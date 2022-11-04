@@ -1,16 +1,15 @@
-"use client";
-
 import "./globals.css";
-import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { SessionContextProvider } from "@supabase/auth-helpers-react";
+import type { ReactNode } from "react";
 import { useState } from "react";
+import Navbar from "../components/navbar";
+import Footer from "../components/footer";
+import Supabase from "../components/Supabase";
 
-export default function RootLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
-	const [supabaseClient] = useState(() => createBrowserSupabaseClient());
+interface RootProps {
+	children: ReactNode;
+}
+
+export default function RootLayout(props: RootProps) {
 	return (
 		<html lang="en">
 			<head>
@@ -20,12 +19,15 @@ export default function RootLayout({
 				<link rel="icon" href="/favicon.ico" />
 			</head>
 			<body>
-				<SessionContextProvider
-					supabaseClient={supabaseClient}
-					initialSession={null}
-				>
-					{children}
-				</SessionContextProvider>
+				<Supabase>
+					<div className="flex flex-col min-h-screen">
+						<div className="flex-1">
+							<Navbar />
+							{props.children}
+						</div>
+						<Footer />
+					</div>
+				</Supabase>
 			</body>
 		</html>
 	);
