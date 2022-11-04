@@ -6,7 +6,7 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
-		"lint": "next lint",
+		"lint": "eslint .",
 		"prepare": "husky install",
 		"pre": "prettier --write ."
 	},
@@ -40,8 +40,8 @@
 	},
 	"lint-staged": {
 		"**/*": [
-			"eslint",
-			"prettier --write --ignore-unknown"
+			"prettier --write --ignore-unknown",
+			"eslint ."
 		]
 	}
 }
