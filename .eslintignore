@@ -34,3 +34,5 @@ next-env.d.ts
 
 # shit linting
 package.json
+styles/globals.css
+yarn.lock
