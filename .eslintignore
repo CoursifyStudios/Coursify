@@ -36,3 +36,4 @@ next-env.d.ts
 package.json
 styles/globals.css
 yarn.lock
+supabase/config.toml
