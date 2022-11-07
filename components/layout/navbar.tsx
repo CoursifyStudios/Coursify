@@ -6,33 +6,40 @@ import {
 	MegaphoneIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export default function Navbar() {
+	const router = useRouter();
 	const user = useUser();
-	const tabs: Tab[] = [
+	const defaultTabs: Tab[] = [
 		{
 			name: "Home",
-			selected: true,
+			route: "/",
+			matcher: /^\/$|^$/g,
 		},
 		{
 			name: "Assignments",
-			selected: false,
+			route: "/assignments",
+			matcher: /^\/assignments/g,
 		},
 	];
 
 	return (
-		<nav className="flex items-center justify-between bg-gray-200 px-8 py-2.5">
+		<nav className="flex h-14 items-center justify-between bg-gray-200 px-8">
 			<div className="flex items-center space-x-6">
-				{tabs.map((v, i) => (
+				{defaultTabs.map((v, i) => (
 					<>
-						<div
-							key={i}
-							className={`my-0.5  rounded-md ${
-								v.selected ? "bg-gray-50 shadow-md" : "bg-gray-300"
-							} px-3 py-0.5 text-lg font-semibold `}
-						>
-							{v.name}
-						</div>
+						<Link key={i} href={v.route}>
+							<div
+								className={`my-0.5  rounded-md ${
+									router.pathname.match(v.matcher)
+										? "bg-gray-50 shadow-md"
+										: "bg-gray-300"
+								} px-3 py-0.5 text-lg font-semibold `}
+							>
+								{v.name}
+							</div>
+						</Link>
 
 						{i == 1 && (
 							<div className="graydient h-10 w-[0.07rem]" key={-1}></div>
@@ -70,7 +77,8 @@ export default function Navbar() {
 interface Tab {
 	//this is temp, see the tabs rfc here for the proposal: https://docs.google.com/document/d/1oAc1VBBhF7aVSQeesqvNN4Wb8J4m-aJBoMPG1vLyVZs/edit
 	name: string;
-	selected: boolean;
+	route: string;
+	matcher: RegExp;
 }
 
 function ButtonIcon(props: { icon: ReactNode; to?: string; classes?: string }) {
