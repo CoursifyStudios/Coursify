@@ -6,40 +6,44 @@ import {
 	MegaphoneIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
-
+const tabs: Tab[] = [
+    {
+        name: "Home",
+        selected: false,
+    },
+    {
+        name: "Assignments",
+        selected: false,
+    },
+];
 export default function Navbar() {
 	const user = useUser();
-	const tabs: Tab[] = [
-		{
-			name: "Home",
-			selected: true,
-		},
-		{
-			name: "Assignments",
-			selected: false,
-		},
-	];
+	
 
 	return (
 		<nav className="flex items-center justify-between bg-gray-200 px-8 py-2.5">
 			<div className="flex items-center space-x-6">
 				{tabs.map((v, i) => (
-					<>
-						<div
-							key={i}
-							className={`my-0.5  rounded-md ${
-								v.selected ? "bg-gray-50 shadow-md" : "bg-gray-300"
-							} px-3 py-0.5 text-lg font-semibold `}
-						>
-							{v.name}
-						</div>
+                    <>
+                        <Link href={useThis(v.name)}>
+                            <div
+                                key={i}
+                                className={`my-0.5  rounded-md ${
+                                    v.selected ? "bg-gray-50 shadow-md" : "bg-gray-300"
+                                } px-3 py-0.5 text-lg font-semibold `}
+                            >
+                                {v.name}
+                            </div>
+                        </Link>
 
-						{i == 1 && (
-							<div className="graydient h-10 w-[0.07rem]" key={-1}></div>
-						)}
-					</>
+                        {i == 1 && (
+                            <div className="graydient h-10 w-[0.07rem]" key={-1}></div>
+                        )}
+                        
+                    </>
 				))}
 			</div>
+
 			<div className="flex flex-row-reverse items-center space-x-4 space-x-reverse">
 				{user ? (
 					<>
@@ -65,6 +69,23 @@ export default function Navbar() {
 			</div>
 		</nav>
 	);
+
+    
+}
+function useThis (tabName: string) {
+    if (tabName == "Home") {
+        return "/";
+    } else {
+        return tabName;
+    }
+}
+
+export function changeTabFocus (tabIndex: number) {
+    for (let i = 0; i < tabs.length; i++) {
+        tabs[i].selected = false;
+        console.log(tabs);
+    }
+    tabs[tabIndex].selected = true;
 }
 
 interface Tab {
