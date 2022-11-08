@@ -1,10 +1,12 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
+import { useTabs } from "../lib/linkRegex";
 import { Database } from "../lib/database.types";
 import { classData, loadData } from "../lib/db/classes";
 
 export default function Home() {
+	const newTab = useTabs((state) => state.newTab("/settings"));
 	const supabaseClient = useSupabaseClient<Database>();
 	const user = useUser();
 	const [data, setData] = useState<classData>();
@@ -43,12 +45,18 @@ export default function Home() {
 				<div className="flex flex-col items-start">
 					<h2 className="text-lg font-medium">Account</h2>
 					<p className="max-w-xl ">{user.user_metadata.name}</p>
-
-					<div
-						className="mt-4 rounded-md bg-gray-200 px-4 py-2 font-medium"
-						onClick={() => supabaseClient.auth.signOut()}
-					>
-						Logout
+					<div className="mt-4 flex ">
+						<div
+							className="cursor-pointer rounded-md bg-gray-200 px-4 py-2 font-medium"
+							onClick={() => supabaseClient.auth.signOut()}
+						>
+							Logout
+						</div>
+						<Link href="/settings" onClick={() => newTab}>
+							<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
+								Settings
+							</div>
+						</Link>
 					</div>
 				</div>
 			) : (

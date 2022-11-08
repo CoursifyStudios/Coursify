@@ -37,3 +37,4 @@ package.json
 styles/globals.css
 yarn.lock
 supabase/config.toml
+.eslintrc.json
