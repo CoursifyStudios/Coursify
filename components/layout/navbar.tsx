@@ -1,5 +1,5 @@
 import { useUser } from "@supabase/auth-helpers-react";
-import type { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import {
 	CalendarIcon,
 	MagnifyingGlassIcon,
@@ -7,8 +7,9 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import { NextComponentType } from "next";
 
-export default function Navbar() {
+const Navbar: NextComponentType = () => {
 	const router = useRouter();
 	const user = useUser();
 	const defaultTabs: Tab[] = [
@@ -19,10 +20,11 @@ export default function Navbar() {
 		},
 		{
 			name: "Assignments",
-			route: "/assignments",
+			route: "/assignments/0",
 			matcher: /^\/assignments/g,
 		},
 	];
+	const [tabs, setTabs] = useState<Tab[]>();
 
 	return (
 		<nav className="flex h-14 items-center justify-between bg-gray-200 px-8">
@@ -72,9 +74,9 @@ export default function Navbar() {
 			</div>
 		</nav>
 	);
-}
+};
 
-interface Tab {
+export interface Tab {
 	//this is temp, see the tabs rfc here for the proposal: https://docs.google.com/document/d/1oAc1VBBhF7aVSQeesqvNN4Wb8J4m-aJBoMPG1vLyVZs/edit
 	name: string;
 	route: string;
@@ -99,3 +101,5 @@ function ButtonIcon(props: { icon: ReactNode; to?: string; classes?: string }) {
 		return r;
 	}
 }
+
+export default Navbar;
