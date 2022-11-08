@@ -77,51 +77,71 @@ const Post: NextPage = () => {
 					id={9}
 				/>
 			</div>
-			<div className="flex flex-grow items-center justify-center rounded-lg bg-gray-200">
-				{0 == Number.parseInt(aid as string) ? (
-					<div className="flex flex-col items-center">
-						<Image
-							src="/svgs/launch.svg"
-							alt="Nothing present icon"
-							width={150}
-							height={150}
-						/>
-						<h2 className=" mt-4 max-w-xs text-center font-semibold">
-							Click an assignment on the left pane to get started
-						</h2>
-					</div>
-				) : (
-					<div>assignment here, haven{"'"}t set up DB yet</div>
-				)}
+			<div className="flex flex-grow  rounded-xl bg-gray-200">
+				<AssignmentPane />
 			</div>
 		</div>
 	);
+
+	function AssignmentPane() {
+		if (!router.isReady || (!data && Number.parseInt(aid as string) != 0)) {
+			return (
+				<div className="m-auto flex flex-col items-center">
+					Loading... (need icons and stuff)
+				</div>
+			);
+		}
+
+		if (Number.parseInt(aid as string) == 0) {
+			return (
+				<div className="m-auto flex flex-col items-center">
+					<Image
+						src="/svgs/launch.svg"
+						alt="Nothing present icon"
+						width={150}
+						height={150}
+					/>
+					<h2 className=" mt-4 max-w-xs text-center font-semibold">
+						Click an assignment on the left pane to get started
+					</h2>
+				</div>
+			);
+		}
+
+		return <div>Assignment {aid}</div>;
+	}
+
+	function AssignmentPreview(props: {
+		name: string;
+		desc: string;
+		starred: boolean;
+		due: Date;
+		id: number;
+	}) {
+		return (
+			<div
+				className={`flex snap-start rounded-md ${
+					Number.parseInt(aid as string) == props.id
+						? "bg-gray-50 shadow-lg"
+						: "bg-gray-200"
+				} p-3`}
+			>
+				<div className="w-10">
+					<Starred starred={props.starred} />
+				</div>
+				<div>
+					<h2 className="text-lg font-medium">{props.name}</h2>
+					<p className="w-[12rem] break-words line-clamp-3  ">{props.desc}</p>
+				</div>
+				<div className="flex flex-col items-end justify-between">
+					<p className="text-sm font-medium text-gray-700">
+						Due: {props.due.getMonth() + 1}/{props.due.getDate()}
+					</p>
+					<CheckIcon className="h-5 w-5 text-gray-600" />
+				</div>
+			</div>
+		);
+	}
 };
 
 export default Post;
-
-function AssignmentPreview(props: {
-	name: string;
-	desc: string;
-	starred: boolean;
-	due: Date;
-	id: number;
-}) {
-	return (
-		<div className="flex snap-start rounded-md bg-gray-200 p-3">
-			<div className="w-10">
-				<Starred starred={props.starred} />
-			</div>
-			<div>
-				<h2 className="text-lg font-medium">{props.name}</h2>
-				<p className="w-[12rem] break-words line-clamp-3  ">{props.desc}</p>
-			</div>
-			<div className="flex flex-col items-end justify-between">
-				<p className="text-sm font-medium text-gray-700">
-					Due: {props.due.getMonth() + 1}/{props.due.getDate()}
-				</p>
-				<CheckIcon className="h-5 w-5 text-gray-600" />
-			</div>
-		</div>
-	);
-}
