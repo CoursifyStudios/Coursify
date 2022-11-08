@@ -30,8 +30,8 @@ const Navbar: NextComponentType = () => {
 		<nav className="flex h-14 items-center justify-between bg-gray-200 px-8">
 			<div className="flex items-center space-x-6">
 				{defaultTabs.map((v, i) => (
-					<>
-						<Link key={i} href={v.route}>
+					<span className="flex" key={i}>
+						<Link href={v.route}>
 							<div
 								className={`my-0.5  rounded-md ${
 									router.pathname.match(v.matcher)
@@ -43,10 +43,8 @@ const Navbar: NextComponentType = () => {
 							</div>
 						</Link>
 
-						{i == 1 && (
-							<div className="graydient h-10 w-[0.07rem]" key={-1}></div>
-						)}
-					</>
+						{i == 1 && <div className="graydient h-10 w-[0.07rem]"></div>}
+					</span>
 				))}
 			</div>
 			<div className="flex flex-row-reverse items-center space-x-4 space-x-reverse">
