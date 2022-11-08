@@ -6,6 +6,7 @@ import {
 	MegaphoneIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function Navbar() {
 	const user = useUser();
@@ -45,6 +46,8 @@ export default function Navbar() {
 					<>
 						<img
 							src={user.user_metadata.picture}
+							alt="Profile picture"
+							referrerPolicy="no-referrer"
 							className="!ml-2 h-10 rounded-full shadow-md shadow-black/25"
 						/>
 						<ButtonIcon
