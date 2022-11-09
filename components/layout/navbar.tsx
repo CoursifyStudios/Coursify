@@ -82,7 +82,7 @@ const Navbar: NextComponentType = () => {
 				{canClose && (
 					<XMarkIcon
 						onClick={(e) => (
-							e.stopPropagation(), handleClose(tab.matcher, selected)
+							e.stopPropagation(), handleClose(tab.name, selected)
 						)}
 						// apparently stop propigation doesn't work with nextjs links.
 						// I could use router.push(), but then we would have to be in charge of preloading pages
@@ -96,8 +96,8 @@ const Navbar: NextComponentType = () => {
 		);
 	}
 
-	function handleClose(regex: RegExp, selected: RegExpMatchArray | null) {
-		closeTab(regex);
+	function handleClose(name: string, selected: RegExpMatchArray | null) {
+		closeTab(name);
 		if (selected) {
 			router.push("/");
 		}

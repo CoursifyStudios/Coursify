@@ -5,7 +5,7 @@ import { persist } from "zustand/middleware";
 export const useTabs = create<{
 	tabs: Tab[];
 	newTab: (route: string) => void;
-	closeTab: (matcher: RegExp) => void;
+	closeTab: (matcher: string) => void;
 }>()(
 	persist(
 		(set) => ({
@@ -14,6 +14,8 @@ export const useTabs = create<{
 				const newTab = getLinkRegex(tab);
 				if (newTab == null) return;
 				set((state) => {
+					console.log(state.tabs);
+
 					if (state.tabs.find((tab) => tab.name == newTab.name)) {
 						return { tabs: state.tabs };
 					} else {
@@ -26,16 +28,15 @@ export const useTabs = create<{
 					}
 				});
 			},
-			closeTab: (tabMatcher) => {
+			closeTab: (name) => {
 				set((state) => {
-					const index = state.tabs.findIndex(
-						(tab) => tab.matcher == tabMatcher
-					);
+					console.log(state.tabs);
+					const index = state.tabs.findIndex((tab) => tab.name == name);
 					if (index == -1) return { tabs: state.tabs };
 					else {
 						const newArr = JSON.parse(JSON.stringify(state.tabs));
-						const toReturn = newArr.splice(index, 1);
-						console.log(newArr, index);
+						newArr.splice(index, 1);
+
 						return {
 							tabs: newArr,
 						};
