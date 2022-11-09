@@ -7,41 +7,47 @@ export const useTabs = create<{
 	newTab: (route: string) => void;
 	closeTab: (matcher: RegExp) => void;
 }>()(
-	//persist(
-	(set) => ({
-		tabs: [],
-		newTab: (tab) => {
-			const newTab = getLinkRegex(tab);
-			if (newTab == null) return;
-			set((state) => {
-				if (state.tabs.find((tab) => tab.name == newTab.name)) {
-					return { tabs: state.tabs };
-				} else {
-					return {
-						tabs: state.tabs.concat([
-							// 0 clue as to why push doesn't work here
-							newTab,
-						]),
-					};
-				}
-			});
-		},
-		closeTab: (tabMatcher) => {
-			set((state) => {
-				const index = state.tabs.findIndex((tab) => tab.matcher == tabMatcher);
-				if (index == -1) return { tabs: state.tabs };
-				else {
-					const newArr = JSON.parse(JSON.stringify(state.tabs));
-					const toReturn = newArr.splice(index, 1);
-					console.log(newArr, index);
-					return {
-						tabs: newArr,
-					};
-				}
-			});
-		},
-	})
-	//)
+	persist(
+		(set) => ({
+			tabs: [],
+			newTab: (tab) => {
+				const newTab = getLinkRegex(tab);
+				if (newTab == null) return;
+				set((state) => {
+					if (state.tabs.find((tab) => tab.name == newTab.name)) {
+						return { tabs: state.tabs };
+					} else {
+						return {
+							tabs: state.tabs.concat([
+								// 0 clue as to why push doesn't work here
+								newTab,
+							]),
+						};
+					}
+				});
+			},
+			closeTab: (tabMatcher) => {
+				set((state) => {
+					const index = state.tabs.findIndex(
+						(tab) => tab.matcher == tabMatcher
+					);
+					if (index == -1) return { tabs: state.tabs };
+					else {
+						const newArr = JSON.parse(JSON.stringify(state.tabs));
+						const toReturn = newArr.splice(index, 1);
+						console.log(newArr, index);
+						return {
+							tabs: newArr,
+						};
+					}
+				});
+			},
+		}),
+		{
+			name: "tabs-storage",
+			getStorage: () => sessionStorage,
+		}
+	)
 );
 
 function getLinkRegex(route: string): Tab | null {

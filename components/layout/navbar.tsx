@@ -15,6 +15,9 @@ const Navbar: NextComponentType = () => {
 	const { newTab, closeTab, tabs } = useTabs();
 	const router = useRouter();
 	const user = useUser();
+	const [hydrated, setHydrated] = useState(false);
+
+	useEffect(() => setHydrated(true), []);
 
 	return (
 		<nav className="flex h-14 items-center justify-between bg-gray-200 px-8">
@@ -24,9 +27,7 @@ const Navbar: NextComponentType = () => {
 				))}
 				<div className="graydient h-10 w-[0.07rem]"></div>
 				{tabs.map(
-					(v, i) => (
-						console.log(v), (<TabUI key={i} canClose={true} tab={v} />)
-					)
+					(v, i) => hydrated && <TabUI key={i} canClose={true} tab={v} />
 				)}
 			</div>
 			<div className="flex flex-row-reverse items-center space-x-4 space-x-reverse">
