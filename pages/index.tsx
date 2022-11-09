@@ -1,12 +1,12 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useTabs } from "../lib/linkRegex";
-import { Database } from "../lib/database.types";
+import { useBearStore, useTabs } from "../lib/handleTabs";
+import { Database } from "../lib/db/database.types";
 import { classData, loadData } from "../lib/db/classes";
 
 export default function Home() {
-	const newTab = useTabs((state) => state.newTab("/settings"));
+	const { newTab, tabs } = useTabs();
 	const supabaseClient = useSupabaseClient<Database>();
 	const user = useUser();
 	const [data, setData] = useState<classData>();
@@ -52,9 +52,14 @@ export default function Home() {
 						>
 							Logout
 						</div>
-						<Link href="/settings" onClick={() => newTab}>
+						<Link href="/settings" onClick={() => newTab("/settings")}>
 							<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
 								Settings
+							</div>
+						</Link>
+						<Link href="/tabstest" onClick={() => newTab("/tabstest")}>
+							<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
+								Testing Tab
 							</div>
 						</Link>
 					</div>

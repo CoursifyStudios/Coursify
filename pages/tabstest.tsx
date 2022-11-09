@@ -5,7 +5,7 @@ const Settings: NextPage = () => {
 	const tabs = useTabs((state) => state.tabs);
 	return (
 		<div>
-			Settings
+			Testing tabs
 			{JSON.stringify(tabs)}
 		</div>
 	);
