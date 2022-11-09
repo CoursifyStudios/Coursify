@@ -1,5 +1,5 @@
 import { useUser } from "@supabase/auth-helpers-react";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import {
 	CalendarIcon,
 	MagnifyingGlassIcon,
@@ -23,9 +23,11 @@ const Navbar: NextComponentType = () => {
 					<TabUI key={i} canClose={false} tab={v} />
 				))}
 				<div className="graydient h-10 w-[0.07rem]"></div>
-				{tabs.map((v, i) => (
-					<TabUI key={i} canClose={true} tab={v} />
-				))}
+				{tabs.map(
+					(v, i) => (
+						console.log(v), (<TabUI key={i} canClose={true} tab={v} />)
+					)
+				)}
 			</div>
 			<div className="flex flex-row-reverse items-center space-x-4 space-x-reverse">
 				{user ? (
@@ -56,7 +58,11 @@ const Navbar: NextComponentType = () => {
 	);
 
 	function TabUI({ tab, canClose }: { tab: Tab; canClose: boolean }) {
-		const selected = router.pathname.match(tab.matcher);
+		const selected = useMemo(
+			() => router.pathname.match(tab.matcher),
+			[router, tab]
+		);
+
 		return (
 			<div
 				className={`my-0.5 flex items-center rounded-md ${

@@ -19,7 +19,7 @@ function MyApp({
 			initialSession={pageProps.initialSession}
 		>
 			<Layout>
-				<Component {...pageProps} />
+				<Component />
 			</Layout>
 		</SessionContextProvider>
 	);

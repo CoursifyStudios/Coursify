@@ -14,7 +14,7 @@ export const useTabs = create<{
 			const newTab = getLinkRegex(tab);
 			if (newTab == null) return;
 			set((state) => {
-				if (state.tabs.find((tab) => tab.matcher == newTab.matcher)) {
+				if (state.tabs.find((tab) => tab.name == newTab.name)) {
 					return { tabs: state.tabs };
 				} else {
 					return {
@@ -41,8 +41,8 @@ export const useTabs = create<{
 			});
 		},
 	})
+	//)
 );
-//);
 
 function getLinkRegex(route: string): Tab | null {
 	const pageMatchers: { matcher: RegExp; name: string }[] = [
