@@ -18,7 +18,7 @@ export default function Login() {
 				<h1 className="mb-14 text-3xl font-bold">Welcome Back</h1>
 				<div className="flex flex-col">
 					<button
-						className="mb-8 flex justify-center rounded-md bg-gray-200 px-4 py-3 text-[1.05rem] font-medium	hover:bg-gray-300"
+						className="mb-8 flex rounded-md bg-gray-200 px-4 py-3 text-[1.05rem] font-medium	hover:bg-gray-300"
 						onClick={() =>
 							supabaseClient.auth.signInWithOAuth({
 								provider: "google",
