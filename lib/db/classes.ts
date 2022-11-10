@@ -3,7 +3,7 @@ import type { Database } from "./database.types";
 
 export async function loadData(
 	supabaseClient: SupabaseClient<Database>
-): Promise<classData> {
+): Promise<ClassData> {
 	const { data, error } = await supabaseClient.from("classes").select("*");
 	if (!error) {
 		return {
@@ -18,8 +18,12 @@ export async function loadData(
 	}
 }
 
-export interface classData {
+export interface ClassData {
 	success: boolean;
-	data?: Database["public"]["Tables"]["classes"]["Row"][];
 	error?: PostgrestError;
+	data?: Database["public"]["Tables"]["classes"]["Row"][];
+}
+
+export interface Class {
+	data: Database["public"]["Tables"]["classes"]["Row"];
 }

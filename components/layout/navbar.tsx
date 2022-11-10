@@ -25,47 +25,35 @@ const Navbar: NextComponentType = () => {
 
 	return (
 		<nav className="flex h-14 items-center justify-between bg-gray-200 px-8">
-			<div className="flex items-center space-x-4">
+			<div className="scrollbar-fancy flex shrink items-center space-x-4 overflow-x-auto">
 				{defaultTabs.map((v, i) => (
 					<TabUI key={i} canClose={false} tab={v} />
 				))}
-				<div className="graydient h-10 w-[0.07rem]"></div>
+				<div className="graydient h-10 w-[0.07rem] "></div>
 				{tabs.map(
 					(v, i) => hydrated && <TabUI key={i} canClose={true} tab={v} />
 				)}
 			</div>
-			<div className="flex flex-row-reverse items-center space-x-4 space-x-reverse">
+			<div className="flex w-72 grow flex-row-reverse items-center space-x-4 space-x-reverse">
 				{user ? (
-					<>
-						<img
-							src={user.user_metadata.picture}
-							alt="Profile picture"
-							referrerPolicy="no-referrer"
-							className="!ml-2 h-10 rounded-full shadow-md shadow-black/25"
-						/>
-						<ButtonIcon
-							icon={<MegaphoneIcon className="h-6 w-6" />}
-							to="/announcements"
-						/>
-						<ButtonIcon
-							icon={<CalendarIcon className="h-6 w-6" />}
-							to="/calendar"
-						/>
-						<ButtonIcon icon={<MagnifyingGlassIcon className="p- h-6 w-6" />} />
-					</>
+					<img
+						src={user.user_metadata.picture}
+						alt="Profile picture"
+						referrerPolicy="no-referrer"
+						className="!ml-2 h-10 rounded-full shadow-md shadow-black/25"
+					/>
 				) : (
-					<div
-						className="cursor-pointer rounded-md bg-blue-500 px-4 py-1 font-medium text-white"
-						onClick={() =>
-							supabase.auth.signInWithOAuth({
-								provider: "google",
-								options: { redirectTo: "/" },
-							})
-						}
-					>
-						Login
-					</div>
+					<div className="!ml-2 h-10 w-10 rounded-full bg-gray-300"></div>
 				)}
+				<ButtonIcon
+					icon={<MegaphoneIcon className="h-5 w-5" />}
+					to="/announcements"
+				/>
+				<ButtonIcon
+					icon={<CalendarIcon className="h-5 w-5" />}
+					to="/calendar"
+				/>
+				<ButtonIcon icon={<MagnifyingGlassIcon className=" h-5 w-5 grow" />} />
 			</div>
 		</nav>
 	);
@@ -78,8 +66,8 @@ const Navbar: NextComponentType = () => {
 
 		return (
 			<div
-				className={`my-0.5 flex items-center rounded-md ${
-					selected ? "bg-gray-50 shadow-md" : "bg-gray-300"
+				className={`my-1.5 mx-1 flex items-center rounded-md ${
+					selected ? "bg-gray-50 shadow-md  " : "bg-gray-300"
 				} ${canClose && "pr-3"} text-lg font-semibold `}
 			>
 				<Link href={tab.route}>

@@ -9,11 +9,12 @@
 		"lint": "eslint .",
 		"next-lint": "next lint",
 		"prepare": "husky install",
-		"types": "supabase gen types typescript --project-id hhrehffmdrcjqowwvgqg > lib/database.types.ts"
+		"types": "supabase gen types typescript --project-id hhrehffmdrcjqowwvgqg > lib/db/database.types.ts"
 	},
 	"dependencies": {
 		"@headlessui/react": "^1.7.4",
 		"@heroicons/react": "^2.0.13",
+		"@next/font": "^13.0.2",
 		"@supabase/auth-helpers-nextjs": "^0.4.5",
 		"@supabase/auth-helpers-react": "^0.3.1",
 		"@supabase/supabase-js": "^2.0.5",

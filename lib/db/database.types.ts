@@ -12,24 +12,24 @@ export interface Database {
 			classes: {
 				Row: {
 					id: number;
-					name: string | null;
+					name: string;
 					teachers: string[] | null;
 					students: string[] | null;
-					description: string | null;
+					description: string;
 				};
 				Insert: {
 					id?: number;
-					name?: string | null;
+					name: string;
 					teachers?: string[] | null;
 					students?: string[] | null;
-					description?: string | null;
+					description?: string;
 				};
 				Update: {
 					id?: number;
-					name?: string | null;
+					name?: string;
 					teachers?: string[] | null;
 					students?: string[] | null;
-					description?: string | null;
+					description?: string;
 				};
 			};
 			users: {
