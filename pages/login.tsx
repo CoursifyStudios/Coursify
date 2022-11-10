@@ -1,6 +1,6 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
-import { Database } from "../lib/database.types";
+import { Database } from "../lib/db/database.types";
 
 export default function Login() {
 	const supabaseClient = useSupabaseClient<Database>();

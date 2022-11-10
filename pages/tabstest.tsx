@@ -3,7 +3,7 @@ import { useTabs } from "../lib/tabs/handleTabs";
 
 const Settings: NextPage = () => {
 	const tabs = useTabs((state) => state.tabs);
-	return <div>Settings</div>;
+	return <div>Testing tabs</div>;
 };
 
 export default Settings;
