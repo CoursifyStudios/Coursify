@@ -1,4 +1,5 @@
-import { ReactNode } from "react";
+import { useRouter } from "next/router";
+import { ReactNode, useEffect, useState } from "react";
 import Footer from "./footer";
 import Navbar from "./navbar";
 
