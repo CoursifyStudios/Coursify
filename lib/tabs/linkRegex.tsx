@@ -6,6 +6,11 @@ const pageMatchers: { matcher: RegExp; name: string }[] = [
 	{ matcher: /^\/tabstest/g, name: "Testing tabs but this name is rly long" },
 ];
 
+/**
+ * Get the regex of a given route
+ * @param route A valid route on the website
+ * @returns The tab representation of the sent route
+ */
 export function getLinkRegex(route: string): Tab | null {
 	let test: Tab | null = null;
 	pageMatchers.forEach((v) => {

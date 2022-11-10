@@ -6,9 +6,12 @@ import { deserializeTabs, serializeTabs } from "./serialize";
 import { getLinkRegex } from "./linkRegex";
 
 export const useTabs = create<{
+	/** The currently opened tabs */
 	tabs: Tab[];
+	/** Create a new tab by passing a valid route */
 	newTab: (route: string) => void;
-	closeTab: (matcher: string) => void;
+	/** Close a new tab by passing a valid name of an opened tab */
+	closeTab: (name: string) => void;
 }>()(
 	persist(
 		(set) => ({
