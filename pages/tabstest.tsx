@@ -1,14 +1,9 @@
 import { NextPage } from "next";
-import { useTabs } from "../lib/handleTabs";
+import { useTabs } from "../lib/tabs/handleTabs";
 
 const Settings: NextPage = () => {
 	const tabs = useTabs((state) => state.tabs);
-	return (
-		<div>
-			Testing tabs
-			{JSON.stringify(tabs)}
-		</div>
-	);
+	return <div>Testing tabs</div>;
 };
 
 export default Settings;

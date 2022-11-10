@@ -9,7 +9,8 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { NextComponentType } from "next";
-import { useTabs } from "../../lib/handleTabs";
+import { useTabs } from "../../lib/tabs/handleTabs";
+import supabase from "../../lib/supabase";
 
 const Navbar: NextComponentType = () => {
 	const { newTab, closeTab, tabs } = useTabs();
@@ -53,7 +54,15 @@ const Navbar: NextComponentType = () => {
 						<ButtonIcon icon={<MagnifyingGlassIcon className="p- h-6 w-6" />} />
 					</>
 				) : (
-					<div className="bg-blue-500 px-4 py-1 font-medium text-white">
+					<div
+						className="cursor-pointer rounded-md bg-blue-500 px-4 py-1 font-medium text-white"
+						onClick={() =>
+							supabase.auth.signInWithOAuth({
+								provider: "google",
+								options: { redirectTo: "/" },
+							})
+						}
+					>
 						Login
 					</div>
 				)}
@@ -85,7 +94,7 @@ const Navbar: NextComponentType = () => {
 				{canClose && (
 					<XMarkIcon
 						onClick={(e) => (
-							e.stopPropagation(), handleClose(tab.matcher, selected)
+							e.stopPropagation(), handleClose(tab.name, selected)
 						)}
 						// apparently stop propigation doesn't work with nextjs links.
 						// I could use router.push(), but then we would have to be in charge of preloading pages
@@ -99,8 +108,8 @@ const Navbar: NextComponentType = () => {
 		);
 	}
 
-	function handleClose(regex: RegExp, selected: RegExpMatchArray | null) {
-		closeTab(regex);
+	function handleClose(name: string, selected: RegExpMatchArray | null) {
+		closeTab(name);
 		if (selected) {
 			router.push("/");
 		}
