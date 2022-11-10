@@ -1,4 +1,4 @@
-import { Tab } from "../components/layout/navbar";
+import { Tab } from "../../components/layout/navbar";
 
 export function serializeTabs(tabs: Tab[]) {
 	const newTabs = tabs.map((tab) => {

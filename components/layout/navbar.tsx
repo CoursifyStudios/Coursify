@@ -9,7 +9,7 @@ import {
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { NextComponentType } from "next";
-import { useTabs } from "../../lib/handleTabs";
+import { useTabs } from "../../lib/tabs/handleTabs";
 import supabase from "../../lib/supabase";
 
 const Navbar: NextComponentType = () => {

@@ -1,8 +1,9 @@
 import create from "zustand";
-import { Tab } from "../components/layout/navbar";
+import { Tab } from "../../components/layout/navbar";
 import { persist } from "zustand/middleware";
 import { deserialize, serialize } from "v8";
 import { deserializeTabs, serializeTabs } from "./serialize";
+import { getLinkRegex } from "./linkRegex";
 
 export const useTabs = create<{
 	tabs: Tab[];
@@ -18,7 +19,7 @@ export const useTabs = create<{
 				set((state) => {
 					console.log(state.tabs);
 
-					if (state.tabs.find((tab) => tab.name == newTab.name)) {
+					if (state.tabs.find((tab) => tab.matcher.test(newTab.route))) {
 						return { tabs: state.tabs };
 					} else {
 						return {
@@ -62,7 +63,6 @@ export const useTabs = create<{
 				});
 			},
 			deserialize: (state) => {
-				//console.log(state)
 				const newState = JSON.parse(state);
 				return {
 					...newState,
@@ -75,24 +75,6 @@ export const useTabs = create<{
 		}
 	)
 );
-
-function getLinkRegex(route: string): Tab | null {
-	const pageMatchers: { matcher: RegExp; name: string }[] = [
-		// List of all links, their regex, then the name of the page
-		{ matcher: /^\/settings/g, name: "Settings" },
-		{ matcher: /^\/tabstest/g, name: "Testing tabs but this name is rly long" },
-	];
-	let test: Tab | null = null;
-	pageMatchers.forEach((v) => {
-		if (v.matcher.test(route)) {
-			test = {
-				route,
-				...v,
-			};
-		}
-	});
-	return test;
-}
 
 //FOR TESTING:
 

@@ -1,7 +1,7 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useBearStore, useTabs } from "../lib/handleTabs";
+import { useBearStore, useTabs } from "../lib/tabs/handleTabs";
 import { Database } from "../lib/db/database.types";
 import { classData, loadData } from "../lib/db/classes";
 
