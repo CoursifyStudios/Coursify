@@ -10,6 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { NextComponentType } from "next";
 import { useTabs } from "../../lib/handleTabs";
+import supabase from "../../lib/supabase";
 
 const Navbar: NextComponentType = () => {
 	const { newTab, closeTab, tabs } = useTabs();
@@ -50,7 +51,15 @@ const Navbar: NextComponentType = () => {
 						<ButtonIcon icon={<MagnifyingGlassIcon className="p- h-6 w-6" />} />
 					</>
 				) : (
-					<div className="bg-blue-500 px-4 py-1 font-medium text-white">
+					<div
+						className="cursor-pointer rounded-md bg-blue-500 px-4 py-1 font-medium text-white"
+						onClick={() =>
+							supabase.auth.signInWithOAuth({
+								provider: "google",
+								options: { redirectTo: "/" },
+							})
+						}
+					>
 						Login
 					</div>
 				)}

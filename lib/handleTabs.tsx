@@ -1,6 +1,8 @@
 import create from "zustand";
 import { Tab } from "../components/layout/navbar";
 import { persist } from "zustand/middleware";
+import { deserialize, serialize } from "v8";
+import { deserializeTabs, serializeTabs } from "./serialize";
 
 export const useTabs = create<{
 	tabs: Tab[];
@@ -34,7 +36,9 @@ export const useTabs = create<{
 					const index = state.tabs.findIndex((tab) => tab.name == name);
 					if (index == -1) return { tabs: state.tabs };
 					else {
-						const newArr = JSON.parse(JSON.stringify(state.tabs));
+						const newArr = deserializeTabs(
+							JSON.parse(JSON.stringify(serializeTabs(state.tabs)))
+						);
 						newArr.splice(index, 1);
 
 						return {
@@ -47,6 +51,27 @@ export const useTabs = create<{
 		{
 			name: "tabs-storage",
 			getStorage: () => sessionStorage,
+			serialize: (state) => {
+				console.log(state);
+				return JSON.stringify({
+					...state,
+					state: {
+						...state.state,
+						tabs: serializeTabs(state.state.tabs),
+					},
+				});
+			},
+			deserialize: (state) => {
+				//console.log(state)
+				const newState = JSON.parse(state);
+				return {
+					...newState,
+					state: {
+						...newState.state,
+						tabs: deserializeTabs(newState.state.tabs),
+					},
+				};
+			},
 		}
 	)
 );
