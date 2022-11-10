@@ -19,6 +19,9 @@ const Navbar: NextComponentType = () => {
 	const [hydrated, setHydrated] = useState(false);
 
 	useEffect(() => setHydrated(true), []);
+	if (router.asPath.startsWith("/login")) {
+		return null;
+	}
 
 	return (
 		<nav className="flex h-14 items-center justify-between bg-gray-200 px-8">
