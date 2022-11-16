@@ -19,7 +19,8 @@ const Navbar: NextComponentType = () => {
 	const [hydrated, setHydrated] = useState(false);
 
 	useEffect(() => setHydrated(true), []);
-	if (router.asPath.startsWith("/login")) {
+
+	if (router.isReady && router.asPath.startsWith("/login")) {
 		return null;
 	}
 
@@ -59,10 +60,7 @@ const Navbar: NextComponentType = () => {
 	);
 
 	function TabUI({ tab, canClose }: { tab: Tab; canClose: boolean }) {
-		const selected = useMemo(
-			() => router.pathname.match(tab.matcher),
-			[router, tab]
-		);
+		const selected = useMemo(() => router.pathname.match(tab.matcher), [tab]);
 
 		return (
 			<div

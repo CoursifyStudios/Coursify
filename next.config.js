@@ -7,6 +7,11 @@ const nextConfig = {
 				destination: "/assignments/0",
 				permanent: false,
 			},
+			{
+				source: "/classes",
+				destination: "/classes/0",
+				permanent: false,
+			},
 		];
 	},
 };
