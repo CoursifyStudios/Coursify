@@ -90,6 +90,26 @@ export interface Database {
 					asssignment_id?: number;
 				};
 			};
+			schools: {
+				Row: {
+					id: number;
+					created_at: string | null;
+					name: string;
+					schedule: Json[] | null;
+				};
+				Insert: {
+					id?: number;
+					created_at?: string | null;
+					name: string;
+					schedule?: Json[] | null;
+				};
+				Update: {
+					id?: number;
+					created_at?: string | null;
+					name?: string;
+					schedule?: Json[] | null;
+				};
+			};
 			users: {
 				Row: {
 					id: string;

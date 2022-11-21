@@ -5,7 +5,13 @@ import { useRouter } from "next/router";
 import { stringify } from "querystring";
 import { useEffect, useState } from "react";
 import { Assignment, newAssignment } from "../../lib/db/assignments";
-import { ClassData, getClass, loadData } from "../../lib/db/classes";
+import {
+	ClassData,
+	getAllAssignments,
+	getClass,
+	getUserSchool,
+	loadData,
+} from "../../lib/db/classes";
 import { Database } from "../../lib/db/database.types";
 
 const Class: NextPage = () => {
@@ -14,11 +20,12 @@ const Class: NextPage = () => {
 	const user = useUser();
 	const supabaseClient = useSupabaseClient<Database>();
 	const [data, setData] = useState<ClassData>();
+	const [d, setD] = useState();
 	const [submitting, setSubmitting] = useState(false);
 
 	useEffect(() => {
 		(async () => {
-			if (user) {
+			if (user && typeof classid == "string") {
 				const data = await getClass(
 					supabaseClient,
 					Number.parseInt(classid as string)
@@ -26,7 +33,13 @@ const Class: NextPage = () => {
 				setData(data);
 			}
 		})();
-	}, [user, supabaseClient, classid]);
+		(async () => {
+			if (user) {
+				const data = await getAllAssignments(supabaseClient);
+				console.log(data);
+			}
+		})();
+	}, [user, supabaseClient]);
 
 	const createAssignment = async (data: Assignment["data"]) => {
 		const assign = await newAssignment(

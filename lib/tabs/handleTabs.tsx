@@ -20,8 +20,6 @@ export const useTabs = create<{
 				const newTab = getLinkRegex(tab);
 				if (newTab == null) return;
 				set((state) => {
-					console.log(state.tabs);
-
 					if (state.tabs.find((tab) => tab.matcher.test(newTab.route))) {
 						return { tabs: state.tabs };
 					} else {
@@ -36,7 +34,6 @@ export const useTabs = create<{
 			},
 			closeTab: (name) => {
 				set((state) => {
-					console.log(state.tabs);
 					const index = state.tabs.findIndex((tab) => tab.name == name);
 					if (index == -1) return { tabs: state.tabs };
 					else {
@@ -56,7 +53,6 @@ export const useTabs = create<{
 			name: "tabs-storage",
 			getStorage: () => sessionStorage,
 			serialize: (state) => {
-				console.log(state);
 				return JSON.stringify({
 					...state,
 					state: {
