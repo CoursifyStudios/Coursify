@@ -22,3 +22,7 @@
 	border-radius: 9999px;
 	background-color: #d1d5db;
 }
+
+.title {
+	@apply text-2xl font-bold;
+}

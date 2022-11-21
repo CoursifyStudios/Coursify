@@ -14,7 +14,7 @@ export default function Custom404() {
 
 			<div
 				onClick={() => router.push("/")}
-				className="mt-8 cursor-pointer rounded-md bg-blue-500 py-2 px-5 font-medium text-gray-100 hover:bg-blue-300"
+				className="mt-8 cursor-pointer rounded-md bg-blue-500 py-2 px-5 font-medium text-gray-100 duration-500 hover:bg-blue-700"
 			>
 				Go back home
 			</div>

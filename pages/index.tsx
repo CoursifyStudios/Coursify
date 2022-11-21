@@ -59,7 +59,7 @@ export default function Home() {
 				<div className="flex w-full">
 					<section>
 						<div className="flex items-center">
-							<h2 className="text-2xl font-bold">Classes</h2>
+							<h2 className="title">Classes</h2>
 							{loading && <Loading className="ml-4" />}
 						</div>
 						<div className="mt-6 grid grid-cols-3 gap-10">
@@ -78,7 +78,7 @@ export default function Home() {
 						</div>
 					</section>
 					<section className="flex-1">
-						<h2 className="text-2xl font-bold">Daily Schedule</h2>
+						<h2 className="title">Daily Schedule</h2>
 						<div className="mt-6 flex flex-col">
 							<div className=" rounded-xl bg-gray-200 p-4">Schedule here</div>
 						</div>
