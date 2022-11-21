@@ -1,5 +1,7 @@
 # Karasu
 
+![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=karasu)
+
 ## Style Guide:
 
 - Use gray 200 for backgrounds when you need a gray. For gray on gray, use gray 300
