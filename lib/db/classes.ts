@@ -89,16 +89,16 @@ export const getUserSchool = async (
 	}
 };
 
-export const getAllAssignments = async (
-	supabaseClient: SupabaseClient<Database>
-) => {
-	const { data, error } = await supabaseClient.from("assignments").select(
-		`
-		name, description
-		`
-	);
-	// .eq("id", "1e5024f5-d493-4e32-9822-87f080ad5516")
-	// .single();
+export const updateClass = async (
+	supabaseClient: SupabaseClient<Database>,
+	classid: number
+): Promise<ClassData> => {
+	const { data, error } = await supabaseClient
+		.from("classes")
+		.update({
+			description: "WE (we) look at all the LAKES (lakes)",
+		})
+		.eq("id", classid);
 	if (!error) {
 		return {
 			success: true,

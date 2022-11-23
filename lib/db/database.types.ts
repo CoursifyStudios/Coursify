@@ -54,40 +54,59 @@ export interface Database {
 				Row: {
 					id: number;
 					name: string;
-					teachers: string[] | null;
-					students: string[] | null;
 					description: string;
-					assignments: number[] | null;
+					block: number | null;
 				};
 				Insert: {
 					id?: number;
 					name: string;
-					teachers?: string[] | null;
-					students?: string[] | null;
 					description?: string;
-					assignments?: number[] | null;
+					block?: number | null;
 				};
 				Update: {
 					id?: number;
 					name?: string;
-					teachers?: string[] | null;
-					students?: string[] | null;
 					description?: string;
-					assignments?: number[] | null;
+					block?: number | null;
 				};
 			};
 			classes_assignments: {
 				Row: {
 					class_id: number;
-					asssignment_id: number;
+					assignment_id: number;
 				};
 				Insert: {
 					class_id: number;
-					asssignment_id: number;
+					assignment_id: number;
 				};
 				Update: {
 					class_id?: number;
-					asssignment_id?: number;
+					assignment_id?: number;
+				};
+			};
+			groups: {
+				Row: {
+					id: number;
+				};
+				Insert: {
+					id?: number;
+				};
+				Update: {
+					id?: number;
+				};
+			};
+			school_users: {
+				Row: {
+					school_id: number;
+					user_id: string;
+				};
+				Insert: {
+					school_id: number;
+					user_id: string;
+				};
+				Update: {
+					school_id?: number;
+					user_id?: string;
 				};
 			};
 			schools: {
@@ -113,24 +132,55 @@ export interface Database {
 			users: {
 				Row: {
 					id: string;
-					updated_at: string | null;
+					created: string | null;
 					username: string | null;
 					full_name: string | null;
 					avatar_url: string | null;
 				};
 				Insert: {
 					id: string;
-					updated_at?: string | null;
+					created?: string | null;
 					username?: string | null;
 					full_name?: string | null;
 					avatar_url?: string | null;
 				};
 				Update: {
 					id?: string;
-					updated_at?: string | null;
+					created?: string | null;
 					username?: string | null;
 					full_name?: string | null;
 					avatar_url?: string | null;
+				};
+			};
+			users_classes: {
+				Row: {
+					class_id: number;
+					user_id: string;
+					teacher: boolean;
+				};
+				Insert: {
+					class_id: number;
+					user_id: string;
+					teacher?: boolean;
+				};
+				Update: {
+					class_id?: number;
+					user_id?: string;
+					teacher?: boolean;
+				};
+			};
+			users_groups: {
+				Row: {
+					user_id: string;
+					group_id: number;
+				};
+				Insert: {
+					user_id: string;
+					group_id: number;
+				};
+				Update: {
+					user_id?: string;
+					group_id?: number;
 				};
 			};
 		};
@@ -138,7 +188,10 @@ export interface Database {
 			[_ in never]: never;
 		};
 		Functions: {
-			[_ in never]: never;
+			can_user_read_assignment: {
+				Args: { arg_user_id: string; arg_assignment_id: number };
+				Returns: boolean;
+			};
 		};
 		Enums: {
 			[_ in never]: never;
