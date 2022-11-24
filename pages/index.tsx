@@ -90,6 +90,7 @@ export default function Home() {
 								))}
 						</div>
 					</section>
+					<section className="w-10"></section>
 					<section className="flex-1">
 						<h2 className="title">Daily Schedule</h2>
 						<div className="mt-6 flex flex-col">

@@ -2,8 +2,8 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "./database.types";
 
 export interface ScheduleInterface {
-	timeStart: number;
-	timeEnd: number;
+	timeStart: string;
+	timeEnd: string;
 	block: number;
 	type: number;
 }
@@ -20,3 +20,12 @@ export async function getSchedule(
 }
 
 export type ScheduleData = Awaited<ReturnType<typeof getSchedule>>;
+
+export async function createNewScheduleObject(
+	supabaseClient: SupabaseClient<Database>,
+	day: Date,
+	timeStart: string,
+	timeEnd: string,
+	block: number,
+	type: number
+) {}
