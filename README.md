@@ -1,4 +1,4 @@
-# Karasu neé NSS
+# Karasu née NSS
 
 ![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=karasu)
 
