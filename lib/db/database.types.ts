@@ -15,7 +15,7 @@ export interface Database {
 					name: string;
 					type: string | null;
 					description: string;
-					description_long: string | null;
+					content: string | null;
 					created_date: string | null;
 					publish_info: Json | null;
 					publish_date: string | null;
@@ -28,7 +28,7 @@ export interface Database {
 					name: string;
 					type?: string | null;
 					description: string;
-					description_long?: string | null;
+					content?: string | null;
 					created_date?: string | null;
 					publish_info?: Json | null;
 					publish_date?: string | null;
@@ -41,7 +41,7 @@ export interface Database {
 					name?: string;
 					type?: string | null;
 					description?: string;
-					description_long?: string | null;
+					content?: string | null;
 					created_date?: string | null;
 					publish_info?: Json | null;
 					publish_date?: string | null;
@@ -56,18 +56,21 @@ export interface Database {
 					name: string;
 					description: string;
 					block: number | null;
+					schedule_type: number | null;
 				};
 				Insert: {
 					id?: number;
 					name: string;
 					description?: string;
 					block?: number | null;
+					schedule_type?: number | null;
 				};
 				Update: {
 					id?: number;
 					name?: string;
 					description?: string;
 					block?: number | null;
+					schedule_type?: number | null;
 				};
 			};
 			classes_assignments: {
@@ -93,6 +96,20 @@ export interface Database {
 				};
 				Update: {
 					id?: number;
+				};
+			};
+			schedule: {
+				Row: {
+					date: string;
+					schedule_items: Json | null;
+				};
+				Insert: {
+					date: string;
+					schedule_items?: Json | null;
+				};
+				Update: {
+					date?: string;
+					schedule_items?: Json | null;
 				};
 			};
 			school_users: {
@@ -136,6 +153,7 @@ export interface Database {
 					username: string | null;
 					full_name: string | null;
 					avatar_url: string | null;
+					email: string | null;
 				};
 				Insert: {
 					id: string;
@@ -143,6 +161,7 @@ export interface Database {
 					username?: string | null;
 					full_name?: string | null;
 					avatar_url?: string | null;
+					email?: string | null;
 				};
 				Update: {
 					id?: string;
@@ -150,6 +169,7 @@ export interface Database {
 					username?: string | null;
 					full_name?: string | null;
 					avatar_url?: string | null;
+					email?: string | null;
 				};
 			};
 			users_classes: {
