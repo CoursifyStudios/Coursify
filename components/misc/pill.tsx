@@ -18,7 +18,7 @@ export const ColoredPill: NextPage<{ color?: "blue"; children: ReactNode }> = ({
 
 	return (
 		<div
-			className={`inline-flex rounded-full px-2.5 py-0.5 font-semibold text-sm shrink-0 ${pillColor}`}
+			className={`inline-flex shrink-0 rounded-full px-2.5 py-0.5 text-sm font-semibold ${pillColor}`}
 		>
 			{children}
 		</div>

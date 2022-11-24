@@ -21,8 +21,8 @@ export default function Home() {
 	const [loading, setLoading] = useState(true);
 	const [schedule, setSchedule] = useState<ScheduleData>();
 
-	const testDate: Date = new Date("2022-11-23");
 	useEffect(() => {
+		const testDate: Date = new Date("2022-11-23");
 		(async () => {
 			if (user) {
 				const classes = await loadData(supabaseClient);
@@ -42,7 +42,7 @@ export default function Home() {
 		}
 		// Only run query once user is logged in.
 		//if (user) loadData()
-	}, [user, supabaseClient, testDate]);
+	}, [user, supabaseClient]);
 	if (!user) {
 		return null;
 	}
@@ -103,15 +103,28 @@ export default function Home() {
 											?.schedule_items as unknown as ScheduleInterface[]
 									).map(
 										(item, index) =>
-											classes?.data?.find((v) => v.block == item.block)
-												?.name && (
+											classes?.data?.find(
+												(v) =>
+													v.block == item.block && v.schedule_type == item.type
+											)?.name && (
 												<Link
 													key={index}
 													className="flex items-center justify-between font-semibold"
-													href={"/classes/" + classes?.data?.find((v) => v.block == item.block) ?.id}>
+													href={
+														"/classes/" +
+														classes?.data?.find(
+															(v) =>
+																v.block == item.block &&
+																v.schedule_type == item.type
+														)?.id
+													}
+												>
 													{
-														classes?.data?.find((v) => v.block == item.block)
-															?.name
+														classes?.data?.find(
+															(v) =>
+																v.block == item.block &&
+																v.schedule_type == item.type
+														)?.name
 													}
 													<ColoredPill color="blue">
 														{item.timeStart} - {item.timeEnd}
