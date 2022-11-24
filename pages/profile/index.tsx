@@ -1,3 +1,3 @@
 export default function Test() {
-	return <div>Nothing here yet</div>;
+	return <div>list of profiles</div>;
 }
