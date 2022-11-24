@@ -1,5 +1,6 @@
 import { Class } from "../../lib/db/classes";
 import Image from "next/image";
+import { ColoredPill } from "../misc/pill";
 
 export function Class(props: { class: Class }) {
 	return (
@@ -17,9 +18,7 @@ export function Class(props: { class: Class }) {
 					<h3 className="break-words text-xl font-semibold line-clamp-2">
 						{props.class.data.name}
 					</h3>
-					<div className="ml-2 mt-1 shrink-0 rounded-full bg-blue-200 px-1.5 text-sm  font-bold text-blue-600">
-						11:30 - 12:15
-					</div>
+					<ColoredPill color="blue">11:30 - 12:15</ColoredPill>
 				</div>
 				<p>Teacher name</p>
 				<div className="mt-auto">

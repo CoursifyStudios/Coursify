@@ -1,6 +1,40 @@
-import { PostgrestError } from "@supabase/supabase-js";
+import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import supabase from "../supabase";
 import { Database } from "./database.types";
+
+const classesRelation = `classes (*)`;
+
+export const getAllAssignments = async (
+	supabaseClient: SupabaseClient<Database>
+) => {
+	return await supabaseClient.from("assignments").select(
+		`
+		name, description, id,
+		${classesRelation}
+		`
+	);
+};
+
+export type AllAssignmentResponse = Awaited<
+	ReturnType<typeof getAllAssignments>
+>;
+
+export const getAssignment = async (
+	supabaseClient: SupabaseClient<Database>,
+	assignmentid: number
+) => {
+	return await supabaseClient
+		.from("assignments")
+		.select(
+			`
+		*, ${classesRelation}
+		`
+		)
+		.eq("id", assignmentid)
+		.single();
+};
+
+export type AssignmentResponse = Awaited<ReturnType<typeof getAssignment>>;
 
 export const newAssignment = async (
 	assignment: Assignment["data"],

@@ -9,6 +9,7 @@
 		"lint": "eslint .",
 		"next-lint": "next lint",
 		"prepare": "husky install",
+		"fmt": "yarn prettier --write .",
 		"types": "supabase gen types typescript --project-id hhrehffmdrcjqowwvgqg > lib/db/database.types.ts"
 	},
 	"dependencies": {

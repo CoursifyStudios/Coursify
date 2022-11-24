@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { NextComponentType } from "next";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import supabase from "../../lib/supabase";
+import { ButtonIcon } from "../misc/pill";
 
 const Navbar: NextComponentType = () => {
 	const { newTab, closeTab, tabs } = useTabs();
@@ -107,25 +108,6 @@ export interface Tab {
 	name: string;
 	route: string;
 	matcher: RegExp;
-}
-
-function ButtonIcon(props: { icon: ReactNode; to?: string; classes?: string }) {
-	const r = (
-		<div
-			className={
-				"grid h-9 w-9 place-items-center rounded-full bg-gray-300 text-gray-800 " +
-				props.classes
-			}
-		>
-			{props.icon}
-		</div>
-	);
-
-	if (props.to) {
-		return <Link href={props.to}>{r}</Link>;
-	} else {
-		return r;
-	}
 }
 
 const defaultTabs: Tab[] = [
