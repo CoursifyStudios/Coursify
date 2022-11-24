@@ -1,6 +1,9 @@
 import {
+	ArrowsPointingInIcon,
+	ArrowsPointingOutIcon,
 	ArrowTopRightOnSquareIcon,
 	CheckIcon,
+	ChevronLeftIcon,
 	LinkIcon,
 } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
@@ -28,6 +31,8 @@ const Post: NextPage = () => {
 	const router = useRouter();
 	const user = useUser();
 	const { assignmentid } = router.query;
+	const [fullscreen, setFullscreen] = useState(false);
+
 	useEffect(() => {
 		(async () => {
 			if (user) {
@@ -50,11 +55,18 @@ const Post: NextPage = () => {
 				setAssignment(assignment);
 			}
 		})();
+		if (router.isReady && assignmentid != "0" && window.innerWidth < 768) {
+			setFullscreen(true);
+		}
 	}, [user, supabaseClient, router]);
 
 	return (
 		<div className="mx-auto flex w-full max-w-screen-xl px-5 pt-5 pb-4">
-			<div className="scrollbar-fancy mr-4 flex h-[calc(100vh-6rem)] w-80 shrink-0 snap-y snap-mandatory flex-col space-y-8 overflow-y-auto ">
+			<div
+				className={`scrollbar-fancy mr-4 grow items-center overflow-x-clip md:grow-0 ${
+					fullscreen ? "hidden" : "flex"
+				} w-[20.5rem] shrink-0 snap-y snap-mandatory flex-col space-y-8 overflow-y-auto p-2 md:h-[calc(100vh-6rem)] `}
+			>
 				{allAssignments ? (
 					!allAssignments.error &&
 					allAssignments.data.map((assignment) => (
@@ -75,10 +87,21 @@ const Post: NextPage = () => {
 						/>
 					))
 				) : (
-					<div>Loading...</div>
+					<>
+						{[...Array(3)].map((_, i) => (
+							<div
+								className="h-24 animate-pulse rounded-xl bg-gray-200 "
+								key={i}
+							></div>
+						))}
+					</>
 				)}
 			</div>
-			<div className="flex h-[calc(100vh-6rem)] grow rounded-xl bg-gray-200 p-6">
+			<div
+				className={`grow rounded-xl bg-gray-200 p-4 md:h-[calc(100vh-6rem)] md:p-6 ${
+					fullscreen ? "flex" : "hidden md:flex"
+				}`}
+			>
 				<AssignmentPane />
 			</div>
 		</div>
@@ -86,6 +109,8 @@ const Post: NextPage = () => {
 
 	function AssignmentPane() {
 		const [copied, setCopied] = useState(false);
+		const [copiedHover, setCopiedHover] = useState(false);
+
 		if (
 			!router.isReady ||
 			!allAssignments ||
@@ -136,6 +161,16 @@ const Post: NextPage = () => {
 				<div className="flex grow flex-col">
 					<section className="flex items-start justify-between">
 						<div className="mr-4 lg:max-w-lg xl:max-w-xl">
+							<Link
+								className=" md:hidden"
+								href="/assignments/0"
+								onClick={() => setFullscreen(false)}
+							>
+								<ButtonIcon
+									icon={<ChevronLeftIcon className="h-5 w-5" />}
+									className="mb-4"
+								/>
+							</Link>
 							<ColoredPill color="blue">
 								{assignment.data.classes
 									? Array.isArray(assignment.data.classes)
@@ -143,6 +178,7 @@ const Post: NextPage = () => {
 										: assignment.data.classes.name
 									: "Error fetching class"}
 							</ColoredPill>
+
 							<h1 className="title mt-4 mb-2 line-clamp-2">
 								{assignment.data.name}
 							</h1>
@@ -152,34 +188,61 @@ const Post: NextPage = () => {
 								test test test test test test test test
 							</p>
 						</div>
-						<div className="flex space-x-4">
+						<div className="flex md:space-x-4">
 							<div
 								className="group relative"
-								onClick={() =>
-									navigator.clipboard.writeText(window.location.href)
-								}
+								onClick={() => (
+									navigator.clipboard.writeText(window.location.href),
+									setCopied(true),
+									setTimeout(() => {
+										//Show for 700 seconds until exiting hover thing
+										setCopiedHover(false);
+										setTimeout(() => {
+											//Change text back once scale animation is over
+											setCopied(false);
+										}, 150);
+									}, 700)
+								)}
+								onMouseEnter={() => setCopiedHover(true)}
+								onMouseLeave={() => setCopiedHover(false)}
 							>
 								<ButtonIcon icon={<LinkIcon className="h-5 w-5" />} />
-								<div className="absolute mt-2 w-24 -translate-x-8 scale-0 rounded bg-gray-50 px-2  py-0.5 text-center text-sm font-medium shadow-lg transition group-hover:scale-100">
-									Copy Link
+								<div
+									className={`absolute mt-2 w-24 -translate-x-8 scale-0 rounded transition-all ${
+										copied ? "bg-green-50" : "bg-gray-50"
+									} px-2  py-0.5 text-center text-sm font-medium shadow-lg transition ${
+										copiedHover && "scale-100"
+									}`}
+								>
+									{copied ? "Copied!" : "Copy Link"}
 								</div>
 							</div>
-							<ButtonIcon
-								icon={<ArrowTopRightOnSquareIcon className="h-5 w-5" />}
-							/>
+							<div onClick={() => setFullscreen(!fullscreen)}>
+								<ButtonIcon
+									icon={
+										fullscreen ? (
+											<ArrowsPointingInIcon className="h-5 w-5" />
+										) : (
+											<ArrowsPointingOutIcon className="h-5 w-5" />
+										)
+									}
+									className="hidden items-center justify-center md:flex"
+								/>
+							</div>
 						</div>
 					</section>
-					<section className="scrollbar-fancy relative mt-8 flex flex-1 overflow-y-scroll whitespace-pre-line">
-						<div className="flex grow flex-col  ">
+					<section className="scrollbar-fancy relative mt-8 flex flex-1 flex-col-reverse overflow-y-scroll whitespace-pre-line md:pr-2 xl:flex-row">
+						<div className="flex grow flex-col">
+							<h2 className="mb-2 text-xl font-semibold">Assignment</h2>
 							{assignment.data.content}
 						</div>
-						<div className="sticky top-0 mr-2 flex w-72 shrink-0 flex-col overflow-y-auto">
+						<div className="sticky mb-8 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:ml-4 xl:mb-0 xl:w-72">
 							<h2 className="text-xl font-semibold">Submission</h2>
 							<div className="mt-2 rounded-xl bg-gray-300 p-6">
 								<h2 className="text-lg font-semibold ">
 									Teachers Instructions:
 								</h2>
-								<p className="text-sm text-gray-700">
+								<p className="max-w-md text-sm text-gray-700">
 									Teachers instructions for assignment submission will go in
 									this place
 								</p>
@@ -211,7 +274,7 @@ const Post: NextPage = () => {
 	}) {
 		return (
 			<Link
-				className={`flex snap-start rounded-xl ${
+				className={`flex h-max snap-start rounded-xl ${
 					Number.parseInt(assignmentid as string) == props.id
 						? "bg-gray-50 shadow-xl"
 						: "bg-gray-200"
