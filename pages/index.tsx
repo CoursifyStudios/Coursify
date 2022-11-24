@@ -6,26 +6,39 @@ import { Database } from "../lib/db/database.types";
 import { AllClassData, loadData } from "../lib/db/classes";
 import { Class } from "../components/classes/class";
 import Loading from "../components/misc/loading";
+import {
+	getSchedule,
+	ScheduleData,
+	ScheduleInterface,
+} from "../lib/db/schedule";
+import { ColoredPill } from "../components/misc/pill";
 
 export default function Home() {
 	const { newTab, tabs } = useTabs();
 	const supabaseClient = useSupabaseClient<Database>();
 	const user = useUser();
-	const [data, setData] = useState<AllClassData>();
+	const [classes, setClasses] = useState<AllClassData>();
 	const [loading, setLoading] = useState(true);
+	const [schedule, setSchedule] = useState<ScheduleData>();
 
+	const testDate: Date = new Date("2022-11-23");
 	useEffect(() => {
 		(async () => {
 			if (user) {
-				const data = await loadData(supabaseClient);
-				setData(data);
+				const classes = await loadData(supabaseClient);
+				setClasses(classes);
 				setLoading(false);
-				sessionStorage.setItem("classes", JSON.stringify(data));
+				sessionStorage.setItem("classes", JSON.stringify(classes));
+
+				//can I piggy-back off of this as well (for now at least?)
+				const scheduleClasses = await getSchedule(supabaseClient, testDate);
+				setSchedule(scheduleClasses);
+				console.log(classes);
 			}
 		})();
 
 		if (user && sessionStorage.getItem("classes")) {
-			setData(JSON.parse(sessionStorage.getItem("classes") as string));
+			setClasses(JSON.parse(sessionStorage.getItem("classes") as string));
 		}
 		// Only run query once user is logged in.
 		//if (user) loadData()
@@ -63,10 +76,10 @@ export default function Home() {
 							{loading && <Loading className="ml-4" />}
 						</div>
 						<div className="mt-6 grid grid-cols-3 gap-10">
-							{data &&
-								data.data &&
-								typeof data.data != "undefined" &&
-								data.data.map((v, i) => (
+							{classes &&
+								classes.data &&
+								typeof classes.data != "undefined" &&
+								classes.data.map((v, i) => (
 									<Link
 										href={"/classes/" + v.id}
 										onClick={() => "/classes/" + v.id}
@@ -78,9 +91,35 @@ export default function Home() {
 						</div>
 					</section>
 					<section className="flex-1">
-						<h2 className="title">Daily Schedule</h2>
+						<h2 className="title">Daily Schedule'</h2>
 						<div className="mt-6 flex flex-col">
-							<div className=" rounded-xl bg-gray-200 p-4">Schedule here</div>
+							<div className=" mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
+								{schedule &&
+									schedule.data &&
+									schedule.data.schedule_items &&
+									Array.isArray(schedule.data.schedule_items) &&
+									(
+										schedule.data
+											?.schedule_items as unknown as ScheduleInterface[]
+									).map(
+										(item, index) =>
+											classes?.data?.find((v) => v.block == item.block)
+												?.name && (
+												<Link
+													key={index}
+													className="flex items-center justify-between font-semibold"
+													href={"/classes/" + classes?.data?.find((v) => v.block == item.block) ?.id}>
+													{
+														classes?.data?.find((v) => v.block == item.block)
+															?.name
+													}
+													<ColoredPill color="blue">
+														{item.timeStart} - {item.timeEnd}
+													</ColoredPill>
+												</Link>
+											)
+									)}
+							</div>
 						</div>
 					</section>
 				</div>
