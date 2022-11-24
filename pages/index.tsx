@@ -42,7 +42,7 @@ export default function Home() {
 		}
 		// Only run query once user is logged in.
 		//if (user) loadData()
-	}, [user, supabaseClient]);
+	}, [user, supabaseClient, testDate]);
 	if (!user) {
 		return null;
 	}
@@ -91,7 +91,7 @@ export default function Home() {
 						</div>
 					</section>
 					<section className="flex-1">
-						<h2 className="title">Daily Schedule'</h2>
+						<h2 className="title">Daily Schedule</h2>
 						<div className="mt-6 flex flex-col">
 							<div className=" mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
 								{schedule &&
