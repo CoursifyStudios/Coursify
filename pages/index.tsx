@@ -22,7 +22,7 @@ export default function Home() {
 	const [schedule, setSchedule] = useState<ScheduleData>();
 
 	useEffect(() => {
-		const testDate: Date = new Date("2022-11-23");
+		const testDate: Date = new Date("2022-11-29");
 		(async () => {
 			if (user) {
 				const classes = await loadData(supabaseClient);
@@ -33,7 +33,6 @@ export default function Home() {
 				//can I piggy-back off of this as well (for now at least?)
 				const scheduleClasses = await getSchedule(supabaseClient, testDate);
 				setSchedule(scheduleClasses);
-				console.log(classes);
 			}
 		})();
 
@@ -66,11 +65,16 @@ export default function Home() {
 						Testing Tab
 					</div>
 				</Link>
+				<Link href="/scheduleEditor" onClick={() => newTab("/scheduleEditor")}>
+					<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
+						Add Schedule item
+					</div>
+				</Link>
 			</div>
 
 			<div className="my-10 mx-auto flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words">
 				<div className="flex w-full">
-					<section>
+					<section className="px-5">
 						<div className="flex items-center">
 							<h2 className="title">Classes</h2>
 							{loading && <Loading className="ml-4" />}
@@ -90,8 +94,7 @@ export default function Home() {
 								))}
 						</div>
 					</section>
-					<section className="w-10"></section>
-					<section className="flex-1">
+					<section className="flex-1 px-5">
 						<h2 className="title">Daily Schedule</h2>
 						<div className="mt-6 flex flex-col">
 							<div className=" mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
