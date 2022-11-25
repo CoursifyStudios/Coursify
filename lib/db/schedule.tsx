@@ -24,28 +24,14 @@ export async function getSchedule(
 export type ScheduleData = Awaited<ReturnType<typeof getSchedule>>;
 
 export const createNewSchedule = async (
+	supabaseClient: SupabaseClient<Database>,
 	day: unknown,
 	scheduleDataToUse: ScheduleInterface[]
-): Promise<SchedulePromise> => {
-	const { data, error } = await supabase
-		.from("schedule")
-		.insert({
-			date: day as string,
-			schedule_items: JSON.parse(JSON.stringify(scheduleDataToUse)) as Json,
-		}) //This is so unbelievably stup-
-		.select()
-		.single();
-	if (!error) {
-		return {
-			success: true,
-			data: data,
-		};
-	} else {
-		return {
-			success: false,
-			error: error,
-		};
-	}
+) => {
+	return await supabaseClient.from("schedule").insert({
+		date: day as string,
+		schedule_items: JSON.parse(JSON.stringify(scheduleDataToUse)) as Json,
+	}); //This is so unbelievably stup-
 };
 
 export interface SchedulePromise {
@@ -53,4 +39,19 @@ export interface SchedulePromise {
 	success: boolean;
 	error?: PostgrestError;
 	data?: unknown;
+}
+
+export function to12hourTime(timeAsString: string) {
+	if (parseInt(timeAsString.substring(0, 2)) <= 12) {
+		return (
+			parseInt(timeAsString.substring(0, 2)) + timeAsString.substring(2) + " AM"
+		);
+	} else {
+		return (
+			parseInt(timeAsString.substring(0, 2)) -
+			12 +
+			timeAsString.substring(2) +
+			" PM"
+		);
+	}
 }

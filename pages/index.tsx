@@ -10,6 +10,7 @@ import {
 	getSchedule,
 	ScheduleData,
 	ScheduleInterface,
+	to12hourTime,
 } from "../lib/db/schedule";
 import { ColoredPill } from "../components/misc/pill";
 
@@ -22,7 +23,7 @@ export default function Home() {
 	const [schedule, setSchedule] = useState<ScheduleData>();
 
 	useEffect(() => {
-		const testDate: Date = new Date("2022-11-29");
+		const testDate: Date = new Date("2022-11-22");
 		(async () => {
 			if (user) {
 				const classes = await loadData(supabaseClient);
@@ -69,9 +70,9 @@ export default function Home() {
 				<Link href="/scheduleEditor" onClick={() => newTab("/scheduleEditor")}>
 					<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
 						Add Schedule item
-                    </div>
-                </Link>
- 
+					</div>
+				</Link>
+
 				<Link
 					href="/profile/3000746abfff-e526-41d8-8bd0-ed420fe4f244"
 					onClick={() =>
@@ -143,7 +144,8 @@ export default function Home() {
 														)?.name
 													}
 													<ColoredPill color="blue">
-														{item.timeStart} - {item.timeEnd}
+														{to12hourTime(item.timeStart)} -{" "}
+														{to12hourTime(item.timeStart)}
 													</ColoredPill>
 												</Link>
 											)

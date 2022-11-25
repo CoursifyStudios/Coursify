@@ -3,8 +3,11 @@ import { useTabs } from "../lib/tabs/handleTabs";
 import { createNewSchedule, ScheduleInterface } from "../lib/db/schedule";
 import { ColoredPill } from "../components/misc/pill";
 import { ErrorMessage, Field, Form, Formik } from "formik";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { Database } from "../lib/db/database.types";
 
 const Settings = () => {
+	const supabaseClient = useSupabaseClient<Database>();
 	const tabs = useTabs((state) => state.tabs);
 	const [tempSchedule, setTempSchedule] = useState<ScheduleInterface[]>();
 	let tempArray: ScheduleInterface[];
@@ -132,7 +135,7 @@ const Settings = () => {
 					initialValues={{ day: new Date() }}
 					onSubmit={(v) => {
 						if (tempSchedule != undefined) {
-							createNewSchedule(v.day, tempSchedule);
+							createNewSchedule(supabaseClient, v.day, tempSchedule);
 						} else alert("Please add one or more schedule items first");
 					}}
 				>
