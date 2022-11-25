@@ -34,12 +34,7 @@ export const createNewSchedule = async (
 	}); //This is so unbelievably stup-
 };
 
-export interface SchedulePromise {
-	//idk what im doing this is just what Lukas' looked like
-	success: boolean;
-	error?: PostgrestError;
-	data?: unknown;
-}
+export type NewSchedule = Awaited<ReturnType<typeof createNewSchedule>>;
 
 export function to12hourTime(timeAsString: string) {
 	if (parseInt(timeAsString.substring(0, 2)) <= 12) {
