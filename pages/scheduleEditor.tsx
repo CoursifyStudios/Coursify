@@ -119,7 +119,7 @@ const Settings = () => {
 												>
 													Block {scheduleItem.block}
 													<ColoredPill color="blue">
-														{to12hourTime(scheduleItem.timeStart)} - {to12hourTime(scheduleItem.timeEnd)}
+														{to12hourTime(scheduleItem.timeStart)} -{" "} {to12hourTime(scheduleItem.timeEnd)}
 													</ColoredPill>
 													{/* put an x here for removing a schedule item */}
 												</div>
