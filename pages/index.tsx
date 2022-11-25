@@ -65,9 +65,21 @@ export default function Home() {
 						Testing Tab
 					</div>
 				</Link>
+
 				<Link href="/scheduleEditor" onClick={() => newTab("/scheduleEditor")}>
 					<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
 						Add Schedule item
+                    </div>
+                </Link>
+ 
+				<Link
+					href="/profile/3000746abfff-e526-41d8-8bd0-ed420fe4f244"
+					onClick={() =>
+						newTab("/profile/3000746abfff-e526-41d8-8bd0-ed420fe4f244")
+					}
+				>
+					<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
+						Profile
 					</div>
 				</Link>
 			</div>

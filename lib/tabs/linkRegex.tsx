@@ -4,6 +4,7 @@ const pageMatchers: { matcher: RegExp; name: string }[] = [
 	// List of all links, their regex, then the name of the page
 	{ matcher: /^\/settings/g, name: "Settings" },
 	{ matcher: /^\/tabstest/g, name: "Testing tabs but this name is rly long" },
+	{ matcher: /^\/profile/g, name: "Name's Profile" },
 ];
 
 /**
