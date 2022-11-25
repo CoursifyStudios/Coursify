@@ -1,11 +1,12 @@
-import { SupabaseClient } from "@supabase/supabase-js";
-import { Database } from "./database.types";
+import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
+import { Database, Json } from "./database.types";
 
 export interface ScheduleInterface {
 	timeStart: string;
 	timeEnd: string;
 	block: number;
 	type: number;
+	//specialEvent?: string;
 }
 
 export async function getSchedule(
@@ -21,11 +22,30 @@ export async function getSchedule(
 
 export type ScheduleData = Awaited<ReturnType<typeof getSchedule>>;
 
-export async function createNewScheduleObject(
+export const createNewSchedule = async (
 	supabaseClient: SupabaseClient<Database>,
-	day: Date,
-	timeStart: string,
-	timeEnd: string,
-	block: number,
-	type: number
-) {}
+	day: unknown,
+	scheduleDataToUse: ScheduleInterface[]
+) => {
+	return await supabaseClient.from("schedule").insert({
+		date: day as string,
+		schedule_items: JSON.parse(JSON.stringify(scheduleDataToUse)) as Json,
+	}); //This is so unbelievably stup-
+};
+
+export type NewSchedule = Awaited<ReturnType<typeof createNewSchedule>>;
+
+export function to12hourTime(timeAsString: string) {
+	if (parseInt(timeAsString.substring(0, 2)) <= 12) {
+		return (
+			parseInt(timeAsString.substring(0, 2)) + timeAsString.substring(2) + " AM"
+		);
+	} else {
+		return (
+			parseInt(timeAsString.substring(0, 2)) -
+			12 +
+			timeAsString.substring(2) +
+			" PM"
+		);
+	}
+}
