@@ -1,5 +1,4 @@
 import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
-import supabase from "../supabase";
 import { Database, Json } from "./database.types";
 
 export interface ScheduleInterface {

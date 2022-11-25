@@ -145,7 +145,7 @@ export default function Home() {
 													}
 													<ColoredPill color="blue">
 														{to12hourTime(item.timeStart)} -{" "}
-														{to12hourTime(item.timeStart)}
+														{to12hourTime(item.timeEnd)}
 													</ColoredPill>
 												</Link>
 											)

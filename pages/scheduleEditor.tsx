@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useTabs } from "../lib/tabs/handleTabs";
-import { createNewSchedule, ScheduleInterface } from "../lib/db/schedule";
+import { createNewSchedule, ScheduleInterface, to12hourTime } from "../lib/db/schedule";
 import { ColoredPill } from "../components/misc/pill";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -119,7 +119,7 @@ const Settings = () => {
 												>
 													Block {scheduleItem.block}
 													<ColoredPill color="blue">
-														{scheduleItem.timeStart} - {scheduleItem.timeEnd}
+														{to12hourTime(scheduleItem.timeStart)} - {to12hourTime(scheduleItem.timeEnd)}
 													</ColoredPill>
 													{/* put an x here for removing a schedule item */}
 												</div>
