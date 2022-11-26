@@ -23,7 +23,6 @@ export default function Home() {
 	const [schedule, setSchedule] = useState<ScheduleData>();
 
 	useEffect(() => {
-		const testDate: Date = new Date("2022-11-23");
 		(async () => {
 			if (user) {
 				const classes = await loadData(supabaseClient);
@@ -32,7 +31,10 @@ export default function Home() {
 				sessionStorage.setItem("classes", JSON.stringify(classes));
 
 				//can I piggy-back off of this as well (for now at least?)
-				const scheduleClasses = await getSchedule(supabaseClient, testDate);
+				const scheduleClasses = await getSchedule(
+					supabaseClient,
+					new Date("2022-11-23")
+				);
 				setSchedule(scheduleClasses);
 			}
 		})();
@@ -49,7 +51,7 @@ export default function Home() {
 
 	return (
 		<>
-			<div className="mx-auto mt-4 flex ">
+			<div className="mx-auto mt-4 flex">
 				<div
 					className="cursor-pointer rounded-md bg-gray-200 px-4 py-2 font-medium"
 					onClick={() => supabaseClient.auth.signOut()}

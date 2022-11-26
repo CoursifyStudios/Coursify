@@ -41,7 +41,6 @@ const Settings = () => {
 									specialEvent: v.itemSpecialType,
 									customColor: v.itemCustomColor,
 								});
-								console.log(tempArray);
 								setTempSchedule(
 									tempArray.sort((a, b) => {
 										if (a.timeStart > b.timeStart) return 1;
@@ -51,7 +50,6 @@ const Settings = () => {
 										return 0;
 									})
 								);
-								console.log(tempArray);
 							} else {
 								setTempSchedule([
 									{
@@ -219,11 +217,3 @@ const Settings = () => {
 };
 
 export default Settings;
-
-function sortByTimeStart(a: ScheduleInterface, b: ScheduleInterface) {
-	if (a.timeStart > b.timeStart) return 1;
-	if (a.timeStart < b.timeStart) return -1;
-	if (a.timeEnd > b.timeEnd) return 1;
-	if (a.timeEnd < b.timeEnd) return -1;
-	return 0;
-}
