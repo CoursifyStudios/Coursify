@@ -5,5 +5,10 @@ export default function Footer() {
 	if (router.isReady && router.asPath.startsWith("/login")) {
 		return null;
 	}
-	return <footer className="">Footer</footer>;
+	return (
+		<footer className="">
+			This isn't centered and it is pissing me off and I cannot figure out how
+			to center it
+		</footer>
+	);
 }

@@ -23,7 +23,6 @@ export default function Home() {
 	const [schedule, setSchedule] = useState<ScheduleData>();
 
 	useEffect(() => {
-		const testDate: Date = new Date("2022-11-22");
 		(async () => {
 			if (user) {
 				const classes = await loadData(supabaseClient);
@@ -32,7 +31,10 @@ export default function Home() {
 				sessionStorage.setItem("classes", JSON.stringify(classes));
 
 				//can I piggy-back off of this as well (for now at least?)
-				const scheduleClasses = await getSchedule(supabaseClient, testDate);
+				const scheduleClasses = await getSchedule(
+					supabaseClient,
+					new Date("2022-11-23")
+				);
 				setSchedule(scheduleClasses);
 			}
 		})();
@@ -49,7 +51,7 @@ export default function Home() {
 
 	return (
 		<>
-			<div className="mx-auto mt-4 flex ">
+			<div className="mx-auto mt-4 flex">
 				<div
 					className="cursor-pointer rounded-md bg-gray-200 px-4 py-2 font-medium"
 					onClick={() => supabaseClient.auth.signOut()}
@@ -95,7 +97,6 @@ export default function Home() {
 						<div className="mt-6 grid grid-cols-3 gap-10">
 							{classes &&
 								classes.data &&
-								typeof classes.data != "undefined" &&
 								classes.data.map((v, i) => (
 									<Link
 										href={"/classes/" + v.id}
@@ -120,7 +121,7 @@ export default function Home() {
 											?.schedule_items as unknown as ScheduleInterface[]
 									).map(
 										(item, index) =>
-											classes?.data?.find(
+											(classes?.data?.find(
 												(v) =>
 													v.block == item.block && v.schedule_type == item.type
 											)?.name && (
@@ -143,12 +144,27 @@ export default function Home() {
 																v.schedule_type == item.type
 														)?.name
 													}
+													{/* Class coloring would be implemented on line below. See the special event implementation fo rhwo that should look */}
 													<ColoredPill color="blue">
 														{to12hourTime(item.timeStart)} -{" "}
 														{to12hourTime(item.timeEnd)}
 													</ColoredPill>
 												</Link>
-											)
+											)) ||
+											(item.specialEvent && (
+												// May want to change this to be a <Link> later on so that you can link to info about special events
+												<div className="flex items-center justify-between font-semibold">
+													{item.specialEvent}
+													<ColoredPill
+														color={
+															item.customColor ? item.customColor : "green"
+														}
+													>
+														{to12hourTime(item.timeStart)} -{" "}
+														{to12hourTime(item.timeEnd)}
+													</ColoredPill>
+												</div>
+											))
 									)}
 							</div>
 						</div>

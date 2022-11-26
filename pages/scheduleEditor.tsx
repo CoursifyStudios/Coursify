@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useTabs } from "../lib/tabs/handleTabs";
-import { createNewSchedule, ScheduleInterface, to12hourTime } from "../lib/db/schedule";
+import {
+	createNewSchedule,
+	ScheduleInterface,
+	to12hourTime,
+} from "../lib/db/schedule";
 import { ColoredPill } from "../components/misc/pill";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -22,8 +26,11 @@ const Settings = () => {
 							itemEndTime: "10:55",
 							itemBlockNumber: 1,
 							itemScheduleType: 1,
+							itemSpecialType: undefined,
+							itemCustomColor: undefined,
 						}}
 						onSubmit={async (v) => {
+							if (v.itemSpecialType == "") v.itemSpecialType = undefined;
 							if (tempSchedule != undefined) {
 								tempArray = [...tempSchedule];
 								tempArray.push({
@@ -31,8 +38,18 @@ const Settings = () => {
 									timeEnd: v.itemEndTime,
 									block: v.itemBlockNumber,
 									type: v.itemScheduleType,
+									specialEvent: v.itemSpecialType,
+									customColor: v.itemCustomColor,
 								});
-								setTempSchedule(tempArray);
+								setTempSchedule(
+									tempArray.sort((a, b) => {
+										if (a.timeStart > b.timeStart) return 1;
+										if (a.timeStart < b.timeStart) return -1;
+										if (a.timeEnd > b.timeEnd) return 1;
+										if (a.timeEnd < b.timeEnd) return -1;
+										return 0;
+									})
+								);
 							} else {
 								setTempSchedule([
 									{
@@ -40,6 +57,8 @@ const Settings = () => {
 										timeEnd: v.itemEndTime,
 										block: v.itemBlockNumber,
 										type: v.itemScheduleType,
+										specialEvent: v.itemSpecialType,
+										customColor: v.itemCustomColor,
 									},
 								]);
 							}
@@ -49,9 +68,11 @@ const Settings = () => {
 							<label htmlFor="itemStartTime">Start time</label>
 							<Field name="itemStartTime" type="time" step="min" />
 							<ErrorMessage name="itemStartTime" />
+
 							<label htmlFor="itemEndTime">End Time</label>
 							<Field name="itemEndTime" type="time" step="min" />
 							<ErrorMessage name="itemEndTime" />
+
 							<label htmlFor="itemBlockNumber">Block #</label>
 							<Field
 								name="itemBlockNumber"
@@ -60,6 +81,7 @@ const Settings = () => {
 								step="1"
 							></Field>
 							<ErrorMessage name="itemBlockNumber" />
+
 							<label htmlFor="itemScheduleType">Schedule type #</label>
 							<Field
 								name="itemScheduleType"
@@ -67,9 +89,22 @@ const Settings = () => {
 								min="1"
 								max="2"
 								step="1"
-							></Field>{" "}
+							></Field>
 							{/* Only two schedule types supported for now */}
 							<ErrorMessage name="itemScheduleType" />
+
+							<label htmlFor="itemSpecialType">
+								Special event (optional. Use for lunch, etc.)
+							</label>
+							<Field name="itemSpecialType" type="text"></Field>
+							<ErrorMessage name="itemSpecialType" />
+
+							<label htmlFor="itemCustomColor">
+								Special event color (optional)
+							</label>
+							<Field name="itemCustomColor" type="text"></Field>
+							<ErrorMessage name="itemCustomColor" />
+
 							<button
 								type="submit"
 								className="mr-auto mt-4 rounded-lg bg-blue-200 py-2 px-4 text-blue-600"
@@ -85,7 +120,7 @@ const Settings = () => {
 						<div className="mt-6 flex flex-col">
 							<div className="mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
 								{tempSchedule &&
-									typeof tempSchedule != "undefined" &&
+									tempSchedule &&
 									tempSchedule.map(
 										(scheduleItem, i) =>
 											scheduleItem.type == 1 && (
@@ -93,9 +128,21 @@ const Settings = () => {
 													key={i}
 													className="flex items-center justify-between font-semibold"
 												>
-													Block {scheduleItem.block}
-													<ColoredPill color="blue">
-														{scheduleItem.timeStart} - {scheduleItem.timeEnd}
+													{scheduleItem.specialEvent}
+													{!scheduleItem.specialEvent
+														? "Block " + scheduleItem.block
+														: ""}
+													<ColoredPill
+														color={
+															!scheduleItem.specialEvent
+																? "blue"
+																: !scheduleItem.customColor
+																? "green"
+																: scheduleItem.customColor
+														}
+													>
+														{to12hourTime(scheduleItem.timeStart)} -{" "}
+														{to12hourTime(scheduleItem.timeEnd)}
 													</ColoredPill>
 													{/* put an x here for removing a schedule item */}
 												</div>
@@ -109,7 +156,7 @@ const Settings = () => {
 						<div className="mt-6 flex flex-col">
 							<div className="mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
 								{tempSchedule &&
-									typeof tempSchedule != "undefined" &&
+									tempSchedule &&
 									tempSchedule.map(
 										(scheduleItem, i) =>
 											scheduleItem.type == 2 && (
@@ -117,9 +164,21 @@ const Settings = () => {
 													key={i}
 													className="flex items-center justify-between font-semibold"
 												>
-													Block {scheduleItem.block}
-													<ColoredPill color="blue">
-														{to12hourTime(scheduleItem.timeStart)} -{" "} {to12hourTime(scheduleItem.timeEnd)}
+													{scheduleItem.specialEvent}
+													{!scheduleItem.specialEvent
+														? "Block " + scheduleItem.block
+														: ""}
+													<ColoredPill
+														color={
+															!scheduleItem.specialEvent
+																? "blue"
+																: !scheduleItem.customColor
+																? "green"
+																: scheduleItem.customColor
+														}
+													>
+														{to12hourTime(scheduleItem.timeStart)} -{" "}
+														{to12hourTime(scheduleItem.timeEnd)}
 													</ColoredPill>
 													{/* put an x here for removing a schedule item */}
 												</div>
