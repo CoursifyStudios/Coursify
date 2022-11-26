@@ -21,7 +21,7 @@ export type AllAssignmentResponse = Awaited<
 
 export const getAssignment = async (
 	supabaseClient: SupabaseClient<Database>,
-	assignmentid: number
+	assignmentid: string
 ) => {
 	return await supabaseClient
 		.from("assignments")
@@ -30,7 +30,7 @@ export const getAssignment = async (
 		*, ${classesRelation}
 		`
 		)
-		.eq("id", assignmentid)
+		.eq("id", "411fd45c-6f07-4578-be4b-43fa4cd453ae") //assignment id here
 		.single();
 };
 
@@ -38,7 +38,7 @@ export type AssignmentResponse = Awaited<ReturnType<typeof getAssignment>>;
 
 export const newAssignment = async (
 	assignment: Assignment["data"],
-	classid: number
+	classid: string
 ): Promise<AssignmentData> => {
 	const { data, error } = await supabase
 		.from("assignments")
@@ -57,7 +57,7 @@ export const newAssignment = async (
 		// amazing naming schema
 		const { error: secondError } = await supabase
 			.from("classes_assignments")
-			.insert({ asssignment_id: data.id, class_id: classid });
+			.insert({ assignment_id: data.id, class_id: classid });
 		if (secondError) {
 			return {
 				success: false,
