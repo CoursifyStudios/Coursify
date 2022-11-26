@@ -21,7 +21,7 @@ const Navbar: NextComponentType = () => {
 
 	useEffect(() => setHydrated(true), []);
 
-	if (router.isReady && router.asPath.startsWith("/login")) {
+	if (router.isReady && hydrated && router.asPath.startsWith("/login")) {
 		return null;
 	}
 
