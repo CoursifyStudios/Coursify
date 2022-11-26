@@ -2,10 +2,10 @@ import { NextPage } from "next";
 import Link from "next/link";
 import type { ReactNode } from "react";
 
-export const ColoredPill: NextPage<{ color?: string; children: ReactNode }> = ({
-	color,
-	children,
-}) => {
+export const ColoredPill: NextPage<{
+	color?: "blue" | "green" | "purple" | "red" | string;
+	children: ReactNode;
+}> = ({ color, children }) => {
 	let pillColor;
 	switch (color) {
 		case "blue":
