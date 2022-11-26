@@ -18,10 +18,7 @@ export interface Database {
 					content: string | null;
 					created_date: string | null;
 					publish_info: Json | null;
-					publish_date: string | null;
 					due_info: Json | null;
-					due_date: string | null;
-					submissions: Json[] | null;
 				};
 				Insert: {
 					id?: number;
@@ -31,10 +28,7 @@ export interface Database {
 					content?: string | null;
 					created_date?: string | null;
 					publish_info?: Json | null;
-					publish_date?: string | null;
 					due_info?: Json | null;
-					due_date?: string | null;
-					submissions?: Json[] | null;
 				};
 				Update: {
 					id?: number;
@@ -44,10 +38,7 @@ export interface Database {
 					content?: string | null;
 					created_date?: string | null;
 					publish_info?: Json | null;
-					publish_date?: string | null;
 					due_info?: Json | null;
-					due_date?: string | null;
-					submissions?: Json[] | null;
 				};
 			};
 			classes: {
@@ -57,6 +48,7 @@ export interface Database {
 					description: string;
 					block: number | null;
 					schedule_type: number | null;
+					color: string;
 				};
 				Insert: {
 					id?: number;
@@ -64,6 +56,7 @@ export interface Database {
 					description?: string;
 					block?: number | null;
 					schedule_type?: number | null;
+					color?: string;
 				};
 				Update: {
 					id?: number;
@@ -71,6 +64,7 @@ export interface Database {
 					description?: string;
 					block?: number | null;
 					schedule_type?: number | null;
+					color?: string;
 				};
 			};
 			classes_assignments: {
