@@ -1,12 +1,37 @@
-import { withMiddlewareAuth } from "@supabase/auth-helpers-nextjs";
+import { createMiddlewareSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
-export const middleware = withMiddlewareAuth({
-	redirectTo: "/login",
-});
+export async function middleware(req: NextRequest) {
+	const res = NextResponse.next();
+	const supabase = createMiddlewareSupabaseClient({ req, res });
+	const {
+		data: { session },
+	} = await supabase.auth.getSession();
+
+	if (session) {
+		return res;
+	}
+
+	const redirectUrl = req.nextUrl.clone();
+	redirectUrl.pathname = "/login";
+	redirectUrl.searchParams.set(`redirectedFrom`, req.nextUrl.pathname);
+	return NextResponse.redirect(redirectUrl);
+}
 
 export const config = {
 	matcher: "/((?!api|_next/static|favicon.ico|login|svg|brand-logos).*)",
 };
+
+// import { withMiddlewareAuth } from "@supabase/auth-helpers-nextjs";
+
+// export const middleware = withMiddlewareAuth({
+// 	redirectTo: "/login",
+// });
+
+// export const config = {
+// 	matcher: "/((?!api|_next/static|favicon.ico|login|svg|brand-logos).*)",
+// };
 
 // import { NextResponse } from "next/server";
 // import type { NextRequest } from "next/server";
