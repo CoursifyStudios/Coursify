@@ -33,7 +33,7 @@ export default function Home() {
 				//can I piggy-back off of this as well (for now at least?)
 				const scheduleClasses = await getSchedule(
 					supabaseClient,
-					new Date("2022-11-20") //Check supabase
+					new Date("2022-11-20") //This is set to use this date as it is the only one with a proper, filled in schedule. After dev, we can remove the arguments and just use new Date()
 				);
 				setSchedule(scheduleClasses);
 			}
@@ -122,21 +122,14 @@ export default function Home() {
 											?.schedule_items as unknown as ScheduleInterface[]
 									).map(
 										(item, index) =>
-											(classes?.data?.find(
-												(v) =>
-													v.block == item.block && v.schedule_type == item.type
-											)?.name &&
+											(checkClassMatchesSchedule(classes, item)?.name &&
 												!item.specialEvent && (
 													<Link
 														key={index}
 														className="flex items-center justify-between font-semibold"
 														href={
 															"/classes/" +
-															classes?.data?.find(
-																(v) =>
-																	v.block == item.block &&
-																	v.schedule_type == item.type
-															)?.id
+															checkClassMatchesSchedule(classes, item)?.id
 														}
 													>
 														{
@@ -148,13 +141,9 @@ export default function Home() {
 														}
 														{/* Class coloring would be implemented on line below. See the special event implementation fo rhwo that should look */}
 														<ColoredPill
-															color={
-																classes?.data?.find(
-																	(v) =>
-																		v.block == item.block &&
-																		v.schedule_type == item.type
-																	//@ts-ignore WHY THE HELL DOES IT THINK THAT IT CAN JUST DO THAT TO ME
-																)?.color
+                                                        
+															color={//@ts-ignore WHY THE HELL DOES IT THINK THAT IT CAN JUST DO THAT TO ME
+																checkClassMatchesSchedule(classes, item)?.color
 															}
 														>
 															{to12hourTime(item.timeStart)} -{" "}
@@ -163,11 +152,7 @@ export default function Home() {
 													</Link>
 												)) ||
 											(item.specialEvent &&
-												classes?.data?.find(
-													(v) =>
-														v.block == item.block &&
-														v.schedule_type == item.type
-												) && (
+												checkClassMatchesSchedule(classes, item) && (
 													// May want to change this to be a <Link> later on so that you can link to info about special events
 													<div className="flex items-center justify-between font-semibold">
 														{item.specialEvent}
@@ -189,4 +174,12 @@ export default function Home() {
 			</div>
 		</>
 	);
+}
+
+function checkClassMatchesSchedule (classes: AllClassData | undefined, scheduleItem: ScheduleInterface) {
+    return classes?.data?.find(
+        (v) =>
+            v.block == scheduleItem.block &&
+            v.schedule_type == scheduleItem.type
+    )
 }
