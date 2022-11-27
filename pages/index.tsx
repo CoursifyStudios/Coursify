@@ -124,14 +124,13 @@ export default function Home() {
 											?.schedule_items as unknown as ScheduleInterface[]
 									).map(
 										(item, index) =>
-											(checkClassMatchesSchedule(classes, item)?.name &&
+											(checkClassMatchesSchedule(item)?.name &&
 												!item.specialEvent && (
 													<Link
 														key={index}
 														className="flex items-center justify-between font-semibold"
 														href={
-															"/classes/" +
-															checkClassMatchesSchedule(classes, item)?.id
+															"/classes/" + checkClassMatchesSchedule(item)?.id
 														}
 													>
 														{
@@ -143,8 +142,8 @@ export default function Home() {
 														}
 														{/* Class coloring would be implemented on line below. See the special event implementation fo rhwo that should look */}
 														<ColoredPill
-                                                        
-															color={//@ts-ignore WHY THE HELL DOES IT THINK THAT IT CAN JUST DO THAT TO ME
+															color={
+																//@ts-ignore WHY THE HELL DOES IT THINK THAT IT CAN JUST DO THAT TO ME
 																checkClassMatchesSchedule(classes, item)?.color
 															}
 														>
@@ -153,21 +152,20 @@ export default function Home() {
 														</ColoredPill>
 													</Link>
 												)) ||
-											(item.specialEvent &&
-												checkClassMatchesSchedule(classes, item) && (
-													// May want to change this to be a <Link> later on so that you can link to info about special events
-													<div className="flex items-center justify-between font-semibold">
-														{item.specialEvent}
-														<ColoredPill
-															color={
-																item.customColor ? item.customColor : "green"
-															}
-														>
-															{to12hourTime(item.timeStart)} -{" "}
-															{to12hourTime(item.timeEnd)}
-														</ColoredPill>
-													</div>
-												))
+											(item.specialEvent && checkClassMatchesSchedule(item) && (
+												// May want to change this to be a <Link> later on so that you can link to info about special events
+												<div className="flex items-center justify-between font-semibold">
+													{item.specialEvent}
+													<ColoredPill
+														color={
+															item.customColor ? item.customColor : "green"
+														}
+													>
+														{to12hourTime(item.timeStart)} -{" "}
+														{to12hourTime(item.timeEnd)}
+													</ColoredPill>
+												</div>
+											))
 									)}
 							</div>
 						</div>
@@ -176,12 +174,11 @@ export default function Home() {
 			</div>
 		</>
 	);
-}
 
-function checkClassMatchesSchedule (classes: AllClassData | undefined, scheduleItem: ScheduleInterface) {
-    return classes?.data?.find(
-        (v) =>
-            v.block == scheduleItem.block &&
-            v.schedule_type == scheduleItem.type
-    )
+	function checkClassMatchesSchedule(scheduleItem: ScheduleInterface) {
+		return classes?.data?.find(
+			(v) =>
+				v.block == scheduleItem.block && v.schedule_type == scheduleItem.type
+		);
+	}
 }
