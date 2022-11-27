@@ -32,10 +32,10 @@ export default function Login() {
 								provider: "google",
 								options: {
 									redirectTo:
-										typeof redirectedFrom == "string"
-											? decodeURI(url + redirectedFrom)
+										typeof redirectedFrom == "string" &&
+										decodeURI(redirectedFrom) != "/"
+											? url + redirectedFrom
 											: url,
-									//"http://localhost:3000/settings"
 								},
 							})
 						}
