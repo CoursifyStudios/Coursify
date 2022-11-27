@@ -95,13 +95,9 @@ export default function Profile() {
 			<div className=" scrollbar-fancy mx-auto mt-8 shrink-0 overflow-y-auto  rounded-xl lg:mt-0 lg:h-[calc(100vh-8rem)]">
 				<h2 className="title mb-4">Classes</h2>
 				<div className="grid gap-8 md:grid-cols-2">
+					{/*@ts-ignore-error types moment */}
 					<Class class={{ data: { name: "test" } }} />
-					<Class class={{ data: { name: "test" } }} />
-					<Class class={{ data: { name: "test" } }} />
-					<Class class={{ data: { name: "test" } }} />
-					<Class class={{ data: { name: "test" } }} />
-					<Class class={{ data: { name: "test" } }} />
-					<Class class={{ data: { name: "test" } }} />
+					{/*@ts-ignore-error types moment */}
 					<Class class={{ data: { name: "test" } }} />
 				</div>
 			</div>
