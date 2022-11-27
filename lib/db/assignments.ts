@@ -2,8 +2,6 @@ import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import supabase from "../supabase";
 import { Database } from "./database.types";
 
-const classesRelation = `classes (*)`;
-
 export const getAllAssignments = async (
 	supabaseClient: SupabaseClient<Database>
 ) => {
