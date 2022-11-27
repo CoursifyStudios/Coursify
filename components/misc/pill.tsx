@@ -20,12 +20,12 @@ export const ColoredPill: NextPage<{
 		case "red":
 			pillColor = "bg-red-200 text-red-600";
 			break;
-        case "yellow":
-            pillColor = "bg-yellow-200 text-yellow-600";
-            break;
-        case "orange":
-            pillColor = "bg-orange-200 text-orange-600";
-            break;
+		case "yellow":
+			pillColor = "bg-yellow-200 text-yellow-600";
+			break;
+		case "orange":
+			pillColor = "bg-orange-200 text-orange-600";
+			break;
 		default:
 			pillColor = "bg-blue-200 text-blue-600";
 			break;

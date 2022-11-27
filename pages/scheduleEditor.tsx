@@ -28,7 +28,6 @@ const Settings = () => {
 							itemScheduleType: 1,
 							itemSpecialType: undefined,
 							itemCustomColor: undefined,
-                            
 						}}
 						onSubmit={async (v) => {
 							if (v.itemSpecialType == "") v.itemSpecialType = undefined;
@@ -74,7 +73,10 @@ const Settings = () => {
 							<Field name="itemEndTime" type="time" step="min" />
 							<ErrorMessage name="itemEndTime" />
 
-							<label htmlFor="itemBlockNumber">Block #, if special event decides which block to match schedule with</label>
+							<label htmlFor="itemBlockNumber">
+								Block #, if special event decides which block to match schedule
+								with
+							</label>
 							<Field
 								name="itemBlockNumber"
 								type="number"
@@ -115,7 +117,7 @@ const Settings = () => {
 						</Form>
 					</Formik>
 				</section>
-				<section className="grid grid-cols-2 mr-5">
+				<section className="mr-5 grid grid-cols-2">
 					<section className="my-6 flex-1 px-5">
 						<h2 className="mb-4 text-lg font-semibold">Schedule type 1</h2>
 						<div className="mt-6 flex flex-col">
@@ -133,26 +135,31 @@ const Settings = () => {
 													{!scheduleItem.specialEvent
 														? "Block " + scheduleItem.block
 														: ""}
-                                                    <div className="flex items-center justify-between font-semibold">
-                                                        <ColoredPill
-                                                            color={
-                                                                !scheduleItem.specialEvent
-                                                                    ? "blue"
-                                                                    : !scheduleItem.customColor
-                                                                    ? "green"
-                                                                    : scheduleItem.customColor
-                                                            }
-                                                        >
-                                                            {to12hourTime(scheduleItem.timeStart)} -{" "}
-                                                            {to12hourTime(scheduleItem.timeEnd)}{" "}
-                                                        </ColoredPill>
-                                                        <p className="text-red-600 ml-3" onClick={() => {
-                                                            tempArray = [...tempSchedule];
-                                                            tempArray.splice(i, 1);
-                                                            setTempSchedule(tempArray);
-                                                        }}>X</p>
-                                                        {/* Look at me doing this wihtout importing a whole package for an svg X */}
-                                                    </div>
+													<div className="flex items-center justify-between font-semibold">
+														<ColoredPill
+															color={
+																!scheduleItem.specialEvent
+																	? "blue"
+																	: !scheduleItem.customColor
+																	? "green"
+																	: scheduleItem.customColor
+															}
+														>
+															{to12hourTime(scheduleItem.timeStart)} -{" "}
+															{to12hourTime(scheduleItem.timeEnd)}{" "}
+														</ColoredPill>
+														<p
+															className="ml-3 text-red-600"
+															onClick={() => {
+																tempArray = [...tempSchedule];
+																tempArray.splice(i, 1);
+																setTempSchedule(tempArray);
+															}}
+														>
+															X
+														</p>
+														{/* Look at me doing this wihtout importing a whole package for an svg X */}
+													</div>
 												</div>
 											)
 									)}
@@ -177,25 +184,30 @@ const Settings = () => {
 														? "Block " + scheduleItem.block
 														: ""}
 													<div className="flex items-center justify-between font-semibold">
-                                                        <ColoredPill
-                                                            color={
-                                                                !scheduleItem.specialEvent
-                                                                    ? "blue"
-                                                                    : !scheduleItem.customColor
-                                                                    ? "green"
-                                                                    : scheduleItem.customColor
-                                                            }
-                                                        >
-                                                            {to12hourTime(scheduleItem.timeStart)} -{" "}
-                                                            {to12hourTime(scheduleItem.timeEnd)}{" "}
-                                                        </ColoredPill>
-                                                        <p className="text-red-600 ml-3" onClick={() => {
-                                                            tempArray = [...tempSchedule];
-                                                            tempArray.splice(i, 1);
-                                                            setTempSchedule(tempArray);
-                                                        }}>X</p>
-                                                        {/* Look at me doing this wihtout importing a whole package for an svg X */}
-                                                    </div>
+														<ColoredPill
+															color={
+																!scheduleItem.specialEvent
+																	? "blue"
+																	: !scheduleItem.customColor
+																	? "green"
+																	: scheduleItem.customColor
+															}
+														>
+															{to12hourTime(scheduleItem.timeStart)} -{" "}
+															{to12hourTime(scheduleItem.timeEnd)}{" "}
+														</ColoredPill>
+														<p
+															className="ml-3 text-red-600"
+															onClick={() => {
+																tempArray = [...tempSchedule];
+																tempArray.splice(i, 1);
+																setTempSchedule(tempArray);
+															}}
+														>
+															X
+														</p>
+														{/* Look at me doing this wihtout importing a whole package for an svg X */}
+													</div>
 												</div>
 											)
 									)}
