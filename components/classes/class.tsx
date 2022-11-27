@@ -18,7 +18,7 @@ export function Class(props: { class: Class }) {
 					<h3 className="break-words text-xl font-semibold line-clamp-2">
 						{props.class.data.name}
 					</h3>
-					<ColoredPill color="blue">11:30 - 12:15</ColoredPill>
+					<ColoredPill color={props.class.data.color}>11:30 - 12:15</ColoredPill>
 				</div>
 				<p>Teacher name</p>
 				<div className="mt-auto">
