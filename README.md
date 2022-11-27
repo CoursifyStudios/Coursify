@@ -1,6 +1,6 @@
 # Karasu née NSS
 
-![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=karasu)
+![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=karasu&style=for-the-badge&logo=true)
 
 ## Style Guide:
 
