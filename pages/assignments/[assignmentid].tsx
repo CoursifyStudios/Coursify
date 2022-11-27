@@ -46,12 +46,9 @@ const Post: NextPage = () => {
 				user &&
 				router.isReady &&
 				typeof assignmentid == "string" &&
-				Number.parseInt(assignmentid) != 0
+				assignmentid != "0"
 			) {
-				const assignment = await getAssignment(
-					supabaseClient,
-					Number.parseInt(assignmentid)
-				);
+				const assignment = await getAssignment(supabaseClient, assignmentid);
 				setAssignment(assignment);
 			}
 		})();
@@ -114,7 +111,7 @@ const Post: NextPage = () => {
 		if (
 			!router.isReady ||
 			!allAssignments ||
-			(!assignment && Number.parseInt(assignmentid as string) != 0)
+			(!assignment && assignmentid != "0")
 		) {
 			return (
 				<div className="m-auto flex flex-col items-center">
@@ -123,7 +120,7 @@ const Post: NextPage = () => {
 			);
 		}
 
-		if (Number.parseInt(assignmentid as string) == 0) {
+		if (assignmentid == "0") {
 			return (
 				<div className="m-auto flex flex-col items-center">
 					<Image
@@ -183,9 +180,7 @@ const Post: NextPage = () => {
 								{assignment.data.name}
 							</h1>
 							<p className="text-gray-700 line-clamp-2">
-								{assignment.data.description} test test test test test test test
-								test test test test test test test test test test test test test
-								test test test test test test test test
+								{assignment.data.description}
 							</p>
 						</div>
 						<div className="flex md:space-x-4">
@@ -264,9 +259,9 @@ const Post: NextPage = () => {
 		desc: string;
 		starred: boolean;
 		due: Date;
-		id: number;
+		id: string;
 		classes?: {
-			id: number;
+			id: string;
 			name: string;
 			description: string;
 			block: number | null;
@@ -275,9 +270,7 @@ const Post: NextPage = () => {
 		return (
 			<Link
 				className={`flex h-max snap-start rounded-xl ${
-					Number.parseInt(assignmentid as string) == props.id
-						? "bg-gray-50 shadow-xl"
-						: "bg-gray-200"
+					assignmentid == props.id ? "bg-gray-50 shadow-xl" : "bg-gray-200"
 				} p-3`}
 				href={"/assignments/" + props.id}
 			>

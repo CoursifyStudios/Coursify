@@ -5,7 +5,7 @@ import { useRouter } from "next/router";
 import { stringify } from "querystring";
 import { useEffect, useState } from "react";
 import { Assignment, newAssignment } from "../../lib/db/assignments";
-import { ClassData, getClass } from "../../lib/db/classes";
+import { getClass, ClassResponse } from "../../lib/db/classes";
 import { Database } from "../../lib/db/database.types";
 
 const Class: NextPage = () => {
@@ -13,17 +13,14 @@ const Class: NextPage = () => {
 	const { classid } = router.query;
 	const user = useUser();
 	const supabaseClient = useSupabaseClient<Database>();
-	const [data, setData] = useState<ClassData>();
+	const [data, setData] = useState<ClassResponse>();
 	const [d, setD] = useState();
 	const [submitting, setSubmitting] = useState(false);
 
 	useEffect(() => {
 		(async () => {
 			if (user && typeof classid == "string") {
-				const data = await getClass(
-					supabaseClient,
-					Number.parseInt(classid as string)
-				);
+				const data = await getClass(supabaseClient, classid);
 				setData(data);
 			}
 		})();
@@ -36,12 +33,10 @@ const Class: NextPage = () => {
 	}, [user, supabaseClient, classid]);
 
 	const createAssignment = async (data: Assignment["data"]) => {
-		const assign = await newAssignment(
-			data,
-			Number.parseInt(classid as string)
-		);
+		const assign = await newAssignment(data, classid as string);
 		if (!assign.success && assign.error) {
 			alert(assign.error.message);
+			console.log(assign.error);
 			setSubmitting(false);
 		} else {
 			alert("created assignment");
@@ -62,6 +57,7 @@ const Class: NextPage = () => {
 
 				{data.data &&
 					data.data.assignments &&
+					Array.isArray(data.data.assignments) &&
 					data.data.assignments.map((assignment, i) => (
 						<div className="flex flex-col" key={i}>
 							Assignment:

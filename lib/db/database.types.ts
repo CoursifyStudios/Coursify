@@ -11,7 +11,6 @@ export interface Database {
 		Tables: {
 			assignments: {
 				Row: {
-					id: number;
 					name: string;
 					type: string | null;
 					description: string;
@@ -19,9 +18,9 @@ export interface Database {
 					created_date: string | null;
 					publish_info: Json | null;
 					due_info: Json | null;
+					id: string;
 				};
 				Insert: {
-					id?: number;
 					name: string;
 					type?: string | null;
 					description: string;
@@ -29,9 +28,9 @@ export interface Database {
 					created_date?: string | null;
 					publish_info?: Json | null;
 					due_info?: Json | null;
+					id?: string;
 				};
 				Update: {
-					id?: number;
 					name?: string;
 					type?: string | null;
 					description?: string;
@@ -39,46 +38,47 @@ export interface Database {
 					created_date?: string | null;
 					publish_info?: Json | null;
 					due_info?: Json | null;
+					id?: string;
 				};
 			};
 			classes: {
 				Row: {
-					id: number;
 					name: string;
 					description: string;
 					block: number | null;
 					schedule_type: number | null;
 					color: string;
+					id: string;
 				};
 				Insert: {
-					id?: number;
 					name: string;
 					description?: string;
 					block?: number | null;
 					schedule_type?: number | null;
 					color?: string;
+					id?: string;
 				};
 				Update: {
-					id?: number;
 					name?: string;
 					description?: string;
 					block?: number | null;
 					schedule_type?: number | null;
 					color?: string;
+					id?: string;
 				};
 			};
 			classes_assignments: {
 				Row: {
-					class_id: number;
-					assignment_id: number;
+					class_id: string;
+					assignment_id: string;
 				};
 				Insert: {
-					class_id: number;
-					assignment_id: number;
+					class_id: string;
+					assignment_id: string;
 				};
 				Update: {
-					class_id?: number;
-					assignment_id?: number;
+					class_id?: string;
+					assignment_id?: string;
 				};
 			};
 			groups: {
@@ -108,36 +108,50 @@ export interface Database {
 			};
 			school_users: {
 				Row: {
-					school_id: number;
 					user_id: string;
+					school_id: string;
 				};
 				Insert: {
-					school_id: number;
 					user_id: string;
+					school_id: string;
 				};
 				Update: {
-					school_id?: number;
 					user_id?: string;
+					school_id?: string;
 				};
 			};
 			schools: {
 				Row: {
-					id: number;
 					created_at: string | null;
 					name: string;
 					schedule: Json[] | null;
+					id: string;
 				};
 				Insert: {
-					id?: number;
 					created_at?: string | null;
 					name: string;
 					schedule?: Json[] | null;
+					id?: string;
 				};
 				Update: {
-					id?: number;
 					created_at?: string | null;
 					name?: string;
 					schedule?: Json[] | null;
+					id?: string;
+				};
+			};
+			test: {
+				Row: {
+					id: number;
+					name: string | null;
+				};
+				Insert: {
+					id?: number;
+					name?: string | null;
+				};
+				Update: {
+					id?: number;
+					name?: string | null;
 				};
 			};
 			users: {
@@ -168,19 +182,19 @@ export interface Database {
 			};
 			users_classes: {
 				Row: {
-					class_id: number;
 					user_id: string;
 					teacher: boolean;
+					class_id: string;
 				};
 				Insert: {
-					class_id: number;
 					user_id: string;
 					teacher?: boolean;
+					class_id: string;
 				};
 				Update: {
-					class_id?: number;
 					user_id?: string;
 					teacher?: boolean;
+					class_id?: string;
 				};
 			};
 			users_groups: {
@@ -202,9 +216,13 @@ export interface Database {
 			[_ in never]: never;
 		};
 		Functions: {
-			can_user_read_assignment: {
-				Args: { arg_user_id: string; arg_assignment_id: number };
+			create_assignment: {
+				Args: { name: string; description: string; class_id: string };
 				Returns: boolean;
+			};
+			hello_world: {
+				Args: Record<PropertyKey, never>;
+				Returns: string;
 			};
 		};
 		Enums: {

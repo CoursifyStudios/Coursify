@@ -20,7 +20,7 @@ export const useTabs = create<{
 				const newTab = getLinkRegex(tab);
 				if (newTab == null) return;
 				set((state) => {
-					if (state.tabs.find((tab) => tab.matcher.test(newTab.route))) {
+					if (state.tabs.find((tab) => tab.name == newTab.name)) {
 						return { tabs: state.tabs };
 					} else {
 						return {

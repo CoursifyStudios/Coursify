@@ -1,9 +1,9 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { useBearStore, useTabs } from "../lib/tabs/handleTabs";
+import { useTabs } from "../lib/tabs/handleTabs";
 import { Database } from "../lib/db/database.types";
-import { AllClassData, loadData } from "../lib/db/classes";
+import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
 import { Class } from "../components/classes/class";
 import Loading from "../components/misc/loading";
 import {
@@ -15,17 +15,19 @@ import {
 import { ColoredPill } from "../components/misc/pill";
 
 export default function Home() {
-	const { newTab, tabs } = useTabs();
+	const { newTab } = useTabs();
 	const supabaseClient = useSupabaseClient<Database>();
 	const user = useUser();
-	const [classes, setClasses] = useState<AllClassData>();
+	const [classes, setClasses] = useState<AllClassesResponse>();
 	const [loading, setLoading] = useState(true);
 	const [schedule, setSchedule] = useState<ScheduleData>();
 
 	useEffect(() => {
+		//testdateto set a seperate date in development
+		const testDate: Date = new Date("2022-11-23");
 		(async () => {
 			if (user) {
-				const classes = await loadData(supabaseClient);
+				const classes = await getAllClasses(supabaseClient);
 				setClasses(classes);
 				setLoading(false);
 				sessionStorage.setItem("classes", JSON.stringify(classes));

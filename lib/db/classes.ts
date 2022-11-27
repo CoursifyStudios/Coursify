@@ -1,9 +1,7 @@
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "./database.types";
 
-export async function loadData(
-	supabaseClient: SupabaseClient<Database>
-): Promise<AllClassData> {
+export async function getAllClasses(supabaseClient: SupabaseClient<Database>) {
 	const { data, error } = await supabaseClient.from("classes").select("*");
 	if (!error) {
 		return {
@@ -18,11 +16,13 @@ export async function loadData(
 	}
 }
 
+export type AllClassesResponse = Awaited<ReturnType<typeof getAllClasses>>;
+
 export const getClass = async (
 	supabaseClient: SupabaseClient<Database>,
-	classid: number
-): Promise<ClassData> => {
-	const { data, error } = await supabaseClient
+	classid: string
+) => {
+	return await supabaseClient
 		.from("classes")
 		.select(
 			`
@@ -34,30 +34,9 @@ export const getClass = async (
 		)
 		.eq("id", classid)
 		.single();
-	if (!error) {
-		return {
-			success: true,
-			data: data,
-		};
-	} else {
-		return {
-			success: false,
-			error: error,
-		};
-	}
 };
 
-export interface AllClassData {
-	success: boolean;
-	error?: PostgrestError;
-	data?: Database["public"]["Tables"]["classes"]["Row"][];
-}
-
-export interface ClassData {
-	success: boolean;
-	error?: PostgrestError;
-	data?: unknown;
-}
+export type ClassResponse = Awaited<ReturnType<typeof getClass>>;
 
 export interface Class {
 	data: Database["public"]["Tables"]["classes"]["Row"];
@@ -66,7 +45,7 @@ export interface Class {
 export const getUserSchool = async (
 	supabaseClient: SupabaseClient<Database>
 ) => {
-	const { data, error } = await supabaseClient.from("schools").select(
+	return await supabaseClient.from("schools").select(
 		`
 		name,
 		users (
@@ -76,38 +55,18 @@ export const getUserSchool = async (
 	);
 	// .eq("id", "1e5024f5-d493-4e32-9822-87f080ad5516")
 	// .single();
-	if (!error) {
-		return {
-			success: true,
-			data: data,
-		};
-	} else {
-		return {
-			success: false,
-			error: error,
-		};
-	}
 };
+
+export type UserSchoolResponse = Awaited<ReturnType<typeof getClass>>;
 
 export const updateClass = async (
 	supabaseClient: SupabaseClient<Database>,
 	classid: number
-): Promise<ClassData> => {
-	const { data, error } = await supabaseClient
+) => {
+	return await supabaseClient
 		.from("classes")
 		.update({
 			description: "WE (we) look at all the LAKES (lakes)",
 		})
 		.eq("id", classid);
-	if (!error) {
-		return {
-			success: true,
-			data: data,
-		};
-	} else {
-		return {
-			success: false,
-			error: error,
-		};
-	}
 };
