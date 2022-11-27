@@ -7,7 +7,7 @@ export default function Footer() {
 	}
 	return (
 		<footer className="">
-			This isn't centered and it is pissing me off and I cannot figure out how
+			This is not centered and it is pissing me off and I cannot figure out how
 			to center it
 		</footer>
 	);
