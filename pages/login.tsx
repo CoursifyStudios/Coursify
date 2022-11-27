@@ -9,7 +9,15 @@ export default function Login() {
 	const router = useRouter();
 	const { redirectedFrom } = router.query;
 
-	if (user) router.push("/");
+	if (user) {
+		if (typeof redirectedFrom == "string")
+			router.push(decodeURI(redirectedFrom));
+		else router.push("/");
+	}
+
+	const url = process.env.NEXT_PUBLIC_BASE_URL
+		? process.env.NEXT_PUBLIC_BASE_URL
+		: "http://localhost:3000";
 
 	return (
 		<div className="flex h-screen bg-teal-500 [background-image:url('/svgs/falling-triangles.svg')]">
@@ -24,7 +32,10 @@ export default function Login() {
 								provider: "google",
 								options: {
 									redirectTo:
-										typeof redirectedFrom == "string" ? redirectedFrom : "/",
+										typeof redirectedFrom == "string"
+											? decodeURI(url + redirectedFrom)
+											: url,
+									//"http://localhost:3000/settings"
 								},
 							})
 						}

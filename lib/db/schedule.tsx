@@ -6,7 +6,8 @@ export interface ScheduleInterface {
 	timeEnd: string;
 	block: number;
 	type: number;
-	//specialEvent?: string;
+	specialEvent?: string;
+	customColor?: string; //may as well
 }
 
 export async function getSchedule(
@@ -36,10 +37,10 @@ export const createNewSchedule = async (
 export type NewSchedule = Awaited<ReturnType<typeof createNewSchedule>>;
 
 export function to12hourTime(timeAsString: string) {
-	if (parseInt(timeAsString.substring(0, 2)) <= 12) {
-		return (
-			parseInt(timeAsString.substring(0, 2)) + timeAsString.substring(2) + " AM"
-		);
+	if (parseInt(timeAsString.substring(0, 2)) == 12) {
+		return timeAsString + " PM";
+	} else if (parseInt(timeAsString.substring(0, 2)) <= 12) {
+		return timeAsString.substring(0, 2) + timeAsString.substring(2) + " AM";
 	} else {
 		return (
 			parseInt(timeAsString.substring(0, 2)) -
