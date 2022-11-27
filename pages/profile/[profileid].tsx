@@ -24,7 +24,7 @@ export default function Profile() {
 				setProfile(data);
 			}
 		})();
-	}, [router, supabaseClient]);
+	}, [router, supabaseClient, profileid]);
 
 	return (
 		<div className="container mx-auto flex w-full flex-col p-2 sm:p-4 md:p-8 lg:flex-row lg:space-x-8 2xl:max-w-screen-xl">
@@ -95,13 +95,9 @@ export default function Profile() {
 			<div className=" scrollbar-fancy mx-auto mt-8 shrink-0 overflow-y-auto  rounded-xl lg:mt-0 lg:h-[calc(100vh-8rem)]">
 				<h2 className="title mb-4">Classes</h2>
 				<div className="grid gap-8 md:grid-cols-2">
+					{/*@ts-ignore-error types moment */}
 					<Class class={{ data: { name: "test" } }} />
-					<Class class={{ data: { name: "test" } }} />
-					<Class class={{ data: { name: "test" } }} />
-					<Class class={{ data: { name: "test" } }} />
-					<Class class={{ data: { name: "test" } }} />
-					<Class class={{ data: { name: "test" } }} />
-					<Class class={{ data: { name: "test" } }} />
+					{/*@ts-ignore-error types moment */}
 					<Class class={{ data: { name: "test" } }} />
 				</div>
 			</div>
