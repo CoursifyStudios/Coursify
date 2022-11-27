@@ -23,7 +23,8 @@ export default function Home() {
 	const [schedule, setSchedule] = useState<ScheduleData>();
 
 	useEffect(() => {
-		const testDate: Date = new Date("2022-11-22");
+		//
+		const testDate: Date = new Date("2022-11-23");
 		(async () => {
 			if (user) {
 				const classes = await getAllClasses(supabaseClient);

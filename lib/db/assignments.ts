@@ -36,7 +36,7 @@ export type AssignmentResponse = Awaited<ReturnType<typeof getAssignment>>;
 
 export const newAssignment = async (
 	assignment: Assignment["data"],
-	classid: string
+	classuuid: string
 ): Promise<AssignmentData> => {
 	const { data, error } = await supabase
 		.from("assignments")
@@ -55,7 +55,7 @@ export const newAssignment = async (
 		// amazing naming schema
 		const { error: secondError } = await supabase
 			.from("classes_assignments")
-			.insert({ assignment_id: data.id, class_id: classid });
+			.insert({ assignment_id: data.id, class_id: classuuid });
 		if (secondError) {
 			return {
 				success: false,
