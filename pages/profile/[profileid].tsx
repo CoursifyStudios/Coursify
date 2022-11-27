@@ -24,7 +24,7 @@ export default function Profile() {
 				setProfile(data);
 			}
 		})();
-	}, [router, supabaseClient]);
+	}, [router, supabaseClient, profileid]);
 
 	return (
 		<div className="container mx-auto flex w-full flex-col p-2 sm:p-4 md:p-8 lg:flex-row lg:space-x-8 2xl:max-w-screen-xl">

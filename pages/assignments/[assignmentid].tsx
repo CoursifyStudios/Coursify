@@ -55,7 +55,7 @@ const Post: NextPage = () => {
 		if (router.isReady && assignmentid != "0" && window.innerWidth < 768) {
 			setFullscreen(true);
 		}
-	}, [user, supabaseClient, router]);
+	}, [user, supabaseClient, router, assignmentid]);
 
 	return (
 		<div className="mx-auto flex w-full max-w-screen-xl px-5 pt-5 pb-4">
