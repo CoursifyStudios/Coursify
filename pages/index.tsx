@@ -35,7 +35,7 @@ export default function Home() {
 				//can I piggy-back off of this as well (for now at least?)
 				const scheduleClasses = await getSchedule(
 					supabaseClient,
-					new Date("2022-11-23")
+					new Date("2022-11-20") //This is set to use this date as it is the only one with a proper, filled in schedule. After dev, we can remove the arguments and just use new Date()
 				);
 				setSchedule(scheduleClasses);
 			}
@@ -73,7 +73,7 @@ export default function Home() {
 
 				<Link href="/scheduleEditor" onClick={() => newTab("/scheduleEditor")}>
 					<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
-						Add Schedule item
+						Add Schedule
 					</div>
 				</Link>
 
@@ -110,8 +110,9 @@ export default function Home() {
 								))}
 						</div>
 					</section>
-					<section className="flex-1 px-5">
+					<section className="px-5">
 						<h2 className="title">Daily Schedule</h2>
+						{/* Line below requires flex. flex was removed temporarily by bill because it made the ui look bad */}
 						<div className="mt-6 flex flex-col">
 							<div className=" mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
 								{schedule &&
@@ -123,37 +124,35 @@ export default function Home() {
 											?.schedule_items as unknown as ScheduleInterface[]
 									).map(
 										(item, index) =>
-											(classes?.data?.find(
-												(v) =>
-													v.block == item.block && v.schedule_type == item.type
-											)?.name && (
-												<Link
-													key={index}
-													className="flex items-center justify-between font-semibold"
-													href={
-														"/classes/" +
-														classes?.data?.find(
-															(v) =>
-																v.block == item.block &&
-																v.schedule_type == item.type
-														)?.id
-													}
-												>
-													{
-														classes?.data?.find(
-															(v) =>
-																v.block == item.block &&
-																v.schedule_type == item.type
-														)?.name
-													}
-													{/* Class coloring would be implemented on line below. See the special event implementation fo rhwo that should look */}
-													<ColoredPill color="blue">
-														{to12hourTime(item.timeStart)} -{" "}
-														{to12hourTime(item.timeEnd)}
-													</ColoredPill>
-												</Link>
-											)) ||
-											(item.specialEvent && (
+											(checkClassMatchesSchedule(item)?.name &&
+												!item.specialEvent && (
+													<Link
+														key={index}
+														className="flex items-center justify-between font-semibold"
+														href={
+															"/classes/" + checkClassMatchesSchedule(item)?.id
+														}
+													>
+														{
+															classes?.data?.find(
+																(v) =>
+																	v.block == item.block &&
+																	v.schedule_type == item.type
+															)?.name
+														}
+														{/* Class coloring would be implemented on line below. See the special event implementation fo rhwo that should look */}
+														<ColoredPill
+															color={
+																//@ts-ignore WHY THE HELL DOES IT THINK THAT IT CAN JUST DO THAT TO ME
+																checkClassMatchesSchedule(classes, item)?.color
+															}
+														>
+															{to12hourTime(item.timeStart)} -{" "}
+															{to12hourTime(item.timeEnd)}
+														</ColoredPill>
+													</Link>
+												)) ||
+											(item.specialEvent && checkClassMatchesSchedule(item) && (
 												// May want to change this to be a <Link> later on so that you can link to info about special events
 												<div className="flex items-center justify-between font-semibold">
 													{item.specialEvent}
@@ -175,4 +174,11 @@ export default function Home() {
 			</div>
 		</>
 	);
+
+	function checkClassMatchesSchedule(scheduleItem: ScheduleInterface) {
+		return classes?.data?.find(
+			(v) =>
+				v.block == scheduleItem.block && v.schedule_type == scheduleItem.type
+		);
+	}
 }

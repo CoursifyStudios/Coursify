@@ -36,17 +36,21 @@ export const createNewSchedule = async (
 
 export type NewSchedule = Awaited<ReturnType<typeof createNewSchedule>>;
 
-export function to12hourTime(timeAsString: string) {
+export function to12hourTime(timeAsString: string, includeAMPM?: boolean) {
 	if (parseInt(timeAsString.substring(0, 2)) == 12) {
-		return timeAsString + " PM";
+		return timeAsString + (includeAMPM ? " PM" : "");
 	} else if (parseInt(timeAsString.substring(0, 2)) <= 12) {
-		return timeAsString.substring(0, 2) + timeAsString.substring(2) + " AM";
+		return (
+			parseInt(timeAsString.substring(0, 2)) +
+			timeAsString.substring(2) +
+			(includeAMPM ? " AM" : "")
+		);
 	} else {
 		return (
 			parseInt(timeAsString.substring(0, 2)) -
 			12 +
 			timeAsString.substring(2) +
-			" PM"
+			(includeAMPM ? " PM" : "")
 		);
 	}
 }
