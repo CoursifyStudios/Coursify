@@ -33,7 +33,7 @@ export default function Home() {
 				//can I piggy-back off of this as well (for now at least?)
 				const scheduleClasses = await getSchedule(
 					supabaseClient,
-					new Date("2022-11-23")
+					new Date("2022-11-20")//Check supabase
 				);
 				setSchedule(scheduleClasses);
 			}
@@ -71,7 +71,7 @@ export default function Home() {
 
 				<Link href="/scheduleEditor" onClick={() => newTab("/scheduleEditor")}>
 					<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
-						Add Schedule item
+						Add Schedule
 					</div>
 				</Link>
 
@@ -108,8 +108,9 @@ export default function Home() {
 								))}
 						</div>
 					</section>
-					<section className="flex-1 px-5">
+					<section className="px-5">
 						<h2 className="title">Daily Schedule</h2>
+                        {/* Line below requires flex. flex was removed temporarily by bill because it made the ui look bad */}
 						<div className="mt-6 flex flex-col">
 							<div className=" mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
 								{schedule &&
@@ -124,7 +125,8 @@ export default function Home() {
 											(classes?.data?.find(
 												(v) =>
 													v.block == item.block && v.schedule_type == item.type
-											)?.name && (
+											)?.name && 
+                                            !item.specialEvent && (
 												<Link
 													key={index}
 													className="flex items-center justify-between font-semibold"
@@ -145,13 +147,21 @@ export default function Home() {
 														)?.name
 													}
 													{/* Class coloring would be implemented on line below. See the special event implementation fo rhwo that should look */}
-													<ColoredPill color="blue">
+													<ColoredPill color={classes?.data?.find(
+															(v) =>
+																v.block == item.block &&
+																v.schedule_type == item.type
+                                                                //@ts-ignore WHY THE HELL DOES IT THINK THAT IT CAN JUST DO THAT TO ME
+														)?.color}>
 														{to12hourTime(item.timeStart)} -{" "}
 														{to12hourTime(item.timeEnd)}
 													</ColoredPill>
 												</Link>
 											)) ||
-											(item.specialEvent && (
+											(item.specialEvent && classes?.data?.find(
+												(v) =>
+													v.block == item.block && v.schedule_type == item.type
+											) && (
 												// May want to change this to be a <Link> later on so that you can link to info about special events
 												<div className="flex items-center justify-between font-semibold">
 													{item.specialEvent}
