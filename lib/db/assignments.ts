@@ -2,15 +2,13 @@ import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import supabase from "../supabase";
 import { Database } from "./database.types";
 
-const classesRelation = `classes (*)`;
-
 export const getAllAssignments = async (
 	supabaseClient: SupabaseClient<Database>
 ) => {
 	return await supabaseClient.from("assignments").select(
 		`
 		name, description, id,
-		${classesRelation}
+		classes (*)
 		`
 	);
 };
@@ -21,16 +19,16 @@ export type AllAssignmentResponse = Awaited<
 
 export const getAssignment = async (
 	supabaseClient: SupabaseClient<Database>,
-	assignmentid: number
+	assignmentuuid: string
 ) => {
 	return await supabaseClient
 		.from("assignments")
 		.select(
 			`
-		*, ${classesRelation}
+		*, classes (*)
 		`
 		)
-		.eq("id", assignmentid)
+		.eq("id", assignmentuuid)
 		.single();
 };
 
@@ -38,7 +36,7 @@ export type AssignmentResponse = Awaited<ReturnType<typeof getAssignment>>;
 
 export const newAssignment = async (
 	assignment: Assignment["data"],
-	classid: number
+	classuuid: string
 ): Promise<AssignmentData> => {
 	const { data, error } = await supabase
 		.from("assignments")
@@ -57,7 +55,7 @@ export const newAssignment = async (
 		// amazing naming schema
 		const { error: secondError } = await supabase
 			.from("classes_assignments")
-			.insert({ asssignment_id: data.id, class_id: classid });
+			.insert({ assignment_id: data.id, class_id: classuuid });
 		if (secondError) {
 			return {
 				success: false,
