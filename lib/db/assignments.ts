@@ -10,7 +10,7 @@ export const getAllAssignments = async (
 	return await supabaseClient.from("assignments").select(
 		`
 		name, description, id,
-		${classesRelation}
+		classes (*)
 		`
 	);
 };
@@ -21,16 +21,16 @@ export type AllAssignmentResponse = Awaited<
 
 export const getAssignment = async (
 	supabaseClient: SupabaseClient<Database>,
-	assignmentid: string
+	assignmentuuid: string
 ) => {
 	return await supabaseClient
 		.from("assignments")
 		.select(
 			`
-		*, ${classesRelation}
+		*, classes (*)
 		`
 		)
-		.eq("id", "411fd45c-6f07-4578-be4b-43fa4cd453ae") //assignment id here
+		.eq("id", assignmentuuid)
 		.single();
 };
 
