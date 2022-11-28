@@ -54,3 +54,13 @@ export function to12hourTime(timeAsString: string, includeAMPM?: boolean) {
 		);
 	}
 }
+
+export function sortedByTime (scheduleArray: ScheduleInterface[]) {
+    return scheduleArray.sort((a, b) => {
+        if (a.timeStart > b.timeStart) return 1;
+        if (a.timeStart < b.timeStart) return -1;
+        if (a.timeEnd > b.timeEnd) return 1;
+        if (a.timeEnd < b.timeEnd) return -1;
+        return 0;
+    })
+}

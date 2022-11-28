@@ -23,8 +23,6 @@ export default function Home() {
 	const [schedule, setSchedule] = useState<ScheduleData>();
 
 	useEffect(() => {
-		//testdateto set a seperate date in development
-		const testDate: Date = new Date("2022-11-23");
 		(async () => {
 			if (user) {
 				const classes = await getAllClasses(supabaseClient);

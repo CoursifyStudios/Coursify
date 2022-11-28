@@ -1,20 +1,25 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTabs } from "../lib/tabs/handleTabs";
 import {
 	createNewSchedule,
 	ScheduleInterface,
+	sortedByTime,
 	to12hourTime,
 } from "../lib/db/schedule";
 import { ColoredPill } from "../components/misc/pill";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database } from "../lib/db/database.types";
+import { JsxElement } from "typescript";
+
 
 const ScheduleEditor = () => {
 	const supabaseClient = useSupabaseClient<Database>();
 	const tabs = useTabs((state) => state.tabs);
 	const [tempSchedule, setTempSchedule] = useState<ScheduleInterface[]>();
 	let tempArray: ScheduleInterface[];
+    const numberOfScheduleTypes: number = 2;
+    let arrOfScheduleViewers: JSX.Element[];
 	return (
 		<div>
 			<div className="grid grid-cols-2">
@@ -41,15 +46,7 @@ const ScheduleEditor = () => {
 									specialEvent: v.itemSpecialType,
 									customColor: v.itemCustomColor,
 								});
-								setTempSchedule(
-									tempArray.sort((a, b) => {
-										if (a.timeStart > b.timeStart) return 1;
-										if (a.timeStart < b.timeStart) return -1;
-										if (a.timeEnd > b.timeEnd) return 1;
-										if (a.timeEnd < b.timeEnd) return -1;
-										return 0;
-									})
-								);
+								setTempSchedule(sortedByTime(tempArray));
 							} else {
 								setTempSchedule([
 									{
@@ -118,112 +115,16 @@ const ScheduleEditor = () => {
 					</Formik>
 				</section>
 				<section className="mr-5 grid grid-cols-2">
-					<section className="my-6 flex-1 px-5">
-						<h2 className="mb-4 text-lg font-semibold">Schedule type 1</h2>
-						<div className="mt-6 flex flex-col">
-							<div className="mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
-								{tempSchedule &&
-									tempSchedule &&
-									tempSchedule.map(
-										(scheduleItem, i) =>
-											scheduleItem.type == 1 && (
-												<div
-													key={i}
-													className="flex items-center justify-between font-semibold"
-												>
-													{scheduleItem.specialEvent}
-													{!scheduleItem.specialEvent
-														? "Block " + scheduleItem.block
-														: ""}
-													<div className="flex items-center justify-between font-semibold">
-														<ColoredPill
-															color={
-																!scheduleItem.specialEvent
-																	? "blue"
-																	: !scheduleItem.customColor
-																	? "green"
-																	: scheduleItem.customColor
-															}
-														>
-															{to12hourTime(scheduleItem.timeStart)} -{" "}
-															{to12hourTime(scheduleItem.timeEnd)}{" "}
-														</ColoredPill>
-														<p
-															className="ml-3 text-red-600"
-															onClick={() => {
-																tempArray = [...tempSchedule];
-																tempArray.splice(i, 1);
-																setTempSchedule(tempArray);
-															}}
-														>
-															X
-														</p>
-														{/* Look at me doing this wihtout importing a whole package for an svg X */}
-													</div>
-												</div>
-											)
-									)}
-							</div>
-						</div>
-					</section>
-					<section className="my-6 flex-1 px-5">
-						<h2 className="mb-4 text-lg font-semibold">Schedule type 2</h2>
-						<div className="mt-6 flex flex-col">
-							<div className="mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
-								{tempSchedule &&
-									tempSchedule &&
-									tempSchedule.map(
-										(scheduleItem, i) =>
-											scheduleItem.type == 2 && (
-												<div
-													key={i}
-													className="flex items-center justify-between font-semibold"
-												>
-													{scheduleItem.specialEvent}
-													{!scheduleItem.specialEvent
-														? "Block " + scheduleItem.block
-														: ""}
-													<div className="flex items-center justify-between font-semibold">
-														<ColoredPill
-															color={
-																!scheduleItem.specialEvent
-																	? "blue"
-																	: !scheduleItem.customColor
-																	? "green"
-																	: scheduleItem.customColor
-															}
-														>
-															{to12hourTime(scheduleItem.timeStart)} -{" "}
-															{to12hourTime(scheduleItem.timeEnd)}{" "}
-														</ColoredPill>
-														<p
-															className="ml-3 text-red-600"
-															onClick={() => {
-																tempArray = [...tempSchedule];
-																tempArray.splice(i, 1);
-																setTempSchedule(tempArray);
-															}}
-														>
-															X
-														</p>
-														{/* Look at me doing this wihtout importing a whole package for an svg X */}
-													</div>
-												</div>
-											)
-									)}
-							</div>
-						</div>
-					</section>
+                    {[...Array(5)].map((_, i) => scheduleViewer(i + 1))}
 				</section>
 			</div>
 			<div className="mx-10">
 				<Formik
-					initialValues={{ day: new Date() }}
+					initialValues={{ day: new Date().toISOString().substring(0,10) }}
 					onSubmit={(v) => {
-						if (tempSchedule != undefined) {
-							createNewSchedule(supabaseClient, v.day, tempSchedule);
-						} else alert("Please add one or more schedule items first");
+						fillOtherScheduleTypesAndHandleSubmit(v);
 					}}
+                    
 				>
 					<Form className="grid grid-cols-1">
 						<label htmlFor="day">Day</label>
@@ -241,6 +142,97 @@ const ScheduleEditor = () => {
 			</div>
 		</div>
 	);
+
+    function fillOtherScheduleTypesAndHandleSubmit (stuffToSubmit: { day: string; }) {
+        if (tempSchedule != undefined) {
+            tempArray = [...tempSchedule];
+            //if the schedule is actually filled in with any values...
+            for (let scheduleTypeToCheck = 1; scheduleTypeToCheck <= numberOfScheduleTypes; scheduleTypeToCheck++) {
+                //check both schedule types...
+                if (tempSchedule.every((scheduleItem) => scheduleItem.type == scheduleTypeToCheck)) {
+                    //to see if all schedule events are of one type...
+                    tempArray = [...tempSchedule]; //and if they are, copy our schedule to this working array...
+                    //we have to loop through to add these events to all other schedule types
+                    for (let scheduleType = 1; scheduleType <= numberOfScheduleTypes; scheduleType++) {
+                        if (scheduleType != scheduleTypeToCheck) {
+                            tempSchedule.map(
+                                (
+                                    scheduleItem,
+                                    index 
+                                ) => //and copy each shedule item from one type to the other
+                                    tempArray.splice(index, 0, {
+                                        timeStart: scheduleItem.timeStart,
+                                        timeEnd: scheduleItem.timeEnd,
+                                        block: scheduleItem.block,
+                                        type: scheduleType,
+                                        specialEvent: scheduleItem.specialEvent,
+                                        customColor: scheduleItem.customColor,
+                                    })
+                            );
+                        }
+                    }
+                    
+                   
+                    window.alert("Your schedule will be copied over to the opposite type as you did not supply both types. Click OK to proceed."); 
+                    //I plan to make this optional in the future, but that would require a popup with options and stuff, I cannot be bothered right now
+                }
+            }
+            setTempSchedule(sortedByTime(tempArray)); //for updating ui
+            createNewSchedule(supabaseClient, stuffToSubmit.day, sortedByTime(tempArray)); //sends schedule to the server
+        } else alert("Please add one or more schedule items first");
+    }
+    function scheduleViewer (scheduleType: number) {
+        return <section className="my-6 flex-1 px-5">
+        <h2 className="mb-4 text-lg font-semibold">Schedule type {scheduleType}</h2>
+        <div className="mt-6 flex flex-col">
+            <div className="mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
+                {tempSchedule &&
+                    tempSchedule &&
+                    tempSchedule.map(
+                        (scheduleItem, i) =>
+                            scheduleItem.type == scheduleType && (
+                                <div
+                                    key={i}
+                                    className="flex items-center justify-between font-semibold"
+                                >
+                                    {scheduleItem.specialEvent}
+                                    {!scheduleItem.specialEvent
+                                        ? "Block " + scheduleItem.block
+                                        : ""}
+                                    <div className="flex items-center justify-between font-semibold">
+                                        <ColoredPill
+                                            color={
+                                                !scheduleItem.specialEvent
+                                                    ? "blue"
+                                                    : !scheduleItem.customColor
+                                                    ? "green"
+                                                    : scheduleItem.customColor
+                                            }
+                                        >
+                                            {to12hourTime(scheduleItem.timeStart)} -{" "}
+                                            {to12hourTime(scheduleItem.timeEnd)}{" "}
+                                        </ColoredPill>
+                                        <p
+                                            className="ml-3 text-red-600"
+                                            onClick={() => {
+                                                tempArray = [...tempSchedule];
+                                                tempArray.splice(i, 1);
+                                                setTempSchedule(tempArray);
+                                            }}
+                                        >
+                                            X
+                                        </p>
+                                        {/* Look at me doing this wihtout importing a whole package for an svg X */}
+                                    </div>
+                                </div>
+                            )
+                    )}
+            </div>
+        </div>
+    </section>
+    }
 };
 
+
 export default ScheduleEditor;
+
