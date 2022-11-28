@@ -144,7 +144,7 @@ export default function Home() {
 														<ColoredPill
 															color={
 																//@ts-ignore WHY THE HELL DOES IT THINK THAT IT CAN JUST DO THAT TO ME
-																checkClassMatchesSchedule(classes, item)?.color
+																checkClassMatchesSchedule(item).color
 															}
 														>
 															{to12hourTime(item.timeStart)} -{" "}
