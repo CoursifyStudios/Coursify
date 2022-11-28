@@ -113,7 +113,7 @@ export default function Home() {
 					<section className="px-5">
 						<h2 className="title">Daily Schedule</h2>
 						{/* Line below requires flex. flex was removed temporarily by bill because it made the ui look bad */}
-						<div className="mt-6 flex flex-col">
+						<div className="flex flex-col">
 							<div className=" mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
 								{schedule &&
 									schedule.data &&
