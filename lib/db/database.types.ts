@@ -49,6 +49,7 @@ export interface Database {
 					schedule_type: number | null;
 					color: string;
 					id: string;
+					name_full: string;
 				};
 				Insert: {
 					name: string;
@@ -57,6 +58,7 @@ export interface Database {
 					schedule_type?: number | null;
 					color?: string;
 					id?: string;
+					name_full?: string;
 				};
 				Update: {
 					name?: string;
@@ -65,6 +67,7 @@ export interface Database {
 					schedule_type?: number | null;
 					color?: string;
 					id?: string;
+					name_full?: string;
 				};
 			};
 			classes_assignments: {
