@@ -2,12 +2,14 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 import { Database } from "../lib/db/database.types";
 import Image from "next/image";
+import { useEffect, useState } from "react";
 
 export default function Login() {
 	const supabaseClient = useSupabaseClient<Database>();
 	const user = useUser();
 	const router = useRouter();
 	const { redirectedFrom } = router.query;
+	const [url, setUrl] = useState<string>();
 
 	if (user) {
 		if (typeof redirectedFrom == "string")
@@ -15,9 +17,9 @@ export default function Login() {
 		else router.push("/");
 	}
 
-	const url = process.env.NEXT_PUBLIC_BASE_URL
-		? process.env.NEXT_PUBLIC_BASE_URL
-		: "http://localhost:3000";
+	useEffect(() => {
+		setUrl(window.location.origin);
+	}, []);
 
 	return (
 		<div className="flex h-screen bg-teal-500 [background-image:url('/svgs/falling-triangles.svg')]">
