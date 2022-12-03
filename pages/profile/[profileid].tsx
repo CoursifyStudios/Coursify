@@ -3,7 +3,7 @@ import type { NextComponentType } from "next";
 import Image from "next/image";
 import profileexample from "../../public/unnamed.jpg";
 import { ReactNode, useEffect, useState } from "react";
-import { Class } from "../../components/classes/class";
+import { Class } from "../../components/edu/class";
 import { ProfilesResponse } from "../../lib/db/profiles";
 import { getProfile } from "../../lib/db/profiles";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";

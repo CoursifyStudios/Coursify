@@ -49,6 +49,8 @@ export interface Database {
 					schedule_type: number | null;
 					color: string;
 					id: string;
+					name_full: string;
+					description_new: Json[] | null;
 				};
 				Insert: {
 					name: string;
@@ -57,6 +59,8 @@ export interface Database {
 					schedule_type?: number | null;
 					color?: string;
 					id?: string;
+					name_full?: string;
+					description_new?: Json[] | null;
 				};
 				Update: {
 					name?: string;
@@ -65,6 +69,8 @@ export interface Database {
 					schedule_type?: number | null;
 					color?: string;
 					id?: string;
+					name_full?: string;
+					description_new?: Json[] | null;
 				};
 			};
 			classes_assignments: {
@@ -185,16 +191,19 @@ export interface Database {
 					user_id: string;
 					teacher: boolean;
 					class_id: string;
+					grade: number;
 				};
 				Insert: {
 					user_id: string;
 					teacher?: boolean;
 					class_id: string;
+					grade?: number;
 				};
 				Update: {
 					user_id?: string;
 					teacher?: boolean;
 					class_id?: string;
+					grade?: number;
 				};
 			};
 			users_groups: {

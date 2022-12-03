@@ -9,6 +9,9 @@ import { getClass, ClassResponse } from "../../lib/db/classes";
 import { Database } from "../../lib/db/database.types";
 import exampleClassImg from "../../public/example-img.jpg";
 import { Button } from "../../components/misc/button";
+import CircleCounter from "../../components/misc/circleCounter";
+import Link from "next/link";
+import { AssignmentPreview } from "../../components/edu/assignments";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -16,6 +19,7 @@ const Class: NextPage = () => {
 	const user = useUser();
 	const supabaseClient = useSupabaseClient<Database>();
 	const [data, setData] = useState<ClassResponse>();
+	const [grade, setGrade] = useState<number>();
 	const [d, setD] = useState();
 
 	useEffect(() => {
@@ -24,14 +28,14 @@ const Class: NextPage = () => {
 				const data = await getClass(supabaseClient, classid);
 				setData(data);
 				console.log(data);
+				if (data.data && Array.isArray(data.data.users_classes)) {
+					//grades are temporarily done like this until we figure out assignment submissions
+					setGrade(
+						data.data.users_classes.find((v) => v.user_id == user.id)?.grade
+					);
+				}
 			}
 		})();
-		// (async () => {
-		// 	if (user && typeof classid == "string") {
-		// 		const data = await updateClass(supabaseClient, Number.parseInt(classid as string));
-		// 		console.log(data);
-		// 	}
-		// })();
 	}, [user, supabaseClient, classid]);
 
 	if (!data) return <div>loading data rn, wait pls ty</div>;
@@ -96,14 +100,35 @@ const Class: NextPage = () => {
 						<Tab.Panel>
 							<div className="rounded-xl bg-gray-200 p-4">
 								{data.data?.description}
+								teacher: {JSON.stringify(data.data?.users_classes)}
 							</div>
 						</Tab.Panel>
 					</Tab.Panels>
 				</Tab.Group>
-				<section className="sticky top-0 ml-8 w-72">
+				<section className="sticky top-0 ml-8 w-[20.5rem] shrink-0">
 					<div>
 						<h2 className="title">Grades</h2>
-						<div className="mt-6 rounded-xl bg-gray-200 p-4"></div>
+						<div className="mt-6 rounded-xl bg-gray-200 p-4">
+							<CircleCounter amount={grade} max={100} />
+						</div>
+					</div>
+					<div>
+						<h2 className="title mt-8 mb-6">Assignments</h2>
+						{Array.isArray(data.data?.assignments) &&
+							data.data?.assignments.map((assignment) => (
+								<Link
+									key={assignment.id}
+									className=" flex rounded-xl bg-gray-200 p-3 transition duration-300 hover:brightness-95"
+									href={"/assignments/" + assignment.id}
+								>
+									<AssignmentPreview
+										name={assignment.name}
+										desc={assignment.description}
+										starred={false}
+										due={new Date(1667840443856)}
+									/>
+								</Link>
+							))}
 					</div>
 				</section>
 			</div>

@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useTabs } from "../lib/tabs/handleTabs";
 import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
-import { Class } from "../components/classes/class";
+import { Class } from "../components/edu/class";
 import Loading from "../components/misc/loading";
 import {
 	getSchedule,

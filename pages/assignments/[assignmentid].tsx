@@ -24,6 +24,7 @@ import noData from "../../public/svgs/no-data.svg";
 import Link from "next/link";
 import { ColoredPill } from "../../components/misc/pill";
 import { ButtonIcon } from "../../components/misc/button";
+import { AssignmentPreview } from "../../components/edu/assignments";
 
 const Post: NextPage = () => {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -68,21 +69,29 @@ const Post: NextPage = () => {
 				{allAssignments ? (
 					!allAssignments.error &&
 					allAssignments.data.map((assignment) => (
-						<AssignmentPreview
-							name={assignment.name}
-							desc={assignment.description}
-							starred={false}
-							due={new Date(1667840443856)}
-							id={assignment.id}
-							classes={
-								assignment.classes
-									? Array.isArray(assignment.classes)
-										? assignment.classes[0]
-										: assignment.classes
-									: undefined
-							}
+						<Link
+							className={`flex h-max snap-start rounded-xl ${
+								assignmentid == assignment.id
+									? "bg-gray-50 shadow-xl"
+									: "bg-gray-200"
+							} p-3`}
+							href={"/assignments/" + assignment.id}
 							key={assignment.id}
-						/>
+						>
+							<AssignmentPreview
+								name={assignment.name}
+								desc={assignment.description}
+								starred={false}
+								due={new Date(1667840443856)}
+								classes={
+									assignment.classes
+										? Array.isArray(assignment.classes)
+											? assignment.classes[0]
+											: assignment.classes
+										: undefined
+								}
+							/>
+						</Link>
 					))
 				) : (
 					<>
@@ -169,13 +178,31 @@ const Post: NextPage = () => {
 									className="mb-4"
 								/>
 							</Link>
-							<ColoredPill color="blue">
-								{assignment.data.classes
-									? Array.isArray(assignment.data.classes)
-										? assignment.data.classes[0].name
-										: assignment.data.classes.name
-									: "Error fetching class"}
-							</ColoredPill>
+							<Link
+								href={
+									"/classes/" +
+									(Array.isArray(assignment.data.classes)
+										? assignment.data.classes[0].id
+										: assignment.data.classes?.id)
+								}
+							>
+								<ColoredPill
+									color={
+										assignment.data.classes
+											? Array.isArray(assignment.data.classes)
+												? assignment.data.classes[0].color
+												: assignment.data.classes?.color
+											: "blue"
+									}
+									hoverState
+								>
+									{assignment.data.classes
+										? Array.isArray(assignment.data.classes)
+											? assignment.data.classes[0].name
+											: assignment.data.classes.name
+										: "Error fetching class"}
+								</ColoredPill>
+							</Link>
 
 							<h1 className="title mt-4 mb-2 line-clamp-2">
 								{assignment.data.name}
@@ -253,46 +280,6 @@ const Post: NextPage = () => {
 		}
 
 		return <div>An unknown error occured. Assignment id: {assignmentid}</div>;
-	}
-
-	function AssignmentPreview(props: {
-		name: string;
-		desc: string;
-		starred: boolean;
-		due: Date;
-		id: string;
-		classes?: {
-			id: string;
-			name: string;
-			description: string;
-			block: number | null;
-		};
-	}) {
-		return (
-			<Link
-				className={`flex h-max snap-start rounded-xl ${
-					assignmentid == props.id ? "bg-gray-50 shadow-xl" : "bg-gray-200"
-				} p-3`}
-				href={"/assignments/" + props.id}
-			>
-				<div className="w-10">
-					<Starred starred={props.starred} />
-				</div>
-				<div>
-					<ColoredPill color="blue">
-						{props.classes?.name || "Error fetching class"}
-					</ColoredPill>
-					<h1 className="text font-medium">{props.name}</h1>
-					<p className="w-[12rem] break-words line-clamp-3  ">{props.desc}</p>
-				</div>
-				<div className="ml-1 flex flex-col items-end justify-between">
-					<p className="w-max text-sm font-medium text-gray-700">
-						Due: {props.due.getMonth() + 1}/{props.due.getDate()}
-					</p>
-					<CheckIcon className="h-5 w-5 text-gray-600" />
-				</div>
-			</Link>
-		);
 	}
 };
 
