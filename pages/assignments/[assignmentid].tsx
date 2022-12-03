@@ -22,7 +22,8 @@ import { Database } from "../../lib/db/database.types";
 import launch from "../../public/svgs/launch.svg";
 import noData from "../../public/svgs/no-data.svg";
 import Link from "next/link";
-import { ButtonIcon, ColoredPill } from "../../components/misc/pill";
+import { ColoredPill } from "../../components/misc/pill";
+import { ButtonIcon } from "../../components/misc/button";
 
 const Post: NextPage = () => {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -58,11 +59,11 @@ const Post: NextPage = () => {
 	}, [user, supabaseClient, router, assignmentid]);
 
 	return (
-		<div className="mx-auto flex w-full max-w-screen-xl px-5 pt-5 pb-4">
+		<div className="mx-auto flex w-full max-w-screen-xl px-5 pt-6 pb-6">
 			<div
 				className={`scrollbar-fancy mr-4 grow items-center overflow-x-clip md:grow-0 ${
 					fullscreen ? "hidden" : "flex"
-				} w-[20.5rem] shrink-0 snap-y snap-mandatory flex-col space-y-8 overflow-y-auto p-2 md:h-[calc(100vh-6rem)] `}
+				} w-[20.5rem] shrink-0 snap-y snap-mandatory flex-col space-y-8 overflow-y-auto md:h-[calc(100vh-6.5rem)] `}
 			>
 				{allAssignments ? (
 					!allAssignments.error &&
@@ -95,7 +96,7 @@ const Post: NextPage = () => {
 				)}
 			</div>
 			<div
-				className={`grow rounded-xl bg-gray-200 p-4 md:h-[calc(100vh-6rem)] md:p-6 ${
+				className={`grow rounded-xl bg-gray-200 p-4 md:h-[calc(100vh-6.5rem)] md:p-6 ${
 					fullscreen ? "flex" : "hidden md:flex"
 				}`}
 			>

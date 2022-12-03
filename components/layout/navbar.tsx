@@ -11,7 +11,7 @@ import { useRouter } from "next/router";
 import { NextComponentType } from "next";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import supabase from "../../lib/supabase";
-import { ButtonIcon } from "../misc/pill";
+import { ButtonIcon } from "../misc/button";
 
 const Navbar: NextComponentType = () => {
 	const { newTab, closeTab, tabs } = useTabs();

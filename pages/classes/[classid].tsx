@@ -8,6 +8,7 @@ import { Tab } from "@headlessui/react";
 import { getClass, ClassResponse } from "../../lib/db/classes";
 import { Database } from "../../lib/db/database.types";
 import exampleClassImg from "../../public/example-img.jpg";
+import { Button } from "../../components/misc/button";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -22,6 +23,7 @@ const Class: NextPage = () => {
 			if (user && typeof classid == "string") {
 				const data = await getClass(supabaseClient, classid);
 				setData(data);
+				console.log(data);
 			}
 		})();
 		// (async () => {
@@ -53,7 +55,7 @@ const Class: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2 ${
+									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2.5 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md shadow-black/25  "
 											: "bg-gray-200"
@@ -66,7 +68,7 @@ const Class: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2.5 ${
+									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2.5 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md shadow-black/25 "
 											: "bg-gray-200"
@@ -79,7 +81,7 @@ const Class: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2.5 ${
+									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2.5 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md  shadow-black/25 "
 											: "bg-gray-200"
@@ -90,8 +92,15 @@ const Class: NextPage = () => {
 							)}
 						</Tab>
 					</Tab.List>
+					<Tab.Panels>
+						<Tab.Panel>
+							<div className="rounded-xl bg-gray-200 p-4">
+								{data.data?.description}
+							</div>
+						</Tab.Panel>
+					</Tab.Panels>
 				</Tab.Group>
-				<section className="sticky top-0 w-72">
+				<section className="sticky top-0 ml-8 w-72">
 					<div>
 						<h2 className="title">Grades</h2>
 						<div className="mt-6 rounded-xl bg-gray-200 p-4"></div>

@@ -26,7 +26,7 @@ export const getClass = async (
 		.from("classes")
 		.select(
 			`
-		name,
+		*,
 		assignments (
 			name, description
 		)
