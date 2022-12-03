@@ -22,7 +22,7 @@ const CircleCounter: NextPage<{ amount?: number; max: number }> = ({
 						fill="none"
 					/>
 					<circle
-						className="stroke-green-600 stroke-[number:calc(1+12)] transition-[stroke-dashoffset] duration-500 [stroke-dasharray:100]"
+						className="stroke-green-500 stroke-[number:calc(1+12)] transition-[stroke-dashoffset] duration-500 [stroke-dasharray:100]"
 						strokeDashoffset={100 - percent * 100}
 						cx="60"
 						cy="60"

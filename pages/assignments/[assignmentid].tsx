@@ -22,9 +22,9 @@ import { Database } from "../../lib/db/database.types";
 import launch from "../../public/svgs/launch.svg";
 import noData from "../../public/svgs/no-data.svg";
 import Link from "next/link";
-import { ColoredPill } from "../../components/misc/pill";
+import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import { ButtonIcon } from "../../components/misc/button";
-import { AssignmentPreview } from "../../components/edu/assignments";
+import { AssignmentPreview } from "../../components/complete/assignments";
 
 const Post: NextPage = () => {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -115,9 +115,6 @@ const Post: NextPage = () => {
 	);
 
 	function AssignmentPane() {
-		const [copied, setCopied] = useState(false);
-		const [copiedHover, setCopiedHover] = useState(false);
-
 		if (
 			!router.isReady ||
 			!allAssignments ||
@@ -212,34 +209,9 @@ const Post: NextPage = () => {
 							</p>
 						</div>
 						<div className="flex md:space-x-4">
-							<div
-								className="group relative"
-								onClick={() => (
-									navigator.clipboard.writeText(window.location.href),
-									setCopied(true),
-									setTimeout(() => {
-										//Show for 700 seconds until exiting hover thing
-										setCopiedHover(false);
-										setTimeout(() => {
-											//Change text back once scale animation is over
-											setCopied(false);
-										}, 150);
-									}, 700)
-								)}
-								onMouseEnter={() => setCopiedHover(true)}
-								onMouseLeave={() => setCopiedHover(false)}
-							>
+							<CopiedHover copy={window.location.href}>
 								<ButtonIcon icon={<LinkIcon className="h-5 w-5" />} />
-								<div
-									className={`absolute mt-2 w-24 -translate-x-8 scale-0 rounded transition-all ${
-										copied ? "bg-green-50" : "bg-gray-50"
-									} px-2  py-0.5 text-center text-sm font-medium shadow-lg transition ${
-										copiedHover && "scale-100"
-									}`}
-								>
-									{copied ? "Copied!" : "Copy Link"}
-								</div>
-							</div>
+							</CopiedHover>
 							<div onClick={() => setFullscreen(!fullscreen)}>
 								<ButtonIcon
 									icon={

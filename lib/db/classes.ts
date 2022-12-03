@@ -31,10 +31,10 @@ export const getClass = async (
 			name, description, id
 		),
 		users_classes (
-			user_id, grade
+			user_id, grade, teacher
 		),
 		users (
-			full_name
+			*
 		)
 	`
 		)

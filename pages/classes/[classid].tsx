@@ -1,5 +1,4 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { ErrorMessage, Field, Form, Formik } from "formik";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import Image from "next/image";
@@ -8,10 +7,11 @@ import { Tab } from "@headlessui/react";
 import { getClass, ClassResponse } from "../../lib/db/classes";
 import { Database } from "../../lib/db/database.types";
 import exampleClassImg from "../../public/example-img.jpg";
-import { Button } from "../../components/misc/button";
 import CircleCounter from "../../components/misc/circleCounter";
 import Link from "next/link";
-import { AssignmentPreview } from "../../components/edu/assignments";
+import { AssignmentPreview } from "../../components/complete/assignments";
+import { ColoredPill, CopiedHover } from "../../components/misc/pill";
+import { AcademicCapIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -20,7 +20,6 @@ const Class: NextPage = () => {
 	const supabaseClient = useSupabaseClient<Database>();
 	const [data, setData] = useState<ClassResponse>();
 	const [grade, setGrade] = useState<number>();
-	const [d, setD] = useState();
 
 	useEffect(() => {
 		(async () => {
@@ -103,11 +102,55 @@ const Class: NextPage = () => {
 								teacher: {JSON.stringify(data.data?.users_classes)}
 							</div>
 						</Tab.Panel>
+						<Tab.Panel>announcements here</Tab.Panel>
+						<Tab.Panel>
+							<div className="grid grid-cols-3 gap-4">
+								{data.data?.users && Array.isArray(data.data?.users) ? (
+									data.data?.users.map((user, i) => (
+										<div className="flex rounded-xl bg-gray-200 p-6" key={i}>
+											<div className="relative h-max">
+												<img
+													src={user.avatar_url!}
+													alt="Profile picture"
+													referrerPolicy="no-referrer"
+													className=" h-10 rounded-full shadow-md shadow-black/25"
+												/>
+												{data.data.users_classes &&
+													Array.isArray(data.data.users_classes) && // based on my testing it will always return an array, doing this to make ts happy
+													data.data.users_classes.find(
+														(userValue) =>
+															userValue.teacher && user.id == userValue.user_id
+													) && (
+														<div className="absolute -bottom-1 -right-1  flex rounded-full bg-yellow-100 p-0.5">
+															<AcademicCapIcon className="h-4 w-4 text-yellow-600" />
+														</div>
+													)}
+											</div>
+											<div className="ml-4 flex flex-col">
+												<h2 className="mb-1 font-medium">{user.full_name}</h2>
+												<CopiedHover copy={user.email ?? "No email found"}>
+													<ColoredPill color="gray">
+														<div className="flex items-center">
+															<EnvelopeIcon className="mr-1.5 h-4 w-4 text-gray-800" />
+															{user.email &&
+																user.email.slice(0, 20) +
+																	(user.email?.length > 20 ? "..." : "")}
+														</div>
+													</ColoredPill>
+												</CopiedHover>
+											</div>
+										</div>
+									))
+								) : (
+									<div className="rounded-xl bg-gray-200 p-4">1 user</div>
+								)}
+							</div>
+						</Tab.Panel>
 					</Tab.Panels>
 				</Tab.Group>
 				<section className="sticky top-0 ml-8 w-[20.5rem] shrink-0">
 					<div>
-						<h2 className="title">Grades</h2>
+						<h2 className="title">Grade</h2>
 						<div className="mt-6 rounded-xl bg-gray-200 p-4">
 							<CircleCounter amount={grade} max={100} />
 						</div>
