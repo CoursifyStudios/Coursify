@@ -89,13 +89,19 @@ export interface Database {
 			};
 			groups: {
 				Row: {
-					id: number;
+					name: string | null;
+					description: string | null;
+					id: string;
 				};
 				Insert: {
-					id?: number;
+					name?: string | null;
+					description?: string | null;
+					id?: string;
 				};
 				Update: {
-					id?: number;
+					name?: string | null;
+					description?: string | null;
+					id?: string;
 				};
 			};
 			schedule: {
@@ -166,7 +172,7 @@ export interface Database {
 					created: string | null;
 					username: string | null;
 					full_name: string | null;
-					avatar_url: string | null;
+					avatar_url: string;
 					email: string | null;
 				};
 				Insert: {
@@ -174,7 +180,7 @@ export interface Database {
 					created?: string | null;
 					username?: string | null;
 					full_name?: string | null;
-					avatar_url?: string | null;
+					avatar_url: string;
 					email?: string | null;
 				};
 				Update: {
@@ -182,7 +188,7 @@ export interface Database {
 					created?: string | null;
 					username?: string | null;
 					full_name?: string | null;
-					avatar_url?: string | null;
+					avatar_url?: string;
 					email?: string | null;
 				};
 			};
@@ -209,15 +215,15 @@ export interface Database {
 			users_groups: {
 				Row: {
 					user_id: string;
-					group_id: number;
+					group_id: string;
 				};
 				Insert: {
 					user_id: string;
-					group_id: number;
+					group_id: string;
 				};
 				Update: {
 					user_id?: string;
-					group_id?: number;
+					group_id?: string;
 				};
 			};
 		};
@@ -229,6 +235,15 @@ export interface Database {
 				Args: { name: string; description: string; class_id: string };
 				Returns: boolean;
 			};
+			get_profile_classes:
+				| {
+						Args: Record<PropertyKey, never>;
+						Returns: unknown;
+				  }
+				| {
+						Args: { id: string };
+						Returns: unknown;
+				  };
 			hello_world: {
 				Args: Record<PropertyKey, never>;
 				Returns: string;

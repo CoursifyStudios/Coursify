@@ -1,16 +1,22 @@
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
 import { useEffect, useState } from "react";
 
 const Settings: NextPage = () => {
 	const supabaseClient = useSupabaseClient();
 	const [data, setData] = useState();
+	const user = useUser();
 	useEffect(() => {
 		(async () => {
-			//const { data, error } = await supabaseClient.rpc('create_assignment', {name: "testing", description: "don't mind me just testing if functions work", class_id: "4db31720-9711-4860-b37d-e15bc7bf74e3"});
-			//console.log(error, data)
+			if (user) {
+				const { data, error } = await supabaseClient.rpc(
+					"get_profile_classes",
+					{ id: "746abfff-e526-41d8-8bd0-ed420fe4f244" }
+				);
+				console.log(error, data);
+			}
 		})();
-	}, [supabaseClient]);
+	}, [supabaseClient, user]);
 	return <div>testing page atm</div>;
 };
 
