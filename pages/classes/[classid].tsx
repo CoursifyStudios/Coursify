@@ -12,6 +12,8 @@ import Link from "next/link";
 import { AssignmentPreview } from "../../components/complete/assignments";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import { AcademicCapIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
+import { useTabs } from "../../lib/tabs/handleTabs";
+import { addPlural } from "../../lib/misc/stringManipulation";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -20,6 +22,7 @@ const Class: NextPage = () => {
 	const supabaseClient = useSupabaseClient<Database>();
 	const [data, setData] = useState<ClassResponse>();
 	const [grade, setGrade] = useState<number>();
+	const { newTab } = useTabs();
 
 	useEffect(() => {
 		(async () => {
@@ -107,7 +110,17 @@ const Class: NextPage = () => {
 							<div className="grid grid-cols-3 gap-4">
 								{data.data?.users && Array.isArray(data.data?.users) ? (
 									data.data?.users.map((user, i) => (
-										<div className="flex rounded-xl bg-gray-200 p-6" key={i}>
+										<Link
+											className="brightness-hover flex rounded-xl bg-gray-200 p-6"
+											key={i}
+											href={"/profile/" + user.id}
+											onClick={() =>
+												newTab(
+													"/profile/" + user.id,
+													addPlural(user.full_name.split(" ")[0]) + " Profile"
+												)
+											}
+										>
 											<div className="relative h-max">
 												<img
 													src={user.avatar_url!}
@@ -139,10 +152,12 @@ const Class: NextPage = () => {
 													</ColoredPill>
 												</CopiedHover>
 											</div>
-										</div>
+										</Link>
 									))
 								) : (
-									<div className="rounded-xl bg-gray-200 p-4">1 user</div>
+									<div className="rounded-xl bg-gray-200 p-4">
+										An error occured
+									</div>
 								)}
 							</div>
 						</Tab.Panel>
@@ -155,13 +170,13 @@ const Class: NextPage = () => {
 							<CircleCounter amount={grade} max={100} />
 						</div>
 					</div>
-					<div>
+					<div className="space-y-4">
 						<h2 className="title mt-8 mb-6">Assignments</h2>
 						{Array.isArray(data.data?.assignments) &&
 							data.data?.assignments.map((assignment) => (
 								<Link
 									key={assignment.id}
-									className=" flex rounded-xl bg-gray-200 p-3 transition duration-300 hover:brightness-95"
+									className=" brightness-hover flex rounded-xl bg-gray-200 p-3"
 									href={"/assignments/" + assignment.id}
 								>
 									<AssignmentPreview

@@ -9,9 +9,8 @@ import { getProfile } from "../../lib/db/profiles";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database, Json } from "../../lib/db/database.types";
 import { useRouter } from "next/router";
-import { CopiedHover } from "../../components/misc/pill";
+import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import type { PostgrestResponse } from "@supabase/supabase-js";
-
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
@@ -44,7 +43,7 @@ export default function Profile() {
 	return (
 		<div className="container mx-auto flex w-full flex-col p-2 sm:p-4 md:p-8 lg:flex-row lg:space-x-8 2xl:max-w-screen-xl">
 			<div className="flex shrink-0 flex-col items-center md:flex-row lg:h-max lg:max-h-[calc(100vh-8rem)] lg:w-72 lg:flex-col">
-				<div className="flex flex-col items-center rounded-xl bg-gray-200 p-6">
+				<div className="flex w-full flex-col items-center rounded-xl bg-gray-200 p-6">
 					{profile && profile.data ? (
 						<img
 							src={profile.data.avatar_url}
@@ -62,17 +61,23 @@ export default function Profile() {
 							<>
 								<p className="invisible">
 									{":"}trojker{":"}
-								</p>{" "}
+								</p>
 								<div className="absolute inset-0 animate-pulse rounded-md bg-gray-300"></div>
 							</>
 						)}
 					</h1>
-					<h2 className="text-xl">2023</h2>
-					<CopiedHover copy="test@example.com">
-						<h2 className="group relative mt-2 flex cursor-pointer items-center rounded-md bg-gray-300 py-0.5 px-2 text-sm font-medium">
-							<EnvelopeIcon className="mr-2 h-5 w-5 text-gray-800" />{" "}
-							23jdoe@shcp.edu
-						</h2>
+					<h2 className="mb-4 text-xl">2023</h2>
+
+					<CopiedHover copy={profile?.data?.email || "No email found"}>
+						<ColoredPill color="gray">
+							<div className="flex items-center">
+								<EnvelopeIcon className="mr-1.5 h-4 w-4 text-gray-800" />
+								{profile && profile.data && profile.data.email
+									? profile.data.email.slice(0, 26) +
+									  (profile.data.email.length > 26 ? "..." : "")
+									: "No email found"}
+							</div>
+						</ColoredPill>
 					</CopiedHover>
 				</div>
 				<div className="scrollbar-fancy scrollbar-fancy-darker mx-0 flex flex-col items-center overflow-y-auto rounded-xl bg-gray-200 p-6 md:mx-auto  lg:mx-0 lg:mt-8 ">

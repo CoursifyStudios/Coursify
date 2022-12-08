@@ -73,7 +73,7 @@ const Post: NextPage = () => {
 							className={`flex h-max snap-start rounded-xl ${
 								assignmentid == assignment.id
 									? "bg-gray-50 shadow-xl"
-									: "bg-gray-200"
+									: "brightness-hover bg-gray-200"
 							} p-3`}
 							href={"/assignments/" + assignment.id}
 							key={assignment.id}

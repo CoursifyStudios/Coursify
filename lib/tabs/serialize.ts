@@ -9,7 +9,9 @@ export function serializeTabs(tabs: Tab[]) {
 	const newTabs = tabs.map((tab) => {
 		return {
 			...tab,
-			matcher: { flags: tab.matcher.flags, source: tab.matcher.source },
+			matcher: tab.matcher
+				? { flags: tab.matcher.flags, source: tab.matcher.source }
+				: undefined,
 		};
 	});
 	return newTabs;
@@ -25,7 +27,9 @@ export function deserializeTabs(tabs: Tab[]) {
 	const newTabs = tabs.map((tab) => {
 		return {
 			...tab,
-			matcher: new RegExp(tab.matcher.source, tab.matcher.flags),
+			matcher: tab.matcher
+				? new RegExp(tab.matcher.source, tab.matcher.flags)
+				: undefined,
 		};
 	});
 	return newTabs;

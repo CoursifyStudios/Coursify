@@ -4,7 +4,7 @@ const pageMatchers: { matcher: RegExp; name: string }[] = [
 	// List of all links, their regex, then the name of the page
 	{ matcher: /^\/settings/g, name: "Settings" },
 	{ matcher: /^\/tabstest/g, name: "Testing tabs but this name is rly long" },
-	{ matcher: /^\/profile/g, name: "Name's Profile" },
+	//{ matcher: /^\/profile/g, name: "Name's Profile" },
 ];
 
 /**
@@ -13,14 +13,13 @@ const pageMatchers: { matcher: RegExp; name: string }[] = [
  * @returns The tab representation of the sent route
  */
 export function getLinkRegex(route: string): Tab | null {
-	let test: Tab | null = null;
 	pageMatchers.forEach((v) => {
 		if (v.matcher.test(route)) {
-			test = {
+			return {
 				route,
 				...v,
 			};
 		}
 	});
-	return test;
+	return null;
 }

@@ -39,7 +39,7 @@ export const CopiedHover: NextPage<{ children: ReactNode; copy: string }> = ({
 	const [copiedHover, setCopiedHover] = useState(false);
 	return (
 		<div
-			className="group relative cursor-pointer select-none"
+			className="group relative cursor-pointer select-none "
 			onClick={() => (
 				navigator.clipboard.writeText(copy),
 				setCopied(true),
@@ -56,7 +56,7 @@ export const CopiedHover: NextPage<{ children: ReactNode; copy: string }> = ({
 			onMouseLeave={() => setCopiedHover(false)}
 		>
 			{children}
-			<div className="absolute left-0 right-0 mt-2 flex justify-center ">
+			<div className="absolute left-0 right-0 mt-2 flex justify-center brightness-105">
 				<div
 					className={`min-w-[6rem] scale-0 rounded transition-all ${
 						copied ? "bg-green-50" : "bg-gray-50"
