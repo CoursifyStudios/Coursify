@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useTabs } from "../lib/tabs/handleTabs";
 import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
-import { Class } from "../components/classes/class";
+import { Class } from "../components/complete/class";
 import Loading from "../components/misc/loading";
 import {
 	getSchedule,
@@ -53,23 +53,13 @@ export default function Home() {
 
 	return (
 		<>
-			<div className="mx-auto mt-4 flex">
+			<div className="mx-auto mt-4 flex ">
 				<div
 					className="cursor-pointer rounded-md bg-gray-200 px-4 py-2 font-medium"
 					onClick={() => supabaseClient.auth.signOut()}
 				>
 					Logout
 				</div>
-				<Link href="/settings" onClick={() => newTab("/settings")}>
-					<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
-						Settings
-					</div>
-				</Link>
-				<Link href="/tabstest" onClick={() => newTab("/tabstest")}>
-					<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
-						Testing Tab
-					</div>
-				</Link>
 
 				<Link href="/scheduleEditor" onClick={() => newTab("/scheduleEditor")}>
 					<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
@@ -89,14 +79,14 @@ export default function Home() {
 				</Link>
 			</div>
 
-			<div className="my-10 mx-auto flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words">
-				<div className="flex w-full">
-					<section className="px-5">
-						<div className="flex items-center">
+			<div className="container my-10 mx-auto flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words  px-4 md:px-8 xl:px-0">
+				<div className="flex w-full flex-col-reverse lg:flex-row">
+					<section>
+						<div className="mt-8 flex items-center lg:mt-0">
 							<h2 className="title">Classes</h2>
 							{loading && <Loading className="ml-4" />}
 						</div>
-						<div className="mt-6 grid grid-cols-3 gap-10">
+						<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
 							{classes &&
 								classes.data &&
 								classes.data.map((v, i) => (
@@ -105,16 +95,20 @@ export default function Home() {
 										onClick={() => "/classes/" + v.id}
 										key={i}
 									>
-										<Class class={{ data: v }} key={i} />
+										<Class
+											class={{ data: v }}
+											key={i}
+											className="!w-full xl:!w-[18.5rem]"
+										/>
 									</Link>
 								))}
 						</div>
 					</section>
-					<section className="px-5">
+					<section className=" grow lg:ml-10 ">
 						<h2 className="title">Daily Schedule</h2>
 						{/* Line below requires flex. flex was removed temporarily by bill because it made the ui look bad */}
 						<div className="flex flex-col">
-							<div className=" mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
+							<div className=" mt-6 grid max-w-md gap-5 rounded-xl bg-gray-200 p-4">
 								{schedule &&
 									schedule.data &&
 									schedule.data.schedule_items &&

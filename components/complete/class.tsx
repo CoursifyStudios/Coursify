@@ -2,9 +2,14 @@ import { Class } from "../../lib/db/classes";
 import Image from "next/image";
 import { ColoredPill } from "../misc/pill";
 
-export function Class(props: { class: Class }) {
+export function Class(props: { class: Class; className?: string }) {
 	return (
-		<div className="group flex w-[19rem] cursor-pointer flex-col rounded-xl bg-gray-200 transition duration-300 hover:shadow-lg hover:brightness-95">
+		<div
+			className={
+				"group flex w-[19rem] cursor-pointer flex-col rounded-xl bg-gray-200 transition duration-300 hover:shadow-lg hover:brightness-95 " +
+				props.className
+			}
+		>
 			<div className="relative h-32 ">
 				<Image
 					src="/example-img.jpg"

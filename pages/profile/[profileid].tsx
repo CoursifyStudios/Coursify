@@ -3,13 +3,15 @@ import type { NextComponentType } from "next";
 import Image from "next/image";
 import profileexample from "../../public/unnamed.jpg";
 import { ReactNode, useEffect, useState } from "react";
-import { Class } from "../../components/classes/class";
+import { Class } from "../../components/complete/class";
 import { ProfilesResponse } from "../../lib/db/profiles";
 import { getProfile } from "../../lib/db/profiles";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database, Json } from "../../lib/db/database.types";
 import { useRouter } from "next/router";
+import { CopiedHover } from "../../components/misc/pill";
 import type { PostgrestResponse } from "@supabase/supabase-js";
+
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
@@ -66,18 +68,12 @@ export default function Profile() {
 						)}
 					</h1>
 					<h2 className="text-xl">2023</h2>
-					<h2
-						className="group relative mt-2 flex cursor-pointer items-center rounded-md bg-gray-300 py-0.5 px-2 text-sm font-medium"
-						onClick={() => navigator.clipboard.writeText("amongus@gmail.com")}
-					>
-						<EnvelopeIcon className="mr-2 h-5 w-5 text-gray-800" />{" "}
-						23jdoe@shcp.edu
-						<div className="absolute -right-20 flex scale-0 group-focus:group-hover:scale-100">
-							<div className="mx-auto rounded-md bg-blue-300 px-2 font-semibold text-blue-700">
-								Copied!
-							</div>
-						</div>
-					</h2>
+					<CopiedHover copy="test@example.com">
+						<h2 className="group relative mt-2 flex cursor-pointer items-center rounded-md bg-gray-300 py-0.5 px-2 text-sm font-medium">
+							<EnvelopeIcon className="mr-2 h-5 w-5 text-gray-800" />{" "}
+							23jdoe@shcp.edu
+						</h2>
+					</CopiedHover>
 				</div>
 				<div className="scrollbar-fancy scrollbar-fancy-darker mx-0 flex flex-col items-center overflow-y-auto rounded-xl bg-gray-200 p-6 md:mx-auto  lg:mx-0 lg:mt-8 ">
 					<h1 className="title mb-5">Achievements</h1>

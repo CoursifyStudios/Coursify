@@ -26,9 +26,15 @@ export const getClass = async (
 		.from("classes")
 		.select(
 			`
-		name,
+		*,
 		assignments (
-			name, description
+			name, description, id
+		),
+		users_classes (
+			user_id, grade, teacher
+		),
+		users (
+			*
 		)
 	`
 		)
