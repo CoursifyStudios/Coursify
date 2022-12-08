@@ -9,7 +9,7 @@ import { getProfile } from "../../lib/db/profiles";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database, Json } from "../../lib/db/database.types";
 import { useRouter } from "next/router";
-import { CopiedHover } from "../../components/misc/pill";
+import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import type { PostgrestResponse } from "@supabase/supabase-js";
 
 export default function Profile() {
@@ -66,12 +66,18 @@ export default function Profile() {
 							</>
 						)}
 					</h1>
-					<h2 className="text-xl">2023</h2>
-					<CopiedHover copy="test@example.com">
-						<h2 className="group relative mt-2 flex cursor-pointer items-center rounded-md bg-gray-300 py-0.5 px-2 text-sm font-medium">
-							<EnvelopeIcon className="mr-2 h-5 w-5 text-gray-800" />{" "}
-							23jdoe@shcp.edu
-						</h2>
+					<h2 className="mb-4 text-xl">2023</h2>
+
+					<CopiedHover copy={profile?.data?.email || "No email found"}>
+						<ColoredPill color="gray">
+							<div className="flex items-center">
+								<EnvelopeIcon className="mr-1.5 h-4 w-4 text-gray-800" />
+								{profile && profile.data && profile.data.email
+									? profile.data.email.slice(0, 26) +
+									  (profile.data.email.length > 26 ? "..." : "")
+									: "No email found"}
+							</div>
+						</ColoredPill>
 					</CopiedHover>
 				</div>
 				<div className="scrollbar-fancy scrollbar-fancy-darker mx-0 flex flex-col items-center overflow-y-auto rounded-xl bg-gray-200 p-6 md:mx-auto  lg:mx-0 lg:mt-8 ">
