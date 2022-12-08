@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useTabs } from "../lib/tabs/handleTabs";
 import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
-import { Class } from "../components/complete/class";
+import { Class, LoadingClass } from "../components/complete/class";
 import Loading from "../components/misc/loading";
 import {
 	getSchedule,
@@ -96,16 +96,10 @@ export default function Home() {
 											class={{ data: v }}
 											key={i}
 											className="!w-full xl:!w-[18.5rem]"
-											linkTo={"/classes/" + v.id}
+											isLink={true}
 										/>
 								  ))
-								: [...Array(6)].map((_, i) => (
-										<Class
-											key={i}
-											className="!w-full xl:!w-[18.5rem]"
-											isLoading={true}
-										/>
-								  ))}
+								: [...Array(6)].map((_, i) => <LoadingClass key={i} />)}
 						</div>
 					</section>
 					<section className=" grow lg:ml-10 ">
