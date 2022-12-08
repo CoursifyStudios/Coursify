@@ -68,9 +68,12 @@ export default function Home() {
 				</Link>
 
 				<Link
-					href="/profile/746abfff-e526-41d8-8bd0-ed420fe4f244"
+					href="/profile/1e5024f5-d493-4e32-9822-87f080ad5516"
 					onClick={() =>
-						newTab("/profile/746abfff-e526-41d8-8bd0-ed420fe4f244")
+						newTab(
+							"/profile/1e5024f5-d493-4e32-9822-87f080ad5516",
+							"Lukas' Profile"
+						)
 					}
 				>
 					<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">

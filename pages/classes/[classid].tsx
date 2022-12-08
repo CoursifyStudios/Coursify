@@ -142,7 +142,9 @@ const Class: NextPage = () => {
 										</div>
 									))
 								) : (
-									<div className="rounded-xl bg-gray-200 p-4">1 user</div>
+									<div className="rounded-xl bg-gray-200 p-4">
+										An error occured
+									</div>
 								)}
 							</div>
 						</Tab.Panel>
@@ -155,7 +157,7 @@ const Class: NextPage = () => {
 							<CircleCounter amount={grade} max={100} />
 						</div>
 					</div>
-					<div>
+					<div className="space-y-4">
 						<h2 className="title mt-8 mb-6">Assignments</h2>
 						{Array.isArray(data.data?.assignments) &&
 							data.data?.assignments.map((assignment) => (
