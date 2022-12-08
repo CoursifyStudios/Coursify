@@ -72,7 +72,7 @@ export default function Home() {
 					onClick={() =>
 						newTab(
 							"/profile/1e5024f5-d493-4e32-9822-87f080ad5516",
-							"Lukas' Profile"
+							"quick007's Profile"
 						)
 					}
 				>
@@ -90,21 +90,22 @@ export default function Home() {
 							{loading && <Loading className="ml-4" />}
 						</div>
 						<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
-							{classes &&
-								classes.data &&
-								classes.data.map((v, i) => (
-									<Link
-										href={"/classes/" + v.id}
-										onClick={() => "/classes/" + v.id}
-										key={i}
-									>
+							{classes && classes.data
+								? classes.data.map((v, i) => (
 										<Class
 											class={{ data: v }}
 											key={i}
 											className="!w-full xl:!w-[18.5rem]"
+											linkTo={"/classes/" + v.id}
 										/>
-									</Link>
-								))}
+								  ))
+								: [...Array(6)].map((_, i) => (
+										<Class
+											key={i}
+											className="!w-full xl:!w-[18.5rem]"
+											isLoading={true}
+										/>
+								  ))}
 						</div>
 					</section>
 					<section className=" grow lg:ml-10 ">

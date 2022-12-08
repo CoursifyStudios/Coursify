@@ -30,3 +30,7 @@
 .title {
 	@apply text-2xl font-bold;
 }
+
+.brightness-hover {
+	@apply transition duration-300 hover:shadow-lg hover:brightness-95;
+}

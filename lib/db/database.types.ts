@@ -171,7 +171,7 @@ export interface Database {
 					id: string;
 					created: string | null;
 					username: string | null;
-					full_name: string | null;
+					full_name: string;
 					avatar_url: string;
 					email: string | null;
 				};
@@ -179,7 +179,7 @@ export interface Database {
 					id: string;
 					created?: string | null;
 					username?: string | null;
-					full_name?: string | null;
+					full_name: string;
 					avatar_url: string;
 					email?: string | null;
 				};
@@ -187,7 +187,7 @@ export interface Database {
 					id?: string;
 					created?: string | null;
 					username?: string | null;
-					full_name?: string | null;
+					full_name?: string;
 					avatar_url?: string;
 					email?: string | null;
 				};

@@ -12,7 +12,6 @@ import { useRouter } from "next/router";
 import { CopiedHover } from "../../components/misc/pill";
 import type { PostgrestResponse } from "@supabase/supabase-js";
 
-
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
 	const [profileClasses, setProfileClasses] =
@@ -44,7 +43,7 @@ export default function Profile() {
 	return (
 		<div className="container mx-auto flex w-full flex-col p-2 sm:p-4 md:p-8 lg:flex-row lg:space-x-8 2xl:max-w-screen-xl">
 			<div className="flex shrink-0 flex-col items-center md:flex-row lg:h-max lg:max-h-[calc(100vh-8rem)] lg:w-72 lg:flex-col">
-				<div className="flex flex-col items-center rounded-xl bg-gray-200 p-6">
+				<div className="flex w-full flex-col items-center rounded-xl bg-gray-200 p-6">
 					{profile && profile.data ? (
 						<img
 							src={profile.data.avatar_url}
@@ -62,7 +61,7 @@ export default function Profile() {
 							<>
 								<p className="invisible">
 									{":"}trojker{":"}
-								</p>{" "}
+								</p>
 								<div className="absolute inset-0 animate-pulse rounded-md bg-gray-300"></div>
 							</>
 						)}
