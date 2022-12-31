@@ -49,13 +49,30 @@ const group: NextPage = () => {
 						</Tab>
 					</Tab.List>
 					<Tab.Panels>
-						<Tab.Panel>Content 1</Tab.Panel>
-						<Tab.Panel>Content 2</Tab.Panel>
-						<Tab.Panel>Content 3</Tab.Panel>
+						<Tab.Panel>
+							<div className="rounded-xl bg-gray-200 p-4">
+								A group description and more information about the group would
+								go here. Could also contain links to instagrams and stuff/other
+								relevant shit
+							</div>
+							<h2 className="title mt-6">Quick Access</h2>
+						</Tab.Panel>
+						<Tab.Panel>
+							Announcments would be here when I figure them out
+						</Tab.Panel>
+						<Tab.Panel>
+							Copy the member page from classes tbh and just reformat some stuff
+						</Tab.Panel>
 					</Tab.Panels>
 				</Tab.Group>
+				<div className="sticky top-0 ml-8 w-[20.5rem] shrink-0 ">
+					<h2 className="title">Next Event</h2>
+					<div className="mt-6 rounded-xl bg-gray-200 p-4">
+						event details here
+					</div>
+					<h2 className="title mt-6 mb-6">Upcoming</h2>
+				</div>
 			</div>
-			<div></div>
 		</div>
 	);
 };

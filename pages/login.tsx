@@ -20,7 +20,7 @@ export default function Login() {
 		: "http://localhost:3000";
 
 	return (
-		<div className="flex h-screen bg-teal-500 [background-image:url('/svgs/falling-triangles.svg')]">
+		<div className="flex h-screen bg-emerald-400 [background-image:url('/svgs/falling-triangles.svg')]">
 			<div className=" md:grow "></div>
 			<div className="mx-10 my-auto flex flex-grow flex-col items-center justify-center rounded-lg bg-white py-20 md:mx-0 md:my-0 md:max-w-xl md:basis-1/3 md:rounded-none md:py-0">
 				<h1 className="mb-14 text-3xl font-bold">Welcome Back</h1>
