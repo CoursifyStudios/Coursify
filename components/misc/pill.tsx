@@ -14,6 +14,9 @@ export const ColoredPill: NextPage<{
 		case "green":
 			pillColor = "bg-green-200 text-green-600";
 			break;
+		case "light green":
+			pillColor = "bg-green-100 text-green-500";
+			break;
 		case "purple":
 			pillColor = "bg-purple-200 text-purple-600";
 			break;
