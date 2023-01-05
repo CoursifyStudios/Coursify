@@ -12,9 +12,5 @@ export default function Footer() {
 		return null;
 	}
 
-	return (
-		<footer className="">
-			 
-		</footer>
-	);
+	return <footer className=""> sss</footer>;
 }
