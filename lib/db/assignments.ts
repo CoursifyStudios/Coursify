@@ -8,7 +8,9 @@ export const getAllAssignments = async (
 	return await supabaseClient.from("assignments").select(
 		`
 		name, description, id,
-		classes (*)
+		classes (
+			name, id, color
+		)
 		`
 	);
 };
@@ -25,7 +27,9 @@ export const getAssignment = async (
 		.from("assignments")
 		.select(
 			`
-		*, classes (*)
+		*, classes (
+			name, id, color
+		)
 		`
 		)
 		.eq("id", assignmentuuid)

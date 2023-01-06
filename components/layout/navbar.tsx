@@ -10,8 +10,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { NextComponentType } from "next";
 import { useTabs } from "../../lib/tabs/handleTabs";
-import supabase from "../../lib/supabase";
-import { ButtonIcon } from "../misc/pill";
+import { ButtonIcon } from "../misc/button";
 
 const Navbar: NextComponentType = () => {
 	const { newTab, closeTab, tabs } = useTabs();
@@ -61,7 +60,13 @@ const Navbar: NextComponentType = () => {
 	);
 
 	function TabUI({ tab, canClose }: { tab: Tab; canClose: boolean }) {
-		const selected = useMemo(() => router.pathname.match(tab.matcher), [tab]);
+		const selected = useMemo(
+			() =>
+				tab.matcher
+					? router.pathname.match(tab.matcher)
+					: router.asPath.includes(tab.route),
+			[tab]
+		);
 
 		return (
 			<div
@@ -95,7 +100,10 @@ const Navbar: NextComponentType = () => {
 		);
 	}
 
-	function handleClose(name: string, selected: RegExpMatchArray | null) {
+	function handleClose(
+		name: string,
+		selected: RegExpMatchArray | null | boolean
+	) {
 		closeTab(name);
 		if (selected) {
 			router.push("/");
@@ -107,7 +115,7 @@ export interface Tab {
 	//this is temp (not), see the tabs rfc here for the proposal: https://docs.google.com/document/d/1oAc1VBBhF7aVSQeesqvNN4Wb8J4m-aJBoMPG1vLyVZs/edit
 	name: string;
 	route: string;
-	matcher: RegExp;
+	matcher?: RegExp;
 }
 
 const defaultTabs: Tab[] = [

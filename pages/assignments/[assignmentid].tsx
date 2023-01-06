@@ -22,7 +22,9 @@ import { Database } from "../../lib/db/database.types";
 import launch from "../../public/svgs/launch.svg";
 import noData from "../../public/svgs/no-data.svg";
 import Link from "next/link";
-import { ButtonIcon, ColoredPill } from "../../components/misc/pill";
+import { ColoredPill, CopiedHover } from "../../components/misc/pill";
+import { ButtonIcon } from "../../components/misc/button";
+import { AssignmentPreview } from "../../components/complete/assignments";
 
 const Post: NextPage = () => {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -58,30 +60,38 @@ const Post: NextPage = () => {
 	}, [user, supabaseClient, router, assignmentid]);
 
 	return (
-		<div className="mx-auto flex w-full max-w-screen-xl px-5 pt-5 pb-4">
+		<div className="mx-auto flex w-full max-w-screen-xl px-5 pt-6 pb-6">
 			<div
 				className={`scrollbar-fancy mr-4 grow items-center overflow-x-clip md:grow-0 ${
 					fullscreen ? "hidden" : "flex"
-				} w-[20.5rem] shrink-0 snap-y snap-mandatory flex-col space-y-8 overflow-y-auto p-2 md:h-[calc(100vh-6rem)] `}
+				} w-[20.5rem] shrink-0 snap-y snap-mandatory flex-col space-y-8 overflow-y-auto md:h-[calc(100vh-6.5rem)] `}
 			>
 				{allAssignments ? (
 					!allAssignments.error &&
 					allAssignments.data.map((assignment) => (
-						<AssignmentPreview
-							name={assignment.name}
-							desc={assignment.description}
-							starred={false}
-							due={new Date(1667840443856)}
-							id={assignment.id}
-							classes={
-								assignment.classes
-									? Array.isArray(assignment.classes)
-										? assignment.classes[0]
-										: assignment.classes
-									: undefined
-							}
+						<Link
+							className={`flex h-max snap-start rounded-xl ${
+								assignmentid == assignment.id
+									? "bg-gray-50 shadow-xl"
+									: "brightness-hover bg-gray-200"
+							} p-3`}
+							href={"/assignments/" + assignment.id}
 							key={assignment.id}
-						/>
+						>
+							<AssignmentPreview
+								name={assignment.name}
+								desc={assignment.description}
+								starred={false}
+								due={new Date(1667840443856)}
+								classes={
+									assignment.classes
+										? Array.isArray(assignment.classes)
+											? assignment.classes[0]
+											: assignment.classes
+										: undefined
+								}
+							/>
+						</Link>
 					))
 				) : (
 					<>
@@ -95,7 +105,7 @@ const Post: NextPage = () => {
 				)}
 			</div>
 			<div
-				className={`grow rounded-xl bg-gray-200 p-4 md:h-[calc(100vh-6rem)] md:p-6 ${
+				className={`grow rounded-xl bg-gray-200 p-4 md:h-[calc(100vh-6.5rem)] md:p-6 ${
 					fullscreen ? "flex" : "hidden md:flex"
 				}`}
 			>
@@ -105,9 +115,6 @@ const Post: NextPage = () => {
 	);
 
 	function AssignmentPane() {
-		const [copied, setCopied] = useState(false);
-		const [copiedHover, setCopiedHover] = useState(false);
-
 		if (
 			!router.isReady ||
 			!allAssignments ||
@@ -168,13 +175,31 @@ const Post: NextPage = () => {
 									className="mb-4"
 								/>
 							</Link>
-							<ColoredPill color="blue">
-								{assignment.data.classes
-									? Array.isArray(assignment.data.classes)
-										? assignment.data.classes[0].name
-										: assignment.data.classes.name
-									: "Error fetching class"}
-							</ColoredPill>
+							<Link
+								href={
+									"/classes/" +
+									(Array.isArray(assignment.data.classes)
+										? assignment.data.classes[0].id
+										: assignment.data.classes?.id)
+								}
+							>
+								<ColoredPill
+									color={
+										assignment.data.classes
+											? Array.isArray(assignment.data.classes)
+												? assignment.data.classes[0].color
+												: assignment.data.classes?.color
+											: "blue"
+									}
+									hoverState
+								>
+									{assignment.data.classes
+										? Array.isArray(assignment.data.classes)
+											? assignment.data.classes[0].name
+											: assignment.data.classes.name
+										: "Error fetching class"}
+								</ColoredPill>
+							</Link>
 
 							<h1 className="title mt-4 mb-2 line-clamp-2">
 								{assignment.data.name}
@@ -184,34 +209,9 @@ const Post: NextPage = () => {
 							</p>
 						</div>
 						<div className="flex md:space-x-4">
-							<div
-								className="group relative"
-								onClick={() => (
-									navigator.clipboard.writeText(window.location.href),
-									setCopied(true),
-									setTimeout(() => {
-										//Show for 700 seconds until exiting hover thing
-										setCopiedHover(false);
-										setTimeout(() => {
-											//Change text back once scale animation is over
-											setCopied(false);
-										}, 150);
-									}, 700)
-								)}
-								onMouseEnter={() => setCopiedHover(true)}
-								onMouseLeave={() => setCopiedHover(false)}
-							>
+							<CopiedHover copy={window.location.href}>
 								<ButtonIcon icon={<LinkIcon className="h-5 w-5" />} />
-								<div
-									className={`absolute mt-2 w-24 -translate-x-8 scale-0 rounded transition-all ${
-										copied ? "bg-green-50" : "bg-gray-50"
-									} px-2  py-0.5 text-center text-sm font-medium shadow-lg transition ${
-										copiedHover && "scale-100"
-									}`}
-								>
-									{copied ? "Copied!" : "Copy Link"}
-								</div>
-							</div>
+							</CopiedHover>
 							<div onClick={() => setFullscreen(!fullscreen)}>
 								<ButtonIcon
 									icon={
@@ -252,46 +252,6 @@ const Post: NextPage = () => {
 		}
 
 		return <div>An unknown error occured. Assignment id: {assignmentid}</div>;
-	}
-
-	function AssignmentPreview(props: {
-		name: string;
-		desc: string;
-		starred: boolean;
-		due: Date;
-		id: string;
-		classes?: {
-			id: string;
-			name: string;
-			description: string;
-			block: number | null;
-		};
-	}) {
-		return (
-			<Link
-				className={`flex h-max snap-start rounded-xl ${
-					assignmentid == props.id ? "bg-gray-50 shadow-xl" : "bg-gray-200"
-				} p-3`}
-				href={"/assignments/" + props.id}
-			>
-				<div className="w-10">
-					<Starred starred={props.starred} />
-				</div>
-				<div>
-					<ColoredPill color="blue">
-						{props.classes?.name || "Error fetching class"}
-					</ColoredPill>
-					<h1 className="text font-medium">{props.name}</h1>
-					<p className="w-[12rem] break-words line-clamp-3  ">{props.desc}</p>
-				</div>
-				<div className="ml-1 flex flex-col items-end justify-between">
-					<p className="w-max text-sm font-medium text-gray-700">
-						Due: {props.due.getMonth() + 1}/{props.due.getDate()}
-					</p>
-					<CheckIcon className="h-5 w-5 text-gray-600" />
-				</div>
-			</Link>
-		);
 	}
 };
 

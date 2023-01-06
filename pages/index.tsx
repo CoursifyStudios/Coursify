@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useTabs } from "../lib/tabs/handleTabs";
 import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
-import { Class } from "../components/classes/class";
+import { Class, LoadingClass } from "../components/complete/class";
 import Loading from "../components/misc/loading";
 import {
 	getSchedule,
@@ -68,9 +68,12 @@ export default function Home() {
 				</Link>
 
 				<Link
-					href="/profile/3000746abfff-e526-41d8-8bd0-ed420fe4f244"
+					href="/profile/1e5024f5-d493-4e32-9822-87f080ad5516"
 					onClick={() =>
-						newTab("/profile/3000746abfff-e526-41d8-8bd0-ed420fe4f244")
+						newTab(
+							"/profile/1e5024f5-d493-4e32-9822-87f080ad5516",
+							"quick007's Profile"
+						)
 					}
 				>
 					<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
@@ -87,21 +90,16 @@ export default function Home() {
 							{loading && <Loading className="ml-4" />}
 						</div>
 						<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
-							{classes &&
-								classes.data &&
-								classes.data.map((v, i) => (
-									<Link
-										href={"/classes/" + v.id}
-										onClick={() => "/classes/" + v.id}
-										key={i}
-									>
+							{classes && classes.data
+								? classes.data.map((v, i) => (
 										<Class
 											class={{ data: v }}
 											key={i}
 											className="!w-full xl:!w-[18.5rem]"
+											isLink={true}
 										/>
-									</Link>
-								))}
+								  ))
+								: [...Array(6)].map((_, i) => <LoadingClass key={i} />)}
 						</div>
 					</section>
 					<section className=" grow lg:ml-10 ">

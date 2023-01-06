@@ -49,6 +49,8 @@ export interface Database {
 					schedule_type: number | null;
 					color: string;
 					id: string;
+					name_full: string;
+					description_new: Json[] | null;
 				};
 				Insert: {
 					name: string;
@@ -57,6 +59,8 @@ export interface Database {
 					schedule_type?: number | null;
 					color?: string;
 					id?: string;
+					name_full?: string;
+					description_new?: Json[] | null;
 				};
 				Update: {
 					name?: string;
@@ -65,6 +69,8 @@ export interface Database {
 					schedule_type?: number | null;
 					color?: string;
 					id?: string;
+					name_full?: string;
+					description_new?: Json[] | null;
 				};
 			};
 			classes_assignments: {
@@ -83,13 +89,19 @@ export interface Database {
 			};
 			groups: {
 				Row: {
-					id: number;
+					name: string | null;
+					description: string | null;
+					id: string;
 				};
 				Insert: {
-					id?: number;
+					name?: string | null;
+					description?: string | null;
+					id?: string;
 				};
 				Update: {
-					id?: number;
+					name?: string | null;
+					description?: string | null;
+					id?: string;
 				};
 			};
 			schedule: {
@@ -159,24 +171,24 @@ export interface Database {
 					id: string;
 					created: string | null;
 					username: string | null;
-					full_name: string | null;
-					avatar_url: string | null;
+					full_name: string;
+					avatar_url: string;
 					email: string | null;
 				};
 				Insert: {
 					id: string;
 					created?: string | null;
 					username?: string | null;
-					full_name?: string | null;
-					avatar_url?: string | null;
+					full_name: string;
+					avatar_url: string;
 					email?: string | null;
 				};
 				Update: {
 					id?: string;
 					created?: string | null;
 					username?: string | null;
-					full_name?: string | null;
-					avatar_url?: string | null;
+					full_name?: string;
+					avatar_url?: string;
 					email?: string | null;
 				};
 			};
@@ -185,30 +197,33 @@ export interface Database {
 					user_id: string;
 					teacher: boolean;
 					class_id: string;
+					grade: number;
 				};
 				Insert: {
 					user_id: string;
 					teacher?: boolean;
 					class_id: string;
+					grade?: number;
 				};
 				Update: {
 					user_id?: string;
 					teacher?: boolean;
 					class_id?: string;
+					grade?: number;
 				};
 			};
 			users_groups: {
 				Row: {
 					user_id: string;
-					group_id: number;
+					group_id: string;
 				};
 				Insert: {
 					user_id: string;
-					group_id: number;
+					group_id: string;
 				};
 				Update: {
 					user_id?: string;
-					group_id?: number;
+					group_id?: string;
 				};
 			};
 		};
@@ -220,6 +235,15 @@ export interface Database {
 				Args: { name: string; description: string; class_id: string };
 				Returns: boolean;
 			};
+			get_profile_classes:
+				| {
+						Args: Record<PropertyKey, never>;
+						Returns: unknown;
+				  }
+				| {
+						Args: { id: string };
+						Returns: unknown;
+				  };
 			hello_world: {
 				Args: Record<PropertyKey, never>;
 				Returns: string;

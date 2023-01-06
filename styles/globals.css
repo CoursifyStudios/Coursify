@@ -23,6 +23,14 @@
 	background-color: #d1d5db;
 }
 
+.scrollbar-fancy-darker::-webkit-scrollbar-thumb {
+	background-color: rgb(156 163 175);
+}
+
 .title {
 	@apply text-2xl font-bold;
+}
+
+.brightness-hover {
+	@apply transition duration-300 hover:shadow-lg hover:brightness-95;
 }

@@ -1,76 +1,72 @@
 import { NextPage } from "next";
 import Link from "next/link";
-import type { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 
 export const ColoredPill: NextPage<{
-	color?: "blue" | "green" | "purple" | "red" | "yellow" | "orange" | string;
+	color?:
+		| "blue"
+		| "green"
+		| "purple"
+		| "red"
+		| "yellow"
+		| "orange"
+		| "gray"
+		| string;
 	children: ReactNode;
-}> = ({ color, children }) => {
-	let pillColor;
-	switch (color) {
-		case "blue":
-			pillColor = "bg-blue-200 text-blue-600";
-			break;
-		case "green":
-			pillColor = "bg-green-200 text-green-600";
-			break;
-		case "light green":
-			pillColor = "bg-green-100 text-green-500";
-			break;
-		case "purple":
-			pillColor = "bg-purple-200 text-purple-600";
-			break;
-		case "red":
-			pillColor = "bg-red-200 text-red-600";
-			break;
-		case "yellow":
-			pillColor = "bg-yellow-200 text-yellow-600";
-			break;
-		case "orange":
-			pillColor = "bg-orange-200 text-orange-600";
-			break;
-		default:
-			pillColor = "bg-blue-200 text-blue-600";
-			break;
-	}
+	hoverState?: boolean;
+	className?: string;
+}> = ({ color, children, hoverState, className }) => {
+	//I'm aware that safelisting exists
+	const tailwind =
+		"bg-blue-200 text-blue-600 bg-green-200 text-green-600 bg-purple-200 text-purple-600 bg-red-200 text-red-600 bg-yellow-200 text-yellow-600 bg-orange-200 text-orange-600 bg-blue-200 text-blue-600";
 
 	return (
 		<div
-			className={`inline-flex shrink-0 rounded-full px-2.5 py-0.5 text-sm font-semibold ${pillColor}`}
+			className={`inline-flex shrink-0 select-none rounded-full px-2.5 py-0.5 text-sm font-semibold transition duration-300 bg-${color}-200 text-${color}-600 ${
+				color == "gray" && "!bg-gray-300 !text-gray-700 "
+			} ${hoverState && "hover:brightness-95"} ${className}`}
 		>
 			{children}
 		</div>
 	);
 };
 
-/**
- *
- * @param icon Use an svg with a width and height of 5 magical tailwind units (techicanlly 5/4ths of a rem)
- * @param to (optional) link of where you want it to go when clicked
- * @param className extra
- * @returns
- */
-
-export const ButtonIcon: NextPage<{
-	icon: ReactNode;
-	to?: string;
-	className?: string;
-}> = ({ icon, to, className }) => {
-	const r = (
+export const CopiedHover: NextPage<{ children: ReactNode; copy: string }> = ({
+	children,
+	copy,
+}) => {
+	const [copied, setCopied] = useState(false);
+	const [copiedHover, setCopiedHover] = useState(false);
+	return (
 		<div
-			className={
-				"grid h-9 w-9 cursor-pointer place-items-center rounded-full bg-gray-300 text-gray-800 transition  duration-300 hover:brightness-95 " +
-				className
-			}
+			className="group relative cursor-pointer select-none "
+			onClick={() => (
+				navigator.clipboard.writeText(copy),
+				setCopied(true),
+				setTimeout(() => {
+					//Show for 700 seconds until exiting hover thing
+					setCopiedHover(false);
+					setTimeout(() => {
+						//Change text back once scale animation is over
+						setCopied(false);
+					}, 150);
+				}, 700)
+			)}
+			onMouseEnter={() => setCopiedHover(true)}
+			onMouseLeave={() => setCopiedHover(false)}
 		>
-			{icon}
+			{children}
+			<div className="absolute left-0 right-0 mt-2 flex justify-center brightness-105">
+				<div
+					className={`min-w-[6rem] scale-0 rounded transition-all ${
+						copied ? "bg-green-50" : "bg-gray-50"
+					} px-2  py-0.5 text-center text-sm font-medium shadow-lg transition ${
+						copiedHover && "scale-100"
+					}`}
+				>
+					{copied ? "Copied!" : "Copy Link"}
+				</div>
+			</div>
 		</div>
 	);
-
-	// allows for wrapping it in a component
-	if (to) {
-		return <Link href={to}>{r}</Link>;
-	} else {
-		return r;
-	}
 };
