@@ -12,7 +12,7 @@ const group: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2 ${
+									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md shadow-black/25  "
 											: "bg-gray-200"
@@ -25,7 +25,7 @@ const group: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2 ${
+									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md shadow-black/25  "
 											: "bg-gray-200"
@@ -38,7 +38,7 @@ const group: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2 ${
+									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md shadow-black/25  "
 											: "bg-gray-200"
