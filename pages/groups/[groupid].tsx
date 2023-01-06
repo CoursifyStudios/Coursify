@@ -2,10 +2,24 @@ import { NextPage } from "next";
 import { Tab } from "@headlessui/react";
 import { Fragment } from "react";
 import { ColoredPill } from "../../components/misc/pill";
+import Image from "next/image";
+import exampleGroupImg from "../../public/example-img.jpg";
+import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 
 const group: NextPage = () => {
 	return (
 		<div className="mx-auto my-10 w-full max-w-screen-xl">
+			<div className="relative mb-6 h-48 w-full">
+				<Image
+					src={exampleGroupImg}
+					alt="Example Image"
+					className="rounded-xl object-cover object-center"
+					fill
+				/>
+				<h1 className="title absolute  bottom-5 left-5 !text-4xl text-gray-200">
+					Badminton Club
+				</h1>
+			</div>
 			<div className="flex">
 				<Tab.Group as="div" className="flex grow flex-col">
 					<Tab.List as="div" className="mx-auto mb-6 flex space-x-6">
@@ -59,7 +73,58 @@ const group: NextPage = () => {
 							<h2 className="title mt-6">Quick Access</h2>
 						</Tab.Panel>
 						<Tab.Panel>
-							Announcments would be here when I figure them out
+							<div className="rounded-xl bg-gray-200 p-4">
+								<div className="flex items-center justify-between">
+									<h2 className="text-2xl font-bold">
+										Selling Lots of Books !!!!!
+									</h2>
+									<EllipsisVerticalIcon className="h-6 w-6" />
+								</div>
+								<div className="flex items-center pt-1 pb-2">
+									<div className="inline-flex shrink-0 items-center rounded-full bg-gray-300 px-2.5 py-0.5">
+										<div className="h-4 w-4 rounded-full bg-white"></div>
+										<p className="ml-1.5 font-semibold text-neutral-700">
+											Jane Doe
+										</p>
+									</div>
+									<p className="pl-2.5 text-gray-600">25 mins ago</p>
+								</div>
+								<p>
+									I am selling some books for English classes. Literature in
+									Science: The Immortal Life of Henrietta Lacks by Rebecca
+									Skloot hardcover Being Human: Core Readings in the Humanities
+									edited by Leon Kass paperback English 3,4: A Raisin in the Sun
+									by Lorraine Hansberry paperback All books are in new condition
+									and have no annotations. If interested, contact me at
+									23jhawk@shcp.edu or 415-741-8383
+								</p>
+							</div>
+							<div className="my-6 rounded-xl bg-gray-200 p-4">
+								<div className="flex items-center justify-between">
+									<h2 className="text-2xl font-bold">
+										Selling Lots of Books !!!!!
+									</h2>
+									<EllipsisVerticalIcon className="h-6 w-6" />
+								</div>
+								<div className="flex items-center pt-1 pb-2">
+									<div className="inline-flex shrink-0 items-center rounded-full bg-gray-300 px-2.5 py-0.5">
+										<div className="h-4 w-4 rounded-full bg-white"></div>
+										<p className="ml-1.5 font-semibold text-neutral-700">
+											Jane Doe
+										</p>
+									</div>
+									<p className="pl-2.5 text-gray-600">25 mins ago</p>
+								</div>
+								<p>
+									I am selling some books for English classes. Literature in
+									Science: The Immortal Life of Henrietta Lacks by Rebecca
+									Skloot hardcover Being Human: Core Readings in the Humanities
+									edited by Leon Kass paperback English 3,4: A Raisin in the Sun
+									by Lorraine Hansberry paperback All books are in new condition
+									and have no annotations. If interested, contact me at
+									23jhawk@shcp.edu or 415-741-8383
+								</p>
+							</div>
 						</Tab.Panel>
 						<Tab.Panel>
 							Copy the member page from classes tbh and just reformat some stuff
