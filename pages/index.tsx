@@ -13,6 +13,7 @@ import {
 	to12hourTime,
 } from "../lib/db/schedule";
 import { ColoredPill } from "../components/misc/pill";
+import ScheduleComponent from "../components/complete/schedule";
 
 export default function Home() {
 	const { newTab } = useTabs();
@@ -105,72 +106,14 @@ export default function Home() {
 					<section className=" grow lg:ml-10 ">
 						<h2 className="title">Daily Schedule</h2>
 						{/* Line below requires flex. flex was removed temporarily by bill because it made the ui look bad */}
-						<div className="flex flex-col">
-							<div className=" mt-6 grid max-w-md gap-5 rounded-xl bg-gray-200 p-4">
-								{schedule &&
-									schedule.data &&
-									schedule.data.schedule_items &&
-									Array.isArray(schedule.data.schedule_items) &&
-									(
-										schedule.data
-											?.schedule_items as unknown as ScheduleInterface[]
-									).map(
-										(item, index) =>
-											(checkClassMatchesSchedule(item)?.name &&
-												!item.specialEvent && (
-													<Link
-														key={index}
-														className="flex items-center justify-between font-semibold"
-														href={
-															"/classes/" + checkClassMatchesSchedule(item)?.id
-														}
-													>
-														{
-															classes?.data?.find(
-																(v) =>
-																	v.block == item.block &&
-																	v.schedule_type == item.type
-															)?.name
-														}
-														{/* Class coloring would be implemented on line below. See the special event implementation fo rhwo that should look */}
-														<ColoredPill
-															color={
-																//@ts-ignore WHY THE HELL DOES IT THINK THAT IT CAN JUST DO THAT TO ME
-																checkClassMatchesSchedule(item).color
-															}
-														>
-															{to12hourTime(item.timeStart)} -{" "}
-															{to12hourTime(item.timeEnd)}
-														</ColoredPill>
-													</Link>
-												)) ||
-											(item.specialEvent && checkClassMatchesSchedule(item) && (
-												// May want to change this to be a <Link> later on so that you can link to info about special events
-												<div className="flex items-center justify-between font-semibold">
-													{item.specialEvent}
-													<ColoredPill
-														color={
-															item.customColor ? item.customColor : "green"
-														}
-													>
-														{to12hourTime(item.timeStart)} -{" "}
-														{to12hourTime(item.timeEnd)}
-													</ColoredPill>
-												</div>
-											))
-									)}
-							</div>
-						</div>
+                        {classes && schedule &&
+                        <ScheduleComponent classes={classes} schedule={schedule} />
+}
 					</section>
 				</div>
 			</div>
 		</>
 	);
-
-	function checkClassMatchesSchedule(scheduleItem: ScheduleInterface) {
-		return classes?.data?.find(
-			(v) =>
-				v.block == scheduleItem.block && v.schedule_type == scheduleItem.type
-		);
-	}
+//This function exists because I had this line like 8 times
+	
 }
