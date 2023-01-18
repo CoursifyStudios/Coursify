@@ -114,6 +114,4 @@ export default function Home() {
 			</div>
 		</>
 	);
-//This function exists because I had this line like 8 times
-	
 }
