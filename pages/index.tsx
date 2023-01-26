@@ -13,6 +13,7 @@ import {
 	to12hourTime,
 } from "../lib/db/schedule";
 import { ColoredPill } from "../components/misc/pill";
+import Editor from "../components/editors/richeditor";
 
 export default function Home() {
 	const { newTab } = useTabs();
