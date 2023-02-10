@@ -25,13 +25,9 @@ export default function Home() {
 	const [loading, setLoading] = useState(true);
 	const [schedule, setSchedule] = useState<ScheduleData>();
     // The following three useState things are for the drag and drop UI
+    
     const [upDownUIOrder, setUpDownUIOrder] = useState(false); //This controls what order the UI should be in
-    const [overDropArea, setoverDropArea] = useState(false); //This controls wether or not to show previews / indicators of the UI change
-    const [assignmentsUIIsBeingDragged, setAssignmentsUIIsBeingDragged] = useState(false); //This determines which element is being dragged. i can do this smarter later.
-    //This is to tell which UI element (classes or assignments) is being dragged, to determine whcih "orbiting indicator" to show
-    //In the future, with multiple elemtents we might want to use a useRef() to the elemtent being dragged, but then we need to put
-    //that useRef in the dragData (I think). The bigger problem is knowing what to compare it to, in which case a simple check with
-    //some text in the dragData should to the trick.
+    const [showUpDownUIPreviews, setShowUpDownUIPreviews] = useState(false); //This controls wether or not to show previews / indicators of the UI change
     
 	useEffect(() => {
 		//testdateto set a seperate date in development
@@ -101,16 +97,16 @@ export default function Home() {
                         // @draggingMode --> which elements on the page are changing places
                         className={upDownUIOrder? "flex flex-col-reverse": "flex flex-col"}>
                             {/* marker that you are over the drop area */}
-                            <div className={overDropArea && assignmentsUIIsBeingDragged? "flex w-full bg-gray-100 rounded-md px-2 my-4": "hidden"}>
+                            <div className={showUpDownUIPreviews? "flex w-full bg-gray-100 rounded-md px-2 my-4": "hidden"}>
                             <br></br>
                             </div>
                             {/* Classes UI */}
                             <section className="mb-8"
                             //event handlers for Classes drop area (where assignments would land)
-                            onDragOver={(e) => { if (assignmentsUIIsBeingDragged) {e.preventDefault();setoverDropArea(true);}}}
-                            onDragEnter={(e) => { if (assignmentsUIIsBeingDragged) {e.preventDefault();setoverDropArea(true);}}}
-                            onDragLeave={() => {setoverDropArea(false);}}
-                            onDrop={() => {if (assignmentsUIIsBeingDragged) {setUpDownUIOrder(!upDownUIOrder);setoverDropArea(false);}}}
+                            onDragOver={(e) => { if (e.dataTransfer.types.includes("assignments")) {e.preventDefault();setShowUpDownUIPreviews(true);}}}
+                            onDragEnter={(e) => { if (e.dataTransfer.types.includes("assignments")) {e.preventDefault();setShowUpDownUIPreviews(true);}}}
+                            onDragLeave={() => {setShowUpDownUIPreviews(false);}}
+                            onDrop={(e) => {if (e.dataTransfer.types.includes("assignments")) {setUpDownUIOrder(!upDownUIOrder);setShowUpDownUIPreviews(false);}}}
                             >
                                 {/* Going to hijack this and use it as a drop area, thanks */}
                                 <div className="mt-8 flex items-center justify-between lg:mt-0">
@@ -120,8 +116,7 @@ export default function Home() {
                                     className="text-xl"
                                     //event handlers for the Classes dragging icon
                                     draggable={true} //replace what it inside brackets with a useState for toggling UI changes if needed
-                                    onDragStart={(e) => {setAssignmentsUIIsBeingDragged(false);e.dataTransfer.setDragImage(ReactDOM.findDOMNode(e.currentTarget)?.parentNode?.parentNode as Element,(ReactDOM.findDOMNode(e.currentTarget)?.parentNode?.parentNode as Element).clientWidth,0)}}
-                                    onDragEnd={() => {setoverDropArea(false);}}
+                                    onDragStart={(e) => {e.dataTransfer.setDragImage(ReactDOM.findDOMNode(e.currentTarget)?.parentNode?.parentNode as Element,(ReactDOM.findDOMNode(e.currentTarget)?.parentNode?.parentNode as Element).clientWidth,0); e.dataTransfer.setData("classes", "");}}
                                     >░░░░</h2>
                                     {/* above is some very temporary styling, don't get mad at me for the h2 tag */}
                                 </div>
@@ -132,10 +127,10 @@ export default function Home() {
                             {/* Assignments UI */}
                             <section className="mb-4"
                             //event handlers for drop area Assignments drop area (where Classes would land)
-                            onDragOver={(e) => { if (!assignmentsUIIsBeingDragged) {e.preventDefault();setoverDropArea(true);}}}
-                            onDragEnter={(e) => { if (!assignmentsUIIsBeingDragged) {e.preventDefault();setoverDropArea(true);}}}
-                            onDragLeave={() => {setoverDropArea(false);}}
-                            onDrop={() =>{ if (!assignmentsUIIsBeingDragged) {setUpDownUIOrder(!upDownUIOrder);setoverDropArea(false);}}}            
+                            onDragOver={(e) => { if (e.dataTransfer.types.includes("classes")) {e.preventDefault();setShowUpDownUIPreviews(true);}}}
+                            onDragEnter={(e) => { if (e.dataTransfer.types.includes("classes")) {e.preventDefault();setShowUpDownUIPreviews(true);}}}
+                            onDragLeave={() => {setShowUpDownUIPreviews(false);}}
+                            onDrop={(e) => { if (e.dataTransfer.types.includes("classes")) {setUpDownUIOrder(!upDownUIOrder);setShowUpDownUIPreviews(false);}}}            
                             >
                                 <div className="flex justify-between">
                                     <h2 className="title">Assignments</h2>
@@ -143,17 +138,15 @@ export default function Home() {
                                     className="text-xl"
                                     //event handlers for the Assignments dragging icon
                                     draggable={true} //replace what it inside brackets with a useState for toggling UI changes if needed
-                                    onDragStart={(e) => {setAssignmentsUIIsBeingDragged(true); e.dataTransfer.setDragImage(ReactDOM.findDOMNode(e.currentTarget)?.parentNode?.parentNode as Element,(ReactDOM.findDOMNode(e.currentTarget)?.parentNode?.parentNode as Element).clientWidth,0)}}
-                                    onDragEnd={() => {setoverDropArea(false);}}
+                                    onDragStart={(e) => {e.dataTransfer.setDragImage(ReactDOM.findDOMNode(e.currentTarget)?.parentNode?.parentNode as Element,(ReactDOM.findDOMNode(e.currentTarget)?.parentNode?.parentNode as Element).clientWidth,0); e.dataTransfer.setData("assignments", "");}}
                                     >░░░░</h2>
                                     {/* above is some very temporary styling, don't get mad at me for the h2 tag */}
                                 </div>
                                 <div className="px-4 py-2 flex bg-gray-200 mt-4 rounded-lg">
                                     <p>ASSIGNEMENT VIEW GOES HERE <br></br>text<br></br>text<br></br>IMAGINE THE THING FROM THE FIGMA WAS HEREtext<br></br>text<br></br></p>
-                                    
                                 </div>
                             </section>
-                            <div className={overDropArea && !assignmentsUIIsBeingDragged? "flex w-full bg-gray-100 rounded-md px-2 mb-4": "hidden"}>
+                            <div className={showUpDownUIPreviews? "flex w-full bg-gray-100 rounded-md px-2 mb-4": "hidden"}>
                             <br></br>
                             </div>
                         </section>
