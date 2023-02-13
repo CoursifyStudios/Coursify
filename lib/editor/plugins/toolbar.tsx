@@ -11,7 +11,6 @@ export default function ToolBarPluginBetter() {
 	const [editor] = useLexicalComposerContext();
 	const [selection, setCurrentSelection] = useState<any>();
 	useEffect(() => {
-		const selection = $getSelection();
 		setCurrentSelection(selection);
 	});
 

@@ -35,7 +35,6 @@ const editorConfig = {
 	onError(error: any) {
 		throw error;
 	},
-	// Any custom nodes go here
 	nodes: [
 		HeadingNode,
 		ListNode,
