@@ -104,19 +104,9 @@ export default function Home() {
 							<section
 								// @upDownUIOrder --> preview has been dropped on field, classes and schedule should change places
 								className={
-									upDownUIOrder ? "flex flex-col-reverse" : "flex flex-col"
+									upDownUIOrder? "flex flex-col-reverse" : "flex flex-col"
 								}
 							>
-								{/* marker that you are over the drop area */}
-								<div
-									className={
-										showUpDownUIPreviews
-											? "my-4 flex w-full rounded-md bg-gray-100 px-2"
-											: "hidden"
-									}
-								>
-									<br></br>
-								</div>
 								{/* Classes UI */}
 								<DropZone
 									id="assignments"
@@ -178,15 +168,6 @@ export default function Home() {
 										</div>
 									</section>
 								</DropZone>
-								<div
-									className={
-										showUpDownUIPreviews
-											? "mb-4 flex w-full rounded-md bg-gray-100 px-2"
-											: "hidden"
-									}
-								>
-									<br></br>
-								</div>
 							</section>
 						</DropZone>
 						<section className="w-10"></section>
