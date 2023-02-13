@@ -11,97 +11,97 @@ export interface Database {
 		Tables: {
 			assignments: {
 				Row: {
-					name: string;
-					type: string | null;
-					description: string;
 					content: string | null;
 					created_date: string | null;
-					publish_info: Json | null;
+					description: string;
 					due_info: Json | null;
 					id: string;
+					name: string;
+					publish_info: Json | null;
+					type: string | null;
 				};
 				Insert: {
-					name: string;
-					type?: string | null;
-					description: string;
 					content?: string | null;
 					created_date?: string | null;
-					publish_info?: Json | null;
+					description: string;
 					due_info?: Json | null;
 					id?: string;
+					name: string;
+					publish_info?: Json | null;
+					type?: string | null;
 				};
 				Update: {
-					name?: string;
-					type?: string | null;
-					description?: string;
 					content?: string | null;
 					created_date?: string | null;
-					publish_info?: Json | null;
+					description?: string;
 					due_info?: Json | null;
 					id?: string;
+					name?: string;
+					publish_info?: Json | null;
+					type?: string | null;
 				};
 			};
 			classes: {
 				Row: {
-					name: string;
-					description: string;
 					block: number | null;
-					schedule_type: number | null;
 					color: string;
-					id: string;
-					name_full: string;
+					description: string;
 					description_new: Json[] | null;
+					id: string;
+					name: string;
+					name_full: string;
+					schedule_type: number | null;
 				};
 				Insert: {
-					name: string;
-					description?: string;
 					block?: number | null;
-					schedule_type?: number | null;
 					color?: string;
-					id?: string;
-					name_full?: string;
+					description?: string;
 					description_new?: Json[] | null;
+					id?: string;
+					name: string;
+					name_full?: string;
+					schedule_type?: number | null;
 				};
 				Update: {
-					name?: string;
-					description?: string;
 					block?: number | null;
-					schedule_type?: number | null;
 					color?: string;
-					id?: string;
-					name_full?: string;
+					description?: string;
 					description_new?: Json[] | null;
+					id?: string;
+					name?: string;
+					name_full?: string;
+					schedule_type?: number | null;
 				};
 			};
 			classes_assignments: {
 				Row: {
-					class_id: string;
 					assignment_id: string;
+					class_id: string;
 				};
 				Insert: {
-					class_id: string;
 					assignment_id: string;
+					class_id: string;
 				};
 				Update: {
-					class_id?: string;
 					assignment_id?: string;
+					class_id?: string;
 				};
 			};
 			groups: {
 				Row: {
-					name: string | null;
 					description: string | null;
 					id: string;
+					name: string | null;
 				};
 				Insert: {
-					name?: string | null;
 					description?: string | null;
 					id?: string;
+					name?: string | null;
 				};
 				Update: {
-					name?: string | null;
 					description?: string | null;
 					id?: string;
+					name?: string | null;
 				};
 			};
 			schedule: {
@@ -120,36 +120,36 @@ export interface Database {
 			};
 			school_users: {
 				Row: {
-					user_id: string;
 					school_id: string;
+					user_id: string;
 				};
 				Insert: {
-					user_id: string;
 					school_id: string;
+					user_id: string;
 				};
 				Update: {
-					user_id?: string;
 					school_id?: string;
+					user_id?: string;
 				};
 			};
 			schools: {
 				Row: {
 					created_at: string | null;
+					id: string;
 					name: string;
 					schedule: Json[] | null;
-					id: string;
 				};
 				Insert: {
 					created_at?: string | null;
+					id?: string;
 					name: string;
 					schedule?: Json[] | null;
-					id?: string;
 				};
 				Update: {
 					created_at?: string | null;
+					id?: string;
 					name?: string;
 					schedule?: Json[] | null;
-					id?: string;
 				};
 			};
 			test: {
@@ -168,62 +168,62 @@ export interface Database {
 			};
 			users: {
 				Row: {
-					id: string;
-					created: string | null;
-					username: string | null;
-					full_name: string;
 					avatar_url: string;
+					created: string | null;
 					email: string | null;
+					full_name: string;
+					id: string;
+					username: string | null;
 				};
 				Insert: {
-					id: string;
-					created?: string | null;
-					username?: string | null;
-					full_name: string;
 					avatar_url: string;
+					created?: string | null;
 					email?: string | null;
+					full_name: string;
+					id: string;
+					username?: string | null;
 				};
 				Update: {
-					id?: string;
-					created?: string | null;
-					username?: string | null;
-					full_name?: string;
 					avatar_url?: string;
+					created?: string | null;
 					email?: string | null;
+					full_name?: string;
+					id?: string;
+					username?: string | null;
 				};
 			};
 			users_classes: {
 				Row: {
-					user_id: string;
-					teacher: boolean;
 					class_id: string;
 					grade: number;
+					teacher: boolean;
+					user_id: string;
 				};
 				Insert: {
-					user_id: string;
-					teacher?: boolean;
 					class_id: string;
 					grade?: number;
+					teacher?: boolean;
+					user_id: string;
 				};
 				Update: {
-					user_id?: string;
-					teacher?: boolean;
 					class_id?: string;
 					grade?: number;
+					teacher?: boolean;
+					user_id?: string;
 				};
 			};
 			users_groups: {
 				Row: {
-					user_id: string;
 					group_id: string;
+					user_id: string;
 				};
 				Insert: {
-					user_id: string;
 					group_id: string;
+					user_id: string;
 				};
 				Update: {
-					user_id?: string;
 					group_id?: string;
+					user_id?: string;
 				};
 			};
 		};
