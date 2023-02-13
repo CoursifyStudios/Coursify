@@ -1,6 +1,6 @@
-import create from "zustand";
+import { create } from "zustand";
 import { Tab } from "../../components/layout/navbar";
-import { persist } from "zustand/middleware";
+import { createJSONStorage, persist } from "zustand/middleware";
 import { deserialize, serialize } from "v8";
 import { deserializeTabs, serializeTabs } from "./serialize";
 import { getLinkRegex } from "./linkRegex";
@@ -59,25 +59,33 @@ export const useTabs = create<{
 		}),
 		{
 			name: "tabs-storage",
-			getStorage: () => sessionStorage,
-			serialize: (state) => {
-				return JSON.stringify({
-					...state,
-					state: {
-						...state.state,
-						tabs: serializeTabs(state.state.tabs),
-					},
-				});
-			},
-			deserialize: (state) => {
-				const newState = JSON.parse(state);
-				return {
-					...newState,
-					state: {
-						...newState.state,
-						tabs: deserializeTabs(newState.state.tabs),
-					},
-				};
+			storage: {
+				getItem: (name) => {
+					const str = sessionStorage.getItem(name);
+					if (str == null) return null;
+					const state = JSON.parse(str);
+
+					return {
+						...state,
+						state: {
+							...state.state,
+							tabs: deserializeTabs(state.state.tabs),
+						},
+					};
+				},
+				setItem: (name, newValue) => {
+					//const str = sessionStorage.getItem(name)
+					const newTabs = JSON.stringify({
+						...newValue,
+						state: {
+							...newValue.state,
+							tabs: serializeTabs(newValue.state.tabs),
+						},
+					});
+
+					sessionStorage.setItem(name, newTabs);
+				},
+				removeItem: (name) => sessionStorage.removeItem(name),
 			},
 		}
 	)
