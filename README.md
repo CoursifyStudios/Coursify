@@ -17,6 +17,8 @@ If you're creating a new page, please try to adhere to these rules:
 
 ## Project Tracking
 
+We use github project for project tracking
+
 ## Style Guide:
 
 - Use gray 200 for backgrounds when you need a gray. For gray on gray, use gray 300. If you need a gray on top of a gray on top of a gray, you're doing something wrong. 
