@@ -24,8 +24,11 @@ export default function Home() {
 	const [upDownUIOrder, setUpDownUIOrder] = useState(false); //This controls what order the UI should be in
 	const [showUpDownUIPreviews, setShowUpDownUIPreviews] = useState(false); //This controls wether or not to show previews / indicators of the UI change
 
+	const [leftRightUIOrder, setLeftRightUIOrder] = useState(false);
+
 	const classesUIReference = useRef<HTMLElement>(null); //I hate that these have to exist
 	const assignmentsUIReference = useRef<HTMLElement>(null);
+	const scheduleUIReference = useRef<HTMLElement>(null);
 
 	useEffect(() => {
 		//testdateto set a seperate date in development
@@ -88,104 +91,121 @@ export default function Home() {
 			</div>
 			<div className="container my-10 mx-auto flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words px-4 md:px-8 xl:px-0">
 				<div className="flex w-full flex-col lg:flex-row">
-					<div className="flex flex-row">
-						<section
-							// @upDownUIOrder --> preview has been dropped on field, classes and schedule should change places
-							// @draggingMode --> which elements on the page are changing places
-							className={
-								upDownUIOrder ? "flex flex-col-reverse" : "flex flex-col"
-							}
+					<div
+						className={
+							leftRightUIOrder ? "flex flex-row-reverse" : "flex flex-row"
+						}
+					>
+						<DropZone
+							id="schedule"
+							setUIState={setLeftRightUIOrder}
+							uIState={leftRightUIOrder}
 						>
-							{/* marker that you are over the drop area */}
-							<div
+							<section
+								// @upDownUIOrder --> preview has been dropped on field, classes and schedule should change places
+								// @draggingMode --> which elements on the page are changing places
 								className={
-									showUpDownUIPreviews
-										? "my-4 flex w-full rounded-md bg-gray-100 px-2"
-										: "hidden"
+									upDownUIOrder ? "flex flex-col-reverse" : "flex flex-col"
 								}
 							>
-								<br></br>
-							</div>
-							{/* Classes UI */}
-							<DropZone
-								id="assignments"
-								setPreviewState={setShowUpDownUIPreviews}
-								setUIState={setUpDownUIOrder}
-								uIState={upDownUIOrder}
-							>
-								<section className="mb-8" ref={classesUIReference}>
-									{/* Going to hijack this and use it as a drop area, thanks */}
-									<div className="mt-8 flex items-center justify-between lg:mt-0">
-										<h2 className="title">Classes</h2>
-										{loading && <Loading className="ml-8" />}
-										<DragZone
-											id="classes"
-											parent={classesUIReference.current as Element}
-											offsetByParentElementWidth={true}
-										>
-											<h2 className="text-xl">░░░░</h2>
-										</DragZone>
-									</div>
-									<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
-										{classes && classes.data
-											? classes.data.map((v, i) => (
-													<Class
-														class={{ data: v }}
-														key={i}
-														className="!w-full xl:!w-[18.5rem]"
-														isLink={true}
-													/>
-											  ))
-											: [...Array(6)].map((_, i) => <LoadingClass key={i} />)}
-									</div>
-								</section>
-							</DropZone>
+								{/* marker that you are over the drop area */}
+								<div
+									className={
+										showUpDownUIPreviews
+											? "my-4 flex w-full rounded-md bg-gray-100 px-2"
+											: "hidden"
+									}
+								>
+									<br></br>
+								</div>
+								{/* Classes UI */}
+								<DropZone
+									id="assignments"
+									setPreviewState={setShowUpDownUIPreviews}
+									setUIState={setUpDownUIOrder}
+									uIState={upDownUIOrder}
+								>
+									<section className="mb-8" ref={classesUIReference}>
+										{/* Going to hijack this and use it as a drop area, thanks */}
+										<div className="mt-8 flex items-center justify-between lg:mt-0">
+											<h2 className="title">Classes</h2>
+											{loading && <Loading className="ml-8" />}
+											<DragZone
+												id="classes"
+												parent={classesUIReference.current as Element}
+												offsetByParentElementWidth={true}
+											>
+												<h2 className="mt-1 text-xl">░░░░</h2>
+											</DragZone>
+										</div>
+										<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
+											{classes && classes.data
+												? classes.data.map((v, i) => (
+														<Class
+															class={{ data: v }}
+															key={i}
+															className="!w-full xl:!w-[18.5rem]"
+															isLink={true}
+														/>
+												  ))
+												: [...Array(6)].map((_, i) => <LoadingClass key={i} />)}
+										</div>
+									</section>
+								</DropZone>
 
-							{/* Assignments UI */}
-							<DropZone
-								id="classes"
-								setPreviewState={setShowUpDownUIPreviews}
-								setUIState={setUpDownUIOrder}
-								uIState={upDownUIOrder}
-							>
-								<section className="mb-4" ref={assignmentsUIReference}>
-									<div className="flex justify-between">
-										<h2 className="title">Assignments</h2>
-										<DragZone
-											id="assignments"
-											parent={assignmentsUIReference.current as Element}
-											offsetByParentElementWidth={true}
-										>
-											<h2
-												className="text-xl">
-												░░░░
-											</h2>
-										</DragZone>
-									</div>
-									<div className="mt-4 flex rounded-lg bg-gray-200 px-4 py-2">
-										<p>
-											ASSIGNEMENT VIEW GOES HERE <br></br>text<br></br>text
-											<br></br>IMAGINE THE THING FROM THE FIGMA WAS HEREtext
-											<br></br>text<br></br>
-										</p>
-									</div>
-								</section>
-							</DropZone>
-							<div
-								className={
-									showUpDownUIPreviews
-										? "mb-4 flex w-full rounded-md bg-gray-100 px-2"
-										: "hidden"
-								}
-							>
-								<br></br>
-							</div>
-						</section>
+								{/* Assignments UI */}
+								<DropZone
+									id="classes"
+									setPreviewState={setShowUpDownUIPreviews}
+									setUIState={setUpDownUIOrder}
+									uIState={upDownUIOrder}
+								>
+									<section className="mb-4" ref={assignmentsUIReference}>
+										<div className="flex justify-between">
+											<h2 className="title">Assignments</h2>
+											<DragZone
+												id="assignments"
+												parent={assignmentsUIReference.current as Element}
+												offsetByParentElementWidth={true}
+											>
+												<h2 className="mt-1 text-xl">░░░░</h2>
+											</DragZone>
+										</div>
+										<div className="mt-4 flex rounded-lg bg-gray-200 px-4 py-2">
+											<p>
+												ASSIGNEMENT VIEW GOES HERE <br></br>text<br></br>text
+												<br></br>IMAGINE THE THING FROM THE FIGMA WAS HEREtext
+												<br></br>text<br></br>
+											</p>
+										</div>
+									</section>
+								</DropZone>
+								<div
+									className={
+										showUpDownUIPreviews
+											? "mb-4 flex w-full rounded-md bg-gray-100 px-2"
+											: "hidden"
+									}
+								>
+									<br></br>
+								</div>
+							</section>
+						</DropZone>
+
 						{/* Maybe you can find a better way to do this, but here is a divider */}
 						<section className="w-10"></section>
 						{/* Schedule UI */}
-						<section className="grow">
-							<h2 className="title">Daily Schedule</h2>
+						<section className="grow" ref={scheduleUIReference}>
+							<div className="flex justify-between">
+								<h2 className="title mr-2">Daily Schedule</h2>
+								<DragZone
+									id="schedule"
+									parent={scheduleUIReference.current as Element}
+									offsetByParentElementWidth={true}
+								>
+									<h2 className="mt-1 text-xl">░░░░</h2>
+								</DragZone>
+							</div>
 							{/* Line below requires flex. flex was removed temporarily by bill because it made the ui look bad */}
 							{classes && schedule && (
 								<ScheduleComponent classes={classes} schedule={schedule} />
