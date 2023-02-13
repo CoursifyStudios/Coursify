@@ -103,7 +103,6 @@ export default function Home() {
 						>
 							<section
 								// @upDownUIOrder --> preview has been dropped on field, classes and schedule should change places
-								// @draggingMode --> which elements on the page are changing places
 								className={
 									upDownUIOrder ? "flex flex-col-reverse" : "flex flex-col"
 								}
@@ -126,7 +125,6 @@ export default function Home() {
 									uIState={upDownUIOrder}
 								>
 									<section className="mb-8" ref={classesUIReference}>
-										{/* Going to hijack this and use it as a drop area, thanks */}
 										<div className="mt-8 flex items-center justify-between lg:mt-0">
 											<h2 className="title">Classes</h2>
 											{loading && <Loading className="ml-8" />}
@@ -191,8 +189,6 @@ export default function Home() {
 								</div>
 							</section>
 						</DropZone>
-
-						{/* Maybe you can find a better way to do this, but here is a divider */}
 						<section className="w-10"></section>
 						{/* Schedule UI */}
 						<section className="grow" ref={scheduleUIReference}>
@@ -206,7 +202,6 @@ export default function Home() {
 									<h2 className="mt-1 text-xl">░░░░</h2>
 								</DragZone>
 							</div>
-							{/* Line below requires flex. flex was removed temporarily by bill because it made the ui look bad */}
 							{classes && schedule && (
 								<ScheduleComponent classes={classes} schedule={schedule} />
 							)}
