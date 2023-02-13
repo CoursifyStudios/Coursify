@@ -157,22 +157,7 @@ export default function Home() {
 											offsetByParentElementWidth={true}
 										>
 											<h2
-												className="text-xl"
-												//event handlers for the Assignments dragging icon
-												draggable={true} //replace what it inside brackets with a useState for toggling UI changes if needed
-												onDragStart={(e) => {
-													e.dataTransfer.setDragImage(
-														ReactDOM.findDOMNode(e.currentTarget)?.parentNode
-															?.parentNode as Element,
-														(
-															ReactDOM.findDOMNode(e.currentTarget)?.parentNode
-																?.parentNode as Element
-														).clientWidth,
-														0
-													);
-													e.dataTransfer.setData("assignments", "");
-												}}
-											>
+												className="text-xl">
 												░░░░
 											</h2>
 										</DragZone>
