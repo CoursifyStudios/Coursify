@@ -3,22 +3,22 @@
 // Started Tuesday, 7 February 2023
 
 import { NextPage } from "next";
-import { ReactInstance, ReactNode, SetStateAction } from "react";
-import ReactDOM from "react-dom";
+import { ReactInstance, ReactNode, useRef } from "react";
 
 export const DragZone: NextPage<{
-    id: string; //potential massive security issue, don't put sensitive info in here
+    id: string; //Only use lowercase 
     children: ReactNode;
     parent: ReactInstance;
     offsetByParentElementWidth: boolean; //false if you want element to appear right of the mouse when dragged, and true for left (logical, I know).
 }> = ({id, children, parent, offsetByParentElementWidth}) => {
+    
     return (
         <div
             draggable={true}
             onDragStart={(e) => {
                 e.dataTransfer.setDragImage(
-                    ReactDOM.findDOMNode(parent) as Element, 
-                    offsetByParentElementWidth? (ReactDOM.findDOMNode(parent) as Element).clientWidth: 0, 
+                    parent as Element, 
+                    offsetByParentElementWidth? (parent as Element).clientWidth: 0, 
                     0)
                 e.dataTransfer.setData(id, "")
             }}
@@ -35,8 +35,9 @@ export const DropZone: NextPage<{
     setUIState: (value: boolean) => void;
     uIState: boolean;
 }> = ({id, children, setPreviewState, setUIState, uIState }) => {
+    const dropZoneRef = useRef<HTMLDivElement>(null);
     return (
-        <div
+        <div ref={dropZoneRef}
             onDragOver={(e) => {
                 if (e.dataTransfer.types.includes(id)) {
                     e.preventDefault(); 
