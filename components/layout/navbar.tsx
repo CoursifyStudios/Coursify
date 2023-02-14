@@ -1,5 +1,5 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { Fragment, ReactNode, useEffect, useMemo, useState } from "react";
 import {
 	ArrowLeftOnRectangleIcon,
 	CalendarIcon,
@@ -14,7 +14,7 @@ import { useRouter } from "next/router";
 import { NextComponentType } from "next";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import { ButtonIcon } from "../misc/button";
-import { Menu } from "@headlessui/react";
+import { Menu, Transition } from "@headlessui/react";
 import { addPlural } from "../../lib/misc/stringManipulation";
 import { Database } from "../../lib/db/database.types";
 
@@ -63,67 +63,77 @@ const Navbar: NextComponentType = () => {
 							<div className="!ml-2 h-10 w-10 rounded-full bg-gray-300"></div>
 						)}
 					</Menu.Button>
-					<div className="absolute right-0 z-50 mt-14">
-						<Menu.Items
-							as="div"
-							className="flex w-48 flex-col  rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-3xl"
-						>
-							<Link
-								href={`/profile/${user?.id}`}
-								onClick={() =>
-									newTab(
-										"/profile/1e5024f5-d493-4e32-9822-87f080ad5516",
-										`${addPlural(user?.user_metadata.name)} Profile`
-									)
-								}
-							>
-								<Menu.Item as="div" className="mx-2 flex flex-col">
-									<h3 className="font-medium line-clamp-2">
-										{user?.user_metadata.full_name}
-									</h3>
-									<p className="truncate text-xs">
-										{user?.user_metadata.email}
-									</p>
-								</Menu.Item>
-							</Link>
-							<div className="graydient-90deg my-3 h-0.5 w-full"></div>
-							<Link
-								href={`/profile/${user?.id}`}
-								onClick={() =>
-									newTab(
-										`/profile/${user?.id}`,
-										`${addPlural(user?.user_metadata.name)} Profile`
-									)
-								}
-							>
-								<Menu.Item
-									as="div"
-									className="flex items-center justify-between rounded-lg py-1 px-2 font-medium transition hover:bg-gray-300"
-								>
-									Profile <UserIcon className="h-5 w-5" />
-								</Menu.Item>
-							</Link>
-							<Link
-								href={`/settings`}
-								className="mt-1"
-								onClick={() => newTab("/settings")}
-							>
-								<Menu.Item
-									as="div"
-									className="flex items-center justify-between rounded-lg py-1 px-2 font-medium transition hover:bg-gray-300"
-								>
-									Settings <CogIcon className="h-5 w-5" />
-								</Menu.Item>
-							</Link>
-							<Menu.Item
+					<Transition
+						as={Fragment}
+						enter="transition ease-out duration-100"
+						enterFrom=" opacity-0 scale-95 translate-x-1 -translate-y-2"
+						enterTo=" opacity-100 scale-100"
+						leave="transition ease-in duration-75"
+						leaveFrom=" opacity-100 scale-100"
+						leaveTo=" opacity-0 scale-95 translate-x-1 -translate-y-2"
+					>
+						<div className="absolute right-0 z-50 mt-14">
+							<Menu.Items
 								as="div"
-								className="mt-1 flex cursor-pointer items-center justify-between rounded-lg bg-red-500/25 py-1 px-2 font-medium transition hover:bg-red-400/50"
-								onClick={() => logOut()}
+								className="flex w-48 flex-col  rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-3xl"
 							>
-								Logout <ArrowLeftOnRectangleIcon className="h-5 w-5" />
-							</Menu.Item>
-						</Menu.Items>
-					</div>
+								<Link
+									href={`/profile/${user?.id}`}
+									onClick={() =>
+										newTab(
+											"/profile/1e5024f5-d493-4e32-9822-87f080ad5516",
+											`${addPlural(user?.user_metadata.name)} Profile`
+										)
+									}
+								>
+									<Menu.Item as="div" className="mx-2 flex flex-col">
+										<h3 className="font-medium line-clamp-2">
+											{user?.user_metadata.full_name}
+										</h3>
+										<p className="truncate text-xs">
+											{user?.user_metadata.email}
+										</p>
+									</Menu.Item>
+								</Link>
+								<div className="graydient-90deg my-3 h-0.5 w-full"></div>
+								<Link
+									href={`/profile/${user?.id}`}
+									onClick={() =>
+										newTab(
+											`/profile/${user?.id}`,
+											`${addPlural(user?.user_metadata.name)} Profile`
+										)
+									}
+								>
+									<Menu.Item
+										as="div"
+										className="flex items-center justify-between rounded-lg py-1 px-2 font-medium transition hover:bg-gray-300"
+									>
+										Profile <UserIcon className="h-5 w-5" />
+									</Menu.Item>
+								</Link>
+								<Link
+									href={`/settings`}
+									className="mt-1"
+									onClick={() => newTab("/settings")}
+								>
+									<Menu.Item
+										as="div"
+										className="flex items-center justify-between rounded-lg py-1 px-2 font-medium transition hover:bg-gray-300"
+									>
+										Settings <CogIcon className="h-5 w-5" />
+									</Menu.Item>
+								</Link>
+								<Menu.Item
+									as="div"
+									className="mt-1 flex cursor-pointer items-center justify-between rounded-lg bg-red-500/25 py-1 px-2 font-medium transition hover:bg-red-400/50"
+									onClick={() => logOut()}
+								>
+									Logout <ArrowLeftOnRectangleIcon className="h-5 w-5" />
+								</Menu.Item>
+							</Menu.Items>
+						</div>
+					</Transition>
 				</Menu>
 				<ButtonIcon
 					icon={<MegaphoneIcon className="h-5 w-5" />}
