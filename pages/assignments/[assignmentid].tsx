@@ -60,7 +60,7 @@ const Post: NextPage = () => {
 	}, [user, supabaseClient, router, assignmentid]);
 
 	return (
-		<div className="mx-auto flex w-full max-w-screen-xl px-5 pt-6 pb-6">
+		<div className="mx-auto flex w-full max-w-screen-xl px-4 pt-6 pb-6 md:px-8 xl:px-0">
 			<div
 				className={`scrollbar-fancy mr-4 grow items-center overflow-x-clip md:grow-0 ${
 					fullscreen ? "hidden" : "flex"
