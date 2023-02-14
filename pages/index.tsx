@@ -10,6 +10,7 @@ import { getSchedule, ScheduleData } from "../lib/db/schedule";
 import ScheduleComponent from "../components/complete/schedule";
 import ReactDOM from "react-dom";
 import { DragZone, DropZone } from "../components/misc/draggableUI";
+import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 
 export default function Home() {
 	const { newTab } = useTabs();
@@ -104,7 +105,7 @@ export default function Home() {
 							<section
 								// @upDownUIOrder --> preview has been dropped on field, classes and schedule should change places
 								className={
-									upDownUIOrder? "flex flex-col-reverse" : "flex flex-col"
+									upDownUIOrder ? "flex flex-col-reverse" : "flex flex-col"
 								}
 							>
 								{/* Classes UI */}
@@ -115,7 +116,7 @@ export default function Home() {
 									uIState={upDownUIOrder}
 								>
 									<section className="mb-8" ref={classesUIReference}>
-										<div className="mt-8 flex items-center justify-between lg:mt-0">
+										<div className="mt-8 flex items-end justify-between lg:mt-0">
 											<h2 className="title">Classes</h2>
 											{loading && <Loading className="ml-8" />}
 											<DragZone
@@ -123,7 +124,11 @@ export default function Home() {
 												parent={classesUIReference.current as Element}
 												offsetByParentElementWidth={true}
 											>
-												<h2 className="mt-1 text-xl">░░░░</h2>
+												<div className="-m-2 flex cursor-pointer p-2">
+													<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
+
+													<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
+												</div>
 											</DragZone>
 										</div>
 										<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
@@ -149,14 +154,18 @@ export default function Home() {
 									uIState={upDownUIOrder}
 								>
 									<section className="mb-4" ref={assignmentsUIReference}>
-										<div className="flex justify-between">
+										<div className="flex items-end justify-between">
 											<h2 className="title">Assignments</h2>
 											<DragZone
 												id="assignments"
 												parent={assignmentsUIReference.current as Element}
 												offsetByParentElementWidth={true}
 											>
-												<h2 className="mt-1 text-xl">░░░░</h2>
+												<div className="-m-2 flex cursor-pointer p-2">
+													<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
+
+													<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
+												</div>
 											</DragZone>
 										</div>
 										<div className="mt-4 flex rounded-lg bg-gray-200 px-4 py-2">
@@ -173,14 +182,18 @@ export default function Home() {
 						<section className="w-10"></section>
 						{/* Schedule UI */}
 						<section className="grow" ref={scheduleUIReference}>
-							<div className="flex justify-between">
+							<div className="flex items-end justify-between">
 								<h2 className="title mr-2">Daily Schedule</h2>
 								<DragZone
 									id="schedule"
 									parent={scheduleUIReference.current as Element}
 									offsetByParentElementWidth={true}
 								>
-									<h2 className="mt-1 text-xl">░░░░</h2>
+									<div className="-m-2 flex cursor-pointer p-2 ">
+										<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
+
+										<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
+									</div>
 								</DragZone>
 							</div>
 							{classes && schedule && (
