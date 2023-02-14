@@ -41,7 +41,7 @@ export default function Profile() {
 	}, [router, supabaseClient, profileid]);
 
 	return (
-		<div className="container mx-auto flex w-full flex-col p-2 sm:p-4 md:p-8 lg:flex-row lg:space-x-8 2xl:max-w-screen-xl">
+		<div className="mx-auto flex w-full flex-col px-4 py-2 sm:py-4 md:px-8 md:py-8 lg:flex-row lg:space-x-8 xl:px-0 2xl:max-w-screen-xl">
 			<div className="flex shrink-0 flex-col items-center md:flex-row lg:h-max lg:max-h-[calc(100vh-8rem)] lg:w-72 lg:flex-col">
 				<div className="flex w-full flex-col items-center rounded-xl bg-gray-200 p-6">
 					{profile && profile.data ? (
