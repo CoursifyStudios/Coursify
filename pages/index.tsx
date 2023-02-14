@@ -49,7 +49,7 @@ export default function Home() {
 
 	return (
 		<>
-			<div className="container my-10 mx-auto flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words  px-4 md:px-8 xl:px-0">
+			<div className="container my-10 mx-auto flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words px-4 md:px-8 xl:px-0">
 				<div className="flex w-full flex-col-reverse lg:flex-row">
 					<section>
 						<div className="mt-8 flex items-center lg:mt-0">
