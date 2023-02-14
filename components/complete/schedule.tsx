@@ -1,5 +1,6 @@
 import Link from "next/link"
-import { AllClassesResponse } from "../../lib/db/classes";
+import { AllClassesResponse, Class } from "../../lib/db/classes";
+import { Database } from "../../lib/db/database.types";
 import { ScheduleData, ScheduleInterface, to12hourTime } from "../../lib/db/schedule";
 import { ColoredPill } from "../misc/pill"
 
@@ -76,5 +77,8 @@ export default function ScheduleComponent({schedule, classes}:{schedule: Schedul
                 v.block == scheduleItem.block && v.schedule_type == scheduleItem.type
         );
     }
+}
+export function timeOfClass(classToUse: Database["public"]["Tables"]["classes"]["Row"], schedule: ScheduleInterface[]) {
+    return schedule?.find((v) => v.block == classToUse.block && v.type == classToUse.schedule_type)?.timeStart + " - " + schedule?.find((v) => v.block == classToUse.block && v.type == classToUse.schedule_type)?.timeEnd;
 }
 

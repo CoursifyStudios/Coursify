@@ -4,10 +4,10 @@ import { ColoredPill } from "../misc/pill";
 import Link from "next/link";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import exampleImage from "../../public/example-img.jpg";
-import { NextPage } from "next";
 
 export function Class(props: {
 	class: Class;
+    time: string;
 	className?: string;
 	isLink?: boolean;
 }) {
@@ -49,7 +49,14 @@ export function Class(props: {
 						<h3 className="break-words text-xl font-semibold line-clamp-2">
 							{classData.name}
 						</h3>
-						<ColoredPill color={classData.color}>11:30 - 12:30</ColoredPill>
+                        {props.time != undefined + " - " + undefined?
+                        <ColoredPill color={classData.color}>
+                            {props.time}
+                        </ColoredPill>
+                        :
+                        <></>
+                        }
+						
 					</div>
 					<p>Teacher name</p>
 				</div>

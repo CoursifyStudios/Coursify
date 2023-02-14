@@ -6,9 +6,8 @@ import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
 import { Class, LoadingClass } from "../components/complete/class";
 import Loading from "../components/misc/loading";
-import { getSchedule, ScheduleData } from "../lib/db/schedule";
-import ScheduleComponent from "../components/complete/schedule";
-import ReactDOM from "react-dom";
+import { getSchedule, ScheduleData, ScheduleInterface } from "../lib/db/schedule";
+import ScheduleComponent, { timeOfClass } from "../components/complete/schedule";
 import { DragZone, DropZone } from "../components/misc/draggableUI";
 
 export default function Home() {
@@ -128,9 +127,16 @@ export default function Home() {
 										</div>
 										<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
 											{classes && classes.data
-												? classes.data.map((v, i) => (
+												? classes.data.sort((a, b) => {
+                                                    if (timeOfClass(a, schedule?.data?.schedule_items as unknown as ScheduleInterface[]) > timeOfClass(b, schedule?.data?.schedule_items as unknown as ScheduleInterface[])) return 1;
+                                                    if (timeOfClass(a, schedule?.data?.schedule_items as unknown as ScheduleInterface[]) < timeOfClass(b, schedule?.data?.schedule_items as unknown as ScheduleInterface[])) return -1;
+                                                    if (timeOfClass(a, schedule?.data?.schedule_items as unknown as ScheduleInterface[]) > timeOfClass(b, schedule?.data?.schedule_items as unknown as ScheduleInterface[])) return 1;
+                                                    if (timeOfClass(a, schedule?.data?.schedule_items as unknown as ScheduleInterface[]) < timeOfClass(b, schedule?.data?.schedule_items as unknown as ScheduleInterface[])) return -1;
+                                                    return 0;
+                                                }).map((v, i) => (
 														<Class
 															class={{ data: v }}
+                                                            time={timeOfClass(v, schedule?.data?.schedule_items as unknown as ScheduleInterface[])}
 															key={i}
 															className="!w-full xl:!w-[18.5rem]"
 															isLink={true}
