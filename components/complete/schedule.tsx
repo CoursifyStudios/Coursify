@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { AllClassesResponse, Class } from "../../lib/db/classes";
+import { AllClassesResponse } from "../../lib/db/classes";
 import { Database } from "../../lib/db/database.types";
 import { ScheduleData, ScheduleInterface, to12hourTime } from "../../lib/db/schedule";
 import { ColoredPill } from "../misc/pill"
