@@ -12,5 +12,5 @@ export default function Footer() {
 		return null;
 	}
 
-	return <footer className=""> sss</footer>;
+	return <footer className="flex items-center">Karasu</footer>;
 }

@@ -6,12 +6,7 @@ import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
 import { Class, LoadingClass } from "../components/complete/class";
 import Loading from "../components/misc/loading";
-import {
-	getSchedule,
-	ScheduleData,
-	ScheduleInterface,
-	to12hourTime,
-} from "../lib/db/schedule";
+import { getSchedule, ScheduleData } from "../lib/db/schedule";
 import { ColoredPill } from "../components/misc/pill";
 import ScheduleComponent from "../components/complete/schedule";
 
@@ -54,35 +49,6 @@ export default function Home() {
 
 	return (
 		<>
-			<div className="mx-auto mt-4 flex ">
-				<div
-					className="cursor-pointer rounded-md bg-gray-200 px-4 py-2 font-medium"
-					onClick={() => supabaseClient.auth.signOut()}
-				>
-					Logout
-				</div>
-
-				<Link href="/scheduleEditor" onClick={() => newTab("/scheduleEditor")}>
-					<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
-						Add Schedule
-					</div>
-				</Link>
-
-				<Link
-					href="/profile/1e5024f5-d493-4e32-9822-87f080ad5516"
-					onClick={() =>
-						newTab(
-							"/profile/1e5024f5-d493-4e32-9822-87f080ad5516",
-							"quick007's Profile"
-						)
-					}
-				>
-					<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
-						Profile
-					</div>
-				</Link>
-			</div>
-
 			<div className="container my-10 mx-auto flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words  px-4 md:px-8 xl:px-0">
 				<div className="flex w-full flex-col-reverse lg:flex-row">
 					<section>
@@ -106,9 +72,9 @@ export default function Home() {
 					<section className=" grow lg:ml-10 ">
 						<h2 className="title">Daily Schedule</h2>
 						{/* Line below requires flex. flex was removed temporarily by bill because it made the ui look bad */}
-                        {classes && schedule &&
-                        <ScheduleComponent classes={classes} schedule={schedule} />
-}
+						{classes && schedule && (
+							<ScheduleComponent classes={classes} schedule={schedule} />
+						)}
 					</section>
 				</div>
 			</div>
