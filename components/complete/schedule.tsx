@@ -78,7 +78,13 @@ export default function ScheduleComponent({schedule, classes}:{schedule: Schedul
         );
     }
 }
-export function timeOfClass(classToUse: Database["public"]["Tables"]["classes"]["Row"], schedule: ScheduleInterface[]) {
-    return schedule?.find((v) => v.block == classToUse.block && v.type == classToUse.schedule_type)?.timeStart + " - " + schedule?.find((v) => v.block == classToUse.block && v.type == classToUse.schedule_type)?.timeEnd;
+export function timeOfClass(classToUse: Database["public"]["Tables"]["classes"]["Row"], schedule: ScheduleInterface[], use12hourTime?: boolean) {
+    if (use12hourTime && schedule?.find((v) => v.block == classToUse.block && v.type == classToUse.schedule_type)) {
+        //@ts-ignore why
+        return to12hourTime(schedule?.find((v) => v.block == classToUse.block && v.type == classToUse.schedule_type)?.timeStart) + " - " + to12hourTime(schedule?.find((v) => v.block == classToUse.block && v.type == classToUse.schedule_type)?.timeEnd);
+    } else {
+        return schedule?.find((v) => v.block == classToUse.block && v.type == classToUse.schedule_type)?.timeStart + " - " + schedule?.find((v) => v.block == classToUse.block && v.type == classToUse.schedule_type)?.timeEnd;
+    }
+    
 }
 

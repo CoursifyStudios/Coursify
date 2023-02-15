@@ -30,8 +30,6 @@ export default function Home() {
 	const scheduleUIReference = useRef<HTMLElement>(null);
 
 	useEffect(() => {
-		//testdateto set a seperate date in development
-		const testDate: Date = new Date("2022-11-23");
 		(async () => {
 			if (user) {
 				const classes = await getAllClasses(supabaseClient);
@@ -112,7 +110,7 @@ export default function Home() {
                                                 }).map((v, i) => (
 														<Class
 															class={{ data: v }}
-                                                            time={timeOfClass(v, schedule?.data?.schedule_items as unknown as ScheduleInterface[])}
+                                                            time={timeOfClass(v, (schedule?.data?.schedule_items as unknown as ScheduleInterface[])?.filter((v) => v.specialEvent == undefined), true)}
 															key={i}
 															className="!w-full xl:!w-[18.5rem]"
 															isLink={true}
