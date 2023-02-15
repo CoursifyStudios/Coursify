@@ -105,7 +105,7 @@ const Post: NextPage = () => {
 				)}
 			</div>
 			<div
-				className={`grow rounded-xl bg-gray-200 p-4 md:h-[calc(100vh-6.5rem)] md:p-6 ${
+				className={`grow rounded-xl px-4 md:h-[calc(100vh-6.5rem)] ${
 					fullscreen ? "flex" : "hidden md:flex"
 				}`}
 			>
@@ -226,14 +226,16 @@ const Post: NextPage = () => {
 							</div>
 						</div>
 					</section>
-					<section className="scrollbar-fancy relative mt-8 flex flex-1 flex-col-reverse overflow-y-scroll whitespace-pre-line md:pr-2 xl:flex-row">
+					<section className="scrollbar-fancy relative mt-5 flex flex-1 flex-col-reverse overflow-y-scroll whitespace-pre-line md:pr-2 xl:flex-row">
 						<div className="flex grow flex-col">
-							<h2 className="mb-2 text-xl font-semibold">Assignment</h2>
-							{assignment.data.content}
+							<h2 className="text-xl font-semibold">Assignment Details</h2>
+							<div className=" mt-2 mb-5 flex grow flex-col rounded-xl bg-gray-200">
+								{assignment.data.content}
+							</div>
 						</div>
-						<div className="sticky mb-8 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:ml-4 xl:mb-0 xl:w-72">
+						<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:ml-4 xl:mb-0 xl:w-72">
 							<h2 className="text-xl font-semibold">Submission</h2>
-							<div className="mt-2 rounded-xl bg-gray-300 p-6">
+							<div className="mt-2 rounded-xl bg-gray-200 p-6">
 								<h2 className="text-lg font-semibold ">
 									Teachers Instructions:
 								</h2>
