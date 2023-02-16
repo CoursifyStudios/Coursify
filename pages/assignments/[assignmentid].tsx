@@ -164,7 +164,7 @@ const Post: NextPage = () => {
 			return (
 				<div className="flex grow flex-col">
 					<section className="flex items-start justify-between">
-						<div className="mr-4 lg:max-w-lg xl:max-w-xl">
+						<div className="mr-4 grow lg:max-w-lg xl:max-w-xl">
 							<Link
 								className=" md:hidden"
 								href="/assignments/0"
@@ -200,13 +200,14 @@ const Post: NextPage = () => {
 										: "Error fetching class"}
 								</ColoredPill>
 							</Link>
-
-							<h1 className="title mt-4 mb-2 line-clamp-2">
-								{assignment.data.name}
-							</h1>
-							<p className="text-gray-700 line-clamp-2">
-								{assignment.data.description}
-							</p>
+							<div className="mt-4 w-full rounded-xl bg-gray-200 p-4">
+								<h1 className="title  mb-2 line-clamp-2">
+									{assignment.data.name}
+								</h1>
+								<p className="text-gray-700 line-clamp-2">
+									{assignment.data.description}
+								</p>
+							</div>
 						</div>
 						<div className="flex md:space-x-4">
 							<CopiedHover copy={window.location.href}>
@@ -226,10 +227,10 @@ const Post: NextPage = () => {
 							</div>
 						</div>
 					</section>
-					<section className="scrollbar-fancy relative mt-5 flex flex-1 flex-col-reverse overflow-y-scroll whitespace-pre-line md:pr-2 xl:flex-row">
+					<section className="relative mt-5 flex flex-1 flex-col-reverse overflow-hidden whitespace-pre-line md:pr-2 xl:flex-row">
 						<div className="flex grow flex-col">
-							<h2 className="text-xl font-semibold">Assignment Details</h2>
-							<div className=" mt-2 mb-5 flex grow flex-col rounded-xl bg-gray-200">
+							<h2 className="text-xl font-semibold">Details</h2>
+							<div className=" scrollbar-fancy mt-2 mb-5 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4">
 								{assignment.data.content}
 							</div>
 						</div>
