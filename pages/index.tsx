@@ -1,26 +1,36 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTabs } from "../lib/tabs/handleTabs";
 import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
 import { Class, LoadingClass } from "../components/complete/class";
 import Loading from "../components/misc/loading";
-import {
-	getSchedule,
-	ScheduleData,
-	ScheduleInterface,
-	to12hourTime,
-} from "../lib/db/schedule";
+import { getSchedule, ScheduleData } from "../lib/db/schedule";
 import { ColoredPill } from "../components/misc/pill";
+import ScheduleComponent from "../components/complete/schedule";
+import ReactDOM from "react-dom";
+import { DragZone, DropZone } from "../components/misc/draggableUI";
+import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 
 export default function Home() {
 	const { newTab } = useTabs();
 	const supabaseClient = useSupabaseClient<Database>();
 	const user = useUser();
+	//const [dragging, setDragging] = useRef();
 	const [classes, setClasses] = useState<AllClassesResponse>();
 	const [loading, setLoading] = useState(true);
 	const [schedule, setSchedule] = useState<ScheduleData>();
+	// The following three useState things are for the drag and drop UI
+
+	const [upDownUIOrder, setUpDownUIOrder] = useState(false); //This controls what order the UI should be in
+	const [showUpDownUIPreviews, setShowUpDownUIPreviews] = useState(false); //This controls wether or not to show previews / indicators of the UI change
+
+	const [leftRightUIOrder, setLeftRightUIOrder] = useState(false);
+
+	const classesUIReference = useRef<HTMLElement>(null); //I hate that these have to exist
+	const assignmentsUIReference = useRef<HTMLElement>(null);
+	const scheduleUIReference = useRef<HTMLElement>(null);
 
 	useEffect(() => {
 		//testdateto set a seperate date in development
@@ -53,124 +63,119 @@ export default function Home() {
 
 	return (
 		<>
-			<div className="mx-auto mt-4 flex ">
-				<div
-					className="cursor-pointer rounded-md bg-gray-200 px-4 py-2 font-medium"
-					onClick={() => supabaseClient.auth.signOut()}
-				>
-					Logout
-				</div>
+			<div className="container my-10 mx-auto flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words px-4 md:px-8 xl:px-0">
+				<div className="flex w-full flex-col lg:flex-row">
+					<div
+						className={
+							leftRightUIOrder ? "flex flex-row-reverse" : "flex flex-row"
+						}
+					>
+						<DropZone
+							id="schedule"
+							setUIState={setLeftRightUIOrder}
+							uIState={leftRightUIOrder}
+						>
+							<section
+								// @upDownUIOrder --> preview has been dropped on field, classes and schedule should change places
+								className={
+									upDownUIOrder ? "flex flex-col-reverse" : "flex flex-col"
+								}
+							>
+								{/* Classes UI */}
+								<DropZone
+									id="assignments"
+									setPreviewState={setShowUpDownUIPreviews}
+									setUIState={setUpDownUIOrder}
+									uIState={upDownUIOrder}
+								>
+									<section className="mb-8" ref={classesUIReference}>
+										<div className="mt-8 flex items-end justify-between lg:mt-0">
+											<h2 className="title">Classes</h2>
+											{loading && <Loading className="ml-8" />}
+											<DragZone
+												id="classes"
+												parent={classesUIReference.current as Element}
+												offsetByParentElementWidth={true}
+											>
+												<div className="-m-2 flex cursor-pointer p-2">
+													<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
 
-				<Link href="/scheduleEditor" onClick={() => newTab("/scheduleEditor")}>
-					<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
-						Add Schedule
-					</div>
-				</Link>
-
-				<Link
-					href="/profile/1e5024f5-d493-4e32-9822-87f080ad5516"
-					onClick={() =>
-						newTab(
-							"/profile/1e5024f5-d493-4e32-9822-87f080ad5516",
-							"quick007's Profile"
-						)
-					}
-				>
-					<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
-						Profile
-					</div>
-				</Link>
-			</div>
-
-			<div className="container my-10 mx-auto flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words  px-4 md:px-8 xl:px-0">
-				<div className="flex w-full flex-col-reverse lg:flex-row">
-					<section>
-						<div className="mt-8 flex items-center lg:mt-0">
-							<h2 className="title">Classes</h2>
-							{loading && <Loading className="ml-4" />}
-						</div>
-						<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
-							{classes && classes.data
-								? classes.data.map((v, i) => (
-										<Class
-											class={{ data: v }}
-											key={i}
-											className="!w-full xl:!w-[18.5rem]"
-											isLink={true}
-										/>
-								  ))
-								: [...Array(6)].map((_, i) => <LoadingClass key={i} />)}
-						</div>
-					</section>
-					<section className=" grow lg:ml-10 ">
-						<h2 className="title">Daily Schedule</h2>
-						{/* Line below requires flex. flex was removed temporarily by bill because it made the ui look bad */}
-						<div className="flex flex-col">
-							<div className=" mt-6 grid max-w-md gap-5 rounded-xl bg-gray-200 p-4">
-								{schedule &&
-									schedule.data &&
-									schedule.data.schedule_items &&
-									Array.isArray(schedule.data.schedule_items) &&
-									(
-										schedule.data
-											?.schedule_items as unknown as ScheduleInterface[]
-									).map(
-										(item, index) =>
-											(checkClassMatchesSchedule(item)?.name &&
-												!item.specialEvent && (
-													<Link
-														key={index}
-														className="flex items-center justify-between font-semibold"
-														href={
-															"/classes/" + checkClassMatchesSchedule(item)?.id
-														}
-													>
-														{
-															classes?.data?.find(
-																(v) =>
-																	v.block == item.block &&
-																	v.schedule_type == item.type
-															)?.name
-														}
-														{/* Class coloring would be implemented on line below. See the special event implementation fo rhwo that should look */}
-														<ColoredPill
-															color={
-																//@ts-ignore WHY THE HELL DOES IT THINK THAT IT CAN JUST DO THAT TO ME
-																checkClassMatchesSchedule(item).color
-															}
-														>
-															{to12hourTime(item.timeStart)} -{" "}
-															{to12hourTime(item.timeEnd)}
-														</ColoredPill>
-													</Link>
-												)) ||
-											(item.specialEvent && checkClassMatchesSchedule(item) && (
-												// May want to change this to be a <Link> later on so that you can link to info about special events
-												<div className="flex items-center justify-between font-semibold">
-													{item.specialEvent}
-													<ColoredPill
-														color={
-															item.customColor ? item.customColor : "green"
-														}
-													>
-														{to12hourTime(item.timeStart)} -{" "}
-														{to12hourTime(item.timeEnd)}
-													</ColoredPill>
+													<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
 												</div>
-											))
-									)}
+											</DragZone>
+										</div>
+										<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
+											{classes && classes.data
+												? classes.data.map((v, i) => (
+														<Class
+															class={{ data: v }}
+															key={i}
+															className="!w-full xl:!w-[18.5rem]"
+															isLink={true}
+														/>
+												  ))
+												: [...Array(6)].map((_, i) => <LoadingClass key={i} />)}
+										</div>
+									</section>
+								</DropZone>
+
+								{/* Assignments UI */}
+								<DropZone
+									id="classes"
+									setPreviewState={setShowUpDownUIPreviews}
+									setUIState={setUpDownUIOrder}
+									uIState={upDownUIOrder}
+								>
+									<section className="mb-4" ref={assignmentsUIReference}>
+										<div className="flex items-end justify-between">
+											<h2 className="title">Assignments</h2>
+											<DragZone
+												id="assignments"
+												parent={assignmentsUIReference.current as Element}
+												offsetByParentElementWidth={true}
+											>
+												<div className="-m-2 flex cursor-pointer p-2">
+													<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
+
+													<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
+												</div>
+											</DragZone>
+										</div>
+										<div className="mt-4 flex rounded-lg bg-gray-200 px-4 py-2">
+											<p>
+												ASSIGNEMENT VIEW GOES HERE <br></br>text<br></br>text
+												<br></br>IMAGINE THE THING FROM THE FIGMA WAS HEREtext
+												<br></br>text<br></br>
+											</p>
+										</div>
+									</section>
+								</DropZone>
+							</section>
+						</DropZone>
+						<section className="w-10"></section>
+						{/* Schedule UI */}
+						<section className="grow" ref={scheduleUIReference}>
+							<div className="flex items-end justify-between">
+								<h2 className="title mr-2">Daily Schedule</h2>
+								<DragZone
+									id="schedule"
+									parent={scheduleUIReference.current as Element}
+									offsetByParentElementWidth={true}
+								>
+									<div className="-m-2 flex cursor-pointer p-2 ">
+										<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
+
+										<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
+									</div>
+								</DragZone>
 							</div>
-						</div>
-					</section>
+							{classes && schedule && (
+								<ScheduleComponent classes={classes} schedule={schedule} />
+							)}
+						</section>
+					</div>
 				</div>
 			</div>
 		</>
 	);
-
-	function checkClassMatchesSchedule(scheduleItem: ScheduleInterface) {
-		return classes?.data?.find(
-			(v) =>
-				v.block == scheduleItem.block && v.schedule_type == scheduleItem.type
-		);
-	}
 }
