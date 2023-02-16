@@ -31,7 +31,7 @@ export function Class(props: {
 		return (
 			<div
 				className={
-					"brightness-hover group flex w-[19rem] cursor-pointer flex-col rounded-xl bg-gray-200 " +
+					"brightness-hover group flex w-[19rem] cursor-pointer select-none flex-col rounded-xl bg-gray-200 " +
 					props.className
 				}
 			>

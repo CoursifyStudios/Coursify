@@ -17,7 +17,7 @@ export default function Footer() {
 	}
 
 	return (
-		<footer className="flex justify-center">
+		<footer className="mt-10 flex justify-center">
 			<div className="my-2 flex w-full max-w-screen-xl flex-col items-center justify-between px-4 text-sm font-medium md:flex-row md:px-8 xl:px-0">
 				<div className="flex flex-col ">
 					<Image
