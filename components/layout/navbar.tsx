@@ -3,7 +3,7 @@ import { Fragment, ReactNode, useEffect, useMemo, useState } from "react";
 import {
 	ArrowLeftOnRectangleIcon,
 	CalendarIcon,
-	CogIcon,
+	Cog6ToothIcon,
 	MagnifyingGlassIcon,
 	MegaphoneIcon,
 	UserIcon,
@@ -121,7 +121,7 @@ const Navbar: NextComponentType = () => {
 										as="div"
 										className="flex items-center justify-between rounded-lg py-1 px-2 font-medium transition hover:bg-gray-300"
 									>
-										Settings <CogIcon className="h-5 w-5" />
+										Settings <Cog6ToothIcon className="h-5 w-5" />
 									</Menu.Item>
 								</Link>
 								<Menu.Item
