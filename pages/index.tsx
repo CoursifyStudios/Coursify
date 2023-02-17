@@ -137,17 +137,7 @@ export default function Home() {
 												: [...Array(6)].map((_, i) => <LoadingClass key={i} />)}
 										</div>
 									</section>
-								{/* Assignments UI */}
-									<section className="mb-4">
-											<h2 className="title">Assignments</h2>
-										<div className="mt-4 flex rounded-lg bg-gray-200 px-4 py-2">
-											<p>
-												ASSIGNEMENT VIEW GOES HERE <br></br>text<br></br>text
-												<br></br>IMAGINE THE THING FROM THE FIGMA WAS HEREtext
-												<br></br>text<br></br>
-											</p>
-										</div>
-									</section>
+								
 						<section className="w-10"></section>
 						{/* Schedule UI */}
 						<section className=" grow lg:ml-10">
