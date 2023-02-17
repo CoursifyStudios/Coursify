@@ -7,7 +7,7 @@ import exampleImage from "../../public/example-img.jpg";
 
 export function Class(props: {
 	class: Class;
-    time: string;
+    time?: string;
 	className?: string;
 	isLink?: boolean;
 }) {
