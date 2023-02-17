@@ -59,11 +59,7 @@ export default function Home() {
 				<div className="flex w-full flex-col">
 					<div className="flex">
 						{/* Classes UI */}
-
-													<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
-												</div>
-											</DragZone>
-										</div>
+										<section>
 										<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
 											{classes && classes.data
 												? classes.data
@@ -141,29 +137,9 @@ export default function Home() {
 												: [...Array(6)].map((_, i) => <LoadingClass key={i} />)}
 										</div>
 									</section>
-								</DropZone>
 								{/* Assignments UI */}
-								<DropZone
-									id="classes"
-									setPreviewState={setShowUpDownUIPreviews}
-									setUIState={setUpDownUIOrder}
-									uIState={upDownUIOrder}
-								>
-									<section className="mb-4" ref={assignmentsUIReference}>
-										<div className="flex items-end justify-between">
+									<section className="mb-4">
 											<h2 className="title">Assignments</h2>
-											<DragZone
-												id="assignments"
-												parent={assignmentsUIReference.current as Element}
-												offsetByParentElementWidth={true}
-											>
-												<div className="-m-2 flex cursor-pointer p-2">
-													<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
-
-													<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
-												</div>
-											</DragZone>
-										</div>
 										<div className="mt-4 flex rounded-lg bg-gray-200 px-4 py-2">
 											<p>
 												ASSIGNEMENT VIEW GOES HERE <br></br>text<br></br>text
@@ -172,18 +148,11 @@ export default function Home() {
 											</p>
 										</div>
 									</section>
-								</DropZone>
-							</section>
-						</DropZone>
 						<section className="w-10"></section>
 						{/* Schedule UI */}
 						<section className=" grow lg:ml-10">
 							<div className="flex items-end justify-between">
 								<h2 className="title mr-2">Daily Schedule</h2>
-								<div className="-m-2 flex cursor-pointer p-2 ">
-									<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
-									<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
-								</div>
 							</div>
 							{classes && schedule ? (
 								<ScheduleComponent classes={classes} schedule={schedule} />
@@ -208,14 +177,7 @@ export default function Home() {
 					<div className="flex grow">
 						{/* Assignments UI */}
 						<section className="">
-							<div className="flex items-end justify-between">
 								<h2 className="title">Assignments</h2>
-
-								<div className="-m-2 flex cursor-pointer p-2">
-									<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
-									<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
-								</div>
-							</div>
 							<div className="mt-6 flex w-full rounded-xl bg-gray-200 px-4 py-2 xl:w-[58.5rem]">
 								<p>
 									ASSIGNEMENT VIEW GOES HERE <br></br>text<br></br>text
@@ -226,13 +188,7 @@ export default function Home() {
 						</section>
 						{/* Starred assignments */}
 						<section className=" grow lg:ml-10">
-							<div className="flex items-end justify-between">
 								<h2 className="title mr-2">Starred</h2>
-								<div className="-m-2 flex cursor-pointer p-2 ">
-									<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
-									<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
-								</div>
-							</div>
 						</section>
 					</div>
 				</div>
