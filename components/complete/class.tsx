@@ -7,7 +7,7 @@ import exampleImage from "../../public/example-img.jpg";
 
 export function Class(props: {
 	class: Class;
-    time?: string;
+	time?: string;
 	className?: string;
 	isLink?: boolean;
 }) {
@@ -49,14 +49,11 @@ export function Class(props: {
 						<h3 className="break-words text-xl font-semibold line-clamp-2">
 							{classData.name}
 						</h3>
-                        {props.time != undefined + " - " + undefined?
-                        <ColoredPill color={classData.color}>
-                            {props.time}
-                        </ColoredPill>
-                        :
-                        <></>
-                        }
-						
+						{props.time != undefined + " - " + undefined ? (
+							<ColoredPill color={classData.color}>{props.time}</ColoredPill>
+						) : (
+							<></>
+						)}
 					</div>
 					<p>Teacher name</p>
 				</div>

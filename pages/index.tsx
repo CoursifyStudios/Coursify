@@ -6,8 +6,14 @@ import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
 import { Class, LoadingClass } from "../components/complete/class";
 import Loading from "../components/misc/loading";
-import { getSchedule, ScheduleData, ScheduleInterface } from "../lib/db/schedule";
-import ScheduleComponent, { timeOfClass } from "../components/complete/schedule";
+import {
+	getSchedule,
+	ScheduleData,
+	ScheduleInterface,
+} from "../lib/db/schedule";
+import ScheduleComponent, {
+	timeOfClass,
+} from "../components/complete/schedule";
 import { DragZone, DropZone } from "../components/misc/draggableUI";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 
@@ -100,22 +106,79 @@ export default function Home() {
 											</DragZone>
 										</div>
 										<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
-                                        {classes && classes.data
-												? classes.data.sort((a, b) => {
-                                                    if (timeOfClass(a, schedule?.data?.schedule_items as unknown as ScheduleInterface[]) > timeOfClass(b, schedule?.data?.schedule_items as unknown as ScheduleInterface[])) return 1;
-                                                    if (timeOfClass(a, schedule?.data?.schedule_items as unknown as ScheduleInterface[]) < timeOfClass(b, schedule?.data?.schedule_items as unknown as ScheduleInterface[])) return -1;
-                                                    if (timeOfClass(a, schedule?.data?.schedule_items as unknown as ScheduleInterface[]) > timeOfClass(b, schedule?.data?.schedule_items as unknown as ScheduleInterface[])) return 1;
-                                                    if (timeOfClass(a, schedule?.data?.schedule_items as unknown as ScheduleInterface[]) < timeOfClass(b, schedule?.data?.schedule_items as unknown as ScheduleInterface[])) return -1;
-                                                    return 0;
-                                                }).map((v, i) => (
-														<Class
-															class={{ data: v }}
-                                                            time={timeOfClass(v, (schedule?.data?.schedule_items as unknown as ScheduleInterface[])?.filter((v) => v.specialEvent == undefined), true)}
-															key={i}
-															className="!w-full xl:!w-[18.5rem]"
-															isLink={true}
-														/>
-												  ))
+											{classes && classes.data
+												? classes.data
+														.sort((a, b) => {
+															if (
+																timeOfClass(
+																	a,
+																	schedule?.data
+																		?.schedule_items as unknown as ScheduleInterface[]
+																) >
+																timeOfClass(
+																	b,
+																	schedule?.data
+																		?.schedule_items as unknown as ScheduleInterface[]
+																)
+															)
+																return 1;
+															if (
+																timeOfClass(
+																	a,
+																	schedule?.data
+																		?.schedule_items as unknown as ScheduleInterface[]
+																) <
+																timeOfClass(
+																	b,
+																	schedule?.data
+																		?.schedule_items as unknown as ScheduleInterface[]
+																)
+															)
+																return -1;
+															if (
+																timeOfClass(
+																	a,
+																	schedule?.data
+																		?.schedule_items as unknown as ScheduleInterface[]
+																) >
+																timeOfClass(
+																	b,
+																	schedule?.data
+																		?.schedule_items as unknown as ScheduleInterface[]
+																)
+															)
+																return 1;
+															if (
+																timeOfClass(
+																	a,
+																	schedule?.data
+																		?.schedule_items as unknown as ScheduleInterface[]
+																) <
+																timeOfClass(
+																	b,
+																	schedule?.data
+																		?.schedule_items as unknown as ScheduleInterface[]
+																)
+															)
+																return -1;
+															return 0;
+														})
+														.map((v, i) => (
+															<Class
+																class={{ data: v }}
+																time={timeOfClass(
+																	v,
+																	(
+																		schedule?.data
+																			?.schedule_items as unknown as ScheduleInterface[]
+																	)?.filter((v) => v.specialEvent == undefined),
+																	true
+																)}
+																key={i}
+																className="!w-full xl:!w-[18.5rem]"
+																isLink={true}
+															/>
+														))
 												: [...Array(6)].map((_, i) => <LoadingClass key={i} />)}
 										</div>
 									</section>
@@ -135,7 +198,7 @@ export default function Home() {
 												parent={assignmentsUIReference.current as Element}
 												offsetByParentElementWidth={true}
 											>
-                                                <div className="-m-2 flex cursor-pointer p-2">
+												<div className="-m-2 flex cursor-pointer p-2">
 													<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
 
 													<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
