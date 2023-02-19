@@ -133,50 +133,23 @@ const group: NextPage = () => {
 				</Tab.Group>
 				<div className="sticky top-0 ml-8 w-[20.5rem] shrink-0 ">
 					<h2 className="title">Next Event</h2>
-					<Event
-						title="Badminton in the Pavillion"
-						date="Today"
-						time="8:00 - 9:30 AM"
-					></Event>
+					<Event title="Badminton" time="8:00 - 9:30 AM"></Event>
 					<h2 className="title mt-6 mb-6">Upcoming</h2>
-					<Event
-						title="Badminton outside"
-						date="12/18/22"
-						time="8:00 - 9:30 AM"
-					></Event>
-					<Event
-						title="Badminton in the Pavillion"
-						date="01/18/23"
-						time="8:00 - 9:30 AM"
-					></Event>
-					<Event
-						title="Badminton in the Gym"
-						date="02/13/23"
-						time="8:00 - 9:30 AM"
-					></Event>
+					<Event title="Badminton outside" time="12/15/22"></Event>
+					<Event title="Badminton in the Pavillion" time="1/8/23"></Event>
+					<Event title="Badminton in the Gym" time="12/9/24"></Event>
 				</div>
 			</div>
 		</div>
 	);
 };
 
-const Event = ({
-	title,
-	date,
-	time,
-}: {
-	title: string;
-	date: string;
-	time: string;
-}) => {
+const Event = ({ title, time }: { title: string; time: string }) => {
 	return (
-		<div className="mt-6 rounded-xl bg-gray-200 p-4">
+		<div className="mt-6 flex items-center justify-between rounded-xl bg-gray-200 p-4">
 			<p className="font-semibold">{title}</p>
-			<div className="mt-1.5 flex">
-				<ColoredPill color={"light green"}>{date}</ColoredPill>
-				<div className="ml-4">
-					<ColoredPill color={"green"}>{time}</ColoredPill>
-				</div>
+			<div className="">
+				<ColoredPill color={"green"}>{time}</ColoredPill>
 			</div>
 		</div>
 	);
