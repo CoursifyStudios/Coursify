@@ -1,19 +1,16 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTabs } from "../lib/tabs/handleTabs";
 import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
 import { Class, LoadingClass } from "../components/complete/class";
 import Loading from "../components/misc/loading";
-import {
-	getSchedule,
-	ScheduleData,
-	ScheduleInterface,
-	to12hourTime,
-} from "../lib/db/schedule";
+import { getSchedule, ScheduleData } from "../lib/db/schedule";
 import { ColoredPill } from "../components/misc/pill";
-import Editor from "../components/editors/richeditor";
+import ScheduleComponent from "../components/complete/schedule";
+import { DragZone, DropZone } from "../components/misc/draggableUI";
+import EllipsisVerticalIcon from "@heroicons/react/24/outline/EllipsisVerticalIcon";
 
 export default function Home() {
 	const { newTab } = useTabs();
@@ -54,124 +51,94 @@ export default function Home() {
 
 	return (
 		<>
-			<div className="mx-auto mt-4 flex ">
-				<div
-					className="cursor-pointer rounded-md bg-gray-200 px-4 py-2 font-medium"
-					onClick={() => supabaseClient.auth.signOut()}
-				>
-					Logout
-				</div>
+			<div className="container my-10 mx-auto flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words px-4 md:px-8 xl:px-0">
+				<div className="flex w-full flex-col">
+					<div className="flex">
+						{/* Classes UI */}
 
-				<Link href="/scheduleEditor" onClick={() => newTab("/scheduleEditor")}>
-					<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
-						Add Schedule
-					</div>
-				</Link>
-
-				<Link
-					href="/profile/1e5024f5-d493-4e32-9822-87f080ad5516"
-					onClick={() =>
-						newTab(
-							"/profile/1e5024f5-d493-4e32-9822-87f080ad5516",
-							"quick007's Profile"
-						)
-					}
-				>
-					<div className="ml-2 rounded-md bg-gray-200 px-4 py-2 font-medium">
-						Profile
-					</div>
-				</Link>
-			</div>
-
-			<div className="container my-10 mx-auto flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words  px-4 md:px-8 xl:px-0">
-				<div className="flex w-full flex-col-reverse lg:flex-row">
-					<section>
-						<div className="mt-8 flex items-center lg:mt-0">
-							<h2 className="title">Classes</h2>
-							{loading && <Loading className="ml-4" />}
-						</div>
-						<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
-							{classes && classes.data
-								? classes.data.map((v, i) => (
-										<Class
-											class={{ data: v }}
-											key={i}
-											className="!w-full xl:!w-[18.5rem]"
-											isLink={true}
-										/>
-								  ))
-								: [...Array(6)].map((_, i) => <LoadingClass key={i} />)}
-						</div>
-					</section>
-					<section className=" grow lg:ml-10 ">
-						<h2 className="title">Daily Schedule</h2>
-						{/* Line below requires flex. flex was removed temporarily by bill because it made the ui look bad */}
-						<div className="flex flex-col">
-							<div className=" mt-6 grid max-w-md gap-5 rounded-xl bg-gray-200 p-4">
-								{schedule &&
-									schedule.data &&
-									schedule.data.schedule_items &&
-									Array.isArray(schedule.data.schedule_items) &&
-									(
-										schedule.data
-											?.schedule_items as unknown as ScheduleInterface[]
-									).map(
-										(item, index) =>
-											(checkClassMatchesSchedule(item)?.name &&
-												!item.specialEvent && (
-													<Link
-														key={index}
-														className="flex items-center justify-between font-semibold"
-														href={
-															"/classes/" + checkClassMatchesSchedule(item)?.id
-														}
-													>
-														{
-															classes?.data?.find(
-																(v) =>
-																	v.block == item.block &&
-																	v.schedule_type == item.type
-															)?.name
-														}
-														{/* Class coloring would be implemented on line below. See the special event implementation fo rhwo that should look */}
-														<ColoredPill
-															color={
-																//@ts-ignore WHY THE HELL DOES IT THINK THAT IT CAN JUST DO THAT TO ME
-																checkClassMatchesSchedule(item).color
-															}
-														>
-															{to12hourTime(item.timeStart)} -{" "}
-															{to12hourTime(item.timeEnd)}
-														</ColoredPill>
-													</Link>
-												)) ||
-											(item.specialEvent && checkClassMatchesSchedule(item) && (
-												// May want to change this to be a <Link> later on so that you can link to info about special events
-												<div className="flex items-center justify-between font-semibold">
-													{item.specialEvent}
-													<ColoredPill
-														color={
-															item.customColor ? item.customColor : "green"
-														}
-													>
-														{to12hourTime(item.timeStart)} -{" "}
-														{to12hourTime(item.timeEnd)}
-													</ColoredPill>
-												</div>
-											))
-									)}
+						<section className="mb-12">
+							<div className="mt-8 flex items-end lg:mt-0">
+								<h2 className="title">Classes</h2>
+								{loading && <Loading className="ml-4" />}
+								<div className="-m-2 ml-auto flex cursor-pointer  p-2">
+									<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
+									<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
+								</div>
 							</div>
-						</div>
-					</section>
+							<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
+								{classes && classes.data
+									? classes.data.map((v, i) => (
+											<Class
+												class={{ data: v }}
+												key={i}
+												className="!w-full xl:!w-[18.5rem]"
+												isLink={true}
+											/>
+									  ))
+									: [...Array(6)].map((_, i) => <LoadingClass key={i} />)}
+							</div>
+						</section>
+						{/* Schedule UI */}
+						<section className=" grow lg:ml-10">
+							<div className="flex items-end justify-between">
+								<h2 className="title mr-2">Daily Schedule</h2>
+								<div className="-m-2 flex cursor-pointer p-2 ">
+									<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
+									<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
+								</div>
+							</div>
+							{classes && schedule ? (
+								<ScheduleComponent classes={classes} schedule={schedule} />
+							) : (
+								<div className="mt-6 flex h-36 animate-pulse flex-col justify-between rounded-xl bg-gray-200 p-4">
+									<div className="flex justify-between">
+										<div className="h-5 w-36 animate-pulse rounded bg-gray-300"></div>
+										<div className="h-5 w-20 animate-pulse rounded bg-gray-300"></div>
+									</div>
+									<div className="flex justify-between">
+										<div className="h-5 w-32 animate-pulse rounded bg-gray-300"></div>
+										<div className="h-5 w-20 animate-pulse rounded bg-gray-300"></div>
+									</div>
+									<div className="flex justify-between">
+										<div className="h-5 w-36 animate-pulse rounded bg-gray-300"></div>
+										<div className="h-5 w-20 animate-pulse rounded bg-gray-300"></div>
+									</div>
+								</div>
+							)}
+						</section>
+					</div>
+					<div className="flex grow">
+						{/* Assignments UI */}
+						<section className="">
+							<div className="flex items-end justify-between">
+								<h2 className="title">Assignments</h2>
+
+								<div className="-m-2 flex cursor-pointer p-2">
+									<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
+									<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
+								</div>
+							</div>
+							<div className="mt-6 flex w-full rounded-xl bg-gray-200 px-4 py-2 xl:w-[58.5rem]">
+								<p>
+									ASSIGNEMENT VIEW GOES HERE <br></br>text<br></br>text
+									<br></br>IMAGINE THE THING FROM THE FIGMA WAS HEREtext
+									<br></br>text<br></br>
+								</p>
+							</div>
+						</section>
+						{/* Starred assignments */}
+						<section className=" grow lg:ml-10">
+							<div className="flex items-end justify-between">
+								<h2 className="title mr-2">Starred</h2>
+								<div className="-m-2 flex cursor-pointer p-2 ">
+									<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
+									<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
+								</div>
+							</div>
+						</section>
+					</div>
 				</div>
 			</div>
 		</>
 	);
-
-	function checkClassMatchesSchedule(scheduleItem: ScheduleInterface) {
-		return classes?.data?.find(
-			(v) =>
-				v.block == scheduleItem.block && v.schedule_type == scheduleItem.type
-		);
-	}
 }
