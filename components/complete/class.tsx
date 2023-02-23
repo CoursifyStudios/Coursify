@@ -1,12 +1,14 @@
-import { Class } from "../../lib/db/classes";
+import { AllClassesResponse, IndividialClass } from "../../lib/db/classes";
 import Image from "next/image";
 import { ColoredPill } from "../misc/pill";
 import Link from "next/link";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import exampleImage from "../../public/example-img.jpg";
+import { ScheduleData, ScheduleInterface } from "../../lib/db/schedule";
+import { timeOfClass } from "./schedule";
 
 export function Class(props: {
-	class: Class;
+	class: IndividialClass;
 	time?: string;
 	className?: string;
 	isLink?: boolean;
@@ -49,11 +51,18 @@ export function Class(props: {
 						<h3 className="break-words text-xl font-semibold line-clamp-2">
 							{classData.name}
 						</h3>
-						{props.time != undefined + " - " + undefined ? (
-							<ColoredPill color={classData.color}>{props.time}</ColoredPill>
-						) : (
-							<></>
-						)}
+						<ColoredPill
+							color={
+								props.time != "undefined - undefined" ? classData.color : "gray"
+							}
+							className={
+								props.time == "undefined - undefined"
+									? "w-20 animate-pulse"
+									: ""
+							}
+						>
+							{props.time != "undefined - undefined" ? props.time : "​"}
+						</ColoredPill>
 					</div>
 					<p>Teacher name</p>
 				</div>
@@ -62,8 +71,70 @@ export function Class(props: {
 	}
 }
 
-export const LoadingClass = () => {
+export const LoadingClass = ({ className }: { className: string }) => {
 	return (
-		<div className="flex h-48 w-[19rem] animate-pulse rounded-xl bg-gray-200"></div>
+		<div
+			className={`flex h-48 w-[19rem] animate-pulse rounded-xl bg-gray-200 ${className}`}
+		></div>
 	);
 };
+
+export function sortClasses(
+	a: ArrayElementType<AllClassesResponse["data"]>,
+	b: ArrayElementType<AllClassesResponse["data"]>,
+	schedule: ScheduleData | undefined
+) {
+	if (!a || !b) return -1;
+
+	if (
+		timeOfClass(
+			a,
+			schedule?.data?.schedule_items as unknown as ScheduleInterface[]
+		) >
+		timeOfClass(
+			b,
+			schedule?.data?.schedule_items as unknown as ScheduleInterface[]
+		)
+	)
+		return 1;
+	if (
+		timeOfClass(
+			a,
+			schedule?.data?.schedule_items as unknown as ScheduleInterface[]
+		) <
+		timeOfClass(
+			b,
+			schedule?.data?.schedule_items as unknown as ScheduleInterface[]
+		)
+	)
+		return -1;
+	if (
+		timeOfClass(
+			a,
+			schedule?.data?.schedule_items as unknown as ScheduleInterface[]
+		) >
+		timeOfClass(
+			b,
+			schedule?.data?.schedule_items as unknown as ScheduleInterface[]
+		)
+	)
+		return 1;
+	if (
+		timeOfClass(
+			a,
+			schedule?.data?.schedule_items as unknown as ScheduleInterface[]
+		) <
+		timeOfClass(
+			b,
+			schedule?.data?.schedule_items as unknown as ScheduleInterface[]
+		)
+	)
+		return -1;
+	return 0;
+}
+
+export type ArrayElementType<T> = T extends (infer U)[]
+	? U
+	: T extends readonly (infer U)[]
+	? U
+	: never;

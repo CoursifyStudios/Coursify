@@ -95,7 +95,7 @@ export function timeOfClass(
 	) {
 		return (
 			to12hourTime(
-                //@ts-ignore why
+				//@ts-ignore why
 				schedule?.find(
 					(v) =>
 						v.block == classToUse.block && v.type == classToUse.schedule_type
@@ -103,7 +103,7 @@ export function timeOfClass(
 			) +
 			" - " +
 			to12hourTime(
-                //@ts-ignore why
+				//@ts-ignore why
 				schedule?.find(
 					(v) =>
 						v.block == classToUse.block && v.type == classToUse.schedule_type
