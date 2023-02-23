@@ -1,25 +1,13 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import Link from "next/link";
-import { useState, useEffect, useRef } from "react";
-import { useTabs } from "../lib/tabs/handleTabs";
+import { useState, useEffect } from "react";
 import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
 import { Class, LoadingClass } from "../components/complete/class";
 import Loading from "../components/misc/loading";
-import {
-	getSchedule,
-	ScheduleData,
-	ScheduleInterface,
-} from "../lib/db/schedule";
-import ScheduleComponent, {
-	timeOfClass,
-} from "../components/complete/schedule";
-import { ColoredPill } from "../components/misc/pill";
-import { DragZone, DropZone } from "../components/misc/draggableUI";
-import EllipsisVerticalIcon from "@heroicons/react/24/outline/EllipsisVerticalIcon";
+import { getSchedule, ScheduleData, ScheduleInterface } from "../lib/db/schedule";
+import ScheduleComponent, { timeOfClass } from "../components/complete/schedule";
 
 export default function Home() {
-	const { newTab } = useTabs();
 	const supabaseClient = useSupabaseClient<Database>();
 	const user = useUser();
 	const [classes, setClasses] = useState<AllClassesResponse>();
@@ -58,92 +46,38 @@ export default function Home() {
 			<div className="container my-10 mx-auto flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words px-4 md:px-8 xl:px-0">
 				<div className="flex w-full flex-col">
 					<div className="flex">
-						{/* Classes UI */}
-										<section>
-										<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
-											{classes && classes.data
-												? classes.data
-														.sort((a, b) => {
-															if (
-																timeOfClass(
-																	a,
-																	schedule?.data
-																		?.schedule_items as unknown as ScheduleInterface[]
-																) >
-																timeOfClass(
-																	b,
-																	schedule?.data
-																		?.schedule_items as unknown as ScheduleInterface[]
-																)
-															)
-																return 1;
-															if (
-																timeOfClass(
-																	a,
-																	schedule?.data
-																		?.schedule_items as unknown as ScheduleInterface[]
-																) <
-																timeOfClass(
-																	b,
-																	schedule?.data
-																		?.schedule_items as unknown as ScheduleInterface[]
-																)
-															)
-																return -1;
-															if (
-																timeOfClass(
-																	a,
-																	schedule?.data
-																		?.schedule_items as unknown as ScheduleInterface[]
-																) >
-																timeOfClass(
-																	b,
-																	schedule?.data
-																		?.schedule_items as unknown as ScheduleInterface[]
-																)
-															)
-																return 1;
-															if (
-																timeOfClass(
-																	a,
-																	schedule?.data
-																		?.schedule_items as unknown as ScheduleInterface[]
-																) <
-																timeOfClass(
-																	b,
-																	schedule?.data
-																		?.schedule_items as unknown as ScheduleInterface[]
-																)
-															)
-																return -1;
-															return 0;
-														})
-														.map((v, i) => (
-															<Class
-																class={{ data: v }}
-																time={timeOfClass(
-																	v,
-																	(
-																		schedule?.data
-																			?.schedule_items as unknown as ScheduleInterface[]
-																	)?.filter((v) => v.specialEvent == undefined),
-																	true
-																)}
-																key={i}
-																className="!w-full xl:!w-[18.5rem]"
-																isLink={true}
-															/>
-														))
-												: [...Array(6)].map((_, i) => <LoadingClass key={i} />)}
-										</div>
-									</section>
-								
-						<section className="w-10"></section>
 						{/* Schedule UI */}
 						<section className=" grow lg:ml-10">
 							<div className="flex items-end justify-between">
 								<h2 className="title mr-2">Daily Schedule</h2>
 							</div>
+                        </section>
+						{/* Classes UI */}
+						<section className="mb-12">
+							<div className="mt-8 flex items-end lg:mt-0">
+								<h2 className="title">Classes</h2>
+								{loading && <Loading className="ml-4" />}
+							</div>
+							<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
+								{classes && classes.data //@ts-ignore
+									? classes.data.sort((a, b) => {
+                                        if (timeOfClass(a, schedule?.data?.schedule_items as unknown as ScheduleInterface[]) > timeOfClass(b, schedule?.data?.schedule_items as unknown as ScheduleInterface[])) return 1;
+                                        if (timeOfClass(a, schedule?.data?.schedule_items as unknown as ScheduleInterface[]) < timeOfClass(b, schedule?.data?.schedule_items as unknown as ScheduleInterface[])) return -1;
+                                        if (timeOfClass(a, schedule?.data?.schedule_items as unknown as ScheduleInterface[]) > timeOfClass(b, schedule?.data?.schedule_items as unknown as ScheduleInterface[])) return 1;
+                                        if (timeOfClass(a, schedule?.data?.schedule_items as unknown as ScheduleInterface[]) < timeOfClass(b, schedule?.data?.schedule_items as unknown as ScheduleInterface[])) return -1;}).map((v, i) => (
+											<Class
+												class={{ data: v }}
+												key={i}
+												className="!w-full xl:!w-[18.5rem]"
+												isLink={true}
+											/>
+									  ))
+									: [...Array(6)].map((_, i) => <LoadingClass key={i} />)}
+							</div>
+						</section>
+						{/* Schedule UI */}
+						<section className=" grow lg:ml-10">
+							<h2 className="title mr-2">Daily Schedule</h2>
 							{classes && schedule ? (
 								<ScheduleComponent classes={classes} schedule={schedule} />
 							) : (
@@ -167,7 +101,7 @@ export default function Home() {
 					<div className="flex grow">
 						{/* Assignments UI */}
 						<section className="">
-								<h2 className="title">Assignments</h2>
+							<h2 className="title">Assignments</h2>
 							<div className="mt-6 flex w-full rounded-xl bg-gray-200 px-4 py-2 xl:w-[58.5rem]">
 								<p>
 									ASSIGNEMENT VIEW GOES HERE <br></br>text<br></br>text
@@ -178,11 +112,22 @@ export default function Home() {
 						</section>
 						{/* Starred assignments */}
 						<section className=" grow lg:ml-10">
-								<h2 className="title mr-2">Starred</h2>
+							<h2 className="title mr-2">Starred</h2>
 						</section>
 					</div>
 				</div>
 			</div>
 		</>
 	);
+}
+
+export function sortClassesByTime2(classes: Database["public"]["Tables"]["classes"]["Row"][],
+                                  schedule: ScheduleInterface[]): Database["public"]["Tables"]["classes"]["Row"][] {
+                                    //@ts-ignore
+    return classes.sort((a, b) => {
+            if (timeOfClass(a, schedule) > timeOfClass(b, schedule)) return 1;
+            if (timeOfClass(a, schedule) < timeOfClass(b, schedule)) return -1;
+            if (timeOfClass(a, schedule) > timeOfClass(b, schedule)) return 1;
+            if (timeOfClass(a, schedule) < timeOfClass(b, schedule)) return -1;
+    });
 }

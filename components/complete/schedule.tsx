@@ -122,3 +122,63 @@ export function timeOfClass(
 		);
 	}
 }
+export function sortClassesByTime (classes: Database["public"]["Tables"]["classes"]["Row"][], schedule: ScheduleData, use12hourTime: boolean) {
+    if (schedule == undefined) return undefined;
+    return classes.sort((a, b) => {
+        //@ts-expect-error
+        if ((schedule as unknown as ScheduleInterface[]).find((v) => v.block == a.block && v.type == a.schedule_type).timeStart > 
+        //@ts-expect-error
+        (schedule as unknown as ScheduleInterface[])?.find((v) => v.block == b.block && v.type == b.schedule_type).timeStart
+        ) {return 1}
+        //@ts-expect-error
+        if ((schedule as unknown as ScheduleInterface[])?.find((v) => v.block == a.block && v.type == a.schedule_type).timeStart < 
+        //@ts-expect-error
+        (schedule as unknown as ScheduleInterface[])?.find((v) => v.block == b.block && v.type == b.schedule_type).timeStart
+        ) {return -1}
+        //@ts-expect-error
+        if ((schedule as unknown as ScheduleInterface[])?.find((v) => v.block == a.block && v.type == a.schedule_type).timeEnd > 
+        //@ts-expect-error
+        (schedule as unknown as ScheduleInterface[])?.find((v) => v.block == b.block && v.type == b.schedule_type).timeEnd
+        ) {return 1}
+        //@ts-expect-error
+        if ((schedule as unknown as ScheduleInterface[])?.find((v) => v.block == a.block && v.type == a.schedule_type).timeEnd > 
+        //@ts-expect-error
+        (schedule as unknown as ScheduleInterface[])?.find((v) => v.block == b.block && v.type == b.schedule_type).timeEnd
+        ) {return -1}
+        return 0;
+    })
+}
+export function sortClassesByTime2(classes: Database["public"]["Tables"]["classes"]["Row"][],
+                                  schedule: ScheduleInterface[]): Database["public"]["Tables"]["classes"]["Row"][] {
+    return classes.sort((a, b) => {
+        if (!schedule) {return 0}
+    
+        const aStartTime = (schedule)?.find((v) => v.block == a.block && v.type == a.schedule_type)?.timeStart;
+        const bStartTime = (schedule)?.find((v) => v.block == b.block && v.type == b.schedule_type)?.timeStart;
+        const aEndTime = (schedule)?.find((v) => v.block == a.block && v.type == a.schedule_type)?.timeEnd;
+        const bEndTime = (schedule)?.find((v) => v.block == b.block && v.type == b.schedule_type)?.timeEnd;
+
+        if (aStartTime == null || bStartTime == null) {
+            // If either start time is undefined or null, return 0 to indicate that both values are equal
+            return 0;
+        }
+        if (Date.parse(aStartTime) > Date.parse(bStartTime)) {
+            return 1;
+        }
+        if (Date.parse(aStartTime) < Date.parse(bStartTime)) {
+            return -1;
+        }
+        if (aEndTime == null || bEndTime == null) {
+            // If either end time is undefined or null, return 0 to indicate that both values are equal
+            return 0;
+        }
+        if (Date.parse(aEndTime) > Date.parse(bEndTime)) {
+            return 1;
+        }
+        if (Date.parse(aEndTime) < Date.parse(bEndTime)) {
+            return -1;
+        }
+        // If none of the conditions are true, return 0 to indicate that both values are equal
+        return 0;
+    });
+}
