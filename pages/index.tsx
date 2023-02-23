@@ -6,15 +6,9 @@ import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
 import { Class, LoadingClass } from "../components/complete/class";
 import Loading from "../components/misc/loading";
-import {
-	getSchedule,
-	ScheduleData,
-	ScheduleInterface,
-} from "../lib/db/schedule";
-import ScheduleComponent, {
-	timeOfClass,
-} from "../components/complete/schedule";
+import { getSchedule, ScheduleData } from "../lib/db/schedule";
 import { ColoredPill } from "../components/misc/pill";
+import ScheduleComponent from "../components/complete/schedule";
 import { DragZone, DropZone } from "../components/misc/draggableUI";
 import EllipsisVerticalIcon from "@heroicons/react/24/outline/EllipsisVerticalIcon";
 
@@ -27,6 +21,8 @@ export default function Home() {
 	const [schedule, setSchedule] = useState<ScheduleData>();
 
 	useEffect(() => {
+		//testdateto set a seperate date in development
+		const testDate: Date = new Date("2022-11-23");
 		(async () => {
 			if (user) {
 				const classes = await getAllClasses(supabaseClient);
@@ -60,122 +56,28 @@ export default function Home() {
 					<div className="flex">
 						{/* Classes UI */}
 
-													<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
-												</div>
-											</DragZone>
-										</div>
-										<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
-											{classes && classes.data
-												? classes.data
-														.sort((a, b) => {
-															if (
-																timeOfClass(
-																	a,
-																	schedule?.data
-																		?.schedule_items as unknown as ScheduleInterface[]
-																) >
-																timeOfClass(
-																	b,
-																	schedule?.data
-																		?.schedule_items as unknown as ScheduleInterface[]
-																)
-															)
-																return 1;
-															if (
-																timeOfClass(
-																	a,
-																	schedule?.data
-																		?.schedule_items as unknown as ScheduleInterface[]
-																) <
-																timeOfClass(
-																	b,
-																	schedule?.data
-																		?.schedule_items as unknown as ScheduleInterface[]
-																)
-															)
-																return -1;
-															if (
-																timeOfClass(
-																	a,
-																	schedule?.data
-																		?.schedule_items as unknown as ScheduleInterface[]
-																) >
-																timeOfClass(
-																	b,
-																	schedule?.data
-																		?.schedule_items as unknown as ScheduleInterface[]
-																)
-															)
-																return 1;
-															if (
-																timeOfClass(
-																	a,
-																	schedule?.data
-																		?.schedule_items as unknown as ScheduleInterface[]
-																) <
-																timeOfClass(
-																	b,
-																	schedule?.data
-																		?.schedule_items as unknown as ScheduleInterface[]
-																)
-															)
-																return -1;
-															return 0;
-														})
-														.map((v, i) => (
-															<Class
-																class={{ data: v }}
-																time={timeOfClass(
-																	v,
-																	(
-																		schedule?.data
-																			?.schedule_items as unknown as ScheduleInterface[]
-																	)?.filter((v) => v.specialEvent == undefined),
-																	true
-																)}
-																key={i}
-																className="!w-full xl:!w-[18.5rem]"
-																isLink={true}
-															/>
-														))
-												: [...Array(6)].map((_, i) => <LoadingClass key={i} />)}
-										</div>
-									</section>
-								</DropZone>
-								{/* Assignments UI */}
-								<DropZone
-									id="classes"
-									setPreviewState={setShowUpDownUIPreviews}
-									setUIState={setUpDownUIOrder}
-									uIState={upDownUIOrder}
-								>
-									<section className="mb-4" ref={assignmentsUIReference}>
-										<div className="flex items-end justify-between">
-											<h2 className="title">Assignments</h2>
-											<DragZone
-												id="assignments"
-												parent={assignmentsUIReference.current as Element}
-												offsetByParentElementWidth={true}
-											>
-												<div className="-m-2 flex cursor-pointer p-2">
-													<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
-
-													<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
-												</div>
-											</DragZone>
-										</div>
-										<div className="mt-4 flex rounded-lg bg-gray-200 px-4 py-2">
-											<p>
-												ASSIGNEMENT VIEW GOES HERE <br></br>text<br></br>text
-												<br></br>IMAGINE THE THING FROM THE FIGMA WAS HEREtext
-												<br></br>text<br></br>
-											</p>
-										</div>
-									</section>
-								</DropZone>
-							</section>
-						</DropZone>
-						<section className="w-10"></section>
+						<section className="mb-12">
+							<div className="mt-8 flex items-end lg:mt-0">
+								<h2 className="title">Classes</h2>
+								{loading && <Loading className="ml-4" />}
+								<div className="-m-2 ml-auto flex cursor-pointer  p-2">
+									<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
+									<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
+								</div>
+							</div>
+							<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
+								{classes && classes.data
+									? classes.data.map((v, i) => (
+											<Class
+												class={{ data: v }}
+												key={i}
+												className="!w-full xl:!w-[18.5rem]"
+												isLink={true}
+											/>
+									  ))
+									: [...Array(6)].map((_, i) => <LoadingClass key={i} />)}
+							</div>
+						</section>
 						{/* Schedule UI */}
 						<section className=" grow lg:ml-10">
 							<div className="flex items-end justify-between">
