@@ -60,10 +60,10 @@ export default function Home() {
 							<div className="mt-8 flex items-end lg:mt-0">
 								<h2 className="title">Classes</h2>
 								{loading && <Loading className="ml-4" />}
-								<div className="-m-2 ml-auto flex cursor-pointer  p-2">
+								{/* <div className="-m-2 ml-auto flex cursor-pointer  p-2">
 									<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
 									<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
-								</div>
+								</div> */}
 							</div>
 							<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
 								{classes && classes.data
@@ -82,10 +82,10 @@ export default function Home() {
 						<section className=" grow lg:ml-10">
 							<div className="flex items-end justify-between">
 								<h2 className="title mr-2">Daily Schedule</h2>
-								<div className="-m-2 flex cursor-pointer p-2 ">
+								{/* <div className="-m-2 flex cursor-pointer p-2 ">
 									<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
 									<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
-								</div>
+								</div> */}
 							</div>
 							{classes && schedule ? (
 								<ScheduleComponent classes={classes} schedule={schedule} />
@@ -113,10 +113,10 @@ export default function Home() {
 							<div className="flex items-end justify-between">
 								<h2 className="title">Assignments</h2>
 
-								<div className="-m-2 flex cursor-pointer p-2">
+								{/* <div className="-m-2 flex cursor-pointer p-2">
 									<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
 									<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
-								</div>
+								</div> */}
 							</div>
 							<div className="mt-6 flex w-full rounded-xl bg-gray-200 px-4 py-2 xl:w-[58.5rem]">
 								<p>
@@ -130,10 +130,10 @@ export default function Home() {
 						<section className=" grow lg:ml-10">
 							<div className="flex items-end justify-between">
 								<h2 className="title mr-2">Starred</h2>
-								<div className="-m-2 flex cursor-pointer p-2 ">
+								{/* <div className="-m-2 flex cursor-pointer p-2 ">
 									<EllipsisVerticalIcon className="h-6 w-6 translate-x-4 text-gray-600" />
 									<EllipsisVerticalIcon className="h-6 w-6 text-gray-600" />
-								</div>
+								</div> */}
 							</div>
 						</section>
 					</div>
