@@ -4,11 +4,17 @@ import { useState, useEffect, useRef } from "react";
 import { useTabs } from "../lib/tabs/handleTabs";
 import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
-import { Class, LoadingClass } from "../components/complete/class";
+import { Class, LoadingClass, sortClasses } from "../components/complete/class";
 import Loading from "../components/misc/loading";
-import { getSchedule, ScheduleData } from "../lib/db/schedule";
+import {
+	getSchedule,
+	ScheduleData,
+	ScheduleInterface,
+} from "../lib/db/schedule";
 import { ColoredPill } from "../components/misc/pill";
-import ScheduleComponent from "../components/complete/schedule";
+import ScheduleComponent, {
+	timeOfClass,
+} from "../components/complete/schedule";
 import { DragZone, DropZone } from "../components/misc/draggableUI";
 import EllipsisVerticalIcon from "@heroicons/react/24/outline/EllipsisVerticalIcon";
 
@@ -67,15 +73,30 @@ export default function Home() {
 							</div>
 							<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
 								{classes && classes.data
-									? classes.data.map((v, i) => (
-											<Class
-												class={{ data: v }}
+									? classes.data
+											.sort((a, b) => sortClasses(a, b, schedule))
+											.map((v, i) => (
+												<Class
+													class={{ data: v }}
+													key={i}
+													className="!w-full xl:!w-[18.5rem]"
+													isLink={true}
+													time={timeOfClass(
+														v,
+														(
+															schedule?.data
+																?.schedule_items as unknown as ScheduleInterface[]
+														)?.filter((v) => v.specialEvent == undefined),
+														true
+													)}
+												/>
+											))
+									: [...Array(6)].map((_, i) => (
+											<LoadingClass
 												key={i}
 												className="!w-full xl:!w-[18.5rem]"
-												isLink={true}
 											/>
-									  ))
-									: [...Array(6)].map((_, i) => <LoadingClass key={i} />)}
+									  ))}
 							</div>
 						</section>
 						{/* Schedule UI */}
