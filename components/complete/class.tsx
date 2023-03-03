@@ -92,6 +92,8 @@ export function sortClasses(
 ) {
 	if (!a || !b) return -1;
 	if (schedule) {
+        if (schedule?.find((v) => v.block == a.block && v.type == a.schedule_type) == undefined) return 1;
+        if (schedule?.find((v) => v.block == b.block && v.type == b.schedule_type) == undefined) return-1;
 		if (
 			//@ts-ignore
 			schedule?.find((v) => v.block == a.block && v.type == a.schedule_type)
@@ -129,6 +131,7 @@ export function sortClasses(
 		)
 			return -1;
 	} else return 1;
+    return 0;
 }
 
 export type ArrayElementType<T> = T extends (infer U)[]
