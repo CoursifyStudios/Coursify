@@ -10,7 +10,6 @@ import {
 	ScheduleInterface,
 } from "../lib/db/schedule";
 import ScheduleComponent, {
-	timeOfClass,
 } from "../components/complete/schedule";
 
 export default function Home() {
@@ -58,26 +57,29 @@ export default function Home() {
 							<div className="mt-8 flex items-end lg:mt-0">
 								<h2 className="title">Classes</h2>
 								{loading && <Loading className="ml-4" />}
-
 							</div>
 							<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
 								{classes && classes.data
 									? classes.data
-											.sort((a, b) => sortClasses(a, b, schedule))
+                                    //@ts-ignore
+											.sort((a, b) =>
+												sortClasses(
+													a,
+													b,
+													schedule?.data
+														?.schedule_items as unknown as ScheduleInterface[]
+												)
+											)
 											.map((v, i) => (
 												<Class
 													class={{ data: v }}
+                                                    showLoading={loading}
 													key={i}
 													className="!w-full xl:!w-[18.5rem]"
 													isLink={true}
-													time={timeOfClass(
-														v,
-														(
-															schedule?.data
-																?.schedule_items as unknown as ScheduleInterface[]
-														)?.filter((v) => v.specialEvent == undefined),
-														true
-													)}
+													time={
+														(schedule?.data?.schedule_items as unknown as ScheduleInterface[])?.find((s) => s.specialEvent == undefined && v.block == s.block && v.schedule_type == s.type)
+													}
 												/>
 											))
 									: [...Array(6)].map((_, i) => (
@@ -94,6 +96,8 @@ export default function Home() {
 							{classes && schedule ? (
 								<ScheduleComponent classes={classes} schedule={schedule} />
 							) : (
+								// loading component 
+                                //why is this so massive lukas jeez
 								<div className="mt-6 flex h-36 animate-pulse flex-col justify-between rounded-xl bg-gray-200 p-4">
 									<div className="flex justify-between">
 										<div className="h-5 w-36 animate-pulse rounded bg-gray-300"></div>
@@ -114,7 +118,7 @@ export default function Home() {
 					<div className="flex grow">
 						{/* Assignments UI */}
 						<section className="">
-							<h2 className="title">Assignments</h2>fc016716b
+							<h2 className="title">Assignments</h2>
 							<div className="mt-6 flex w-full rounded-xl bg-gray-200 px-4 py-2 xl:w-[58.5rem]">
 								<p>
 									ASSIGNEMENT VIEW GOES HERE <br></br>text<br></br>text
@@ -132,15 +136,4 @@ export default function Home() {
 			</div>
 		</>
 	);
-}
-
-export function sortClassesByTime2(classes: Database["public"]["Tables"]["classes"]["Row"][],
-                                  schedule: ScheduleInterface[]): Database["public"]["Tables"]["classes"]["Row"][] {
-                                    //@ts-ignore
-    return classes.sort((a, b) => {
-            if (timeOfClass(a, schedule) > timeOfClass(b, schedule)) return 1;
-            if (timeOfClass(a, schedule) < timeOfClass(b, schedule)) return -1;
-            if (timeOfClass(a, schedule) > timeOfClass(b, schedule)) return 1;
-            if (timeOfClass(a, schedule) < timeOfClass(b, schedule)) return -1;
-    });
 }

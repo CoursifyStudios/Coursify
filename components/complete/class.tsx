@@ -4,12 +4,12 @@ import { ColoredPill } from "../misc/pill";
 import Link from "next/link";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import exampleImage from "../../public/example-img.jpg";
-import { ScheduleData, ScheduleInterface } from "../../lib/db/schedule";
-import { timeOfClass } from "./schedule";
+import { ScheduleInterface, to12hourTime } from "../../lib/db/schedule";
 
 export function Class(props: {
 	class: IndividialClass;
-	time?: string;
+    showLoading: boolean;
+	time?: ScheduleInterface;
 	className?: string;
 	isLink?: boolean;
 }) {
@@ -51,18 +51,19 @@ export function Class(props: {
 						<h3 className="break-words text-xl font-semibold line-clamp-2">
 							{classData.name}
 						</h3>
-						<ColoredPill
-							color={
-								props.time != "undefined - undefined" ? classData.color : "gray"
-							}
-							className={
-								props.time == "undefined - undefined"
-									? "w-20 animate-pulse"
-									: ""
-							}
-						>
-							{props.time != "undefined - undefined" ? props.time : "​"}
-						</ColoredPill>
+							<ColoredPill
+								color={
+									props.time?.timeStart != undefined
+										? classData.color
+										: "gray"
+								}
+								className={
+                                    props.showLoading ? "w-20 animate-pulse" :
+                                    props.time?.timeStart == undefined? "px-0 py-0" : ""
+								}
+							>
+								{props.time?.timeStart != undefined? to12hourTime(props.time?.timeStart) + " - " + to12hourTime(props.time?.timeEnd) : ""}
+							</ColoredPill>
 					</div>
 					<p>Teacher name</p>
 				</div>
@@ -82,55 +83,47 @@ export const LoadingClass = ({ className }: { className: string }) => {
 export function sortClasses(
 	a: ArrayElementType<AllClassesResponse["data"]>,
 	b: ArrayElementType<AllClassesResponse["data"]>,
-	schedule: ScheduleData | undefined
+	schedule: ScheduleInterface[] | undefined
 ) {
 	if (!a || !b) return -1;
-
-	if (
-		timeOfClass(
-			a,
-			schedule?.data?.schedule_items as unknown as ScheduleInterface[]
-		) >
-		timeOfClass(
-			b,
-			schedule?.data?.schedule_items as unknown as ScheduleInterface[]
+	if (schedule) {
+		if (
+            //@ts-ignore
+			schedule?.find((v) => v.block == a.block && v.type == a.schedule_type)
+				?.timeStart >
+                //@ts-ignore
+			schedule?.find((v) => v.block == b.block && v.type == b.schedule_type)
+				?.timeStart
 		)
-	)
-		return 1;
-	if (
-		timeOfClass(
-			a,
-			schedule?.data?.schedule_items as unknown as ScheduleInterface[]
-		) <
-		timeOfClass(
-			b,
-			schedule?.data?.schedule_items as unknown as ScheduleInterface[]
+			return 1;
+		if (
+            //@ts-ignore
+			schedule?.find((v) => v.block == a.block && v.type == a.schedule_type)
+				?.timeStart <
+                //@ts-ignore
+			schedule?.find((v) => v.block == b.block && v.type == b.schedule_type)
+				?.timeStart
 		)
-	)
-		return -1;
-	if (
-		timeOfClass(
-			a,
-			schedule?.data?.schedule_items as unknown as ScheduleInterface[]
-		) >
-		timeOfClass(
-			b,
-			schedule?.data?.schedule_items as unknown as ScheduleInterface[]
+			return -1;
+		if (
+            //@ts-ignore
+			schedule?.find((v) => v.block == a.block && v.type == a.schedule_type)
+				?.timeEnd >
+                //@ts-ignore
+			schedule?.find((v) => v.block == b.block && v.type == b.schedule_type)
+				?.timeEnd
 		)
-	)
-		return 1;
-	if (
-		timeOfClass(
-			a,
-			schedule?.data?.schedule_items as unknown as ScheduleInterface[]
-		) <
-		timeOfClass(
-			b,
-			schedule?.data?.schedule_items as unknown as ScheduleInterface[]
+			return 1;
+		if (
+            //@ts-ignore
+			schedule?.find((v) => v.block == a.block && v.type == a.schedule_type)
+				?.timeEnd <
+                //@ts-ignore
+			schedule?.find((v) => v.block == b.block && v.type == b.schedule_type)
+				?.timeEnd
 		)
-	)
-		return -1;
-	return 0;
+			return -1;
+	} else return 1;
 }
 
 export type ArrayElementType<T> = T extends (infer U)[]
