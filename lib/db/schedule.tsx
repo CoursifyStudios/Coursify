@@ -54,3 +54,14 @@ export function to12hourTime(timeAsString: string, includeAMPM?: boolean) {
 		);
 	}
 }
+
+export function toDayOfWeek(dayAsNumber: number): string {
+	if (dayAsNumber == 0) return "Sunday";
+	if (dayAsNumber == 1) return "Monday";
+	if (dayAsNumber == 2) return "Tuesday";
+	if (dayAsNumber == 3) return "Wednesday";
+	if (dayAsNumber == 4) return "Thursday";
+	if (dayAsNumber == 5) return "Friday";
+	if (dayAsNumber == 6) return "Saturday";
+	return "";
+}

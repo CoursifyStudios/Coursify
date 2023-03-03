@@ -8,9 +8,9 @@ import {
 	getSchedule,
 	ScheduleData,
 	ScheduleInterface,
+	toDayOfWeek,
 } from "../lib/db/schedule";
-import ScheduleComponent, {
-} from "../components/complete/schedule";
+import ScheduleComponent from "../components/complete/schedule";
 
 export default function Home() {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -61,7 +61,7 @@ export default function Home() {
 							<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
 								{classes && classes.data
 									? classes.data
-                                    //@ts-ignore
+											//@ts-ignore
 											.sort((a, b) =>
 												sortClasses(
 													a,
@@ -73,13 +73,19 @@ export default function Home() {
 											.map((v, i) => (
 												<Class
 													class={{ data: v }}
-                                                    showLoading={loading}
+													showLoading={loading}
 													key={i}
 													className="!w-full xl:!w-[18.5rem]"
 													isLink={true}
-													time={
-														(schedule?.data?.schedule_items as unknown as ScheduleInterface[])?.find((s) => s.specialEvent == undefined && v.block == s.block && v.schedule_type == s.type)
-													}
+													time={(
+														schedule?.data
+															?.schedule_items as unknown as ScheduleInterface[]
+													)?.find(
+														(s) =>
+															s.specialEvent == undefined &&
+															v.block == s.block &&
+															v.schedule_type == s.type
+													)}
 												/>
 											))
 									: [...Array(6)].map((_, i) => (
@@ -92,12 +98,16 @@ export default function Home() {
 						</section>
 						{/* Schedule UI */}
 						<section className=" grow lg:ml-10">
-							<h2 className="title mr-2">Daily Schedule</h2>
+							<h2 className="title mr-2">
+								{schedule?.data?.date
+									? toDayOfWeek(new Date(schedule?.data?.date).getDay())
+									: "Daily Schedule"}
+							</h2>
 							{classes && schedule ? (
 								<ScheduleComponent classes={classes} schedule={schedule} />
 							) : (
-								// loading component 
-                                //why is this so massive lukas jeez
+								// loading component
+								//why is this so massive lukas jeez
 								<div className="mt-6 flex h-36 animate-pulse flex-col justify-between rounded-xl bg-gray-200 p-4">
 									<div className="flex justify-between">
 										<div className="h-5 w-36 animate-pulse rounded bg-gray-300"></div>
@@ -130,6 +140,11 @@ export default function Home() {
 						{/* Starred assignments */}
 						<section className=" grow lg:ml-10">
 							<h2 className="title mr-2">Starred</h2>
+							<p>
+								STARRED GOES HERE <br></br>text<br></br>text
+								<br></br>IMAGINE THE THING FROM THE FIGMA WAS HEREtext
+								<br></br>text<br></br>
+							</p>
 						</section>
 					</div>
 				</div>

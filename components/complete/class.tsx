@@ -8,7 +8,7 @@ import { ScheduleInterface, to12hourTime } from "../../lib/db/schedule";
 
 export function Class(props: {
 	class: IndividialClass;
-    showLoading: boolean;
+	showLoading: boolean;
 	time?: ScheduleInterface;
 	className?: string;
 	isLink?: boolean;
@@ -51,19 +51,24 @@ export function Class(props: {
 						<h3 className="break-words text-xl font-semibold line-clamp-2">
 							{classData.name}
 						</h3>
-							<ColoredPill
-								color={
-									props.time?.timeStart != undefined
-										? classData.color
-										: "gray"
-								}
-								className={
-                                    props.showLoading ? "w-20 animate-pulse" :
-                                    props.time?.timeStart == undefined? "px-0 py-0" : ""
-								}
-							>
-								{props.time?.timeStart != undefined? to12hourTime(props.time?.timeStart) + " - " + to12hourTime(props.time?.timeEnd) : ""}
-							</ColoredPill>
+						<ColoredPill
+							color={
+								props.time?.timeStart != undefined ? classData.color : "gray"
+							}
+							className={
+								props.showLoading
+									? "w-20 animate-pulse"
+									: props.time?.timeStart == undefined
+									? "px-0 py-0"
+									: ""
+							}
+						>
+							{props.time?.timeStart != undefined
+								? to12hourTime(props.time?.timeStart) +
+								  " - " +
+								  to12hourTime(props.time?.timeEnd)
+								: ""}
+						</ColoredPill>
 					</div>
 					<p>Teacher name</p>
 				</div>
@@ -88,37 +93,37 @@ export function sortClasses(
 	if (!a || !b) return -1;
 	if (schedule) {
 		if (
-            //@ts-ignore
+			//@ts-ignore
 			schedule?.find((v) => v.block == a.block && v.type == a.schedule_type)
 				?.timeStart >
-                //@ts-ignore
+			//@ts-ignore
 			schedule?.find((v) => v.block == b.block && v.type == b.schedule_type)
 				?.timeStart
 		)
 			return 1;
 		if (
-            //@ts-ignore
+			//@ts-ignore
 			schedule?.find((v) => v.block == a.block && v.type == a.schedule_type)
 				?.timeStart <
-                //@ts-ignore
+			//@ts-ignore
 			schedule?.find((v) => v.block == b.block && v.type == b.schedule_type)
 				?.timeStart
 		)
 			return -1;
 		if (
-            //@ts-ignore
+			//@ts-ignore
 			schedule?.find((v) => v.block == a.block && v.type == a.schedule_type)
 				?.timeEnd >
-                //@ts-ignore
+			//@ts-ignore
 			schedule?.find((v) => v.block == b.block && v.type == b.schedule_type)
 				?.timeEnd
 		)
 			return 1;
 		if (
-            //@ts-ignore
+			//@ts-ignore
 			schedule?.find((v) => v.block == a.block && v.type == a.schedule_type)
 				?.timeEnd <
-                //@ts-ignore
+			//@ts-ignore
 			schedule?.find((v) => v.block == b.block && v.type == b.schedule_type)
 				?.timeEnd
 		)

@@ -18,7 +18,8 @@ export default function ScheduleComponent({
 		<div className="flex flex-col">
 			<div className=" mt-6 grid max-w-md gap-5 rounded-xl bg-gray-200 p-4">
 				{/* I've left some comments to clear up some stuff */}
-				{schedule && //checks if the useState that stores the schedule UI is not null
+				{schedule &&
+					classes && //checks if the useState that stores the schedule UI is not null
 					schedule.data && //checks if the data on the schedule thing exists
 					schedule.data.schedule_items && //checks if there are schedule items on the data thing on the schedule thing
 					Array.isArray(schedule.data.schedule_items) &&
