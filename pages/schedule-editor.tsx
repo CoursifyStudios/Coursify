@@ -1,8 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTabs } from "../lib/tabs/handleTabs";
 import {
 	createNewSchedule,
+	createNewTemplate,
+	getScheduleTemplates,
 	ScheduleInterface,
+	ScheduleTemplatesDB,
+	TemplateInterface,
 	to12hourTime,
 } from "../lib/db/schedule";
 import { ColoredPill } from "../components/misc/pill";
@@ -15,11 +19,28 @@ const ScheduleEditor = () => {
 	const tabs = useTabs((state) => state.tabs);
 	const [tempSchedule, setTempSchedule] = useState<ScheduleInterface[]>();
 	let tempArray: ScheduleInterface[];
+	const [scheduleTemplates, setScheduleTemplates] =
+		useState<ScheduleTemplatesDB>();
+	const [templateName, setTemplateName] = useState<string>();
+	const [template, setTemplate] = useState<number | null>(null);
+	useEffect(() => {
+		(async () => {
+			const scheduleTemplates = await getScheduleTemplates(supabaseClient);
+			setScheduleTemplates(scheduleTemplates);
+		})();
+	}, [supabaseClient]);
 	return (
 		<div>
 			<div className="grid grid-cols-2">
 				<section className="my-6 ml-5 px-5">
-					<h2 className="mb-4 text-lg font-semibold">New Schedule Item:</h2>
+					<h2 className="mb-4 text-lg font-semibold">
+						New Schedule Item: {template ? templateName : ""}
+					</h2>
+					<h2>
+						{template}
+						{", "}
+						{templateName}
+					</h2>
 					<Formik
 						initialValues={{
 							itemStartTime: "09:30",
@@ -30,6 +51,7 @@ const ScheduleEditor = () => {
 							itemCustomColor: undefined,
 						}}
 						onSubmit={async (v) => {
+							setTemplate(null);
 							if (v.itemSpecialType == "") v.itemSpecialType = undefined;
 							if (tempSchedule != undefined) {
 								tempArray = [...tempSchedule];
@@ -123,7 +145,6 @@ const ScheduleEditor = () => {
 						<div className="mt-6 flex flex-col">
 							<div className="mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
 								{tempSchedule &&
-									tempSchedule &&
 									tempSchedule.map(
 										(scheduleItem, i) =>
 											scheduleItem.type == 1 && (
@@ -171,7 +192,6 @@ const ScheduleEditor = () => {
 						<div className="mt-6 flex flex-col">
 							<div className="mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
 								{tempSchedule &&
-									tempSchedule &&
 									tempSchedule.map(
 										(scheduleItem, i) =>
 											scheduleItem.type == 2 && (
@@ -216,12 +236,14 @@ const ScheduleEditor = () => {
 					</section>
 				</section>
 			</div>
-			<div className="mx-10">
+			<div className="mx-10 grid grid-cols-2 gap-5">
 				<Formik
 					initialValues={{ day: new Date() }}
 					onSubmit={(v) => {
-						if (tempSchedule != undefined) {
-							createNewSchedule(supabaseClient, v.day, tempSchedule);
+						if (template) {
+							createNewSchedule(supabaseClient, v.day, template, null);
+						} else if (tempSchedule) {
+							createNewSchedule(supabaseClient, v.day, template, tempSchedule);
 						} else alert("Please add one or more schedule items first");
 					}}
 				>
@@ -234,10 +256,88 @@ const ScheduleEditor = () => {
 							type="submit"
 							className="mr-auto mt-4 rounded-lg bg-blue-200 py-2 px-4 text-blue-600"
 						>
-							Add to Schedule (send to server)
+							Add as a Schedule (send to server)
 						</button>
 					</Form>
 				</Formik>
+				<div>
+					<Formik
+						initialValues={{ day: new Date() }}
+						onSubmit={(v) => {
+							if (template) {
+								alert("Please alter the template");
+							} else if (tempSchedule && templateName) {
+								createNewTemplate(supabaseClient, templateName, tempSchedule);
+							} else
+								alert(
+									"Please add one or more schedule items first and name your "
+								);
+						}}
+					>
+						<Form className="grid grid-cols-1">
+							<label htmlFor="name">Name Your Template:</label>
+							<Field name="name" type="text"></Field>
+							<ErrorMessage name="name" />
+
+							<button
+								type="submit"
+								className="mr-auto mt-4 rounded-lg bg-blue-200 py-2 px-4 text-blue-600"
+							>
+								Add a New Template
+							</button>
+						</Form>
+					</Formik>
+				</div>
+			</div>
+			<div className="mx-10 mt-5">
+				<h2>Schedule Templates:</h2>
+				<div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+					{scheduleTemplates &&
+						scheduleTemplates.data &&
+						(scheduleTemplates.data as unknown as TemplateInterface[]).map(
+							(v) => (
+								<button
+									className="rounded-md bg-gray-200 p-4"
+									onClick={() => {
+										setTempSchedule(
+											v.schedule_items as unknown as ScheduleInterface[]
+										);
+										setTemplateName(v.name);
+										setTemplate(v.id);
+									}}
+									key={v.id}
+								>
+									<div className="flex justify-center">{v.name}</div>
+									<div className="grid grid-cols-2 gap-5">
+										<div className="">
+											{(v.schedule_items as unknown as ScheduleInterface[]).map(
+												(period, iterator) =>
+													period.type == 1 && (
+														<div className="whitespace-nowrap" key={iterator}>
+															{period.timeStart}
+															{" - "}
+															{period.timeEnd}
+														</div>
+													)
+											)}
+										</div>
+										<div>
+											{(v.schedule_items as unknown as ScheduleInterface[]).map(
+												(period, iterator) =>
+													period.type == 2 && (
+														<div className="whitespace-nowrap" key={iterator}>
+															{period.timeStart}
+															{" - "}
+															{period.timeEnd}
+														</div>
+													)
+											)}
+										</div>
+									</div>
+								</button>
+							)
+						)}
+				</div>
 			</div>
 		</div>
 	);

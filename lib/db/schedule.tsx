@@ -1,4 +1,4 @@
-import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
+import { SupabaseClient } from "@supabase/supabase-js";
 import { Database, Json } from "./database.types";
 
 export interface ScheduleInterface {
@@ -15,26 +15,64 @@ export async function getSchedule(
 	day: Date
 ) {
 	return await supabaseClient //when the response comes back..
-		.from("schedule")
-		.select() //This should select everything, I think. It might have to be '*, $(something)', but I have no idea
+		.from("days_schedule")
+		.select(
+			`
+        *,
+        schedule_templates (
+            *
+        )`
+		) //This should select everything, I think. It might have to be '*, $(something)', but I have no idea
 		.eq("date", day.toISOString())
 		.single();
 }
 
 export type ScheduleData = Awaited<ReturnType<typeof getSchedule>>;
 
+export interface TemplateInterface {
+	id: number;
+	schedule_items: Json;
+	name: string;
+}
+export async function getScheduleTemplates(
+	supabaseClient: SupabaseClient<Database>
+) {
+	return await supabaseClient.from("schedule_templates").select(`*`);
+}
+
+export type ScheduleTemplatesDB = Awaited<
+	ReturnType<typeof getScheduleTemplates>
+>;
+
 export const createNewSchedule = async (
 	supabaseClient: SupabaseClient<Database>,
 	day: unknown,
-	scheduleDataToUse: ScheduleInterface[]
+	template: number | null,
+	scheduleDataToUse: ScheduleInterface[] | null
 ) => {
-	return await supabaseClient.from("schedule").insert({
+	return await supabaseClient.from("days_schedule").insert({
 		date: day as string,
-		schedule_items: JSON.parse(JSON.stringify(scheduleDataToUse)) as Json,
+		template: template,
+		schedule_items: scheduleDataToUse
+			? (JSON.parse(JSON.stringify(scheduleDataToUse)) as Json)
+			: null,
 	}); //This is so unbelievably stup-
 };
 
 export type NewSchedule = Awaited<ReturnType<typeof createNewSchedule>>;
+
+export const createNewTemplate = async (
+	supabaseClient: SupabaseClient<Database>,
+	nameToUse: string,
+	scheduleDataToUse: ScheduleInterface[]
+) => {
+	return await supabaseClient.from("schedule_templates").insert({
+		schedule_items: JSON.parse(JSON.stringify(scheduleDataToUse)) as Json,
+		name: nameToUse,
+	});
+};
+
+export type NewTemplate = Awaited<ReturnType<typeof createNewTemplate>>;
 
 export function to12hourTime(timeAsString: string, includeAMPM?: boolean) {
 	if (parseInt(timeAsString.substring(0, 2)) == 12) {
@@ -56,12 +94,12 @@ export function to12hourTime(timeAsString: string, includeAMPM?: boolean) {
 }
 
 export function toDayOfWeek(dayAsNumber: number): string {
-	if (dayAsNumber == 0) return "Sunday";
-	if (dayAsNumber == 1) return "Monday";
-	if (dayAsNumber == 2) return "Tuesday";
-	if (dayAsNumber == 3) return "Wednesday";
-	if (dayAsNumber == 4) return "Thursday";
-	if (dayAsNumber == 5) return "Friday";
-	if (dayAsNumber == 6) return "Saturday";
+	if (dayAsNumber % 7 == 0) return "Sunday";
+	if (dayAsNumber % 7 == 1) return "Monday";
+	if (dayAsNumber % 7 == 2) return "Tuesday";
+	if (dayAsNumber % 7 == 3) return "Wednesday";
+	if (dayAsNumber % 7 == 4) return "Thursday";
+	if (dayAsNumber % 7 == 5) return "Friday";
+	if (dayAsNumber % 7 == 6) return "Saturday";
 	return "";
 }

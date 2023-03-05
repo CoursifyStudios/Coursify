@@ -8,7 +8,7 @@ import { ScheduleInterface, to12hourTime } from "../../lib/db/schedule";
 
 export function Class(props: {
 	class: IndividialClass;
-	showLoading: boolean;
+	showLoading?: boolean;
 	time?: ScheduleInterface;
 	className?: string;
 	isLink?: boolean;
@@ -57,9 +57,9 @@ export function Class(props: {
 							}
 							className={
 								props.showLoading
-									? "w-20 animate-pulse"
+									? "h-5 w-20 animate-pulse"
 									: props.time?.timeStart == undefined
-									? "px-0 py-0"
+									? "hidden"
 									: ""
 							}
 						>
@@ -138,7 +138,7 @@ export function sortClasses(
 				?.timeEnd
 		)
 			return -1;
-	} else return 1;
+	} else return -1;
 	return 0;
 }
 

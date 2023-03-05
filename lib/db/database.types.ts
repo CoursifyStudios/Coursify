@@ -43,34 +43,34 @@ export interface Database {
 			};
 			classes: {
 				Row: {
-					block: number | null;
+					block: number;
 					color: string;
 					description: string;
 					description_new: Json[] | null;
 					id: string;
 					name: string;
 					name_full: string;
-					schedule_type: number | null;
+					schedule_type: number;
 				};
 				Insert: {
-					block?: number | null;
+					block: number;
 					color?: string;
 					description?: string;
 					description_new?: Json[] | null;
 					id?: string;
 					name: string;
 					name_full?: string;
-					schedule_type?: number | null;
+					schedule_type?: number;
 				};
 				Update: {
-					block?: number | null;
+					block?: number;
 					color?: string;
 					description?: string;
 					description_new?: Json[] | null;
 					id?: string;
 					name?: string;
 					name_full?: string;
-					schedule_type?: number | null;
+					schedule_type?: number;
 				};
 			};
 			classes_assignments: {
@@ -85,6 +85,23 @@ export interface Database {
 				Update: {
 					assignment_id?: string;
 					class_id?: string;
+				};
+			};
+			days_schedule: {
+				Row: {
+					date: string;
+					schedule_items: Json | null;
+					template: number | null;
+				};
+				Insert: {
+					date: string;
+					schedule_items?: Json | null;
+					template?: number | null;
+				};
+				Update: {
+					date?: string;
+					schedule_items?: Json | null;
+					template?: number | null;
 				};
 			};
 			groups: {
@@ -115,6 +132,23 @@ export interface Database {
 				};
 				Update: {
 					date?: string;
+					schedule_items?: Json | null;
+				};
+			};
+			schedule_templates: {
+				Row: {
+					id: number;
+					name: string | null;
+					schedule_items: Json | null;
+				};
+				Insert: {
+					id?: number;
+					name?: string | null;
+					schedule_items?: Json | null;
+				};
+				Update: {
+					id?: number;
+					name?: string | null;
 					schedule_items?: Json | null;
 				};
 			};
@@ -168,6 +202,7 @@ export interface Database {
 			};
 			users: {
 				Row: {
+					about: string | null;
 					avatar_url: string;
 					created: string | null;
 					email: string | null;
@@ -176,6 +211,7 @@ export interface Database {
 					username: string | null;
 				};
 				Insert: {
+					about?: string | null;
 					avatar_url: string;
 					created?: string | null;
 					email?: string | null;
@@ -184,6 +220,7 @@ export interface Database {
 					username?: string | null;
 				};
 				Update: {
+					about?: string | null;
 					avatar_url?: string;
 					created?: string | null;
 					email?: string | null;
@@ -215,14 +252,17 @@ export interface Database {
 			users_groups: {
 				Row: {
 					group_id: string;
+					group_leader: boolean | null;
 					user_id: string;
 				};
 				Insert: {
 					group_id: string;
+					group_leader?: boolean | null;
 					user_id: string;
 				};
 				Update: {
 					group_id?: string;
+					group_leader?: boolean | null;
 					user_id?: string;
 				};
 			};
@@ -232,17 +272,41 @@ export interface Database {
 		};
 		Functions: {
 			create_assignment: {
-				Args: { name: string; description: string; class_id: string };
+				Args: {
+					name: string;
+					description: string;
+					class_id: string;
+				};
 				Returns: boolean;
 			};
 			get_profile_classes:
 				| {
 						Args: Record<PropertyKey, never>;
-						Returns: unknown;
+						Returns: {
+							block: number;
+							color: string;
+							description: string;
+							description_new: Json[] | null;
+							id: string;
+							name: string;
+							name_full: string;
+							schedule_type: number;
+						}[];
 				  }
 				| {
-						Args: { id: string };
-						Returns: unknown;
+						Args: {
+							id: string;
+						};
+						Returns: {
+							block: number;
+							color: string;
+							description: string;
+							description_new: Json[] | null;
+							id: string;
+							name: string;
+							name_full: string;
+							schedule_type: number;
+						}[];
 				  };
 			hello_world: {
 				Args: Record<PropertyKey, never>;
@@ -250,6 +314,9 @@ export interface Database {
 			};
 		};
 		Enums: {
+			[_ in never]: never;
+		};
+		CompositeTypes: {
 			[_ in never]: never;
 		};
 	};
