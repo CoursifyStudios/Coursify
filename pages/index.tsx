@@ -7,7 +7,6 @@ import Loading from "../components/misc/loading";
 import {
 	getSchedule,
 	ScheduleInterface,
-	toDayOfWeek,
 } from "../lib/db/schedule";
 import ScheduleComponent from "../components/complete/schedule";
 
@@ -137,11 +136,15 @@ export default function Home() {
 						{/* Schedule UI */}
 						<section className=" grow lg:ml-10">
 							<h2 className="title mr-2">
-								{toDayOfWeek(new Date("2023-03-03").getDay())}
+								{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
+									new Date("2023-03-03")
+								)}
 							</h2>
 							<ScheduleComponent classes={classes} schedule={schedule} />
 							<h2 className="title mr-2">
-								{toDayOfWeek(new Date(2023).getDay())}
+								{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
+									new Date("2023-03-04")
+								)}
 							</h2>
 							<ScheduleComponent
 								classes={classes}

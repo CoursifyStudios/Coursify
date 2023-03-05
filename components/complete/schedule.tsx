@@ -13,74 +13,64 @@ export default function ScheduleComponent({
 	if (!(schedule && classes))
 		return (
 			<div className="mt-6 flex h-36 animate-pulse flex-col justify-between rounded-xl bg-gray-200 p-4">
-				<div className="flex justify-between">
-					<div className="h-5 w-36 animate-pulse rounded bg-gray-300"></div>
-					<div className="h-5 w-20 animate-pulse rounded bg-gray-300"></div>
-				</div>
-				<div className="flex justify-between">
-					<div className="h-5 w-32 animate-pulse rounded bg-gray-300"></div>
-					<div className="h-5 w-20 animate-pulse rounded bg-gray-300"></div>
-				</div>
-				<div className="flex justify-between">
-					<div className="h-5 w-36 animate-pulse rounded bg-gray-300"></div>
-					<div className="h-5 w-20 animate-pulse rounded bg-gray-300"></div>
-				</div>
+				{[...Array(3)].map((_, i) => (
+					<div className="flex justify-between" key={i}>
+						<div className="h-5 w-36 animate-pulse rounded bg-gray-300"></div>
+						<div className="h-5 w-20 animate-pulse rounded bg-gray-300"></div>
+					</div>
+				))}
 			</div>
 		);
 	return (
 		<div className="flex flex-col">
-			<div className=" mt-6 grid max-w-md gap-5 rounded-xl bg-gray-200 p-4">
+			<div className="mt-6 mb-6 grid max-w-md gap-5 rounded-xl bg-gray-200 p-4">
 				{/* I've left some comments to clear up some stuff */}
 				{schedule && //checks if the useState that stores the schedule UI is not null
-					schedule
-						/* Pretty sure that the line above makes sure that we are iterating over an array of ScheduleInterfaces, 
-                            and not of "schedule_items", which is not a type that we can use to populate the UI directly. I think.*/
-						.map(
-							(item, index) =>
-								(checkClassMatchesSchedule(item)?.name &&
-									/* checks that item (a ScheduleInterface) matches to a class, (see the function), and that the name attribute on it is not null */
-									!item.specialEvent && ( //If the item is not a special event... ...fill the UI with the stuff...
-										<Link
-											key={index}
-											className="flex grow items-center justify-between font-semibold"
-											href={
-												"/classes/" + checkClassMatchesSchedule(item)?.id //link to the correct class
+					schedule.map(
+						(item, index) =>
+							(checkClassMatchesSchedule(item)?.name &&
+								/* checks that item (a ScheduleInterface) matches to a class, (see the function), and that the name attribute on it is not null */
+								!item.specialEvent && ( //If the item is not a special event... ...fill the UI with the stuff...
+									<Link
+										key={index}
+										className="flex grow items-center justify-between font-semibold"
+										href={
+											"/classes/" + checkClassMatchesSchedule(item)?.id //link to the correct class
+										}
+									>
+										{
+											classes?.data?.find(
+												/* Here we check that the schedule and classes match up, using a slightly different process to the one used by checkClassMatchesSchedule). */
+												(v) =>
+													v.block == item.block && v.schedule_type == item.type
+											)?.name // And we fill in the UI with the name
+										}
+										<ColoredPill
+											color={
+												//@ts-ignore WHY THE HELL DOES IT THINK THAT IT CAN JUST DO THAT TO ME
+												checkClassMatchesSchedule(item).color
 											}
 										>
-											{
-												classes?.data?.find(
-													/* Here we check that the schedule and classes match up, using a slightly different process to the one used by checkClassMatchesSchedule). */
-													(v) =>
-														v.block == item.block &&
-														v.schedule_type == item.type
-												)?.name // And we fill in the UI with the name
-											}
-											<ColoredPill
-												color={
-													//@ts-ignore WHY THE HELL DOES IT THINK THAT IT CAN JUST DO THAT TO ME
-													checkClassMatchesSchedule(item).color
-												}
-											>
-												{to12hourTime(item.timeStart)} -{" "}
-												{to12hourTime(item.timeEnd)}
-											</ColoredPill>
-										</Link>
-									)) ||
-								(item.specialEvent &&
-									checkClassMatchesSchedule(item) && ( // If the schedule item is for a special event, fill the UI with custom event stuff
-										// May want to change this to be a <Link> later on so that you can link to info about special events
+											{to12hourTime(item.timeStart)} -{" "}
+											{to12hourTime(item.timeEnd)}
+										</ColoredPill>
+									</Link>
+								)) ||
+							(item.specialEvent &&
+								checkClassMatchesSchedule(item) && ( // If the schedule item is for a special event, fill the UI with custom event stuff
+									// May want to change this to be a <Link> later on so that you can link to info about special events
 
-										<div className="flex grow items-center justify-between font-semibold">
-											{item.specialEvent}
-											<ColoredPill
-												color={item.customColor ? item.customColor : "green"}
-											>
-												{to12hourTime(item.timeStart)} -{" "}
-												{to12hourTime(item.timeEnd)}
-											</ColoredPill>
-										</div>
-									))
-						)}
+									<div className="flex grow items-center justify-between font-semibold">
+										{item.specialEvent}
+										<ColoredPill
+											color={item.customColor ? item.customColor : "green"}
+										>
+											{to12hourTime(item.timeStart)} -{" "}
+											{to12hourTime(item.timeEnd)}
+										</ColoredPill>
+									</div>
+								))
+					)}
 			</div>
 		</div>
 	);

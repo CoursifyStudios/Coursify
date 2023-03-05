@@ -92,14 +92,3 @@ export function to12hourTime(timeAsString: string, includeAMPM?: boolean) {
 		);
 	}
 }
-
-export function toDayOfWeek(dayAsNumber: number): string {
-	if (dayAsNumber % 7 == 0) return "Sunday";
-	if (dayAsNumber % 7 == 1) return "Monday";
-	if (dayAsNumber % 7 == 2) return "Tuesday";
-	if (dayAsNumber % 7 == 3) return "Wednesday";
-	if (dayAsNumber % 7 == 4) return "Thursday";
-	if (dayAsNumber % 7 == 5) return "Friday";
-	if (dayAsNumber % 7 == 6) return "Saturday";
-	return "";
-}
