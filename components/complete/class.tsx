@@ -10,7 +10,7 @@ export function Class(props: {
 	class: IndividialClass;
 	showLoading?: boolean;
 	time?: ScheduleInterface;
-  room?: string;
+	room?: string;
 	className?: string;
 	isLink?: boolean;
 }) {
@@ -41,13 +41,17 @@ export function Class(props: {
 				<div className="relative h-32 ">
 					<Image
 						src={exampleImage}
-                        loading="eager"
+						loading="eager"
 						alt="Example Image"
 						className="rounded-t-xl object-cover object-center"
 						placeholder="blur"
 						fill
 					/>
-                    <h2 className={`text-xl font-semibold text-${classData.color}-600 opacity-75 bg-gray-200 absolute top-2 right-2 rounded-lg px-2`}>{classData.block}</h2>
+					<h2
+						className={`text-xl font-semibold text-${classData.color}-600 absolute top-2 right-2 rounded-lg bg-gray-200 px-2 opacity-75`}
+					>
+						{classData.block}
+					</h2>
 				</div>
 				<div className="flex flex-grow flex-col  p-4">
 					<div className="flex items-start justify-between">
@@ -66,17 +70,17 @@ export function Class(props: {
 									: ""
 							}
 						>
-							{props.time?.timeStart != undefined
+							{props.time?.timeStart != undefined && !props.showLoading
 								? to12hourTime(props.time?.timeStart) +
 								  " - " +
 								  to12hourTime(props.time?.timeEnd)
 								: ""}
 						</ColoredPill>
 					</div>
-                    <div className="flex justify-between">
-					    <p>Teacher name</p>
-                        <p>{props.room? "Room " + props.room : ""}</p>
-                    </div>
+					<div className="flex justify-between">
+						<p>Teacher name</p>
+						<p>{props.room ? "Room " + props.room : ""}</p>
+					</div>
 				</div>
 			</div>
 		);
