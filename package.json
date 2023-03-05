@@ -13,9 +13,17 @@
 		"types": "supabase gen types typescript --project-id hhrehffmdrcjqowwvgqg > lib/db/database.types.ts"
 	},
 	"dependencies": {
+		"@grammarly/editor-sdk-react": "^2.3.7",
 		"@headlessui/react": "^1.7.10",
 		"@heroicons/react": "^2.0.15",
-		"@next/font": "^13.1.6",
+		"@lexical/clipboard": "^0.7.6",
+		"@lexical/link": "^0.7.6",
+		"@lexical/list": "^0.7.6",
+		"@lexical/markdown": "^0.7.6",
+		"@lexical/react": "^0.7.6",
+		"@lexical/rich-text": "^0.7.6",
+		"@lexical/selection": "^0.8.0",
+		"@lexical/utils": "^0.7.6",
 		"@supabase/auth-helpers-nextjs": "^0.5.4",
 		"@supabase/auth-helpers-react": "^0.3.1",
 		"@supabase/supabase-js": "^2.7.1",
@@ -23,10 +31,12 @@
 		"@types/react": "18.0.28",
 		"@types/react-dom": "18.0.10",
 		"formik": "^2.2.9",
+		"lexical": "^0.8.1",
 		"next": "13.1.6",
 		"react": "18.2.0",
 		"react-dom": "18.2.0",
 		"typescript": "4.9.5",
+		"use-child": "^1.0.0",
 		"zustand": "^4.3.3"
 	},
 	"devDependencies": {

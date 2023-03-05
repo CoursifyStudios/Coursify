@@ -10,10 +10,11 @@ export const DragZone: NextPage<{
 	children: ReactNode;
 	parent: ReactInstance;
 	offsetByParentElementWidth: boolean; //false if you want element to appear right of the mouse when dragged, and true for left (logical, I know).
-    className?: string;
-}> = ({ id, children, parent, offsetByParentElementWidth, className}) => {
+	className?: string;
+}> = ({ id, children, parent, offsetByParentElementWidth, className }) => {
 	return (
-		<div className={className}
+		<div
+			className={className}
 			draggable={true}
 			onDragStart={(e) => {
 				e.dataTransfer.setDragImage(
@@ -35,11 +36,12 @@ export const DropZone: NextPage<{
 	setPreviewState?: (value: boolean) => void;
 	setUIState: (value: boolean) => void;
 	uIState: boolean;
-    className?: string;
+	className?: string;
 }> = ({ id, children, setPreviewState, setUIState, uIState, className }) => {
 	const dropZoneRef = useRef<HTMLDivElement>(null);
 	return (
-		<div className={className}
+		<div
+			className={className}
 			ref={dropZoneRef}
 			onDragOver={(e) => {
 				if (e.dataTransfer.types.includes(id)) {
