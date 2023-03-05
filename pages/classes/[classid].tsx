@@ -13,7 +13,7 @@ import { AssignmentPreview } from "../../components/complete/assignments";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import { AcademicCapIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 import { useTabs } from "../../lib/tabs/handleTabs";
-import { addPlural } from "../../lib/misc/stringManipulation";
+import { addPossesive } from "../../lib/misc/stringManipulation";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -117,7 +117,7 @@ const Class: NextPage = () => {
 											onClick={() =>
 												newTab(
 													"/profile/" + user.id,
-													addPlural(user.full_name.split(" ")[0]) + " Profile"
+													user.full_name.split(" ")[0] + "'s Profile"
 												)
 											}
 										>
