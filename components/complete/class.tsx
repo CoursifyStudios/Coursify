@@ -76,7 +76,7 @@ export const Class: NextPage<{
 									: ""
 							}
 						>
-							{time?.timeStart != undefined
+							{time?.timeStart != undefined && !showLoading
 								? to12hourTime(time?.timeStart) +
 								  " - " +
 								  to12hourTime(time?.timeEnd)
