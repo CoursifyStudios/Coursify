@@ -10,7 +10,7 @@ export function Class(props: {
 	class: IndividialClass;
 	showLoading?: boolean;
 	time?: ScheduleInterface;
-    room?: string;
+  room?: string;
 	className?: string;
 	isLink?: boolean;
 }) {
