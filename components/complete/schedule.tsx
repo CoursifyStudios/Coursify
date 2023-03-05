@@ -32,12 +32,16 @@ export default function ScheduleComponent({
 			</div>
 		);
 	return (
+
+	return (
 		<div className="flex flex-col">
-			<div className=" mt-6 mb-4 grid max-w-md gap-5 rounded-xl bg-gray-200 p-4">
+			<div className=" mt-6 grid max-w-md gap-5 rounded-xl bg-gray-200 p-4">
 				{/* I've left some comments to clear up some stuff */}
-				{schedule &&
-					classes && //checks if the useState that stores the schedule UI is not null
-					schedule
+				{schedule && //checks if the useState that stores the schedule UI is not null
+					schedule.data && //checks if the data on the schedule thing exists
+					schedule.data.schedule_items && //checks if there are schedule items on the data thing on the schedule thing
+					Array.isArray(schedule.data.schedule_items) &&
+					(schedule.data?.schedule_items as unknown as ScheduleInterface[])
 						/* Pretty sure that the line above makes sure that we are iterating over an array of ScheduleInterfaces, 
                             and not of "schedule_items", which is not a type that we can use to populate the UI directly. I think.*/
 						.map(
