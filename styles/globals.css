@@ -38,15 +38,16 @@
 	background-color: rgb(156 163 175);
 }
 
-.title {
-	@apply text-2xl font-bold;
-}
-
 .brightness-hover {
 	@apply transition duration-300 hover:shadow-lg hover:brightness-95;
 }
 
 /*Editor CSS*/
+
+.editor-paragraph {
+	@apply mt-1 mb-2 text-base;
+}
+
 .ltr {
 	text-align: left;
 }
@@ -56,7 +57,7 @@
 }
 
 .editor-text-bold {
-	font-weight: bold;
+	@apply font-medium;
 }
 
 .editor-text-italic {
@@ -88,8 +89,7 @@
 }
 
 .editor-code {
-	background-color: rgb(240, 242, 245);
-	font-family: Menlo, Consolas, Monaco, monospace;
+	@apply rounded-xl bg-gray-800 font-mono text-gray-200;
 	display: block;
 	padding: 8px 8px 8px 52px;
 	line-height: 1.53;
@@ -104,27 +104,23 @@
 }
 
 .editor-code:before {
+	@apply bg-gray-700 text-gray-400;
 	content: attr(data-gutter);
 	position: absolute;
-	background-color: #eee;
 	left: 0;
 	top: 0;
-	border-right: 1px solid #ccc;
 	padding: 8px;
-	color: #777;
 	white-space: pre-wrap;
 	text-align: right;
 	min-width: 25px;
 }
 .editor-code:after {
+	@apply font-mono text-xs text-gray-400 first-letter:uppercase;
 	content: attr(data-highlight-language);
 	top: 0;
 	right: 3px;
 	padding: 3px;
-	font-size: 10px;
-	text-transform: uppercase;
 	position: absolute;
-	color: rgba(0, 0, 0, 0.5);
 }
 
 .editor-paragraph:last-child {
@@ -132,22 +128,15 @@
 }
 
 .editor-heading-h1 {
-	font-size: 24px;
-	color: rgb(5, 5, 5);
-	font-weight: 400;
-	margin: 0;
-	margin-bottom: 12px;
-	padding: 0;
+	@apply mb-4 mt-2 text-xl font-bold text-gray-900;
 }
 
 .editor-heading-h2 {
-	font-size: 15px;
-	color: rgb(0, 0, 0);
-	font-weight: 700;
-	margin: 0;
-	margin-top: 10px;
-	padding: 0;
-	text-transform: uppercase;
+	@apply mb-3 mt-2 text-lg font-bold text-gray-900;
+}
+
+.editor-heading-h3 {
+	@apply mb-2 mt-2 text-base font-bold text-gray-900;
 }
 
 .editor-quote {
