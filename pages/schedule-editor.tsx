@@ -262,12 +262,12 @@ const ScheduleEditor = () => {
 				</Formik>
 				<div>
 					<Formik
-						initialValues={{ day: new Date() }}
+						initialValues={{ name: "" }}
 						onSubmit={(v) => {
 							if (template) {
 								alert("Please alter the template");
-							} else if (tempSchedule && templateName) {
-								createNewTemplate(supabaseClient, templateName, tempSchedule);
+							} else if (tempSchedule) {
+								createNewTemplate(supabaseClient, v.name, tempSchedule);
 							} else
 								alert(
 									"Please add one or more schedule items first and name your "

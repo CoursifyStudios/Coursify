@@ -4,10 +4,7 @@ import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
 import { Class, LoadingClass, sortClasses } from "../components/complete/class";
 import Loading from "../components/misc/loading";
-import {
-	getSchedule,
-	ScheduleInterface,
-} from "../lib/db/schedule";
+import { getSchedule, ScheduleInterface } from "../lib/db/schedule";
 import ScheduleComponent from "../components/complete/schedule";
 
 export default function Home() {
@@ -79,7 +76,7 @@ export default function Home() {
 		}
 		// Only run query once user is logged in.
 		//if (user) loadData()
-	}, [user, supabaseClient, schedule]);
+	}, [user, supabaseClient]);
 	if (!user) {
 		return null;
 	}
@@ -96,15 +93,17 @@ export default function Home() {
 							</div>
 							<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
 								{classes && classes.data && schedule
-									? classes.data.slice(0,classes.data.length)
-                                        .sort((a, b) => sortClasses(a, b, schedule))
-											.map((v, i) => (
+									? classes.data
+											.sort((a, b) => sortClasses(a, b, schedule))
+											.map((v) => (
 												<Class
 													class={{ data: v }}
 													showLoading={loading}
-													key={i}
+													key={v.id}
 													className="!w-full xl:!w-[18.5rem]"
 													isLink={true}
+													//@ts-ignore
+													room={v.room}
 													time={schedule?.find(
 														(s) =>
 															s.specialEvent == undefined &&

@@ -60,7 +60,10 @@ export default function ScheduleComponent({
 								checkClassMatchesSchedule(item) && ( // If the schedule item is for a special event, fill the UI with custom event stuff
 									// May want to change this to be a <Link> later on so that you can link to info about special events
 
-									<div className="flex grow items-center justify-between font-semibold">
+									<div
+										className="flex grow items-center justify-between font-semibold"
+										key={index}
+									>
 										{item.specialEvent}
 										<ColoredPill
 											color={item.customColor ? item.customColor : "green"}
