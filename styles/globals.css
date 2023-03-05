@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+.title {
+	@apply text-2xl font-bold;
+}
+
 .graydient {
 	background: rgb(209, 213, 219);
 	background: linear-gradient(

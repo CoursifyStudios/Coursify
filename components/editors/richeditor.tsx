@@ -26,7 +26,7 @@ import { ReactNode, useEffect, useState } from "react";
 
 function Placeholder() {
 	return (
-		<div className="absolute top-1 left-1 -z-10 text-gray-600">
+		<div className="absolute top-2 left-1 -z-10 text-gray-600">
 			Enter some rich text...
 		</div>
 	);
@@ -96,7 +96,7 @@ export default function Editor({ editable }: { editable: boolean }) {
 						<div className="relative">
 							<RichTextPlugin
 								contentEditable={
-									<ContentEditable className="prose mt-1 h-full p-1 focus:outline-none" />
+									<ContentEditable className="prose mt-1 h-full !max-w-full p-1 focus:outline-none" />
 								}
 								placeholder={<Placeholder />}
 								ErrorBoundary={LexicalErrorBoundary}
@@ -110,7 +110,7 @@ export default function Editor({ editable }: { editable: boolean }) {
 							<MarkdownShortcutPlugin transformers={TRANSFORMERS} />
 						</div>
 					</div>
-					<TreeViewPlugin />
+					{/* <TreeViewPlugin /> */}
 				</EditorContextProvider>
 			</LexicalComposer>
 		</GrammarlyEditorPlugin>

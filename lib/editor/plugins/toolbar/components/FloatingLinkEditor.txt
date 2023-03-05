@@ -13,7 +13,7 @@ import {
 } from "lexical";
 import React from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import LinkPreview from "../../../ui/LinkPreview";
+//import LinkPreview from "../../../ui/LinkPreview";
 import { getSelectedNode } from "../../../utils/node.util";
 
 function positionEditorElement(editor, rect) {
@@ -178,7 +178,7 @@ function FloatingLinkEditor({
 							}}
 						/>
 					</div>
-					<LinkPreview url={linkUrl} />
+					{/* <LinkPreview url={linkUrl} /> */}
 				</>
 			)}
 		</div>

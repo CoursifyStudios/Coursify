@@ -165,7 +165,7 @@ const BlockFormatDropdown = () => {
 		setSelectedBlock(
 			blocks.find((block) => blockType == block.id) || blocks[1]
 		);
-	}, [blockType, blocks]);
+	}, [blockType]);
 
 	return (
 		<Listbox
