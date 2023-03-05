@@ -5,23 +5,21 @@ import Link from "next/link";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import exampleImage from "../../public/example-img.jpg";
 import { ScheduleInterface, to12hourTime } from "../../lib/db/schedule";
+import { NextPage } from "next";
 
-export function Class(props: {
-	class: IndividialClass;
+export const Class: NextPage<{
+	classData: IndividialClass["data"];
 	showLoading?: boolean;
 	time?: ScheduleInterface;
-  room?: string;
 	className?: string;
 	isLink?: boolean;
-}) {
-	const classData = props.class.data;
-
+}> = ({ classData, showLoading, time, className, isLink }) => {
 	const { newTab } = useTabs();
 
-	if (props.isLink)
+	if (isLink)
 		return (
 			<Link
-				href={props.isLink && "/classes/" + classData.id}
+				href={isLink && "/classes/" + classData.id}
 				onClick={() => newTab("/classes/" + classData.id, classData.name)}
 			>
 				<Component />
@@ -35,19 +33,33 @@ export function Class(props: {
 			<div
 				className={
 					"brightness-hover group flex w-[19rem] cursor-pointer select-none flex-col rounded-xl bg-gray-200 " +
-					props.className
+					className
 				}
 			>
 				<div className="relative h-32 ">
 					<Image
 						src={exampleImage}
-                        loading="eager"
+						loading="eager"
 						alt="Example Image"
 						className="rounded-t-xl object-cover object-center"
 						placeholder="blur"
 						fill
 					/>
-                    <h2 className={`text-xl font-semibold text-${classData.color}-600 opacity-75 bg-gray-200 absolute top-2 right-2 rounded-lg px-2`}>{classData.block}</h2>
+					<div className="absolute top-2 right-2 left-2 flex items-center justify-between space-x-2">
+						{classData.room && (
+							<ColoredPill
+								color="gray"
+								className="-mb-0.5 -mt-1 !bg-neutral-500/20 text-xs !text-gray-300 backdrop-blur-xl"
+							>
+								Rm. {classData.room}
+							</ColoredPill>
+						)}
+						<h2
+							className={`text-xl text-${classData.color}-300 rounded-lg bg-neutral-500/20 px-2 font-bold opacity-75 backdrop-blur-xl`}
+						>
+							{classData.block}
+						</h2>
+					</div>
 				</div>
 				<div className="flex flex-grow flex-col  p-4">
 					<div className="flex items-start justify-between">
@@ -55,33 +67,30 @@ export function Class(props: {
 							{classData.name}
 						</h3>
 						<ColoredPill
-							color={
-								props.time?.timeStart != undefined ? classData.color : "gray"
-							}
+							color={time?.timeStart != undefined ? classData.color : "gray"}
 							className={
-								props.showLoading
+								showLoading
 									? "h-5 w-20 animate-pulse"
-									: props.time?.timeStart == undefined
+									: time?.timeStart == undefined
 									? "hidden"
 									: ""
 							}
 						>
-							{props.time?.timeStart != undefined
-								? to12hourTime(props.time?.timeStart) +
+							{time?.timeStart != undefined
+								? to12hourTime(time?.timeStart) +
 								  " - " +
-								  to12hourTime(props.time?.timeEnd)
+								  to12hourTime(time?.timeEnd)
 								: ""}
 						</ColoredPill>
 					</div>
-                    <div className="flex justify-between">
-					    <p>Teacher name</p>
-                        <p>{props.room? "Room " + props.room : ""}</p>
-                    </div>
+					<div className="flex justify-between">
+						<p>Teacher name</p>
+					</div>
 				</div>
 			</div>
 		);
 	}
-}
+};
 
 export const LoadingClass = ({ className }: { className: string }) => {
 	return (
