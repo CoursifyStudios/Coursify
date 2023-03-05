@@ -69,17 +69,6 @@ export default function Home() {
 							.schedule_items as unknown as ScheduleInterface[]
 					);
 				}
-				if (classes.data) {
-					classes.data = classes.data?.sort((a, b) =>
-						sortClasses(
-							a,
-							b,
-							schedule
-							// schedule?.data?.schedule_templates
-							// 	.schedule_items as unknown as ScheduleInterface[]
-						)
-					);
-				}
 				setLoading(false);
 				sessionStorage.setItem("classes", JSON.stringify(classes));
 			}
@@ -107,9 +96,8 @@ export default function Home() {
 							</div>
 							<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
 								{classes && classes.data && schedule
-									? classes.data
-											//@ts-ignore
-											.sort((a, b) => sortClasses(a, b, schedule))
+									? classes.data.slice(0,classes.data.length)
+                                        .sort((a, b) => sortClasses(a, b, schedule))
 											.map((v, i) => (
 												<Class
 													class={{ data: v }}
