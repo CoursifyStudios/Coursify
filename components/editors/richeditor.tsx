@@ -16,7 +16,6 @@ import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
 import { TRANSFORMERS } from "@lexical/markdown";
 
-import ListMaxIndentLevelPlugin from "../../lib/editor/plugins/listmaxindentlevelplugin";
 import CodeHighlightPlugin from "../../lib/editor/plugins/codehighlightplugin";
 import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 import { GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
@@ -108,7 +107,6 @@ export default function Editor({ editable }: { editable: boolean }) {
 							<ListPlugin />
 							<LinkPlugin />
 							<AutoLinkPlugin matchers={MATCHERS} />
-							<ListMaxIndentLevelPlugin maxDepth={7} />
 							<MarkdownShortcutPlugin transformers={TRANSFORMERS} />
 						</div>
 					</div>
