@@ -47,7 +47,7 @@ export function Class(props: {
 						placeholder="blur"
 						fill
 					/>
-                    <h2 className={`text-xl font-semibold text-${classData.color}-600 opacity-80 bg-gray-200 absolute top-2 right-2 rounded-lg px-2`}>{classData.block}</h2>
+                    <h2 className={`text-xl font-semibold text-${classData.color}-600 opacity-75 bg-gray-200 absolute top-2 right-2 rounded-lg px-2`}>{classData.block}</h2>
 				</div>
 				<div className="flex flex-grow flex-col  p-4">
 					<div className="flex items-start justify-between">
