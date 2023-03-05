@@ -94,6 +94,7 @@ export default function Home() {
 							<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
 								{classes && classes.data && schedule
 									? classes.data
+											.slice(0, classes.data.length)
 											.sort((a, b) => sortClasses(a, b, schedule))
 											.map((v) => (
 												<Class

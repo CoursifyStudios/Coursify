@@ -40,7 +40,7 @@ export function Class(props: {
 				<div className="relative h-32 ">
 					<Image
 						src={exampleImage}
-                        loading="eager"
+						loading="eager"
 						alt="Example Image"
 						className="rounded-t-xl object-cover object-center"
 						placeholder="blur"
