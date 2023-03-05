@@ -100,7 +100,7 @@ export default function Profile() {
 				<div className="grid gap-8 md:grid-cols-2">
 					{profileClasses && profileClasses.data
 						? profileClasses.data.map((currentClass, i) => (
-								<Class class={{ data: currentClass }} key={i} isLink={true} />
+								<Class classData={currentClass} key={i} isLink={true} />
 						  ))
 						: ""}
 				</div>
