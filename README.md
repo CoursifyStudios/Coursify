@@ -26,6 +26,7 @@ We use github project for project tracking
 - Use gray 200 for backgrounds when you need a gray. For gray on gray, use gray 300. If you need a gray on top of a gray on top of a gray, you're doing something wrong.
 - For labels, use the [Pill](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/pill.tsx#L5-L32) component.
 - For buttons, use the [Button](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/button.tsx#L5-L13) component, or the [ButtonIcon](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/button.tsx#L23-L45) component for using an icon as a button
+	- If for whatever reason you make a fake button that is not accessible by screen readers and keyboard navigation, add tabIndex={0}.
 - If you need a tooltip the user can copy, use the [CopiedHover](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/pill.tsx#L34-L72) component. A tooltip component is coming soon.
 - Pages should use `max-w-screen-xl` and have borders like this: `px-4 md:px-8 xl:px-0`
 
