@@ -80,11 +80,9 @@ export default function Home() {
 							// 	.schedule_items as unknown as ScheduleInterface[]
 						)
 					);
-					console.log(classes.data);
 				}
 				setLoading(false);
 				sessionStorage.setItem("classes", JSON.stringify(classes));
-				console.log(sessionStorage.getItem("classes"));
 			}
 		})();
 
