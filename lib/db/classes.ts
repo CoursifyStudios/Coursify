@@ -44,7 +44,7 @@ export const getClass = async (
 
 export type ClassResponse = Awaited<ReturnType<typeof getClass>>;
 
-export interface Class {
+export interface IndividialClass {
 	data: Database["public"]["Tables"]["classes"]["Row"];
 }
 
