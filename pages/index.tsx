@@ -96,20 +96,18 @@ export default function Home() {
 									? classes.data
 											.slice(0, classes.data.length)
 											.sort((a, b) => sortClasses(a, b, schedule))
-											.map((v) => (
+											.map((classData) => (
 												<Class
-													class={{ data: v }}
+													classData={classData}
 													showLoading={loading}
-													key={v.id}
+													key={classData.id}
 													className="!w-full xl:!w-[18.5rem]"
 													isLink={true}
-													//@ts-ignore
-													room={v.room}
 													time={schedule?.find(
 														(s) =>
 															s.specialEvent == undefined &&
-															v.block == s.block &&
-															v.schedule_type == s.type
+															classData.block == s.block &&
+															classData.schedule_type == s.type
 													)}
 												/>
 											))

@@ -50,6 +50,7 @@ export interface Database {
 					id: string;
 					name: string;
 					name_full: string;
+					room: string | null;
 					schedule_type: number;
 				};
 				Insert: {
@@ -60,6 +61,7 @@ export interface Database {
 					id?: string;
 					name: string;
 					name_full?: string;
+					room?: string | null;
 					schedule_type?: number;
 				};
 				Update: {
@@ -70,6 +72,7 @@ export interface Database {
 					id?: string;
 					name?: string;
 					name_full?: string;
+					room?: string | null;
 					schedule_type?: number;
 				};
 			};
@@ -290,6 +293,7 @@ export interface Database {
 							id: string;
 							name: string;
 							name_full: string;
+							room: string | null;
 							schedule_type: number;
 						}[];
 				  }
@@ -305,6 +309,7 @@ export interface Database {
 							id: string;
 							name: string;
 							name_full: string;
+							room: string | null;
 							schedule_type: number;
 						}[];
 				  };
