@@ -48,7 +48,7 @@ export const Class: NextPage<{
 					<div className="absolute top-2 right-2 left-2 flex items-center justify-between space-x-2">
 						{classData.room && (
 							<ColoredPill
-								color="gray"
+								//color="gray"
 								className="-mb-0.5 -mt-1 !bg-neutral-500/20 text-xs !text-gray-300 backdrop-blur-xl"
 							>
 								Rm. {classData.room}
