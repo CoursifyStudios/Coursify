@@ -95,7 +95,9 @@ export default function Home() {
 								{classes && classes.data && schedule
 									? classes.data
 											.slice(0, classes.data.length)
-											.sort((a, b) => sortClasses(a, b, schedule))
+											.sort((a, b) =>
+												sortClasses(a, b, schedule, tomorrowSchedule)
+											)
 											.map((classData) => (
 												<Class
 													classData={classData}
