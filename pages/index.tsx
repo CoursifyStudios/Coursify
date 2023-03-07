@@ -19,14 +19,14 @@ export default function Home() {
 	useEffect(() => {
 		(async () => {
 			if (user) {
-				const classes = await getAllClasses(supabaseClient);
+				const [classes, scheduleClasses, tomorrowSchedule] = await Promise.all([
+					getAllClasses(supabaseClient),
+					getSchedule(supabaseClient, new Date("2023-03-03")),
+					getSchedule(supabaseClient, new Date("2023-03-04")),
+				]);
+
 				setClasses(classes);
 
-				//can I piggy-back off of this as well (for now at least?)
-				const scheduleClasses = await getSchedule(
-					supabaseClient,
-					new Date("2023-03-03") //This is set to use this date as it is the only one with a proper, filled in schedule. After dev, we can remove the arguments and just use new Date()
-				);
 				if (
 					!scheduleClasses.data?.template &&
 					scheduleClasses?.data?.schedule_items
@@ -45,16 +45,12 @@ export default function Home() {
 					);
 				}
 
-				const tomorrowSchedule = await getSchedule(
-					supabaseClient,
-					new Date("2023-03-04") //This is set to use this date as it is the only one with a proper, filled in schedule. After dev, we can remove the arguments and just use new Date()
-				);
 				if (
 					!tomorrowSchedule.data?.template &&
 					tomorrowSchedule?.data?.schedule_items
 				) {
 					setTomorrowSchedule(
-						scheduleClasses.data
+						tomorrowSchedule.data
 							?.schedule_items as unknown as ScheduleInterface[]
 					);
 				} else if (
@@ -66,6 +62,7 @@ export default function Home() {
 							.schedule_items as unknown as ScheduleInterface[]
 					);
 				}
+
 				setLoading(false);
 				sessionStorage.setItem("classes", JSON.stringify(classes));
 			}
@@ -74,8 +71,6 @@ export default function Home() {
 		if (user && sessionStorage.getItem("classes")) {
 			setClasses(JSON.parse(sessionStorage.getItem("classes") as string));
 		}
-		// Only run query once user is logged in.
-		//if (user) loadData()
 	}, [user, supabaseClient]);
 	if (!user) {
 		return null;
