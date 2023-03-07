@@ -53,7 +53,9 @@ export const getClass = async (
 
 export type ClassResponse = Awaited<ReturnType<typeof getClass>>;
 
-export type IndividialClass = NonNullableArray<AllClassesResponse["data"]>;
+export interface IndividialClass {
+	data: Database["public"]["Tables"]["classes"]["Row"];
+}
 
 export const getUserSchool = async (
 	supabaseClient: SupabaseClient<Database>

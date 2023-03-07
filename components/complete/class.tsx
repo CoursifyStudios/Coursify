@@ -6,9 +6,12 @@ import { useTabs } from "../../lib/tabs/handleTabs";
 import exampleImage from "../../public/example-img.jpg";
 import { ScheduleInterface, to12hourTime } from "../../lib/db/schedule";
 import { NextPage } from "next";
+import { NonNullableArray } from "../../lib/misc/misc.types";
 
 export const Class: NextPage<{
-	classData: IndividialClass;
+	classData:
+		| IndividialClass["data"]
+		| NonNullableArray<AllClassesResponse["data"]>;
 	showLoading?: boolean;
 	time?: ScheduleInterface;
 	className?: string;
@@ -87,61 +90,63 @@ export const Class: NextPage<{
 						</ColoredPill>
 					</div>
 					<div className="mt-2 flex flex-wrap items-center">
-						{Array.isArray(classData.users_classes!) ? (
-							classData.users_classes!.filter((userData) => userData.teacher)
-								.length > 0 ? (
-								classData
-									.users_classes!.filter((userData) => userData.teacher)
-									.map((userData, i) => {
-										const user = !Array.isArray(classData.users!)
-											? classData.users!
-											: classData.users!.find(
-													(user) => user.id == userData.user_id
-											  );
-										if (!user)
-											return (
-												<p className="text-sm italic text-gray-700">
-													No teacher
-												</p>
-											);
+						{"users_classes" in classData &&
+							"users" in classData &&
+							(Array.isArray(classData.users_classes!) ? (
+								classData.users_classes!.filter((userData) => userData.teacher)
+									.length > 0 ? (
+									classData
+										.users_classes!.filter((userData) => userData.teacher)
+										.map((userData, i) => {
+											const user = !Array.isArray(classData.users!)
+												? classData.users!
+												: classData.users!.find(
+														(user) => user.id == userData.user_id
+												  );
+											if (!user)
+												return (
+													<p className="text-sm italic text-gray-700">
+														No teacher
+													</p>
+												);
 
-										return (
-											<>
-												<Link
-													href={`/profile/${user.id}`}
-													className=" flex flex-col items-center"
-												>
-													<div className="peer flex items-center decoration-slate-800 decoration-2 hover:underline">
-														<img
-															src={user.avatar_url}
-															alt="Profile picture"
-															referrerPolicy="no-referrer"
-															className=" mr-1 rounded-full shadow shadow-black/25 "
-															height={20}
-															width={20}
-														/>
-														<div className="font-semibold">
-															{user.full_name}
+											return (
+												<>
+													<Link
+														href={`/profile/${user.id}`}
+														className=" flex flex-col items-center"
+													>
+														<div className="peer flex items-center decoration-slate-800 decoration-2 hover:underline">
+															<img
+																src={user.avatar_url}
+																alt="Profile picture"
+																referrerPolicy="no-referrer"
+																className=" mr-1 rounded-full shadow shadow-black/25 "
+																height={20}
+																width={20}
+															/>
+															<div className="font-semibold">
+																{user.full_name}
+															</div>
 														</div>
-													</div>
-													{/* <div className="hidden peer-hover:block absolute mt-6 rounded-xl bg-gray-200/50 backdrop-blur-xl p-4 z-10 shadow-lg">
+														{/* <div className="hidden peer-hover:block absolute mt-6 rounded-xl bg-gray-200/50 backdrop-blur-xl p-4 z-10 shadow-lg">
 														test didn't appear over elements idk why
 													</div> */}
-												</Link>
-												<p className="mr-2 [&:last-child]:hidden">,</p>
-											</>
-										);
-									})
+													</Link>
+													<p className="mr-2 [&:last-child]:hidden">,</p>
+												</>
+											);
+										})
+								) : (
+									<p className="text-sm italic text-gray-700">No teacher</p>
+								)
+							) : Array.isArray(classData.users) ? (
+								<p>An unknown error occured</p>
+							) : classData.users_classes?.teacher ? (
+								<p>{classData.users?.full_name}</p>
 							) : (
 								<p className="text-sm italic text-gray-700">No teacher</p>
-							)
-						) : Array.isArray(classData.users) ? (
-							<p>An unknown error occured</p>
-						) : classData.users_classes?.teacher ? (
-							<p>{classData.users?.full_name}</p>
-						) : (
-							<p className="text-sm italic text-gray-700">No teacher</p>
-						)}
+							))}
 						{/* <p>{classData.id}</p> */}
 					</div>
 				</div>
