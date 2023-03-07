@@ -1,8 +1,17 @@
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
+import { NonNullableArray } from "../misc/misc.types";
 import type { Database } from "./database.types";
 
 export async function getAllClasses(supabaseClient: SupabaseClient<Database>) {
-	const { data, error } = await supabaseClient.from("classes").select("*");
+	const { data, error } = await supabaseClient.from("classes").select(`
+	*,
+	users (
+		avatar_url, id, full_name
+	),
+	users_classes (
+		user_id, teacher, grade
+	)
+	`);
 	if (!error) {
 		return {
 			success: true,
