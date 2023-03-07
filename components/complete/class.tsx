@@ -116,7 +116,7 @@ export const Class: NextPage<{
 														href={`/profile/${user.id}`}
 														className=" flex flex-col items-center"
 													>
-														<div className="peer flex items-center decoration-slate-800 decoration-2 hover:underline">
+														<div className="peer flex items-center rounded-full px-1 py-0.5 hover:bg-gray-300">
 															<img
 																src={user.avatar_url}
 																alt="Profile picture"
@@ -133,7 +133,9 @@ export const Class: NextPage<{
 														test didn't appear over elements idk why
 													</div> */}
 													</Link>
-													<p className="mr-2 [&:last-child]:hidden">,</p>
+													<p className="mr-2 -ml-0.5 [&:last-child]:hidden">
+														,
+													</p>
 												</>
 											);
 										})
