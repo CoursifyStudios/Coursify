@@ -2,6 +2,7 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { Fragment, ReactNode, useEffect, useMemo, useState } from "react";
 import {
 	ArrowLeftOnRectangleIcon,
+	CalendarDaysIcon,
 	CalendarIcon,
 	Cog6ToothIcon,
 	MagnifyingGlassIcon,
@@ -153,7 +154,7 @@ const Navbar: NextComponentType = () => {
 					to="/announcements"
 				/>
 				<ButtonIcon
-					icon={<CalendarIcon className="h-5 w-5" />}
+					icon={<CalendarDaysIcon className="h-5 w-5" />}
 					to="/calendar"
 				/>
 				<ButtonIcon icon={<MagnifyingGlassIcon className=" h-5 w-5 grow" />} />

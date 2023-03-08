@@ -3,8 +3,8 @@ import Image from "next/image";
 import exampleGroupImg from "../../public/example-img.jpg";
 import { Tab } from "@headlessui/react";
 import { Fragment } from "react";
-import Betatag from "../../components/misc/betatag";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
+import Betatag from "../../components/misc/betatag";
 
 const sport: NextPage = () => {
 	return (
@@ -21,7 +21,6 @@ const sport: NextPage = () => {
 						Swim Team
 					</h1>
 				</div>
-
 				<Tab.Group as="div" className="flex grow flex-col">
 					<Tab.List as="div" className="mx-auto mb-6 flex space-x-6">
 						<Tab as={Fragment}>
@@ -66,25 +65,57 @@ const sport: NextPage = () => {
 					</Tab.List>
 					<Tab.Panels>
 						<Tab.Panel>
-							<h1 className="title mb-1">Weekly View</h1>
-							<div className="flex h-64 flex-grow space-x-6 rounded-xl py-2">
-								{[...new Array(5)].map((_, i) => (
-									<div
-										key={i}
-										className="grow rounded-xl bg-gray-200 px-3 text-center text-gray-700"
-									>
+							<div className="flex">
+								<h1 className="title mb-1">Weekly View</h1>
+								<div className="ml-3 p-1">
+									<Betatag />
+								</div>
+							</div>
+							<div className="blur-sm">
+								<div className="flex h-64 flex-grow space-x-6 rounded-xl py-2">
+									<div className="grow rounded-xl bg-gray-200 px-3 text-center text-gray-700">
 										<p className="mt-4">MON</p>
 										<h2 className="title mb-6">16</h2>
 										<div className="rounded-lg bg-green-200 py-0.5">
 											<p className="text-green-600">Swim Practice</p>
 										</div>
-										<div className="my-1.5 rounded-lg  bg-blue-200 py-0.5">
-											<p className="text-blue-600">Swim Practice</p>
+									</div>
+									<div className="grow rounded-xl bg-gray-200 px-3 text-center text-gray-700">
+										<p className="mt-4">TUE</p>
+										<h2 className="title mb-6">17</h2>
+										<div className="rounded-lg bg-green-200 py-0.5">
+											<p className="text-green-600">Swim Practice</p>
+										</div>
+										<div className="my-1.5 rounded-lg bg-red-200 py-0.5">
+											<p className="text-red-600">Soph Lifting</p>
 										</div>
 									</div>
-								))}
+									<div className="grow rounded-xl bg-gray-200 px-3 text-center text-gray-700">
+										<p className="mt-4">WED</p>
+										<h2 className="title mb-6">18</h2>
+										<div className="rounded-lg bg-green-200 py-0.5">
+											<p className="text-green-600">Swim Practice</p>
+										</div>
+									</div>
+									<div className="grow rounded-xl bg-gray-200 px-3 text-center text-gray-700">
+										<p className="mt-4">THUR</p>
+										<h2 className="title mb-6">19</h2>
+										<div className="rounded-lg bg-green-200 py-0.5">
+											<p className="text-green-600">Swim Practice</p>
+										</div>
+										<div className="my-1.5 rounded-lg  bg-blue-200 py-0.5">
+											<p className="text-blue-600">Mitty Meet Day</p>
+										</div>
+									</div>
+									<div className="grow rounded-xl bg-gray-200 px-3 text-center text-gray-700">
+										<p className="mt-4">FRI</p>
+										<h2 className="title mb-6">20</h2>
+										<div className="rounded-lg bg-green-200 py-0.5">
+											<p className="text-green-600">Swim Practice</p>
+										</div>
+									</div>
+								</div>
 							</div>
-							<Betatag />
 							<div className="flex space-x-6">
 								<div className="basis-1/2">
 									<h1 className="title pt-5">Announcements</h1>
