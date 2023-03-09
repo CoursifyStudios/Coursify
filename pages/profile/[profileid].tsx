@@ -9,6 +9,7 @@ import { Database } from "../../lib/db/database.types";
 import { useRouter } from "next/router";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import type { PostgrestResponse } from "@supabase/supabase-js";
+import { AllGroupsResponse, getAllGroups } from "../../lib/db/groups";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
@@ -16,8 +17,8 @@ export default function Profile() {
 		useState<
 			PostgrestResponse<Database["public"]["Tables"]["classes"]["Row"]>
 		>();
+    const [profileGroups, setProfileGroups] = useState<AllGroupsResponse>();
 	const supabaseClient = useSupabaseClient<Database>();
-
 	const router = useRouter();
 	const { profileid } = router.query;
 
@@ -34,6 +35,11 @@ export default function Profile() {
 				});
 				//@ts-ignore-error
 				setProfileClasses(classesData);
+                const groupsData = await getAllGroups(
+                    supabaseClient
+                );
+                setProfileGroups(groupsData);
+                console.log(groupsData);
 			}
 		})();
 	}, [router, supabaseClient, profileid]);
@@ -108,26 +114,15 @@ export default function Profile() {
 			<div className="scrollbar-fancy hidden w-full flex-col overflow-y-auto rounded-xl lg:h-[calc(100vh-8rem)] xl:flex">
 				<h2 className="title mb-4">Groups</h2>
 				<div className="flex flex-col gap-8">
-					<Groups
-						photo="/profileexample.jpg"
-						title="Mr. Farrell's Counseling Students, Class of 2025"
-						description="12345678912345"
-					/>
-					<Groups
-						photo="/profileexample.jpg"
-						title="Tedx"
-						description="we talk about stuff sometimes"
-					/>
-					<Groups
-						photo="/profileexample.jpg"
-						title="Tedx"
-						description="we talk about stuff sometimes"
-					/>
-					<Groups
-						photo="/profileexample.jpg"
-						title="Tedx"
-						description="we talk about stuff sometimes like really boring shit"
-					/>
+                    {profileGroups && profileGroups.data && profileGroups.data.map((group) => (
+                        <Groups
+                            key={group.id}
+                            photo="/profileexample.jpg"
+                            title={group.name? group.name : ""}
+                            description={group.description? group.description : ""}
+                        />
+                    )
+                    )}
 				</div>
 			</div>
 		</div>
