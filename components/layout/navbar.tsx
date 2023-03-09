@@ -17,7 +17,7 @@ import { NextComponentType } from "next";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import { ButtonIcon } from "../misc/button";
 import { Menu, Transition } from "@headlessui/react";
-import { addPlural } from "../../lib/misc/stringManipulation";
+import { addPossesive } from "../../lib/misc/stringManipulation";
 import { Database } from "../../lib/db/database.types";
 
 const Navbar: NextComponentType = () => {
@@ -84,7 +84,7 @@ const Navbar: NextComponentType = () => {
 									onClick={() =>
 										newTab(
 											"/profile/1e5024f5-d493-4e32-9822-87f080ad5516",
-											`${addPlural(user?.user_metadata.name)} Profile`
+											`${user?.user_metadata.name}'s Profile`
 										)
 									}
 								>
@@ -103,7 +103,7 @@ const Navbar: NextComponentType = () => {
 									onClick={() =>
 										newTab(
 											`/profile/${user?.id}`,
-											`${addPlural(user?.user_metadata.name)} Profile`
+											`${user?.user_metadata.name}'s Profile`
 										)
 									}
 								>

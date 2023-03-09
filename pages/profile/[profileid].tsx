@@ -1,13 +1,11 @@
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
-import type { NextComponentType } from "next";
 import Image from "next/image";
-import profileexample from "../../public/unnamed.jpg";
 import { ReactNode, useEffect, useState } from "react";
 import { Class } from "../../components/complete/class";
 import { ProfilesResponse } from "../../lib/db/profiles";
 import { getProfile } from "../../lib/db/profiles";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { Database, Json } from "../../lib/db/database.types";
+import { Database } from "../../lib/db/database.types";
 import { useRouter } from "next/router";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import type { PostgrestResponse } from "@supabase/supabase-js";
@@ -102,7 +100,7 @@ export default function Profile() {
 				<div className="grid gap-8 md:grid-cols-2">
 					{profileClasses && profileClasses.data
 						? profileClasses.data.map((currentClass, i) => (
-								<Class class={{ data: currentClass }} key={i} />
+								<Class classData={currentClass} key={i} isLink={true} />
 						  ))
 						: ""}
 				</div>
