@@ -33,11 +33,12 @@ export default function Profile() {
 				const classesData = await supabaseClient.rpc("get_profile_classes", {
 					id: profileid as string,
 				});
-				//@ts-ignore-error
 				setProfileClasses(classesData);
                 const groupsData = await getAllGroups(
-                    supabaseClient
+                    supabaseClient, profileid as string
                 );
+
+                console.log(groupsData);
                 setProfileGroups(groupsData);
 			}
 		})();
@@ -113,14 +114,22 @@ export default function Profile() {
 			<div className="scrollbar-fancy hidden w-full flex-col overflow-y-auto rounded-xl lg:h-[calc(100vh-8rem)] xl:flex">
 				<h2 className="title mb-4">Groups</h2>
 				<div className="flex flex-col gap-8">
-                    {profileGroups && profileGroups.data && profileGroups.data.map((group) => (
-                        <Groups
+                    {profileGroups && profileGroups.data && profileGroups.data && profileGroups.data.map((groupLink) => (
+                        Array.isArray(groupLink) ? (groupLink.map((group) => (
+                            <Groups
                             key={group.id}
                             photo="/profileexample.jpg"
                             title={group.name? group.name : ""}
                             description={group.description? group.description : ""}
                         />
-                    )
+                        ))) : (
+                            <Groups
+                            photo="/profileexample.jpg"
+                            title={(Array.isArray(groupLink.groups)? groupLink.groups[0].name : groupLink.groups?.name) as string}
+                            description={(Array.isArray(groupLink.groups)? groupLink.groups[0].description : groupLink.groups?.description) as string}
+                            />
+                        )
+                        )
                     )}
 				</div>
 			</div>
