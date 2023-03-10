@@ -39,7 +39,6 @@ export default function Profile() {
                     supabaseClient
                 );
                 setProfileGroups(groupsData);
-                console.log(groupsData);
 			}
 		})();
 	}, [router, supabaseClient, profileid]);
