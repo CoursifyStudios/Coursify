@@ -10,6 +10,7 @@ import { useRouter } from "next/router";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import type { PostgrestResponse } from "@supabase/supabase-js";
 import { AllGroupsResponse, getAllGroups } from "../../lib/db/groups";
+import { group } from "console";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
@@ -17,7 +18,7 @@ export default function Profile() {
 		useState<
 			PostgrestResponse<Database["public"]["Tables"]["classes"]["Row"]>
 		>();
-    const [profileGroups, setProfileGroups] = useState<AllGroupsResponse>();
+	const [profileGroups, setProfileGroups] = useState<AllGroupsResponse>();
 	const supabaseClient = useSupabaseClient<Database>();
 	const router = useRouter();
 	const { profileid } = router.query;
@@ -34,12 +35,13 @@ export default function Profile() {
 					id: profileid as string,
 				});
 				setProfileClasses(classesData);
-                const groupsData = await getAllGroups(
-                    supabaseClient, profileid as string
-                );
+				const groupsData = await getAllGroups(
+					supabaseClient,
+					profileid as string
+				);
 
-                console.log(groupsData);
-                setProfileGroups(groupsData);
+				console.log(groupsData);
+				setProfileGroups(groupsData);
 			}
 		})();
 	}, [router, supabaseClient, profileid]);
@@ -114,23 +116,36 @@ export default function Profile() {
 			<div className="scrollbar-fancy hidden w-full flex-col overflow-y-auto rounded-xl lg:h-[calc(100vh-8rem)] xl:flex">
 				<h2 className="title mb-4">Groups</h2>
 				<div className="flex flex-col gap-8">
-                    {profileGroups && profileGroups.data && profileGroups.data && profileGroups.data.map((groupLink) => (
-                        Array.isArray(groupLink) ? (groupLink.map((group) => (
-                            <Groups
-                            key={group.id}
-                            photo="/profileexample.jpg"
-                            title={group.name? group.name : ""}
-                            description={group.description? group.description : ""}
-                        />
-                        ))) : (
-                            <Groups
-                            photo="/profileexample.jpg"
-                            title={(Array.isArray(groupLink.groups)? groupLink.groups[0].name : groupLink.groups?.name) as string}
-                            description={(Array.isArray(groupLink.groups)? groupLink.groups[0].description : groupLink.groups?.description) as string}
-                            />
-                        )
-                        )
-                    )}
+					{profileGroups &&
+						profileGroups.data &&
+						profileGroups.data &&
+						profileGroups.data.map((groupLink) =>
+							Array.isArray(groupLink) ? (
+								groupLink.map((group) => (
+									<Groups
+										key={group.id}
+										photo="/profileexample.jpg"
+										title={group.name ? group.name : ""}
+										description={group.description ? group.description : ""}
+									/>
+								))
+							) : (
+								<Groups
+                                    key={groupLink.group_id}
+									photo="/profileexample.jpg"
+									title={
+										(Array.isArray(groupLink.groups)
+											? groupLink.groups[0].name
+											: groupLink.groups?.name) as string
+									}
+									description={
+										(Array.isArray(groupLink.groups)
+											? groupLink.groups[0].description
+											: groupLink.groups?.description) as string
+									}
+								/>
+							)
+						)}
 				</div>
 			</div>
 		</div>
