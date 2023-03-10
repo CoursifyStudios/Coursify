@@ -5,6 +5,7 @@ import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
 import { Class, LoadingClass, sortClasses } from "../components/complete/class";
 import Loading from "../components/misc/loading";
 import {
+	dayPlus,
 	getSchedule,
 	ScheduleData,
 	ScheduleInterface,
