@@ -10,7 +10,6 @@ import {
 	ScheduleInterface,
 } from "../lib/db/schedule";
 import ScheduleComponent from "../components/complete/schedule";
-import { dayPlus } from "../lib/misc/times";
 
 export default function Home() {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -33,7 +32,6 @@ export default function Home() {
 			const parsedSchedules: { date: string; schedule: ScheduleInterface[] }[] =
 				JSON.parse(schedule);
 			const today = new Date("2023-03-03");
-			console.log(parsedSchedules);
 			parsedSchedules.forEach((parsedSchedule) => {
 				/**
 				 * this sees if the schedule matches the current day. Theoreticlly, if you close
@@ -42,7 +40,6 @@ export default function Home() {
 				 * displayed the correct day as I've missed class due to an error like this in g calender (or it could've
 				 * been the fact that I looked at it as I was getting off a plane at 3am, but y'know)
 				 */
-				console.log(today, dayPlus(today, 1));
 				if (parsedSchedule.date === today.toISOString()) {
 					setSchedule(parsedSchedule.schedule);
 				} else if (parsedSchedule.date === dayPlus(today, 1).toISOString()) {
