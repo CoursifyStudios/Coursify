@@ -10,6 +10,9 @@ export const getAllAssignments = async (
 		name, description, id,
 		classes (
 			name, id, color
+		),
+		starred (
+			assignment_id
 		)
 		`
 	);

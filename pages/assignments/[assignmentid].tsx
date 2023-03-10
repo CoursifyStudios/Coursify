@@ -27,7 +27,7 @@ import { ButtonIcon } from "../../components/misc/button";
 import { AssignmentPreview } from "../../components/complete/assignments";
 
 const Post: NextPage = () => {
-	const supabaseClient = useSupabaseClient<Database>();
+	const supabase = useSupabaseClient<Database>();
 	const [allAssignments, setAllAssignments] = useState<AllAssignmentResponse>();
 	const [assignment, setAssignment] = useState<AssignmentResponse>();
 	const router = useRouter();
@@ -38,8 +38,9 @@ const Post: NextPage = () => {
 	useEffect(() => {
 		(async () => {
 			if (user) {
-				const all = await getAllAssignments(supabaseClient);
-				setAllAssignments(all);
+				const assignments = await getAllAssignments(supabase);
+				setAllAssignments(assignments);
+				console.log(assignments);
 			}
 		})();
 
@@ -50,14 +51,14 @@ const Post: NextPage = () => {
 				typeof assignmentid == "string" &&
 				assignmentid != "0"
 			) {
-				const assignment = await getAssignment(supabaseClient, assignmentid);
+				const assignment = await getAssignment(supabase, assignmentid);
 				setAssignment(assignment);
 			}
 		})();
 		if (router.isReady && assignmentid != "0" && window.innerWidth < 768) {
 			setFullscreen(true);
 		}
-	}, [user, supabaseClient, router, assignmentid]);
+	}, [user, supabase, router, assignmentid]);
 
 	return (
 		<div className="mx-auto flex w-full max-w-screen-xl px-4 pt-6 pb-6 md:px-8 xl:px-0">
@@ -81,7 +82,13 @@ const Post: NextPage = () => {
 							<AssignmentPreview
 								name={assignment.name}
 								desc={assignment.description}
-								starred={false}
+								starred={
+									assignment.starred
+										? Array.isArray(assignment.starred)
+											? assignment.starred.length > 0
+											: !!assignment.starred
+										: false
+								}
 								due={new Date(1667840443856)}
 								classes={
 									assignment.classes
