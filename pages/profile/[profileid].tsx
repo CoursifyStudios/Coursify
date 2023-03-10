@@ -103,7 +103,7 @@ export default function Profile() {
 				</div>
 			</div>
 
-			<div className=" scrollbar-fancy mx-auto mt-8 shrink-0 overflow-y-auto  rounded-xl lg:mt-0 lg:h-[calc(100vh-8rem)]">
+			<div className=" scrollbar-fancy mx-auto mt-8 shrink-0 overflow-y-auto rounded-xl lg:mt-0 lg:h-[calc(100vh-8rem)]">
 				<h2 className="title mb-4">Classes</h2>
 				<div className="grid gap-8 md:grid-cols-2">
 					{profileClasses && profileClasses.data
@@ -117,7 +117,6 @@ export default function Profile() {
 				<h2 className="title mb-4">Groups</h2>
 				<div className="flex flex-col gap-8">
 					{profileGroups &&
-						profileGroups.data &&
 						profileGroups.data &&
 						profileGroups.data.map((groupLink) =>
 							Array.isArray(groupLink) ? (
