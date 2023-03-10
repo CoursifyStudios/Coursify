@@ -10,7 +10,6 @@ import { useRouter } from "next/router";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import type { PostgrestResponse } from "@supabase/supabase-js";
 import { AllGroupsResponse, getAllGroups } from "../../lib/db/groups";
-import { group } from "console";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
@@ -39,8 +38,6 @@ export default function Profile() {
 					supabaseClient,
 					profileid as string
 				);
-
-				console.log(groupsData);
 				setProfileGroups(groupsData);
 			}
 		})();
