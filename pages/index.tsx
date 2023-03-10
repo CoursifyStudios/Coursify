@@ -11,12 +11,17 @@ import {
 	ScheduleInterface,
 } from "../lib/db/schedule";
 import ScheduleComponent from "../components/complete/schedule";
+import {
+	AllAssignmentResponse,
+	getAllAssignments,
+} from "../lib/db/assignments";
 
 export default function Home() {
 	const supabaseClient = useSupabaseClient<Database>();
 	const user = useUser();
 	const [classes, setClasses] = useState<AllClassesResponse>();
 	const [loading, setLoading] = useState(true);
+	const [assignments, setAssignments] = useState<AllAssignmentResponse>();
 	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
 	const [tomorrowSchedule, setTomorrowSchedule] =
 		useState<ScheduleInterface[]>();
@@ -40,6 +45,7 @@ export default function Home() {
 				 * on it. This is very much a qol edge case thing, but I wanted to add functionality that would make sure it
 				 * displayed the correct day as I've missed class due to an error like this in g calender (or it could've
 				 * been the fact that I looked at it as I was getting off a plane at 3am, but y'know)
+				 *      ...sounds like a skill issue -Bill
 				 */
 				if (parsedSchedule.date === today.toISOString()) {
 					setSchedule(parsedSchedule.schedule);
@@ -53,16 +59,23 @@ export default function Home() {
 	useEffect(() => {
 		(async () => {
 			if (user) {
-				const [classes, scheduleClasses, secondDaySchedule, thirdDaySchedule] =
-					await Promise.all([
-						getAllClasses(supabaseClient),
-						// read comment in above useeffect as to why I'm fetching 3 dates
-						getSchedule(supabaseClient, new Date("2023-03-03")),
-						getSchedule(supabaseClient, new Date("2023-03-04")),
-						getSchedule(supabaseClient, new Date("2023-03-05")),
-					]);
+				const [
+					classes,
+					assignments,
+					scheduleClasses,
+					secondDaySchedule,
+					thirdDaySchedule,
+				] = await Promise.all([
+					getAllClasses(supabaseClient),
+					getAllAssignments(supabaseClient),
+					// read comment in above useEffect as to why I'm fetching 3 dates
+					getSchedule(supabaseClient, new Date("2023-03-03")),
+					getSchedule(supabaseClient, new Date("2023-03-04")),
+					getSchedule(supabaseClient, new Date("2023-03-05")),
+				]);
 
 				setClasses(classes);
+				setAssignments(assignments);
 				const fullSchedule: { date: Date; schedule: ScheduleInterface[] }[] =
 					[];
 
@@ -171,12 +184,31 @@ export default function Home() {
 						{/* Assignments UI */}
 						<section className="">
 							<h2 className="title">Assignments</h2>
-							<div className="mt-6 flex w-full rounded-xl bg-gray-200 px-4 py-2 xl:w-[58.5rem]">
-								<p>
-									ASSIGNEMENT VIEW GOES HERE <br></br>text<br></br>text
-									<br></br>IMAGINE THE THING FROM THE FIGMA WAS HEREtext
-									<br></br>text<br></br>
-								</p>
+							<div className="mt-6 grid w-full rounded-xl bg-gray-200 px-4 py-2 xl:w-[58.5rem]">
+                            {classes && classes.data && classes.data.map((aClass) => (
+                                    <div key={aClass.id}> 
+                                        <h2 className="font-semibold">{aClass.name}</h2>
+                                        <div className="flex cols gap-5">
+                                            {assignments && assignments.data && assignments.data.map((assignment) => (
+                                                Array.isArray(assignment.classes) ? (
+                                                    assignment.classes.map((assignmentClass) => (
+                                                        assignmentClass.id == aClass.id &&
+                                                        <div key={assignmentClass.id} className="bg-gray">
+                                                            <h2>{assignment.name}</h2>
+                                                            <p>{assignment.description}</p>
+                                                        </div>
+                                                    ))
+                                                ) : (
+                                                    <div key={assignment.id} className="bg-gray">
+                                                        <h2>{assignment.name}</h2>
+                                                        <p>{assignment.description}</p>
+                                                    </div>
+                                                )
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))
+                                }
 							</div>
 						</section>
 						{/* Starred assignments */}
