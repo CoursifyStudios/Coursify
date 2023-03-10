@@ -131,7 +131,7 @@ export default function Profile() {
 								))
 							) : (
 								<Groups
-                                    key={groupLink.group_id}
+									key={groupLink.group_id}
 									photo="/profileexample.jpg"
 									title={
 										(Array.isArray(groupLink.groups)
@@ -176,7 +176,10 @@ const Groups = (props: {
 	description: string;
 }) => {
 	return (
-		<div className="flex w-full items-center rounded-md bg-gray-200 p-4 transition duration-300 hover:shadow-lg hover:brightness-95 ">
+		<div
+			className="flex w-full items-center rounded-md bg-gray-200 p-4 transition duration-300 hover:shadow-lg hover:brightness-95 "
+			tabIndex={0}
+		>
 			<Image
 				width={100}
 				height={100}
