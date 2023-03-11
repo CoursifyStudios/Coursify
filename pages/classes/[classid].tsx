@@ -14,6 +14,7 @@ import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import { AcademicCapIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import { addPossesive } from "../../lib/misc/stringManipulation";
+import Editor from "../../components/editors/richeditor";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -100,10 +101,16 @@ const Class: NextPage = () => {
 					</Tab.List>
 					<Tab.Panels>
 						<Tab.Panel>
-							<div className="rounded-xl bg-gray-200 p-4">
-								{data.data?.description}
-								teacher: {JSON.stringify(data.data?.users_classes)}
+							<div className="flex">
+								<ColoredPill color="green">Test</ColoredPill>
 							</div>
+							{data.data?.full_description && (
+								<Editor
+									editable={false}
+									initialState={data.data?.full_description}
+									//className=" "
+								/>
+							)}
 						</Tab.Panel>
 						<Tab.Panel>announcements here</Tab.Panel>
 						<Tab.Panel>
@@ -195,6 +202,3 @@ const Class: NextPage = () => {
 };
 
 export default Class;
-
-// to-do: send new assignment for server, get id back, then write to classes_assignments
-// future: create a functiuon that I can call that does this for me. faster + more reliable if the user exists page

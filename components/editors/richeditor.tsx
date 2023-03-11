@@ -30,15 +30,8 @@ import {
 	useEffect,
 	useState,
 } from "react";
-import { EditorState } from "lexical/LexicalEditorState";
-
-function Placeholder() {
-	return (
-		<div className="absolute top-2 left-1 -z-10 text-gray-600">
-			Enter some rich text...
-		</div>
-	);
-}
+import { EditorState, SerializedEditorState } from "lexical/LexicalEditorState";
+import { Json } from "../../lib/db/database.types";
 
 const editorConfig = {
 	// The editor theme
@@ -97,22 +90,30 @@ const MATCHERS = [
 export default function Editor({
 	editable,
 	updateState,
+	className,
+	initialState,
 }: {
 	editable: boolean;
-	updateState: Dispatch<SetStateAction<undefined | EditorState>>;
+	updateState?: Dispatch<SetStateAction<undefined | EditorState>>;
+	initialState?: Json;
+	className?: string;
 }) {
 	return (
 		<GrammarlyEditorPlugin clientId="client_HhHcuxVxKgaZMFYuD57U3V">
 			<LexicalComposer initialConfig={editorConfig}>
-				<EditorContextProvider editable={editable}>
-					<div className="relative mb-2 rounded-xl p-4 shadow-lg">
-						<ToolbarPlugin />
+				<EditorContextProvider editable={editable} initialState={initialState}>
+					<div
+						className={`relative ${
+							className ? className : "mb-2 rounded-xl p-4 shadow-lg"
+						}`}
+					>
+						{editable && <ToolbarPlugin />}
 						<div className="relative">
 							<RichTextPlugin
 								contentEditable={
 									<ContentEditable className="prose mt-1 h-full !max-w-full p-1 focus:outline-none" />
 								}
-								placeholder={<Placeholder />}
+								placeholder={editable ? <Placeholder /> : <></>}
 								ErrorBoundary={LexicalErrorBoundary}
 							/>
 							<HistoryPlugin />
@@ -120,7 +121,7 @@ export default function Editor({
 							<CodeHighlightPlugin />
 							<ListPlugin />
 							<LinkPlugin />
-							<OnChangePlugin onChange={updateState} />
+							{updateState && <OnChangePlugin onChange={updateState} />}
 							<AutoLinkPlugin matchers={MATCHERS} />
 							<MarkdownShortcutPlugin transformers={TRANSFORMERS} />
 						</div>
@@ -135,9 +136,11 @@ export default function Editor({
 function EditorContextProvider({
 	children,
 	editable,
+	initialState,
 }: {
 	children: ReactNode;
 	editable: boolean;
+	initialState?: Json;
 }) {
 	const [editor] = useLexicalComposerContext();
 
@@ -145,6 +148,12 @@ function EditorContextProvider({
 
 	useEffect(() => {
 		editor.setEditable(editable);
+		if (initialState)
+			editor.setEditorState(
+				editor.parseEditorState(
+					initialState as unknown as SerializedEditorState
+				)
+			);
 	});
 
 	return (
@@ -153,5 +162,13 @@ function EditorContextProvider({
 		>
 			{children}
 		</EditorContext.Provider>
+	);
+}
+
+function Placeholder() {
+	return (
+		<div className="absolute top-2 left-1 -z-10 text-gray-600">
+			Enter some rich text...
+		</div>
 	);
 }

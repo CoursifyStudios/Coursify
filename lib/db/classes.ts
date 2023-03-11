@@ -85,3 +85,9 @@ export const updateClass = async (
 		})
 		.eq("id", classid);
 };
+
+export interface ClassPill {
+	name: string;
+	link?: string;
+	icon: "doc" | "link" | "chat" | "calender" | "folder" | "music";
+}
