@@ -8,8 +8,10 @@ export const getAllAssignments = async (
 	return await supabaseClient.from("assignments").select(
 		`
 		name, description, id,
-		classes (
-			name, id, color
+		classes_assignments (
+			classes (
+				name, id, color
+			)
 		),
 		starred (
 			assignment_id
