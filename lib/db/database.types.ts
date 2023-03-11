@@ -14,30 +14,36 @@ export interface Database {
 					content: string | null;
 					created_date: string | null;
 					description: string;
-					due_info: Json | null;
+					due_date: string | null;
+					due_type: number | null;
 					id: string;
 					name: string;
-					publish_info: Json | null;
+					publish_date: string | null;
+					publish_type: number | null;
 					type: string | null;
 				};
 				Insert: {
 					content?: string | null;
 					created_date?: string | null;
 					description: string;
-					due_info?: Json | null;
+					due_date?: string | null;
+					due_type?: number | null;
 					id?: string;
 					name: string;
-					publish_info?: Json | null;
+					publish_date?: string | null;
+					publish_type?: number | null;
 					type?: string | null;
 				};
 				Update: {
 					content?: string | null;
 					created_date?: string | null;
 					description?: string;
-					due_info?: Json | null;
+					due_date?: string | null;
+					due_type?: number | null;
 					id?: string;
 					name?: string;
-					publish_info?: Json | null;
+					publish_date?: string | null;
+					publish_type?: number | null;
 					type?: string | null;
 				};
 			};
@@ -124,20 +130,6 @@ export interface Database {
 					name?: string | null;
 				};
 			};
-			schedule: {
-				Row: {
-					date: string;
-					schedule_items: Json | null;
-				};
-				Insert: {
-					date: string;
-					schedule_items?: Json | null;
-				};
-				Update: {
-					date?: string;
-					schedule_items?: Json | null;
-				};
-			};
 			schedule_templates: {
 				Row: {
 					id: number;
@@ -187,6 +179,20 @@ export interface Database {
 					id?: string;
 					name?: string;
 					schedule?: Json[] | null;
+				};
+			};
+			starred: {
+				Row: {
+					assignment_id: string;
+					user_id: string;
+				};
+				Insert: {
+					assignment_id: string;
+					user_id: string;
+				};
+				Update: {
+					assignment_id?: string;
+					user_id?: string;
 				};
 			};
 			test: {

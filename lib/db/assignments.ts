@@ -10,6 +10,9 @@ export const getAllAssignments = async (
 		name, description, id,
 		classes (
 			name, id, color
+		),
+		starred (
+			assignment_id
 		)
 		`
 	);
@@ -18,6 +21,36 @@ export const getAllAssignments = async (
 export type AllAssignmentResponse = Awaited<
 	ReturnType<typeof getAllAssignments>
 >;
+
+export const handleStarred = async (
+	supabase: SupabaseClient<Database>,
+	starred: boolean,
+	dbStarred: boolean,
+	assId: string,
+	userID: string
+): Promise<boolean> => {
+	if (starred == dbStarred) {
+		return dbStarred;
+	}
+	if (starred && !dbStarred) {
+		//create new row
+		await supabase.from("starred").insert({
+			user_id: userID,
+			assignment_id: assId,
+		});
+		return starred;
+	}
+	if (!starred && dbStarred) {
+		//delete row
+		await supabase
+			.from("starred")
+			.delete()
+			.eq("user_id", userID)
+			.eq("assignment_id", assId);
+		return starred;
+	}
+	return false;
+};
 
 export const getAssignment = async (
 	supabaseClient: SupabaseClient<Database>,
@@ -54,7 +87,6 @@ export const newAssignment = async (
 			error,
 		};
 	}
-	console.log(data);
 	if (data) {
 		// amazing naming schema
 		const { error: secondError } = await supabase
