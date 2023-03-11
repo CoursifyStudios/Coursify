@@ -11,17 +11,14 @@ import {
 	ScheduleInterface,
 } from "../lib/db/schedule";
 import ScheduleComponent from "../components/complete/schedule";
-import {
-	AllAssignmentResponse,
-	getAllAssignments,
-} from "../lib/db/assignments";
+import { AssignmentPreview } from "../components/complete/assignments";
+import Link from "next/link";
 
 export default function Home() {
 	const supabaseClient = useSupabaseClient<Database>();
 	const user = useUser();
 	const [classes, setClasses] = useState<AllClassesResponse>();
 	const [loading, setLoading] = useState(true);
-	const [assignments, setAssignments] = useState<AllAssignmentResponse>();
 	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
 	const [tomorrowSchedule, setTomorrowSchedule] =
 		useState<ScheduleInterface[]>();
@@ -61,13 +58,13 @@ export default function Home() {
 			if (user) {
 				const [
 					classes,
-					assignments,
+					//assignments,
 					scheduleClasses,
 					secondDaySchedule,
 					thirdDaySchedule,
 				] = await Promise.all([
 					getAllClasses(supabaseClient),
-					getAllAssignments(supabaseClient),
+					//getAllAssignments(supabaseClient),
 					// read comment in above useEffect as to why I'm fetching 3 dates
 					getSchedule(supabaseClient, new Date("2023-03-03")),
 					getSchedule(supabaseClient, new Date("2023-03-04")),
@@ -75,7 +72,6 @@ export default function Home() {
 				]);
 
 				setClasses(classes);
-				setAssignments(assignments);
 				const fullSchedule: { date: Date; schedule: ScheduleInterface[] }[] =
 					[];
 
@@ -184,31 +180,36 @@ export default function Home() {
 						{/* Assignments UI */}
 						<section className="">
 							<h2 className="title">Assignments</h2>
-							<div className="mt-6 grid w-full rounded-xl bg-gray-200 px-4 py-2 xl:w-[58.5rem]">
-                            {classes && classes.data && classes.data.map((aClass) => (
-                                    <div key={aClass.id}> 
-                                        <h2 className="font-semibold">{aClass.name}</h2>
-                                        <div className="flex cols gap-5">
-                                            {assignments && assignments.data && assignments.data.map((assignment) => (
-                                                Array.isArray(assignment.classes) ? (
-                                                    assignment.classes.map((assignmentClass) => (
-                                                        assignmentClass.id == aClass.id &&
-                                                        <div key={assignmentClass.id} className="bg-gray">
-                                                            <h2>{assignment.name}</h2>
-                                                            <p>{assignment.description}</p>
-                                                        </div>
-                                                    ))
-                                                ) : (
-                                                    <div key={assignment.id} className="bg-gray">
-                                                        <h2>{assignment.name}</h2>
-                                                        <p>{assignment.description}</p>
-                                                    </div>
-                                                )
-                                            ))}
-                                        </div>
-                                    </div>
-                                ))
-                                }
+							<div className="rounded-x grid w-full py-2 xl:w-[58.5rem]">
+								{classes &&
+									classes.data &&
+									classes.data.map((aClass) => (
+										<div key={aClass.id}>
+											<h2 className="font-semibold my-4">{aClass.name}</h2>
+											<div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3  gap-5">
+												{Array.isArray(aClass.assignments) &&
+													aClass.assignments.map((assignment) => (
+														<div key={assignment.id} className={"flex bg-gray-200 p-2 rounded-lg"}>
+															<AssignmentPreview
+																supabase={supabaseClient}
+																name={assignment.name}
+																desc={assignment.description}
+																id={assignment.id}
+																starred={
+																	assignment.starred
+																		? Array.isArray(assignment.starred)
+																			? assignment.starred.length > 0
+																			: !!assignment.starred
+																		: false
+																}
+																due={new Date()}
+																userId={user.id}
+															/>
+														</div>
+													))}
+											</div>
+										</div>
+									))}
 							</div>
 						</section>
 						{/* Starred assignments */}

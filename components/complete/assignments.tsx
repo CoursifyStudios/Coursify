@@ -1,7 +1,7 @@
 import { CheckIcon } from "@heroicons/react/24/outline";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import Link from "next/link";
-import { use, useState } from "react";
+import { useState } from "react";
 import { handleStarred } from "../../lib/db/assignments";
 import { Database } from "../../lib/db/database.types";
 import { ColoredPill } from "../misc/pill";
@@ -28,7 +28,7 @@ export function AssignmentPreview(props: {
 		const newStarred = await handleStarred(
 			props.supabase,
 			starred,
-			props.starred,
+			dbStarred,
 			props.id,
 			props.userId
 		);
