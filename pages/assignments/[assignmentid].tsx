@@ -69,6 +69,7 @@ const Post: NextPage = () => {
 			>
 				{allAssignments ? (
 					!allAssignments.error &&
+					user &&
 					allAssignments.data.map((assignment) => (
 						<Link
 							className={`flex h-max snap-start rounded-xl ${
@@ -80,6 +81,9 @@ const Post: NextPage = () => {
 							key={assignment.id}
 						>
 							<AssignmentPreview
+								id={assignment.id}
+								userId={user.id}
+								supabase={supabase}
 								name={assignment.name}
 								desc={assignment.description}
 								starred={

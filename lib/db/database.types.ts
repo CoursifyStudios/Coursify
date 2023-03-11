@@ -183,15 +183,15 @@ export interface Database {
 			};
 			starred: {
 				Row: {
-					assignment_id: string | null;
+					assignment_id: string;
 					user_id: string;
 				};
 				Insert: {
-					assignment_id?: string | null;
+					assignment_id: string;
 					user_id: string;
 				};
 				Update: {
-					assignment_id?: string | null;
+					assignment_id?: string;
 					user_id?: string;
 				};
 			};
