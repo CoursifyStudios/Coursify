@@ -92,3 +92,9 @@ export function to12hourTime(timeAsString: string, includeAMPM?: boolean) {
 		);
 	}
 }
+
+export function dayPlus(day: Date, add: number) {
+	const newDay = new Date(day.getTime());
+	newDay.setDate(day.getDate() + add);
+	return newDay;
+}

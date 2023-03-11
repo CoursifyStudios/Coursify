@@ -1,10 +1,15 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
 import { Class, LoadingClass, sortClasses } from "../components/complete/class";
 import Loading from "../components/misc/loading";
-import { getSchedule, ScheduleInterface } from "../lib/db/schedule";
+import {
+	dayPlus,
+	getSchedule,
+	ScheduleData,
+	ScheduleInterface,
+} from "../lib/db/schedule";
 import ScheduleComponent from "../components/complete/schedule";
 
 export default function Home() {
@@ -17,60 +22,87 @@ export default function Home() {
 		useState<ScheduleInterface[]>();
 
 	useEffect(() => {
+		const [classes, schedule] = [
+			sessionStorage.getItem("classes"),
+			sessionStorage.getItem("schedule"),
+		];
+		if (classes) {
+			setClasses(JSON.parse(classes));
+		}
+		if (schedule) {
+			const parsedSchedules: { date: string; schedule: ScheduleInterface[] }[] =
+				JSON.parse(schedule);
+			const today = new Date("2023-03-03");
+			parsedSchedules.forEach((parsedSchedule) => {
+				/**
+				 * this sees if the schedule matches the current day. Theoreticlly, if you close
+				 * your computer that night and open it up the next day, it *should* have the updated schedule
+				 * on it. This is very much a qol edge case thing, but I wanted to add functionality that would make sure it
+				 * displayed the correct day as I've missed class due to an error like this in g calender (or it could've
+				 * been the fact that I looked at it as I was getting off a plane at 3am, but y'know)
+				 */
+				if (parsedSchedule.date === today.toISOString()) {
+					setSchedule(parsedSchedule.schedule);
+				} else if (parsedSchedule.date === dayPlus(today, 1).toISOString()) {
+					setTomorrowSchedule(parsedSchedule.schedule);
+				}
+			});
+		}
+	}, []);
+
+	useEffect(() => {
 		(async () => {
 			if (user) {
-				const [classes, scheduleClasses, tomorrowSchedule] = await Promise.all([
-					getAllClasses(supabaseClient),
-					getSchedule(supabaseClient, new Date("2023-03-03")),
-					getSchedule(supabaseClient, new Date("2023-03-04")),
-				]);
+				const [classes, scheduleClasses, secondDaySchedule, thirdDaySchedule] =
+					await Promise.all([
+						getAllClasses(supabaseClient),
+						// read comment in above useeffect as to why I'm fetching 3 dates
+						getSchedule(supabaseClient, new Date("2023-03-03")),
+						getSchedule(supabaseClient, new Date("2023-03-04")),
+						getSchedule(supabaseClient, new Date("2023-03-05")),
+					]);
 
 				setClasses(classes);
+				const fullSchedule: { date: Date; schedule: ScheduleInterface[] }[] =
+					[];
 
-				if (
-					!scheduleClasses.data?.template &&
-					scheduleClasses?.data?.schedule_items
-				) {
-					setSchedule(
-						scheduleClasses.data
-							?.schedule_items as unknown as ScheduleInterface[]
-					);
-				} else if (
-					!Array.isArray(scheduleClasses.data?.schedule_templates) &&
-					scheduleClasses.data?.schedule_templates?.schedule_items
-				) {
-					setSchedule(
-						scheduleClasses.data.schedule_templates
-							.schedule_items as unknown as ScheduleInterface[]
-					);
-				}
+				const addScheduleData = (
+					scheduleData: ScheduleData,
+					date: Date,
+					setter?: Dispatch<SetStateAction<ScheduleInterface[] | undefined>>
+				) => {
+					if (
+						!scheduleData.data?.template &&
+						scheduleData?.data?.schedule_items
+					) {
+						const data = scheduleData.data
+							?.schedule_items as unknown as ScheduleInterface[];
+						if (setter) setter(data);
+						fullSchedule.push({ date: date, schedule: data });
+					} else if (
+						!Array.isArray(scheduleData.data?.schedule_templates) &&
+						scheduleData.data?.schedule_templates?.schedule_items
+					) {
+						const data = scheduleData.data.schedule_templates
+							.schedule_items as unknown as ScheduleInterface[];
+						if (setter) setter(data);
+						fullSchedule.push({ date: date, schedule: data });
+					}
+				};
 
-				if (
-					!tomorrowSchedule.data?.template &&
-					tomorrowSchedule?.data?.schedule_items
-				) {
-					setTomorrowSchedule(
-						tomorrowSchedule.data
-							?.schedule_items as unknown as ScheduleInterface[]
-					);
-				} else if (
-					!Array.isArray(tomorrowSchedule.data?.schedule_templates) &&
-					tomorrowSchedule.data?.schedule_templates?.schedule_items
-				) {
-					setTomorrowSchedule(
-						tomorrowSchedule.data.schedule_templates
-							.schedule_items as unknown as ScheduleInterface[]
-					);
-				}
+				addScheduleData(scheduleClasses, new Date("2023-03-03"), setSchedule);
+				addScheduleData(
+					secondDaySchedule,
+					new Date("2023-03-04"),
+					setTomorrowSchedule
+				);
+				addScheduleData(thirdDaySchedule, new Date("2023-03-05"));
 
 				setLoading(false);
 				sessionStorage.setItem("classes", JSON.stringify(classes));
+				sessionStorage.setItem("schedule", JSON.stringify(fullSchedule));
 			}
 		})();
-
-		if (user && sessionStorage.getItem("classes")) {
-			setClasses(JSON.parse(sessionStorage.getItem("classes") as string));
-		}
 	}, [user, supabaseClient]);
 	if (!user) {
 		return null;
