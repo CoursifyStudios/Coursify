@@ -22,6 +22,7 @@ import { GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
 import ToolbarPlugin from "../../lib/editor/plugins/toolbar/main";
 import { EditorContext } from "../../lib/editor/plugins/toolbar/contextProviders";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
+import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import {
 	Dispatch,
 	ReactNode,
@@ -103,7 +104,7 @@ export default function Editor({
 	return (
 		<GrammarlyEditorPlugin clientId="client_HhHcuxVxKgaZMFYuD57U3V">
 			<LexicalComposer initialConfig={editorConfig}>
-				<EditorContextProvider editable={editable} updateState={updateState}>
+				<EditorContextProvider editable={editable}>
 					<div className="relative mb-2 rounded-xl p-4 shadow-lg">
 						<ToolbarPlugin />
 						<div className="relative">
@@ -119,6 +120,7 @@ export default function Editor({
 							<CodeHighlightPlugin />
 							<ListPlugin />
 							<LinkPlugin />
+							<OnChangePlugin onChange={updateState} />
 							<AutoLinkPlugin matchers={MATCHERS} />
 							<MarkdownShortcutPlugin transformers={TRANSFORMERS} />
 						</div>
@@ -133,11 +135,9 @@ export default function Editor({
 function EditorContextProvider({
 	children,
 	editable,
-	updateState,
 }: {
 	children: ReactNode;
 	editable: boolean;
-	updateState: Dispatch<SetStateAction<undefined | EditorState>>;
 }) {
 	const [editor] = useLexicalComposerContext();
 
@@ -146,11 +146,6 @@ function EditorContextProvider({
 	useEffect(() => {
 		editor.setEditable(editable);
 	});
-
-	useEffect(() => {
-		updateState(editor.getEditorState());
-		console.log("testing if works");
-	}, [editor, activeEditor]);
 
 	return (
 		<EditorContext.Provider
