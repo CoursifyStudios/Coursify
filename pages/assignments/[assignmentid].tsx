@@ -40,7 +40,6 @@ const Post: NextPage = () => {
 			if (user) {
 				const assignments = await getAllAssignments(supabase);
 				setAllAssignments(assignments);
-				console.log(assignments);
 			}
 		})();
 
