@@ -120,7 +120,7 @@ export default function Profile() {
 								groupLink.map((group) => (
 									<Groups
 										key={group.id}
-										photo="/profileexample.jpg"
+										photo="/example-img.jpg"
 										title={group.name ? group.name : ""}
 										description={group.description ? group.description : ""}
 									/>
@@ -128,7 +128,7 @@ export default function Profile() {
 							) : (
 								<Groups
 									key={groupLink.group_id}
-									photo="/profileexample.jpg"
+									photo="/example-img.jpg"
 									title={
 										(Array.isArray(groupLink.groups)
 											? groupLink.groups[0].name
@@ -173,18 +173,19 @@ const Groups = (props: {
 }) => {
 	return (
 		<div
-			className="flex w-full items-center rounded-md bg-gray-200 p-4 transition duration-300 hover:shadow-lg hover:brightness-95 "
+			className="brightness-hover	flex cursor-pointer select-none flex-col rounded-xl bg-gray-200 "
 			tabIndex={0}
 		>
-			<Image
-				width={100}
-				height={100}
-				className="mr-2 h-10 w-10 rounded-full object-cover"
-				alt={"Groups image for " + props.title}
-				src={props.photo}
-			/>
-			<div className="flex flex-col justify-center">
-				<h3 className="text-l w-28 font-bold line-clamp-2 ">{props.title}</h3>
+			<div className="relative h-16">
+				<Image
+					fill
+					className="rounded-t-xl object-cover object-center"
+					alt={"Groups image for " + props.title}
+					src={props.photo}
+				/>
+			</div>
+			<div className="flex justify-center">
+				<h3 className="text-l p-3 font-medium line-clamp-2">{props.title}</h3>
 			</div>
 		</div>
 	);
