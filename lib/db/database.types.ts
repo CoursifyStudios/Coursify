@@ -50,9 +50,10 @@ export interface Database {
 			classes: {
 				Row: {
 					block: number;
+					classpills: Json[];
 					color: string;
 					description: string;
-					description_new: Json[] | null;
+					full_description: Json | null;
 					id: string;
 					name: string;
 					name_full: string;
@@ -61,9 +62,10 @@ export interface Database {
 				};
 				Insert: {
 					block: number;
+					classpills?: Json[];
 					color?: string;
 					description?: string;
-					description_new?: Json[] | null;
+					full_description?: Json | null;
 					id?: string;
 					name: string;
 					name_full?: string;
@@ -72,9 +74,10 @@ export interface Database {
 				};
 				Update: {
 					block?: number;
+					classpills?: Json[];
 					color?: string;
 					description?: string;
-					description_new?: Json[] | null;
+					full_description?: Json | null;
 					id?: string;
 					name?: string;
 					name_full?: string;
@@ -293,9 +296,10 @@ export interface Database {
 						Args: Record<PropertyKey, never>;
 						Returns: {
 							block: number;
+							classpills: Json[];
 							color: string;
 							description: string;
-							description_new: Json[] | null;
+							full_description: Json | null;
 							id: string;
 							name: string;
 							name_full: string;
@@ -309,9 +313,10 @@ export interface Database {
 						};
 						Returns: {
 							block: number;
+							classpills: Json[];
 							color: string;
 							description: string;
-							description_new: Json[] | null;
+							full_description: Json | null;
 							id: string;
 							name: string;
 							name_full: string;

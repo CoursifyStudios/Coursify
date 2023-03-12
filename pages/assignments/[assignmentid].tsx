@@ -9,7 +9,6 @@ import {
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import Starred from "../../components/misc/starred";
 import Image from "next/image";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import {
@@ -40,6 +39,7 @@ const Post: NextPage = () => {
 			if (user) {
 				const assignments = await getAllAssignments(supabase);
 				setAllAssignments(assignments);
+				console.log(assignments);
 			}
 		})();
 
@@ -94,10 +94,11 @@ const Post: NextPage = () => {
 								}
 								due={new Date(1667840443856)}
 								classes={
-									assignment.classes
-										? Array.isArray(assignment.classes)
-											? assignment.classes[0]
-											: assignment.classes
+									assignment.classes_assignments &&
+									Array.isArray(assignment.classes_assignments)
+										? Array.isArray(assignment.classes_assignments[0].classes)
+											? assignment.classes_assignments[0].classes[0]
+											: assignment.classes_assignments[0].classes || undefined
 										: undefined
 								}
 							/>
