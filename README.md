@@ -5,11 +5,11 @@
 
 <br />
 
-![Github All Releases](https://img.shields.io/badge/FOR%20STUDENTS-BY%20STUDENTS-blueviolet?style=for-the-badge)
+![For students by students badge](https://img.shields.io/badge/FOR%20STUDENTS-BY%20STUDENTS-blueviolet?style=for-the-badge)
 
 <br />
 
-[![forthebadge](https://forthebadge.com/images/badges/uses-badges.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/it-works-why.svg)](https://forthebadge.com) ![Github All Releases](https://img.shields.io/badge/MADE%20POSSIBLE%20BY-12%20DOLLAR%20GREEN%20CHECKMARKS-brightgreen?style=for-the-badge)
+[![forthebadge](https://forthebadge.com/images/badges/uses-badges.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/it-works-why.svg)](https://forthebadge.com) ![Powered by green check marks badge](https://img.shields.io/badge/MADE%20POSSIBLE%20BY-12%20DOLLAR%20GREEN%20CHECKMARKS-brightgreen?style=for-the-badge)
 
 ## Clickup Wiki
 
