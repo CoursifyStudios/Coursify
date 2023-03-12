@@ -23,7 +23,8 @@ If you're creating a new page, please try to adhere to these rules:
 
 ## Project Tracking
 
-We use github projects for project tracking. This means that if you are working something or have a feature idea, it should be there.
+We use [github projects](https://github.com/orgs/CoursifyStudios/projects/5/views/2) for project tracking. This means that if you are working something or have a feature idea, it should be there.
+Suggestions for new setttings on the settings page should not go on the primary project tracking sheet, and should instead go on the [settings suggestions](https://github.com/orgs/CoursifyStudios/projects/6/views/1) sheet.
 
 ## Style Guide:
 
