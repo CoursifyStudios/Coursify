@@ -240,6 +240,7 @@ const Class: NextPage = () => {
 					<div className="space-y-4">
 						<h2 className="title mt-8 mb-6">Assignments</h2>
 						{Array.isArray(data.data?.assignments) &&
+							user &&
 							data.data?.assignments.map((assignment) => (
 								<Link
 									key={assignment.id}
@@ -247,6 +248,9 @@ const Class: NextPage = () => {
 									href={"/assignments/" + assignment.id}
 								>
 									<AssignmentPreview
+										id={assignment.id}
+										supabase={supabaseClient}
+										userId={user.id}
 										name={assignment.name}
 										desc={assignment.description}
 										starred={false}
