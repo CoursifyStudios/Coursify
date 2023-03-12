@@ -33,13 +33,10 @@ const Class: NextPage = () => {
 		setEdited(true);
 
 		const newLongDescription = editorState?.toJSON();
-		console.log(newLongDescription);
 		if (classid != undefined && !Array.isArray(classid) && newLongDescription) {
-			console.log("fired");
 			const data = await updateClass(supabase, classid, {
 				full_description: newLongDescription as unknown as Json,
 			});
-			console.log(data);
 		}
 	};
 
