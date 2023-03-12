@@ -249,7 +249,7 @@ const Class: NextPage = () => {
 								>
 									<AssignmentPreview
 										id={assignment.id}
-										supabase={supabaseClient}
+										supabase={supabase}
 										userId={user.id}
 										name={assignment.name}
 										desc={assignment.description}
