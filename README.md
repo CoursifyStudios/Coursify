@@ -5,7 +5,7 @@
 <br />
 <br />
 
-[![forthebadge](https://forthebadge.com/images/badges/uses-badges.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/it-works-why.svg)](https://forthebadge.com)
+[![forthebadge](https://forthebadge.com/images/badges/uses-badges.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/it-works-why.svg)](https://forthebadge.com) ![Github All Releases](https://img.shields.io/badge/MADE%20POSSIBLE%20BY-12%20DOLLAR%20GREEN%20CHECKMARKS-brightgreen?style=for-the-badge)
 
 ## Clickup Wiki
 
@@ -15,7 +15,7 @@ If you're creating a new page, please try to adhere to these rules:
 
 - Use the default font. Don't write it in some wierd serif font.
 - Articles should be simple and to the point. Roundabout explanations using the MLA format waste peoples time.
-- Explain with code. Rather than trying to describe the way smth works in a long paragraphh, try to lean on code examples as much as possible, while using writing to add context.
+- Explain with code. Rather than trying to describe the way something works in a long paragraphh, try to lean on code examples as much as possible, while using writing to add context.
 
 ## Project Tracking
 
