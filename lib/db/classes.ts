@@ -75,15 +75,11 @@ export const getUserSchool = async (
 export type UserSchoolResponse = Awaited<ReturnType<typeof getClass>>;
 
 export const updateClass = async (
-	supabaseClient: SupabaseClient<Database>,
-	classid: number
+	supabase: SupabaseClient<Database>,
+	classid: string,
+	updates: Database["public"]["Tables"]["classes"]["Update"]
 ) => {
-	return await supabaseClient
-		.from("classes")
-		.update({
-			description: "WE (we) look at all the LAKES (lakes)",
-		})
-		.eq("id", classid);
+	return await supabase.from("classes").update(updates).eq("id", classid);
 };
 
 export interface ClassPill {

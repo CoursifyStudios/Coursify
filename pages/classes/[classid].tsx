@@ -2,33 +2,25 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Tab } from "@headlessui/react";
-import { getClass, ClassResponse } from "../../lib/db/classes";
-import { Database } from "../../lib/db/database.types";
+import { getClass, ClassResponse, updateClass } from "../../lib/db/classes";
+import { Database, Json } from "../../lib/db/database.types";
 import exampleClassImg from "../../public/example-img.jpg";
 import CircleCounter from "../../components/misc/circleCounter";
 import Link from "next/link";
 import { AssignmentPreview } from "../../components/complete/assignments";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
-import {
-	AcademicCapIcon,
-	EnvelopeIcon,
-	PencilIcon,
-	PencilSquareIcon,
-} from "@heroicons/react/24/outline";
+import { AcademicCapIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 import { useTabs } from "../../lib/tabs/handleTabs";
-import { addPossesive } from "../../lib/misc/stringManipulation";
 import Editor from "../../components/editors/richeditor";
 import { EditorState } from "lexical";
-import { SerializedEditorState } from "lexical/LexicalEditorState";
-import { parseEditorState } from "lexical/LexicalUpdates";
 
 const Class: NextPage = () => {
 	const router = useRouter();
 	const { classid } = router.query;
 	const user = useUser();
-	const supabaseClient = useSupabaseClient<Database>();
+	const supabase = useSupabaseClient<Database>();
 	const [data, setData] = useState<ClassResponse>();
 	const [grade, setGrade] = useState<number>();
 	const [isTeacher, setIsTeacher] = useState<boolean>();
@@ -37,14 +29,24 @@ const Class: NextPage = () => {
 	const [editorState, setEditorState] = useState<EditorState>();
 	const [edited, setEdited] = useState(false);
 
-	const updateEditorDB = () => {
+	const updateEditorDB = async () => {
 		setEdited(true);
+
+		const newLongDescription = editorState?.toJSON();
+		console.log(newLongDescription);
+		if (classid != undefined && !Array.isArray(classid) && newLongDescription) {
+			console.log("fired");
+			const data = await updateClass(supabase, classid, {
+				full_description: newLongDescription as unknown as Json,
+			});
+			console.log(data);
+		}
 	};
 
 	useEffect(() => {
 		(async () => {
 			if (user && typeof classid == "string") {
-				const data = await getClass(supabaseClient, classid);
+				const data = await getClass(supabase, classid);
 				setData(data);
 				if (data.data && Array.isArray(data.data.users_classes)) {
 					//grades are temporarily done like this until we figure out assignment submissions
@@ -59,7 +61,7 @@ const Class: NextPage = () => {
 		})();
 		setEdited(false);
 		setEditorState(undefined);
-	}, [user, supabaseClient, classid]);
+	}, [user, supabase, classid]);
 
 	if (!data) return <div>loading data rn, wait pls ty</div>;
 
