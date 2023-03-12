@@ -2,24 +2,28 @@
 
 ![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=karasu&style=for-the-badge&logo=true)
 
+
 <br />
+
+![Github All Releases](https://img.shields.io/badge/FOR%20STUDENTS-BY%20STUDENTS-blueviolet?style=for-the-badge)
+
 <br />
 
 [![forthebadge](https://forthebadge.com/images/badges/uses-badges.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/it-works-why.svg)](https://forthebadge.com) ![Github All Releases](https://img.shields.io/badge/MADE%20POSSIBLE%20BY-12%20DOLLAR%20GREEN%20CHECKMARKS-brightgreen?style=for-the-badge)
 
 ## Clickup Wiki
 
-Certain important things are written on our [Clickup wiki](https://app.clickup.com/42080348/docs), like how to fetch data with supabase, or how to use our custom draggable components. Clickup is no longer used an an issue tracker, see the [project tracking](#project-tracking) section below.
+Certain important things are written on our [Clickup wiki](https://app.clickup.com/42080348/docs), like how to fetch data with supabase, or how to use our custom draggable components. Clickup is no longer used as an issue tracker, please see the [project tracking](#project-tracking) section below.
 
 If you're creating a new page, please try to adhere to these rules:
 
-- Use the default font. Don't write it in some wierd serif font.
+- Use the default font. Don't write it in some weird serif font.
 - Articles should be simple and to the point. Roundabout explanations using the MLA format waste peoples time.
-- Explain with code. Rather than trying to describe the way something works in a long paragraphh, try to lean on code examples as much as possible, while using writing to add context.
+- Explain with code. Rather than trying to describe the way something works in a long paragraph, try to lean on code examples as much as possible, while using writing to add context and reasoning.
 
 ## Project Tracking
 
-We use github project for project tracking
+We use github projects for project tracking. This means that if you are working something or have a feature idea, it should be there.
 
 ## Style Guide:
 
@@ -42,4 +46,4 @@ _Some of these can be combined/used in other ways_
 </CopiedHover>
 ```
 
-You can view brandons unfinished style guide [here](https://app.clickup.com/42080348/v/dc/18462w-160/18462w-300)
+You can view Brandon's unfinished style guide [here](https://app.clickup.com/42080348/v/dc/18462w-160/18462w-300)
