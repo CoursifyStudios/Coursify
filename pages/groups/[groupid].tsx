@@ -4,7 +4,11 @@ import { Fragment } from "react";
 import { ColoredPill } from "../../components/misc/pill";
 import Image from "next/image";
 import exampleGroupImg from "../../public/example-img.jpg";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
+import {
+	EllipsisVerticalIcon,
+	LinkIcon,
+	MapPinIcon,
+} from "@heroicons/react/24/outline";
 
 const group: NextPage = () => {
 	return (
@@ -66,9 +70,24 @@ const group: NextPage = () => {
 					<Tab.Panels>
 						<Tab.Panel>
 							<div className="rounded-xl bg-gray-200 p-4">
-								A group description and more information about the group would
-								go here. Could also contain links to instagrams and stuff/other
-								relevant shit
+								<p className="text-lg">
+									Welcome to our high school badminton club! Our club is
+									designed for students who are interested in playing badminton
+									and want to improve their skills. We meet every weekday
+									morning during the founders period in the school gymnasium. We
+									provide all necessary equipment, including rackets and
+									shuttlecocks, so all you need to bring is your enthusiasm and
+									a willingness to learn.
+								</p>
+								<div className="mt-4 flex justify-center space-x-8">
+									<div className="flex">
+										<MapPinIcon className="h-6 w-6" />
+										<p className="text-lg font-bold">Old Gym</p>
+									</div>
+
+									<LinkIcon className="h-6 w-6" />
+									<p>Instagram</p>
+								</div>
 							</div>
 							<h2 className="title mt-6">Quick Access</h2>
 						</Tab.Panel>

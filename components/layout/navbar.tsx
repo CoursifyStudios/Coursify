@@ -3,7 +3,6 @@ import { Fragment, ReactNode, useEffect, useMemo, useState } from "react";
 import {
 	ArrowLeftOnRectangleIcon,
 	CalendarDaysIcon,
-	CalendarIcon,
 	Cog6ToothIcon,
 	MagnifyingGlassIcon,
 	MegaphoneIcon,
@@ -115,7 +114,7 @@ const Navbar: NextComponentType = () => {
 									</Menu.Item>
 								</Link>
 								<Link
-									href={`/groups/0`}
+									href={`/groups`}
 									className="mt-1"
 									onClick={() => newTab("/groups")}
 								>
