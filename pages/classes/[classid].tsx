@@ -2,7 +2,7 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
 import Image from "next/image";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { Tab } from "@headlessui/react";
 import { getClass, ClassResponse } from "../../lib/db/classes";
 import { Database } from "../../lib/db/database.types";
@@ -11,10 +11,18 @@ import CircleCounter from "../../components/misc/circleCounter";
 import Link from "next/link";
 import { AssignmentPreview } from "../../components/complete/assignments";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
-import { AcademicCapIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
+import {
+	AcademicCapIcon,
+	EnvelopeIcon,
+	PencilIcon,
+	PencilSquareIcon,
+} from "@heroicons/react/24/outline";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import { addPossesive } from "../../lib/misc/stringManipulation";
 import Editor from "../../components/editors/richeditor";
+import { EditorState } from "lexical";
+import { SerializedEditorState } from "lexical/LexicalEditorState";
+import { parseEditorState } from "lexical/LexicalUpdates";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -23,22 +31,34 @@ const Class: NextPage = () => {
 	const supabaseClient = useSupabaseClient<Database>();
 	const [data, setData] = useState<ClassResponse>();
 	const [grade, setGrade] = useState<number>();
+	const [isTeacher, setIsTeacher] = useState<boolean>();
 	const { newTab } = useTabs();
+	const [editable, setEditable] = useState(false);
+	const [editorState, setEditorState] = useState<EditorState>();
+	const [edited, setEdited] = useState(false);
+
+	const updateEditorDB = () => {
+		setEdited(true);
+	};
 
 	useEffect(() => {
 		(async () => {
 			if (user && typeof classid == "string") {
 				const data = await getClass(supabaseClient, classid);
 				setData(data);
-				console.log(data);
 				if (data.data && Array.isArray(data.data.users_classes)) {
 					//grades are temporarily done like this until we figure out assignment submissions
 					setGrade(
 						data.data.users_classes.find((v) => v.user_id == user.id)?.grade
 					);
+					setIsTeacher(
+						data.data.users_classes.find((v) => v.user_id == user.id)?.teacher
+					);
 				}
 			}
 		})();
+		setEdited(false);
+		setEditorState(undefined);
 	}, [user, supabaseClient, classid]);
 
 	if (!data) return <div>loading data rn, wait pls ty</div>;
@@ -104,12 +124,50 @@ const Class: NextPage = () => {
 							<div className="flex">
 								<ColoredPill color="green">Test</ColoredPill>
 							</div>
-							{data.data?.full_description && (
-								<Editor
-									editable={false}
-									initialState={data.data?.full_description}
-									//className=" "
-								/>
+							{data.data?.full_description ||
+							(editorState && edited && !data.data?.full_description) ||
+							editable ? (
+								<div className="group relative">
+									<Editor
+										editable={editable}
+										initialState={data.data?.full_description}
+										updatedState={edited ? editorState : undefined}
+										updateState={setEditorState}
+
+										//className=" "
+									/>
+									{isTeacher &&
+										(!editable ? (
+											<div
+												onClick={() => setEditable(true)}
+												className="brightness-hover absolute right-2 top-2 z-10 flex cursor-pointer rounded-lg bg-gray-200 px-2.5 py-1 font-semibold opacity-0 transition group-hover:opacity-100"
+											>
+												Edit
+											</div>
+										) : (
+											<div
+												onClick={() => {
+													setEditable(false);
+													updateEditorDB();
+												}}
+												className="brightness-hover absolute right-2 bottom-2 z-10 flex cursor-pointer rounded-lg bg-gray-200 px-2.5 py-1 font-semibold"
+											>
+												Save
+											</div>
+										))}
+								</div>
+							) : (
+								isTeacher && (
+									<div onClick={() => setEditable(true)}>
+										<ColoredPill
+											color="gray"
+											className="mt-2 cursor-pointer"
+											hoverState
+										>
+											Add a class description
+										</ColoredPill>
+									</div>
+								)
 							)}
 						</Tab.Panel>
 						<Tab.Panel>announcements here</Tab.Panel>

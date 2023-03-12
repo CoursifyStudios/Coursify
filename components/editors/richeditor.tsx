@@ -92,16 +92,24 @@ export default function Editor({
 	updateState,
 	className,
 	initialState,
+	updatedState,
 }: {
 	editable: boolean;
-	updateState?: Dispatch<SetStateAction<undefined | EditorState>>;
-	initialState?: Json;
+	updateState?:
+		| Dispatch<SetStateAction<undefined | EditorState>>
+		| ((state: EditorState) => void);
+	initialState?: Json | SerializedEditorState;
 	className?: string;
+	updatedState?: EditorState;
 }) {
 	return (
 		<GrammarlyEditorPlugin clientId="client_HhHcuxVxKgaZMFYuD57U3V">
 			<LexicalComposer initialConfig={editorConfig}>
-				<EditorContextProvider editable={editable} initialState={initialState}>
+				<EditorContextProvider
+					editable={editable}
+					initialState={initialState}
+					updatedState={updatedState}
+				>
 					<div
 						className={`relative ${
 							className ? className : "mb-2 rounded-xl p-4 shadow-lg"
@@ -121,7 +129,12 @@ export default function Editor({
 							<CodeHighlightPlugin />
 							<ListPlugin />
 							<LinkPlugin />
-							{updateState && <OnChangePlugin onChange={updateState} />}
+							{updateState && (
+								<OnChangePlugin
+									onChange={updateState}
+									ignoreSelectionChange={true}
+								/>
+							)}
 							<AutoLinkPlugin matchers={MATCHERS} />
 							<MarkdownShortcutPlugin transformers={TRANSFORMERS} />
 						</div>
@@ -137,10 +150,12 @@ function EditorContextProvider({
 	children,
 	editable,
 	initialState,
+	updatedState,
 }: {
 	children: ReactNode;
 	editable: boolean;
-	initialState?: Json;
+	initialState?: Json | SerializedEditorState;
+	updatedState?: EditorState;
 }) {
 	const [editor] = useLexicalComposerContext();
 
@@ -148,13 +163,15 @@ function EditorContextProvider({
 
 	useEffect(() => {
 		editor.setEditable(editable);
-		if (initialState)
+		if (updatedState) {
+			editor.setEditorState(updatedState);
+		} else if (initialState)
 			editor.setEditorState(
 				editor.parseEditorState(
 					initialState as unknown as SerializedEditorState
 				)
 			);
-	});
+	}, [editable, initialState, updatedState]);
 
 	return (
 		<EditorContext.Provider
