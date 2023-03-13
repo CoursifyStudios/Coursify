@@ -81,9 +81,3 @@ export const updateClass = async (
 ) => {
 	return await supabase.from("classes").update(updates).eq("id", classid);
 };
-
-export interface ClassPill {
-	name: string;
-	link?: string;
-	icon: "doc" | "link" | "chat" | "calender" | "folder" | "music";
-}

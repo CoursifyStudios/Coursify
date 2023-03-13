@@ -2,7 +2,7 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { ReactNode } from "react";
 
-export const Button: NextPage<{ className: string; children: ReactNode }> = ({
+export const Button: NextPage<{ className?: string; children: ReactNode }> = ({
 	className,
 	children,
 }) => {
