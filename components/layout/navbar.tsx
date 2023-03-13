@@ -76,7 +76,7 @@ const Navbar: NextComponentType = () => {
 						<div className="absolute right-0 z-50 mt-14">
 							<Menu.Items
 								as="div"
-								className="flex w-48 flex-col  rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-3xl"
+								className="flex w-48 flex-col  rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-xl"
 							>
 								<Link
 									href={`/profile/${user?.id}`}
