@@ -121,7 +121,7 @@ const Class: NextPage = () => {
 					</Tab.List>
 					<Tab.Panels>
 						<Tab.Panel>
-							<div className="flex space-x-2">
+							<div className="mb-3 flex flex-wrap gap-2">
 								{data.data?.classpills && isTeacher != undefined && classid && (
 									<InfoPills
 										allPills={data.data.classpills as unknown as InfoPill[]}
