@@ -1,28 +1,65 @@
+import {
+	MagnifyingGlassCircleIcon,
+	MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import { NextPage } from "next";
 import Image from "next/image";
 const groupDirecory: NextPage = () => {
 	return (
 		<div>
-			{" "}
 			<div className="mx-auto my-10 w-full max-w-screen-xl">
-				<div className="mt-6 grid gap-6 md:grid-cols-3 xl:grid-cols-4 ">
-					<Groups photo="" name="Testing" description="Testing this shit" />
-					<Groups photo="" name="Testing" description="Testing this shit" />
-					<Groups photo="" name="Testing" description="Testing this shit" />
-					<Groups photo="" name="Testing" description="Testing this shit" />
-					<Groups photo="" name="Testing" description="Testing this shit" />
-					<Groups photo="" name="Testing" description="Testing this shit" />
-					<Groups photo="" name="Testing" description="Testing this shit" />
+				<div className="space-y-3">
+					<div className="flex w-1/3 items-center rounded-full bg-gray-300 p-1">
+						<MagnifyingGlassIcon className="ml-1 h-6 w-6" />
+						<p className="ml-1.5 p-1 ">Search for Groups</p>
+					</div>
+					<div className="">
+						<h1 className="title">Your Groups</h1>
+						<div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-5 ">
+							<GroupSmall photo="/example-img.jpg" title="Testing" />
+							<GroupSmall photo="/example-img.jpg" title="Testing" />
+							<GroupSmall photo="/example-img.jpg" title="Testing" />
+							<GroupSmall photo="/example-img.jpg" title="Testing" />
+							<GroupSmall photo="/example-img.jpg" title="Testing" />
+							<GroupSmall photo="/example-img.jpg" title="Testing" />
+							<GroupSmall photo="/example-img.jpg" title="Testing" />
+							<GroupSmall photo="/example-img.jpg" title="Testing" />
+							<GroupSmall photo="/example-img.jpg" title="Testing" />
+							<GroupSmall photo="/example-img.jpg" title="Testing" />
+						</div>
+					</div>
+					<div>
+						<h1 className="title">Featured Groups</h1>
+						<div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-4 ">
+							<GroupLarge photo="" name="SHC Announcements" membernum="1300" />
+							<GroupLarge photo="" name="SHC Library" membernum="500" />
+							<GroupLarge photo="" name="SHC Dining" membernum="730" />
+							<GroupLarge photo="" name="Fitness Center" membernum="450" />
+						</div>
+					</div>
+					<div>
+						<h1 className="title">Outdoors</h1>
+						<div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-4 ">
+							<GroupLarge photo="" name="Fitness center" membernum="100" />
+							<GroupLarge photo="" name="Climbing Club" membernum="50" />
+							<GroupLarge photo="" name="Hiking Club" membernum="90" />
+							<GroupLarge
+								photo=""
+								name="Lake Viewing Enjoyers"
+								membernum="1600"
+							/>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 	);
 };
 
-const Groups = (props: {
+const GroupLarge = (props: {
 	photo: string;
 	name: string;
-	description: string;
+	membernum: string;
 }) => {
 	return (
 		<div
@@ -44,7 +81,28 @@ const Groups = (props: {
 						{props.name}
 					</h3>
 				</div>
-				<p>{props.description}</p>
+				<p>{props.membernum} Members</p>
+			</div>
+		</div>
+	);
+};
+
+const GroupSmall = (props: { photo: string; title: string }) => {
+	return (
+		<div
+			className="brightness-hover	flex cursor-pointer select-none flex-col rounded-xl bg-gray-200 "
+			tabIndex={0}
+		>
+			<div className="relative h-16">
+				<Image
+					fill
+					className="rounded-t-xl object-cover object-center"
+					alt={"Groups image for " + props.title}
+					src={props.photo}
+				/>
+			</div>
+			<div className="flex justify-center">
+				<h3 className="text-l p-3 font-medium line-clamp-2">{props.title}</h3>
 			</div>
 		</div>
 	);
