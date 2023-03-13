@@ -49,7 +49,7 @@ const group: NextPage = () => {
 											: "bg-gray-200"
 									} text-lg font-semibold `}
 								>
-									Announcements
+									Resources
 								</div>
 							)}
 						</Tab>
@@ -69,7 +69,7 @@ const group: NextPage = () => {
 					</Tab.List>
 					<Tab.Panels>
 						<Tab.Panel>
-							<div className="rounded-xl bg-gray-200 p-4">
+							<div className="mb-6 rounded-xl bg-gray-200 p-4">
 								<p className="text-lg">
 									Welcome to our high school badminton club! Our club is
 									designed for students who are interested in playing badminton
@@ -81,44 +81,79 @@ const group: NextPage = () => {
 									items then lukas made the chips feature)
 								</p>
 							</div>
-							<h2 className="title mt-6">Quick Access</h2>
-						</Tab.Panel>
-						<Tab.Panel>
-							<div className="mb-6 rounded-xl bg-gray-200 p-4">
-								<div className="flex items-center justify-between">
-									<h2 className="text-2xl font-bold">
-										Selling Lots of Books !!!!!
-									</h2>
-									<EllipsisVerticalIcon className="h-6 w-6" />
-								</div>
-								<div className="flex items-center pt-1 pb-2">
-									<div className="inline-flex shrink-0 items-center rounded-full bg-gray-300 px-2.5 py-0.5">
-										<div className="h-4 w-4 rounded-full bg-white"></div>
-										<p className="ml-1.5 font-semibold text-neutral-700">
-											Jane Doe
-										</p>
+							<h2 className="title mb-3">Announcements</h2>
+							<div className="space-y-3">
+								<div className="rounded-xl bg-gray-200 p-4">
+									<div className="flex items-center justify-between">
+										<h2 className="text-2xl font-bold">
+											Selling Lots of Books !!!!!
+										</h2>
+										<EllipsisVerticalIcon className="h-6 w-6" />
 									</div>
-									<p className="pl-2.5 text-gray-600">25 mins ago</p>
-								</div>
-								<p>
-									I am selling some books for English classes. Literature in
-									Science: The Immortal Life of Henrietta Lacks by Rebecca
-									Skloot hardcover Being Human: Core Readings in the Humanities
-									edited by Leon Kass paperback English 3,4: A Raisin in the Sun
-									by Lorraine Hansberry paperback All books are in new condition
-									and have no annotations. If interested, contact me at
-									23jhawk@shcp.edu or 415-741-8383
-								</p>
-								<div className="mt-4 flex items-center justify-between">
-									<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
-										<p className="ml-1.5 p-1">Insert response here</p>
+									<div className="flex items-center pt-1 pb-2">
+										<div className="inline-flex shrink-0 items-center rounded-full bg-gray-300 px-2.5 py-0.5">
+											<div className="h-4 w-4 rounded-full bg-white"></div>
+											<p className="ml-1.5 font-semibold text-neutral-700">
+												Jane Doe
+											</p>
+										</div>
+										<p className="pl-2.5 text-gray-600">25 mins ago</p>
 									</div>
-									<div className="rounded-full bg-gray-300 p-2">
-										<FaceSmileIcon className="h-6 w-6" />
+									<p>
+										I am selling some books for English classes. Literature in
+										Science: The Immortal Life of Henrietta Lacks by Rebecca
+										Skloot hardcover Being Human: Core Readings in the
+										Humanities edited by Leon Kass paperback English 3,4: A
+										Raisin in the Sun by Lorraine Hansberry paperback All books
+										are in new condition and have no annotations. If interested,
+										contact me at 23jhawk@shcp.edu or 415-741-8383
+									</p>
+									<div className="mt-4 flex items-center justify-between">
+										<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
+											<p className="ml-1.5 p-1">Insert response here</p>
+										</div>
+										<div className="rounded-full bg-gray-300 p-2">
+											<FaceSmileIcon className="h-6 w-6" />
+										</div>
+									</div>
+								</div>
+								<div className="rounded-xl bg-gray-200 p-4">
+									<div className="flex items-center justify-between">
+										<h2 className="text-2xl font-bold">
+											Selling Lots of Books !!!!!
+										</h2>
+										<EllipsisVerticalIcon className="h-6 w-6" />
+									</div>
+									<div className="flex items-center pt-1 pb-2">
+										<div className="inline-flex shrink-0 items-center rounded-full bg-gray-300 px-2.5 py-0.5">
+											<div className="h-4 w-4 rounded-full bg-white"></div>
+											<p className="ml-1.5 font-semibold text-neutral-700">
+												Jane Doe
+											</p>
+										</div>
+										<p className="pl-2.5 text-gray-600">25 mins ago</p>
+									</div>
+									<p>
+										I am selling some books for English classes. Literature in
+										Science: The Immortal Life of Henrietta Lacks by Rebecca
+										Skloot hardcover Being Human: Core Readings in the
+										Humanities edited by Leon Kass paperback English 3,4: A
+										Raisin in the Sun by Lorraine Hansberry paperback All books
+										are in new condition and have no annotations. If interested,
+										contact me at 23jhawk@shcp.edu or 415-741-8383
+									</p>
+									<div className="mt-4 flex items-center justify-between">
+										<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
+											<p className="ml-1.5 p-1">Insert response here</p>
+										</div>
+										<div className="rounded-full bg-gray-300 p-2">
+											<FaceSmileIcon className="h-6 w-6" />
+										</div>
 									</div>
 								</div>
 							</div>
 						</Tab.Panel>
+						<Tab.Panel></Tab.Panel>
 						<Tab.Panel>Copy member component from classes</Tab.Panel>
 					</Tab.Panels>
 				</Tab.Group>
