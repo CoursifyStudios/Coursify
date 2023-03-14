@@ -2,10 +2,11 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { Fragment, ReactNode, useEffect, useMemo, useState } from "react";
 import {
 	ArrowLeftOnRectangleIcon,
-	CalendarIcon,
+	CalendarDaysIcon,
 	Cog6ToothIcon,
 	MagnifyingGlassIcon,
 	MegaphoneIcon,
+	UserGroupIcon,
 	UserIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -75,7 +76,7 @@ const Navbar: NextComponentType = () => {
 						<div className="absolute right-0 z-50 mt-14">
 							<Menu.Items
 								as="div"
-								className="flex w-48 flex-col  rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-3xl"
+								className="flex w-48 flex-col  rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-xl"
 							>
 								<Link
 									href={`/profile/${user?.id}`}
@@ -113,6 +114,18 @@ const Navbar: NextComponentType = () => {
 									</Menu.Item>
 								</Link>
 								<Link
+									href={`/groups`}
+									className="mt-1"
+									onClick={() => newTab("/groups")}
+								>
+									<Menu.Item
+										as="div"
+										className="flex items-center justify-between rounded-lg py-1 px-2 font-medium transition hover:bg-gray-300"
+									>
+										Groups <UserGroupIcon className="h-5 w-5" />
+									</Menu.Item>
+								</Link>
+								<Link
 									href={`/settings`}
 									className="mt-1"
 									onClick={() => newTab("/settings")}
@@ -140,7 +153,7 @@ const Navbar: NextComponentType = () => {
 					to="/announcements"
 				/>
 				<ButtonIcon
-					icon={<CalendarIcon className="h-5 w-5" />}
+					icon={<CalendarDaysIcon className="h-5 w-5" />}
 					to="/calendar"
 				/>
 				<ButtonIcon icon={<MagnifyingGlassIcon className=" h-5 w-5 grow" />} />
