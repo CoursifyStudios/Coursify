@@ -197,7 +197,7 @@ export default function Home() {
 														<h2 className="my-4 font-semibold">
 															{aClass.name}
 														</h2>
-														<div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+														<div className="flex gap-6 md:grid-cols-2 xl:grid-cols-2">
 															{Array.isArray(aClass.assignments) &&
 																aClass.assignments.map((assignment) => (
 																	<div
