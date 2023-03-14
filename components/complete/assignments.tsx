@@ -2,39 +2,54 @@ import { CheckIcon } from "@heroicons/react/24/outline";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useState } from "react";
-import { handleStarred } from "../../lib/db/assignments";
+import { Assignment, handleStarred } from "../../lib/db/assignments";
 import { Database } from "../../lib/db/database.types";
+import { ScheduleInterface } from "../../lib/db/schedule";
 import { ColoredPill } from "../misc/pill";
 import Starred from "../misc/starred";
 
-export function AssignmentPreview(props: {
+export function AssignmentPreview({
+	supabase,
+	assignment,
+	classes,
+	starredAsParam,
+	schedule,
+	scheduleT,
+	userId,
+}: {
 	supabase: SupabaseClient<Database>;
-	name: string;
-	desc: string;
-	starred: boolean;
-	due: Date;
+	assignment: Assignment;
+	// name: string;
+	// desc: string;
+	starredAsParam: boolean;
+	// due: Date;
+	schedule: ScheduleInterface[];
+	scheduleT: ScheduleInterface[];
 	userId: string;
-	id: string;
-	classes?: {
+	// id: string;
+	//this cannot be optional, Lukas
+	classes: {
 		id: string;
 		name: string;
 		color: string;
+		block: number;
+		schedule_type: number;
 	};
 }) {
-	const [starred, setStarred] = useState(props.starred);
-	const [dbStarred, setDbStarred] = useState(props.starred);
+	const [starred, setStarred] = useState(starredAsParam);
+	const [dbStarred, setDbStarred] = useState(starredAsParam);
 
 	const dealWithStarred = async () => {
 		const newStarred = await handleStarred(
-			props.supabase,
+			supabase,
 			starred,
 			dbStarred,
-			props.id,
-			props.userId
+			assignment.id,
+			userId
 		);
 		setDbStarred(newStarred);
 	};
-
+	const date = new Date(assignment.due_date!);
 	return (
 		<>
 			<div className="w-10" onMouseLeave={() => dealWithStarred()}>
@@ -43,22 +58,113 @@ export function AssignmentPreview(props: {
 				</span>
 			</div>
 			<div>
-				<Link href={"/classes/" + props.classes?.id}>
-					{props.classes && (
-						<ColoredPill color={props.classes.color} hoverState>
-							{props.classes.name}
+				<Link href={"/classes/" + classes?.id}>
+					{classes && (
+						<ColoredPill color={classes.color} hoverState>
+							{classes.name}
 						</ColoredPill>
 					)}
 				</Link>
-				<h1 className="text font-medium">{props.name}</h1>
-				<p className="w-[12rem] break-words line-clamp-3  ">{props.desc}</p>
+				<h1 className="text font-medium">{assignment.name}</h1>
+				<p className="w-[12rem] break-words line-clamp-3  ">
+					{assignment.description}
+				</p>
 			</div>
 			<div className="ml-1 flex flex-col items-end justify-between">
 				<p className="w-max text-sm font-medium text-gray-700">
-					Due: {props.due.getMonth() + 1}/{props.due.getDate()}
+					{date.getMonth()}/{date.getDate()}
+					<ColoredPill color={classes.color}>
+						{timeOfAssignment(
+							classes,
+							schedule,
+							scheduleT,
+							assignment.due_type!
+						)
+							? timeOfAssignment(
+									classes,
+									schedule,
+									scheduleT,
+									assignment.due_type!
+							  )
+							: date.getHours() + ":" + date.getMinutes()}
+					</ColoredPill>
 				</p>
 				<CheckIcon className="h-5 w-5 text-gray-600" />
 			</div>
 		</>
 	);
+}
+
+enum DueType {
+	DATE = 0,
+	START_OF_CLASS = 1,
+	END_OF_CLASS = 2,
+}
+
+export function timeOfAssignment(
+	classParam: {
+		id: string;
+		name: string;
+		color: string;
+		block: number;
+		schedule_type: number;
+	},
+	schedule: ScheduleInterface[],
+	scheduleT: ScheduleInterface[],
+	dueType: DueType
+) {
+	// Checks if the class is today
+	if (
+		schedule.find(
+			(s) =>
+				s.specialEvent == undefined &&
+				classParam.block == s.block &&
+				classParam.schedule_type == s.type
+		)
+	) {
+		// If the assignment is due at the start of the class
+		if (dueType == DueType.START_OF_CLASS) {
+			return schedule.find(
+				(s) =>
+					s.specialEvent == undefined &&
+					classParam.block == s.block &&
+					classParam.schedule_type == s.type
+			)?.timeStart;
+			// If the assignment is due at the end of the class
+		} else if (dueType == DueType.END_OF_CLASS) {
+			return schedule.find(
+				(s) =>
+					s.specialEvent == undefined &&
+					classParam.block == s.block &&
+					classParam.schedule_type == s.type
+			)?.timeStart;
+		}
+		// If the class is not today, but it is tomorrow
+	} else if (
+		scheduleT.find(
+			(s) =>
+				s.specialEvent == undefined &&
+				classParam.block == s.block &&
+				classParam.schedule_type == s.type
+		)
+	) {
+		// If the assignment is due at the start of the class
+	}
+	if (dueType == DueType.START_OF_CLASS) {
+		return scheduleT.find(
+			(s) =>
+				s.specialEvent == undefined &&
+				classParam.block == s.block &&
+				classParam.schedule_type == s.type
+		)?.timeStart;
+		// If the assignment is due at the end of the class
+	} else if (dueType == DueType.END_OF_CLASS) {
+		return scheduleT.find(
+			(s) =>
+				s.specialEvent == undefined &&
+				classParam.block == s.block &&
+				classParam.schedule_type == s.type
+		)?.timeStart;
+	}
+	return null;
 }

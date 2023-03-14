@@ -80,11 +80,11 @@ const Post: NextPage = () => {
 							key={assignment.id}
 						>
 							<AssignmentPreview
-								id={assignment.id}
+
+                                //@ts-ignore
+                                assignment={assignment}
 								userId={user.id}
 								supabase={supabase}
-								name={assignment.name}
-								desc={assignment.description}
 								starred={
 									assignment.starred
 										? Array.isArray(assignment.starred)
@@ -93,13 +93,14 @@ const Post: NextPage = () => {
 										: false
 								}
 								due={new Date(1667840443856)}
+                                //@ts-ignore
 								classes={
-									assignment.classes_assignments &&
+									(assignment.classes_assignments &&
 									Array.isArray(assignment.classes_assignments)
 										? Array.isArray(assignment.classes_assignments[0].classes)
 											? assignment.classes_assignments[0].classes[0]
-											: assignment.classes_assignments[0].classes || undefined
-										: undefined
+											: assignment.classes_assignments[0].classes
+										: assignment.classes_assignments)!
 								}
 							/>
 						</Link>

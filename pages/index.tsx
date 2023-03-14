@@ -12,7 +12,6 @@ import {
 } from "../lib/db/schedule";
 import ScheduleComponent from "../components/complete/schedule";
 import { AssignmentPreview } from "../components/complete/assignments";
-import Link from "next/link";
 
 export default function Home() {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -183,43 +182,97 @@ export default function Home() {
 							<div className="rounded-x grid w-full py-2 xl:w-[58.5rem]">
 								{classes &&
 									classes.data &&
-									classes.data.map((aClass) => (
-										<div key={aClass.id}>
-											<h2 className="font-semibold my-4">{aClass.name}</h2>
-											<div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3  gap-5">
-												{Array.isArray(aClass.assignments) &&
-													aClass.assignments.map((assignment) => (
-														<div key={assignment.id} className={"flex bg-gray-200 p-2 rounded-lg"}>
-															<AssignmentPreview
-																supabase={supabaseClient}
-																name={assignment.name}
-																desc={assignment.description}
-																id={assignment.id}
-																starred={
-																	assignment.starred
-																		? Array.isArray(assignment.starred)
-																			? assignment.starred.length > 0
-																			: !!assignment.starred
-																		: false
-																}
-																due={new Date()}
-																userId={user.id}
-															/>
+									classes.data
+										.slice(0, classes.data.length)
+										.sort((a, b) =>
+											sortClasses(a, b, schedule, tomorrowSchedule)
+										)
+										.map(
+											(aClass) =>
+												!(
+													Array.isArray(aClass.assignments) &&
+													aClass.assignments.length == 0
+												) && (
+													<div key={aClass.id}>
+														<h2 className="my-4 font-semibold">
+															{aClass.name}
+														</h2>
+														<div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+															{Array.isArray(aClass.assignments) &&
+																aClass.assignments.map((assignment) => (
+																	<div
+																		key={assignment.id}
+																		className={
+																			"flex rounded-lg bg-gray-200 p-2"
+																		}
+																	>
+																		<AssignmentPreview
+																			supabase={supabaseClient}
+																			assignment={assignment}
+																			userId={user.id}
+																			// name={assignment.name}
+																			// desc={assignment.description}
+																			// id={assignment.id}
+																			starredAsParam={
+																				assignment.starred
+																					? Array.isArray(assignment.starred)
+																						? assignment.starred.length > 0
+																						: !!assignment.starred
+																					: false
+																			}
+																			schedule={schedule!}
+																			scheduleT={tomorrowSchedule!}
+																			classes={aClass}
+																		/>
+																	</div>
+																))}
 														</div>
-													))}
-											</div>
-										</div>
-									))}
+													</div>
+												)
+										)}
 							</div>
 						</section>
 						{/* Starred assignments */}
 						<section className=" grow lg:ml-10">
-							<h2 className="title mr-2">Starred</h2>
-							<p>
-								STARRED GOES HERE <br></br>text<br></br>text
-								<br></br>IMAGINE THE THING FROM THE FIGMA WAS HEREtext
-								<br></br>text<br></br>
-							</p>
+							<h2 className="title mr-2 mb-4">Starred</h2>
+							<div className="gap-4 grid">
+								{classes &&
+									classes.data &&
+									classes.data.map(
+										(aClass) =>
+											Array.isArray(aClass.assignments) &&
+											aClass.assignments.map((assignment) => (
+                                                (assignment.starred
+                                                    ? Array.isArray(assignment.starred)
+                                                        ? assignment.starred.length > 0
+                                                        : !!assignment.starred
+                                                    : false) &&
+												<div
+													key={assignment.id}
+													className={"flex rounded-lg bg-gray-200 p-2"}
+												>
+													<AssignmentPreview
+														supabase={supabaseClient}
+														assignment={assignment}
+														userId={user.id}
+														// name={assignment.name}
+														// desc={assignment.description}
+														// id={assignment.id}
+														starredAsParam={
+															assignment.starred
+																? Array.isArray(assignment.starred)
+																	? assignment.starred.length > 0
+																	: !!assignment.starred
+																: false
+														}
+														schedule={schedule!}
+														scheduleT={tomorrowSchedule!}
+														classes={aClass}
+													/>
+												</div>
+											))
+									)}
+							</div>
 						</section>
 					</div>
 				</div>

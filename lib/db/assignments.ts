@@ -74,7 +74,7 @@ export const getAssignment = async (
 export type AssignmentResponse = Awaited<ReturnType<typeof getAssignment>>;
 
 export const newAssignment = async (
-	assignment: Assignment["data"],
+	assignment: Assignment,
 	classuuid: string
 ): Promise<AssignmentData> => {
 	const { data, error } = await supabase
@@ -105,9 +105,8 @@ export const newAssignment = async (
 	return { success: false };
 };
 
-export interface Assignment {
-	data: Database["public"]["Tables"]["assignments"]["Insert"];
-}
+//Lukas is building the world's first 7D array
+export type Assignment = Database["public"]["Tables"]["assignments"]["Row"];
 
 export interface AssignmentData {
 	// I can't use extends here because I want to have data be undefined sometimes
