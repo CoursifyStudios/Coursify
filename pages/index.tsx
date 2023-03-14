@@ -235,42 +235,44 @@ export default function Home() {
 						{/* Starred assignments */}
 						<section className=" grow lg:ml-10">
 							<h2 className="title mr-2 mb-4">Starred</h2>
-							<div className="gap-4 grid">
+							<div className="grid gap-4">
 								{classes &&
 									classes.data &&
 									classes.data.map(
 										(aClass) =>
 											Array.isArray(aClass.assignments) &&
-											aClass.assignments.map((assignment) => (
-                                                (assignment.starred
-                                                    ? Array.isArray(assignment.starred)
-                                                        ? assignment.starred.length > 0
-                                                        : !!assignment.starred
-                                                    : false) &&
-												<div
-													key={assignment.id}
-													className={"flex rounded-lg bg-gray-200 p-2"}
-												>
-													<AssignmentPreview
-														supabase={supabaseClient}
-														assignment={assignment}
-														userId={user.id}
-														// name={assignment.name}
-														// desc={assignment.description}
-														// id={assignment.id}
-														starredAsParam={
-															assignment.starred
-																? Array.isArray(assignment.starred)
-																	? assignment.starred.length > 0
-																	: !!assignment.starred
-																: false
-														}
-														schedule={schedule!}
-														scheduleT={tomorrowSchedule!}
-														classes={aClass}
-													/>
-												</div>
-											))
+											aClass.assignments.map(
+												(assignment) =>
+													(assignment.starred
+														? Array.isArray(assignment.starred)
+															? assignment.starred.length > 0
+															: !!assignment.starred
+														: false) && (
+														<div
+															key={assignment.id}
+															className={"flex rounded-lg bg-gray-200 p-2"}
+														>
+															<AssignmentPreview
+																supabase={supabaseClient}
+																assignment={assignment}
+																userId={user.id}
+																// name={assignment.name}
+																// desc={assignment.description}
+																// id={assignment.id}
+																starredAsParam={
+																	assignment.starred
+																		? Array.isArray(assignment.starred)
+																			? assignment.starred.length > 0
+																			: !!assignment.starred
+																		: false
+																}
+																schedule={schedule!}
+																scheduleT={tomorrowSchedule!}
+																classes={aClass}
+															/>
+														</div>
+													)
+											)
 									)}
 							</div>
 						</section>

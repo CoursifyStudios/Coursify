@@ -1,8 +1,6 @@
 import {
 	ArrowsPointingInIcon,
 	ArrowsPointingOutIcon,
-	ArrowTopRightOnSquareIcon,
-	CheckIcon,
 	ChevronLeftIcon,
 	LinkIcon,
 } from "@heroicons/react/24/outline";
@@ -24,11 +22,15 @@ import Link from "next/link";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import { ButtonIcon } from "../../components/misc/button";
 import { AssignmentPreview } from "../../components/complete/assignments";
+import { ScheduleInterface } from "../../lib/db/schedule";
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
 	const [allAssignments, setAllAssignments] = useState<AllAssignmentResponse>();
 	const [assignment, setAssignment] = useState<AssignmentResponse>();
+    //obviously we need a better solution
+    const [schedule, setSchedule] = useState<ScheduleInterface[]>();
+    const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
 	const router = useRouter();
 	const user = useUser();
 	const { assignmentid } = router.query;
@@ -39,7 +41,9 @@ const Post: NextPage = () => {
 			if (user) {
 				const assignments = await getAllAssignments(supabase);
 				setAllAssignments(assignments);
-				console.log(assignments);
+
+                const allSchedules : { date: string; schedule: ScheduleInterface[] }[] = JSON.parse(sessionStorage.getItem("schedule")!);
+				setSchedule(allSchedules[0].schedule); setScheduleT(allSchedules[1].schedule);
 			}
 		})();
 
@@ -80,20 +84,20 @@ const Post: NextPage = () => {
 							key={assignment.id}
 						>
 							<AssignmentPreview
-
-                                //@ts-ignore
-                                assignment={assignment}
+								supabase={supabase} //@ts-ignore
+								assignment={assignment}
 								userId={user.id}
-								supabase={supabase}
-								starred={
+								starredAsParam={
 									assignment.starred
 										? Array.isArray(assignment.starred)
 											? assignment.starred.length > 0
 											: !!assignment.starred
 										: false
 								}
-								due={new Date(1667840443856)}
-                                //@ts-ignore
+								//obviously we need a better solution
+								schedule={schedule!}
+								scheduleT={scheduleT!}
+								//@ts-ignore
 								classes={
 									(assignment.classes_assignments &&
 									Array.isArray(assignment.classes_assignments)
