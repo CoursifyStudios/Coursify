@@ -42,9 +42,13 @@ const Post: NextPage = () => {
 				const assignments = await getAllAssignments(supabase);
 				setAllAssignments(assignments);
 
-                const allSchedules : { date: string; schedule: ScheduleInterface[] }[] = JSON.parse(sessionStorage.getItem("schedule")!);
-				setSchedule(allSchedules[0].schedule); setScheduleT(allSchedules[1].schedule);
+                
 			}
+            const allSchedules : { date: string; schedule: ScheduleInterface[] }[] = JSON.parse(sessionStorage.getItem("schedule")!);
+			if (allSchedules) {
+                setSchedule(allSchedules[0].schedule); setScheduleT(allSchedules[1].schedule);
+                console.log(allSchedules);
+            }
 		})();
 
 		(async () => {

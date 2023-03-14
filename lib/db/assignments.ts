@@ -7,7 +7,7 @@ export const getAllAssignments = async (
 ) => {
 	return await supabaseClient.from("assignments").select(
 		`
-		name, description, id,
+		*,
 		classes_assignments (
 			classes (
 				name, id, color, block, schedule_type

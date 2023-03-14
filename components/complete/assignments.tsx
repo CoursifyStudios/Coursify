@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Assignment, handleStarred } from "../../lib/db/assignments";
 import { Database } from "../../lib/db/database.types";
-import { ScheduleInterface } from "../../lib/db/schedule";
+import { ScheduleInterface, to12hourTime } from "../../lib/db/schedule";
 import { ColoredPill } from "../misc/pill";
 import Starred from "../misc/starred";
 
@@ -36,6 +36,9 @@ export function AssignmentPreview({
 		schedule_type: number;
 	};
 }) {
+
+	const date = new Date(assignment.due_date!);
+    console.log(assignment, date);
 	const [starred, setStarred] = useState(starredAsParam);
 	const [dbStarred, setDbStarred] = useState(starredAsParam);
 
@@ -49,7 +52,6 @@ export function AssignmentPreview({
 		);
 		setDbStarred(newStarred);
 	};
-	const date = new Date(assignment.due_date!);
 	return (
 		<>
 			<div className="w-10" onMouseLeave={() => dealWithStarred()}>
@@ -71,7 +73,7 @@ export function AssignmentPreview({
 				</p>
 			</div>
 			<div className="ml-1 flex flex-col items-end justify-between">
-				<p className="w-max text-sm font-medium text-gray-700">
+				<div className="w-max text-sm font-medium text-gray-700">
 					{date.getMonth()}/{date.getDate()}
 					<ColoredPill color={classes.color}>
 						{timeOfAssignment(
@@ -86,9 +88,9 @@ export function AssignmentPreview({
 									scheduleT,
 									assignment.due_type!
 							  )
-							: date.getHours() + ":" + date.getMinutes()}
+							: to12hourTime(date.getHours() + ":" + date.getMinutes())}
 					</ColoredPill>
-				</p>
+				</div>
 				<CheckIcon className="h-5 w-5 text-gray-600" />
 			</div>
 		</>
@@ -114,7 +116,8 @@ export function timeOfAssignment(
 	dueType: DueType
 ) {
 	// Checks if the class is today
-	if (
+    console.log(schedule)
+;	if (
 		schedule.find(
 			(s) =>
 				s.specialEvent == undefined &&
