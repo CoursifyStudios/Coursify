@@ -69,7 +69,11 @@ export default function Profile() {
 							</>
 						)}
 					</h1>
-					<h2 className="mb-4 text-xl">2023</h2>
+					{profile && profile.data ? (
+						<h2 className="mb-4 text-xl">{profile?.data?.year}</h2>
+					) : (
+						<div></div>
+					)}
 
 					<CopiedHover copy={profile?.data?.email || "No email found"}>
 						<ColoredPill color="gray">
