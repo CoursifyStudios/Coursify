@@ -28,9 +28,9 @@ const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
 	const [allAssignments, setAllAssignments] = useState<AllAssignmentResponse>();
 	const [assignment, setAssignment] = useState<AssignmentResponse>();
-    //obviously we need a better solution
-    const [schedule, setSchedule] = useState<ScheduleInterface[]>();
-    const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
+	//obviously we need a better solution
+	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
+	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
 	const router = useRouter();
 	const user = useUser();
 	const { assignmentid } = router.query;
@@ -41,14 +41,13 @@ const Post: NextPage = () => {
 			if (user) {
 				const assignments = await getAllAssignments(supabase);
 				setAllAssignments(assignments);
-
-                
 			}
-            const allSchedules : { date: string; schedule: ScheduleInterface[] }[] = JSON.parse(sessionStorage.getItem("schedule")!);
+			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
+				JSON.parse(sessionStorage.getItem("schedule")!);
 			if (allSchedules) {
-                setSchedule(allSchedules[0].schedule); setScheduleT(allSchedules[1].schedule);
-                console.log(allSchedules);
-            }
+				setSchedule(allSchedules[0].schedule);
+				setScheduleT(allSchedules[1].schedule);
+			}
 		})();
 
 		(async () => {

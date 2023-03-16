@@ -15,6 +15,7 @@ import { AcademicCapIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import Editor from "../../components/editors/richeditor";
 import { EditorState } from "lexical";
+import { ScheduleInterface } from "../../lib/db/schedule";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -28,6 +29,8 @@ const Class: NextPage = () => {
 	const [editable, setEditable] = useState(false);
 	const [editorState, setEditorState] = useState<EditorState>();
 	const [edited, setEdited] = useState(false);
+    const [schedule, setSchedule] = useState<ScheduleInterface[]>();
+    const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
 
 	const updateEditorDB = async () => {
 		setEdited(true);
@@ -54,6 +57,12 @@ const Class: NextPage = () => {
 						data.data.users_classes.find((v) => v.user_id == user.id)?.teacher
 					);
 				}
+			}
+            const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
+				JSON.parse(sessionStorage.getItem("schedule")!);
+			if (allSchedules) {
+				setSchedule(allSchedules[0].schedule);
+				setScheduleT(allSchedules[1].schedule);
 			}
 		})();
 		setEdited(false);
@@ -245,13 +254,14 @@ const Class: NextPage = () => {
 									href={"/assignments/" + assignment.id}
 								>
 									<AssignmentPreview
-										id={assignment.id}
 										supabase={supabase}
+										assignment={Array.isArray(assignment) ? assignment[0] : assignment}
+										starredAsParam={false}
+										schedule={schedule!}
+										scheduleT={scheduleT!}
 										userId={user.id}
-										name={assignment.name}
-										desc={assignment.description}
-										starred={false}
-										due={new Date(1667840443856)}
+                                        //@ts-ignore
+										classes={data}
 									/>
 								</Link>
 							))}

@@ -43,7 +43,7 @@ export const getClass = async (
 			`
 		*,
 		assignments (
-			name, description, id
+			name, description, id, due_type, due_date
 		),
 		users_classes (
 			user_id, grade, teacher

@@ -2,7 +2,7 @@ import { CheckIcon } from "@heroicons/react/24/outline";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useState } from "react";
-import { Assignment, handleStarred } from "../../lib/db/assignments";
+import { handleStarred } from "../../lib/db/assignments";
 import { Database } from "../../lib/db/database.types";
 import { ScheduleInterface, to12hourTime } from "../../lib/db/schedule";
 import { ColoredPill } from "../misc/pill";
@@ -18,16 +18,17 @@ export function AssignmentPreview({
 	userId,
 }: {
 	supabase: SupabaseClient<Database>;
-	assignment: Assignment;
-	// name: string;
-	// desc: string;
+	assignment: {
+        id: string;
+        name: string;
+        description: string;
+        due_type: number;
+        due_date: string;
+    };
 	starredAsParam: boolean;
-	// due: Date;
 	schedule: ScheduleInterface[];
 	scheduleT: ScheduleInterface[];
 	userId: string;
-	// id: string;
-	//this cannot be optional, Lukas
 	classes: {
 		id: string;
 		name: string;
@@ -36,9 +37,7 @@ export function AssignmentPreview({
 		schedule_type: number;
 	};
 }) {
-
-	const date = new Date(assignment.due_date!);
-    console.log(assignment, date);
+;	const date = new Date(assignment.due_date!);
 	const [starred, setStarred] = useState(starredAsParam);
 	const [dbStarred, setDbStarred] = useState(starredAsParam);
 
@@ -116,8 +115,7 @@ export function timeOfAssignment(
 	dueType: DueType
 ) {
 	// Checks if the class is today
-    console.log(schedule)
-;	if (
+	if (
 		schedule.find(
 			(s) =>
 				s.specialEvent == undefined &&
