@@ -37,7 +37,7 @@ export function AssignmentPreview({
 		schedule_type: number;
 	};
 }) {
-;	const date = new Date(assignment.due_date!);
+	const date = new Date(assignment.due_date!);
 	const [starred, setStarred] = useState(starredAsParam);
 	const [dbStarred, setDbStarred] = useState(starredAsParam);
 

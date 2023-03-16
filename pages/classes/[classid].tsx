@@ -273,8 +273,7 @@ const Class: NextPage = () => {
 										schedule={schedule!}
 										scheduleT={scheduleT!}
 										userId={user.id}
-                                        //@ts-ignore
-										classes={data}
+										classes={data.data}
 									/>
 								</Link>
 							))}
