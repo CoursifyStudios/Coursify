@@ -16,6 +16,7 @@ import { useTabs } from "../../lib/tabs/handleTabs";
 import Editor from "../../components/editors/richeditor";
 import { EditorState } from "lexical";
 import { ScheduleInterface } from "../../lib/db/schedule";
+import { InfoPill, InfoPills } from "../../components/misc/infopills";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -129,8 +130,20 @@ const Class: NextPage = () => {
 					</Tab.List>
 					<Tab.Panels>
 						<Tab.Panel>
-							<div className="flex">
-								<ColoredPill color="green">Test</ColoredPill>
+							<div className="mb-3 flex flex-wrap gap-2">
+								{data.data?.classpills && isTeacher != undefined && classid && (
+									<InfoPills
+										allPills={data.data.classpills as unknown as InfoPill[]}
+										updatePills={(newPills: InfoPill[]) =>
+											updateClass(
+												supabase,
+												Array.isArray(classid) ? classid[0] : classid,
+												{ classpills: newPills as unknown as Json[] }
+											)
+										}
+										isTeacher={isTeacher}
+									/>
+								)}
 							</div>
 							{data.data?.full_description ||
 							(editorState && edited && !data.data?.full_description) ||
