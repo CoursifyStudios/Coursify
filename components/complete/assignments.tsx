@@ -19,12 +19,12 @@ export function AssignmentPreview({
 }: {
 	supabase: SupabaseClient<Database>;
 	assignment: {
-        id: string;
-        name: string;
-        description: string;
-        due_type: number;
-        due_date: string;
-    };
+		id: string;
+		name: string;
+		description: string;
+		due_type: number;
+		due_date: string;
+	};
 	starredAsParam: boolean;
 	schedule: ScheduleInterface[];
 	scheduleT: ScheduleInterface[];

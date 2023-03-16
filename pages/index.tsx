@@ -208,7 +208,11 @@ export default function Home() {
 																	>
 																		<AssignmentPreview
 																			supabase={supabaseClient}
-																			assignment={assignment}
+																			assignment={
+																				Array.isArray(assignment)
+																					? assignment[0]
+																					: assignment
+																			}
 																			userId={user.id}
 																			// name={assignment.name}
 																			// desc={assignment.description}
@@ -254,7 +258,11 @@ export default function Home() {
 														>
 															<AssignmentPreview
 																supabase={supabaseClient}
-																assignment={assignment}
+																assignment={
+																	Array.isArray(assignment)
+																		? assignment[0]
+																		: assignment
+																}
 																userId={user.id}
 																// name={assignment.name}
 																// desc={assignment.description}
