@@ -93,6 +93,7 @@ const Post: NextPage = () => {
 				{allAssignments ? (
 					!allAssignments.error &&
 					user &&
+                    schedule &&
 					allAssignments.data.map((assignment) => (
 						<Link
 							className={`flex h-max snap-start rounded-xl ${
