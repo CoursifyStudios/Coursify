@@ -15,7 +15,7 @@ import { AcademicCapIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import Editor from "../../components/editors/richeditor";
 import { EditorState } from "lexical";
-import { ScheduleInterface } from "../../lib/db/schedule";
+import { getSchedule, ScheduleInterface } from "../../lib/db/schedule";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
 
 const Class: NextPage = () => {
@@ -61,10 +61,27 @@ const Class: NextPage = () => {
 			}
 			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
 				JSON.parse(sessionStorage.getItem("schedule")!);
-			if (allSchedules) {
-				setSchedule(allSchedules[0].schedule);
-				setScheduleT(allSchedules[1].schedule);
-			}
+                if (allSchedules && allSchedules.length != 0) {
+                    setSchedule(allSchedules[0].schedule);
+                    setScheduleT(allSchedules[1].schedule);
+                } else {
+                    const [scheduleToday, scheduleTomorrow] = await Promise.all([
+                        getSchedule(supabase, new Date("2023-03-03")),
+                        getSchedule(supabase, new Date("2023-03-04")),
+                    ]);
+                    setSchedule(
+                        !scheduleToday.data?.template && scheduleToday.data?.schedule_items
+                            ? (scheduleToday.data.schedule_items as unknown as ScheduleInterface[])
+                            : !Array.isArray(scheduleToday.data?.schedule_templates) ? (scheduleToday.data
+                                    ?.schedule_templates?.schedule_items as unknown as ScheduleInterface[]) : undefined
+                    );
+                    setScheduleT(
+                        !scheduleTomorrow.data?.template && scheduleToday.data?.schedule_items
+                            ? (scheduleTomorrow.data?.schedule_items as unknown as ScheduleInterface[])
+                            : !Array.isArray(scheduleTomorrow.data?.schedule_templates) ? (scheduleTomorrow.data
+                                    ?.schedule_templates?.schedule_items as unknown as ScheduleInterface[]) : undefined
+                    );
+                }
 		})();
 		setEdited(false);
 		setEditorState(undefined);
