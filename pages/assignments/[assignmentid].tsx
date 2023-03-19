@@ -22,7 +22,7 @@ import Link from "next/link";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import { ButtonIcon } from "../../components/misc/button";
 import { AssignmentPreview } from "../../components/complete/assignments";
-import { getSchedule, ScheduleInterface } from "../../lib/db/schedule";
+import { getSchedule, ScheduleInterface, setThisSchedule } from "../../lib/db/schedule";
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
@@ -52,18 +52,8 @@ const Post: NextPage = () => {
 					getSchedule(supabase, new Date("2023-03-03")),
 					getSchedule(supabase, new Date("2023-03-04")),
 				]);
-				setSchedule(
-					!scheduleToday.data?.template && scheduleToday.data?.schedule_items
-						? (scheduleToday.data.schedule_items as unknown as ScheduleInterface[])
-						: !Array.isArray(scheduleToday.data?.schedule_templates) ? (scheduleToday.data
-								?.schedule_templates?.schedule_items as unknown as ScheduleInterface[]) : undefined
-				);
-				setScheduleT(
-					!scheduleTomorrow.data?.template && scheduleToday.data?.schedule_items
-						? (scheduleTomorrow.data?.schedule_items as unknown as ScheduleInterface[])
-						: !Array.isArray(scheduleTomorrow.data?.schedule_templates) ? (scheduleTomorrow.data
-								?.schedule_templates?.schedule_items as unknown as ScheduleInterface[]) : undefined
-				);
+				setThisSchedule(scheduleToday, setSchedule);
+				setThisSchedule(scheduleTomorrow, setScheduleT);
 			}
 		})();
 
