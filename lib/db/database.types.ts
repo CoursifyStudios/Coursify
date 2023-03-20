@@ -9,12 +9,38 @@ export type Json =
 export interface Database {
 	public: {
 		Tables: {
+			achievements: {
+				Row: {
+					desc_full: string | null;
+					desc_short: string | null;
+					icon: string | null;
+					id: number;
+					name: string;
+					school: string;
+				};
+				Insert: {
+					desc_full?: string | null;
+					desc_short?: string | null;
+					icon?: string | null;
+					id?: number;
+					name: string;
+					school: string;
+				};
+				Update: {
+					desc_full?: string | null;
+					desc_short?: string | null;
+					icon?: string | null;
+					id?: number;
+					name?: string;
+					school?: string;
+				};
+			};
 			assignments: {
 				Row: {
 					content: string | null;
 					created_date: string | null;
 					description: string;
-					due_date: string | null;
+					due_date: string;
 					due_type: number | null;
 					id: string;
 					name: string;
@@ -26,7 +52,7 @@ export interface Database {
 					content?: string | null;
 					created_date?: string | null;
 					description: string;
-					due_date?: string | null;
+					due_date?: string;
 					due_type?: number | null;
 					id?: string;
 					name: string;
@@ -38,7 +64,7 @@ export interface Database {
 					content?: string | null;
 					created_date?: string | null;
 					description?: string;
-					due_date?: string | null;
+					due_date?: string;
 					due_type?: number | null;
 					id?: string;
 					name?: string;
@@ -121,16 +147,19 @@ export interface Database {
 					description: string | null;
 					id: string;
 					name: string | null;
+					public: boolean | null;
 				};
 				Insert: {
 					description?: string | null;
 					id?: string;
 					name?: string | null;
+					public?: boolean | null;
 				};
 				Update: {
 					description?: string | null;
 					id?: string;
 					name?: string | null;
+					public?: boolean | null;
 				};
 			};
 			schedule_templates: {
@@ -214,31 +243,45 @@ export interface Database {
 			};
 			users: {
 				Row: {
-					about: string | null;
 					avatar_url: string;
 					created: string | null;
 					email: string | null;
 					full_name: string;
 					id: string;
 					username: string | null;
+					year: string | null;
 				};
 				Insert: {
-					about?: string | null;
 					avatar_url: string;
 					created?: string | null;
 					email?: string | null;
 					full_name: string;
 					id: string;
 					username?: string | null;
+					year?: string | null;
 				};
 				Update: {
-					about?: string | null;
 					avatar_url?: string;
 					created?: string | null;
 					email?: string | null;
 					full_name?: string;
 					id?: string;
 					username?: string | null;
+					year?: string | null;
+				};
+			};
+			users_achivements: {
+				Row: {
+					achivement_id: number;
+					user_id: string;
+				};
+				Insert: {
+					achivement_id: number;
+					user_id: string;
+				};
+				Update: {
+					achivement_id?: number;
+					user_id?: string;
 				};
 			};
 			users_classes: {
@@ -291,42 +334,22 @@ export interface Database {
 				};
 				Returns: boolean;
 			};
-			get_profile_classes:
-				| {
-						Args: Record<PropertyKey, never>;
-						Returns: {
-							block: number;
-							classpills: Json[];
-							color: string;
-							description: string;
-							full_description: Json | null;
-							id: string;
-							name: string;
-							name_full: string;
-							room: string | null;
-							schedule_type: number;
-						}[];
-				  }
-				| {
-						Args: {
-							id: string;
-						};
-						Returns: {
-							block: number;
-							classpills: Json[];
-							color: string;
-							description: string;
-							full_description: Json | null;
-							id: string;
-							name: string;
-							name_full: string;
-							room: string | null;
-							schedule_type: number;
-						}[];
-				  };
-			hello_world: {
-				Args: Record<PropertyKey, never>;
-				Returns: string;
+			get_profile_classes: {
+				Args: {
+					id: string;
+				};
+				Returns: {
+					block: number;
+					classpills: Json[];
+					color: string;
+					description: string;
+					full_description: Json | null;
+					id: string;
+					name: string;
+					name_full: string;
+					room: string | null;
+					schedule_type: number;
+				}[];
 			};
 		};
 		Enums: {
