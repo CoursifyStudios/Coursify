@@ -7,7 +7,11 @@ export const getProfile = async (
 ) => {
 	return await supabaseClient
 		.from("users")
-		.select(`*`)
+		.select(
+			`*, achievements (
+			*
+		)`
+		)
 		.eq("id", profileid)
 		.single();
 };

@@ -10,6 +10,8 @@ import { useRouter } from "next/router";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import type { PostgrestResponse } from "@supabase/supabase-js";
 import { AllGroupsResponse, getAllGroups } from "../../lib/db/groups";
+import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
+import { IconConverter, InfoPill } from "../../components/misc/infopills";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
@@ -83,21 +85,31 @@ export default function Profile() {
 						</ColoredPill>
 					</CopiedHover>
 				</div>
-				<div className="scrollbar-fancy scrollbar-fancy-darker mx-0 flex flex-col items-center overflow-y-auto rounded-xl bg-gray-200 p-6 md:mx-auto  lg:mx-0 lg:mt-8 ">
-					<h1 className="title mb-5">Achievements</h1>
-					<div className=" grid grid-cols-1 gap-6 md:grid-cols-2">
-						<Achievement
-							icon={<EnvelopeIcon className="h-6 w-6" />}
-							description="Inquiry and Innovation program"
-							title="i2"
-						/>
-						<Achievement
-							icon={<EnvelopeIcon className="h-6 w-6" />}
-							description="The good test takers"
-							title="DePaul"
-						/>
+				{!(
+					profile?.data &&
+					getDataInArray(profile?.data?.achievements).length == 0
+				) && (
+					<div className="scrollbar-fancy scrollbar-fancy-darker mx-0 flex w-full flex-col items-center overflow-y-auto rounded-xl bg-gray-200 p-6 md:mx-auto  lg:mx-0 lg:mt-8 ">
+						<h1 className="title mb-5">Achievements</h1>
+						<div className=" grid w-full grid-cols-1 gap-6 md:grid-cols-2">
+							{profile?.data?.achievements
+								? getDataInArray(profile?.data?.achievements).map(
+										(achievement, i) => (
+											<Achievement data={achievement} key={i} />
+										)
+								  )
+								: [...new Array(4)].map((_, i) => (
+										<div
+											className="flex cursor-pointer select-none flex-col items-center rounded-xl"
+											key={i}
+										>
+											<div className="relative h-16 w-16 animate-pulse rounded-full bg-gray-300"></div>
+											<div className="mb-2 mt-3 h-6 w-16  animate-pulse rounded bg-gray-300"></div>
+										</div>
+								  ))}
+						</div>
 					</div>
-				</div>
+				)}
 			</div>
 
 			<div className=" scrollbar-fancy mx-auto mt-8 shrink-0 overflow-y-auto rounded-xl lg:mt-0 lg:h-[calc(100vh-8rem)]">
@@ -149,21 +161,36 @@ export default function Profile() {
 }
 
 const Achievement = ({
-	icon,
-	title,
-	description,
+	data,
 }: {
-	icon: ReactNode;
-	title: string;
-	description: string;
+	data: {
+		desc_full: string | null;
+		desc_short: string | null;
+		icon: string | null;
+		id: number;
+		name: string;
+		school: string;
+	};
 }) => {
 	return (
 		<div className="flex flex-col text-center">
-			<div className="mx-auto rounded-full bg-white p-4">{icon}</div>
-			<h3 className="mt-2 font-bold line-clamp-2 ">{title}</h3>
-			<h4 className="text-sm line-clamp-2">{description}</h4>
+			<div className="mx-auto rounded-full bg-white p-4">
+				{getIcon(data.icon)}
+			</div>
+			<h3 className="mt-2 font-bold line-clamp-2 ">{data.name}</h3>
+			<h4 className="text-sm line-clamp-2">{data.desc_short}</h4>
 		</div>
 	);
+};
+
+const getIcon = (icon: string | null) => {
+	if (icon == null) {
+		return null;
+	}
+	if (["doc", "link", "chat", "calendar", "folder", "music"].includes(icon)) {
+		return <IconConverter.toIcon str={icon as InfoPill["icon"]} />;
+	}
+	return <img className="h-5 w-5" referrerPolicy="no-referrer" src={icon} />;
 };
 
 const Groups = (props: {
@@ -174,7 +201,7 @@ const Groups = (props: {
 	return (
 		<div
 			className="brightness-hover	flex cursor-pointer select-none flex-col rounded-xl bg-gray-200 "
-			tabIndex={0}
+			//tabIndex={0}
 		>
 			<div className="relative h-16">
 				<Image
