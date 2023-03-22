@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import { Tab } from "@headlessui/react";
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { ColoredPill } from "../../components/misc/pill";
 import Image from "next/image";
 import exampleGroupImg from "../../public/example-img.jpg";
@@ -9,10 +9,24 @@ import {
 	FaceSmileIcon,
 } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
+import { getGroup, GroupResponse } from "../../lib/db/groups";
+import supabase from "../../lib/supabase";
 
 const Group: NextPage = () => {
 	const router = useRouter();
 	const { groupid } = router.query;
+	const [groupData, setGroupData] = useState<GroupResponse>();
+
+	useEffect( () => {
+		(async () => {
+			if (typeof groupid == "string") {
+				const data = await getGroup(supabase, groupid);
+				setGroupData(data);
+                console.log(data);
+			}
+		})();
+	}, [supabase, groupid]);
+
 	return (
 		<div className="mx-auto my-10 w-full max-w-screen-xl">
 			<div className="relative mb-6 h-48 w-full">
@@ -23,7 +37,7 @@ const Group: NextPage = () => {
 					fill
 				/>
 				<h1 className="title absolute  bottom-5 left-5 !text-4xl text-gray-200">
-					Badminton Club
+					{groupData?.data?.name}
 				</h1>
 			</div>
 			<div className="flex">
@@ -73,14 +87,7 @@ const Group: NextPage = () => {
 						<Tab.Panel>
 							<div className="mb-6 rounded-xl bg-gray-200 p-4">
 								<p className="text-lg">
-									Welcome to our high school badminton club! Our club is
-									designed for students who are interested in playing badminton
-									and want to improve their skills. We meet every weekday
-									morning during the founders period in the school gymnasium. We
-									provide all necessary equipment, including rackets and
-									shuttlecocks, so all you need to bring is your enthusiasm and
-									a willingness to learn. (had a different system for links and
-									items then lukas made the chips feature)
+									{groupData?.data?.description}
 								</p>
 							</div>
 							<h2 className="title mb-3">Announcements</h2>
@@ -108,7 +115,8 @@ const Group: NextPage = () => {
 										Humanities edited by Leon Kass paperback English 3,4: A
 										Raisin in the Sun by Lorraine Hansberry paperback All books
 										are in new condition and have no annotations. If interested,
-										contact me at holy shit that{"'"}s someone{"'"}s actual information
+										contact me at holy shit that{"'"}s someone{"'"}s actual
+										information
 									</p>
 									<div className="mt-4 flex items-center justify-between">
 										<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">

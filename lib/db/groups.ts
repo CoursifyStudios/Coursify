@@ -9,11 +9,11 @@ export const getAllGroupsForUser = async (
 		.from("users_groups")
 		.select(
 			`
-    *,
-    groups (
-        *
-    )
-    `
+        *,
+        groups (
+            *
+        )
+        `
 		)
 		.eq("user_id", userID);
 };
@@ -23,14 +23,14 @@ export type AllGroupsResponse = Awaited<ReturnType<typeof getAllGroupsForUser>>;
 export const getAllPublicGroups = async (
 	supabaseClient: SupabaseClient<Database>
 ) => {
-    console.log(supabaseClient, "dfghj");
 	return await supabaseClient
 		.from("groups")
 		.select(
-			`
-    *`
+		`
+        *
+        `
 		)
-		//.eq("public", true);
+		.eq("public", true);
 };
 
 export type PublicGroupsResponse = Awaited<
@@ -43,7 +43,14 @@ export const getGroup = async (
 ) => {
 	return await supabaseClient
 		.from("groups")
-		.select(`*`)
+		.select(
+            `
+            *,
+            users_groups (
+                *
+            )
+            `
+        )
 		.eq("id", groupid)
 		.single();
 };

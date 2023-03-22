@@ -1,10 +1,21 @@
-import {
-	MagnifyingGlassCircleIcon,
-	MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
 import Image from "next/image";
-const groupDirecory: NextPage = () => {
+import { useEffect, useState } from "react";
+import { getAllPublicGroups, PublicGroupsResponse } from "../../lib/db/groups";
+import supabase from "../../lib/supabase";
+
+export default function GroupDirectory() {
+	const [allGroupData, setAllGroupData] = useState<PublicGroupsResponse>();
+
+	useEffect(() => {
+		(async () => {
+			const data = await getAllPublicGroups(supabase);
+			setAllGroupData(data);
+			console.log(data);
+		})();
+	}, [supabase]);
+
 	return (
 		<div>
 			<div className="mx-auto my-10 w-full max-w-screen-xl">
@@ -31,10 +42,16 @@ const groupDirecory: NextPage = () => {
 					<div>
 						<h1 className="title">Featured Groups</h1>
 						<div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-4 ">
-							<GroupLarge photo="" name="SHC Announcements" membernum="1300" />
-							<GroupLarge photo="" name="SHC Library" membernum="500" />
-							<GroupLarge photo="" name="SHC Dining" membernum="730" />
-							<GroupLarge photo="" name="Fitness Center" membernum="450" />
+							{allGroupData &&
+								allGroupData.data &&
+								allGroupData.data.map((group) => (
+									<GroupLarge
+										key={group.id}
+										photo="/example-img.jpg"
+										name={group.name!}
+										membernum="1300"
+									/>
+								))}
 						</div>
 					</div>
 					<div>
@@ -107,5 +124,3 @@ const GroupSmall = (props: { photo: string; title: string }) => {
 		</div>
 	);
 };
-
-export default groupDirecory;
