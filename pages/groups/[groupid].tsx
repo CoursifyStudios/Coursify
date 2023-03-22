@@ -10,7 +10,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
 
-const group: NextPage = () => {
+const Group: NextPage = () => {
 	const router = useRouter();
 	const { groupid } = router.query;
 	return (
@@ -108,7 +108,7 @@ const group: NextPage = () => {
 										Humanities edited by Leon Kass paperback English 3,4: A
 										Raisin in the Sun by Lorraine Hansberry paperback All books
 										are in new condition and have no annotations. If interested,
-										contact me at holy shit that's someone's actual information
+										contact me at holy shit that{"'"}s someone{"'"}s actual information
 									</p>
 									<div className="mt-4 flex items-center justify-between">
 										<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
@@ -183,4 +183,4 @@ const Event = ({ title, time }: { title: string; time: string }) => {
 	);
 };
 
-export default group;
+export default Group;

@@ -8,7 +8,7 @@ import { Database } from "../../lib/db/database.types";
 import { useRouter } from "next/router";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import type { PostgrestResponse } from "@supabase/supabase-js";
-import { AllGroupsResponse, getAllGroups } from "../../lib/db/groups";
+import { AllGroupsResponse, getAllGroupsForUser } from "../../lib/db/groups";
 import Link from "next/link";
 import { Group } from "../../components/complete/group";
 
@@ -35,7 +35,7 @@ export default function Profile() {
 					id: profileid as string,
 				});
 				setProfileClasses(classesData);
-				const groupsData = await getAllGroups(
+				const groupsData = await getAllGroupsForUser(
 					supabaseClient,
 					profileid as string
 				);
@@ -106,7 +106,7 @@ export default function Profile() {
 				<div className="grid gap-8 md:grid-cols-2">
 					{profileClasses && profileClasses.data
 						? profileClasses.data.map((currentClass, i) => (
-								<Class classData={currentClass} key={i} isLink={true} />
+								<Class classData={currentClass} key={currentClass.id} isLink={true} />
 						  ))
 						: ""}
 				</div>
@@ -119,9 +119,8 @@ export default function Profile() {
 						profileGroups.data.map((groupLink) =>
 							Array.isArray(groupLink) ? (
 								groupLink.map((group) => (
-									<Link href={group}>
+									<Link href={group} key={group.id}>
 										<Group
-											key={group.id}
 											photo="/example-img.jpg"
 											title={group.name ? group.name : ""}
 											id={groupLink.group_id}
