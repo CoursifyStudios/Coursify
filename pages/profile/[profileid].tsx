@@ -1,6 +1,6 @@
-import { EnvelopeIcon } from "@heroicons/react/24/outline";
+import { EnvelopeIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import { ReactNode, useEffect, useState } from "react";
+import { Fragment, ReactNode, useEffect, useState } from "react";
 import { Class } from "../../components/complete/class";
 import { ProfilesResponse } from "../../lib/db/profiles";
 import { getProfile } from "../../lib/db/profiles";
@@ -11,7 +11,7 @@ import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import type { PostgrestResponse } from "@supabase/supabase-js";
 import { AllGroupsResponse, getAllGroups } from "../../lib/db/groups";
 import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
-import { IconConverter, InfoPill } from "../../components/misc/infopills";
+import { Achievement } from "../../components/complete/achivement";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
@@ -159,39 +159,6 @@ export default function Profile() {
 		</div>
 	);
 }
-
-const Achievement = ({
-	data,
-}: {
-	data: {
-		desc_full: string | null;
-		desc_short: string | null;
-		icon: string | null;
-		id: number;
-		name: string;
-		school: string;
-	};
-}) => {
-	return (
-		<div className="flex flex-col text-center">
-			<div className="mx-auto rounded-full bg-white p-4">
-				{getIcon(data.icon)}
-			</div>
-			<h3 className="mt-2 font-bold line-clamp-2 ">{data.name}</h3>
-			<h4 className="text-sm line-clamp-2">{data.desc_short}</h4>
-		</div>
-	);
-};
-
-const getIcon = (icon: string | null) => {
-	if (icon == null) {
-		return null;
-	}
-	if (["doc", "link", "chat", "calendar", "folder", "music"].includes(icon)) {
-		return <IconConverter.toIcon str={icon as InfoPill["icon"]} />;
-	}
-	return <img className="h-5 w-5" referrerPolicy="no-referrer" src={icon} />;
-};
 
 const Groups = (props: {
 	photo: string;
