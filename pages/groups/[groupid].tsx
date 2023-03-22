@@ -4,13 +4,15 @@ import { Fragment } from "react";
 import { ColoredPill } from "../../components/misc/pill";
 import Image from "next/image";
 import exampleGroupImg from "../../public/example-img.jpg";
-
 import {
 	EllipsisVerticalIcon,
 	FaceSmileIcon,
 } from "@heroicons/react/24/outline";
+import { useRouter } from "next/router";
 
 const group: NextPage = () => {
+	const router = useRouter();
+	const { groupid } = router.query;
 	return (
 		<div className="mx-auto my-10 w-full max-w-screen-xl">
 			<div className="relative mb-6 h-48 w-full">
