@@ -27,7 +27,11 @@ export const getAllPublicGroups = async (
 		.from("groups")
 		.select(
 		`
-        *
+        *,
+        users_groups (
+            user_id, group_id
+        )
+
         `
 		)
 		.eq("public", true);

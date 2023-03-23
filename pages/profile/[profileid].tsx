@@ -106,7 +106,11 @@ export default function Profile() {
 				<div className="grid gap-8 md:grid-cols-2">
 					{profileClasses && profileClasses.data
 						? profileClasses.data.map((currentClass, i) => (
-								<Class classData={currentClass} key={currentClass.id} isLink={true} />
+								<Class
+									classData={currentClass}
+									key={currentClass.id}
+									isLink={true}
+								/>
 						  ))
 						: ""}
 				</div>
@@ -119,14 +123,13 @@ export default function Profile() {
 						profileGroups.data.map((groupLink) =>
 							Array.isArray(groupLink) ? (
 								groupLink.map((group) => (
-									<Link href={group} key={group.id}>
-										<Group
-											photo="/example-img.jpg"
-											title={group.name ? group.name : ""}
-											id={groupLink.group_id}
-                                            isLink={true}
-										/>
-									</Link>
+									<Group
+										key={group.id}
+										photo="/example-img.jpg"
+										title={group.name ? group.name : ""}
+										id={groupLink.group_id}
+										isLink={true}
+									/>
 								))
 							) : (
 								<Group
@@ -138,7 +141,7 @@ export default function Profile() {
 											: groupLink.groups?.name) as string
 									}
 									id={groupLink.group_id}
-                                    isLink={true}
+									isLink={true}
 								/>
 							)
 						)}

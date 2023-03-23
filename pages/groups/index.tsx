@@ -1,5 +1,4 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import { NextPage } from "next";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { getAllPublicGroups, PublicGroupsResponse } from "../../lib/db/groups";
@@ -24,19 +23,22 @@ export default function GroupDirectory() {
 						<MagnifyingGlassIcon className="ml-1 h-6 w-6" />
 						<p className="ml-1.5 p-1 ">Search for Groups</p>
 					</div>
-					<div className="">
+					<div>
 						<h1 className="title">Your Groups</h1>
 						<div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-5 ">
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
+							{allGroupData &&
+								allGroupData.data &&
+								allGroupData.data.map(
+									(group) =>
+										(!Array.isArray(group.users_groups) ||
+											group.users_groups.length != 0) && (
+											<GroupSmall
+												key={group.id}
+												photo="/example-img.jpg"
+												title={group.name!}
+											/>
+										)
+								)}
 						</div>
 					</div>
 					<div>
@@ -44,34 +46,63 @@ export default function GroupDirectory() {
 						<div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-4 ">
 							{allGroupData &&
 								allGroupData.data &&
-								allGroupData.data.map((group) => (
-									<GroupLarge
-										key={group.id}
-										photo="/example-img.jpg"
-										name={group.name!}
-										membernum="1300"
-									/>
-								))}
+								allGroupData.data.map(
+									(group) =>
+										//@ts-ignore
+										group.featured && (
+											<GroupLarge
+												key={group.id}
+												photo="/example-img.jpg"
+												name={group.name!}
+												membernum={Math.floor(Math.random() * 2000).toString()}
+											/>
+										)
+								)}
 						</div>
 					</div>
 					<div>
 						<h1 className="title">Outdoors</h1>
 						<div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-4 ">
-							<GroupLarge photo="" name="Fitness center" membernum="100" />
-							<GroupLarge photo="" name="Climbing Club" membernum="50" />
-							<GroupLarge photo="" name="Hiking Club" membernum="90" />
-							<GroupLarge
-								photo=""
-								name="Lake Viewing Enjoyers"
-								membernum="1600"
-							/>
+							{allGroupData &&
+								allGroupData.data &&
+								allGroupData.data.map(
+									(group) =>
+										//@ts-ignore
+										group.tags &&
+										//@ts-ignore
+										group.tags.includes("outdoors") && (
+											<GroupLarge
+												key={group.id}
+												photo="/example-img.jpg"
+												name={group.name!}
+												membernum={Math.floor(Math.random() * 2000).toString()}
+											/>
+										)
+								)}
+						</div>
+						<h1 className="title">No Tags</h1>
+						<div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-4 ">
+							{allGroupData &&
+								allGroupData.data &&
+								allGroupData.data.map(
+									(group) =>
+										//@ts-ignore
+										!group.tags && (
+											<GroupLarge
+												key={group.id}
+												photo="/example-img.jpg"
+												name={group.name!}
+												membernum={Math.floor(Math.random() * 2000).toString()}
+											/>
+										)
+								)}
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	);
-};
+}
 
 const GroupLarge = (props: {
 	photo: string;
@@ -124,3 +155,4 @@ const GroupSmall = (props: { photo: string; title: string }) => {
 		</div>
 	);
 };
+//copyright coursify studios 5783
