@@ -16,6 +16,7 @@ export function AssignmentPreview({
 	schedule,
 	scheduleT,
 	userId,
+	showClassPill,
 }: {
 	supabase: SupabaseClient<Database>;
 	assignment: {
@@ -36,6 +37,7 @@ export function AssignmentPreview({
 		block: number;
 		schedule_type: number;
 	};
+	showClassPill: boolean;
 }) {
 	const date = new Date(assignment.due_date!);
 	const [starred, setStarred] = useState(starredAsParam);
@@ -52,28 +54,28 @@ export function AssignmentPreview({
 		setDbStarred(newStarred);
 	};
 	return (
-		<>
-			<div className="w-10" onMouseLeave={() => dealWithStarred()}>
-				<span onClick={() => setStarred((starred) => !starred)}>
-					<Starred starred={starred} />
-				</span>
-			</div>
-			<div>
-				<Link href={"/classes/" + classes?.id}>
-					{classes && (
-						<ColoredPill color={classes.color} hoverState>
-							{classes.name}
-						</ColoredPill>
-					)}
-				</Link>
-				<h1 className="text font-medium">{assignment.name}</h1>
-				<p className="w-[12rem] break-words line-clamp-3  ">
-					{assignment.description}
-				</p>
-			</div>
-			<div className="ml-1 flex flex-col items-end justify-between">
-				<div className="w-max text-sm font-medium text-gray-700">
-					{date.getMonth()}/{date.getDate()}
+		<div className="">
+			<div className="mb-1 flex justify-between">
+				<div className="flex">
+					<div className="h-full" onMouseLeave={() => dealWithStarred()}>
+						<span onClick={() => setStarred((starred) => !starred)}>
+							<Starred starred={starred} />
+						</span>
+					</div>
+					<div className="ml-2">
+						{classes && showClassPill && (
+							<Link href={"/classes/" + classes?.id}>
+								<ColoredPill color={classes.color} hoverState>
+									{classes.name}
+								</ColoredPill>
+							</Link>
+						)}
+					</div>
+				</div>
+				<div className="flex items-center">
+					<div className="mr-2 text-sm font-medium text-gray-700">
+						{date.getMonth()}/{date.getDate()}
+					</div>
 					<ColoredPill color={classes.color}>
 						{timeOfAssignment(
 							classes,
@@ -90,9 +92,17 @@ export function AssignmentPreview({
 							: to12hourTime(date.getHours() + ":" + date.getMinutes())}
 					</ColoredPill>
 				</div>
-				<CheckIcon className="h-5 w-5 text-gray-600" />
 			</div>
-		</>
+			<div>
+				<h1 className="text font-medium">{assignment.name}</h1>
+				<div className="flex items-end justify-between">
+					<p className="w-[12rem] break-words line-clamp-3  ">
+						{assignment.description}
+					</p>
+					<CheckIcon className="h-6 w-6" />
+				</div>
+			</div>
+		</div>
 	);
 }
 

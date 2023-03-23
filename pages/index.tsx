@@ -12,6 +12,8 @@ import {
 } from "../lib/db/schedule";
 import ScheduleComponent from "../components/complete/schedule";
 import { AssignmentPreview } from "../components/complete/assignments";
+import { ColoredPill } from "../components/misc/pill";
+import Link from "next/link";
 
 export default function Home() {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -178,8 +180,8 @@ export default function Home() {
 					<div className="flex grow">
 						{/* Assignments UI */}
 						<section className="">
-							<h2 className="title">Assignments</h2>
-							<div className="rounded-x grid w-full py-2 xl:w-[58.5rem]">
+							<h2 className="title mb-3">Assignments</h2>
+							<div className="xl:w-[58.5rem]">
 								{classes &&
 									classes.data &&
 									classes.data
@@ -194,17 +196,26 @@ export default function Home() {
 													aClass.assignments.length == 0
 												) && (
 													<div key={aClass.id}>
-														<h2 className="my-4 font-semibold">
+														<Link href={"/classes/" + aClass.id}>
+															{/* <ColoredPill
+																color={aClass.color}
+																className="my-4"
+															>
+																<p className="text-lg">{aClass.name}</p>
+															</ColoredPill> */}
+															<h2 className="mb-2 font-semibold">
+																{aClass.name}
+															</h2>
+														</Link>
+														{/* <h2 className="my-4 text-lg font-semibold">
 															{aClass.name}
-														</h2>
-														<div className="flex gap-6 md:grid-cols-2 xl:grid-cols-2">
+														</h2> */}
+														<div className="mb-5 grid gap-5 xl:grid-cols-3">
 															{Array.isArray(aClass.assignments) &&
 																aClass.assignments.map((assignment) => (
 																	<div
 																		key={assignment.id}
-																		className={
-																			"flex rounded-lg bg-gray-200 p-2"
-																		}
+																		className={"rounded-lg bg-gray-200 p-2"}
 																	>
 																		<AssignmentPreview
 																			supabase={supabaseClient}
@@ -214,9 +225,6 @@ export default function Home() {
 																					: assignment
 																			}
 																			userId={user.id}
-																			// name={assignment.name}
-																			// desc={assignment.description}
-																			// id={assignment.id}
 																			starredAsParam={
 																				assignment.starred
 																					? Array.isArray(assignment.starred)
@@ -224,6 +232,7 @@ export default function Home() {
 																						: !!assignment.starred
 																					: false
 																			}
+																			showClassPill={false}
 																			schedule={schedule!}
 																			scheduleT={tomorrowSchedule!}
 																			classes={aClass}
@@ -236,7 +245,6 @@ export default function Home() {
 										)}
 							</div>
 						</section>
-						{/* Starred assignments */}
 						<section className=" grow lg:ml-10">
 							<h2 className="title mr-2 mb-4">Starred</h2>
 							<div className="grid gap-4">
@@ -254,7 +262,7 @@ export default function Home() {
 														: false) && (
 														<div
 															key={assignment.id}
-															className={"flex rounded-lg bg-gray-200 p-2"}
+															className={" rounded-lg bg-gray-200 p-2"}
 														>
 															<AssignmentPreview
 																supabase={supabaseClient}
@@ -274,6 +282,7 @@ export default function Home() {
 																			: !!assignment.starred
 																		: false
 																}
+																showClassPill={true}
 																schedule={schedule!}
 																scheduleT={tomorrowSchedule!}
 																classes={aClass}
