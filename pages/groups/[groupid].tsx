@@ -17,12 +17,12 @@ const Group: NextPage = () => {
 	const { groupid } = router.query;
 	const [groupData, setGroupData] = useState<GroupResponse>();
 
-	useEffect( () => {
+	useEffect(() => {
 		(async () => {
 			if (typeof groupid == "string") {
 				const data = await getGroup(supabase, groupid);
 				setGroupData(data);
-                console.log(data);
+				console.log(data);
 			}
 		})();
 	}, [supabase, groupid]);
@@ -86,9 +86,7 @@ const Group: NextPage = () => {
 					<Tab.Panels>
 						<Tab.Panel>
 							<div className="mb-6 rounded-xl bg-gray-200 p-4">
-								<p className="text-lg">
-									{groupData?.data?.description}
-								</p>
+								<p className="text-lg">{groupData?.data?.description}</p>
 							</div>
 							<h2 className="title mb-3">Announcements</h2>
 							<div className="space-y-3">

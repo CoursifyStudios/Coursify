@@ -26,7 +26,7 @@ export const getAllPublicGroups = async (
 	return await supabaseClient
 		.from("groups")
 		.select(
-		`
+			`
         *,
         users_groups (
             user_id, group_id
@@ -48,13 +48,13 @@ export const getGroup = async (
 	return await supabaseClient
 		.from("groups")
 		.select(
-            `
+			`
             *,
             users_groups (
                 *
             )
             `
-        )
+		)
 		.eq("id", groupid)
 		.single();
 };

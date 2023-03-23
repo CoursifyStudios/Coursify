@@ -10,7 +10,7 @@ import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import type { PostgrestResponse } from "@supabase/supabase-js";
 import { AllGroupsResponse, getAllGroupsForUser } from "../../lib/db/groups";
 import Link from "next/link";
-import { Group } from "../../components/complete/group";
+import { GroupSmall } from "../../components/complete/group";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
@@ -123,7 +123,7 @@ export default function Profile() {
 						profileGroups.data.map((groupLink) =>
 							Array.isArray(groupLink) ? (
 								groupLink.map((group) => (
-									<Group
+									<GroupSmall
 										key={group.id}
 										photo="/example-img.jpg"
 										title={group.name ? group.name : ""}
@@ -132,7 +132,7 @@ export default function Profile() {
 									/>
 								))
 							) : (
-								<Group
+								<GroupSmall
 									key={groupLink.group_id}
 									photo="/example-img.jpg"
 									title={

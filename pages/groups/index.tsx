@@ -1,6 +1,6 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
 import { useEffect, useState } from "react";
+import { GroupLarge, GroupSmall } from "../../components/complete/group";
 import { getAllPublicGroups, PublicGroupsResponse } from "../../lib/db/groups";
 import supabase from "../../lib/supabase";
 
@@ -11,7 +11,6 @@ export default function GroupDirectory() {
 		(async () => {
 			const data = await getAllPublicGroups(supabase);
 			setAllGroupData(data);
-			console.log(data);
 		})();
 	}, [supabase]);
 
@@ -34,8 +33,10 @@ export default function GroupDirectory() {
 											group.users_groups.length != 0) && (
 											<GroupSmall
 												key={group.id}
+												id={group.id}
 												photo="/example-img.jpg"
 												title={group.name!}
+												isLink={true}
 											/>
 										)
 								)}
@@ -52,9 +53,11 @@ export default function GroupDirectory() {
 										group.featured && (
 											<GroupLarge
 												key={group.id}
+												id={group.id}
 												photo="/example-img.jpg"
 												name={group.name!}
-												membernum={Math.floor(Math.random() * 2000).toString()}
+												membernum={Math.floor(Math.random() * 2000)}
+												isLink={true}
 											/>
 										)
 								)}
@@ -73,9 +76,11 @@ export default function GroupDirectory() {
 										group.tags.includes("outdoors") && (
 											<GroupLarge
 												key={group.id}
+												id={group.id}
 												photo="/example-img.jpg"
 												name={group.name!}
-												membernum={Math.floor(Math.random() * 2000).toString()}
+												membernum={Math.floor(Math.random() * 2000)}
+												isLink={true}
 											/>
 										)
 								)}
@@ -90,9 +95,11 @@ export default function GroupDirectory() {
 										!group.tags && (
 											<GroupLarge
 												key={group.id}
+												id={group.id}
 												photo="/example-img.jpg"
 												name={group.name!}
-												membernum={Math.floor(Math.random() * 2000).toString()}
+												membernum={Math.floor(Math.random() * 2000)}
+												isLink={true}
 											/>
 										)
 								)}
@@ -104,55 +111,4 @@ export default function GroupDirectory() {
 	);
 }
 
-const GroupLarge = (props: {
-	photo: string;
-	name: string;
-	membernum: string;
-}) => {
-	return (
-		<div
-			className={
-				"flex w-[19rem] cursor-pointer flex-col rounded-xl bg-gray-200 transition duration-300 hover:shadow-lg hover:brightness-95 "
-			}
-		>
-			<div className="relative h-32 ">
-				<Image
-					src="/example-img.jpg"
-					alt="Example Image"
-					className="rounded-t-xl object-cover object-center"
-					fill
-				/>
-			</div>
-			<div className="flex flex-grow flex-col p-4">
-				<div className="flex items-start justify-between">
-					<h3 className="break-words text-xl font-semibold line-clamp-2">
-						{props.name}
-					</h3>
-				</div>
-				<p>{props.membernum} Members</p>
-			</div>
-		</div>
-	);
-};
-
-const GroupSmall = (props: { photo: string; title: string }) => {
-	return (
-		<div
-			className="brightness-hover	flex cursor-pointer select-none flex-col rounded-xl bg-gray-200 "
-			tabIndex={0}
-		>
-			<div className="relative h-16">
-				<Image
-					fill
-					className="rounded-t-xl object-cover object-center"
-					alt={"Groups image for " + props.title}
-					src={props.photo}
-				/>
-			</div>
-			<div className="flex justify-center">
-				<h3 className="text-l p-3 font-medium line-clamp-2">{props.title}</h3>
-			</div>
-		</div>
-	);
-};
 //copyright coursify studios 5783
