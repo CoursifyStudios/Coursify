@@ -85,7 +85,7 @@ export default function GroupDirectory() {
 										)
 								)}
 						</div>
-						<h1 className="title">No Tags</h1>
+						<h1 className="title mt-4">No Tags</h1>
 						<div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-4 ">
 							{allGroupData &&
 								allGroupData.data &&

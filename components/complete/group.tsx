@@ -40,7 +40,7 @@ export const GroupSmall: NextPage<{
 			</div>
 		);
 	}
-};
+}; //combine these into one at some point
 export const GroupLarge: NextPage<{
 	id: string;
 	photo: string;
