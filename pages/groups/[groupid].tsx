@@ -9,20 +9,28 @@ import {
 	FaceSmileIcon,
 } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
-import { getGroup, GroupResponse } from "../../lib/db/groups";
+import {
+	getGroup,
+	getGroupAnnouncements,
+	GroupAnnouncementsResponse,
+	GroupResponse,
+} from "../../lib/db/groups";
 import supabase from "../../lib/supabase";
 
 const Group: NextPage = () => {
 	const router = useRouter();
 	const { groupid } = router.query;
 	const [groupData, setGroupData] = useState<GroupResponse>();
-
+	const [announcements, setAnnouncements] =
+		useState<GroupAnnouncementsResponse>();
 	useEffect(() => {
 		(async () => {
 			if (typeof groupid == "string") {
 				const data = await getGroup(supabase, groupid);
 				setGroupData(data);
-				console.log(data);
+				const announcements = await getGroupAnnouncements(supabase, groupid);
+				setAnnouncements(announcements);
+				console.log(announcements);
 			}
 		})();
 	}, [supabase, groupid]);
@@ -90,75 +98,29 @@ const Group: NextPage = () => {
 							</div>
 							<h2 className="title mb-3">Announcements</h2>
 							<div className="space-y-3">
-								<div className="rounded-xl bg-gray-200 p-4">
-									<div className="flex items-center justify-between">
-										<h2 className="text-2xl font-bold">
-											Selling Lots of Books !!!!!
-										</h2>
-										<EllipsisVerticalIcon className="h-6 w-6" />
-									</div>
-									<div className="flex items-center pt-1 pb-2">
-										<div className="inline-flex shrink-0 items-center rounded-full bg-gray-300 px-2.5 py-0.5">
-											<div className="h-4 w-4 rounded-full bg-white"></div>
-											<p className="ml-1.5 font-semibold text-neutral-700">
-												Jane Doe
-											</p>
-										</div>
-										<p className="pl-2.5 text-gray-600">25 mins ago</p>
-									</div>
-									<p>
-										I am selling some books for English classes. Literature in
-										Science: The Immortal Life of Henrietta Lacks by Rebecca
-										Skloot hardcover Being Human: Core Readings in the
-										Humanities edited by Leon Kass paperback English 3,4: A
-										Raisin in the Sun by Lorraine Hansberry paperback All books
-										are in new condition and have no annotations. If interested,
-										contact me at holy shit that{"'"}s someone{"'"}s actual
-										information
-									</p>
-									<div className="mt-4 flex items-center justify-between">
-										<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
-											<p className="ml-1.5 p-1">Insert response here</p>
-										</div>
-										<div className="rounded-full bg-gray-300 p-2">
-											<FaceSmileIcon className="h-6 w-6" />
-										</div>
-									</div>
-								</div>
-								<div className="rounded-xl bg-gray-200 p-4">
-									<div className="flex items-center justify-between">
-										<h2 className="text-2xl font-bold">
-											Selling Lots of Books !!!!!
-										</h2>
-										<EllipsisVerticalIcon className="h-6 w-6" />
-									</div>
-									<div className="flex items-center pt-1 pb-2">
-										<div className="inline-flex shrink-0 items-center rounded-full bg-gray-300 px-2.5 py-0.5">
-											<div className="h-4 w-4 rounded-full bg-white"></div>
-											<p className="ml-1.5 font-semibold text-neutral-700">
-												Jane Doe
-											</p>
-										</div>
-										<p className="pl-2.5 text-gray-600">25 mins ago</p>
-									</div>
-									<p>
-										I am selling some books for English classes. Literature in
-										Science: The Immortal Life of Henrietta Lacks by Rebecca
-										Skloot hardcover Being Human: Core Readings in the
-										Humanities edited by Leon Kass paperback English 3,4: A
-										Raisin in the Sun by Lorraine Hansberry paperback All books
-										are in new condition and have no annotations. If interested,
-										contact me at whoa there
-									</p>
-									<div className="mt-4 flex items-center justify-between">
-										<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
-											<p className="ml-1.5 p-1">Insert response here</p>
-										</div>
-										<div className="rounded-full bg-gray-300 p-2">
-											<FaceSmileIcon className="h-6 w-6" />
-										</div>
-									</div>
-								</div>
+								{announcements &&
+									announcements.data && //change below when I get actual types
+									announcements.data.map((announcementsData) =>
+										Array.isArray(announcementsData.announcements) ? (
+											announcementsData.announcements.map((announcement) => (
+												<Announcement
+													key={announcement.id}
+													author={announcement.author!}
+													title={announcement.title!}
+													content={announcement.content!}
+													time={announcement.time!}
+												></Announcement>
+											))
+										) : (
+											<Announcement
+												key={announcementsData.announcements?.id}
+												author={announcementsData.announcements?.author!}
+												title={announcementsData.announcements?.title!}
+												content={announcementsData.announcements?.content!}
+												time={announcementsData.announcements?.time!}
+											></Announcement>
+										)
+									)}
 							</div>
 						</Tab.Panel>
 						<Tab.Panel></Tab.Panel>
@@ -189,4 +151,40 @@ const Event = ({ title, time }: { title: string; time: string }) => {
 	);
 };
 
+const Announcement = ({
+	author,
+	title,
+	content,
+	time,
+}: {
+	author: string;
+	title: string;
+	content: string;
+	time: string;
+}) => {
+	return (
+		<div className="rounded-xl bg-gray-200 p-4">
+			<div className="flex items-center justify-between">
+				<h2 className="text-2xl font-bold">{title}</h2>
+				<EllipsisVerticalIcon className="h-6 w-6" />
+			</div>
+			<div className="flex items-center pt-1 pb-2">
+				<div className="inline-flex shrink-0 items-center rounded-full bg-gray-300 px-2.5 py-0.5">
+					<div className="h-4 w-4 rounded-full bg-white"></div>
+					<p className="ml-1.5 font-semibold text-neutral-700">{author}</p>
+				</div>
+				<p className="pl-2.5 text-gray-600">{time}</p>
+			</div>
+			<p>{content}</p>
+			<div className="mt-4 flex items-center justify-between">
+				<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
+					<p className="ml-1.5 p-1">Insert response here</p>
+				</div>
+				<div className="rounded-full bg-gray-300 p-2">
+					<FaceSmileIcon className="h-6 w-6" />
+				</div>
+			</div>
+		</div>
+	);
+};
 export default Group;
