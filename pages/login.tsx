@@ -14,12 +14,12 @@ export default function Login() {
 
 	useEffect(() => {
 		setUrl(window.location.origin);
-		if (user) {
+		if (user && router.isReady) {
 			if (typeof redirectedFrom == "string")
 				router.push(decodeURI(redirectedFrom));
 			else router.push("/");
 		}
-	}, [user]);
+	}, [user, router]);
 
 	return (
 		<div className="flex h-screen bg-teal-500 [background-image:url('/svgs/falling-triangles.svg')]">

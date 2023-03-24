@@ -1,19 +1,22 @@
 import { Transition, Dialog } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useState, Fragment } from "react";
+import { formatDate } from "../../lib/misc/formatDate";
 import { IconConverter, InfoPill } from "../misc/infopills";
 
 export const Achievement = ({
 	data,
+	earned,
 }: {
 	data: {
 		desc_full: string | null;
 		desc_short: string | null;
 		icon: string | null;
-		id: number;
+		id: string;
 		name: string;
 		school: string;
 	};
+	earned?: Date;
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	return (
@@ -55,6 +58,12 @@ export const Achievement = ({
 									</section>
 
 									<p className="mt-4 text-sm">{data.desc_full}</p>
+									{earned && (
+										<div className="mt-3 flex text-xs text-gray-700">
+											<h3 className="mr-1.5 font-medium">Earned:</h3>
+											{formatDate(earned)}
+										</div>
+									)}
 
 									<button
 										onClick={() => setIsOpen(false)}

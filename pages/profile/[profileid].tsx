@@ -1,6 +1,6 @@
-import { EnvelopeIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import { Fragment, ReactNode, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Class } from "../../components/complete/class";
 import { ProfilesResponse } from "../../lib/db/profiles";
 import { getProfile } from "../../lib/db/profiles";
@@ -87,15 +87,19 @@ export default function Profile() {
 				</div>
 				{!(
 					profile?.data &&
-					getDataInArray(profile?.data?.achievements).length == 0
+					getDataInArray(profile?.data?.users_achievements).length == 0
 				) && (
 					<div className="scrollbar-fancy scrollbar-fancy-darker mx-0 flex w-full flex-col items-center overflow-y-auto rounded-xl bg-gray-200 p-6 md:mx-auto  lg:mx-0 lg:mt-8 ">
 						<h1 className="title mb-5">Achievements</h1>
 						<div className=" grid w-full grid-cols-1 gap-6 md:grid-cols-2">
-							{profile?.data?.achievements
-								? getDataInArray(profile?.data?.achievements).map(
+							{profile?.data?.users_achievements
+								? getDataInArray(profile?.data?.users_achievements).map(
 										(achievement, i) => (
-											<Achievement data={achievement} key={i} />
+											<Achievement
+												data={getDataOutArray(achievement.achievements)!}
+												key={i}
+												earned={new Date(achievement.date_earned)}
+											/>
 										)
 								  )
 								: [...new Array(4)].map((_, i) => (

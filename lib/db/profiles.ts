@@ -8,9 +8,16 @@ export const getProfile = async (
 	return await supabaseClient
 		.from("users")
 		.select(
-			`*, achievements (
-			*
-		)`
+			`
+			*, 
+			users_achievements (
+				*, 
+				achievements (
+					*
+				)
+			)
+			
+		`
 		)
 		.eq("id", profileid)
 		.single();
