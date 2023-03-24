@@ -11,12 +11,21 @@ import CircleCounter from "../../components/misc/circleCounter";
 import Link from "next/link";
 import { AssignmentPreview } from "../../components/complete/assignments";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
-import { AcademicCapIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
+import {
+	AcademicCapIcon,
+	EnvelopeIcon,
+	PlusIcon,
+} from "@heroicons/react/24/outline";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import Editor from "../../components/editors/richeditor";
 import { EditorState } from "lexical";
-import { getSchedule, ScheduleInterface, setThisSchedule } from "../../lib/db/schedule";
+import {
+	getSchedule,
+	ScheduleInterface,
+	setThisSchedule,
+} from "../../lib/db/schedule";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
+import { CreateAssignment } from "../../components/complete/createAssignment";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -32,6 +41,7 @@ const Class: NextPage = () => {
 	const [edited, setEdited] = useState(false);
 	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
 	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
+	const [assignmentCreationOpen, setAssignmentCreationOpen] = useState(false);
 
 	const updateEditorDB = async () => {
 		setEdited(true);
@@ -61,26 +71,61 @@ const Class: NextPage = () => {
 			}
 			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
 				JSON.parse(sessionStorage.getItem("schedule")!);
-                if (allSchedules && allSchedules.length != 0) {
-                    setSchedule(allSchedules[0].schedule);
-                    setScheduleT(allSchedules[1].schedule);
-                } else {
-                    const [scheduleToday, scheduleTomorrow] = await Promise.all([
-                        getSchedule(supabase, new Date("2023-03-03")),
-                        getSchedule(supabase, new Date("2023-03-04")),
-                    ]);
-                    setThisSchedule(scheduleToday, setSchedule);
-                    setThisSchedule(scheduleTomorrow, setScheduleT);
-                }
+			if (allSchedules && allSchedules.length != 0) {
+				setSchedule(allSchedules[0].schedule);
+				setScheduleT(allSchedules[1].schedule);
+			} else {
+				const [scheduleToday, scheduleTomorrow] = await Promise.all([
+					getSchedule(supabase, new Date("2023-03-03")),
+					getSchedule(supabase, new Date("2023-03-04")),
+				]);
+				setThisSchedule(scheduleToday, setSchedule);
+				setThisSchedule(scheduleTomorrow, setScheduleT);
+			}
 		})();
 		setEdited(false);
 		setEditorState(undefined);
 	}, [user, supabase, classid]);
 
-	if (!data) return <div>loading data rn, wait pls ty</div>;
+	if (!data)
+		return (
+			<div className="mx-auto my-10 w-full max-w-screen-xl">
+				<div className="relative mb-6 h-48 w-full animate-pulse rounded-xl bg-gray-200 "></div>
+				<div className="flex">
+					<section className="flex grow flex-col">
+						<div className="flex w-full">
+							<div className="mx-auto mb-7 flex space-x-6">
+								<div className="h-7 w-24 animate-pulse rounded-md bg-gray-200"></div>
+								<div className="h-7 w-24 animate-pulse rounded-md bg-gray-200"></div>
+								<div className="h-7 w-24 animate-pulse rounded-md bg-gray-200"></div>
+							</div>
+						</div>
+						<div className="group">
+							<div className="flex h-36 w-full animate-pulse rounded-xl bg-gray-200"></div>
+						</div>
+					</section>
+					<section className="sticky top-0 ml-8 w-[20.5rem] shrink-0">
+						<div>
+							<h2 className="title">Grade</h2>
+							<div className="mt-6 h-16 animate-pulse rounded-xl	 bg-gray-200 p-4"></div>
+						</div>
+						<div className="space-y-4">
+							<h2 className="title mt-4 mb-6">Assignments</h2>
+							<div className="flex h-20 grow animate-pulse rounded-xl bg-gray-200"></div>
+							<div className="flex h-20 grow animate-pulse rounded-xl bg-gray-200"></div>
+							<div className="flex h-20 grow animate-pulse rounded-xl bg-gray-200"></div>
+						</div>
+					</section>
+				</div>
+			</div>
+		);
 
 	return (
 		<div className="mx-auto my-10 w-full max-w-screen-xl">
+			<CreateAssignment
+				open={assignmentCreationOpen}
+				setOpen={setAssignmentCreationOpen}
+			/>
 			<div className="relative mb-6 h-48 w-full">
 				<Image
 					src={exampleClassImg}
@@ -88,7 +133,7 @@ const Class: NextPage = () => {
 					className="rounded-xl object-cover object-center"
 					fill
 				/>
-				<h1 className="title absolute  bottom-5 left-5 !text-4xl text-gray-200">
+				<h1 className="title absolute bottom-5 left-5 !text-4xl text-gray-200">
 					{data.data && data.data.name}
 				</h1>
 			</div>
@@ -257,14 +302,27 @@ const Class: NextPage = () => {
 					</Tab.Panels>
 				</Tab.Group>
 				<section className="sticky top-0 ml-8 w-[20.5rem] shrink-0">
-					<div>
-						<h2 className="title">Grade</h2>
-						<div className="mt-6 rounded-xl bg-gray-200 p-4">
-							<CircleCounter amount={grade} max={100} />
+					{!isTeacher && (
+						<div>
+							<h2 className="title">Grade</h2>
+							<div className="mt-6 rounded-xl bg-gray-200 p-4">
+								<CircleCounter amount={grade} max={100} />
+							</div>
 						</div>
-					</div>
+					)}
 					<div className="space-y-4">
 						<h2 className="title mt-8 mb-6">Assignments</h2>
+						{isTeacher && (
+							<div
+								onClick={() => setAssignmentCreationOpen(true)}
+								className="group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:bg-gray-200 hover:text-black"
+							>
+								<PlusIcon className="mr-4 -ml-4 h-8 w-8 transition group-hover:scale-125" />{" "}
+								<h3 className=" text-lg font-medium  transition">
+									New Assignment
+								</h3>
+							</div>
+						)}
 						{Array.isArray(data.data?.assignments) &&
 							user &&
 							data.data?.assignments.map((assignment) => (
@@ -278,7 +336,7 @@ const Class: NextPage = () => {
 										assignment={
 											Array.isArray(assignment) ? assignment[0] : assignment
 										}
-                                        showClassPill={false}
+										showClassPill={false}
 										starredAsParam={false}
 										schedule={schedule!}
 										scheduleT={scheduleT!}
