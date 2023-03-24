@@ -11,7 +11,7 @@ import CircleCounter from "../../components/misc/circleCounter";
 import Link from "next/link";
 import { AssignmentPreview } from "../../components/complete/assignments";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
-import { AcademicCapIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
+import { AcademicCapIcon, EnvelopeIcon, IdentificationIcon } from "@heroicons/react/24/outline";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import Editor from "../../components/editors/richeditor";
 import { EditorState } from "lexical";
@@ -228,7 +228,7 @@ const Class: NextPage = () => {
 															userValue.teacher && user.id == userValue.user_id
 													) && (
 														<div className="absolute -bottom-1 -right-1  flex rounded-full bg-yellow-100 p-0.5">
-															<AcademicCapIcon className="h-4 w-4 text-yellow-600" />
+															<IdentificationIcon className="h-4 w-4 text-yellow-600" />
 														</div>
 													)}
 											</div>
