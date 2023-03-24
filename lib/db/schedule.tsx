@@ -1,4 +1,5 @@
 import { SupabaseClient } from "@supabase/supabase-js";
+import { Dispatch, SetStateAction } from "react";
 import { Database, Json } from "./database.types";
 
 export interface ScheduleInterface {
@@ -98,3 +99,13 @@ export function dayPlus(day: Date, add: number) {
 	newDay.setDate(day.getDate() + add);
 	return newDay;
 }
+
+export const setThisSchedule = (
+    scheduleData: ScheduleData,
+    setter?: Dispatch<SetStateAction<ScheduleInterface[] | undefined>>
+    ) => {
+        if (setter) setter(!scheduleData.data?.template && scheduleData.data?.schedule_items
+            ? (scheduleData.data.schedule_items as unknown as ScheduleInterface[])
+            : !Array.isArray(scheduleData.data?.schedule_templates) ? (scheduleData.data
+                    ?.schedule_templates?.schedule_items as unknown as ScheduleInterface[]) : undefined)
+    }

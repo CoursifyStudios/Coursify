@@ -106,7 +106,7 @@ const group: NextPage = () => {
 										Humanities edited by Leon Kass paperback English 3,4: A
 										Raisin in the Sun by Lorraine Hansberry paperback All books
 										are in new condition and have no annotations. If interested,
-										contact me at 23jhawk@shcp.edu or 415-741-8383
+										contact me at
 									</p>
 									<div className="mt-4 flex items-center justify-between">
 										<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
@@ -140,7 +140,7 @@ const group: NextPage = () => {
 										Humanities edited by Leon Kass paperback English 3,4: A
 										Raisin in the Sun by Lorraine Hansberry paperback All books
 										are in new condition and have no annotations. If interested,
-										contact me at 23jhawk@shcp.edu or 415-741-8383
+										contact me at
 									</p>
 									<div className="mt-4 flex items-center justify-between">
 										<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">

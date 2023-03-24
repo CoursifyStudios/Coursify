@@ -11,6 +11,9 @@ import {
 	ScheduleInterface,
 } from "../lib/db/schedule";
 import ScheduleComponent from "../components/complete/schedule";
+import { AssignmentPreview } from "../components/complete/assignments";
+import { ColoredPill } from "../components/misc/pill";
+import Link from "next/link";
 
 export default function Home() {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -40,6 +43,7 @@ export default function Home() {
 				 * on it. This is very much a qol edge case thing, but I wanted to add functionality that would make sure it
 				 * displayed the correct day as I've missed class due to an error like this in g calender (or it could've
 				 * been the fact that I looked at it as I was getting off a plane at 3am, but y'know)
+				 *      ...sounds like a skill issue -Bill
 				 */
 				if (parsedSchedule.date === today.toISOString()) {
 					setSchedule(parsedSchedule.schedule);
@@ -53,14 +57,20 @@ export default function Home() {
 	useEffect(() => {
 		(async () => {
 			if (user) {
-				const [classes, scheduleClasses, secondDaySchedule, thirdDaySchedule] =
-					await Promise.all([
-						getAllClasses(supabaseClient),
-						// read comment in above useeffect as to why I'm fetching 3 dates
-						getSchedule(supabaseClient, new Date("2023-03-03")),
-						getSchedule(supabaseClient, new Date("2023-03-04")),
-						getSchedule(supabaseClient, new Date("2023-03-05")),
-					]);
+				const [
+					classes,
+					//assignments,
+					scheduleClasses,
+					secondDaySchedule,
+					thirdDaySchedule,
+				] = await Promise.all([
+					getAllClasses(supabaseClient),
+					//getAllAssignments(supabaseClient),
+					// read comment in above useEffect as to why I'm fetching 3 dates
+					getSchedule(supabaseClient, new Date("2023-03-03")),
+					getSchedule(supabaseClient, new Date("2023-03-04")),
+					getSchedule(supabaseClient, new Date("2023-03-05")),
+				]);
 
 				setClasses(classes);
 				const fullSchedule: { date: Date; schedule: ScheduleInterface[] }[] =
@@ -170,23 +180,115 @@ export default function Home() {
 					<div className="flex grow">
 						{/* Assignments UI */}
 						<section className="">
-							<h2 className="title">Assignments</h2>
-							<div className="mt-6 flex w-full rounded-xl bg-gray-200 px-4 py-2 xl:w-[58.5rem]">
-								<p>
-									ASSIGNEMENT VIEW GOES HERE <br></br>text<br></br>text
-									<br></br>IMAGINE THE THING FROM THE FIGMA WAS HEREtext
-									<br></br>text<br></br>
-								</p>
+							<h2 className="title mb-3">Assignments</h2>
+							<div className="xl:w-[58.5rem]">
+								{classes &&
+									classes.data &&
+									classes.data
+										.slice(0, classes.data.length)
+										.sort((a, b) =>
+											sortClasses(a, b, schedule, tomorrowSchedule)
+										)
+										.map(
+											(aClass) =>
+												!(
+													Array.isArray(aClass.assignments) &&
+													aClass.assignments.length == 0
+												) && (
+													<div key={aClass.id}>
+														<Link href={"/classes/" + aClass.id}>
+															{/* <ColoredPill
+																color={aClass.color}
+																className="my-4"
+															>
+																<p className="text-lg">{aClass.name}</p>
+															</ColoredPill> */}
+															<h2 className="mb-2 font-semibold">
+																{aClass.name}
+															</h2>
+														</Link>
+														{/* <h2 className="my-4 text-lg font-semibold">
+															{aClass.name}
+														</h2> */}
+														<div className="mb-5 grid gap-5 xl:grid-cols-3">
+															{Array.isArray(aClass.assignments) &&
+																aClass.assignments.map((assignment) => (
+																	<div
+																		key={assignment.id}
+																		className={"rounded-lg bg-gray-200 p-2"}
+																	>
+																		<AssignmentPreview
+																			supabase={supabaseClient}
+																			assignment={
+																				Array.isArray(assignment)
+																					? assignment[0]
+																					: assignment
+																			}
+																			userId={user.id}
+																			starredAsParam={
+																				assignment.starred
+																					? Array.isArray(assignment.starred)
+																						? assignment.starred.length > 0
+																						: !!assignment.starred
+																					: false
+																			}
+																			showClassPill={false}
+																			schedule={schedule!}
+																			scheduleT={tomorrowSchedule!}
+																			classes={aClass}
+																		/>
+																	</div>
+																))}
+														</div>
+													</div>
+												)
+										)}
 							</div>
 						</section>
-						{/* Starred assignments */}
 						<section className=" grow lg:ml-10">
-							<h2 className="title mr-2">Starred</h2>
-							<p>
-								STARRED GOES HERE <br></br>text<br></br>text
-								<br></br>IMAGINE THE THING FROM THE FIGMA WAS HEREtext
-								<br></br>text<br></br>
-							</p>
+							<h2 className="title mr-2 mb-4">Starred</h2>
+							<div className="grid gap-4">
+								{classes &&
+									classes.data &&
+									classes.data.map(
+										(aClass) =>
+											Array.isArray(aClass.assignments) &&
+											aClass.assignments.map(
+												(assignment) =>
+													(assignment.starred
+														? Array.isArray(assignment.starred)
+															? assignment.starred.length > 0
+															: !!assignment.starred
+														: false) && (
+														<div
+															key={assignment.id}
+															className={" rounded-lg bg-gray-200 p-2"}
+														>
+															<AssignmentPreview
+																supabase={supabaseClient}
+																assignment={
+																	Array.isArray(assignment)
+																		? assignment[0]
+																		: assignment
+																}
+																userId={user.id}
+																starredAsParam={
+																	assignment.starred
+																		? Array.isArray(assignment.starred)
+																			? assignment.starred.length > 0
+																			: !!assignment.starred
+																		: false
+																}
+																showClassPill={true}
+																schedule={schedule!}
+																scheduleT={tomorrowSchedule!}
+																classes={aClass}
+															/>
+														</div>
+													)
+											)
+									)}
+							</div>
 						</section>
 					</div>
 				</div>
