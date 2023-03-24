@@ -14,7 +14,7 @@ export interface Database {
 					desc_full: string | null;
 					desc_short: string | null;
 					icon: string | null;
-					id: number;
+					id: string;
 					name: string;
 					school: string;
 				};
@@ -22,7 +22,7 @@ export interface Database {
 					desc_full?: string | null;
 					desc_short?: string | null;
 					icon?: string | null;
-					id?: number;
+					id?: string;
 					name: string;
 					school: string;
 				};
@@ -30,9 +30,32 @@ export interface Database {
 					desc_full?: string | null;
 					desc_short?: string | null;
 					icon?: string | null;
-					id?: number;
+					id?: string;
 					name?: string;
 					school?: string;
+				};
+			};
+			announcements: {
+				Row: {
+					author: string | null;
+					content: string | null;
+					id: string;
+					time: string | null;
+					title: string | null;
+				};
+				Insert: {
+					author?: string | null;
+					content?: string | null;
+					id?: string;
+					time?: string | null;
+					title?: string | null;
+				};
+				Update: {
+					author?: string | null;
+					content?: string | null;
+					id?: string;
+					time?: string | null;
+					title?: string | null;
 				};
 			};
 			assignments: {
@@ -46,7 +69,7 @@ export interface Database {
 					name: string;
 					publish_date: string | null;
 					publish_type: number | null;
-					type: string | null;
+					submission_type: string | null;
 				};
 				Insert: {
 					content?: string | null;
@@ -58,7 +81,7 @@ export interface Database {
 					name: string;
 					publish_date?: string | null;
 					publish_type?: number | null;
-					type?: string | null;
+					submission_type?: string | null;
 				};
 				Update: {
 					content?: string | null;
@@ -70,7 +93,7 @@ export interface Database {
 					name?: string;
 					publish_date?: string | null;
 					publish_type?: number | null;
-					type?: string | null;
+					submission_type?: string | null;
 				};
 			};
 			classes: {
@@ -145,21 +168,41 @@ export interface Database {
 			groups: {
 				Row: {
 					description: string | null;
+					featured: boolean | null;
 					id: string;
 					name: string | null;
 					public: boolean | null;
+					tags: string[] | null;
 				};
 				Insert: {
 					description?: string | null;
+					featured?: boolean | null;
 					id?: string;
 					name?: string | null;
 					public?: boolean | null;
+					tags?: string[] | null;
 				};
 				Update: {
 					description?: string | null;
+					featured?: boolean | null;
 					id?: string;
 					name?: string | null;
 					public?: boolean | null;
+					tags?: string[] | null;
+				};
+			};
+			groups_announcements: {
+				Row: {
+					announcement_id: string;
+					group_id: string;
+				};
+				Insert: {
+					announcement_id: string;
+					group_id: string;
+				};
+				Update: {
+					announcement_id?: string;
+					group_id?: string;
 				};
 			};
 			schedule_templates: {
@@ -270,17 +313,20 @@ export interface Database {
 					year?: string | null;
 				};
 			};
-			users_achivements: {
+			users_achievements: {
 				Row: {
-					achivement_id: number;
+					achivement_id: string;
+					date_earned: string;
 					user_id: string;
 				};
 				Insert: {
-					achivement_id: number;
+					achivement_id: string;
+					date_earned?: string;
 					user_id: string;
 				};
 				Update: {
-					achivement_id?: number;
+					achivement_id?: string;
+					date_earned?: string;
 					user_id?: string;
 				};
 			};
