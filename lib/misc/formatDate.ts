@@ -30,5 +30,5 @@ export const howLongAgo = (date: string) => {
 	if (interval > 1) {
 		return Math.floor(interval) + " minutes ago";
 	}
-	return Math.floor(seconds) + " seconds";
+	return Math.floor(seconds) + " seconds ago";
 };

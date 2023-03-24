@@ -4,18 +4,11 @@ import { Fragment, useEffect, useState } from "react";
 import { ColoredPill } from "../../components/misc/pill";
 import Image from "next/image";
 import exampleGroupImg from "../../public/example-img.jpg";
-import {
-	EllipsisVerticalIcon,
-	FaceSmileIcon
-} from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
-import {
-	getGroup,
-	GroupResponse
-} from "../../lib/db/groups";
+import { getGroup, GroupResponse } from "../../lib/db/groups";
 import supabase from "../../lib/supabase";
-import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
-import { howLongAgo } from "../../lib/misc/formatDate";
+import { getDataInArray } from "../../lib/misc/dataOutArray";
+import { Announcement } from "../../components/misc/assignmentsandmembers";
 
 const Group: NextPage = () => {
 	const router = useRouter();
@@ -96,17 +89,15 @@ const Group: NextPage = () => {
 							<div className="space-y-3">
 								{groupData &&
 									groupData.data &&
-                                    groupData.data.announcements && //change below when I get actual types
-									getDataInArray(groupData.data.announcements).map((announcement) =>
-												<Announcement
-													key={announcement.id}
-													author={announcement.author!}
-													title={announcement.title!}
-													content={announcement.content!}
-													time={announcement.time!}
-												></Announcement>
-											)
-                                }
+									groupData.data.announcements && //change below when I get actual types
+									getDataInArray(groupData.data.announcements).map(
+										(announcement) => (
+											<Announcement
+												key={announcement.id}
+												announcement={announcement}
+											></Announcement>
+										)
+									)}
 							</div>
 						</Tab.Panel>
 						<Tab.Panel></Tab.Panel>
@@ -137,41 +128,4 @@ const Event = ({ title, time }: { title: string; time: string }) => {
 	);
 };
 
-const Announcement = ({
-	author,
-	title,
-	content,
-	time,
-}: {
-	author: string
-	title: string;
-	content: string;
-	time: string;
-}) => {
-	return (
-		<div className="rounded-xl bg-gray-200 p-4">
-			<div className="flex items-center justify-between">
-				<h2 className="text-2xl font-bold">{title}</h2>
-				<EllipsisVerticalIcon className="h-6 w-6" />
-			</div>
-			<div className="flex items-center pt-1 pb-2">
-				<div className="inline-flex shrink-0 items-center rounded-full bg-gray-300 px-2.5 py-0.5">
-					<div className="h-4 w-4 rounded-full bg-white"></div>
-					<p className="ml-1.5 font-semibold text-neutral-700">{author}</p>
-				</div>
-				<p className="pl-2.5 text-gray-600">{howLongAgo(time)}</p>
-			</div>
-			<p>{content}</p>
-			{/* <div className="mt-4 flex items-center justify-between">
-				<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
-					<p className="ml-1.5 p-1">Insert response here</p>
-				</div>
-				<div className="rounded-full bg-gray-300 p-2">
-					<FaceSmileIcon className="h-6 w-6" />
-				</div>
-			</div> */}
-		</div>
-	);
-};
 export default Group;
-
