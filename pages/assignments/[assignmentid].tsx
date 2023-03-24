@@ -27,6 +27,7 @@ import {
 	ScheduleInterface,
 	setThisSchedule,
 } from "../../lib/db/schedule";
+import Editor from "../../components/editors/richeditor";
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
@@ -262,9 +263,11 @@ const Post: NextPage = () => {
 					<section className="relative mt-5 flex flex-1 flex-col-reverse overflow-hidden whitespace-pre-line md:pr-2 xl:flex-row">
 						<div className="flex grow flex-col">
 							<h2 className="text-xl font-semibold">Details</h2>
-							<div className=" scrollbar-fancy mt-2 mb-5 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4">
-								{assignment.data.content}
-							</div>
+							<Editor
+								editable={false}
+								initialState={assignment.data.content}
+								className=" scrollbar-fancy mt-2 mb-5 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
+							/>
 						</div>
 						<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:ml-4 xl:mb-0 xl:w-72">
 							<h2 className="text-xl font-semibold">Submission</h2>
