@@ -23,7 +23,7 @@ export const InfoPills: NextPage<{
 	isTeacher: boolean;
 }> = ({ allPills, updatePills, isTeacher }) => {
 	const [pills, setPills] = useState(allPills);
-	const [selectedIcon, setSelectedIcon] = useState(InfoPillIcons[0]);
+	const [selectedIcon, setSelectedIcon] = useState(Icons[0]);
 	const [selectedColor, setSelectedColor] = useState(colors[0]);
 	const [newName, setNewName] = useState<string>();
 	const [link, setLink] = useState<string>();
@@ -59,13 +59,13 @@ export const InfoPills: NextPage<{
 									className="h-7 items-center space-x-2"
 									hoverState
 								>
-									<InfoPillIconConverter.toIcon str={pill.icon} />
+									<IconConverter.toIcon str={pill.icon} />
 									<span className="ml-2">{pill.name}</span>
 								</ColoredPill>
 							</a>
 						) : (
 							<ColoredPill color={pill.color} className="h-7 items-center">
-								<InfoPillIconConverter.toIcon str={pill.icon} />
+								<IconConverter.toIcon str={pill.icon} />
 								<span className="ml-2">{pill.name}</span>
 							</ColoredPill>
 						)}
@@ -120,7 +120,7 @@ export const InfoPills: NextPage<{
 											<ChevronUpDownIcon className="h-4 w-4" />
 										</Listbox.Button>
 										<Listbox.Options className="absolute bottom-8 z-20 -translate-x-2 space-y-2 rounded-lg bg-gray-300/75 p-1 backdrop-blur-xl">
-											{InfoPillIcons.map((icon, i) => (
+											{Icons.map((icon, i) => (
 												<Listbox.Option
 													key={i}
 													value={icon}
@@ -178,7 +178,7 @@ export const InfoPills: NextPage<{
 											close();
 											newPill({
 												color: selectedColor.name,
-												icon: InfoPillIconConverter.toString(selectedIcon),
+												icon: IconConverter.toString(selectedIcon),
 												name: newName,
 												link: link,
 											} as InfoPill);
@@ -215,7 +215,7 @@ export interface InfoPill {
 
 const className = "h-5 w-5";
 
-const InfoPillIcons = [
+const Icons = [
 	<DocumentIcon className={className} key={1} />,
 	<LinkIcon className={className} key={2} />,
 	<ChatBubbleOvalLeftEllipsisIcon className={className} key={3} />,
@@ -224,14 +224,7 @@ const InfoPillIcons = [
 	<MusicalNoteIcon className={className} key={6} />,
 ];
 
-const InfoPillIconStrings = [
-	"doc",
-	"link",
-	"chat",
-	"calendar",
-	"folder",
-	"music",
-];
+const IconStrings = ["doc", "link", "chat", "calendar", "folder", "music"];
 
 const colors = [
 	{ id: 1, name: "blue" },
@@ -243,9 +236,8 @@ const colors = [
 	{ id: 7, name: "gray" },
 ];
 
-const InfoPillIconConverter = {
-	toString: (icon: JSX.Element) =>
-		InfoPillIconStrings[InfoPillIcons.indexOf(icon)],
+export const IconConverter = {
+	toString: (icon: JSX.Element) => IconStrings[Icons.indexOf(icon)],
 	toIcon: ({ str }: { str: InfoPill["icon"] }) =>
-		InfoPillIcons[InfoPillIconStrings.indexOf(str)],
+		Icons[IconStrings.indexOf(str)],
 };
