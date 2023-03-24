@@ -1,8 +1,6 @@
 import {
 	ArrowsPointingInIcon,
 	ArrowsPointingOutIcon,
-	ArrowTopRightOnSquareIcon,
-	CheckIcon,
 	ChevronLeftIcon,
 	LinkIcon,
 } from "@heroicons/react/24/outline";
@@ -24,11 +22,19 @@ import Link from "next/link";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import { ButtonIcon } from "../../components/misc/button";
 import { AssignmentPreview } from "../../components/complete/assignments";
+import {
+	getSchedule,
+	ScheduleInterface,
+	setThisSchedule,
+} from "../../lib/db/schedule";
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
 	const [allAssignments, setAllAssignments] = useState<AllAssignmentResponse>();
 	const [assignment, setAssignment] = useState<AssignmentResponse>();
+	//obviously we need a better solution
+	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
+	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
 	const router = useRouter();
 	const user = useUser();
 	const { assignmentid } = router.query;
@@ -39,7 +45,19 @@ const Post: NextPage = () => {
 			if (user) {
 				const assignments = await getAllAssignments(supabase);
 				setAllAssignments(assignments);
-				console.log(assignments);
+			}
+			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
+				JSON.parse(sessionStorage.getItem("schedule")!);
+			if (allSchedules && allSchedules.length != 0) {
+				setSchedule(allSchedules[0].schedule);
+				setScheduleT(allSchedules[1].schedule);
+			} else {
+				const [scheduleToday, scheduleTomorrow] = await Promise.all([
+					getSchedule(supabase, new Date("2023-03-03")),
+					getSchedule(supabase, new Date("2023-03-04")),
+				]);
+				setThisSchedule(scheduleToday, setSchedule);
+				setThisSchedule(scheduleTomorrow, setScheduleT);
 			}
 		})();
 
@@ -62,16 +80,17 @@ const Post: NextPage = () => {
 	return (
 		<div className="mx-auto flex w-full max-w-screen-xl px-4 pt-6 pb-6 md:px-8 xl:px-0">
 			<div
-				className={`scrollbar-fancy mr-4 grow items-center overflow-x-clip md:grow-0 ${
+				className={`scrollbar-fancy mr-4 grow items-stretch overflow-x-clip md:grow-0 ${
 					fullscreen ? "hidden" : "flex"
 				} w-[20.5rem] shrink-0 snap-y snap-mandatory flex-col space-y-8 overflow-y-auto md:h-[calc(100vh-6.5rem)] `}
 			>
 				{allAssignments ? (
 					!allAssignments.error &&
 					user &&
+					schedule &&
 					allAssignments.data.map((assignment) => (
 						<Link
-							className={`flex h-max snap-start rounded-xl ${
+							className={`flex snap-start rounded-xl ${
 								assignmentid == assignment.id
 									? "bg-gray-50 shadow-xl"
 									: "brightness-hover bg-gray-200"
@@ -80,26 +99,28 @@ const Post: NextPage = () => {
 							key={assignment.id}
 						>
 							<AssignmentPreview
-								id={assignment.id}
+								supabase={supabase} //@ts-ignore
+								assignment={assignment}
 								userId={user.id}
-								supabase={supabase}
-								name={assignment.name}
-								desc={assignment.description}
-								starred={
+								starredAsParam={
 									assignment.starred
 										? Array.isArray(assignment.starred)
 											? assignment.starred.length > 0
 											: !!assignment.starred
 										: false
 								}
-								due={new Date(1667840443856)}
+								//obviously we need a better solution
+								schedule={schedule!}
+								scheduleT={scheduleT!}
+								showClassPill={true}
+								//@ts-ignore
 								classes={
-									assignment.classes_assignments &&
+									(assignment.classes_assignments &&
 									Array.isArray(assignment.classes_assignments)
 										? Array.isArray(assignment.classes_assignments[0].classes)
 											? assignment.classes_assignments[0].classes[0]
-											: assignment.classes_assignments[0].classes || undefined
-										: undefined
+											: assignment.classes_assignments[0].classes
+										: assignment.classes_assignments)!
 								}
 							/>
 						</Link>

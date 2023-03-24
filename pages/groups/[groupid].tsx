@@ -176,15 +176,16 @@ const Announcement = ({
 				<p className="pl-2.5 text-gray-600">{time}</p>
 			</div>
 			<p>{content}</p>
-			<div className="mt-4 flex items-center justify-between">
+			{/* <div className="mt-4 flex items-center justify-between">
 				<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
 					<p className="ml-1.5 p-1">Insert response here</p>
 				</div>
 				<div className="rounded-full bg-gray-300 p-2">
 					<FaceSmileIcon className="h-6 w-6" />
 				</div>
-			</div>
+			</div> */}
 		</div>
 	);
 };
 export default Group;
+

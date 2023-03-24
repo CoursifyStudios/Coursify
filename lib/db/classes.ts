@@ -10,7 +10,13 @@ export async function getAllClasses(supabaseClient: SupabaseClient<Database>) {
 	),
 	users_classes (
 		user_id, teacher, grade
-	)
+	),
+    assignments (
+        *,
+        starred (
+            *
+        )
+    )
 	`);
 	if (!error) {
 		return {
@@ -37,7 +43,7 @@ export const getClass = async (
 			`
 		*,
 		assignments (
-			name, description, id
+			name, description, id, due_type, due_date
 		),
 		users_classes (
 			user_id, grade, teacher

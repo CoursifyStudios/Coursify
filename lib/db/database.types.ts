@@ -14,7 +14,7 @@ export interface Database {
 					desc_full: string | null;
 					desc_short: string | null;
 					icon: string | null;
-					id: number;
+					id: string;
 					name: string;
 					school: string;
 				};
@@ -22,7 +22,7 @@ export interface Database {
 					desc_full?: string | null;
 					desc_short?: string | null;
 					icon?: string | null;
-					id?: number;
+					id?: string;
 					name: string;
 					school: string;
 				};
@@ -30,7 +30,7 @@ export interface Database {
 					desc_full?: string | null;
 					desc_short?: string | null;
 					icon?: string | null;
-					id?: number;
+					id?: string;
 					name?: string;
 					school?: string;
 				};
@@ -40,22 +40,22 @@ export interface Database {
 					author: string | null;
 					content: string | null;
 					id: string;
-					title: string | null;
 					time: string | null;
+					title: string | null;
 				};
 				Insert: {
 					author?: string | null;
 					content?: string | null;
 					id?: string;
+					time?: string | null;
 					title?: string | null;
-					time: string | null;
 				};
 				Update: {
 					author?: string | null;
 					content?: string | null;
 					id?: string;
+					time?: string | null;
 					title?: string | null;
-					time: string | null;
 				};
 			};
 			assignments: {
@@ -93,7 +93,7 @@ export interface Database {
 					name?: string;
 					publish_date?: string | null;
 					publish_type?: number | null;
-					submission_type?: string | null;
+					submission_submission_type?: string | null;
 				};
 			};
 			classes: {
@@ -315,15 +315,18 @@ export interface Database {
 			};
 			users_achievements: {
 				Row: {
-					achivement_id: number;
+					achivement_id: string;
+					date_earned: string;
 					user_id: string;
 				};
 				Insert: {
-					achivement_id: number;
+					achivement_id: string;
+					date_earned?: string;
 					user_id: string;
 				};
 				Update: {
-					achivement_id?: number;
+					achivement_id?: string;
+					date_earned?: string;
 					user_id?: string;
 				};
 			};
