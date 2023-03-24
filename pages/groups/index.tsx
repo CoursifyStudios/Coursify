@@ -44,7 +44,7 @@ export default function GroupDirectory() {
 					</div>
 					<div>
 						<h1 className="title">Featured Groups</h1>
-						<div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-4 ">
+						<div className="scrollbar-hide mt-4 flex snap-x snap-mandatory space-x-5 overflow-x-auto">
 							{allGroupData &&
 								allGroupData.data &&
 								allGroupData.data.map(
@@ -65,7 +65,7 @@ export default function GroupDirectory() {
 					</div>
 					<div>
 						<h1 className="title">Outdoors</h1>
-						<div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-4 ">
+						<div className="scrollbar-hide mt-4 flex snap-x snap-mandatory space-x-5 overflow-x-auto">
 							{allGroupData &&
 								allGroupData.data &&
 								allGroupData.data.map(
