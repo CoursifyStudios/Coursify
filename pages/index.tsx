@@ -272,9 +272,6 @@ export default function Home() {
 																		: assignment
 																}
 																userId={user.id}
-																// name={assignment.name}
-																// desc={assignment.description}
-																// id={assignment.id}
 																starredAsParam={
 																	assignment.starred
 																		? Array.isArray(assignment.starred)

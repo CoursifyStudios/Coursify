@@ -278,6 +278,7 @@ const Class: NextPage = () => {
 										assignment={
 											Array.isArray(assignment) ? assignment[0] : assignment
 										}
+                                        showClassPill={false}
 										starredAsParam={false}
 										schedule={schedule!}
 										scheduleT={scheduleT!}
