@@ -60,7 +60,7 @@ export interface Database {
 			};
 			assignments: {
 				Row: {
-					content: string | null;
+					content: Json | null;
 					created_date: string | null;
 					description: string;
 					due_date: string;
@@ -72,7 +72,7 @@ export interface Database {
 					submission_type: string | null;
 				};
 				Insert: {
-					content?: string | null;
+					content?: Json | null;
 					created_date?: string | null;
 					description: string;
 					due_date?: string;
@@ -84,7 +84,7 @@ export interface Database {
 					submission_type?: string | null;
 				};
 				Update: {
-					content?: string | null;
+					content?: Json | null;
 					created_date?: string | null;
 					description?: string;
 					due_date?: string;
