@@ -6,31 +6,27 @@ import Image from "next/image";
 import exampleGroupImg from "../../public/example-img.jpg";
 import {
 	EllipsisVerticalIcon,
-	FaceSmileIcon,
+	FaceSmileIcon
 } from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
 import {
 	getGroup,
-	getGroupAnnouncements,
-	GroupAnnouncementsResponse,
-	GroupResponse,
+	GroupResponse
 } from "../../lib/db/groups";
 import supabase from "../../lib/supabase";
+import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
+import { howLongAgo } from "../../lib/misc/formatDate";
 
 const Group: NextPage = () => {
 	const router = useRouter();
 	const { groupid } = router.query;
 	const [groupData, setGroupData] = useState<GroupResponse>();
-	const [announcements, setAnnouncements] =
-		useState<GroupAnnouncementsResponse>();
 	useEffect(() => {
 		(async () => {
 			if (typeof groupid == "string") {
-				const data = await getGroup(supabase, groupid);
-				setGroupData(data);
-				const announcements = await getGroupAnnouncements(supabase, groupid);
-				setAnnouncements(announcements);
-				console.log(announcements);
+				const groupData = await getGroup(supabase, groupid);
+				setGroupData(groupData);
+				console.log(groupData);
 			}
 		})();
 	}, [supabase, groupid]);
@@ -98,11 +94,10 @@ const Group: NextPage = () => {
 							</div>
 							<h2 className="title mb-3">Announcements</h2>
 							<div className="space-y-3">
-								{announcements &&
-									announcements.data && //change below when I get actual types
-									announcements.data.map((announcementsData) =>
-										Array.isArray(announcementsData.announcements) ? (
-											announcementsData.announcements.map((announcement) => (
+								{groupData &&
+									groupData.data &&
+                                    groupData.data.announcements && //change below when I get actual types
+									getDataInArray(groupData.data.announcements).map((announcement) =>
 												<Announcement
 													key={announcement.id}
 													author={announcement.author!}
@@ -110,17 +105,8 @@ const Group: NextPage = () => {
 													content={announcement.content!}
 													time={announcement.time!}
 												></Announcement>
-											))
-										) : (
-											<Announcement
-												key={announcementsData.announcements?.id}
-												author={announcementsData.announcements?.author!}
-												title={announcementsData.announcements?.title!}
-												content={announcementsData.announcements?.content!}
-												time={announcementsData.announcements?.time!}
-											></Announcement>
-										)
-									)}
+											)
+                                }
 							</div>
 						</Tab.Panel>
 						<Tab.Panel></Tab.Panel>
@@ -157,7 +143,7 @@ const Announcement = ({
 	content,
 	time,
 }: {
-	author: string;
+	author: string
 	title: string;
 	content: string;
 	time: string;
@@ -173,7 +159,7 @@ const Announcement = ({
 					<div className="h-4 w-4 rounded-full bg-white"></div>
 					<p className="ml-1.5 font-semibold text-neutral-700">{author}</p>
 				</div>
-				<p className="pl-2.5 text-gray-600">{time}</p>
+				<p className="pl-2.5 text-gray-600">{howLongAgo(time)}</p>
 			</div>
 			<p>{content}</p>
 			{/* <div className="mt-4 flex items-center justify-between">

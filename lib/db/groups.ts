@@ -52,6 +52,8 @@ export const getGroup = async (
             *,
             users_groups (
                 *
+            ), announcements (
+                *
             )
             `
 		)
@@ -61,23 +63,23 @@ export const getGroup = async (
 
 export type GroupResponse = Awaited<ReturnType<typeof getGroup>>;
 
-export const getGroupAnnouncements = async (
-	supabaseClient: SupabaseClient<Database>,
-	groupid: string
-) => {
-	return await supabaseClient
-		.from("groups_announcements")
-		.select(
-			`
-            *,
-            announcements (
-                *
-            )
-            `
-		)
-		.eq("group_id", groupid);
-};
+// export const getGroupAnnouncements = async (
+// 	supabaseClient: SupabaseClient<Database>,
+// 	groupid: string
+// ) => {
+// 	return await supabaseClient
+// 		.from("groups_announcements")
+// 		.select(
+// 			`
+//             *,
+//             announcements (
+//                 *
+//             )
+//             `
+// 		)
+// 		.eq("group_id", groupid);
+// };
 
-export type GroupAnnouncementsResponse = Awaited<
-	ReturnType<typeof getGroupAnnouncements>
->;
+// export type GroupAnnouncementsResponse = Awaited<
+// 	ReturnType<typeof getGroupAnnouncements>
+// >;
