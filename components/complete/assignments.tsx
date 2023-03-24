@@ -59,7 +59,7 @@ export function AssignmentPreview({
 		setDbStarred(starredAsParam);
 	}, [starredAsParam]);
 	return (
-		<div className="">
+		<div className="grow">
 			<div className="mb-1 flex justify-between">
 				<div className="flex">
 					<div className="h-full" onMouseLeave={() => dealWithStarred()}>
