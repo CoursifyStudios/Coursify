@@ -12,7 +12,7 @@ export default function ScheduleComponent({
 }) {
 	if (!(schedule && classes))
 		return (
-			<div className="my-6 flex h-36 animate-pulse flex-col justify-between rounded-xl bg-gray-200 p-4">
+			<div className="my-5 flex h-36 animate-pulse flex-col justify-between rounded-xl bg-gray-200 p-4">
 				{[...Array(3)].map((_, i) => (
 					<div className="flex justify-between" key={i}>
 						<div className="h-5 w-36 animate-pulse rounded bg-gray-300"></div>
@@ -23,7 +23,7 @@ export default function ScheduleComponent({
 		);
 	return (
 		<div className="flex flex-col">
-			<div className="my-6 grid max-w-md gap-5 rounded-xl bg-gray-200 p-4">
+			<div className="my-4 grid max-w-md gap-5 rounded-xl bg-gray-200 p-4">
 				{/* I've left some comments to clear up some stuff */}
 				{schedule && //checks if the useState that stores the schedule UI is not null
 					schedule.map(

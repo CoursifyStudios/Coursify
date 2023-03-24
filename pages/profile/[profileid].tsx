@@ -9,8 +9,9 @@ import { Database } from "../../lib/db/database.types";
 import { useRouter } from "next/router";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import type { PostgrestResponse } from "@supabase/supabase-js";
-import { AllGroupsResponse, getAllGroups } from "../../lib/db/groups";
+import { AllGroupsResponse, getAllGroupsForUser } from "../../lib/db/groups";
 import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
+import { GroupSmall } from "../../components/complete/group";
 import { Achievement } from "../../components/complete/achivement";
 
 export default function Profile() {
@@ -36,7 +37,7 @@ export default function Profile() {
 					id: profileid as string,
 				});
 				setProfileClasses(classesData);
-				const groupsData = await getAllGroups(
+				const groupsData = await getAllGroupsForUser(
 					supabaseClient,
 					profileid as string
 				);
@@ -121,7 +122,11 @@ export default function Profile() {
 				<div className="grid gap-8 md:grid-cols-2">
 					{profileClasses && profileClasses.data
 						? profileClasses.data.map((currentClass, i) => (
-								<Class classData={currentClass} key={i} isLink={true} />
+								<Class
+									classData={currentClass}
+									key={currentClass.id}
+									isLink={true}
+								/>
 						  ))
 						: ""}
 				</div>
@@ -134,15 +139,16 @@ export default function Profile() {
 						profileGroups.data.map((groupLink) =>
 							Array.isArray(groupLink) ? (
 								groupLink.map((group) => (
-									<Groups
+									<GroupSmall
 										key={group.id}
 										photo="/example-img.jpg"
 										title={group.name ? group.name : ""}
-										description={group.description ? group.description : ""}
+										id={groupLink.group_id}
+										isLink={true}
 									/>
 								))
 							) : (
-								<Groups
+								<GroupSmall
 									key={groupLink.group_id}
 									photo="/example-img.jpg"
 									title={
@@ -150,11 +156,8 @@ export default function Profile() {
 											? groupLink.groups[0].name
 											: groupLink.groups?.name) as string
 									}
-									description={
-										(Array.isArray(groupLink.groups)
-											? groupLink.groups[0].description
-											: groupLink.groups?.description) as string
-									}
+									id={groupLink.group_id}
+									isLink={true}
 								/>
 							)
 						)}
@@ -163,28 +166,3 @@ export default function Profile() {
 		</div>
 	);
 }
-
-const Groups = (props: {
-	photo: string;
-	title: string;
-	description: string;
-}) => {
-	return (
-		<div
-			className="brightness-hover	flex cursor-pointer select-none flex-col rounded-xl bg-gray-200 "
-			//tabIndex={0}
-		>
-			<div className="relative h-16">
-				<Image
-					fill
-					className="rounded-t-xl object-cover object-center"
-					alt={"Groups image for " + props.title}
-					src={props.photo}
-				/>
-			</div>
-			<div className="flex justify-center">
-				<h3 className="text-l p-3 font-medium line-clamp-2">{props.title}</h3>
-			</div>
-		</div>
-	);
-};

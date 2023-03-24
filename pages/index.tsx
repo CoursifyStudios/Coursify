@@ -128,7 +128,7 @@ export default function Home() {
 								<h2 className="title">Classes</h2>
 								{loading && <Loading className="ml-4" />}
 							</div>
-							<div className="mt-6 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
+							<div className="mt-5 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
 								{classes && classes.data && schedule
 									? classes.data
 											.slice(0, classes.data.length)
