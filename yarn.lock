@@ -1049,6 +1049,13 @@ electron-to-chromium@^1.4.284:
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.4.339.tgz#bfa611a7707ca8bbb784e01fe247c18a35bd8d28"
   integrity sha512-MSXHBJGcbBydq/DQDlpBeUKnJ6C7aTiNCTRpfDV5Iz0sNr/Ng6RJFloq82AAicp/SrmDq4zF6XsKG0B8Xwn1UQ==
 
+embla-carousel-wheel-gestures@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/embla-carousel-wheel-gestures/-/embla-carousel-wheel-gestures-3.0.0.tgz#a68ad0f76c2bec876354939b7edac00245433e19"
+  integrity sha512-OxMyRkDxiSHJy1DCInYjpq93q8Xz311ajCEUp/pvWH/odDc+KODLAtVI06U5NiPNIUJWj+IlZvLSVZUtpdTBEQ==
+  dependencies:
+    wheel-gestures "^2.2.5"
+
 emoji-regex@^8.0.0:
   version "8.0.0"
   resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-8.0.0.tgz#e818fd69ce5ccfcb404594f842963bf53164cc37"
@@ -3135,6 +3142,11 @@ whatwg-url@^5.0.0:
   dependencies:
     tr46 "~0.0.3"
     webidl-conversions "^3.0.0"
+
+wheel-gestures@^2.2.5:
+  version "2.2.5"
+  resolved "https://registry.yarnpkg.com/wheel-gestures/-/wheel-gestures-2.2.5.tgz#d4a7cdcd402500de26f65aabc8553b657515fb7d"
+  integrity sha512-01BlXRjBVt5Gy0VH2rRqMeccHruTGq2Gd1fx0UqCPN8KDeDCmlTXsRGc/hXJk6W+wnO9CNJp2xfntMNRArBxKQ==
 
 which-boxed-primitive@^1.0.2:
   version "1.0.2"

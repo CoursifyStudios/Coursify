@@ -64,7 +64,7 @@ export const GroupLarge: NextPage<{
 		return (
 			<div
 				className={
-					"flex w-[19rem] cursor-pointer flex-col rounded-xl bg-gray-200 transition duration-300 hover:shadow-lg hover:brightness-95 "
+					" flex w-[19rem] cursor-pointer snap-start flex-col rounded-xl bg-gray-200 transition duration-300 hover:shadow-lg hover:brightness-95 "
 				}
 			>
 				<div className="relative h-32 ">
