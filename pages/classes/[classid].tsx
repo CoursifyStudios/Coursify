@@ -11,12 +11,18 @@ import CircleCounter from "../../components/misc/circleCounter";
 import Link from "next/link";
 import { AssignmentPreview } from "../../components/complete/assignments";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
-import { AcademicCapIcon, EnvelopeIcon, IdentificationIcon } from "@heroicons/react/24/outline";
+import { EnvelopeIcon, IdentificationIcon } from "@heroicons/react/24/outline";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import Editor from "../../components/editors/richeditor";
 import { EditorState } from "lexical";
-import { getSchedule, ScheduleInterface, setThisSchedule } from "../../lib/db/schedule";
+import {
+	getSchedule,
+	ScheduleInterface,
+	setThisSchedule,
+} from "../../lib/db/schedule";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
+import { Announcement } from "../../components/misc/assignmentsandmembers";
+import { getDataInArray } from "../../lib/misc/dataOutArray";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -61,17 +67,17 @@ const Class: NextPage = () => {
 			}
 			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
 				JSON.parse(sessionStorage.getItem("schedule")!);
-                if (allSchedules && allSchedules.length != 0) {
-                    setSchedule(allSchedules[0].schedule);
-                    setScheduleT(allSchedules[1].schedule);
-                } else {
-                    const [scheduleToday, scheduleTomorrow] = await Promise.all([
-                        getSchedule(supabase, new Date("2023-03-03")),
-                        getSchedule(supabase, new Date("2023-03-04")),
-                    ]);
-                    setThisSchedule(scheduleToday, setSchedule);
-                    setThisSchedule(scheduleTomorrow, setScheduleT);
-                }
+			if (allSchedules && allSchedules.length != 0) {
+				setSchedule(allSchedules[0].schedule);
+				setScheduleT(allSchedules[1].schedule);
+			} else {
+				const [scheduleToday, scheduleTomorrow] = await Promise.all([
+					getSchedule(supabase, new Date("2023-03-03")),
+					getSchedule(supabase, new Date("2023-03-04")),
+				]);
+				setThisSchedule(scheduleToday, setSchedule);
+				setThisSchedule(scheduleTomorrow, setScheduleT);
+			}
 		})();
 		setEdited(false);
 		setEditorState(undefined);
@@ -198,7 +204,22 @@ const Class: NextPage = () => {
 								)
 							)}
 						</Tab.Panel>
-						<Tab.Panel>announcements here</Tab.Panel>
+						<Tab.Panel>
+							<h2 className="title mb-3">Announcements</h2>
+							<div className="space-y-3">
+								{data &&
+                                    data.data &&
+                                    data.data.announcements &&
+									getDataInArray(data.data.announcements).map(
+										(announcement) => (
+											<Announcement
+												key={announcement.id}
+												announcement={announcement}
+											></Announcement>
+										)
+									)}
+							</div>
+						</Tab.Panel>
 						<Tab.Panel>
 							<div className="grid grid-cols-3 gap-4">
 								{data.data?.users && Array.isArray(data.data?.users) ? (
@@ -278,7 +299,7 @@ const Class: NextPage = () => {
 										assignment={
 											Array.isArray(assignment) ? assignment[0] : assignment
 										}
-                                        showClassPill={false}
+										showClassPill={false}
 										starredAsParam={false}
 										schedule={schedule!}
 										scheduleT={scheduleT!}

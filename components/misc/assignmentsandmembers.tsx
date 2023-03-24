@@ -1,13 +1,11 @@
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { Database } from "../../lib/db/database.types";
-import { getDataInArray } from "../../lib/misc/dataOutArray";
 import { howLongAgo } from "../../lib/misc/formatDate";
-
 
 export const Announcement = ({
 	announcement,
 }: {
-	announcement: Database["public"]["Tables"]["announcements"]["Row"]
+	announcement: Database["public"]["Tables"]["announcements"]["Row"];
 }) => {
 	return (
 		<div className="rounded-xl bg-gray-200 p-4">
@@ -18,7 +16,9 @@ export const Announcement = ({
 			<div className="flex items-center pt-1 pb-2">
 				<div className="inline-flex shrink-0 items-center rounded-full bg-gray-300 px-2.5 py-0.5">
 					<div className="h-4 w-4 rounded-full bg-white"></div>
-					<p className="ml-1.5 font-semibold text-neutral-700">{announcement.author}</p>
+					<p className="ml-1.5 font-semibold text-neutral-700">
+						{announcement.author}
+					</p>
 				</div>
 				<p className="pl-2.5 text-gray-600">{howLongAgo(announcement.time!)}</p>
 			</div>
