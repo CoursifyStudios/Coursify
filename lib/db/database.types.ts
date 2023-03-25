@@ -9,42 +9,91 @@ export type Json =
 export interface Database {
 	public: {
 		Tables: {
+			achievements: {
+				Row: {
+					desc_full: string | null;
+					desc_short: string | null;
+					icon: string | null;
+					id: string;
+					name: string;
+					school: string;
+				};
+				Insert: {
+					desc_full?: string | null;
+					desc_short?: string | null;
+					icon?: string | null;
+					id?: string;
+					name: string;
+					school: string;
+				};
+				Update: {
+					desc_full?: string | null;
+					desc_short?: string | null;
+					icon?: string | null;
+					id?: string;
+					name?: string;
+					school?: string;
+				};
+			};
+			announcements: {
+				Row: {
+					author: string | null;
+					content: string | null;
+					id: string;
+					time: string | null;
+					title: string | null;
+				};
+				Insert: {
+					author?: string | null;
+					content?: string | null;
+					id?: string;
+					time?: string | null;
+					title?: string | null;
+				};
+				Update: {
+					author?: string | null;
+					content?: string | null;
+					id?: string;
+					time?: string | null;
+					title?: string | null;
+				};
+			};
 			assignments: {
 				Row: {
-					content: string | null;
+					content: Json | null;
 					created_date: string | null;
 					description: string;
-					due_date: string | null;
+					due_date: string;
 					due_type: number | null;
 					id: string;
 					name: string;
 					publish_date: string | null;
 					publish_type: number | null;
-					type: string | null;
+					submission_type: string | null;
 				};
 				Insert: {
-					content?: string | null;
+					content?: Json | null;
 					created_date?: string | null;
 					description: string;
-					due_date?: string | null;
+					due_date?: string;
 					due_type?: number | null;
 					id?: string;
 					name: string;
 					publish_date?: string | null;
 					publish_type?: number | null;
-					type?: string | null;
+					submission_type?: string | null;
 				};
 				Update: {
-					content?: string | null;
+					content?: Json | null;
 					created_date?: string | null;
 					description?: string;
-					due_date?: string | null;
+					due_date?: string;
 					due_type?: number | null;
 					id?: string;
 					name?: string;
 					publish_date?: string | null;
 					publish_type?: number | null;
-					type?: string | null;
+					submission_type?: string | null;
 				};
 			};
 			classes: {
@@ -119,18 +168,41 @@ export interface Database {
 			groups: {
 				Row: {
 					description: string | null;
+					featured: boolean | null;
 					id: string;
 					name: string | null;
+					public: boolean | null;
+					tags: string[] | null;
 				};
 				Insert: {
 					description?: string | null;
+					featured?: boolean | null;
 					id?: string;
 					name?: string | null;
+					public?: boolean | null;
+					tags?: string[] | null;
 				};
 				Update: {
 					description?: string | null;
+					featured?: boolean | null;
 					id?: string;
 					name?: string | null;
+					public?: boolean | null;
+					tags?: string[] | null;
+				};
+			};
+			groups_announcements: {
+				Row: {
+					announcement_id: string;
+					group_id: string;
+				};
+				Insert: {
+					announcement_id: string;
+					group_id: string;
+				};
+				Update: {
+					announcement_id?: string;
+					group_id?: string;
 				};
 			};
 			schedule_templates: {
@@ -214,31 +286,48 @@ export interface Database {
 			};
 			users: {
 				Row: {
-					about: string | null;
 					avatar_url: string;
 					created: string | null;
 					email: string | null;
 					full_name: string;
 					id: string;
 					username: string | null;
+					year: string | null;
 				};
 				Insert: {
-					about?: string | null;
 					avatar_url: string;
 					created?: string | null;
 					email?: string | null;
 					full_name: string;
 					id: string;
 					username?: string | null;
+					year?: string | null;
 				};
 				Update: {
-					about?: string | null;
 					avatar_url?: string;
 					created?: string | null;
 					email?: string | null;
 					full_name?: string;
 					id?: string;
 					username?: string | null;
+					year?: string | null;
+				};
+			};
+			users_achievements: {
+				Row: {
+					achivement_id: string;
+					date_earned: string;
+					user_id: string;
+				};
+				Insert: {
+					achivement_id: string;
+					date_earned?: string;
+					user_id: string;
+				};
+				Update: {
+					achivement_id?: string;
+					date_earned?: string;
+					user_id?: string;
 				};
 			};
 			users_classes: {
@@ -291,42 +380,22 @@ export interface Database {
 				};
 				Returns: boolean;
 			};
-			get_profile_classes:
-				| {
-						Args: Record<PropertyKey, never>;
-						Returns: {
-							block: number;
-							classpills: Json[];
-							color: string;
-							description: string;
-							full_description: Json | null;
-							id: string;
-							name: string;
-							name_full: string;
-							room: string | null;
-							schedule_type: number;
-						}[];
-				  }
-				| {
-						Args: {
-							id: string;
-						};
-						Returns: {
-							block: number;
-							classpills: Json[];
-							color: string;
-							description: string;
-							full_description: Json | null;
-							id: string;
-							name: string;
-							name_full: string;
-							room: string | null;
-							schedule_type: number;
-						}[];
-				  };
-			hello_world: {
-				Args: Record<PropertyKey, never>;
-				Returns: string;
+			get_profile_classes: {
+				Args: {
+					id: string;
+				};
+				Returns: {
+					block: number;
+					classpills: Json[];
+					color: string;
+					description: string;
+					full_description: Json | null;
+					id: string;
+					name: string;
+					name_full: string;
+					room: string | null;
+					schedule_type: number;
+				}[];
 			};
 		};
 		Enums: {

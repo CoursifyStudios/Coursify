@@ -15,6 +15,7 @@ import { AcademicCapIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import Editor from "../../components/editors/richeditor";
 import { EditorState } from "lexical";
+import { getSchedule, ScheduleInterface, setThisSchedule } from "../../lib/db/schedule";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
 
 const Class: NextPage = () => {
@@ -29,6 +30,8 @@ const Class: NextPage = () => {
 	const [editable, setEditable] = useState(false);
 	const [editorState, setEditorState] = useState<EditorState>();
 	const [edited, setEdited] = useState(false);
+	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
+	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
 
 	const updateEditorDB = async () => {
 		setEdited(true);
@@ -56,6 +59,19 @@ const Class: NextPage = () => {
 					);
 				}
 			}
+			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
+				JSON.parse(sessionStorage.getItem("schedule")!);
+                if (allSchedules && allSchedules.length != 0) {
+                    setSchedule(allSchedules[0].schedule);
+                    setScheduleT(allSchedules[1].schedule);
+                } else {
+                    const [scheduleToday, scheduleTomorrow] = await Promise.all([
+                        getSchedule(supabase, new Date("2023-03-03")),
+                        getSchedule(supabase, new Date("2023-03-04")),
+                    ]);
+                    setThisSchedule(scheduleToday, setSchedule);
+                    setThisSchedule(scheduleTomorrow, setScheduleT);
+                }
 		})();
 		setEdited(false);
 		setEditorState(undefined);
@@ -258,13 +274,16 @@ const Class: NextPage = () => {
 									href={"/assignments/" + assignment.id}
 								>
 									<AssignmentPreview
-										id={assignment.id}
 										supabase={supabase}
+										assignment={
+											Array.isArray(assignment) ? assignment[0] : assignment
+										}
+                                        showClassPill={false}
+										starredAsParam={false}
+										schedule={schedule!}
+										scheduleT={scheduleT!}
 										userId={user.id}
-										name={assignment.name}
-										desc={assignment.description}
-										starred={false}
-										due={new Date(1667840443856)}
+										classes={data.data}
 									/>
 								</Link>
 							))}

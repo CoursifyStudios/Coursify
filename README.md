@@ -2,7 +2,6 @@
 
 ![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=karasu&style=for-the-badge&logo=true)
 
-
 <br />
 
 ![For students by students badge](https://img.shields.io/badge/FOR%20STUDENTS-BY%20STUDENTS-blueviolet?style=for-the-badge)

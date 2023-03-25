@@ -1,10 +1,19 @@
-import {
-	MagnifyingGlassCircleIcon,
-	MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
-import { NextPage } from "next";
-import Image from "next/image";
-const groupDirecory: NextPage = () => {
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
+import { GroupLarge, GroupSmall } from "../../components/complete/group";
+import { getAllPublicGroups, PublicGroupsResponse } from "../../lib/db/groups";
+import supabase from "../../lib/supabase";
+
+export default function GroupDirectory() {
+	const [allGroupData, setAllGroupData] = useState<PublicGroupsResponse>();
+
+	useEffect(() => {
+		(async () => {
+			const data = await getAllPublicGroups(supabase);
+			setAllGroupData(data);
+		})();
+	}, [supabase]);
+
 	return (
 		<div>
 			<div className="mx-auto my-10 w-full max-w-screen-xl">
@@ -13,99 +22,93 @@ const groupDirecory: NextPage = () => {
 						<MagnifyingGlassIcon className="ml-1 h-6 w-6" />
 						<p className="ml-1.5 p-1 ">Search for Groups</p>
 					</div>
-					<div className="">
+					<div>
 						<h1 className="title">Your Groups</h1>
 						<div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-5 ">
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
-							<GroupSmall photo="/example-img.jpg" title="Testing" />
+							{allGroupData &&
+								allGroupData.data &&
+								allGroupData.data.map(
+									(group) =>
+										(!Array.isArray(group.users_groups) ||
+											group.users_groups.length != 0) && (
+											<GroupSmall
+												key={group.id}
+												id={group.id}
+												photo="/example-img.jpg"
+												title={group.name!}
+												isLink={true}
+											/>
+										)
+								)}
 						</div>
 					</div>
 					<div>
 						<h1 className="title">Featured Groups</h1>
-						<div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-4 ">
-							<GroupLarge photo="" name="SHC Announcements" membernum="1300" />
-							<GroupLarge photo="" name="SHC Library" membernum="500" />
-							<GroupLarge photo="" name="SHC Dining" membernum="730" />
-							<GroupLarge photo="" name="Fitness Center" membernum="450" />
+						<div className="scrollbar-hide mt-4 flex snap-x snap-mandatory space-x-5 overflow-x-auto">
+							{allGroupData &&
+								allGroupData.data &&
+								allGroupData.data.map(
+									(group) =>
+										//@ts-ignore
+										group.featured && (
+											<GroupLarge
+												key={group.id}
+												id={group.id}
+												photo="/example-img.jpg"
+												name={group.name!}
+												membernum={Math.floor(Math.random() * 2000)}
+												isLink={true}
+											/>
+										)
+								)}
 						</div>
 					</div>
 					<div>
 						<h1 className="title">Outdoors</h1>
+						<div className="scrollbar-hide mt-4 flex snap-x snap-mandatory space-x-5 overflow-x-auto">
+							{allGroupData &&
+								allGroupData.data &&
+								allGroupData.data.map(
+									(group) =>
+										//@ts-ignore
+										group.tags &&
+										//@ts-ignore
+										group.tags.includes("outdoors") && (
+											<GroupLarge
+												key={group.id}
+												id={group.id}
+												photo="/example-img.jpg"
+												name={group.name!}
+												membernum={Math.floor(Math.random() * 2000)}
+												isLink={true}
+											/>
+										)
+								)}
+						</div>
+						<h1 className="title mt-4">No Tags</h1>
 						<div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-4 ">
-							<GroupLarge photo="" name="Fitness center" membernum="100" />
-							<GroupLarge photo="" name="Climbing Club" membernum="50" />
-							<GroupLarge photo="" name="Hiking Club" membernum="90" />
-							<GroupLarge
-								photo=""
-								name="Lake Viewing Enjoyers"
-								membernum="1600"
-							/>
+							{allGroupData &&
+								allGroupData.data &&
+								allGroupData.data.map(
+									(group) =>
+										//@ts-ignore
+										!group.tags && (
+											<GroupLarge
+												key={group.id}
+												id={group.id}
+												photo="/example-img.jpg"
+												name={group.name!}
+												membernum={Math.floor(Math.random() * 2000)}
+												isLink={true}
+											/>
+										)
+								)}
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	);
-};
+}
 
-const GroupLarge = (props: {
-	photo: string;
-	name: string;
-	membernum: string;
-}) => {
-	return (
-		<div
-			className={
-				"flex w-[19rem] cursor-pointer flex-col rounded-xl bg-gray-200 transition duration-300 hover:shadow-lg hover:brightness-95 "
-			}
-		>
-			<div className="relative h-32 ">
-				<Image
-					src="/example-img.jpg"
-					alt="Example Image"
-					className="rounded-t-xl object-cover object-center"
-					fill
-				/>
-			</div>
-			<div className="flex flex-grow flex-col p-4">
-				<div className="flex items-start justify-between">
-					<h3 className="break-words text-xl font-semibold line-clamp-2">
-						{props.name}
-					</h3>
-				</div>
-				<p>{props.membernum} Members</p>
-			</div>
-		</div>
-	);
-};
-
-const GroupSmall = (props: { photo: string; title: string }) => {
-	return (
-		<div
-			className="brightness-hover	flex cursor-pointer select-none flex-col rounded-xl bg-gray-200 "
-			tabIndex={0}
-		>
-			<div className="relative h-16">
-				<Image
-					fill
-					className="rounded-t-xl object-cover object-center"
-					alt={"Groups image for " + props.title}
-					src={props.photo}
-				/>
-			</div>
-			<div className="flex justify-center">
-				<h3 className="text-l p-3 font-medium line-clamp-2">{props.title}</h3>
-			</div>
-		</div>
-	);
-};
-
-export default groupDirecory;
+//copyright coursify studios 5783
