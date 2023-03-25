@@ -49,13 +49,14 @@ export const getGroup = async (
 		.from("groups")
 		.select(
 			`
-            *,
-            users_groups (
-                *
-            ), announcements (
-                *
-            )
-            `
+        *,
+        announcements (
+            *
+        ),
+        users_groups (
+            *
+        )
+    `
 		)
 		.eq("id", groupid)
 		.single();

@@ -55,6 +55,7 @@ const Class: NextPage = () => {
 			if (user && typeof classid == "string") {
 				const data = await getClass(supabase, classid);
 				setData(data);
+                console.log(data);
 				if (data.data && Array.isArray(data.data.users_classes)) {
 					//grades are temporarily done like this until we figure out assignment submissions
 					setGrade(
@@ -208,8 +209,8 @@ const Class: NextPage = () => {
 							<h2 className="title mb-3">Announcements</h2>
 							<div className="space-y-3">
 								{data &&
-                                    data.data &&
-                                    data.data.announcements &&
+									data.data &&
+									data.data.announcements &&
 									getDataInArray(data.data.announcements).map(
 										(announcement) => (
 											<Announcement

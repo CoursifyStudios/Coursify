@@ -8,7 +8,10 @@ import { useRouter } from "next/router";
 import { getGroup, GroupResponse } from "../../lib/db/groups";
 import supabase from "../../lib/supabase";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
-import { Announcement } from "../../components/misc/assignmentsandmembers";
+import {
+	Announcement,
+	Member,
+} from "../../components/misc/assignmentsandmembers";
 
 const Group: NextPage = () => {
 	const router = useRouter();
@@ -101,7 +104,26 @@ const Group: NextPage = () => {
 							</div>
 						</Tab.Panel>
 						<Tab.Panel></Tab.Panel>
-						<Tab.Panel>Copy member component from classes</Tab.Panel>
+						<Tab.Panel>
+							<div className="grid grid-cols-3 gap-4">
+								{/* {groupData &&
+									groupData.data &&
+									getDataInArray(groupData.data.users).map((user) => (
+										<Member
+											key={user!.id}
+											user={user!}
+											leader={
+												getDataInArray(groupData.data.users_groups).find(
+													(userInUsersGroups) =>
+														user?.id == userInUsersGroups?.user_id
+												)?.group_leader
+													? true
+													: false
+											}
+										></Member>
+									))} */}
+							</div>
+						</Tab.Panel>
 					</Tab.Panels>
 				</Tab.Group>
 				<div className="sticky top-0 ml-8 w-[20.5rem] shrink-0 ">
