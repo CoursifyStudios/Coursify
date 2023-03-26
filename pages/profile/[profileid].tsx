@@ -27,7 +27,7 @@ export default function Profile() {
 
 	useEffect(() => {
 		(async () => {
-			if (profileid) {
+			if (false) {
 				const profileData = await getProfile(
 					supabaseClient,
 					profileid as string
@@ -65,17 +65,15 @@ export default function Profile() {
 							profile.data.full_name
 						) : (
 							<>
-								<p className="invisible">
-									{":"}trojker{":"}
-								</p>
-								<div className="absolute inset-0 animate-pulse rounded-md bg-gray-300"></div>
+								<p className="invisible">Rick Astley</p>
+								<div className="absolute inset-0 animate-pulse rounded-md bg-gray-300 "></div>
 							</>
 						)}
 					</h1>
 					{profile && profile.data ? (
 						<h2 className="mb-4 text-xl">{profile?.data?.year}</h2>
 					) : (
-						<div></div>
+						<div className="mt-3 mb-5 h-8 w-16 animate-pulse rounded-md bg-gray-300"></div>
 					)}
 
 					<CopiedHover copy={profile?.data?.email || "No email found"}>
