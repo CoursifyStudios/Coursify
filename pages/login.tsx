@@ -23,7 +23,8 @@ export default function Login() {
 	useEffect(() => {
 		console.log(window.location.hash);
 		if (user) {
-			alert("test");
+			//alert("test");
+			setTimeout(() => router.reload(), 100);
 		}
 		// if (access_token) {
 		// 	alert("access")
