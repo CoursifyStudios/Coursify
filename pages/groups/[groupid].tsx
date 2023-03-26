@@ -11,7 +11,7 @@ import { getDataInArray } from "../../lib/misc/dataOutArray";
 import {
 	Announcement,
 	Member,
-} from "../../components/misc/assignmentsandmembers";
+} from "../../components/misc/announcementsAndMembers";
 
 const Group: NextPage = () => {
 	const router = useRouter();

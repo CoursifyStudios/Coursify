@@ -21,7 +21,7 @@ import {
 	setThisSchedule,
 } from "../../lib/db/schedule";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
-import { Announcement } from "../../components/misc/assignmentsandmembers";
+import { Announcement } from "../../components/misc/announcementsAndMembers";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
 
 const Class: NextPage = () => {
@@ -55,7 +55,7 @@ const Class: NextPage = () => {
 			if (user && typeof classid == "string") {
 				const data = await getClass(supabase, classid);
 				setData(data);
-                console.log(data);
+				console.log(data);
 				if (data.data && Array.isArray(data.data.users_classes)) {
 					//grades are temporarily done like this until we figure out assignment submissions
 					setGrade(
