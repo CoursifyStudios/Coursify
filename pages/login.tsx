@@ -22,7 +22,7 @@ export default function Login() {
 
 	useEffect(() => {
 		if (user) {
-			setTimeout(() => router.reload(), 500);
+			router.reload();
 		}
 	}, [user, access_token]);
 
