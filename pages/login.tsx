@@ -21,15 +21,9 @@ export default function Login() {
 	}, [user, router, redirectedFrom]);
 
 	useEffect(() => {
-		console.log(window.location.hash);
 		if (user) {
-			//alert("test");
-			setTimeout(() => router.reload(), 100);
+			setTimeout(() => router.reload(), 500);
 		}
-		// if (access_token) {
-		// 	alert("access")
-		// }
-		//router.reload()
 	}, [user, access_token]);
 
 	return (
