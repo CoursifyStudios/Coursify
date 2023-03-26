@@ -23,7 +23,7 @@ export const GroupSmall: NextPage<{
 	function Groups() {
 		return (
 			<div
-				className="brightness-hover	flex cursor-pointer select-none flex-col rounded-xl bg-gray-200 "
+				className="brightness-hover	flex cursor-pointer select-none snap-start flex-col rounded-xl bg-gray-200 "
 				tabIndex={0}
 			>
 				<div className="relative h-16">
