@@ -18,7 +18,14 @@ export default function Login() {
 				router.push(decodeURI(redirectedFrom));
 			else router.push("/");
 		}
-	}, [user, router]);
+	}, [user, router, redirectedFrom]);
+
+	useEffect(() => {
+		if (user) {
+			alert("test");
+		}
+		//router.reload()
+	}, []);
 
 	return (
 		<div className="flex h-screen bg-teal-500 [background-image:url('/svgs/falling-triangles.svg')]">
