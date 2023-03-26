@@ -135,9 +135,9 @@ export default function Profile() {
 						: ""}
 				</div>
 			</div>
-			<div className="scrollbar-fancy hidden w-full flex-col overflow-y-auto rounded-xl lg:h-[calc(100vh-8rem)] xl:flex">
+			<div className=" hidden w-full flex-col rounded-xl lg:h-[calc(100vh-8rem)] xl:flex">
 				<h2 className="title mb-4">Groups</h2>
-				<div className="flex flex-col gap-8">
+				<div className="scrollbar-fancy flex snap-y snap-proximity flex-col space-y-5 overflow-y-auto">
 					{profileGroups &&
 						profileGroups.data &&
 						profileGroups.data.map((groupLink) =>
