@@ -27,7 +27,7 @@ export default function Profile() {
 
 	useEffect(() => {
 		(async () => {
-			if (false) {
+			if (profileid) {
 				const profileData = await getProfile(
 					supabaseClient,
 					profileid as string
