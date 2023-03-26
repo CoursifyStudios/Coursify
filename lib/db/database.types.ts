@@ -37,22 +37,22 @@ export interface Database {
 			};
 			announcements: {
 				Row: {
-					author: string | null;
-					content: string | null;
+					author: string;
+					content: Json | null;
 					id: string;
 					time: string | null;
 					title: string | null;
 				};
 				Insert: {
-					author?: string | null;
-					content?: string | null;
+					author: string;
+					content?: Json | null;
 					id?: string;
 					time?: string | null;
 					title?: string | null;
 				};
 				Update: {
-					author?: string | null;
-					content?: string | null;
+					author?: string;
+					content?: Json | null;
 					id?: string;
 					time?: string | null;
 					title?: string | null;
@@ -132,6 +132,20 @@ export interface Database {
 					name_full?: string;
 					room?: string | null;
 					schedule_type?: number;
+				};
+			};
+			classes_announcements: {
+				Row: {
+					announcement_id: string;
+					class_id: string;
+				};
+				Insert: {
+					announcement_id: string;
+					class_id: string;
+				};
+				Update: {
+					announcement_id?: string;
+					class_id?: string;
 				};
 			};
 			classes_assignments: {
@@ -372,14 +386,40 @@ export interface Database {
 			[_ in never]: never;
 		};
 		Functions: {
-			create_assignment: {
-				Args: {
-					name: string;
-					description: string;
-					class_id: string;
-				};
-				Returns: boolean;
-			};
+			create_assignment:
+				| {
+						Args: {
+							name: string;
+							description: string;
+							submission_type: string;
+							content: Json;
+							due_type: number;
+							class_id: string;
+						};
+						Returns: boolean;
+				  }
+				| {
+						Args: {
+							name: string;
+							description: string;
+							submission_type: string;
+							content: Json;
+							due_type: number;
+							due_date: string;
+							publish_type: number;
+							publish_date: string;
+							class_id: string;
+						};
+						Returns: boolean;
+				  }
+				| {
+						Args: {
+							name: string;
+							description: string;
+							class_id: string;
+						};
+						Returns: boolean;
+				  };
 			get_profile_classes: {
 				Args: {
 					id: string;
