@@ -91,7 +91,7 @@ export const CreateAssignment: NextPage<{
 										3
 									</div>
 								</div>
-								<h2 className="mt-6 text-xl font-bold">Assignment type</h2>
+								<h2 className="mt-6 text-xl font-bold">Submission Type</h2>
 								<AssignmentType />
 								<AssignmentDetails />
 								<div className="ml-auto flex space-x-4">
@@ -126,21 +126,18 @@ export const CreateAssignment: NextPage<{
 
 		return (
 			<div>
-				<div className="grid grid-cols-3 gap-6">
-					<div className="bg-gray-200">
-						<div>
-							{submissionType.map((submission, i) => (
-								<div key={i}>
-									<div className="align-center flex">
-										<div>{submission.icon}</div>
-										<h1 className="font-bold">{submission.name}</h1>
-									</div>
-
-									<p className="text-sm">{submission.desc}</p>
+				<div className="mt-4 grid grid-cols-3 gap-5">
+					{submissionType.map((submission, i) => (
+						<div key={i}>
+							<div className="flex rounded-md bg-gray-200 p-2">
+								<div className="flex content-center">
+									<div>{submission.icon}</div>
+									<h1 className="font-bold">{submission.name}</h1>
 								</div>
-							))}
+								<p className="text-sm">{submission.desc}</p>
+							</div>
 						</div>
-					</div>
+					))}
 				</div>
 			</div>
 		);
@@ -201,6 +198,16 @@ export const CreateAssignment: NextPage<{
 };
 
 const submissionType: { icon: ReactNode; name: string; desc: string }[] = [
+	{
+		icon: <DocumentTextIcon className="h-12 w-12" />,
+		name: "Document",
+		desc: "This is a document",
+	},
+	{
+		icon: <DocumentTextIcon className="h-12 w-12" />,
+		name: "Document",
+		desc: "This is a document",
+	},
 	{
 		icon: <DocumentTextIcon className="h-12 w-12" />,
 		name: "Document",
