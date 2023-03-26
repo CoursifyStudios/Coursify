@@ -51,9 +51,15 @@ export const getGroup = async (
 			`
         *,
         announcements (
-            *
+            *,
+            users (
+                avatar_url, full_name
+            )
         ),
         users_groups (
+            user_id, group_leader
+        ),
+        users (
             *
         )
     `

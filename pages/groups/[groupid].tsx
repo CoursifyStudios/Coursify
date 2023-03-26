@@ -6,17 +6,21 @@ import Image from "next/image";
 import exampleGroupImg from "../../public/example-img.jpg";
 import { useRouter } from "next/router";
 import { getGroup, GroupResponse } from "../../lib/db/groups";
-import supabase from "../../lib/supabase";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
 import {
 	Announcement,
 	Member,
 } from "../../components/misc/announcementsAndMembers";
+import { AnnouncementPostingUI } from "../../components/complete/announcementPosting";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { Database } from "../../lib/db/database.types";
 
 const Group: NextPage = () => {
 	const router = useRouter();
 	const { groupid } = router.query;
+	const supabase = useSupabaseClient<Database>();
 	const [groupData, setGroupData] = useState<GroupResponse>();
+
 	useEffect(() => {
 		(async () => {
 			if (typeof groupid == "string") {
@@ -88,8 +92,16 @@ const Group: NextPage = () => {
 							<div className="mb-6 rounded-xl bg-gray-200 p-4">
 								<p className="text-lg">{groupData?.data?.description}</p>
 							</div>
-							<h2 className="title mb-3">Announcements</h2>
+							<div className="mb-3 flex items-center justify-between">
+								<h2 className="title">Announcements</h2>
+								
+							</div>
+
 							<div className="space-y-3">
+								
+								<AnnouncementPostingUI />
+									
+								
 								{groupData &&
 									groupData.data &&
 									groupData.data.announcements && //change below when I get actual types
@@ -106,7 +118,7 @@ const Group: NextPage = () => {
 						<Tab.Panel></Tab.Panel>
 						<Tab.Panel>
 							<div className="grid grid-cols-3 gap-4">
-								{/* {groupData &&
+								{groupData &&
 									groupData.data &&
 									getDataInArray(groupData.data.users).map((user) => (
 										<Member
@@ -121,7 +133,7 @@ const Group: NextPage = () => {
 													: false
 											}
 										></Member>
-									))} */}
+									))}
 							</div>
 						</Tab.Panel>
 					</Tab.Panels>
