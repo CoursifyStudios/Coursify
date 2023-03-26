@@ -8,7 +8,7 @@ export default function Login() {
 	const supabaseClient = useSupabaseClient<Database>();
 	const user = useUser();
 	const router = useRouter();
-	const { redirectedFrom } = router.query;
+	const { redirectedFrom, access_token } = router.query;
 	const [url, setUrl] = useState<string>();
 
 	useEffect(() => {
@@ -21,11 +21,15 @@ export default function Login() {
 	}, [user, router, redirectedFrom]);
 
 	useEffect(() => {
+		console.log(window.location.hash);
 		if (user) {
 			alert("test");
 		}
+		// if (access_token) {
+		// 	alert("access")
+		// }
 		//router.reload()
-	}, []);
+	}, [user, access_token]);
 
 	return (
 		<div className="flex h-screen bg-teal-500 [background-image:url('/svgs/falling-triangles.svg')]">
