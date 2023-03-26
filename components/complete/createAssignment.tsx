@@ -1,5 +1,12 @@
 import { Transition, Dialog } from "@headlessui/react";
-import { DocumentTextIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import {
+	ChatBubbleBottomCenterTextIcon,
+	ClipboardDocumentListIcon,
+	DocumentCheckIcon,
+	DocumentTextIcon,
+	LinkIcon,
+	XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { Field, Form, Formik } from "formik";
 import { NextPage } from "next";
 import {
@@ -16,7 +23,7 @@ import { getIcon } from "./achivement";
 import * as Yup from "yup";
 import Editor from "../editors/richeditor";
 import { EditorState, SerializedEditorState } from "lexical";
-
+import Image from "next/image";
 export const CreateAssignment: NextPage<{
 	open: boolean;
 	setOpen: Dispatch<SetStateAction<boolean>>;
@@ -126,15 +133,14 @@ export const CreateAssignment: NextPage<{
 
 		return (
 			<div>
-				<div className="mt-4 grid grid-cols-3 gap-5">
+				<div className="my-4 grid grid-cols-3 gap-5">
 					{submissionType.map((submission, i) => (
 						<div key={i}>
-							<div className="flex rounded-md bg-gray-200 p-2">
-								<div className="flex content-center">
+							<div className="brightness-hover rounded-md bg-gray-200 p-2">
+								<div className="flex items-center">
 									<div>{submission.icon}</div>
-									<h1 className="font-bold">{submission.name}</h1>
+									<h1 className="ml-3 font-semibold">{submission.name}</h1>
 								</div>
-								<p className="text-sm">{submission.desc}</p>
 							</div>
 						</div>
 					))}
@@ -197,20 +203,37 @@ export const CreateAssignment: NextPage<{
 	}
 };
 
-const submissionType: { icon: ReactNode; name: string; desc: string }[] = [
+const submissionType: { icon: ReactNode; name: string }[] = [
 	{
-		icon: <DocumentTextIcon className="h-12 w-12" />,
-		name: "Document",
-		desc: "This is a document",
+		icon: <LinkIcon className="h-10 w-10" />,
+		name: "Link",
 	},
 	{
-		icon: <DocumentTextIcon className="h-12 w-12" />,
-		name: "Document",
-		desc: "This is a document",
+		icon: <DocumentTextIcon className="h-10 w-10" />,
+		name: "Rich Media",
 	},
 	{
-		icon: <DocumentTextIcon className="h-12 w-12" />,
-		name: "Document",
-		desc: "This is a document",
+		icon: <DocumentCheckIcon className="h-10 w-10" />,
+		name: "Checkbox",
+	},
+	{
+		icon: <ChatBubbleBottomCenterTextIcon className="h-10 w-10" />,
+		name: "Discussion Post",
+	},
+	{
+		icon: <ClipboardDocumentListIcon className="h-10 w-10" />,
+		name: "Assesment",
+	},
+	{
+		icon: (
+			<Image
+				src="/brand-logos/googledrive.svg"
+				alt="Google Logo"
+				width={24}
+				height={24}
+				className="w=10 ml-2 h-10"
+			/>
+		),
+		name: "Google Media",
 	},
 ];
