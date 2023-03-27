@@ -15,7 +15,10 @@ const Settings: NextPage = () => {
 			// 	);
 			// 	console.log(error, data);
 			// }
-			const { data, error } = await supabase.from("groups").select(`
+			const { data, error } = await supabase
+				.from("groups")
+				.select(
+					`
 				*, 
 				announcements (
 					*, users (
@@ -25,8 +28,10 @@ const Settings: NextPage = () => {
 				users (
 					*
 				)
-				`).eq("id", "cfca7d36-2f81-4aa2-af91-4b3d2fefcb63")
-				console.log(data, error)
+				`
+				)
+				.eq("id", "cfca7d36-2f81-4aa2-af91-4b3d2fefcb63");
+			console.log(data, error);
 		})();
 	}, [supabase]);
 	return <div>testing page atm</div>;

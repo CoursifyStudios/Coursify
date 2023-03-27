@@ -19,7 +19,6 @@ import {
 	FaceSmileIcon,
 } from "@heroicons/react/24/outline";
 
-
 const Group: NextPage = () => {
 	const router = useRouter();
 	const { groupid } = router.query;
@@ -34,7 +33,6 @@ const Group: NextPage = () => {
 			}
 		})();
 	}, [supabase, groupid]);
-
 
 	return (
 		<div className="mx-auto my-10 w-full max-w-screen-xl">
@@ -99,14 +97,11 @@ const Group: NextPage = () => {
 							</div>
 							<div className="mb-3 flex items-center justify-between">
 								<h2 className="title">Announcements</h2>
-								
 							</div>
 
 							<div className="space-y-3">
-								
 								<AnnouncementPostingUI communityid={groupid as string} />
-									
-								
+
 								{groupData &&
 									groupData.data &&
 									groupData.data.announcements && //change below when I get actual types

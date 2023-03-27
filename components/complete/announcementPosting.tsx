@@ -8,16 +8,16 @@ import Editor from "../editors/richeditor";
 import { Button } from "../misc/button";
 
 export const AnnouncementPostingUI = ({
-    communityid,
+	communityid,
 }: {
-    communityid: string;
+	communityid: string;
 }) => {
 	const supabase = useSupabaseClient<Database>();
 	const [showPost, setShowPost] = useState(false);
 	const [title, setTitle] = useState("");
 	const [editorState, setEditorState] = useState<EditorState>();
-    const user = useUser();
-    
+	const user = useUser();
+
 	const FormObserver: React.FC = () => {
 		const { values } = useFormikContext();
 
@@ -94,13 +94,13 @@ export const AnnouncementPostingUI = ({
 								title,
 								editorState?.toJSON() as unknown as Json
 							);
-                            //@ts-ignore WHY WHY WHY
-                            // const test = await supabase.rpc("create_announcement", {
-                            //     title: title,
-                            //     content: editorState?.toJSON() as unknown as Json,
-                            //     group_id: communityid
-                            // });
-                            // console.log(test);
+							//@ts-ignore WHY WHY WHY
+							// const test = await supabase.rpc("create_announcement", {
+							//     title: title,
+							//     content: editorState?.toJSON() as unknown as Json,
+							//     group_id: communityid
+							// });
+							// console.log(test);
 						}}
 					>
 						Post

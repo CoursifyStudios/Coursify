@@ -15,19 +15,22 @@ export const Announcement = ({
 	announcement,
 }: {
 	announcement: {
-    author: string;
-    content: Json;
-    id: string;
-    time: string | null;
-    title: string | null;
-    users: {
-        avatar_url: string;
-        full_name: string;
-    } | {
-        avatar_url: string;
-        full_name: string;
-    }[] | null;
-};
+		author: string;
+		content: Json;
+		id: string;
+		time: string | null;
+		title: string | null;
+		users:
+			| {
+					avatar_url: string;
+					full_name: string;
+			  }
+			| {
+					avatar_url: string;
+					full_name: string;
+			  }[]
+			| null;
+	};
 }) => {
 	return (
 		<div className="rounded-xl bg-gray-200 p-4">
@@ -37,14 +40,22 @@ export const Announcement = ({
 			</div>
 			<div className="flex items-center pt-1 pb-2">
 				<div className="inline-flex shrink-0 items-center rounded-full bg-gray-300 px-1 py-0.5">
-					<img src={getDataOutArray(announcement.users!).avatar_url} alt="" className="h-5 w-5 rounded-full" />
+					<img
+						src={getDataOutArray(announcement.users!).avatar_url}
+						alt=""
+						className="h-5 w-5 rounded-full"
+					/>
 					<p className="ml-1.5 font-semibold text-neutral-700">
 						{getDataOutArray(announcement.users!).full_name}
 					</p>
 				</div>
 				<p className="pl-2.5 text-gray-600">{howLongAgo(announcement.time!)}</p>
 			</div>
-			<Editor editable={false} initialState={announcement.content} className="mt-2"/>
+			<Editor
+				editable={false}
+				initialState={announcement.content}
+				className="mt-2"
+			/>
 			{/* <div className="mt-4 flex items-center justify-between">
 				<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
 					<p className="ml-1.5 p-1">Insert response here</p>
