@@ -1,17 +1,33 @@
-import { Dialog, Transition } from "@headlessui/react";
-import { XMarkIcon } from "@heroicons/react/24/outline";
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { ErrorMessage, Field, Form, Formik, useFormikContext } from "formik";
 import { EditorState } from "lexical";
-import { Fragment, useState } from "react";
+import { useEffect, useState } from "react";
 import { createNewAnnouncement } from "../../lib/db/announcements";
-import { Json } from "../../lib/db/database.types";
-import supabase from "../../lib/supabase";
+import { Database, Json } from "../../lib/db/database.types";
 import Editor from "../editors/richeditor";
 import { Button } from "../misc/button";
 
-export const AnnouncementPostingUI = () => {
+export const AnnouncementPostingUI = ({
+    communityid,
+}: {
+    communityid: string;
+}) => {
+	const supabase = useSupabaseClient<Database>();
 	const [showPost, setShowPost] = useState(false);
+	const [title, setTitle] = useState("");
 	const [editorState, setEditorState] = useState<EditorState>();
+    const user = useUser();
+    
+	const FormObserver: React.FC = () => {
+		const { values } = useFormikContext();
+
+		useEffect(() => {
+			setTitle((values as { title: string }).title);
+		}, [values]);
+
+		return null;
+	};
+
 	if (!showPost)
 		return (
 			<div
@@ -40,16 +56,16 @@ export const AnnouncementPostingUI = () => {
 			>
 				<Form className="flex flex-col">
 					<label htmlFor="title" className="flex flex-col text-sm font-medium">
-						Title
 						<Field
 							name="title"
 							type="text"
-							placeholder="Enter a title..."
 							className="h-10 w-96 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium placeholder:text-gray-700"
-							autofocus
+							autoFocus
 						></Field>
 					</label>
 					<ErrorMessage name="title"></ErrorMessage>
+
+					<FormObserver />
 				</Form>
 			</Formik>
 			<Editor
@@ -71,8 +87,20 @@ export const AnnouncementPostingUI = () => {
 				<Button className="brightness-hover !bg-blue-500 text-white">
 					<span
 						tabIndex={0}
-						onClick={() => {
-							//createNewAnnouncement(supabase, "changeme", )
+						onClick={async () => {
+							createNewAnnouncement(
+								supabase,
+								user?.id!,
+								title,
+								editorState?.toJSON() as unknown as Json
+							);
+                            //@ts-ignore WHY WHY WHY
+                            // const test = await supabase.rpc("create_announcement", {
+                            //     title: title,
+                            //     content: editorState?.toJSON() as unknown as Json,
+                            //     group_id: communityid
+                            // });
+                            // console.log(test);
 						}}
 					>
 						Post

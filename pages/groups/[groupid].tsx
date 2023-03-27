@@ -99,7 +99,7 @@ const Group: NextPage = () => {
 
 							<div className="space-y-3">
 								
-								<AnnouncementPostingUI />
+								<AnnouncementPostingUI communityid={groupid as string} />
 									
 								
 								{groupData &&
