@@ -64,14 +64,16 @@ export default function Profile() {
 							profile.data.full_name
 						) : (
 							<>
-								<p className="invisible">
-									{":"}trojker{":"}
-								</p>
-								<div className="absolute inset-0 animate-pulse rounded-md bg-gray-300"></div>
+								<p className="invisible">Rick Astley</p>
+								<div className="absolute inset-0 animate-pulse rounded-md bg-gray-300 "></div>
 							</>
 						)}
 					</h1>
-					<h2 className="mb-4 text-xl">2023</h2>
+					{profile && profile.data ? (
+						<h2 className="mb-4 text-xl">{profile?.data?.year}</h2>
+					) : (
+						<div className="mt-3 mb-5 h-8 w-16 animate-pulse rounded-md bg-gray-300"></div>
+					)}
 
 					<CopiedHover copy={profile?.data?.email || "No email found"}>
 						<ColoredPill color="gray">
@@ -130,9 +132,9 @@ export default function Profile() {
 						: ""}
 				</div>
 			</div>
-			<div className="scrollbar-fancy hidden w-full flex-col overflow-y-auto rounded-xl lg:h-[calc(100vh-8rem)] xl:flex">
+			<div className=" hidden w-full flex-col rounded-xl lg:h-[calc(100vh-8rem)] xl:flex">
 				<h2 className="title mb-4">Groups</h2>
-				<div className="flex flex-col gap-8">
+				<div className="scrollbar-fancy flex snap-y snap-proximity flex-col space-y-5 overflow-y-auto">
 					{profileGroups &&
 						profileGroups.data &&
 						profileGroups.data.map((groupLink) =>
