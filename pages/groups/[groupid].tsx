@@ -14,6 +14,11 @@ import {
 import { AnnouncementPostingUI } from "../../components/complete/announcementPosting";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database } from "../../lib/db/database.types";
+import {
+	EllipsisVerticalIcon,
+	FaceSmileIcon,
+} from "@heroicons/react/24/outline";
+
 
 const Group: NextPage = () => {
 	const router = useRouter();
@@ -24,12 +29,12 @@ const Group: NextPage = () => {
 	useEffect(() => {
 		(async () => {
 			if (typeof groupid == "string") {
-				const groupData = await getGroup(supabase, groupid);
-				setGroupData(groupData);
-				console.log(groupData);
+				const data = await getGroup(supabase, groupid);
+				setGroupData(data);
 			}
 		})();
 	}, [supabase, groupid]);
+
 
 	return (
 		<div className="mx-auto my-10 w-full max-w-screen-xl">

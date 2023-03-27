@@ -9,8 +9,8 @@ import { useRouter } from "next/router";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import type { PostgrestResponse } from "@supabase/supabase-js";
 import { AllGroupsResponse, getAllGroupsForUser } from "../../lib/db/groups";
-import { GroupSmall } from "../../components/complete/group";
 import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
+import { GroupSmall } from "../../components/complete/group";
 import { Achievement } from "../../components/complete/achivement";
 
 export default function Profile() {
