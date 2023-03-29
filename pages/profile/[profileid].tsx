@@ -111,7 +111,7 @@ export default function Profile() {
 											key={i}
 										>
 											<div className="relative h-16 w-16 animate-pulse rounded-full bg-gray-300"></div>
-											<div className="mb-2 mt-3 h-6 w-16  animate-pulse rounded bg-gray-300"></div>
+											<div className="mb-2 mt-3 h-6 w-16 animate-pulse rounded bg-gray-300"></div>
 										</div>
 								  ))}
 						</div>
@@ -119,12 +119,13 @@ export default function Profile() {
 				)}
 			</div>
 
-			<div className=" scrollbar-fancy mx-auto mt-8 shrink-0 overflow-y-auto rounded-xl lg:mt-0 lg:h-[calc(100vh-8rem)]">
+			<div className=" mx-auto mt-8 shrink-0 flex-col rounded-xl lg:mt-0 lg:h-[calc(100vh-8rem)] xl:flex">
 				<h2 className="title mb-4">Classes</h2>
-				<div className="grid gap-8 md:grid-cols-2">
+				<div className="scrollbar-fancy grid snap-y snap-proximity gap-8 overflow-y-auto md:grid-cols-2">
 					{profileClasses && profileClasses.data
 						? profileClasses.data.map((currentClass, i) => (
 								<Class
+									className="snap-start"
 									classData={currentClass}
 									key={currentClass.id}
 									isLink={true}
@@ -133,7 +134,7 @@ export default function Profile() {
 						: ""}
 				</div>
 			</div>
-			<div className=" hidden w-full flex-col rounded-xl lg:h-[calc(100vh-8rem)] xl:flex">
+			<div className="hidden w-full flex-col rounded-xl lg:h-[calc(100vh-8rem)] xl:flex">
 				<h2 className="title mb-4">Groups</h2>
 				<div className="scrollbar-fancy flex snap-y snap-proximity flex-col space-y-5 overflow-y-auto">
 					{profileGroups &&
