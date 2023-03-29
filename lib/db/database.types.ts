@@ -104,6 +104,7 @@ export interface Database {
 					description: string;
 					full_description: Json | null;
 					id: string;
+					image: string | null;
 					name: string;
 					name_full: string;
 					room: string | null;
@@ -116,6 +117,7 @@ export interface Database {
 					description?: string;
 					full_description?: Json | null;
 					id?: string;
+					image?: string | null;
 					name: string;
 					name_full?: string;
 					room?: string | null;
@@ -128,6 +130,7 @@ export interface Database {
 					description?: string;
 					full_description?: Json | null;
 					id?: string;
+					image?: string | null;
 					name?: string;
 					name_full?: string;
 					room?: string | null;
@@ -184,6 +187,7 @@ export interface Database {
 					description: string | null;
 					featured: boolean | null;
 					id: string;
+					image: string | null;
 					name: string | null;
 					public: boolean | null;
 					tags: string[] | null;
@@ -192,6 +196,7 @@ export interface Database {
 					description?: string | null;
 					featured?: boolean | null;
 					id?: string;
+					image?: string | null;
 					name?: string | null;
 					public?: boolean | null;
 					tags?: string[] | null;
@@ -200,6 +205,7 @@ export interface Database {
 					description?: string | null;
 					featured?: boolean | null;
 					id?: string;
+					image?: string | null;
 					name?: string | null;
 					public?: boolean | null;
 					tags?: string[] | null;
@@ -386,6 +392,14 @@ export interface Database {
 			[_ in never]: never;
 		};
 		Functions: {
+			create_announcement: {
+				Args: {
+					title: string;
+					content: string;
+					group_id: string;
+				};
+				Returns: boolean;
+			};
 			create_assignment:
 				| {
 						Args: {
@@ -431,6 +445,7 @@ export interface Database {
 					description: string;
 					full_description: Json | null;
 					id: string;
+					image: string | null;
 					name: string;
 					name_full: string;
 					room: string | null;

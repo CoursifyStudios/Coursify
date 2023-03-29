@@ -15,7 +15,11 @@ import { AcademicCapIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import Editor from "../../components/editors/richeditor";
 import { EditorState } from "lexical";
-import { getSchedule, ScheduleInterface, setThisSchedule } from "../../lib/db/schedule";
+import {
+	getSchedule,
+	ScheduleInterface,
+	setThisSchedule,
+} from "../../lib/db/schedule";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
 
 const Class: NextPage = () => {
@@ -61,17 +65,17 @@ const Class: NextPage = () => {
 			}
 			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
 				JSON.parse(sessionStorage.getItem("schedule")!);
-                if (allSchedules && allSchedules.length != 0) {
-                    setSchedule(allSchedules[0].schedule);
-                    setScheduleT(allSchedules[1].schedule);
-                } else {
-                    const [scheduleToday, scheduleTomorrow] = await Promise.all([
-                        getSchedule(supabase, new Date("2023-03-03")),
-                        getSchedule(supabase, new Date("2023-03-04")),
-                    ]);
-                    setThisSchedule(scheduleToday, setSchedule);
-                    setThisSchedule(scheduleTomorrow, setScheduleT);
-                }
+			if (allSchedules && allSchedules.length != 0) {
+				setSchedule(allSchedules[0].schedule);
+				setScheduleT(allSchedules[1].schedule);
+			} else {
+				const [scheduleToday, scheduleTomorrow] = await Promise.all([
+					getSchedule(supabase, new Date("2023-03-03")),
+					getSchedule(supabase, new Date("2023-03-04")),
+				]);
+				setThisSchedule(scheduleToday, setSchedule);
+				setThisSchedule(scheduleTomorrow, setScheduleT);
+			}
 		})();
 		setEdited(false);
 		setEditorState(undefined);
@@ -83,7 +87,7 @@ const Class: NextPage = () => {
 		<div className="mx-auto my-10 w-full max-w-screen-xl">
 			<div className="relative mb-6 h-48 w-full">
 				<Image
-					src={exampleClassImg}
+					src={data.data?.image!}
 					alt="Example Image"
 					className="rounded-xl object-cover object-center"
 					fill
@@ -278,7 +282,7 @@ const Class: NextPage = () => {
 										assignment={
 											Array.isArray(assignment) ? assignment[0] : assignment
 										}
-                                        showClassPill={false}
+										showClassPill={false}
 										starredAsParam={false}
 										schedule={schedule!}
 										scheduleT={scheduleT!}
