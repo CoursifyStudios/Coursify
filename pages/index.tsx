@@ -189,12 +189,15 @@ export default function Home() {
 										.sort((a, b) =>
 											sortClasses(a, b, schedule, tomorrowSchedule)
 										)
+                                        .filter((element) => !(
+                                            Array.isArray(element.assignments) &&
+                                            element.assignments.length == 0
+                                        ))
+                                        //temporary measure
+                                        .slice(0, 3)
 										.map(
 											(aClass) =>
-												!(
-													Array.isArray(aClass.assignments) &&
-													aClass.assignments.length == 0
-												) && (
+                                                (
 													<div key={aClass.id}>
 														<Link href={"/classes/" + aClass.id}>
 															{/* <ColoredPill
