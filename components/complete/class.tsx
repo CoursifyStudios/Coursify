@@ -41,7 +41,7 @@ export const Class: NextPage<{
 			>
 				<div className="relative h-32 ">
 					<Image
-						src={classData?.image? classData.image : exampleImage}
+						src={classData?.image ? classData.image : exampleImage}
 						loading="eager"
 						alt="Example Image"
 						className="rounded-t-xl object-cover object-center"
