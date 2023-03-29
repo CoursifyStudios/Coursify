@@ -23,6 +23,7 @@ import {
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
 import { Announcement } from "../../components/misc/announcementsAndMembers";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
+import { AnnouncementPostingUI } from "../../components/complete/announcementPosting";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -208,9 +209,10 @@ const Class: NextPage = () => {
 						<Tab.Panel>
 							<h2 className="title mb-3">Announcements</h2>
 							<div className="space-y-3">
-								{data &&
-									data.data &&
-									data.data.announcements &&
+								<AnnouncementPostingUI communityid={classid as string} isClass={true} />
+
+								{data.data &&
+									data.data.announcements && //change below when I get actual types
 									getDataInArray(data.data.announcements).map(
 										(announcement) => (
 											<Announcement
