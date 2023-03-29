@@ -83,7 +83,7 @@ const Class: NextPage = () => {
 		<div className="mx-auto my-10 w-full max-w-screen-xl">
 			<div className="relative mb-6 h-48 w-full">
 				<Image
-					src={exampleClassImg}
+					src={data.data?.image!}
 					alt="Example Image"
 					className="rounded-xl object-cover object-center"
 					fill

@@ -41,11 +41,10 @@ export const Class: NextPage<{
 			>
 				<div className="relative h-32 ">
 					<Image
-						src={exampleImage}
+						src={classData?.image? classData.image : exampleImage}
 						loading="eager"
 						alt="Example Image"
 						className="rounded-t-xl object-cover object-center"
-						placeholder="blur"
 						fill
 					/>
 					<div className="absolute top-2 right-2 left-2 flex items-center justify-between space-x-2">
