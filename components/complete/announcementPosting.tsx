@@ -9,8 +9,10 @@ import { Button } from "../misc/button";
 
 export const AnnouncementPostingUI = ({
 	communityid,
+	isClass,
 }: {
 	communityid: string;
+	isClass: boolean;
 }) => {
 	const supabase = useSupabaseClient<Database>();
 	const [showPost, setShowPost] = useState(false);
@@ -88,11 +90,15 @@ export const AnnouncementPostingUI = ({
 					<span
 						tabIndex={0}
 						onClick={async () => {
-							createNewAnnouncement(
-								supabase,
-								user?.id!,
-								title,
-								editorState?.toJSON() as unknown as Json
+							console.log(
+								createNewAnnouncement(
+									supabase,
+									user?.id!,
+									title,
+									editorState?.toJSON() as unknown as Json,
+                                    communityid,
+                                    isClass //possibly a temporary measure
+								)
 							);
 							//@ts-ignore WHY WHY WHY
 							// const test = await supabase.rpc("create_announcement", {
