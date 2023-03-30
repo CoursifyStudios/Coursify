@@ -130,39 +130,49 @@ export default function Profile() {
 									isLink={true}
 								/>
 						  ))
-						: ""}
+						: [...new Array(6)].map((_, i) => (
+								<div
+									key={i}
+									className="h-48 w-[19rem] animate-pulse rounded-xl bg-gray-200"
+								></div>
+						  ))}
 				</div>
 			</div>
 			<div className="hidden w-full flex-col rounded-xl lg:h-[calc(100vh-8rem)] xl:flex">
 				<h2 className="title mb-4">Groups</h2>
 				<div className="scrollbar-fancy flex snap-y snap-proximity flex-col space-y-5 overflow-y-auto">
-					{profileGroups &&
-						profileGroups.data &&
-						profileGroups.data.map((groupLink) =>
-							Array.isArray(groupLink) ? (
-								groupLink.map((group) => (
+					{profileGroups && profileGroups.data
+						? profileGroups.data.map((groupLink) =>
+								Array.isArray(groupLink) ? (
+									groupLink.map((group) => (
+										<GroupSmall
+											key={group.id}
+											photo="/example-img.jpg"
+											title={group.name ? group.name : ""}
+											id={groupLink.group_id}
+											isLink={true}
+										/>
+									))
+								) : (
 									<GroupSmall
-										key={group.id}
+										key={groupLink.group_id}
 										photo="/example-img.jpg"
-										title={group.name ? group.name : ""}
+										title={
+											(Array.isArray(groupLink.groups)
+												? groupLink.groups[0].name
+												: groupLink.groups?.name) as string
+										}
 										id={groupLink.group_id}
 										isLink={true}
 									/>
-								))
-							) : (
-								<GroupSmall
-									key={groupLink.group_id}
-									photo="/example-img.jpg"
-									title={
-										(Array.isArray(groupLink.groups)
-											? groupLink.groups[0].name
-											: groupLink.groups?.name) as string
-									}
-									id={groupLink.group_id}
-									isLink={true}
-								/>
-							)
-						)}
+								)
+						  )
+						: [...new Array(4)].map((_, i) => (
+								<div
+									key={i}
+									className="h-24 w-[16rem] animate-pulse rounded-xl bg-gray-200"
+								></div>
+						  ))}
 				</div>
 			</div>
 		</div>
