@@ -40,7 +40,7 @@ const Group: NextPage = () => {
 					alt="Example Image"
 					className="rounded-xl object-cover object-center"
 					fill
-				/> : <div className="bg-gray-200 animate-pulse absolute inset-0 />}
+				/> : <div className="bg-gray-200 animate-pulse absolute inset-0" />}
 				<h1 className="title absolute z-10 bottom-5 left-5 !text-4xl text-gray-200">
 					{groupData?.data?.name}
 				</h1>
