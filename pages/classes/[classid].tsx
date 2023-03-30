@@ -220,14 +220,26 @@ const Class: NextPage = () => {
 
 								{data.data &&
 									data.data.announcements && //change below when I get actual types
-									getDataInArray(data.data.announcements).map(
-										(announcement) => (
+									getDataInArray(data.data.announcements)
+										.sort((a, b) => {
+											if (
+												new Date(a.time!).getTime() >
+												new Date(b.time!).getTime()
+											)
+												return -1;
+											if (
+												new Date(a.time!).getTime() <
+												new Date(b.time!).getTime()
+											)
+												return 1;
+											return 0;
+										})
+										.map((announcement) => (
 											<Announcement
 												key={announcement.id}
 												announcement={announcement}
 											></Announcement>
-										)
-									)}
+										))}
 							</div>
 						</Tab.Panel>
 						<Tab.Panel>

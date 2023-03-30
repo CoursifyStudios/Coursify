@@ -7,10 +7,9 @@ export const formatDate = (date: Date) => {
 };
 
 export const howLongAgo = (date: string) => {
-	const seconds = (new Date().getTime() - new Date(date).getTime()) / 1000;
-
+	const seconds = ((Date.now() - new Date(date).getTime()) / 1000) - (new Date().getTimezoneOffset() * 60) -3600;
 	var interval = seconds / 31536000;
-
+    console.log(seconds)
 	if (interval > 2) {
 		return Math.floor(interval) + " years ago";
 	}
