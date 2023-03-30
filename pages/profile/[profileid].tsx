@@ -147,7 +147,7 @@ export default function Profile() {
 									groupLink.map((group) => (
 										<GroupSmall
 											key={group.id}
-											photo="/example-img.jpg"
+											photo={group.image ? group.image : "/example-img.jpg"}
 											title={group.name ? group.name : ""}
 											id={groupLink.group_id}
 											isLink={true}
@@ -156,7 +156,11 @@ export default function Profile() {
 								) : (
 									<GroupSmall
 										key={groupLink.group_id}
-										photo="/example-img.jpg"
+										photo={
+											getDataOutArray(groupLink.groups!).image
+												? getDataOutArray(groupLink.groups!).image!
+												: "/example-img.jpg"
+										}
 										title={
 											(Array.isArray(groupLink.groups)
 												? groupLink.groups[0].name
