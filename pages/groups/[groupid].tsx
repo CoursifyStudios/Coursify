@@ -4,18 +4,23 @@ import { Fragment, useEffect, useState } from "react";
 import { ColoredPill } from "../../components/misc/pill";
 import Image from "next/image";
 import exampleGroupImg from "../../public/example-img.jpg";
-import {
-	EllipsisVerticalIcon,
-	FaceSmileIcon,
-} from "@heroicons/react/24/outline";
 import { useRouter } from "next/router";
 import { getGroup, GroupResponse } from "../../lib/db/groups";
-import supabase from "../../lib/supabase";
+import { getDataInArray } from "../../lib/misc/dataOutArray";
+import { Member } from "../../components/complete/members";
+import {
+	Announcement,
+	AnnouncementPostingUI,
+} from "../../components/complete/announcements";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { Database } from "../../lib/db/database.types";
 
 const Group: NextPage = () => {
 	const router = useRouter();
 	const { groupid } = router.query;
+	const supabase = useSupabaseClient<Database>();
 	const [groupData, setGroupData] = useState<GroupResponse>();
+	const [refreshAnnouncements, setRefreshAnnouncements] = useState(false);
 
 	useEffect(() => {
 		(async () => {
@@ -29,13 +34,14 @@ const Group: NextPage = () => {
 	return (
 		<div className="mx-auto my-10 w-full max-w-screen-xl">
 			<div className="relative mb-6 h-48 w-full">
+				{groupData?.data?.image ?
 				<Image
-					src={groupData?.data?.image? groupData.data.image : exampleGroupImg}
+					src={groupData.data.image}
 					alt="Example Image"
 					className="rounded-xl object-cover object-center"
 					fill
-				/>
-				<h1 className="title absolute  bottom-5 left-5 !text-4xl text-gray-200">
+				/> : <div className="bg-gray-200 animate-pulse absolute inset-0" />}
+				<h1 className="title absolute z-10 bottom-5 left-5 !text-4xl text-gray-200">
 					{groupData?.data?.name}
 				</h1>
 			</div>
@@ -87,78 +93,64 @@ const Group: NextPage = () => {
 							<div className="mb-6 rounded-xl bg-gray-200 p-4">
 								<p className="text-lg">{groupData?.data?.description}</p>
 							</div>
-							<h2 className="title mb-3">Announcements</h2>
+							<div className="mb-3 flex items-center justify-between">
+								<h2 className="title">Announcements</h2>
+							</div>
+
 							<div className="space-y-3">
-								<div className="rounded-xl bg-gray-200 p-4">
-									<div className="flex items-center justify-between">
-										<h2 className="text-2xl font-bold">
-											Selling Lots of Books !!!!!
-										</h2>
-										<EllipsisVerticalIcon className="h-6 w-6" />
-									</div>
-									<div className="flex items-center pt-1 pb-2">
-										<div className="inline-flex shrink-0 items-center rounded-full bg-gray-300 px-2.5 py-0.5">
-											<div className="h-4 w-4 rounded-full bg-white"></div>
-											<p className="ml-1.5 font-semibold text-neutral-700">
-												Jane Doe
-											</p>
-										</div>
-										<p className="pl-2.5 text-gray-600">25 mins ago</p>
-									</div>
-									<p>
-										I am selling some books for English classes. Literature in
-										Science: The Immortal Life of Henrietta Lacks by Rebecca
-										Skloot hardcover Being Human: Core Readings in the
-										Humanities edited by Leon Kass paperback English 3,4: A
-										Raisin in the Sun by Lorraine Hansberry paperback All books
-										are in new condition and have no annotations. If interested
-									</p>
-									<div className="mt-4 flex items-center justify-between">
-										<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
-											<p className="ml-1.5 p-1">Insert response here</p>
-										</div>
-										<div className="rounded-full bg-gray-300 p-2">
-											<FaceSmileIcon className="h-6 w-6" />
-										</div>
-									</div>
-								</div>
-								<div className="rounded-xl bg-gray-200 p-4">
-									<div className="flex items-center justify-between">
-										<h2 className="text-2xl font-bold">
-											Selling Lots of Books !!!!!
-										</h2>
-										<EllipsisVerticalIcon className="h-6 w-6" />
-									</div>
-									<div className="flex items-center pt-1 pb-2">
-										<div className="inline-flex shrink-0 items-center rounded-full bg-gray-300 px-2.5 py-0.5">
-											<div className="h-4 w-4 rounded-full bg-white"></div>
-											<p className="ml-1.5 font-semibold text-neutral-700">
-												Jane Doe
-											</p>
-										</div>
-										<p className="pl-2.5 text-gray-600">25 mins ago</p>
-									</div>
-									<p>
-										I am selling some books for English classes. Literature in
-										Science: The Immortal Life of Henrietta Lacks by Rebecca
-										Skloot hardcover Being Human: Core Readings in the
-										Humanities edited by Leon Kass paperback English 3,4: A
-										Raisin in the Sun by Lorraine Hansberry paperback All books
-										are in new condition and have no annotations. If interested,
-									</p>
-									<div className="mt-4 flex items-center justify-between">
-										<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
-											<p className="ml-1.5 p-1">Insert response here</p>
-										</div>
-										<div className="rounded-full bg-gray-300 p-2">
-											<FaceSmileIcon className="h-6 w-6" />
-										</div>
-									</div>
-								</div>
+								<AnnouncementPostingUI
+									communityid={groupid as string}
+									isClass={false}
+									prevRefreshState={refreshAnnouncements}
+									refreshAnnouncements={setRefreshAnnouncements}
+								/>
+
+								{groupData &&
+									groupData.data &&
+									groupData.data.announcements && //change below when I get actual types
+									getDataInArray(groupData.data.announcements)
+										.sort((a, b) => {
+											if (
+												new Date(a.time!).getTime() >
+												new Date(b.time!).getTime()
+											)
+												return -1;
+											if (
+												new Date(a.time!).getTime() <
+												new Date(b.time!).getTime()
+											)
+												return 1;
+											return 0;
+										})
+										.map((announcement) => (
+											<Announcement
+												key={announcement.id}
+												announcement={announcement}
+											></Announcement>
+										))}
 							</div>
 						</Tab.Panel>
 						<Tab.Panel></Tab.Panel>
-						<Tab.Panel>Copy member component from classes</Tab.Panel>
+						<Tab.Panel>
+							<div className="grid grid-cols-3 gap-4">
+								{groupData &&
+									groupData.data &&
+									getDataInArray(groupData.data.users).map((user) => (
+										<Member
+											key={user!.id}
+											user={user!}
+											leader={
+												getDataInArray(groupData.data.users_groups).find(
+													(userInUsersGroups) =>
+														user?.id == userInUsersGroups?.user_id
+												)?.group_leader
+													? true
+													: false
+											}
+										></Member>
+									))}
+							</div>
+						</Tab.Panel>
 					</Tab.Panels>
 				</Tab.Group>
 				<div className="sticky top-0 ml-8 w-[20.5rem] shrink-0 ">

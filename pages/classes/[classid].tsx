@@ -11,7 +11,7 @@ import CircleCounter from "../../components/misc/circleCounter";
 import Link from "next/link";
 import { AssignmentPreview } from "../../components/complete/assignments";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
-import { AcademicCapIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
+import { EnvelopeIcon, IdentificationIcon } from "@heroicons/react/24/outline";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import Editor from "../../components/editors/richeditor";
 import { EditorState } from "lexical";
@@ -21,6 +21,11 @@ import {
 	setThisSchedule,
 } from "../../lib/db/schedule";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
+import { getDataInArray } from "../../lib/misc/dataOutArray";
+import {
+	Announcement,
+	AnnouncementPostingUI,
+} from "../../components/complete/announcements";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -36,6 +41,7 @@ const Class: NextPage = () => {
 	const [edited, setEdited] = useState(false);
 	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
 	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
+	const [refreshAnnouncements, setRefreshAnnouncements] = useState(false);
 
 	const updateEditorDB = async () => {
 		setEdited(true);
@@ -79,7 +85,7 @@ const Class: NextPage = () => {
 		})();
 		setEdited(false);
 		setEditorState(undefined);
-	}, [user, supabase, classid]);
+	}, [user, supabase, classid, refreshAnnouncements]);
 
 	if (!data) return <div>loading data rn, wait pls ty</div>;
 
@@ -87,7 +93,7 @@ const Class: NextPage = () => {
 		<div className="mx-auto my-10 w-full max-w-screen-xl">
 			<div className="relative mb-6 h-48 w-full">
 				<Image
-					src={data.data?.image? data.data.image : exampleClassImg}
+					src={data.data?.image ? data.data.image : exampleClassImg}
 					alt="Example Image"
 					className="rounded-xl object-cover object-center"
 					fill
@@ -202,7 +208,40 @@ const Class: NextPage = () => {
 								)
 							)}
 						</Tab.Panel>
-						<Tab.Panel>announcements here</Tab.Panel>
+						<Tab.Panel>
+							<h2 className="title mb-3">Announcements</h2>
+							<div className="space-y-3">
+								<AnnouncementPostingUI
+									communityid={classid as string}
+									isClass={true}
+									prevRefreshState={refreshAnnouncements}
+									refreshAnnouncements={setRefreshAnnouncements}
+								/>
+
+								{data.data &&
+									data.data.announcements && //change below when I get actual types
+									getDataInArray(data.data.announcements)
+										.sort((a, b) => {
+											if (
+												new Date(a.time!).getTime() >
+												new Date(b.time!).getTime()
+											)
+												return -1;
+											if (
+												new Date(a.time!).getTime() <
+												new Date(b.time!).getTime()
+											)
+												return 1;
+											return 0;
+										})
+										.map((announcement) => (
+											<Announcement
+												key={announcement.id}
+												announcement={announcement}
+											></Announcement>
+										))}
+							</div>
+						</Tab.Panel>
 						<Tab.Panel>
 							<div className="grid grid-cols-3 gap-4">
 								{data.data?.users && Array.isArray(data.data?.users) ? (
@@ -232,7 +271,7 @@ const Class: NextPage = () => {
 															userValue.teacher && user.id == userValue.user_id
 													) && (
 														<div className="absolute -bottom-1 -right-1  flex rounded-full bg-yellow-100 p-0.5">
-															<AcademicCapIcon className="h-4 w-4 text-yellow-600" />
+															<IdentificationIcon className="h-4 w-4 text-yellow-600" />
 														</div>
 													)}
 											</div>
