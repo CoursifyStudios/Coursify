@@ -74,7 +74,7 @@ export default function GroupDirectory() {
 											<GroupLarge
 												key={group.id}
 												id={group.id}
-												photo="/example-img.jpg"
+												photo={group.image ? group.image : "/example-img.jpg"}
 												name={group.name!}
 												membernum={Math.floor(Math.random() * 2000)}
 												isLink={true}
@@ -92,7 +92,7 @@ export default function GroupDirectory() {
 											<GroupLarge
 												key={group.id}
 												id={group.id}
-												photo="/example-img.jpg"
+												photo={group.image ? group.image : "/example-img.jpg"}
 												name={group.name!}
 												membernum={Math.floor(Math.random() * 2000)}
 												isLink={true}
