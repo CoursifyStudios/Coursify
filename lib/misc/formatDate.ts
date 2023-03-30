@@ -7,8 +7,11 @@ export const formatDate = (date: Date) => {
 };
 
 export const howLongAgo = (date: string) => {
-	const seconds = ((Date.now() - new Date(date).getTime()) / 1000) - (new Date().getTimezoneOffset() * 60) -3600;
-    
+	const seconds =
+		(Date.now() - new Date(date).getTime()) / 1000 -
+		new Date().getTimezoneOffset() * 60 -
+		3600;
+
 	var interval = seconds / 31536000;
 
 	if (interval > 2) {
