@@ -7,10 +7,11 @@ import exampleGroupImg from "../../public/example-img.jpg";
 import { useRouter } from "next/router";
 import { getGroup, GroupResponse } from "../../lib/db/groups";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
+import { Member } from "../../components/complete/members";
 import {
-	Member,
-} from "../../components/complete/members";
-import { Announcement, AnnouncementPostingUI } from "../../components/complete/announcements";
+	Announcement,
+	AnnouncementPostingUI,
+} from "../../components/complete/announcements";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database } from "../../lib/db/database.types";
 
@@ -19,7 +20,7 @@ const Group: NextPage = () => {
 	const { groupid } = router.query;
 	const supabase = useSupabaseClient<Database>();
 	const [groupData, setGroupData] = useState<GroupResponse>();
-    const [refreshAnnouncements, setRefreshAnnouncements] = useState(false);
+	const [refreshAnnouncements, setRefreshAnnouncements] = useState(false);
 
 	useEffect(() => {
 		(async () => {
@@ -99,8 +100,8 @@ const Group: NextPage = () => {
 								<AnnouncementPostingUI
 									communityid={groupid as string}
 									isClass={false}
-                                    prevRefreshState={refreshAnnouncements}
-                                    refreshAnnouncements={setRefreshAnnouncements}
+									prevRefreshState={refreshAnnouncements}
+									refreshAnnouncements={setRefreshAnnouncements}
 								/>
 
 								{groupData &&

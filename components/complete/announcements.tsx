@@ -71,13 +71,13 @@ export const Announcement = ({
 export const AnnouncementPostingUI = ({
 	communityid,
 	isClass,
-    prevRefreshState,
-    refreshAnnouncements,
+	prevRefreshState,
+	refreshAnnouncements,
 }: {
 	communityid: string;
 	isClass: boolean;
-    prevRefreshState: boolean;
-    refreshAnnouncements: (value: boolean) => void;
+	prevRefreshState: boolean;
+	refreshAnnouncements: (value: boolean) => void;
 }) => {
 	const supabase = useSupabaseClient<Database>();
 	const [showPost, setShowPost] = useState(false);
@@ -179,8 +179,7 @@ export const AnnouncementPostingUI = ({
 										isClass //possibly a temporary measure
 									);
 									if (testing) setShowLoading(false);
-									console.log(testing);
-                                    refreshAnnouncements(!prevRefreshState)
+									refreshAnnouncements(!prevRefreshState);
 								}}
 							>
 								Post
@@ -191,14 +190,11 @@ export const AnnouncementPostingUI = ({
 			</div>
 		);
 	} else {
-        return (
-            <Loading className="flex"/>
-        )
-    }
+		return <Loading className="flex" />;
+	}
 };
 
 function isEditorEmpty(editor: EditorState | undefined) {
-	console.log(editor);
 	if (editor) return editor.toJSON().root.direction === null;
 	return true;
 }

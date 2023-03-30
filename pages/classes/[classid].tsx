@@ -22,7 +22,10 @@ import {
 } from "../../lib/db/schedule";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
-import { Announcement, AnnouncementPostingUI } from "../../components/complete/announcements";
+import {
+	Announcement,
+	AnnouncementPostingUI,
+} from "../../components/complete/announcements";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -38,7 +41,7 @@ const Class: NextPage = () => {
 	const [edited, setEdited] = useState(false);
 	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
 	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
-    const [refreshAnnouncements, setRefreshAnnouncements] = useState(false);
+	const [refreshAnnouncements, setRefreshAnnouncements] = useState(false);
 
 	const updateEditorDB = async () => {
 		setEdited(true);
@@ -56,7 +59,6 @@ const Class: NextPage = () => {
 			if (user && typeof classid == "string") {
 				const data = await getClass(supabase, classid);
 				setData(data);
-				console.log(data);
 				if (data.data && Array.isArray(data.data.users_classes)) {
 					//grades are temporarily done like this until we figure out assignment submissions
 					setGrade(
@@ -212,8 +214,8 @@ const Class: NextPage = () => {
 								<AnnouncementPostingUI
 									communityid={classid as string}
 									isClass={true}
-                                    prevRefreshState={refreshAnnouncements}
-                                    refreshAnnouncements={setRefreshAnnouncements}
+									prevRefreshState={refreshAnnouncements}
+									refreshAnnouncements={setRefreshAnnouncements}
 								/>
 
 								{data.data &&
