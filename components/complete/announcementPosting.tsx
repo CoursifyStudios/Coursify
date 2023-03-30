@@ -96,8 +96,8 @@ export const AnnouncementPostingUI = ({
 									user?.id!,
 									title,
 									editorState?.toJSON() as unknown as Json,
-                                    communityid,
-                                    isClass //possibly a temporary measure
+									communityid,
+									isClass //possibly a temporary measure
 								)
 							);
 							//@ts-ignore WHY WHY WHY

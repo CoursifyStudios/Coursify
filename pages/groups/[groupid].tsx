@@ -38,7 +38,7 @@ const Group: NextPage = () => {
 		<div className="mx-auto my-10 w-full max-w-screen-xl">
 			<div className="relative mb-6 h-48 w-full">
 				<Image
-					src={groupData?.data?.image? groupData.data.image : exampleGroupImg}
+					src={groupData?.data?.image ? groupData.data.image : exampleGroupImg}
 					alt="Example Image"
 					className="rounded-xl object-cover object-center"
 					fill
@@ -100,7 +100,10 @@ const Group: NextPage = () => {
 							</div>
 
 							<div className="space-y-3">
-								<AnnouncementPostingUI communityid={groupid as string} isClass={false} />
+								<AnnouncementPostingUI
+									communityid={groupid as string}
+									isClass={false}
+								/>
 
 								{groupData &&
 									groupData.data &&

@@ -91,7 +91,7 @@ const Class: NextPage = () => {
 		<div className="mx-auto my-10 w-full max-w-screen-xl">
 			<div className="relative mb-6 h-48 w-full">
 				<Image
-					src={data.data?.image? data.data.image : exampleClassImg}
+					src={data.data?.image ? data.data.image : exampleClassImg}
 					alt="Example Image"
 					className="rounded-xl object-cover object-center"
 					fill
@@ -209,7 +209,10 @@ const Class: NextPage = () => {
 						<Tab.Panel>
 							<h2 className="title mb-3">Announcements</h2>
 							<div className="space-y-3">
-								<AnnouncementPostingUI communityid={classid as string} isClass={true} />
+								<AnnouncementPostingUI
+									communityid={classid as string}
+									isClass={true}
+								/>
 
 								{data.data &&
 									data.data.announcements && //change below when I get actual types
