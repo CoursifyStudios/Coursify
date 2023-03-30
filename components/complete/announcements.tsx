@@ -146,8 +146,8 @@ export const AnnouncementPostingUI = ({
 						Cancel
 					</span>
 				</Button>
-				<Button className={isEditorEmpty(editorState)? "text-white" :"brightness-hover !bg-blue-500 text-white"}>
-					{isEditorEmpty(editorState)? (
+				<Button className={isEditorEmpty(editorState) || title.length == 0? "text-white" :"brightness-hover !bg-blue-500 text-white"}>
+					{isEditorEmpty(editorState) || title.length == 0? (
 						<span>Post</span>
 					) : (
 						<span
