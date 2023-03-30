@@ -27,7 +27,7 @@ export default function Profile() {
 
 	useEffect(() => {
 		(async () => {
-			if (profileid) {
+			if (false) {
 				const profileData = await getProfile(
 					supabaseClient,
 					profileid as string
@@ -131,7 +131,12 @@ export default function Profile() {
 									isLink={true}
 								/>
 						  ))
-						: ""}
+						: [...new Array(6)].map((_, i) => (
+								<div
+									key={i}
+									className="h-48 w-72 animate-pulse rounded-xl bg-gray-200"
+								></div>
+						  ))}
 				</div>
 			</div>
 			<div className="hidden w-full flex-col rounded-xl lg:h-[calc(100vh-8rem)] xl:flex">
@@ -141,15 +146,14 @@ export default function Profile() {
 						profileGroups.data &&
 						profileGroups.data.map((groupLink) =>
 							Array.isArray(groupLink) ? (
-								groupLink.map((group) => (
-									<GroupSmall
-										key={group.id}
-										photo="/example-img.jpg"
-										title={group.name ? group.name : ""}
-										id={groupLink.group_id}
-										isLink={true}
-									/>
-								))
+								groupLink.map((group) =>
+									[...new Array(6)].map((_, i) => (
+										<div
+											key={i}
+											className="h-48 w-72 animate-pulse rounded-xl bg-gray-200"
+										></div>
+									))
+								)
 							) : (
 								<GroupSmall
 									key={groupLink.group_id}
