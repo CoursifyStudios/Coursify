@@ -167,10 +167,10 @@ export default function Profile() {
 									/>
 								)
 						  )
-						: [...new Array(5)].map((_, i) => (
+						: [...new Array(4)].map((_, i) => (
 								<div
 									key={i}
-									className="h-24 w-[19rem] animate-pulse rounded-xl bg-gray-200"
+									className="h-24 w-[16rem] animate-pulse rounded-xl bg-gray-200"
 								></div>
 						  ))}
 				</div>
