@@ -34,13 +34,14 @@ const Group: NextPage = () => {
 	return (
 		<div className="mx-auto my-10 w-full max-w-screen-xl">
 			<div className="relative mb-6 h-48 w-full">
+				{groupData?.data?.image ?
 				<Image
-					src={groupData?.data?.image ? groupData.data.image : exampleGroupImg}
+					src={groupData.data.image}
 					alt="Example Image"
 					className="rounded-xl object-cover object-center"
 					fill
-				/>
-				<h1 className="title absolute  bottom-5 left-5 !text-4xl text-gray-200">
+				/> : <div className="bg-gray-200 animate-pulse absolute inset-0" />}
+				<h1 className="title absolute z-10 bottom-5 left-5 !text-4xl text-gray-200">
 					{groupData?.data?.name}
 				</h1>
 			</div>
