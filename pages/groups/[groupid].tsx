@@ -19,6 +19,7 @@ const Group: NextPage = () => {
 	const { groupid } = router.query;
 	const supabase = useSupabaseClient<Database>();
 	const [groupData, setGroupData] = useState<GroupResponse>();
+    const [refreshAnnouncements, setRefreshAnnouncements] = useState(false);
 
 	useEffect(() => {
 		(async () => {
@@ -98,6 +99,8 @@ const Group: NextPage = () => {
 								<AnnouncementPostingUI
 									communityid={groupid as string}
 									isClass={false}
+                                    prevRefreshState={refreshAnnouncements}
+                                    refreshAnnouncements={setRefreshAnnouncements}
 								/>
 
 								{groupData &&

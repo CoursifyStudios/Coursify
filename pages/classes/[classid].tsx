@@ -38,6 +38,7 @@ const Class: NextPage = () => {
 	const [edited, setEdited] = useState(false);
 	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
 	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
+    const [refreshAnnouncements, setRefreshAnnouncements] = useState(false);
 
 	const updateEditorDB = async () => {
 		setEdited(true);
@@ -82,7 +83,7 @@ const Class: NextPage = () => {
 		})();
 		setEdited(false);
 		setEditorState(undefined);
-	}, [user, supabase, classid]);
+	}, [user, supabase, classid, refreshAnnouncements]);
 
 	if (!data) return <div>loading data rn, wait pls ty</div>;
 
@@ -211,6 +212,8 @@ const Class: NextPage = () => {
 								<AnnouncementPostingUI
 									communityid={classid as string}
 									isClass={true}
+                                    prevRefreshState={refreshAnnouncements}
+                                    refreshAnnouncements={setRefreshAnnouncements}
 								/>
 
 								{data.data &&
