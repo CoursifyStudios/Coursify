@@ -9,7 +9,7 @@ import { getGroup, GroupResponse } from "../../lib/db/groups";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
 import {
 	Member,
-} from "../../components/misc/announcementsAndMembers";
+} from "../../components/complete/members";
 import { Announcement, AnnouncementPostingUI } from "../../components/complete/announcements";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database } from "../../lib/db/database.types";

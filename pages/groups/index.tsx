@@ -18,10 +18,10 @@ export default function GroupDirectory() {
 		<div>
 			<div className="mx-auto my-10 w-full max-w-screen-xl">
 				<div className="space-y-3">
-					<div className="flex w-1/3 items-center rounded-full bg-gray-300 p-1">
+					{/* <div className="flex w-1/3 items-center rounded-full bg-gray-300 p-1">
 						<MagnifyingGlassIcon className="ml-1 h-6 w-6" />
 						<p className="ml-1.5 p-1 ">Search for Groups</p>
-					</div>
+					</div> */}
 					<div>
 						<h1 className="title">Your Groups</h1>
 						<div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-5 ">
@@ -49,7 +49,6 @@ export default function GroupDirectory() {
 								allGroupData.data &&
 								allGroupData.data.map(
 									(group) =>
-										//@ts-ignore
 										group.featured && (
 											<GroupLarge
 												key={group.id}
@@ -70,9 +69,7 @@ export default function GroupDirectory() {
 								allGroupData.data &&
 								allGroupData.data.map(
 									(group) =>
-										//@ts-ignore
 										group.tags &&
-										//@ts-ignore
 										group.tags.includes("outdoors") && (
 											<GroupLarge
 												key={group.id}

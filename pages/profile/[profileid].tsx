@@ -11,7 +11,7 @@ import type { PostgrestResponse } from "@supabase/supabase-js";
 import { AllGroupsResponse, getAllGroupsForUser } from "../../lib/db/groups";
 import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
 import { GroupSmall } from "../../components/complete/group";
-import { Achievement } from "../../components/complete/achivement";
+import { Achievement } from "../../components/complete/achievements";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();

@@ -4,7 +4,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useTabs } from "../../lib/tabs/handleTabs";
-import { ColoredPill, CopiedHover } from "./pill";
+import { ColoredPill, CopiedHover } from "../misc/pill";
 
 export const Member = ({
 	user,

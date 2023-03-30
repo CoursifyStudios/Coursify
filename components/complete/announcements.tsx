@@ -146,10 +146,13 @@ export const AnnouncementPostingUI = ({
 						Cancel
 					</span>
 				</Button>
-				<Button className="brightness-hover !bg-blue-500 text-white">
-					<span
-						tabIndex={0}
-						onClick={async () => {
+				<Button className={isEditorEmpty(editorState)? "text-white" :"brightness-hover !bg-blue-500 text-white"}>
+					{isEditorEmpty(editorState)? (
+						<span>Post</span>
+					) : (
+						<span
+							tabIndex={0}
+							onClick={async () => {
 								createNewAnnouncement(
 									supabase,
 									user?.id!,
@@ -158,12 +161,20 @@ export const AnnouncementPostingUI = ({
 									communityid,
 									isClass //possibly a temporary measure
 								);
-						}}
-					>
-						Post
-					</span>
+							}}
+						>
+							Post
+						</span>
+					)}
 				</Button>
 			</div>
 		</div>
 	);
 };
+
+function isEditorEmpty (editor: EditorState | undefined) {
+    console.log(editor);
+    if (editor)
+    return editor.toJSON().root.direction === null;
+    return true;
+}
