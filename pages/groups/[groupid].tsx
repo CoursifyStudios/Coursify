@@ -8,16 +8,11 @@ import { useRouter } from "next/router";
 import { getGroup, GroupResponse } from "../../lib/db/groups";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
 import {
-	Announcement,
 	Member,
 } from "../../components/misc/announcementsAndMembers";
-import { AnnouncementPostingUI } from "../../components/complete/announcementPosting";
+import { Announcement, AnnouncementPostingUI } from "../../components/complete/announcements";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database } from "../../lib/db/database.types";
-import {
-	EllipsisVerticalIcon,
-	FaceSmileIcon,
-} from "@heroicons/react/24/outline";
 
 const Group: NextPage = () => {
 	const router = useRouter();

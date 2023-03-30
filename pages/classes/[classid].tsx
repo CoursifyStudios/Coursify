@@ -21,9 +21,8 @@ import {
 	setThisSchedule,
 } from "../../lib/db/schedule";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
-import { Announcement } from "../../components/misc/announcementsAndMembers";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
-import { AnnouncementPostingUI } from "../../components/complete/announcementPosting";
+import { Announcement, AnnouncementPostingUI } from "../../components/complete/announcements";
 
 const Class: NextPage = () => {
 	const router = useRouter();
