@@ -42,6 +42,12 @@ export const getClass = async (
 		.select(
 			`
 		*,
+        announcements (
+            *,
+            users (
+                *
+            )
+        ),
 		assignments (
 			name, description, id, due_type, due_date
 		),

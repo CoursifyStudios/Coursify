@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import Image from "next/image";
 export const GroupSmall: NextPage<{
-	photo: string;
+	photo: string | null | undefined;
 	title: string;
 	id: string;
 	isLink?: boolean;
@@ -27,12 +27,16 @@ export const GroupSmall: NextPage<{
 				tabIndex={0}
 			>
 				<div className="relative h-16">
-					<Image
-						fill
-						className="rounded-t-xl object-cover object-center"
-						alt={"Groups image for " + title}
-						src={photo}
-					/>
+					{photo ? (
+						<Image
+							src={photo}
+							alt={"Image for " + title}
+							className="rounded-t-xl object-cover object-center"
+							fill
+						/>
+					) : (
+						<div className="absolute inset-0 animate-pulse bg-gray-200" />
+					)}
 				</div>
 				<div className="flex justify-center">
 					<h3 className="text-l p-3 font-medium line-clamp-2">{title}</h3>
@@ -43,7 +47,7 @@ export const GroupSmall: NextPage<{
 }; //combine these into one at some point
 export const GroupLarge: NextPage<{
 	id: string;
-	photo: string;
+	photo: string | null | undefined;
 	name: string;
 	membernum: number;
 	isLink?: boolean;
@@ -68,12 +72,16 @@ export const GroupLarge: NextPage<{
 				}
 			>
 				<div className="relative h-32 ">
-					<Image
-						src={photo}
-						alt="Example Image"
-						className="rounded-t-xl object-cover object-center"
-						fill
-					/>
+					{photo ? (
+						<Image
+							src={photo}
+							alt={"Image for " + name}
+							className="rounded-t-xl object-cover object-center"
+							fill
+						/>
+					) : (
+						<div className="absolute inset-0 animate-pulse bg-gray-200" />
+					)}
 				</div>
 				<div className="flex flex-grow flex-col p-4">
 					<div className="flex items-start justify-between">

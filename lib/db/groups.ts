@@ -49,11 +49,20 @@ export const getGroup = async (
 		.from("groups")
 		.select(
 			`
+        *,
+        announcements (
             *,
-            users_groups (
-                *
+            users (
+                avatar_url, full_name
             )
-            `
+        ),
+        users_groups (
+            user_id, group_leader
+        ),
+        users (
+            *
+        )
+    `
 		)
 		.eq("id", groupid)
 		.single();
