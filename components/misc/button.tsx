@@ -6,15 +6,17 @@ export const Button: NextPage<{
 	className?: string;
 	children: ReactNode;
 	color?: string;
-}> = ({ className, children, color }) => {
+	disabled?: boolean;
+}> = ({ className, children, color, disabled }) => {
 	return (
-		<div
-			className={`flex cursor-pointer items-center rounded-md py-1 px-4 focus:outline-none ${className} ${
+		<button
+			disabled={disabled}
+			className={`flex cursor-pointer items-center rounded-md py-1 px-4 font-semibold focus:outline-none ${className} focus:outline-none ${
 				color ? color : "bg-gray-200"
-			} brightness-hover font-semibold `}
+			} ${disabled ? "cursor-not-allowed brightness-75" : "brightness-hover"}`}
 		>
 			{children}
-		</div>
+		</button>
 	);
 };
 

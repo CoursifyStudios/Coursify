@@ -165,12 +165,19 @@ function EditorContextProvider({
 		editor.setEditable(editable);
 		if (updatedState) {
 			editor.setEditorState(updatedState);
-		} else if (initialState)
-			editor.setEditorState(
-				editor.parseEditorState(
-					initialState as unknown as SerializedEditorState
-				)
+		} else if (initialState) {
+			const newInitialState = editor.parseEditorState(
+				initialState as unknown as SerializedEditorState
 			);
+			//@ts-expect-error Lexical types r bad
+			if (
+				(
+					editor.getEditorState().toJSON().root.children[0]
+						.children as unknown[]
+				).length == 0
+			)
+				editor.setEditorState(newInitialState);
+		}
 	}, [editable, initialState, updatedState]);
 
 	return (

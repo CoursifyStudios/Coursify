@@ -7,7 +7,7 @@ import {
 	LinkIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { Field, Form, Formik } from "formik";
+import { ErrorMessage, Field, Form, Formik, useFormikContext } from "formik";
 import { NextPage } from "next";
 import {
 	Dispatch,
@@ -30,7 +30,11 @@ export const CreateAssignment: NextPage<{
 	setOpen: Dispatch<SetStateAction<boolean>>;
 }> = ({ open, setOpen }) => {
 	const [stage, setStage] = useState(1);
-	const [assignmentData, setAssignmentData] = useState();
+	const [assignmentData, setAssignmentData] = useState<{
+		name: string;
+		description: string;
+		submission: string;
+	}>();
 	const [assignmentType, setAssignmentType] = useState<AssignmentTypes>();
 	const [content, setContent] = useState<SerializedEditorState>();
 	return (
@@ -39,6 +43,7 @@ export const CreateAssignment: NextPage<{
 				open={open}
 				onClose={() => {
 					setOpen(false), setStage(1);
+					setAssignmentType(undefined);
 				}}
 			>
 				<Transition.Child
@@ -76,9 +81,7 @@ export const CreateAssignment: NextPage<{
 
 									<div
 										className={`${
-											stage == 1
-												? "border-2 border-white"
-												: "bg-blue-500 text-white"
+											stage == 1 ? "bg-white" : "bg-blue-500 text-white"
 										}  z-10 -ml-2 grid h-8 w-8 place-items-center rounded-full  font-semibold `}
 									>
 										2
@@ -92,9 +95,7 @@ export const CreateAssignment: NextPage<{
 
 									<div
 										className={`z-10 grid h-8 w-8 ${
-											stage == 3
-												? "bg-blue-500 text-white"
-												: "border-2 border-white"
+											stage == 3 ? "bg-blue-500 text-white" : " bg-white"
 										} -ml-2 place-items-center rounded-full  font-semibold`}
 									>
 										3
@@ -103,24 +104,12 @@ export const CreateAssignment: NextPage<{
 
 								<AssignmentType />
 								<AssignmentDetails />
-								<div className="ml-auto flex space-x-4">
-									{stage != 1 && (
-										<>
-											<span onClick={() => setStage((stage) => stage - 1)}>
-												<Button>Prev</Button>
-											</span>
+								<AssignmentCreation />
 
-											<span onClick={() => setStage((stage) => stage + 1)}>
-												<Button color="bg-blue-500" className="text-white ">
-													{stage == 3 ? "Create" : "Next"}
-												</Button>
-											</span>
-										</>
-									)}
-								</div>
 								<button
 									onClick={() => {
 										setOpen(false), setStage(1);
+										setAssignmentType(undefined);
 									}}
 									className="absolute right-4 top-4 rounded p-0.5 text-gray-700 transition hover:bg-gray-300 hover:text-gray-900 focus:outline-none"
 								>
@@ -173,12 +162,35 @@ export const CreateAssignment: NextPage<{
 	}
 	function AssignmentDetails() {
 		const [editorState, setEditorState] = useState<EditorState>();
+		const [disabled, setDisabled] = useState(true);
 
 		useEffect(() => {
 			setContent(editorState?.toJSON());
 		}, [stage]);
 
 		if (stage != 2) return null;
+
+		const AssignmentWatcher = () => {
+			const { errors, values } = useFormikContext();
+
+			useEffect(() => {
+				if (
+					Object.keys(errors).length == 0 &&
+					//@ts-expect-error Formik "types" are a joke
+					values.name &&
+					//@ts-expect-error Formik "types" are a joke
+					values.description
+				) {
+					setDisabled(false);
+				} else {
+					if (disabled != true) {
+						setDisabled(true);
+					}
+				}
+			}, [errors, values]);
+
+			return null;
+		};
 
 		return (
 			<>
@@ -192,45 +204,120 @@ export const CreateAssignment: NextPage<{
 				</h2>
 				<Formik
 					validationSchema={Yup.object({
-						name: Yup.string().min(3).max(30).required(),
-						description: Yup.string().min(3).max(100).required(),
-						due_date: Yup.date(),
-						publish: Yup.date().required(),
+						name: Yup.string().min(3).max(40).required(),
+						description: Yup.string().min(3).max(60).required(),
+						submission: Yup.string().min(3).max(100),
 					})}
 					initialValues={{
 						name: "",
 						description: "",
-						due_date: new Date(),
-						publish_date: new Date(),
+						submission: "",
+						...assignmentData,
 					}}
-					onSubmit={(values) => console.log(values)}
+					onSubmit={(values) => {
+						setAssignmentData(values);
+						console.log(values);
+					}}
 				>
-					<Form className="mt-10 mb-6 space-y-6 ">
-						<label htmlFor="name" className="flex flex-col">
-							<span className="text-sm font-medium">Assignment Name</span>
-							<Field
-								className="mt-1 rounded-md border-gray-300 bg-white/50 focus:ring-1"
-								type="text"
-								name="name"
+					{({ submitForm }) => (
+						<Form className="mt-10 flex flex-col space-y-3 ">
+							<AssignmentWatcher />
+							<label htmlFor="name" className="flex flex-col">
+								<span className="text-sm font-medium">
+									Assignment Name <span className="text-red-600">*</span>
+								</span>
+								<Field
+									className="mt-1 rounded-md border-gray-300 bg-white/50 focus:ring-1"
+									type="text"
+									name="name"
+								/>
+								<div className="text-sm text-red-600">
+									<ErrorMessage name="name" />
+								</div>
+							</label>
+							<label htmlFor="description" className="flex flex-col">
+								<span className="text-sm font-medium">
+									Short Description <span className="text-red-600">*</span>
+								</span>
+								<Field
+									className="mt-1 rounded-md border-gray-300  bg-white/50 focus:ring-1"
+									type="text"
+									name="description"
+								/>
+								<div className="text-sm text-red-600">
+									<ErrorMessage name="description" />
+								</div>
+							</label>
+							<label htmlFor="submission" className="flex flex-col">
+								<span className="text-sm font-medium">
+									Submission Instructions
+								</span>
+								<Field
+									className="mt-1 rounded-md border-gray-300  bg-white/50 focus:ring-1"
+									type="text"
+									name="submission"
+								/>
+								<div className="text-sm text-red-600">
+									<ErrorMessage name="submission" />
+								</div>
+							</label>
+							<span className="text-sm font-medium">Full Description</span>
+							<Editor
+								editable
+								updateState={setEditorState}
+								initialState={editorState?.toJSON()}
+								className="scrollbar-fancy mt-1 mb-6 max-h-[30vh] overflow-y-auto rounded-md border border-gray-300 bg-white/50 px-2 pb-2 focus:ring-1"
+								//initialState={content}
 							/>
-						</label>
-						<label htmlFor="description" className="flex flex-col">
-							<span className="text-sm font-medium">Short Description</span>
-							<Field
-								className="mt-1 rounded-md border-gray-300  bg-white/50 focus:ring-1"
-								type="text"
-								name="description"
-							/>
-						</label>
-					</Form>
+							<div className="ml-auto flex space-x-4">
+								<span onClick={() => setStage((stage) => stage - 1)}>
+									<Button>Prev</Button>
+								</span>
+
+								<span
+									onClick={() => {
+										submitForm();
+										setStage((stage) => stage + 1);
+									}}
+								>
+									<Button
+										color="bg-blue-500"
+										className="text-white "
+										disabled={disabled}
+									>
+										Next
+									</Button>
+								</span>
+							</div>
+						</Form>
+					)}
 				</Formik>
-				<span className="text-sm font-medium">Full Description</span>
-				<Editor
-					editable
-					updateState={setEditorState}
-					className="mt-1 mb-10 rounded-md border border-gray-300 bg-white/50 focus:ring-1"
-					//initialState={content}
-				/>
+			</>
+		);
+	}
+	function AssignmentCreation() {
+		const [disabled, setDisabled] = useState(true);
+
+		if (stage != 3) return null;
+
+		return (
+			<>
+				stage 3 stuff here
+				<div className="ml-auto flex space-x-4">
+					<span onClick={() => setStage((stage) => stage - 1)}>
+						<Button>Prev</Button>
+					</span>
+
+					<span onClick={() => setStage((stage) => stage + 1)}>
+						<Button
+							color="bg-blue-500"
+							className="text-white "
+							disabled={disabled}
+						>
+							Next
+						</Button>
+					</span>
+				</div>
 			</>
 		);
 	}
