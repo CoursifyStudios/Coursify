@@ -24,12 +24,14 @@ import * as Yup from "yup";
 import Editor from "../editors/richeditor";
 import { EditorState, SerializedEditorState } from "lexical";
 import Image from "next/image";
+import { AssignmentTypes } from "../../lib/db/assignments";
 export const CreateAssignment: NextPage<{
 	open: boolean;
 	setOpen: Dispatch<SetStateAction<boolean>>;
 }> = ({ open, setOpen }) => {
 	const [stage, setStage] = useState(1);
 	const [assignmentData, setAssignmentData] = useState();
+	const [assignmentType, setAssignmentType] = useState<AssignmentTypes>();
 	const [content, setContent] = useState<SerializedEditorState>();
 	return (
 		<Transition appear show={open} as={Fragment}>
@@ -75,7 +77,7 @@ export const CreateAssignment: NextPage<{
 									<div
 										className={`${
 											stage == 1
-												? "border-2 border-gray-300"
+												? "border-2 border-white"
 												: "bg-blue-500 text-white"
 										}  z-10 -ml-2 grid h-8 w-8 place-items-center rounded-full  font-semibold `}
 									>
@@ -92,26 +94,29 @@ export const CreateAssignment: NextPage<{
 										className={`z-10 grid h-8 w-8 ${
 											stage == 3
 												? "bg-blue-500 text-white"
-												: "border-2 border-gray-300"
+												: "border-2 border-white"
 										} -ml-2 place-items-center rounded-full  font-semibold`}
 									>
 										3
 									</div>
 								</div>
-								<h2 className="mt-6 text-xl font-bold">Submission Type</h2>
+
 								<AssignmentType />
 								<AssignmentDetails />
 								<div className="ml-auto flex space-x-4">
 									{stage != 1 && (
-										<span onClick={() => setStage((stage) => stage - 1)}>
-											<Button>Prev</Button>
-										</span>
+										<>
+											<span onClick={() => setStage((stage) => stage - 1)}>
+												<Button>Prev</Button>
+											</span>
+
+											<span onClick={() => setStage((stage) => stage + 1)}>
+												<Button color="bg-blue-500" className="text-white ">
+													{stage == 3 ? "Create" : "Next"}
+												</Button>
+											</span>
+										</>
 									)}
-									<span onClick={() => setStage((stage) => stage + 1)}>
-										<Button color="bg-blue-500" className="text-white ">
-											{stage == 3 ? "Create" : "Next"}
-										</Button>
-									</span>
 								</div>
 								<button
 									onClick={() => {
@@ -132,20 +137,38 @@ export const CreateAssignment: NextPage<{
 		if (stage != 1) return null;
 
 		return (
-			<div>
-				<div className="my-4 grid grid-cols-3 gap-5">
+			<>
+				<h2 className="mt-6 text-xl font-bold">Submission Type</h2>
+				<div className="mt-4 grid grid-cols-3 gap-5">
 					{submissionType.map((submission, i) => (
 						<div key={i}>
-							<div className="brightness-hover rounded-md bg-gray-200 p-2">
+							<div
+								className={`brightness-hover h-full cursor-pointer rounded-md p-4 ${
+									submission.type == assignmentType
+										? "bg-white shadow-md"
+										: "bg-gray-200"
+								} `}
+								onClick={() => {
+									setAssignmentType(submission.type);
+									setStage((stage) => stage + 1);
+								}}
+							>
 								<div className="flex items-center">
-									<div>{submission.icon}</div>
-									<h1 className="ml-3 font-semibold">{submission.name}</h1>
+									<div className="rounded-full bg-blue-500 p-2 text-white">
+										{submission.icon}
+									</div>
+									<div className="ml-3">
+										<h1 className="font-semibold">{submission.name}</h1>
+										<p className="test-gray-700 text-xs">
+											{submission.description}
+										</p>
+									</div>
 								</div>
 							</div>
 						</div>
 					))}
 				</div>
-			</div>
+			</>
 		);
 	}
 	function AssignmentDetails() {
@@ -159,6 +182,14 @@ export const CreateAssignment: NextPage<{
 
 		return (
 			<>
+				<h2 className="mt-6 text-xl font-bold">
+					Create Assignment -{" "}
+					{
+						submissionType.find(
+							(submission) => submission.type == assignmentType
+						)?.name
+					}
+				</h2>
 				<Formik
 					validationSchema={Yup.object({
 						name: Yup.string().min(3).max(30).required(),
@@ -174,28 +205,30 @@ export const CreateAssignment: NextPage<{
 					}}
 					onSubmit={(values) => console.log(values)}
 				>
-					<Form className="mt-10 mb-6">
+					<Form className="mt-10 mb-6 space-y-6 ">
 						<label htmlFor="name" className="flex flex-col">
-							Assignment Name
+							<span className="text-sm font-medium">Assignment Name</span>
 							<Field
-								className="rounded border-none bg-white/50 focus:ring"
+								className="mt-1 rounded-md border-gray-300 bg-white/50 focus:ring-1"
 								type="text"
 								name="name"
 							/>
 						</label>
-						<label htmlFor="name" className="flex flex-col">
-							Short Description
+						<label htmlFor="description" className="flex flex-col">
+							<span className="text-sm font-medium">Short Description</span>
 							<Field
-								className="rounded border-none bg-white/50 focus:ring"
+								className="mt-1 rounded-md border-gray-300  bg-white/50 focus:ring-1"
 								type="text"
 								name="description"
 							/>
 						</label>
 					</Form>
 				</Formik>
+				<span className="text-sm font-medium">Full Description</span>
 				<Editor
 					editable
 					updateState={setEditorState}
+					className="mt-1 mb-10 rounded-md border border-gray-300 bg-white/50 focus:ring-1"
 					//initialState={content}
 				/>
 			</>
@@ -203,26 +236,44 @@ export const CreateAssignment: NextPage<{
 	}
 };
 
-const submissionType: { icon: ReactNode; name: string }[] = [
+const className = "h-5 w-5 min-w-[1.25rem]";
+
+const submissionType: {
+	icon: ReactNode;
+	name: string;
+	description: string;
+	type: AssignmentTypes;
+}[] = [
 	{
-		icon: <LinkIcon className="h-10 w-10" />,
+		icon: <LinkIcon className={className} />,
 		name: "Link",
+		description: "Submission for links",
+		type: "link",
 	},
 	{
-		icon: <DocumentTextIcon className="h-10 w-10" />,
+		icon: <DocumentTextIcon className={className} />,
 		name: "Rich Media",
+		description: "Submission for images, videos, etc.",
+		type: "media",
 	},
 	{
-		icon: <DocumentCheckIcon className="h-10 w-10" />,
+		icon: <DocumentCheckIcon className={className} />,
 		name: "Checkbox",
+		description: "Checkoff, i.e. complete an assignment in a packet",
+		type: "check",
 	},
 	{
-		icon: <ChatBubbleBottomCenterTextIcon className="h-10 w-10" />,
+		icon: <ChatBubbleBottomCenterTextIcon className={className} />,
 		name: "Discussion Post",
+		description: "Students can post discusstions and reply to others",
+		type: "post",
 	},
 	{
-		icon: <ClipboardDocumentListIcon className="h-10 w-10" />,
+		icon: <ClipboardDocumentListIcon className={className} />,
 		name: "Assesment",
+		description:
+			"Combine free responses and/or multiple choice questions for a test",
+		type: "test",
 	},
 	{
 		icon: (
@@ -231,9 +282,11 @@ const submissionType: { icon: ReactNode; name: string }[] = [
 				alt="Google Logo"
 				width={24}
 				height={24}
-				className="w=10 ml-2 h-10"
+				className={className + " invert"}
 			/>
 		),
 		name: "Google Media",
+		description: "Submission box for google docs, slides, sheets, etc.",
+		type: "google",
 	},
 ];

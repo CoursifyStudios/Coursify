@@ -315,10 +315,10 @@ const Class: NextPage = () => {
 						{isTeacher && (
 							<div
 								onClick={() => setAssignmentCreationOpen(true)}
-								className="group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:bg-gray-200 hover:text-black"
+								className="group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black"
 							>
 								<PlusIcon className="mr-4 -ml-4 h-8 w-8 transition group-hover:scale-125" />{" "}
-								<h3 className=" text-lg font-medium  transition">
+								<h3 className="text-lg font-medium transition">
 									New Assignment
 								</h3>
 							</div>
