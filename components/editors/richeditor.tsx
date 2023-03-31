@@ -92,6 +92,7 @@ export default function Editor({
 	updateState,
 	className,
 	initialState,
+	initialStateEditor,
 	updatedState,
 }: {
 	editable: boolean;
@@ -99,6 +100,7 @@ export default function Editor({
 		| Dispatch<SetStateAction<undefined | EditorState>>
 		| ((state: EditorState) => void);
 	initialState?: Json | SerializedEditorState;
+	initialStateEditor?: EditorState;
 	className?: string;
 	updatedState?: EditorState;
 }) {
@@ -109,6 +111,7 @@ export default function Editor({
 					editable={editable}
 					initialState={initialState}
 					updatedState={updatedState}
+					initialStateEditor={initialStateEditor}
 				>
 					<div
 						className={`relative ${
@@ -151,10 +154,12 @@ function EditorContextProvider({
 	editable,
 	initialState,
 	updatedState,
+	initialStateEditor,
 }: {
 	children: ReactNode;
 	editable: boolean;
 	initialState?: Json | SerializedEditorState;
+	initialStateEditor?: EditorState;
 	updatedState?: EditorState;
 }) {
 	const [editor] = useLexicalComposerContext();
@@ -165,20 +170,22 @@ function EditorContextProvider({
 		editor.setEditable(editable);
 		if (updatedState) {
 			editor.setEditorState(updatedState);
-		} else if (initialState) {
-			const newInitialState = editor.parseEditorState(
-				initialState as unknown as SerializedEditorState
-			);
-			//@ts-expect-error Lexical types r bad
+		} else if (initialState || initialStateEditor) {
 			if (
 				(
-					editor.getEditorState().toJSON().root.children[0]
+					editor.getEditorState().toJSON().root.children[0] //@ts-expect-error Lexical types r bad
 						.children as unknown[]
 				).length == 0
 			)
-				editor.setEditorState(newInitialState);
+				editor.setEditorState(
+					initialStateEditor ||
+						editor.parseEditorState(
+							initialState as unknown as SerializedEditorState
+						)
+				);
+			console.log(initialStateEditor?.toJSON());
 		}
-	}, [editable, initialState, updatedState]);
+	}, [editable, initialState, updatedState, initialStateEditor]);
 
 	return (
 		<EditorContext.Provider

@@ -265,9 +265,8 @@ export const CreateAssignment: NextPage<{
 							<Editor
 								editable
 								updateState={setEditorState}
-								initialState={editorState?.toJSON()}
+								initialStateEditor={editorState}
 								className="scrollbar-fancy mt-1 mb-6 max-h-[30vh] overflow-y-auto rounded-md border border-gray-300 bg-white/50 px-2 pb-2 focus:ring-1"
-								//initialState={content}
 							/>
 							<div className="ml-auto flex space-x-4">
 								<span onClick={() => setStage((stage) => stage - 1)}>
