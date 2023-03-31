@@ -143,20 +143,12 @@ export default function Profile() {
 				<div className="scrollbar-fancy flex snap-y snap-proximity flex-col space-y-5 overflow-y-auto">
 					{profileGroups && profileGroups.data
 						? profileGroups.data.map((groupLink) =>
-								Array.isArray(groupLink) ? (
-									groupLink.map((group) => (
-										<GroupSmall
-											key={group.id}
-											photo="/example-img.jpg"
-											title={group.name ? group.name : ""}
-											id={groupLink.group_id}
-											isLink={true}
-										/>
-									))
-								) : (
+								!Array.isArray(groupLink) && (
 									<GroupSmall
 										key={groupLink.group_id}
-										photo="/example-img.jpg"
+										photo={
+											getDataOutArray(groupLink.groups!).image
+										}
 										title={
 											(Array.isArray(groupLink.groups)
 												? groupLink.groups[0].name
