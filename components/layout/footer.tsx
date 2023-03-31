@@ -17,16 +17,15 @@ export default function Footer() {
 	}
 
 	return (
-		<footer className="mt-10 flex justify-center">
-			<div className="my-2 flex w-full max-w-screen-xl flex-col items-center justify-between px-4 text-sm font-medium md:flex-row md:px-8 xl:px-0">
-				<div className="flex flex-col ">
-					<Image
-						src={karasuLogo}
-						alt="Karasu logo"
-						className="mx-auto mb-2 md:mx-0"
-						width={70}
-					/>
-					{/* A next-generation LMS */}
+		<footer className="mt-10 flex justify-center bg-gray-200">
+			<div className="my-4 flex w-full max-w-screen-xl flex-col items-center justify-between px-4 text-sm font-medium md:flex-row md:px-8 xl:px-0">
+				<div className="flex flex-col">
+					<h3 className="mr-auto	bg-gradient-to-r from-pink-400 to-orange-300 bg-clip-text text-xl font-extrabold text-transparent">
+						Coursify
+					</h3>
+					<p className="mt-1">
+						© 2023 Coursify Studios. Made with ❤️ in San Francisco.
+					</p>
 				</div>
 				<div className="mt-4 space-x-4 md:mt-0">
 					<Link href="/privacy">
