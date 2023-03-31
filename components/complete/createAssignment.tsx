@@ -1,4 +1,4 @@
-import { Transition, Dialog } from "@headlessui/react";
+import { Transition, Dialog, Listbox } from "@headlessui/react";
 import {
 	ChatBubbleBottomCenterTextIcon,
 	ClipboardDocumentListIcon,
@@ -17,14 +17,14 @@ import {
 	useEffect,
 	useState,
 } from "react";
-import { formatDate } from "../../lib/misc/formatDate";
 import { Button } from "../misc/button";
-import { getIcon } from "./achivement";
 import * as Yup from "yup";
 import Editor from "../editors/richeditor";
 import { EditorState, SerializedEditorState } from "lexical";
 import Image from "next/image";
 import { AssignmentTypes } from "../../lib/db/assignments";
+import { DueType } from "./assignments";
+
 export const CreateAssignment: NextPage<{
 	open: boolean;
 	setOpen: Dispatch<SetStateAction<boolean>>;
@@ -37,6 +37,8 @@ export const CreateAssignment: NextPage<{
 	}>();
 	const [assignmentType, setAssignmentType] = useState<AssignmentTypes>();
 	const [content, setContent] = useState<SerializedEditorState>();
+	const [selectedDueType, setSelectedDueType] = useState(types[0]);
+	const [selectedPublishType, setSelectedPublishType] = useState(types[0]);
 
 	return (
 		<Transition appear show={open} as={Fragment}>
@@ -299,8 +301,56 @@ export const CreateAssignment: NextPage<{
 
 		return (
 			<>
-				stage 3 stuff here
-				<div className="ml-auto flex space-x-4">
+				<section className="mt-6 flex flex-col">
+					<h2 className="text-xl font-bold">{assignmentData?.name}</h2>
+					<p className="mt-2 text-gray-700">
+						<span className="font-medium text-gray-800">
+							Short description:{" "}
+						</span>
+						{assignmentData?.name}
+					</p>
+					{assignmentData?.submission && (
+						<p className="mt-3 text-gray-700">
+							<span className="font-medium text-gray-800">
+								Submission Instructions:{" "}
+							</span>
+							{assignmentData?.submission}
+						</p>
+					)}
+					<span className="mt-3 font-medium text-gray-800">
+						Full Description:{" "}
+					</span>
+					<Editor
+						editable={false}
+						initialState={content}
+						className="scrollbar-fancy max-h-[30vh] overflow-y-auto"
+					/>
+				</section>
+				<hr className="my-4" />
+				<section className="grid grid-cols-2">
+					<div className="">
+						<p className="mb-2 font-medium text-gray-800">Publish</p>
+					</div>
+					<div className="">
+						<p className="mb-2 font-medium text-gray-800">Due</p>
+						<Listbox value={selectedDueType} onChange={setSelectedDueType}>
+							<Listbox.Button>{selectedDueType.name}</Listbox.Button>
+							<Listbox.Options className="absolute space-y-2 rounded-xl bg-white/75 p-3 backdrop-blur-xl">
+								{types.map((type, i) => (
+									<Listbox.Option
+										key={i}
+										value={type}
+										className="cursor-pointer transition hover:bg-gray-200/50"
+									>
+										{type.name}
+									</Listbox.Option>
+								))}
+							</Listbox.Options>
+						</Listbox>
+					</div>
+				</section>
+
+				<section className="ml-auto mt-6 flex space-x-4">
 					<span onClick={() => setStage((stage) => stage - 1)}>
 						<Button>Prev</Button>
 					</span>
@@ -311,14 +361,29 @@ export const CreateAssignment: NextPage<{
 							className="text-white "
 							disabled={disabled}
 						>
-							Next
+							Create
 						</Button>
 					</span>
-				</div>
+				</section>
 			</>
 		);
 	}
 };
+
+const types: { type: DueType; name: string }[] = [
+	{
+		type: DueType.START_OF_CLASS,
+		name: "Start of class",
+	},
+	{
+		type: DueType.END_OF_CLASS,
+		name: "End of class",
+	},
+	{
+		type: DueType.DATE,
+		name: "Custom date",
+	},
+];
 
 const className = "h-5 w-5 min-w-[1.25rem]";
 

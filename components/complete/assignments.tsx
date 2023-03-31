@@ -111,7 +111,7 @@ export function AssignmentPreview({
 	);
 }
 
-enum DueType {
+export enum DueType {
 	DATE = 0,
 	START_OF_CLASS = 1,
 	END_OF_CLASS = 2,
