@@ -1,5 +1,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+	images: {
+		domains: ["hhrehffmdrcjqowwvgqg.supabase.co", "cdn.coursify.one"],
+	},
 	async redirects() {
 		return [
 			{

@@ -1,5 +1,4 @@
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Class } from "../../components/complete/class";
 import { ProfilesResponse } from "../../lib/db/profiles";
@@ -12,7 +11,7 @@ import type { PostgrestResponse } from "@supabase/supabase-js";
 import { AllGroupsResponse, getAllGroupsForUser } from "../../lib/db/groups";
 import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
 import { GroupSmall } from "../../components/complete/group";
-import { Achievement } from "../../components/complete/achivement";
+import { Achievement } from "../../components/complete/achievement";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
@@ -111,58 +110,60 @@ export default function Profile() {
 											key={i}
 										>
 											<div className="relative h-16 w-16 animate-pulse rounded-full bg-gray-300"></div>
-											<div className="mb-2 mt-3 h-6 w-16  animate-pulse rounded bg-gray-300"></div>
+											<div className="mb-2 mt-3 h-6 w-16 animate-pulse rounded bg-gray-300"></div>
 										</div>
 								  ))}
 						</div>
 					</div>
 				)}
 			</div>
-
-			<div className="scrollbar-fancy mx-auto mt-8 shrink-0 overflow-y-auto rounded-xl lg:mt-0 lg:h-[calc(100vh-8rem)]">
+			<div className="scrollbar-fancy mx-auto mt-8 shrink-0 overflow-y-auto rounded-xl lg:mt-0 lg:h-[calc(100vh-8rem)] xl:flex">
 				<h2 className="title mb-4">Classes</h2>
-				<div className="grid gap-8 md:grid-cols-2">
+				<div className="scrollbar-fancy grid snap-y snap-proximity gap-8 overflow-y-auto md:grid-cols-2">
 					{profileClasses && profileClasses.data
 						? profileClasses.data.map((currentClass, i) => (
 								<Class
+									className="snap-start"
 									classData={currentClass}
 									key={currentClass.id}
 									isLink={true}
 								/>
 						  ))
-						: ""}
+						: [...new Array(6)].map((_, i) => (
+								<div
+									key={i}
+									className="h-48 w-[19rem] animate-pulse rounded-xl bg-gray-200"
+								></div>
+						  ))}
 				</div>
 			</div>
-			<div className=" hidden w-full flex-col rounded-xl lg:h-[calc(100vh-8rem)] xl:flex">
+			<div className="hidden w-full flex-col rounded-xl lg:h-[calc(100vh-8rem)] xl:flex">
 				<h2 className="title mb-4">Groups</h2>
 				<div className="scrollbar-fancy flex snap-y snap-proximity flex-col space-y-5 overflow-y-auto">
-					{profileGroups &&
-						profileGroups.data &&
-						profileGroups.data.map((groupLink) =>
-							Array.isArray(groupLink) ? (
-								groupLink.map((group) => (
+					{profileGroups && profileGroups.data
+						? profileGroups.data.map((groupLink) =>
+								!Array.isArray(groupLink) && (
 									<GroupSmall
-										key={group.id}
-										photo="/example-img.jpg"
-										title={group.name ? group.name : ""}
+										key={groupLink.group_id}
+										photo={
+											getDataOutArray(groupLink.groups!).image
+										}
+										title={
+											(Array.isArray(groupLink.groups)
+												? groupLink.groups[0].name
+												: groupLink.groups?.name) as string
+										}
 										id={groupLink.group_id}
 										isLink={true}
 									/>
-								))
-							) : (
-								<GroupSmall
-									key={groupLink.group_id}
-									photo="/example-img.jpg"
-									title={
-										(Array.isArray(groupLink.groups)
-											? groupLink.groups[0].name
-											: groupLink.groups?.name) as string
-									}
-									id={groupLink.group_id}
-									isLink={true}
-								/>
-							)
-						)}
+								)
+						  )
+						: [...new Array(4)].map((_, i) => (
+								<div
+									key={i}
+									className="h-24 w-[16rem] animate-pulse rounded-xl bg-gray-200"
+								></div>
+						  ))}
 				</div>
 			</div>
 		</div>

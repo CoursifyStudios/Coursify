@@ -177,11 +177,11 @@ export default function Home() {
 							/>
 						</section>
 					</div>
-					<div className="flex grow">
+					<div className="flex">
 						{/* Assignments UI */}
-						<section className="">
-							<h2 className="title mb-3">Assignments</h2>
-							<div className="xl:w-[58.5rem]">
+						<section>
+							<h2 className="title mb-4">Due Next Class</h2>
+							<div className="grid grid-cols-3 gap-4 xl:w-[58.5rem] ">
 								{classes &&
 									classes.data &&
 									classes.data
@@ -189,60 +189,65 @@ export default function Home() {
 										.sort((a, b) =>
 											sortClasses(a, b, schedule, tomorrowSchedule)
 										)
-										.map(
-											(aClass) =>
+										.filter(
+											(element) =>
 												!(
-													Array.isArray(aClass.assignments) &&
-													aClass.assignments.length == 0
-												) && (
-													<div key={aClass.id}>
-														<Link href={"/classes/" + aClass.id}>
-															{/* <ColoredPill
+													Array.isArray(element.assignments) &&
+													element.assignments.length == 0
+												)
+										)
+										//temporary measure
+										.slice(0, 3)
+										.map((aClass) => (
+											<div key={aClass.id}>
+												<div>
+													<Link href={"/classes/" + aClass.id}>
+														{/* <ColoredPill
 																color={aClass.color}
 																className="my-4"
 															>
 																<p className="text-lg">{aClass.name}</p>
 															</ColoredPill> */}
-															<h2 className="mb-2 font-semibold">
-																{aClass.name}
-															</h2>
-														</Link>
-														{/* <h2 className="my-4 text-lg font-semibold">
+														<h2 className="mb-2 text-xl font-semibold">
+															{aClass.name}
+														</h2>
+													</Link>
+													{/* <h2 className="my-4 text-lg font-semibold">
 															{aClass.name}
 														</h2> */}
-														<div className="mb-5 grid gap-5 xl:grid-cols-3">
-															{Array.isArray(aClass.assignments) &&
-																aClass.assignments.map((assignment) => (
-																	<div
-																		key={assignment.id}
-																		className={"rounded-lg bg-gray-200 p-2"}
-																	>
-																		<AssignmentPreview
-																			supabase={supabaseClient}
-																			assignment={
-																				Array.isArray(assignment)
-																					? assignment[0]
-																					: assignment
-																			}
-																			userId={user.id}
-																			starredAsParam={
-																				assignment.starred
-																					? Array.isArray(assignment.starred)
-																						? assignment.starred.length > 0
-																						: !!assignment.starred
-																					: false
-																			}
-																			showClassPill={false}
-																			schedule={schedule!}
-																			scheduleT={tomorrowSchedule!}
-																			classes={aClass}
-																		/>
-																	</div>
-																))}
-														</div>
+													<div className="mb-5 flex-col space-y-4 first-letter:space-y-4">
+														{Array.isArray(aClass.assignments) &&
+															aClass.assignments.map((assignment) => (
+																<div
+																	key={assignment.id}
+																	className={"rounded-lg bg-gray-200 p-2"}
+																>
+																	<AssignmentPreview
+																		supabase={supabaseClient}
+																		assignment={
+																			Array.isArray(assignment)
+																				? assignment[0]
+																				: assignment
+																		}
+																		userId={user.id}
+																		starredAsParam={
+																			assignment.starred
+																				? Array.isArray(assignment.starred)
+																					? assignment.starred.length > 0
+																					: !!assignment.starred
+																				: false
+																		}
+																		showClassPill={false}
+																		schedule={schedule!}
+																		scheduleT={tomorrowSchedule!}
+																		classes={aClass}
+																	/>
+																</div>
+															))}
 													</div>
-												)
-										)}
+												</div>
+											</div>
+										))}
 							</div>
 						</section>
 						<section className=" grow lg:ml-10">

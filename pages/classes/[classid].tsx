@@ -12,7 +12,7 @@ import Link from "next/link";
 import { AssignmentPreview } from "../../components/complete/assignments";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import {
-	AcademicCapIcon,
+	IdentificationIcon,
 	EnvelopeIcon,
 	PlusIcon,
 } from "@heroicons/react/24/outline";
@@ -26,6 +26,11 @@ import {
 } from "../../lib/db/schedule";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
 import { CreateAssignment } from "../../components/complete/createAssignment";
+import { getDataInArray } from "../../lib/misc/dataOutArray";
+import {
+	Announcement,
+	AnnouncementPostingUI,
+} from "../../components/complete/announcements";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -42,6 +47,7 @@ const Class: NextPage = () => {
 	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
 	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
 	const [assignmentCreationOpen, setAssignmentCreationOpen] = useState(false);
+	const [refreshAnnouncements, setRefreshAnnouncements] = useState(false);
 
 	const updateEditorDB = async () => {
 		setEdited(true);
@@ -85,7 +91,7 @@ const Class: NextPage = () => {
 		})();
 		setEdited(false);
 		setEditorState(undefined);
-	}, [user, supabase, classid]);
+	}, [user, supabase, classid, refreshAnnouncements]);
 
 	if (!data)
 		return (
@@ -128,7 +134,7 @@ const Class: NextPage = () => {
 			/>
 			<div className="relative mb-6 h-48 w-full">
 				<Image
-					src={exampleClassImg}
+					src={data.data?.image ? data.data.image : exampleClassImg}
 					alt="Example Image"
 					className="rounded-xl object-cover object-center"
 					fill
@@ -243,7 +249,40 @@ const Class: NextPage = () => {
 								)
 							)}
 						</Tab.Panel>
-						<Tab.Panel>announcements here</Tab.Panel>
+						<Tab.Panel>
+							<h2 className="title mb-3">Announcements</h2>
+							<div className="space-y-3">
+								<AnnouncementPostingUI
+									communityid={classid as string}
+									isClass={true}
+									prevRefreshState={refreshAnnouncements}
+									refreshAnnouncements={setRefreshAnnouncements}
+								/>
+
+								{data.data &&
+									data.data.announcements && //change below when I get actual types
+									getDataInArray(data.data.announcements)
+										.sort((a, b) => {
+											if (
+												new Date(a.time!).getTime() >
+												new Date(b.time!).getTime()
+											)
+												return -1;
+											if (
+												new Date(a.time!).getTime() <
+												new Date(b.time!).getTime()
+											)
+												return 1;
+											return 0;
+										})
+										.map((announcement) => (
+											<Announcement
+												key={announcement.id}
+												announcement={announcement}
+											></Announcement>
+										))}
+							</div>
+						</Tab.Panel>
 						<Tab.Panel>
 							<div className="grid grid-cols-3 gap-4">
 								{data.data?.users && Array.isArray(data.data?.users) ? (
@@ -273,7 +312,7 @@ const Class: NextPage = () => {
 															userValue.teacher && user.id == userValue.user_id
 													) && (
 														<div className="absolute -bottom-1 -right-1  flex rounded-full bg-yellow-100 p-0.5">
-															<AcademicCapIcon className="h-4 w-4 text-yellow-600" />
+															<IdentificationIcon className="h-4 w-4 text-yellow-600" />
 														</div>
 													)}
 											</div>
