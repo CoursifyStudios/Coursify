@@ -37,6 +37,7 @@ export const CreateAssignment: NextPage<{
 	}>();
 	const [assignmentType, setAssignmentType] = useState<AssignmentTypes>();
 	const [content, setContent] = useState<SerializedEditorState>();
+
 	return (
 		<Transition appear show={open} as={Fragment}>
 			<Dialog
@@ -164,10 +165,6 @@ export const CreateAssignment: NextPage<{
 		const [editorState, setEditorState] = useState<EditorState>();
 		const [disabled, setDisabled] = useState(true);
 
-		useEffect(() => {
-			setContent(editorState?.toJSON());
-		}, [stage]);
-
 		if (stage != 2) return null;
 
 		const AssignmentWatcher = () => {
@@ -216,7 +213,6 @@ export const CreateAssignment: NextPage<{
 					}}
 					onSubmit={(values) => {
 						setAssignmentData(values);
-						console.log(values);
 					}}
 				>
 					{({ submitForm }) => (
@@ -265,8 +261,9 @@ export const CreateAssignment: NextPage<{
 							<Editor
 								editable
 								updateState={setEditorState}
-								initialStateEditor={editorState}
-								className="scrollbar-fancy mt-1 mb-6 max-h-[30vh] overflow-y-auto rounded-md border border-gray-300 bg-white/50 px-2 pb-2 focus:ring-1"
+								initialState={content}
+								//initialStateEditor={editorState}
+								className="scrollbar-fancy mt-1 mb-6 max-h-[30vh] min-h-[6rem] overflow-y-auto overflow-x-hidden rounded-md border border-gray-300 bg-white/50 pb-2 focus:ring-1"
 							/>
 							<div className="ml-auto flex space-x-4">
 								<span onClick={() => setStage((stage) => stage - 1)}>
@@ -276,6 +273,7 @@ export const CreateAssignment: NextPage<{
 								<span
 									onClick={() => {
 										submitForm();
+										setContent(editorState?.toJSON());
 										setStage((stage) => stage + 1);
 									}}
 								>
