@@ -148,8 +148,6 @@ export default function Profile() {
 										key={groupLink.group_id}
 										photo={
 											getDataOutArray(groupLink.groups!).image
-												? getDataOutArray(groupLink.groups!).image!
-												: "/example-img.jpg"
 										}
 										title={
 											(Array.isArray(groupLink.groups)

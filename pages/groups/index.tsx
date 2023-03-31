@@ -34,7 +34,7 @@ export default function GroupDirectory() {
 											<GroupSmall
 												key={group.id}
 												id={group.id}
-												photo={group.image ? group.image : "/example-img.jpg"}
+												photo={group.image}
 												title={group.name!}
 												isLink={true}
 											/>
@@ -53,7 +53,7 @@ export default function GroupDirectory() {
 											<GroupLarge
 												key={group.id}
 												id={group.id}
-												photo={group.image ? group.image : "/example-img.jpg"}
+												photo={group.image}
 												name={group.name!}
 												membernum={Math.floor(Math.random() * 2000)}
 												isLink={true}
@@ -74,7 +74,7 @@ export default function GroupDirectory() {
 											<GroupLarge
 												key={group.id}
 												id={group.id}
-												photo={group.image ? group.image : "/example-img.jpg"}
+												photo={group.image}
 												name={group.name!}
 												membernum={Math.floor(Math.random() * 2000)}
 												isLink={true}
@@ -92,7 +92,7 @@ export default function GroupDirectory() {
 											<GroupLarge
 												key={group.id}
 												id={group.id}
-												photo={group.image ? group.image : "/example-img.jpg"}
+												photo={group.image}
 												name={group.name!}
 												membernum={Math.floor(Math.random() * 2000)}
 												isLink={true}
