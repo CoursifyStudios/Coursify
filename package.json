@@ -1,5 +1,5 @@
 {
-	"name": "nss",
+	"name": "coursify",
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
@@ -37,6 +37,7 @@
 		"react-dom": "18.2.0",
 		"typescript": "5.0.2",
 		"use-child": "^1.0.0",
+		"yup": "^1.0.2",
 		"zustand": "^4.3.6"
 	},
 	"devDependencies": {

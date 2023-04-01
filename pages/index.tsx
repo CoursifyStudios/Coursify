@@ -140,7 +140,7 @@ export default function Home() {
 													classData={classData}
 													showLoading={loading}
 													key={classData.id}
-													className="!w-full xl:!w-[18.5rem]"
+													className="h-full !w-full xl:!w-[18.5rem]"
 													isLink={true}
 													time={schedule?.find(
 														(s) =>
@@ -180,7 +180,7 @@ export default function Home() {
 					<div className="flex">
 						{/* Assignments UI */}
 						<section>
-							<h2 className="title mb-4">Due Next Class</h2>
+							<h2 className="title mb-4">Assignments</h2>
 							<div className="grid grid-cols-3 gap-4 xl:w-[58.5rem] ">
 								{classes &&
 									classes.data &&
@@ -220,7 +220,7 @@ export default function Home() {
 															aClass.assignments.map((assignment) => (
 																<div
 																	key={assignment.id}
-																	className={"rounded-lg bg-gray-200 p-2"}
+																	className={"brightness-hover rounded-lg bg-gray-200 p-2"}
 																>
 																	<AssignmentPreview
 																		supabase={supabaseClient}

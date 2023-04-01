@@ -66,10 +66,12 @@ interface IToolbarProps {
 	defaultFontColor?: string /** The default selected font color in the toolbar */;
 	defaultBgColor?: string /** The default selected background color in the toolbar */;
 	defaultFontFamily?: string /** The default selected font family in the toolbar */;
+	backdrop?: boolean;
 }
 
 const ToolbarPlugin = ({
 	children,
+	backdrop = true,
 	defaultFontSize = "15px",
 	defaultFontColor = "#000",
 	defaultBgColor = "#fff",
@@ -280,7 +282,11 @@ const ToolbarPlugin = ({
 				blockType,
 			}}
 		>
-			<div className="sticky top-0 z-40 bg-white">
+			<div
+				className={`sticky top-0 z-40 rounded-b ${
+					backdrop && "bg-white/50 backdrop-blur"
+				} `}
+			>
 				<div className=" flex items-center ">
 					<div className="mr-6 space-x-0.5">
 						<BoldButton />
