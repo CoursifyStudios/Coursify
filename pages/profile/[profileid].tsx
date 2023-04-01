@@ -117,7 +117,7 @@ export default function Profile() {
 					</div>
 				)}
 			</div>
-			
+
 			<div className=" mx-auto mt-8 shrink-0 flex-col rounded-xl lg:mt-0 lg:h-[calc(100vh-8rem)] xl:flex">
 				<h2 className="title mb-4">Classes</h2>
 				<div className="scrollbar-fancy grid snap-y snap-proximity gap-8 overflow-y-auto md:grid-cols-2">
@@ -142,22 +142,21 @@ export default function Profile() {
 				<h2 className="title mb-4">Groups</h2>
 				<div className="scrollbar-fancy flex snap-y snap-proximity flex-col space-y-5 overflow-y-auto">
 					{profileGroups && profileGroups.data
-						? profileGroups.data.map((groupLink) =>
-								!Array.isArray(groupLink) && (
-									<GroupSmall
-										key={groupLink.group_id}
-										photo={
-											getDataOutArray(groupLink.groups!).image
-										}
-										title={
-											(Array.isArray(groupLink.groups)
-												? groupLink.groups[0].name
-												: groupLink.groups?.name) as string
-										}
-										id={groupLink.group_id}
-										isLink={true}
-									/>
-								)
+						? profileGroups.data.map(
+								(groupLink) =>
+									!Array.isArray(groupLink) && (
+										<GroupSmall
+											key={groupLink.group_id}
+											photo={getDataOutArray(groupLink.groups!).image}
+											title={
+												(Array.isArray(groupLink.groups)
+													? groupLink.groups[0].name
+													: groupLink.groups?.name) as string
+											}
+											id={groupLink.group_id}
+											isLink={true}
+										/>
+									)
 						  )
 						: [...new Array(4)].map((_, i) => (
 								<div

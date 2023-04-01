@@ -60,24 +60,33 @@ export function AssignmentPreview({
 	}, [starredAsParam]);
 	return (
 		<div className="grow">
-			<div className="mb-1 flex justify-between">
+			<div className="mb-1 flex">
 				<div className="flex">
-					<div className="h-full" onMouseLeave={() => dealWithStarred()}>
+					<div className="" onMouseLeave={() => dealWithStarred()}>
 						<span onClick={() => setStarred((starred) => !starred)}>
 							<Starred starred={starred} />
 						</span>
 					</div>
-					<div className="ml-2">
-						{classes && showClassPill && (
-							<Link href={"/classes/" + classes?.id}>
-								<ColoredPill color={classes.color} hoverState>
-									{classes.name}
-								</ColoredPill>
-							</Link>
-						)}
-					</div>
+					<Link href={"/assignments/" + assignment.id} className="">
+						<div className="ml-2">
+							{classes && showClassPill && (
+								<Link href={"/classes/" + classes?.id}>
+									<ColoredPill color={classes.color} hoverState>
+										{classes.name}
+									</ColoredPill>
+								</Link>
+							)}
+						</div>
+					</Link>
 				</div>
-				<div className="flex items-center">
+				<Link
+					href={"/assignments/" + assignment.id}
+					className="flex-grow"
+				></Link>
+				<Link
+					href={"/assignments/" + assignment.id}
+					className="flex items-center"
+				>
 					<div className="mr-2 text-sm font-medium text-gray-700">
 						{date.getMonth()}/{date.getDate()}
 					</div>
@@ -96,9 +105,9 @@ export function AssignmentPreview({
 							  )
 							: to12hourTime(date.getHours() + ":" + date.getMinutes())}
 					</ColoredPill>
-				</div>
+				</Link>
 			</div>
-			<div>
+			<Link href={"/assignments/" + assignment.id}>
 				<h1 className="text font-medium">{assignment.name}</h1>
 				<div className="flex items-end justify-between">
 					<p className="w-[12rem] break-words line-clamp-2  ">
@@ -106,7 +115,7 @@ export function AssignmentPreview({
 					</p>
 					<CheckIcon className="h-6 w-6" />
 				</div>
-			</div>
+			</Link>
 		</div>
 	);
 }

@@ -180,7 +180,7 @@ export default function Home() {
 					<div className="flex">
 						{/* Assignments UI */}
 						<section>
-							<h2 className="title mb-4">Due Next Class</h2>
+							<h2 className="title mb-4">Announcements</h2>
 							<div className="grid grid-cols-3 gap-4 xl:w-[58.5rem] ">
 								{classes &&
 									classes.data &&
