@@ -95,13 +95,13 @@ const Post: NextPage = () => {
 					user &&
 					schedule &&
 					allAssignments.data.map((assignment) => (
-						<Link
+						<div //linking is now build in haha
 							className={`flex snap-start rounded-xl ${
 								assignmentid == assignment.id
 									? "bg-gray-50 shadow-xl"
 									: "brightness-hover bg-gray-200"
 							} p-3`}
-							href={"/assignments/" + assignment.id}
+							//href={"/assignments/" + assignment.id}
 							key={assignment.id}
 						>
 							<AssignmentPreview
@@ -129,7 +129,7 @@ const Post: NextPage = () => {
 										: assignment.classes_assignments)!
 								}
 							/>
-						</Link>
+						</div>
 					))
 				) : (
 					<>
