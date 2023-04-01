@@ -283,7 +283,7 @@ const Post: NextPage = () => {
 								</div>
 							</div>
 						</section>
-						<section className="scrollbar-fancy relative mt-5 flex flex-1 flex-col-reverse overflow-y-auto whitespace-pre-line md:pr-2 xl:flex-row">
+						<section className="scrollbar-fancy relative mt-5 flex flex-1 flex-col-reverse overflow-y-auto overflow-x-hidden whitespace-pre-line md:pr-2 xl:flex-row">
 							<div className="flex grow flex-col">
 								<h2 className="text-xl font-semibold">Details</h2>
 								<Editor
