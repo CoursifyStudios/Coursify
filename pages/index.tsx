@@ -140,7 +140,7 @@ export default function Home() {
 													classData={classData}
 													showLoading={loading}
 													key={classData.id}
-													className="!w-full xl:!w-[18.5rem]"
+													className="h-full !w-full xl:!w-[18.5rem]"
 													isLink={true}
 													time={schedule?.find(
 														(s) =>

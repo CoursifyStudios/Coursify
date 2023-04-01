@@ -11,6 +11,14 @@ const EditorPage: NextPage = () => {
 			<div className="w-full max-w-2xl">
 				<Editor updateState={setEditorState} editable />
 			</div>
+			<div
+				onClick={() =>
+					navigator.clipboard.writeText(JSON.stringify(editorState, null, 2))
+				}
+				className="mt-6 cursor-pointer rounded-md bg-gray-200 px-4 py-2 font-semibold"
+			>
+				copy content
+			</div>
 			<pre>{JSON.stringify(editorState, null, 2)}</pre>
 		</div>
 	);

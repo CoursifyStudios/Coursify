@@ -2,16 +2,21 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { ReactNode } from "react";
 
-export const Button: NextPage<{ className?: string; children: ReactNode }> = ({
-	className,
-	children,
-}) => {
+export const Button: NextPage<{
+	className?: string;
+	children: ReactNode;
+	color?: string;
+	disabled?: boolean;
+}> = ({ className, children, color, disabled }) => {
 	return (
-		<div
-			className={`flex cursor-pointer items-center rounded-md py-0.5 px-2.5 focus:outline-none ${className} bg-gray-200 text-lg font-semibold `}
+		<button
+			disabled={disabled}
+			className={`flex cursor-pointer items-center rounded-md py-1 px-4 font-semibold focus:outline-none ${className} focus:outline-none ${
+				color ? color : "bg-gray-200"
+			} ${disabled ? "cursor-not-allowed brightness-75" : "brightness-hover"}`}
 		>
 			{children}
-		</div>
+		</button>
 	);
 };
 

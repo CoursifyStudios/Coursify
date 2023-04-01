@@ -113,3 +113,11 @@ export interface AssignmentData {
 	success: boolean;
 	error?: PostgrestError;
 }
+
+export type AssignmentTypes =
+	| "link"
+	| "media"
+	| "test"
+	| "check"
+	| "post"
+	| "google";

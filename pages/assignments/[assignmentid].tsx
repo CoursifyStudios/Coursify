@@ -3,10 +3,11 @@ import {
 	ArrowsPointingOutIcon,
 	ChevronLeftIcon,
 	LinkIcon,
+	XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import Image from "next/image";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import {
@@ -28,6 +29,9 @@ import {
 	setThisSchedule,
 } from "../../lib/db/schedule";
 import Editor from "../../components/editors/richeditor";
+import { Transition, Dialog } from "@headlessui/react";
+import { getIcon } from "../../components/complete/achievement";
+import { formatDate } from "../../lib/misc/formatDate";
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
@@ -69,6 +73,7 @@ const Post: NextPage = () => {
 				typeof assignmentid == "string" &&
 				assignmentid != "0"
 			) {
+				setAssignment(undefined);
 				const assignment = await getAssignment(supabase, assignmentid);
 				setAssignment(assignment);
 			}
@@ -83,7 +88,7 @@ const Post: NextPage = () => {
 			<div
 				className={`scrollbar-fancy mr-4 grow items-stretch overflow-x-clip md:grow-0 ${
 					fullscreen ? "hidden" : "flex"
-				} w-[20.5rem] shrink-0 snap-y snap-mandatory flex-col space-y-5 overflow-y-auto md:h-[calc(100vh-6.5rem)] `}
+				} w-[20.5rem] shrink-0 snap-y snap-mandatory flex-col space-y-5 overflow-y-auto pb-6 md:h-[calc(100vh-6.5rem)] `}
 			>
 				{allAssignments ? (
 					!allAssignments.error &&
@@ -148,14 +153,31 @@ const Post: NextPage = () => {
 	);
 
 	function AssignmentPane() {
+		const [isOpen, setIsOpen] = useState(false);
 		if (
 			!router.isReady ||
 			!allAssignments ||
 			(!assignment && assignmentid != "0")
 		) {
 			return (
-				<div className="m-auto flex flex-col items-center">
-					Loading... (need loadiung animations and stuff)sss
+				<div className=" flex grow flex-col">
+					<ColoredPill color="gray" className="mr-auto animate-pulse">
+						<span className="invisible">trojker</span>
+					</ColoredPill>
+					<div className="mt-4 w-full max-w-lg rounded-xl bg-gray-200 p-4 xl:max-w-xl">
+						<h1 className="title mb-2 w-max rounded-md bg-gray-300 line-clamp-2">
+							<span className="invisible">trojker anem name ass</span>
+						</h1>
+						<p className="mt-4 w-max rounded-md bg-gray-300 line-clamp-2">
+							<span className="invisible">
+								trojker longer description would go hereeeeeeeee coolio
+							</span>
+						</p>
+					</div>
+					<div className="mt-6 flex grow">
+						<div className="mt-4 w-full max-w-lg rounded-xl bg-gray-200 p-4 xl:max-w-xl"></div>
+						<div className="mt-4 ml-4 max-h-48 grow rounded-xl bg-gray-200 p-4 xl:max-w-xl"></div>
+					</div>
 				</div>
 			);
 		}
@@ -195,97 +217,147 @@ const Post: NextPage = () => {
 
 		if (assignment?.data) {
 			return (
-				<div className="flex grow flex-col">
-					<section className="flex items-start justify-between">
-						<div className="mr-4 grow lg:max-w-lg xl:max-w-xl">
-							<Link
-								className=" md:hidden"
-								href="/assignments/0"
-								onClick={() => setFullscreen(false)}
-							>
-								<ButtonIcon
-									icon={<ChevronLeftIcon className="h-5 w-5" />}
-									className="mb-4"
-								/>
-							</Link>
-							<Link
-								href={
-									"/classes/" +
-									(Array.isArray(assignment.data.classes)
-										? assignment.data.classes[0].id
-										: assignment.data.classes?.id)
-								}
-							>
-								<ColoredPill
-									color={
-										assignment.data.classes
-											? Array.isArray(assignment.data.classes)
-												? assignment.data.classes[0].color
-												: assignment.data.classes?.color
-											: "blue"
-									}
-									hoverState
+				<>
+					<div className="flex grow flex-col">
+						<section className="flex items-start justify-between">
+							<div className="mr-4 grow lg:max-w-lg xl:max-w-xl">
+								<Link
+									className=" md:hidden"
+									href="/assignments/0"
+									onClick={() => setFullscreen(false)}
 								>
-									{assignment.data.classes
-										? Array.isArray(assignment.data.classes)
-											? assignment.data.classes[0].name
-											: assignment.data.classes.name
-										: "Error fetching class"}
-								</ColoredPill>
-							</Link>
-							<div className="mt-4 w-full rounded-xl bg-gray-200 p-4">
-								<h1 className="title  mb-2 line-clamp-2">
-									{assignment.data.name}
-								</h1>
-								<p className="text-gray-700 line-clamp-2">
-									{assignment.data.description}
-								</p>
-							</div>
-						</div>
-						<div className="flex md:space-x-4">
-							<CopiedHover copy={window.location.href}>
-								<ButtonIcon icon={<LinkIcon className="h-5 w-5" />} />
-							</CopiedHover>
-							<div onClick={() => setFullscreen(!fullscreen)}>
-								<ButtonIcon
-									icon={
-										fullscreen ? (
-											<ArrowsPointingInIcon className="h-5 w-5" />
-										) : (
-											<ArrowsPointingOutIcon className="h-5 w-5" />
-										)
+									<ButtonIcon
+										icon={<ChevronLeftIcon className="h-5 w-5" />}
+										className="mb-4"
+									/>
+								</Link>
+								<Link
+									href={
+										"/classes/" +
+										(Array.isArray(assignment.data.classes)
+											? assignment.data.classes[0].id
+											: assignment.data.classes?.id)
 									}
-									className="hidden items-center justify-center md:flex"
-								/>
-							</div>
-						</div>
-					</section>
-					<section className="relative mt-5 flex flex-1 flex-col-reverse overflow-hidden whitespace-pre-line md:pr-2 xl:flex-row">
-						<div className="flex grow flex-col">
-							<h2 className="text-xl font-semibold">Details</h2>
-							<Editor
-								editable={false}
-								initialState={assignment.data.content}
-								className=" scrollbar-fancy mt-2 mb-5 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
-							/>
-						</div>
-						<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:ml-4 xl:mb-0 xl:w-72">
-							<h2 className="text-xl font-semibold">Submission</h2>
-							<div className="mt-2 rounded-xl bg-gray-200 p-6">
-								<h2 className="text-lg font-semibold ">
-									Teachers Instructions:
-								</h2>
-								<p className="max-w-md text-sm text-gray-700">
-									Teachers instructions for assignment submission will go in
-									this place
-								</p>
-								<div className="mt-6 inline-flex rounded-md bg-blue-500 px-4 py-1 font-semibold text-white">
-									Submit Link
+								>
+									<ColoredPill
+										color={
+											assignment.data.classes
+												? Array.isArray(assignment.data.classes)
+													? assignment.data.classes[0].color
+													: assignment.data.classes?.color
+												: "blue"
+										}
+										hoverState
+									>
+										{assignment.data.classes
+											? Array.isArray(assignment.data.classes)
+												? assignment.data.classes[0].name
+												: assignment.data.classes.name
+											: "Error fetching class"}
+									</ColoredPill>
+								</Link>
+								<div className="mt-4 w-full rounded-xl bg-gray-200 p-4">
+									<h1 className="title mb-2 line-clamp-2">
+										{assignment.data.name}
+									</h1>
+									<p className="text-gray-700 line-clamp-2">
+										{assignment.data.description}
+									</p>
 								</div>
 							</div>
-						</div>
-					</section>
-				</div>
+							<div className="flex md:space-x-4">
+								<CopiedHover copy={window.location.href}>
+									<ButtonIcon icon={<LinkIcon className="h-5 w-5" />} />
+								</CopiedHover>
+								<div onClick={() => setFullscreen(!fullscreen)}>
+									<ButtonIcon
+										icon={
+											fullscreen ? (
+												<ArrowsPointingInIcon className="h-5 w-5" />
+											) : (
+												<ArrowsPointingOutIcon className="h-5 w-5" />
+											)
+										}
+										className="hidden items-center justify-center md:flex"
+									/>
+								</div>
+							</div>
+						</section>
+						<section className="scrollbar-fancy relative mt-5 flex flex-1 flex-col-reverse overflow-y-auto whitespace-pre-line md:pr-2 xl:flex-row">
+							<div className="flex grow flex-col">
+								<h2 className="text-xl font-semibold">Details</h2>
+								<Editor
+									editable={false}
+									initialState={assignment.data.content}
+									className=" scrollbar-fancy mt-2 mb-5 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
+								/>
+							</div>
+							<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:ml-4 xl:mb-0 xl:w-72">
+								<h2 className="text-xl font-semibold">Submission</h2>
+								<div className="mt-2 rounded-xl bg-gray-200 p-6">
+									{assignment.data.submission_instructions ? (
+										<>
+											<h2 className="text-lg font-semibold ">
+												Teachers Instructions:
+											</h2>
+											<p className="max-w-md text-sm text-gray-700">
+												{assignment.data.submission_instructions}
+											</p>
+										</>
+									) : (
+										<h2 className="text-lg font-semibold ">
+											Submit assignment
+										</h2>
+									)}
+									<div
+										className="mt-6 inline-flex cursor-pointer rounded-md bg-blue-500 px-4 py-1 font-semibold text-white"
+										onClick={() => setIsOpen(true)}
+									>
+										Submit
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<Transition appear show={isOpen} as={Fragment}>
+						<Dialog open={isOpen} onClose={() => setIsOpen(false)}>
+							<Transition.Child
+								enter="ease-out transition"
+								enterFrom="opacity-75"
+								enterTo="opacity-100 scale-100"
+								leave="ease-in transition"
+								leaveFrom="opacity-100 scale-100"
+								leaveTo="opacity-75"
+								as={Fragment}
+							>
+								<div className="fixed inset-0 flex items-center justify-center bg-black/20 p-4">
+									<Transition.Child
+										enter="ease-out transition"
+										enterFrom="opacity-75 scale-95"
+										enterTo="opacity-100 scale-100"
+										leave="ease-in transition"
+										leaveFrom="opacity-100 scale-100"
+										leaveTo="opacity-75 scale-95"
+										as={Fragment}
+									>
+										<Dialog.Panel className="relative w-full max-w-md rounded-xl bg-white/75 p-4 shadow-md backdrop-blur-xl">
+											<section className="my-10 flex items-center text-lg font-medium">
+												This feature is temporarily disabled for the i2 showcase
+											</section>
+
+											<button
+												onClick={() => setIsOpen(false)}
+												className="absolute right-4 top-4 rounded p-0.5 text-gray-700 transition hover:bg-gray-300 hover:text-gray-900 focus:outline-none"
+											>
+												<XMarkIcon className="h-5 w-5" />
+											</button>
+										</Dialog.Panel>
+									</Transition.Child>
+								</div>
+							</Transition.Child>
+						</Dialog>
+					</Transition>
+				</>
 			);
 		}
 
