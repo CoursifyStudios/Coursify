@@ -158,11 +158,11 @@ const Group: NextPage = () => {
 				</Tab.Group>
 				<div className="sticky top-0 ml-8 w-[20.5rem] shrink-0 ">
 					<h2 className="title">Next Event</h2>
-					<Event title="Badminton" time="8:00 - 9:30 AM"></Event>
+					<Event title="Castle Rock" time="8:00 - 9:30 AM"></Event>
 					<h2 className="title mt-6 mb-6">Upcoming</h2>
-					<Event title="Badminton outside" time="12/15/22"></Event>
-					<Event title="Badminton in the Pavillion" time="1/8/23"></Event>
-					<Event title="Badminton in the Gym" time="12/9/24"></Event>
+					<Event title="Yosemite Climbing" time="12/15/22"></Event>
+					<Event title="Mission Cliffs" time="1/8/23"></Event>
+					<Event title="Boulder Sesh" time="12/9/24"></Event>
 				</div>
 			</div>
 		</div>
