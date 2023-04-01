@@ -156,7 +156,7 @@ const Group: NextPage = () => {
 						</Tab.Panel>
 					</Tab.Panels>
 				</Tab.Group>
-				<div className="sticky top-0 ml-8 w-[20.5rem] shrink-0 ">
+				<div className="sticky top-0 ml-8 w-[20.5rem] shrink-0 rounded-md blur-sm ">
 					<h2 className="title">Next Event</h2>
 					<Event title="Castle Rock" time="8:00 - 9:30 AM"></Event>
 					<h2 className="title mt-6 mb-6">Upcoming</h2>
