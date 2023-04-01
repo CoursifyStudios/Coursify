@@ -365,10 +365,10 @@ const Class: NextPage = () => {
 						{Array.isArray(data.data?.assignments) &&
 							user &&
 							data.data?.assignments.map((assignment) => (
-								<Link
+								<div // no longer needs to be a lonk
 									key={assignment.id}
 									className=" brightness-hover flex rounded-xl bg-gray-200 p-3"
-									href={"/assignments/" + assignment.id}
+									//href={"/assignments/" + assignment.id}
 								>
 									<AssignmentPreview
 										supabase={supabase}
@@ -382,7 +382,7 @@ const Class: NextPage = () => {
 										userId={user.id}
 										classes={data.data}
 									/>
-								</Link>
+								</div>
 							))}
 					</div>
 				</section>
