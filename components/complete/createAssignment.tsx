@@ -40,15 +40,16 @@ export const CreateAssignment: NextPage<{
 	const [selectedDueType, setSelectedDueType] = useState(types[0]);
 	const [selectedPublishType, setSelectedPublishType] = useState(types[0]);
 
+	const closeMenu = () => {
+		setOpen(false);
+		setStage(1);
+		setAssignmentType(undefined);
+		setContent(undefined);
+	};
+
 	return (
 		<Transition appear show={open} as={Fragment}>
-			<Dialog
-				open={open}
-				onClose={() => {
-					setOpen(false), setStage(1);
-					setAssignmentType(undefined);
-				}}
-			>
+			<Dialog open={open} onClose={closeMenu}>
 				<Transition.Child
 					enter="ease-out transition"
 					enterFrom="opacity-75"
@@ -110,10 +111,7 @@ export const CreateAssignment: NextPage<{
 								<AssignmentCreation />
 
 								<button
-									onClick={() => {
-										setOpen(false), setStage(1);
-										setAssignmentType(undefined);
-									}}
+									onClick={closeMenu}
 									className="absolute right-4 top-4 rounded p-0.5 text-gray-700 transition hover:bg-gray-300 hover:text-gray-900 focus:outline-none"
 								>
 									<XMarkIcon className="h-5 w-5" />
@@ -302,7 +300,7 @@ export const CreateAssignment: NextPage<{
 		return (
 			<>
 				<section className="mt-6 flex flex-col">
-					<h2 className="text-xl font-bold">{assignmentData?.name}</h2>
+					{/* <h2 className="text-xl font-bold">{assignmentData?.name}</h2>
 					<p className="mt-2 text-gray-700">
 						<span className="font-medium text-gray-800">
 							Short description:{" "}
@@ -363,7 +361,10 @@ export const CreateAssignment: NextPage<{
 						>
 							Create
 						</Button>
-					</span>
+					</span> */}
+					<p className="my-10 text-center text-lg font-semibold">
+						This feature had been temporarily disabled during the i2 event
+					</p>
 				</section>
 			</>
 		);

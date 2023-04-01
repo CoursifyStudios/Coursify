@@ -183,7 +183,6 @@ function EditorContextProvider({
 							initialState as unknown as SerializedEditorState
 						)
 				);
-			console.log("initail state", initialStateEditor?.toJSON());
 		}
 	}, [editable, initialState, updatedState, initialStateEditor]);
 

@@ -69,6 +69,7 @@ export interface Database {
 					name: string;
 					publish_date: string | null;
 					publish_type: number | null;
+					submission_instructions: string | null;
 					submission_type: string | null;
 				};
 				Insert: {
@@ -81,6 +82,7 @@ export interface Database {
 					name: string;
 					publish_date?: string | null;
 					publish_type?: number | null;
+					submission_instructions?: string | null;
 					submission_type?: string | null;
 				};
 				Update: {
@@ -93,6 +95,7 @@ export interface Database {
 					name?: string;
 					publish_date?: string | null;
 					publish_type?: number | null;
+					submission_instructions?: string | null;
 					submission_type?: string | null;
 				};
 			};
