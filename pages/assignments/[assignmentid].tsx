@@ -88,7 +88,7 @@ const Post: NextPage = () => {
 			<div
 				className={`scrollbar-fancy mr-4 grow items-stretch overflow-x-clip md:grow-0 ${
 					fullscreen ? "hidden" : "flex"
-				} w-[20.5rem] shrink-0 snap-y snap-mandatory flex-col space-y-5 overflow-y-auto md:h-[calc(100vh-6.5rem)] `}
+				} w-[20.5rem] shrink-0 snap-y snap-mandatory flex-col space-y-5 overflow-y-auto pb-6 md:h-[calc(100vh-6.5rem)] `}
 			>
 				{allAssignments ? (
 					!allAssignments.error &&

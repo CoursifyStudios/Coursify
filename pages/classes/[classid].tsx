@@ -303,7 +303,7 @@ const Class: NextPage = () => {
 													src={user.avatar_url!}
 													alt="Profile picture"
 													referrerPolicy="no-referrer"
-													className=" h-10 rounded-full shadow-md shadow-black/25"
+													className=" h-10 min-w-[2.5rem] rounded-full shadow-md shadow-black/25"
 												/>
 												{data.data.users_classes &&
 													Array.isArray(data.data.users_classes) && // based on my testing it will always return an array, doing this to make ts happy
@@ -323,8 +323,8 @@ const Class: NextPage = () => {
 														<div className="flex items-center">
 															<EnvelopeIcon className="mr-1.5 h-4 w-4 text-gray-800" />
 															{user.email &&
-																user.email.slice(0, 20) +
-																	(user.email?.length > 20 ? "..." : "")}
+																user.email.slice(0, 15) +
+																	(user.email?.length > 15 ? "..." : "")}
 														</div>
 													</ColoredPill>
 												</CopiedHover>

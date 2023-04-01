@@ -101,7 +101,7 @@ export function AssignmentPreview({
 			<div>
 				<h1 className="text font-medium">{assignment.name}</h1>
 				<div className="flex items-end justify-between">
-					<p className="w-[12rem] break-words line-clamp-3  ">
+					<p className="w-[12rem] break-words line-clamp-2  ">
 						{assignment.description}
 					</p>
 					<CheckIcon className="h-6 w-6" />
