@@ -117,7 +117,7 @@ export default function Profile() {
 					</div>
 				)}
 			</div>
-			<div className="scrollbar-fancy mx-auto mt-8 shrink-0 overflow-y-auto rounded-xl lg:mt-0 lg:h-[calc(100vh-8rem)] xl:flex">
+			<div className=" mx-auto mt-8 shrink-0 flex-col rounded-xl lg:mt-0 lg:h-[calc(100vh-8rem)] xl:flex">
 				<h2 className="title mb-4">Classes</h2>
 				<div className="scrollbar-fancy grid snap-y snap-proximity gap-8 overflow-y-auto md:grid-cols-2">
 					{profileClasses && profileClasses.data
