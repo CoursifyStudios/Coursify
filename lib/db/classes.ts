@@ -1,6 +1,8 @@
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { NonNullableArray } from "../misc/misc.types";
 import type { Database } from "./database.types";
+import { getSchedulesForMonth, ScheduleInterface } from "./schedule";
+import { getDataOutArray } from "../misc/dataOutArray";
 
 export async function getAllClasses(supabaseClient: SupabaseClient<Database>) {
 	const { data, error } = await supabaseClient.from("classes").select(`
@@ -93,3 +95,66 @@ export const updateClass = async (
 ) => {
 	return await supabase.from("classes").update(updates).eq("id", classid);
 };
+
+export const getDaysForClassInMonth = async (
+	supabase: SupabaseClient<Database>,
+	classObject: {
+		block: number;
+		type: number;
+	},
+	month: number,
+	year = new Date().getFullYear()
+) => {
+	const monthSchedules = await getSchedulesForMonth(supabase, month, year);
+	const dates: Date[] = [];
+	if (monthSchedules.data) {
+		monthSchedules.data.map((daySchedule) => {
+			if (
+				daySchedule.template &&
+				getDataOutArray(daySchedule.template).schedule_items &&
+				classHappensThisDay(
+					classObject.block,
+					classObject.type,
+					getDataOutArray(daySchedule.template)
+						.schedule_items as unknown as ScheduleInterface[]
+				)
+			) {
+				const date = new Date(daySchedule.date);
+				date.setUTCHours(0, 0, 0, 0);
+
+				dates.push(date);
+			}
+			if (
+				daySchedule.schedule_items &&
+				!daySchedule.template &&
+				classHappensThisDay(
+					classObject.block,
+					classObject.type,
+					getDataOutArray(
+						daySchedule.schedule_items
+					) as unknown as ScheduleInterface[]
+				)
+			) {
+				const date = new Date(daySchedule.date);
+				date.setUTCHours(0, 0, 0, 0);
+				dates.push(date);
+			}
+		});
+	}
+	return sortDatesAscending(dates);
+};
+
+function sortDatesAscending(dates: Date[]): Date[] {
+	return dates.sort((a, b) => a.getTime() - b.getTime());
+}
+
+function classHappensThisDay(
+	block: number,
+	type: number,
+	schedule: ScheduleInterface[]
+) {
+	return (
+		schedule.find((period) => period.block == block && period.type == type) !=
+		undefined
+	);
+}

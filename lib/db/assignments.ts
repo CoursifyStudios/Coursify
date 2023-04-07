@@ -1,6 +1,7 @@
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import supabase from "../supabase";
 import { Database } from "./database.types";
+import { DueType } from "../../components/complete/assignments";
 
 export const getAllAssignments = async (
 	supabaseClient: SupabaseClient<Database>
@@ -121,3 +122,17 @@ export type AssignmentTypes =
 	| "check"
 	| "post"
 	| "google";
+
+export type NewAssignmentData = {
+	name: string;
+	description: string;
+	submission: string;
+	selectedDueType?: {
+		type: DueType;
+		name: string;
+	};
+	selectedPublishType?: {
+		type: DueType;
+		name: string;
+	};
+};

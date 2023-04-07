@@ -1,6 +1,7 @@
 import { Transition, Dialog, Listbox } from "@headlessui/react";
 import {
 	ChatBubbleBottomCenterTextIcon,
+	ChevronUpDownIcon,
 	ClipboardDocumentListIcon,
 	DocumentCheckIcon,
 	DocumentTextIcon,
@@ -17,34 +18,34 @@ import {
 	useEffect,
 	useState,
 } from "react";
-import { Button } from "../misc/button";
+import { Button } from "../../misc/button";
 import * as Yup from "yup";
-import Editor from "../editors/richeditor";
+import Editor from "../../editors/richeditor";
 import { EditorState, SerializedEditorState } from "lexical";
 import Image from "next/image";
-import { AssignmentTypes } from "../../lib/db/assignments";
-import { DueType } from "./assignments";
+import {
+	AssignmentTypes,
+	NewAssignmentData,
+} from "../../../lib/db/assignments";
+
+import AssignmentCreation, { types } from "./three";
+import { DueType } from "../assignments";
 
 export const CreateAssignment: NextPage<{
 	open: boolean;
 	setOpen: Dispatch<SetStateAction<boolean>>;
 }> = ({ open, setOpen }) => {
 	const [stage, setStage] = useState(1);
-	const [assignmentData, setAssignmentData] = useState<{
-		name: string;
-		description: string;
-		submission: string;
-	}>();
+	const [assignmentData, setAssignmentData] = useState<NewAssignmentData>();
 	const [assignmentType, setAssignmentType] = useState<AssignmentTypes>();
 	const [content, setContent] = useState<SerializedEditorState>();
-	const [selectedDueType, setSelectedDueType] = useState(types[0]);
-	const [selectedPublishType, setSelectedPublishType] = useState(types[0]);
 
 	const closeMenu = () => {
 		setOpen(false);
 		setStage(1);
 		setAssignmentType(undefined);
 		setContent(undefined);
+		setAssignmentData(undefined);
 	};
 
 	return (
@@ -108,7 +109,14 @@ export const CreateAssignment: NextPage<{
 
 								<AssignmentType />
 								<AssignmentDetails />
-								<AssignmentCreation />
+								{stage == 3 && assignmentData && (
+									<AssignmentCreation
+										content={content}
+										assignmentData={assignmentData}
+										setAssignmentData={setAssignmentData}
+										setStage={setStage}
+									/>
+								)}
 
 								<button
 									onClick={closeMenu}
@@ -262,7 +270,6 @@ export const CreateAssignment: NextPage<{
 								editable
 								updateState={setEditorState}
 								initialState={content}
-								//initialStateEditor={editorState}
 								className="scrollbar-fancy mt-1 mb-6 max-h-[30vh] min-h-[6rem] overflow-y-auto overflow-x-hidden rounded-md border border-gray-300 bg-white/50 pb-2 focus:ring-1"
 							/>
 							<div className="ml-auto flex space-x-4">
@@ -292,99 +299,7 @@ export const CreateAssignment: NextPage<{
 			</>
 		);
 	}
-	function AssignmentCreation() {
-		const [disabled, setDisabled] = useState(true);
-
-		if (stage != 3) return null;
-
-		return (
-			<>
-				<section className="mt-6 flex flex-col">
-					{/* <h2 className="text-xl font-bold">{assignmentData?.name}</h2>
-					<p className="mt-2 text-gray-700">
-						<span className="font-medium text-gray-800">
-							Short description:{" "}
-						</span>
-						{assignmentData?.name}
-					</p>
-					{assignmentData?.submission && (
-						<p className="mt-3 text-gray-700">
-							<span className="font-medium text-gray-800">
-								Submission Instructions:{" "}
-							</span>
-							{assignmentData?.submission}
-						</p>
-					)}
-					<span className="mt-3 font-medium text-gray-800">
-						Full Description:{" "}
-					</span>
-					<Editor
-						editable={false}
-						initialState={content}
-						className="scrollbar-fancy max-h-[30vh] overflow-y-auto"
-					/>
-				</section>
-				<hr className="my-4" />
-				<section className="grid grid-cols-2">
-					<div className="">
-						<p className="mb-2 font-medium text-gray-800">Publish</p>
-					</div>
-					<div className="">
-						<p className="mb-2 font-medium text-gray-800">Due</p>
-						<Listbox value={selectedDueType} onChange={setSelectedDueType}>
-							<Listbox.Button>{selectedDueType.name}</Listbox.Button>
-							<Listbox.Options className="absolute space-y-2 rounded-xl bg-white/75 p-3 backdrop-blur-xl">
-								{types.map((type, i) => (
-									<Listbox.Option
-										key={i}
-										value={type}
-										className="cursor-pointer transition hover:bg-gray-200/50"
-									>
-										{type.name}
-									</Listbox.Option>
-								))}
-							</Listbox.Options>
-						</Listbox>
-					</div>
-				</section>
-
-				<section className="ml-auto mt-6 flex space-x-4">
-					<span onClick={() => setStage((stage) => stage - 1)}>
-						<Button>Prev</Button>
-					</span>
-
-					<span onClick={() => setStage((stage) => stage + 1)}>
-						<Button
-							color="bg-blue-500"
-							className="text-white "
-							disabled={disabled}
-						>
-							Create
-						</Button>
-					</span> */}
-					<p className="my-10 text-center text-lg font-semibold">
-						This feature had been temporarily disabled during the i2 event
-					</p>
-				</section>
-			</>
-		);
-	}
 };
-
-const types: { type: DueType; name: string }[] = [
-	{
-		type: DueType.START_OF_CLASS,
-		name: "Start of class",
-	},
-	{
-		type: DueType.END_OF_CLASS,
-		name: "End of class",
-	},
-	{
-		type: DueType.DATE,
-		name: "Custom date",
-	},
-];
 
 const className = "h-5 w-5 min-w-[1.25rem]";
 

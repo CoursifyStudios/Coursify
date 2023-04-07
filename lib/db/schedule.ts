@@ -114,3 +114,26 @@ export const setThisSchedule = (
 				: undefined
 		);
 };
+
+export const getSchedulesForMonth = async (
+	supabase: SupabaseClient<Database>,
+	month: number,
+	year = new Date().getFullYear()
+) => {
+	return await supabase
+		.from("days_schedule")
+		.select(
+			`
+		date,
+		schedule_items,
+		template (
+			schedule_items
+		)
+		`
+		)
+		.gte("date", `${year}-${month + 1}-01`)
+		.lte(
+			"date",
+			`${year}-${month + 1}-${new Date(year, month + 1, 0).getDate()}`
+		);
+};

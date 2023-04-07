@@ -25,7 +25,7 @@ import {
 	setThisSchedule,
 } from "../../lib/db/schedule";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
-import { CreateAssignment } from "../../components/complete/createAssignment";
+import { CreateAssignment } from "../../components/complete/assignmentCreation";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
 import {
 	Announcement,
@@ -63,6 +63,7 @@ const Class: NextPage = () => {
 	useEffect(() => {
 		(async () => {
 			if (user && typeof classid == "string") {
+				setData(undefined);
 				const data = await getClass(supabase, classid);
 				setData(data);
 				if (data.data && Array.isArray(data.data.users_classes)) {
