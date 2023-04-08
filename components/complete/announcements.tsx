@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { createNewAnnouncement } from "../../lib/db/announcements";
 import { Database, Json } from "../../lib/db/database.types";
 import { getDataOutArray } from "../../lib/misc/dataOutArray";
-import { howLongAgo } from "../../lib/misc/formatDate";
+import { howLongAgo } from "../../lib/misc/dates";
 import Editor from "../editors/richeditor";
 import { Button } from "../misc/button";
 import Loading from "../misc/loading";

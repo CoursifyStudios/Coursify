@@ -31,7 +31,7 @@ import {
 import Editor from "../../components/editors/richeditor";
 import { Transition, Dialog } from "@headlessui/react";
 import { getIcon } from "../../components/complete/achievement";
-import { formatDate } from "../../lib/misc/formatDate";
+import { formatDate } from "../../lib/misc/dates";
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();

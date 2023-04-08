@@ -1,7 +1,7 @@
 import { Transition, Dialog } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { useState, Fragment } from "react";
-import { formatDate } from "../../lib/misc/formatDate";
+import { formatDate } from "../../lib/misc/dates";
 import { IconConverter, InfoPill } from "../misc/infopills";
 
 export const Achievement = ({

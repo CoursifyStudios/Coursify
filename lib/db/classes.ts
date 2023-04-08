@@ -1,7 +1,7 @@
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { NonNullableArray } from "../misc/misc.types";
 import type { Database } from "./database.types";
-import { getSchedulesForMonth, ScheduleInterface } from "./schedule";
+import { getSchedulesForXDays, ScheduleInterface } from "./schedule";
 import { getDataOutArray } from "../misc/dataOutArray";
 
 export async function getAllClasses(supabaseClient: SupabaseClient<Database>) {
@@ -96,16 +96,20 @@ export const updateClass = async (
 	return await supabase.from("classes").update(updates).eq("id", classid);
 };
 
-export const getDaysForClassInMonth = async (
+export const getClassTimesForXDays = async (
 	supabase: SupabaseClient<Database>,
 	classObject: {
 		block: number;
 		type: number;
 	},
-	month: number,
-	year = new Date().getFullYear()
+	startDate: Date,
+	duration: number
 ) => {
-	const monthSchedules = await getSchedulesForMonth(supabase, month, year);
+	const monthSchedules = await getSchedulesForXDays(
+		supabase,
+		startDate,
+		duration
+	);
 	const dates: Date[] = [];
 	if (monthSchedules.data) {
 		monthSchedules.data.map((daySchedule) => {
@@ -120,8 +124,6 @@ export const getDaysForClassInMonth = async (
 				)
 			) {
 				const date = new Date(daySchedule.date);
-				date.setUTCHours(0, 0, 0, 0);
-
 				dates.push(date);
 			}
 			if (
@@ -136,7 +138,6 @@ export const getDaysForClassInMonth = async (
 				)
 			) {
 				const date = new Date(daySchedule.date);
-				date.setUTCHours(0, 0, 0, 0);
 				dates.push(date);
 			}
 		});

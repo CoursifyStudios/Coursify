@@ -7,13 +7,23 @@ import { DueType } from "../assignments";
 import { NextPage } from "next";
 import { SerializedEditorState, SerializedLexicalNode } from "lexical";
 import { NewAssignmentData } from "../../../lib/db/assignments";
+import AssignmentCalender from "./assignmentCalender";
 
 const AssignmentCreation: NextPage<{
 	content?: SerializedEditorState<SerializedLexicalNode>;
 	assignmentData: NewAssignmentData;
 	setAssignmentData: Dispatch<SetStateAction<NewAssignmentData | undefined>>;
 	setStage: Dispatch<SetStateAction<number>>;
-}> = ({ content, assignmentData, setAssignmentData, setStage }) => {
+	block: number;
+	scheduleType: number;
+}> = ({
+	content,
+	assignmentData,
+	setAssignmentData,
+	setStage,
+	block,
+	scheduleType,
+}) => {
 	const [disabled, setDisabled] = useState(true);
 	const [selectedDueType, setSelectedDueType] = useState(types[0]);
 	const [selectedPublishType, setSelectedPublishType] = useState(types[0]);
@@ -49,29 +59,29 @@ const AssignmentCreation: NextPage<{
 			<section className="grid grid-cols-2 gap-4">
 				<div className="flex flex-col">
 					<div className="flex justify-between">
-						<p className="mb-2 font-medium text-gray-800">Publish</p>
+						<p className="mb-2 font-medium text-gray-800">Set a Publish Date</p>
 						<Toggle enabled={publish} setEnabled={setPublished} />
 					</div>
 					{publish ? (
 						<WhenDue type="publish" />
 					) : (
 						<div className="text-sm text-gray-700">
-							Auto publishing is disabled. This assignment will be available
-							immediately to your students.
+							Auto publishing is disabled. This assignment will be available to
+							your students immediately.
 						</div>
 					)}
 				</div>
 				<div className="flex flex-col">
 					<div className="flex justify-between">
-						<p className="mb-2 font-medium text-gray-800 ">Due</p>
+						<p className="mb-2 font-medium text-gray-800 ">Due Date</p>
 						<Toggle enabled={due} setEnabled={setDue} />
 					</div>
 					{due ? (
 						<WhenDue type="due" />
 					) : (
 						<div className="text-sm text-gray-700">
-							Due dates are disabled. This assignment will be hidden to
-							students, overriding auto publishing.
+							This assignment does not have a due date, and will be hidden to
+							students. Note that this overrides auto publishing.
 						</div>
 					)}
 				</div>
@@ -120,19 +130,27 @@ const AssignmentCreation: NextPage<{
 						))}
 					</Listbox.Options>
 				</Listbox>
-				{type == "due"
-					? selectedDueType.type == DueType.DATE && (
-							<input
-								type="datetime-local"
-								className="mt-4 rounded-md border-gray-300  bg-white/50 focus:ring-1"
-							/>
-					  )
-					: selectedPublishType.type == DueType.DATE && (
-							<input
-								type="datetime-local"
-								className="mt-4 rounded-md border-gray-300  bg-white/50 focus:ring-1"
-							/>
-					  )}
+				{type == "due" &&
+					(selectedDueType.type == DueType.DATE ? (
+						<input
+							type="datetime-local"
+							className="mt-4 rounded-md border-gray-300  bg-white/50 focus:ring-1"
+						/>
+					) : (
+						<AssignmentCalender
+							block={block}
+							scheduleType={scheduleType}
+							type="due"
+							setAssignmentData={setAssignmentData}
+						/>
+					))}
+
+				{type == "publish" && selectedPublishType.type == DueType.DATE && (
+					<input
+						type="datetime-local"
+						className="mt-4 rounded-md border-gray-300  bg-white/50 focus:ring-1"
+					/>
+				)}
 			</>
 		);
 	}

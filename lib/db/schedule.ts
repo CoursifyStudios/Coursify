@@ -115,11 +115,13 @@ export const setThisSchedule = (
 		);
 };
 
-export const getSchedulesForMonth = async (
+export const getSchedulesForXDays = async (
 	supabase: SupabaseClient<Database>,
-	month: number,
-	year = new Date().getFullYear()
+	startDate: Date,
+	numDays: number
 ) => {
+	const endDate = new Date(startDate.getTime());
+	endDate.setDate(startDate.getDate() + numDays);
 	return await supabase
 		.from("days_schedule")
 		.select(
@@ -131,9 +133,6 @@ export const getSchedulesForMonth = async (
 		)
 		`
 		)
-		.gte("date", `${year}-${month + 1}-01`)
-		.lte(
-			"date",
-			`${year}-${month + 1}-${new Date(year, month + 1, 0).getDate()}`
-		);
+		.gte("date", startDate.toISOString().slice(0, 10))
+		.lte("date", endDate.toISOString().slice(0, 10));
 };

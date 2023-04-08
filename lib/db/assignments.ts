@@ -127,12 +127,8 @@ export type NewAssignmentData = {
 	name: string;
 	description: string;
 	submission: string;
-	selectedDueType?: {
-		type: DueType;
-		name: string;
-	};
-	selectedPublishType?: {
-		type: DueType;
-		name: string;
-	};
+	dueType?: DueType;
+	dueDate?: Date;
+	publishType?: DueType;
+	publishDate?: Date;
 };

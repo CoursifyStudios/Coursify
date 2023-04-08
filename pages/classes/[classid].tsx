@@ -92,7 +92,7 @@ const Class: NextPage = () => {
 		})();
 		setEdited(false);
 		setEditorState(undefined);
-	}, [user, supabase, classid, refreshAnnouncements]);
+	}, [classid, refreshAnnouncements]);
 
 	if (!data)
 		return (
@@ -129,10 +129,14 @@ const Class: NextPage = () => {
 
 	return (
 		<div className="mx-auto my-10 w-full max-w-screen-xl">
-			<CreateAssignment
-				open={assignmentCreationOpen}
-				setOpen={setAssignmentCreationOpen}
-			/>
+			{data.data && (
+				<CreateAssignment
+					block={data.data.block}
+					scheduleType={data.data.schedule_type}
+					open={assignmentCreationOpen}
+					setOpen={setAssignmentCreationOpen}
+				/>
+			)}
 			<div className="relative mb-6 h-48 w-full">
 				<Image
 					src={data.data?.image ? data.data.image : exampleClassImg}

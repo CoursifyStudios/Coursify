@@ -34,7 +34,9 @@ import { DueType } from "../assignments";
 export const CreateAssignment: NextPage<{
 	open: boolean;
 	setOpen: Dispatch<SetStateAction<boolean>>;
-}> = ({ open, setOpen }) => {
+	block: number;
+	scheduleType: number;
+}> = ({ open, setOpen, block, scheduleType }) => {
 	const [stage, setStage] = useState(1);
 	const [assignmentData, setAssignmentData] = useState<NewAssignmentData>();
 	const [assignmentType, setAssignmentType] = useState<AssignmentTypes>();
@@ -111,6 +113,8 @@ export const CreateAssignment: NextPage<{
 								<AssignmentDetails />
 								{stage == 3 && assignmentData && (
 									<AssignmentCreation
+										block={block}
+										scheduleType={scheduleType}
 										content={content}
 										assignmentData={assignmentData}
 										setAssignmentData={setAssignmentData}
