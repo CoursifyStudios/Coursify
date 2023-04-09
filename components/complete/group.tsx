@@ -2,6 +2,9 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import Image from "next/image";
+import { addUserToGroup } from "../../lib/db/groups";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+
 export const GroupSmall: NextPage<{
 	photo: string | null | undefined;
 	title: string;
@@ -53,6 +56,8 @@ export const GroupLarge: NextPage<{
 	isLink?: boolean;
 }> = ({ id, photo, name, membernum, isLink }) => {
 	const { newTab } = useTabs();
+	const user = useUser();
+	const supabase = useSupabaseClient();
 	if (isLink) {
 		return (
 			<Link
@@ -83,13 +88,25 @@ export const GroupLarge: NextPage<{
 						<div className="absolute inset-0 animate-pulse bg-gray-200" />
 					)}
 				</div>
-				<div className="flex flex-grow flex-col p-4">
-					<div className="flex items-start justify-between">
-						<h3 className="break-words text-xl font-semibold line-clamp-2">
-							{name}
-						</h3>
+				<div className="flex items-center justify-between p-4">
+					<div>
+						<div className="flex items-start justify-between">
+							<h3 className="break-words text-xl font-semibold line-clamp-2">
+								{name}
+							</h3>
+						</div>
+						<p>{membernum} Members</p>
 					</div>
-					<p>{membernum} Members</p>
+					{user && (
+						<button
+							className="isolate-auto brightness:hover rounded-lg bg-blue-500 py-1 px-2 font-medium text-white"
+							onClick={async () => {
+								console.log(addUserToGroup(supabase, id, user.id));
+							}}
+						>
+							Join
+						</button>
+					)}
 				</div>
 			</div>
 		);
