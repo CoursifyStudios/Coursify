@@ -30,6 +30,22 @@ import {
 
 import AssignmentCreation, { types } from "./three";
 import { DueType } from "../assignments";
+import { create } from "zustand";
+
+interface AssignmmentState {
+	data: NewAssignmentData | undefined;
+	set: (data: NewAssignmentData | undefined) => void;
+}
+
+export const useAssignmentStore = create<AssignmmentState>()((set) => ({
+	data: undefined,
+	set: (data) =>
+		set((state) => ({
+			data: data
+				? ({ ...state.data, ...data } as NewAssignmentData)
+				: undefined,
+		})),
+}));
 
 export const CreateAssignment: NextPage<{
 	open: boolean;
@@ -38,9 +54,12 @@ export const CreateAssignment: NextPage<{
 	scheduleType: number;
 }> = ({ open, setOpen, block, scheduleType }) => {
 	const [stage, setStage] = useState(1);
-	const [assignmentData, setAssignmentData] = useState<NewAssignmentData>();
 	const [assignmentType, setAssignmentType] = useState<AssignmentTypes>();
 	const [content, setContent] = useState<SerializedEditorState>();
+	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
+		setAssignmentData: state.set,
+		assignmentData: state.data,
+	}));
 
 	const closeMenu = () => {
 		setOpen(false);
@@ -111,13 +130,11 @@ export const CreateAssignment: NextPage<{
 
 								<AssignmentType />
 								<AssignmentDetails />
-								{stage == 3 && assignmentData && (
+								{stage == 3 && (
 									<AssignmentCreation
 										block={block}
 										scheduleType={scheduleType}
 										content={content}
-										assignmentData={assignmentData}
-										setAssignmentData={setAssignmentData}
 										setStage={setStage}
 									/>
 								)}

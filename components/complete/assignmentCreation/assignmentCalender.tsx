@@ -7,42 +7,37 @@ import { Listbox } from "@headlessui/react";
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { getDaysInMonth } from "../../../lib/misc/dates";
 import { getClassTimesForXDays } from "../../../lib/db/classes";
+import { useAssignmentStore } from ".";
 
 const AssignmentCalender: NextPage<{
-	block: number;
-	scheduleType: number;
-	setAssignmentData: Dispatch<SetStateAction<NewAssignmentData | undefined>>;
+	daysData: Date[] | undefined;
 	type: "due" | "publish";
-}> = ({ block, scheduleType, setAssignmentData }) => {
-	const supabase = useSupabaseClient<Database>();
-	const [daysData, setDaysData] = useState<Date[]>();
+}> = ({ daysData, type }) => {
+	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
+		setAssignmentData: state.set,
+		assignmentData: state.data,
+	}));
 	const [selectedDay, setSelectedDay] = useState<number>();
 
-	const refreshData = async () => {
-		setDaysData(undefined);
-		const classDays = await getClassTimesForXDays(
-			supabase,
-			{ block, type: scheduleType },
-			new Date(),
-			80
-		);
-		console.log(classDays);
-		setDaysData(classDays);
-	};
+	const updateAssignmentData = (date: Date, day: number) => {
+		if (type == "due") {
+			setAssignmentData({ dueDate: date } as NewAssignmentData);
+		}
+		if (type == "publish") {
+			setAssignmentData({ publishDate: date } as NewAssignmentData);
+		}
 
-	useEffect(() => {
-		if (!daysData) refreshData();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, []);
+		setSelectedDay(day);
+	};
 
 	return (
 		<>
 			{daysData ? (
-				<div className="scrollbar-fancy mt-2 flex max-h-56 flex-wrap gap-2 overflow-auto">
+				<div className="scrollbar-fancy relatiive mt-2 flex max-h-56 flex-wrap gap-2 overflow-auto">
 					{fillArrayWithDates(new Date(), 80).map((date, i) => (
 						<>
 							{(i == 0 || date.getDate() == 1) && (
-								<h2 className="w-full text-lg font-medium">
+								<h2 className="sticky top-0 z-10 w-full bg-[#f2f2f2] text-lg font-medium">
 									{date.toLocaleString("default", { month: "long" })}
 								</h2>
 							)}
@@ -56,11 +51,11 @@ const AssignmentCalender: NextPage<{
 											date.toISOString().slice(0, 10)
 									)
 										? " brightness-hover cursor-pointer bg-gray-300"
-										: "cursor-not-allowed text-gray-600"
+										: "cursor-not-allowed text-gray-500"
 								}
 								${selectedDay == i && "border border-gray-300 bg-white shadow"}
 								`}
-								onClick={() => setSelectedDay(i)}
+								onClick={() => updateAssignmentData(date, i)}
 							>
 								{date.getDate()}
 							</div>
@@ -68,7 +63,21 @@ const AssignmentCalender: NextPage<{
 					))}
 				</div>
 			) : (
-				"loadiung"
+				<div className="flex flex-col">
+					<div className="my-2 mr-auto animate-pulse rounded bg-gray-200 px-2">
+						<span className="invisible text-lg">
+							{new Date().toLocaleString("default", { month: "long" })}
+						</span>
+					</div>
+					<div className="grid grid-cols-7 gap-4">
+						{[...new Array(14)].map((_, i) => (
+							<div
+								className="h-10 w-full animate-pulse rounded bg-gray-200"
+								key={i}
+							></div>
+						))}
+					</div>
+				</div>
 			)}
 		</>
 	);
@@ -83,7 +92,5 @@ function fillArrayWithDates(date: Date, numDays: number) {
 	}
 	return output;
 }
-
-const years = [new Date().getFullYear(), new Date().getFullYear() + 1];
 
 export default AssignmentCalender;

@@ -1,6 +1,6 @@
 import { Listbox, Switch } from "@headlessui/react";
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Button } from "../../misc/button";
 import Editor from "../../editors/richeditor";
 import { DueType } from "../assignments";
@@ -8,27 +8,47 @@ import { NextPage } from "next";
 import { SerializedEditorState, SerializedLexicalNode } from "lexical";
 import { NewAssignmentData } from "../../../lib/db/assignments";
 import AssignmentCalender from "./assignmentCalender";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { getClassTimesForXDays } from "../../../lib/db/classes";
+import { Database } from "../../../lib/db/database.types";
+import { useAssignmentStore } from ".";
 
 const AssignmentCreation: NextPage<{
 	content?: SerializedEditorState<SerializedLexicalNode>;
-	assignmentData: NewAssignmentData;
-	setAssignmentData: Dispatch<SetStateAction<NewAssignmentData | undefined>>;
 	setStage: Dispatch<SetStateAction<number>>;
 	block: number;
 	scheduleType: number;
-}> = ({
-	content,
-	assignmentData,
-	setAssignmentData,
-	setStage,
-	block,
-	scheduleType,
-}) => {
+}> = ({ content, setStage, block, scheduleType }) => {
 	const [disabled, setDisabled] = useState(true);
 	const [selectedDueType, setSelectedDueType] = useState(types[0]);
 	const [selectedPublishType, setSelectedPublishType] = useState(types[0]);
 	const [publish, setPublished] = useState(false);
 	const [due, setDue] = useState(true);
+	const [daysData, setDaysData] = useState<Date[]>();
+	const supabase = useSupabaseClient<Database>();
+
+	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
+		setAssignmentData: state.set,
+		assignmentData: state.data,
+	}));
+
+	const refreshData = async () => {
+		setDaysData(undefined);
+		const classDays = await getClassTimesForXDays(
+			supabase,
+			{ block, type: scheduleType },
+			new Date(),
+			80
+		);
+		setDaysData(classDays);
+	};
+
+	useEffect(() => {
+		if (!daysData) refreshData();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	if (!assignmentData) return null;
 
 	return (
 		<>
@@ -73,7 +93,7 @@ const AssignmentCreation: NextPage<{
 				</div>
 				<div className="flex flex-col">
 					<div className="flex justify-between">
-						<p className="mb-2 font-medium text-gray-800 ">Due Date</p>
+						<p className="mb-2 font-medium text-gray-800 ">Set a Due Date</p>
 						<Toggle enabled={due} setEnabled={setDue} />
 					</div>
 					{due ? (
@@ -112,13 +132,13 @@ const AssignmentCreation: NextPage<{
 					value={type == "due" ? selectedDueType : selectedPublishType}
 					onChange={type == "due" ? setSelectedDueType : setSelectedPublishType}
 					as="div"
-					className="mr-auto flex flex-col items-center"
+					className="z-20 mr-auto flex flex-col items-center"
 				>
 					<Listbox.Button className="brightness-hover flex items-center rounded-xl bg-gray-200  py-1 px-2 font-semibold">
 						{(type == "due" ? selectedDueType : selectedPublishType).name}{" "}
 						<ChevronUpDownIcon className="ml-2 h-5 w-5" />
 					</Listbox.Button>
-					<Listbox.Options className="absolute mt-12 space-y-2 rounded-xl bg-white/75 p-2 backdrop-blur-xl">
+					<Listbox.Options className="absolute mt-12 space-y-2 rounded-xl bg-white/75 p-2 backdrop-blur-xl ">
 						{types.map((type, i) => (
 							<Listbox.Option
 								key={i}
@@ -137,20 +157,18 @@ const AssignmentCreation: NextPage<{
 							className="mt-4 rounded-md border-gray-300  bg-white/50 focus:ring-1"
 						/>
 					) : (
-						<AssignmentCalender
-							block={block}
-							scheduleType={scheduleType}
-							type="due"
-							setAssignmentData={setAssignmentData}
-						/>
+						<AssignmentCalender type="due" daysData={daysData} />
 					))}
 
-				{type == "publish" && selectedPublishType.type == DueType.DATE && (
-					<input
-						type="datetime-local"
-						className="mt-4 rounded-md border-gray-300  bg-white/50 focus:ring-1"
-					/>
-				)}
+				{type == "publish" &&
+					(selectedPublishType.type == DueType.DATE ? (
+						<input
+							type="datetime-local"
+							className="mt-4 rounded-md border-gray-300  bg-white/50 focus:ring-1"
+						/>
+					) : (
+						<AssignmentCalender type="publish" daysData={daysData} />
+					))}
 			</>
 		);
 	}
