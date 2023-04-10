@@ -192,12 +192,6 @@ export const AnnouncementPostingUI = ({
 					focus={false}
 				/>
 
-				<div className="mb-2 flex">
-					{/* <p className="font-medium">Multishare</p> <div className="rounded-full ml-2 bg-gray-200 p-0 5">
-						
-					</div> */}
-				</div>
-
 				<div className="mb-4 flex flex-wrap gap-4">
 					{chosenCommunities &&
 						chosenCommunities.map(
@@ -206,7 +200,6 @@ export const AnnouncementPostingUI = ({
 									<ColoredPill key={chosenCommunity.id} color="gray">
 										{chosenCommunity.name}
 									</ColoredPill>
-									// &nbsp;•&nbsp;
 								)
 						)}
 				</div>
@@ -225,17 +218,14 @@ export const AnnouncementPostingUI = ({
 						<Button
 							className="brightness-hover transition hover:bg-red-300"
 							onClick={() => {
+                                setChosenCommunities([]);
 								setShowPost(false);
 							}}
 						>
 							Cancel
 						</Button>
 						<Button
-							className={
-								isEditorEmpty(editorState) || title.length == 0
-									? "text-white"
-									: "brightness-hover !bg-blue-500 text-white"
-							}
+							className="text-white" color="bg-blue-500"
 							onClick={async () => {
 								if (!isEditorEmpty(editorState) && !(title.length == 0)) {
 									setChosenCommunities((communities) =>
@@ -256,9 +246,11 @@ export const AnnouncementPostingUI = ({
 										communities
 									);
 									if (testing) setShowLoading(false);
+                                    setChosenCommunities([]);
 									refreshAnnouncements(!prevRefreshState);
 								}
 							}}
+                            disabled={isEditorEmpty(editorState) || title.length == 0}
 						>
 							Post
 						</Button>
