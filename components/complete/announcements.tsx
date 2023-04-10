@@ -132,7 +132,7 @@ export const AnnouncementPostingUI = ({
 								name="title"
 								type="text"
 								className="h-10 w-96 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium placeholder:text-gray-700"
-								autoFocus
+                                autoFocus
 							></Field>
 						</label>
 						<ErrorMessage name="title"></ErrorMessage>
@@ -144,6 +144,7 @@ export const AnnouncementPostingUI = ({
 					editable={true}
 					className="my-4 rounded bg-gray-200 p-2"
 					updateState={setEditorState}
+                    focus={false}
 				/>
 				<div className="ml-auto flex space-x-4">
 					<Button className="brightness-hover transition hover:bg-red-300">

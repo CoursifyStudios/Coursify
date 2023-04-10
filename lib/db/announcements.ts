@@ -31,3 +31,41 @@ export const createNewAnnouncement = async (
 		});
 	}
 };
+
+export const crossPostAnnouncements = async (
+    supabaseClient: SupabaseClient<Database>,
+    announcementAuthor: string,
+    announcementTitle: string,
+    announcementContent: Json,
+    communities: ClassOrGroupObject[]
+) => {
+    const announcementData = await supabaseClient
+		.from("announcements")
+		.insert({
+			author: announcementAuthor,
+			title: announcementTitle,
+			content: announcementContent,
+		})
+		.select()
+		.single();
+    
+    communities.forEach(async (community) => {
+        if (community.trueIfClass) {
+            //better than trying both tables
+            return await supabaseClient.from("classes_announcements").insert({
+                class_id: community.id,
+                announcement_id: announcementData.data?.id!,
+            });
+        } else {
+            return await supabaseClient.from("groups_announcements").insert({
+                announcement_id: announcementData.data?.id!,
+                group_id: community.id,
+            });
+        }
+    });
+}
+
+export interface ClassOrGroupObject {
+    id: string;
+    trueIfClass: boolean;
+}
