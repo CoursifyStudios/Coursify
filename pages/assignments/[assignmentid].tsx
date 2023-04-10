@@ -21,7 +21,7 @@ import launch from "../../public/svgs/launch.svg";
 import noData from "../../public/svgs/no-data.svg";
 import Link from "next/link";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
-import { ButtonIcon } from "../../components/misc/button";
+import { Button, ButtonIcon } from "../../components/misc/button";
 import { AssignmentPreview } from "../../components/complete/assignments";
 import {
 	getSchedule,
@@ -283,8 +283,14 @@ const Post: NextPage = () => {
 								</div>
 							</div>
 						</section>
-						<section className="scrollbar-fancy relative mt-5 flex flex-1 flex-col-reverse overflow-y-auto overflow-x-hidden whitespace-pre-line md:pr-2 xl:flex-row">
-							<div className="flex grow flex-col">
+						<section
+							className={`scrollbar-fancy relative mt-5 flex flex-1  overflow-y-auto overflow-x-hidden whitespace-pre-line md:pr-2 ${
+								assignment.data.submission_type == "post"
+									? "flex-col"
+									: "flex-col-reverse xl:flex-row"
+							}`}
+						>
+							<div className="flex flex-col">
 								<h2 className="text-xl font-semibold">Details</h2>
 								<Editor
 									editable={false}
@@ -292,31 +298,43 @@ const Post: NextPage = () => {
 									className=" scrollbar-fancy mt-2 mb-5 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
 								/>
 							</div>
-							<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:ml-4 xl:mb-0 xl:w-72">
-								<h2 className="text-xl font-semibold">Submission</h2>
-								<div className="mt-2 rounded-xl bg-gray-200 p-6">
-									{assignment.data.submission_instructions ? (
-										<>
+							{assignment.data.submission_type != "post" ? (
+								<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:ml-4 xl:mb-0 xl:w-72">
+									<h2 className="text-xl font-semibold">Submission</h2>
+									<div className="mt-2 rounded-xl bg-gray-200 p-6">
+										{assignment.data.submission_instructions ? (
+											<>
+												<h2 className="text-lg font-semibold ">
+													Teachers Instructions:
+												</h2>
+												<p className="max-w-md text-sm text-gray-700">
+													{assignment.data.submission_instructions}
+												</p>
+											</>
+										) : (
 											<h2 className="text-lg font-semibold ">
-												Teachers Instructions:
+												Submit assignment
 											</h2>
-											<p className="max-w-md text-sm text-gray-700">
-												{assignment.data.submission_instructions}
-											</p>
-										</>
-									) : (
-										<h2 className="text-lg font-semibold ">
-											Submit assignment
-										</h2>
-									)}
-									<div
-										className="mt-6 inline-flex cursor-pointer rounded-md bg-blue-500 px-4 py-1 font-semibold text-white"
-										onClick={() => setIsOpen(true)}
-									>
-										Submit
+										)}
+										{assignment.data.submission_type == "check" ? (
+											<Button color="bg-blue-500" className="mt-6 text-white">
+												Set as completed
+											</Button>
+										) : (
+											<div
+												className="mt-6 inline-flex cursor-pointer rounded-md bg-blue-500 px-4 py-1 font-semibold text-white"
+												onClick={() => setIsOpen(true)}
+											>
+												Submit
+											</div>
+										)}
 									</div>
 								</div>
-							</div>
+							) : (
+								<div>
+									<h2 className="text-xl font-semibold">Discussion Posts</h2>
+								</div>
+							)}
 						</section>
 					</div>
 					<Transition appear show={isOpen} as={Fragment}>
