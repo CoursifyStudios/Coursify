@@ -4,6 +4,7 @@ import { useTabs } from "../../lib/tabs/handleTabs";
 import Image from "next/image";
 import { addUserToGroup } from "../../lib/db/groups";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { Button } from "../misc/button";
 
 export const GroupSmall: NextPage<{
 	photo: string | null | undefined;
@@ -98,14 +99,15 @@ export const GroupLarge: NextPage<{
 						<p>{membernum} Members</p>
 					</div>
 					{user && (
-						<button
-							className="isolate-auto brightness:hover rounded-lg bg-blue-500 py-1 px-2 font-medium text-white"
+						<Button
+							className="isolate-auto brightness:hover rounded-lg py-1 px-2 font-medium text-white"
+                            color="bg-blue-500"
 							onClick={async () => {
-								console.log(addUserToGroup(supabase, id, user.id));
+								addUserToGroup(supabase, id, user.id);
 							}}
 						>
 							Join
-						</button>
+						</Button>
 					)}
 				</div>
 			</div>

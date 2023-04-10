@@ -67,5 +67,6 @@ export const crossPostAnnouncements = async (
 
 export interface ClassOrGroupObject {
     id: string;
+    name: string;
     trueIfClass: boolean;
 }

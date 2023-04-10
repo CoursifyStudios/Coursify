@@ -290,6 +290,7 @@ const Post: NextPage = () => {
 									editable={false}
 									initialState={assignment.data.content}
 									className=" scrollbar-fancy mt-2 mb-5 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
+                                    focus={false}
 								/>
 							</div>
 							<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:ml-4 xl:mb-0 xl:w-72">

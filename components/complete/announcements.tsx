@@ -3,8 +3,13 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { ErrorMessage, Field, Form, Formik, useFormikContext } from "formik";
 import { EditorState } from "lexical";
 import { useEffect, useState } from "react";
-import { createNewAnnouncement } from "../../lib/db/announcements";
+import {
+	ClassOrGroupObject,
+	createNewAnnouncement,
+} from "../../lib/db/announcements";
+import { getJustAllTheClasses } from "../../lib/db/classes";
 import { Database, Json } from "../../lib/db/database.types";
+import { getAllGroupsForUser } from "../../lib/db/groups";
 import { getDataOutArray } from "../../lib/misc/dataOutArray";
 import { howLongAgo } from "../../lib/misc/formatDate";
 import Editor from "../editors/richeditor";
@@ -84,6 +89,8 @@ export const AnnouncementPostingUI = ({
 	const [title, setTitle] = useState("");
 	const [editorState, setEditorState] = useState<EditorState>();
 	const [showLoading, setShowLoading] = useState(false);
+	const [communities, setCommunities] = useState<ClassOrGroupObject[]>();
+
 	const user = useUser();
 
 	const FormObserver: React.FC = () => {
@@ -95,6 +102,36 @@ export const AnnouncementPostingUI = ({
 
 		return null;
 	};
+	
+	async function getCommunities () {
+			if (user) {
+				const groupsResponse = await getAllGroupsForUser(supabase, user.id);
+				const classesResponse = await getJustAllTheClasses(supabase, user.id);
+				const groupsAndClasses: ClassOrGroupObject[] = [];
+				if (groupsResponse.data && classesResponse.data) {
+					groupsResponse.data?.map((group) => {
+						groupsAndClasses.push({
+							id: getDataOutArray(group).group_id,
+							name: getDataOutArray(getDataOutArray(group).groups)
+								?.name as string,
+							trueIfClass: false,
+						});
+					});
+					classesResponse.data?.map((classRow) => {
+						if (classRow.teacher) {
+							groupsAndClasses.push({
+								id: getDataOutArray(classRow).class_id,
+								name: getDataOutArray(classRow.classes)?.name as string,
+								trueIfClass: true,
+							});
+						}
+					});
+					setCommunities(groupsAndClasses);
+					console.log(groupsAndClasses);
+				}
+			}
+		};
+	
 
 	if (!showLoading) {
 		if (!showPost)
@@ -131,8 +168,8 @@ export const AnnouncementPostingUI = ({
 							<Field
 								name="title"
 								type="text"
-								className="h-10 w-96 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium placeholder:text-gray-700"
-                                autoFocus
+								className="h-10 w-96 rounded border-gray-300 bg-white py-1.5 pl-3 text-lg font-normal placeholder:text-gray-700 focus:ring-2"
+								autoFocus
 							></Field>
 						</label>
 						<ErrorMessage name="title"></ErrorMessage>
@@ -142,34 +179,41 @@ export const AnnouncementPostingUI = ({
 				</Formik>
 				<Editor
 					editable={true}
-					className="my-4 rounded bg-gray-200 p-2"
+					className="my-4 rounded border border-gray-300 bg-white p-2"
 					updateState={setEditorState}
-                    focus={false}
+					focus={false}
 				/>
-				<div className="ml-auto flex space-x-4">
-					<Button className="brightness-hover transition hover:bg-red-300">
-						<span
-							tabIndex={0}
+
+				{/* <div className="">
+					{communities &&
+						communities.map((community) => (
+							<p className="">{community.name}</p>
+						))}
+				</div> */}
+
+				<div className="justify-between flex space-x-4">
+					<Button 
+                        className="mr-auto"
+                        onClick={() => {
+
+                        }}>Post to other groups...</Button>
+					<div className="flex space-x-4">
+						<Button
+							className="brightness-hover transition hover:bg-red-300"
 							onClick={() => {
 								setShowPost(false);
 							}}
 						>
 							Cancel
-						</span>
-					</Button>
-					<Button
-						className={
-							isEditorEmpty(editorState) || title.length == 0
-								? "text-white"
-								: "brightness-hover !bg-blue-500 text-white"
-						}
-					>
-						{isEditorEmpty(editorState) || title.length == 0 ? (
-							<span>Post</span>
-						) : (
-							<span
-								tabIndex={0}
-								onClick={async () => {
+						</Button>
+						<Button
+							className={
+								isEditorEmpty(editorState) || title.length == 0
+									? "text-white"
+									: "brightness-hover !bg-blue-500 text-white"
+							}
+							onClick={async () => {
+								if (!isEditorEmpty(editorState) && !(title.length == 0)) {
 									setShowLoading(true);
 									const testing = await createNewAnnouncement(
 										supabase,
@@ -181,12 +225,12 @@ export const AnnouncementPostingUI = ({
 									);
 									if (testing) setShowLoading(false);
 									refreshAnnouncements(!prevRefreshState);
-								}}
-							>
-								Post
-							</span>
-						)}
-					</Button>
+								}
+							}}
+						>
+							Post
+						</Button>
+					</div>
 				</div>
 			</div>
 		);

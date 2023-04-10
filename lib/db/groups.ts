@@ -23,7 +23,7 @@ export type AllGroupsResponse = Awaited<ReturnType<typeof getAllGroupsForUser>>;
 export const getAllPublicGroups = async (
 	supabaseClient: SupabaseClient<Database>
 ) => {
-	return await supabaseClient
+	return await supabaseClient 
 		.from("groups")
 		.select(
 			`

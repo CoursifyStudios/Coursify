@@ -33,6 +33,25 @@ export async function getAllClasses(supabaseClient: SupabaseClient<Database>) {
 
 export type AllClassesResponse = Awaited<ReturnType<typeof getAllClasses>>;
 
+export const getJustAllTheClasses = async (
+    supabase: SupabaseClient<Database>,
+    userID: string
+) => {
+    return await supabase
+        .from("users_classes")
+        .select(
+            `
+            *,
+            classes (
+                *
+            )
+            `
+        )
+        .eq("user_id", userID);
+};
+
+//export type JustAllClassesResponse = Awaited<ReturnType<typeof getJustAllTheClasses>>;
+
 export const getClass = async (
 	supabaseClient: SupabaseClient<Database>,
 	classid: string

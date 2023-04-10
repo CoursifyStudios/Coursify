@@ -264,6 +264,7 @@ export const CreateAssignment: NextPage<{
 								initialState={content}
 								//initialStateEditor={editorState}
 								className="scrollbar-fancy mt-1 mb-6 max-h-[30vh] min-h-[6rem] overflow-y-auto overflow-x-hidden rounded-md border border-gray-300 bg-white/50 pb-2 focus:ring-1"
+                                focus={true}
 							/>
 							<div className="ml-auto flex space-x-4">
 								<span onClick={() => setStage((stage) => stage - 1)}>
