@@ -220,7 +220,9 @@ export default function Home() {
 															aClass.assignments.map((assignment) => (
 																<div
 																	key={assignment.id}
-																	className={"brightness-hover rounded-lg bg-gray-200 p-2"}
+																	className={
+																		"brightness-hover rounded-lg bg-gray-200 p-2"
+																	}
 																>
 																	<AssignmentPreview
 																		supabase={supabaseClient}

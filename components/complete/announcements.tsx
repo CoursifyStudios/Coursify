@@ -10,7 +10,7 @@ import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
 import {
 	ClassOrGroupObject,
 	createNewAnnouncement,
-    crossPostAnnouncements,
+	crossPostAnnouncements,
 } from "../../lib/db/announcements";
 import { getJustAllTheClasses } from "../../lib/db/classes";
 import { Database, Json } from "../../lib/db/database.types";
@@ -119,7 +119,7 @@ export const AnnouncementPostingUI = ({
 			const classesResponse = await getJustAllTheClasses(supabase, user.id);
 			const groupsAndClasses: ClassOrGroupObject[] = [];
 			if (groupsResponse.data && classesResponse.data) {
-				groupsResponse.data?.map((group) => {
+				groupsResponse.data.map((group) => {
 					groupsAndClasses.push({
 						id: getDataOutArray(group).group_id,
 						name: getDataOutArray(getDataOutArray(group).groups)
@@ -127,7 +127,7 @@ export const AnnouncementPostingUI = ({
 						trueIfClass: false,
 					});
 				});
-				classesResponse.data?.map((classRow) => {
+				classesResponse.data.map((classRow) => {
 					if (classRow.teacher) {
 						groupsAndClasses.push({
 							id: getDataOutArray(classRow).class_id,
@@ -137,7 +137,6 @@ export const AnnouncementPostingUI = ({
 					}
 				});
 				setCommunities(groupsAndClasses);
-				console.log(groupsAndClasses);
 			}
 		}
 	}
@@ -202,9 +201,11 @@ export const AnnouncementPostingUI = ({
 				<div className="mb-4 flex flex-wrap gap-4">
 					{chosenCommunities &&
 						chosenCommunities.map(
-							(chosenCommunity, i) =>
+							(chosenCommunity) =>
 								chosenCommunity && (
-									<ColoredPill color="gray">{chosenCommunity.name}</ColoredPill>
+									<ColoredPill key={chosenCommunity.id} color="gray">
+										{chosenCommunity.name}
+									</ColoredPill>
 									// &nbsp;•&nbsp;
 								)
 						)}
@@ -270,7 +271,7 @@ export const AnnouncementPostingUI = ({
 						setChosenCommunities={setChosenCommunities}
 						setShowCrossPosting={setShowCrossPosting}
 						showCrossPosting={showCrossPosting}
-                        communityid={communityid}
+						communityid={communityid}
 					/>
 				)}
 			</div>
@@ -286,14 +287,14 @@ const CommunityPicker = ({
 	setShowCrossPosting,
 	showCrossPosting,
 	setChosenCommunities,
-    communityid,
+	communityid,
 }: {
 	showCrossPosting: boolean;
 	setShowCrossPosting: Dispatch<SetStateAction<boolean>>;
 	communities: ClassOrGroupObject[];
 	chosenCommunities: ClassOrGroupObject[];
 	setChosenCommunities: Dispatch<SetStateAction<ClassOrGroupObject[]>>;
-    communityid: string;
+	communityid: string;
 }) => {
 	return (
 		<Transition appear show={showCrossPosting} as={Fragment}>
@@ -351,7 +352,10 @@ const CommunityPicker = ({
 												);
 										  })
 										: [...new Array(6)].map((_, i) => (
-												<div className="h-12 animate-pulse rounded-lg bg-gray-200" />
+												<div
+													key={i}
+													className="h-12 animate-pulse rounded-lg bg-gray-200"
+												/>
 										  ))}
 								</div>
 							</Dialog.Panel>

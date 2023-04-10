@@ -33,13 +33,13 @@ export const createNewAnnouncement = async (
 };
 
 export const crossPostAnnouncements = async (
-    supabaseClient: SupabaseClient<Database>,
-    announcementAuthor: string,
-    announcementTitle: string,
-    announcementContent: Json,
-    communities: ClassOrGroupObject[]
+	supabaseClient: SupabaseClient<Database>,
+	announcementAuthor: string,
+	announcementTitle: string,
+	announcementContent: Json,
+	communities: ClassOrGroupObject[]
 ) => {
-    const announcementData = await supabaseClient
+	const announcementData = await supabaseClient
 		.from("announcements")
 		.insert({
 			author: announcementAuthor,
@@ -48,26 +48,25 @@ export const crossPostAnnouncements = async (
 		})
 		.select()
 		.single();
-    console.log(announcementData);
-    communities.forEach(async (community) => {
-        if (community.trueIfClass) {
-            //better than trying both tables
-            const thing = await supabaseClient.from("classes_announcements").insert({
-                class_id: community.id,
-                announcement_id: announcementData.data?.id!,
-            });
-        } else {
-            const thing = await supabaseClient.from("groups_announcements").insert({
-                announcement_id: announcementData.data?.id!,
-                group_id: community.id,
-            });
-        }
-    });
-    return announcementData;
-}
+	communities.forEach(async (community) => {
+		if (community.trueIfClass) {
+			//better than trying both tables
+			const thing = await supabaseClient.from("classes_announcements").insert({
+				class_id: community.id,
+				announcement_id: announcementData.data?.id!,
+			});
+		} else {
+			const thing = await supabaseClient.from("groups_announcements").insert({
+				announcement_id: announcementData.data?.id!,
+				group_id: community.id,
+			});
+		}
+	});
+	return announcementData;
+};
 
 export interface ClassOrGroupObject {
-    id: string;
-    name: string;
-    trueIfClass: boolean;
+	id: string;
+	name: string;
+	trueIfClass: boolean;
 }

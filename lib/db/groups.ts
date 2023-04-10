@@ -23,7 +23,7 @@ export type AllGroupsResponse = Awaited<ReturnType<typeof getAllGroupsForUser>>;
 export const getAllPublicGroups = async (
 	supabaseClient: SupabaseClient<Database>
 ) => {
-	return await supabaseClient 
+	return await supabaseClient
 		.from("groups")
 		.select(
 			`
@@ -71,17 +71,17 @@ export const getGroup = async (
 export type GroupResponse = Awaited<ReturnType<typeof getGroup>>;
 
 export const addUserToGroup = async (
-    supabaseClient: SupabaseClient<Database>,
-    groupID: string,
-    userID: string
+	supabaseClient: SupabaseClient<Database>,
+	groupID: string,
+	userID: string
 ) => {
-    return await supabaseClient
-        .from("users_groups")
-        .insert({
-            user_id: userID,
-            group_id: groupID,
-            group_leader: null,
-        });
-}
+	return await supabaseClient.from("users_groups").insert({
+		user_id: userID,
+		group_id: groupID,
+		group_leader: null,
+	});
+};
 
-export type PossiblyTemporaryUserGroupType = Awaited<ReturnType<typeof addUserToGroup>>;
+export type PossiblyTemporaryUserGroupType = Awaited<
+	ReturnType<typeof addUserToGroup>
+>;
