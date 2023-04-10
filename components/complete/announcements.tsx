@@ -11,8 +11,8 @@ import {
 	ClassOrGroupObject,
 	createNewAnnouncement,
 	crossPostAnnouncements,
+    getClassesAndGroups,
 } from "../../lib/db/announcements";
-import { getJustAllTheClasses } from "../../lib/db/classes";
 import { Database, Json } from "../../lib/db/database.types";
 import { getAllGroupsForUser } from "../../lib/db/groups";
 import { getDataOutArray } from "../../lib/misc/dataOutArray";
@@ -115,22 +115,20 @@ export const AnnouncementPostingUI = ({
 
 	async function getCommunities() {
 		if (user && communities.length == 0) {
-			const groupsResponse = await getAllGroupsForUser(supabase, user.id);
-			const classesResponse = await getJustAllTheClasses(supabase, user.id);
+            const dbResponse = await getClassesAndGroups(supabase, user.id);
 			const groupsAndClasses: ClassOrGroupObject[] = [];
-			if (groupsResponse.data && classesResponse.data) {
-				groupsResponse.data.map((group) => {
+			if (dbResponse.data && Array.isArray(dbResponse.data.users_classes) && Array.isArray(dbResponse.data.users_groups)) {
+				dbResponse.data.users_groups.map((group) => {
 					groupsAndClasses.push({
-						id: getDataOutArray(group).group_id,
-						name: getDataOutArray(getDataOutArray(group).groups)
-							?.name as string,
+						id: group.group_id,
+						name: getDataOutArray(group.groups)?.name as string,
 						trueIfClass: false,
 					});
 				});
-				classesResponse.data.map((classRow) => {
+				dbResponse.data.users_classes.map((classRow) => {
 					if (classRow.teacher) {
 						groupsAndClasses.push({
-							id: getDataOutArray(classRow).class_id,
+							id: classRow.class_id,
 							name: getDataOutArray(classRow.classes)?.name as string,
 							trueIfClass: true,
 						});
