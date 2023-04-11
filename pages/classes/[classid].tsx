@@ -187,7 +187,7 @@ const Class: NextPage = () => {
 						</Tab>
 					</Tab.List>
 					<Tab.Panels>
-						<Tab.Panel>
+						<Tab.Panel tabIndex={-1}>
 							<div className="mb-3 flex flex-wrap gap-2">
 								{data.data?.classpills && isTeacher != undefined && classid && (
 									<InfoPills
@@ -249,7 +249,7 @@ const Class: NextPage = () => {
 								)
 							)}
 						</Tab.Panel>
-						<Tab.Panel>
+						<Tab.Panel tabIndex={-1}>
 							<h2 className="title mb-3">Announcements</h2>
 							<div className="space-y-3">
 								{isTeacher && (
@@ -285,7 +285,7 @@ const Class: NextPage = () => {
 										))}
 							</div>
 						</Tab.Panel>
-						<Tab.Panel>
+						<Tab.Panel tabIndex={-1}>
 							<div className="grid grid-cols-3 gap-4">
 								{data.data?.users && Array.isArray(data.data?.users) ? (
 									data.data?.users.map((user, i) => (

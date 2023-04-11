@@ -63,11 +63,32 @@ export function AssignmentPreview({
 			<div className="mb-1 flex">
 				<div className="flex">
 					<div className="" onMouseLeave={() => dealWithStarred()}>
-						<span onClick={() => setStarred((starred) => !starred)}>
+						<span
+							tabIndex={0}
+							onClick={() => setStarred((starred) => !starred)}
+							/* This mess is to replicate the mouseLeave functionality (to reduce uneeded db requests)
+							 * What I'm doing is changeing the value of the useState starred whenever the user presses
+							 * the enter or space keys (i.e. clicks it on a screen reader), and then when they move on
+							 * by pressing the tab key again or they decide to press escape, I update on the db -Bill */
+							onKeyDown={(key) => {
+								if (key.key == "Enter" || key.key == " ") {
+									setStarred((starred) => !starred);
+								} else if (key.key == "Enter" || key.key == "Escape") {
+									dealWithStarred();
+								}
+							}}
+						>
 							<Starred starred={starred} />
 						</span>
 					</div>
-					<Link href={"/assignments/" + assignment.id} className="">
+					{/* I'm going to use this outer div as the vehicle for tab support linking ot assignments for now
+					 * It isn't the prettiest thing in the world, but it's in the right order and it's less work,
+					 * which for screen reader support is all that matters [If you're wondering what this is about,
+					 * note the lack of tabIndex={-1} on this particular <Link> element] -Bill
+					 * Upon further inspection, this is kind of terrible solution, but so it using 5 links that link
+					 * to the same thing. We need to redo this anyways, so I am declaring this an official half-solution
+					 *  -Bill, 10 minutes later */}
+					<Link href={"/assignments/" + assignment.id}>
 						<div className="ml-2">
 							{classes && showClassPill && (
 								<Link href={"/classes/" + classes?.id}>
@@ -80,10 +101,12 @@ export function AssignmentPreview({
 					</Link>
 				</div>
 				<Link
+					tabIndex={-1}
 					href={"/assignments/" + assignment.id}
 					className="flex-grow"
 				></Link>
 				<Link
+					tabIndex={-1}
 					href={"/assignments/" + assignment.id}
 					className="flex items-center"
 				>
@@ -107,7 +130,7 @@ export function AssignmentPreview({
 					</ColoredPill>
 				</Link>
 			</div>
-			<Link href={"/assignments/" + assignment.id}>
+			<Link tabIndex={-1} href={"/assignments/" + assignment.id}>
 				<h1 className="text font-medium">{assignment.name}</h1>
 				<div className="flex items-end justify-between">
 					<p className="w-[12rem] break-words line-clamp-2  ">

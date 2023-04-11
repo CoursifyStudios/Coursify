@@ -48,7 +48,7 @@ const Navbar: NextComponentType = () => {
 					(v, i) => hydrated && <TabUI key={i} canClose={true} tab={v} />
 				)}
 			</div>
-			<div className="flex flex-grow-0 items-center space-x-4 ml-2">
+			<div className="ml-2 flex flex-grow-0 items-center space-x-4">
 				<ButtonIcon icon={<MagnifyingGlassIcon className=" h-5 w-9" />} />
 				<ButtonIcon
 					icon={<CalendarDaysIcon className="h-5 w-5" />}
@@ -58,14 +58,17 @@ const Navbar: NextComponentType = () => {
 					icon={<MegaphoneIcon className="h-5 w-5" />}
 					to="/announcements"
 				/>
-				<Menu className="relative !ml-4 flex flex-col items-center w-10" as="div">
+				<Menu
+					className="relative !ml-4 flex w-10 flex-col items-center"
+					as="div"
+				>
 					<Menu.Button>
 						{user ? (
 							<img
 								src={user.user_metadata.picture}
 								alt="Profile picture"
 								referrerPolicy="no-referrer"
-								className=" rounded-full shadow-md shadow-black/25 w-10"
+								className=" w-10 rounded-full shadow-md shadow-black/25"
 								height={40}
 								width={40}
 							/>
@@ -187,14 +190,15 @@ const Navbar: NextComponentType = () => {
 				</Link>
 				{canClose && (
 					<XMarkIcon
-                        tabIndex={0}
+						tabIndex={0}
 						onClick={(e) => (
 							e.stopPropagation(), handleClose(tab.name, selected)
 						)}
-                        //never thought I would have had to do that manually
-                        onKeyDown={(key) => key.key == "Enter" && (
-                            key.stopPropagation(), handleClose(tab.name, selected)
-                        )}
+						//never thought I would have had to do that manually
+						onKeyDown={(key) =>
+							(key.key == "Enter" || key.key == " ") &&
+							(key.stopPropagation(), handleClose(tab.name, selected))
+						}
 						// apparently stop propigation doesn't work with nextjs links.
 						// I could use router.push(), but then we would have to be in charge of preloading pages
 						// I decicded to instead just make the text the link. It not great but is just works:tm:
