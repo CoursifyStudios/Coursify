@@ -94,6 +94,7 @@ export default function Editor({
 	initialState,
 	initialStateEditor,
 	updatedState,
+	focus,
 }: {
 	editable: boolean;
 	updateState?:
@@ -103,6 +104,7 @@ export default function Editor({
 	initialStateEditor?: EditorState;
 	className?: string;
 	updatedState?: EditorState;
+	focus?: boolean;
 }) {
 	return (
 		<GrammarlyEditorPlugin clientId="client_HhHcuxVxKgaZMFYuD57U3V">
@@ -128,7 +130,7 @@ export default function Editor({
 								ErrorBoundary={LexicalErrorBoundary}
 							/>
 							<HistoryPlugin />
-							<AutoFocusPlugin />
+							{focus && <AutoFocusPlugin />}
 							<CodeHighlightPlugin />
 							<ListPlugin />
 							<LinkPlugin />

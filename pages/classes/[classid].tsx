@@ -212,7 +212,7 @@ const Class: NextPage = () => {
 										initialState={data.data?.full_description}
 										updatedState={edited ? editorState : undefined}
 										updateState={setEditorState}
-
+										focus={true}
 										//className=" "
 									/>
 									{isTeacher &&
@@ -252,12 +252,14 @@ const Class: NextPage = () => {
 						<Tab.Panel>
 							<h2 className="title mb-3">Announcements</h2>
 							<div className="space-y-3">
-								<AnnouncementPostingUI
-									communityid={classid as string}
-									isClass={true}
-									prevRefreshState={refreshAnnouncements}
-									refreshAnnouncements={setRefreshAnnouncements}
-								/>
+								{isTeacher && (
+									<AnnouncementPostingUI
+										communityid={classid as string}
+										isClass={true}
+										prevRefreshState={refreshAnnouncements}
+										refreshAnnouncements={setRefreshAnnouncements}
+									/>
+								)}
 
 								{data.data &&
 									data.data.announcements && //change below when I get actual types
