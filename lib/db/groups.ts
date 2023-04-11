@@ -2,10 +2,10 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "./database.types";
 
 export const getAllGroupsForUser = async (
-	supabaseClient: SupabaseClient<Database>,
+	supabase: SupabaseClient<Database>,
 	userID: string
 ) => {
-	return await supabaseClient
+	return await supabase
 		.from("users_groups")
 		.select(
 			`
@@ -21,9 +21,9 @@ export const getAllGroupsForUser = async (
 export type AllGroupsResponse = Awaited<ReturnType<typeof getAllGroupsForUser>>;
 
 export const getAllPublicGroups = async (
-	supabaseClient: SupabaseClient<Database>
+	supabase: SupabaseClient<Database>
 ) => {
-	return await supabaseClient
+	return await supabase
 		.from("groups")
 		.select(
 			`
@@ -42,10 +42,10 @@ export type PublicGroupsResponse = Awaited<
 >;
 
 export const getGroup = async (
-	supabaseClient: SupabaseClient<Database>,
+	supabase: SupabaseClient<Database>,
 	groupID: string
 ) => {
-	return await supabaseClient
+	return await supabase
 		.from("groups")
 		.select(
 			`
@@ -71,11 +71,11 @@ export const getGroup = async (
 export type GroupResponse = Awaited<ReturnType<typeof getGroup>>;
 
 export const addUserToGroup = async (
-	supabaseClient: SupabaseClient<Database>,
+	supabase: SupabaseClient<Database>,
 	groupID: string,
 	userID: string
 ) => {
-	return await supabaseClient.from("users_groups").insert({
+	return await supabase.from("users_groups").insert({
 		user_id: userID,
 		group_id: groupID,
 		group_leader: null,

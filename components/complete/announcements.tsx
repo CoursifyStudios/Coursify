@@ -11,7 +11,7 @@ import {
 	ClassOrGroupObject,
 	createNewAnnouncement,
 	crossPostAnnouncements,
-    getClassesAndGroups,
+	getClassesAndGroups,
 } from "../../lib/db/announcements";
 import { Database, Json } from "../../lib/db/database.types";
 import { getAllGroupsForUser } from "../../lib/db/groups";
@@ -115,9 +115,13 @@ export const AnnouncementPostingUI = ({
 
 	async function getCommunities() {
 		if (user && communities.length == 0) {
-            const dbResponse = await getClassesAndGroups(supabase, user.id);
+			const dbResponse = await getClassesAndGroups(supabase, user.id);
 			const groupsAndClasses: ClassOrGroupObject[] = [];
-			if (dbResponse.data && Array.isArray(dbResponse.data.users_classes) && Array.isArray(dbResponse.data.users_groups)) {
+			if (
+				dbResponse.data &&
+				Array.isArray(dbResponse.data.users_classes) &&
+				Array.isArray(dbResponse.data.users_groups)
+			) {
 				dbResponse.data.users_groups.map((group) => {
 					groupsAndClasses.push({
 						id: group.group_id,
@@ -216,14 +220,15 @@ export const AnnouncementPostingUI = ({
 						<Button
 							className="brightness-hover transition hover:bg-red-300"
 							onClick={() => {
-                                setChosenCommunities([]);
+								setChosenCommunities([]);
 								setShowPost(false);
 							}}
 						>
 							Cancel
 						</Button>
 						<Button
-							className="text-white" color="bg-blue-500"
+							className="text-white"
+							color="bg-blue-500"
 							onClick={async () => {
 								if (!isEditorEmpty(editorState) && !(title.length == 0)) {
 									setChosenCommunities((communities) =>
@@ -244,11 +249,11 @@ export const AnnouncementPostingUI = ({
 										communities
 									);
 									if (testing) setShowLoading(false);
-                                    setChosenCommunities([]);
+									setChosenCommunities([]);
 									refreshAnnouncements(!prevRefreshState);
 								}
 							}}
-                            disabled={isEditorEmpty(editorState) || title.length == 0}
+							disabled={isEditorEmpty(editorState) || title.length == 0}
 						>
 							Post
 						</Button>
