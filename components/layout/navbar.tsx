@@ -191,6 +191,10 @@ const Navbar: NextComponentType = () => {
 						onClick={(e) => (
 							e.stopPropagation(), handleClose(tab.name, selected)
 						)}
+                        //never thought I would have had to do that manually
+                        onKeyDown={(key) => key.key == "Enter" && (
+                            key.stopPropagation(), handleClose(tab.name, selected)
+                        )}
 						// apparently stop propigation doesn't work with nextjs links.
 						// I could use router.push(), but then we would have to be in charge of preloading pages
 						// I decicded to instead just make the text the link. It not great but is just works:tm:
