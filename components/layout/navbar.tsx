@@ -48,15 +48,24 @@ const Navbar: NextComponentType = () => {
 					(v, i) => hydrated && <TabUI key={i} canClose={true} tab={v} />
 				)}
 			</div>
-			<div className="flex w-72 grow flex-row-reverse items-center space-x-4 space-x-reverse">
-				<Menu className="relative !ml-2 flex flex-col items-center " as="div">
+			<div className="flex flex-grow-0 items-center space-x-4 ml-2">
+				<ButtonIcon icon={<MagnifyingGlassIcon className=" h-5 w-9" />} />
+				<ButtonIcon
+					icon={<CalendarDaysIcon className="h-5 w-5" />}
+					to="/calendar"
+				/>
+				<ButtonIcon
+					icon={<MegaphoneIcon className="h-5 w-5" />}
+					to="/announcements"
+				/>
+				<Menu className="relative !ml-4 flex flex-col items-center w-10" as="div">
 					<Menu.Button>
 						{user ? (
 							<img
 								src={user.user_metadata.picture}
 								alt="Profile picture"
 								referrerPolicy="no-referrer"
-								className=" rounded-full shadow-md shadow-black/25"
+								className=" rounded-full shadow-md shadow-black/25 w-10"
 								height={40}
 								width={40}
 							/>
@@ -148,15 +157,6 @@ const Navbar: NextComponentType = () => {
 						</div>
 					</Transition>
 				</Menu>
-				<ButtonIcon
-					icon={<MegaphoneIcon className="h-5 w-5" />}
-					to="/announcements"
-				/>
-				<ButtonIcon
-					icon={<CalendarDaysIcon className="h-5 w-5" />}
-					to="/calendar"
-				/>
-				<ButtonIcon icon={<MagnifyingGlassIcon className=" h-5 w-5 grow" />} />
 			</div>
 		</nav>
 	);
