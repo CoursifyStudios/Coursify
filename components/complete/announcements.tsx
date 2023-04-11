@@ -50,13 +50,13 @@ export const Announcement = ({
 				<EllipsisVerticalIcon className="h-6 w-6" />
 			</div>
 			<div className="flex items-center pt-1 pb-2">
-				<div className="inline-flex shrink-0 items-center rounded-full bg-gray-300 px-1 py-0.5">
+				<div tabIndex={0} className="inline-flex shrink-0 items-center rounded-full bg-gray-300 px-1 py-0.5">
 					<img
 						src={getDataOutArray(announcement.users!).avatar_url}
 						alt=""
 						className="h-5 w-5 rounded-full"
 					/>
-					<p className="ml-1.5 font-semibold text-neutral-700">
+					<p className="ml-1.5 mr-1 font-semibold text-neutral-700">
 						{getDataOutArray(announcement.users!).full_name}
 					</p>
 				</div>

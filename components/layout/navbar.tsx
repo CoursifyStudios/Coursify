@@ -187,6 +187,7 @@ const Navbar: NextComponentType = () => {
 				</Link>
 				{canClose && (
 					<XMarkIcon
+                        tabIndex={0}
 						onClick={(e) => (
 							e.stopPropagation(), handleClose(tab.name, selected)
 						)}
