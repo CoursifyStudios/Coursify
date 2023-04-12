@@ -114,6 +114,13 @@ export const Class: NextPage<{
 													<Link
 														href={`/profile/${user.id}`}
 														className=" flex flex-col items-center"
+														onClick={(e) => {
+                                                            e.stopPropagation();
+															newTab(
+																"/profile/" + user.id,
+																user.full_name.split(" ")[0] + "'s Profile"
+															);
+														}}
 													>
 														<div className="peer flex items-center rounded-full px-1 py-0.5 hover:bg-gray-300">
 															<img
