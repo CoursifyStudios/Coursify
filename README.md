@@ -1,4 +1,4 @@
-# Karasu
+# Courisfy
 
 ![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=karasu&style=for-the-badge&logo=true)
 
@@ -9,6 +9,16 @@
 <br />
 
 [![forthebadge](https://forthebadge.com/images/badges/uses-badges.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/it-works-why.svg)](https://forthebadge.com) ![Powered by green check marks badge](https://img.shields.io/badge/MADE%20POSSIBLE%20BY-12%20DOLLAR%20GREEN%20CHECKMARKS-brightgreen?style=for-the-badge)
+
+## Setting up Supabase Locally
+
+1. Download the [Supabase CLI](https://supabase.com/docs/guides/cli#installation) and [Docker](https://www.docker.com/products/docker-desktop/)
+
+2. Log into supabase by running `supabase login`
+
+3. Run `supabase start`. This might take a while, esspecilly if it's your first time running it. (You can use `supabase stop` to stop the docker container). Nesxt, run `yarn slink` to link to the Coursify project. **Ask Lukas for the password**
+
+4. Visit the [dashboard](http://localhost:54323)
 
 ## Clickup Wiki
 
