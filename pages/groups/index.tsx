@@ -10,7 +10,7 @@ export default function GroupDirectory() {
 	useEffect(() => {
 		(async () => {
 			const data = await getAllPublicGroups(supabase);
-			setAllGroupData(data);
+			setAllGroupData(undefined);
 		})();
 	}, [supabase]);
 
@@ -25,80 +25,100 @@ export default function GroupDirectory() {
 					<div>
 						<h1 className="title">Your Groups</h1>
 						<div className="mt-4 grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 ">
-							{allGroupData &&
-								allGroupData.data &&
-								allGroupData.data.map(
-									(group) =>
-										(!Array.isArray(group.users_groups) ||
-											group.users_groups.length != 0) && (
-											<GroupSmall
-												key={group.id}
-												id={group.id}
-												photo={group.image}
-												title={group.name!}
-												isLink={true}
-											/>
-										)
-								)}
+							{allGroupData?.data
+								? allGroupData.data.map(
+										(group) =>
+											(!Array.isArray(group.users_groups) ||
+												group.users_groups.length != 0) && (
+												<GroupSmall
+													key={group.id}
+													id={group.id}
+													photo={group.image}
+													title={group.name!}
+													isLink={true}
+												/>
+											)
+								  )
+								: [...Array(4)].map((_, i) => (
+										<div
+											key={i}
+											className="h-28 animate-pulse rounded-xl bg-gray-200"
+										></div>
+								  ))}
 						</div>
 					</div>
 					<div>
 						<h1 className="title">Featured Groups</h1>
 						<div className="scrollbar-fancy mt-4 flex snap-x snap-proximity space-x-5 overflow-x-auto">
-							{allGroupData &&
-								allGroupData.data &&
-								allGroupData.data.map(
-									(group) =>
-										group.featured && (
-											<GroupLarge
-												key={group.id}
-												id={group.id}
-												photo={group.image}
-												name={group.name!}
-												membernum={Math.floor(Math.random() * 2000)}
-												isLink={true}
-											/>
-										)
-								)}
+							{allGroupData?.data
+								? allGroupData.data.map(
+										(group) =>
+											group.featured && (
+												<GroupLarge
+													key={group.id}
+													id={group.id}
+													photo={group.image}
+													name={group.name!}
+													membernum={Math.floor(Math.random() * 2000)}
+													isLink={true}
+												/>
+											)
+								  )
+								: [...Array(3)].map((_, i) => (
+										<div
+											key={i}
+											className="h-40 w-64 animate-pulse rounded-xl bg-gray-200"
+										></div>
+								  ))}
 						</div>
 					</div>
 					<div>
 						<h1 className="title">Outdoors</h1>
 						<div className="scrollbar-fancy snap-priority mt-4 flex snap-x space-x-5 overflow-x-auto">
-							{allGroupData &&
-								allGroupData.data &&
-								allGroupData.data.map(
-									(group) =>
-										group.tags &&
-										group.tags.includes("outdoors") && (
-											<GroupLarge
-												key={group.id}
-												id={group.id}
-												photo={group.image}
-												name={group.name!}
-												membernum={Math.floor(Math.random() * 2000)}
-												isLink={true}
-											/>
-										)
-								)}
+							{allGroupData?.data
+								? allGroupData.data.map(
+										(group) =>
+											group.tags &&
+											group.tags.includes("outdoors") && (
+												<GroupLarge
+													key={group.id}
+													id={group.id}
+													photo={group.image}
+													name={group.name!}
+													membernum={Math.floor(Math.random() * 2000)}
+													isLink={true}
+												/>
+											)
+								  )
+								: [...Array(3)].map((_, i) => (
+										<div
+											key={i}
+											className="h-40 w-64 animate-pulse rounded-xl bg-gray-200"
+										></div>
+								  ))}
 						</div>
 						<h1 className="title mt-4">No Tags</h1>
 						<div className="mt-4 grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-							{allGroupData &&
-								allGroupData.data &&
-								allGroupData.data.map(
-									(group) =>
-										!group.tags && (
-											<GroupLarge
-												key={group.id}
-												id={group.id}
-												photo={group.image}
-												name={group.name!}
-												membernum={Math.floor(Math.random() * 2000)}
-												isLink={true}
-											/>
-										)
-								)}
+							{allGroupData?.data
+								? allGroupData.data.map(
+										(group) =>
+											!group.tags && (
+												<GroupLarge
+													key={group.id}
+													id={group.id}
+													photo={group.image}
+													name={group.name!}
+													membernum={Math.floor(Math.random() * 2000)}
+													isLink={true}
+												/>
+											)
+								  )
+								: [...Array(6)].map((_, i) => (
+										<div
+											key={i}
+											className="h-40 w-64 animate-pulse rounded-xl bg-gray-200"
+										></div>
+								  ))}
 						</div>
 					</div>
 				</div>
