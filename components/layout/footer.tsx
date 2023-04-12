@@ -24,7 +24,7 @@ export default function Footer() {
 						Coursify
 					</h3>
 					<p className="mt-4 flex flex-col items-center md:mt-1 md:flex-row ">
-						<span>© 2023 Coursify Studios.</span>{" "}
+						<span>© 2023 Coursify Studios.&nbsp;</span>
 						<span>Made with ❤️ in San Francisco.</span>
 					</p>
 				</div>

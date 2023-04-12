@@ -6,17 +6,17 @@ import {
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { ErrorMessage, Field, Form, Formik, useFormikContext } from "formik";
 import { EditorState } from "lexical";
+import Link from "next/link";
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
 import {
 	ClassOrGroupObject,
-	createNewAnnouncement,
 	crossPostAnnouncements,
 	getClassesAndGroups,
 } from "../../lib/db/announcements";
 import { Database, Json } from "../../lib/db/database.types";
-import { getAllGroupsForUser } from "../../lib/db/groups";
 import { getDataOutArray } from "../../lib/misc/dataOutArray";
 import { howLongAgo } from "../../lib/misc/formatDate";
+import { useTabs } from "../../lib/tabs/handleTabs";
 import Editor from "../editors/richeditor";
 import { Button } from "../misc/button";
 import Loading from "../misc/loading";
@@ -43,6 +43,7 @@ export const Announcement = ({
 			| null;
 	};
 }) => {
+	const { newTab } = useTabs();
 	return (
 		<div className="rounded-xl bg-gray-200 p-4">
 			<div className="flex items-center justify-between">
@@ -50,9 +51,14 @@ export const Announcement = ({
 				<EllipsisVerticalIcon className="h-6 w-6" />
 			</div>
 			<div className="flex items-center pt-1 pb-2">
-				<div
-					tabIndex={0}
-					className="inline-flex shrink-0 items-center rounded-full bg-gray-300 px-1 py-0.5"
+				<Link
+					href={"/profile/" + announcement.author}
+					className="inline-flex shrink-0 items-center rounded-full px-1 py-0.5 hover:bg-gray-300"
+					onClick={() => newTab(
+						"/profile/" + announcement.author,
+						getDataOutArray(announcement.users!).full_name.split(" ")[0] +
+							"'s Profile"
+					)}
 				>
 					<img
 						src={getDataOutArray(announcement.users!).avatar_url}
@@ -62,7 +68,7 @@ export const Announcement = ({
 					<p className="ml-1.5 mr-1 font-semibold text-neutral-700">
 						{getDataOutArray(announcement.users!).full_name}
 					</p>
-				</div>
+				</Link>
 				<p className="pl-2.5 text-gray-600">{howLongAgo(announcement.time!)}</p>
 			</div>
 			<Editor
