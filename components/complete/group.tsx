@@ -26,10 +26,7 @@ export const GroupSmall: NextPage<{
 	return <Groups />;
 	function Groups() {
 		return (
-			<div
-				className="brightness-hover	flex cursor-pointer select-none snap-start flex-col rounded-xl bg-gray-200 "
-				tabIndex={0}
-			>
+			<div className="brightness-hover	flex cursor-pointer select-none snap-start flex-col rounded-xl bg-gray-200 ">
 				<div className="relative h-16">
 					{photo ? (
 						<Image
@@ -74,7 +71,7 @@ export const GroupLarge: NextPage<{
 		return (
 			<div
 				className={
-					" flex w-[19rem] cursor-pointer snap-start flex-col rounded-xl bg-gray-200 transition duration-300 hover:shadow-lg hover:brightness-95 "
+					"flex w-[19rem] cursor-pointer snap-start flex-col rounded-xl bg-gray-200 transition duration-300 hover:shadow-lg hover:brightness-95 "
 				}
 			>
 				<div className="relative h-32 ">

@@ -21,7 +21,7 @@ import launch from "../../public/svgs/launch.svg";
 import noData from "../../public/svgs/no-data.svg";
 import Link from "next/link";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
-import { ButtonIcon } from "../../components/misc/button";
+import { Button, ButtonIcon } from "../../components/misc/button";
 import { AssignmentPreview } from "../../components/complete/assignments";
 import {
 	getSchedule,
@@ -310,12 +310,13 @@ const Post: NextPage = () => {
 											Submit assignment
 										</h2>
 									)}
-									<div
-										className="mt-6 inline-flex cursor-pointer rounded-md bg-blue-500 px-4 py-1 font-semibold text-white"
+									<Button
+										className="mt-6 inline-flex cursor-pointer rounded-md px-4 py-1 font-semibold text-white"
+										color="bg-blue-500"
 										onClick={() => setIsOpen(true)}
 									>
 										Submit
-									</div>
+									</Button>
 								</div>
 							</div>
 						</section>

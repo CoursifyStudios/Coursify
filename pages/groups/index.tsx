@@ -16,7 +16,7 @@ export default function GroupDirectory() {
 
 	return (
 		<div>
-			<div className="mx-auto my-10 w-full max-w-screen-xl">
+			<div className="mx-auto my-10 w-full max-w-screen-xl px-4">
 				<div className="space-y-3">
 					{/* <div className="flex w-1/3 items-center rounded-full bg-gray-300 p-1">
 						<MagnifyingGlassIcon className="ml-1 h-6 w-6" />
@@ -24,7 +24,7 @@ export default function GroupDirectory() {
 					</div> */}
 					<div>
 						<h1 className="title">Your Groups</h1>
-						<div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-5 ">
+						<div className="mt-4 grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 ">
 							{allGroupData &&
 								allGroupData.data &&
 								allGroupData.data.map(
@@ -83,7 +83,7 @@ export default function GroupDirectory() {
 								)}
 						</div>
 						<h1 className="title mt-4">No Tags</h1>
-						<div className="mt-4 grid gap-6 md:grid-cols-3 xl:grid-cols-4 ">
+						<div className="mt-4 grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 							{allGroupData &&
 								allGroupData.data &&
 								allGroupData.data.map(
