@@ -92,7 +92,7 @@ const Group: NextPage = () => {
 						</Tab>
 					</Tab.List>
 					<Tab.Panels>
-						<Tab.Panel>
+						<Tab.Panel tabIndex={-1}>
 							<div className="mb-6 rounded-xl bg-gray-200 p-4">
 								<p className="text-lg">{groupData?.data?.description}</p>
 							</div>
@@ -133,8 +133,8 @@ const Group: NextPage = () => {
 										))}
 							</div>
 						</Tab.Panel>
-						<Tab.Panel></Tab.Panel>
-						<Tab.Panel>
+						<Tab.Panel tabIndex={-1}></Tab.Panel>
+						<Tab.Panel tabIndex={-1}>
 							<div className="grid grid-cols-3 gap-4">
 								{groupData &&
 									groupData.data &&
