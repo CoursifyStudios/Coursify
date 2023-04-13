@@ -65,13 +65,14 @@ const Class: NextPage = () => {
 			if (user && typeof classid == "string") {
 				const data = await getClass(supabase, classid);
 				setData(data);
-				if (data.data && Array.isArray(data.data.users_classes)) {
+				console.log(data);
+				if (data.data && Array.isArray(data.data.class_users)) {
 					//grades are temporarily done like this until we figure out assignment submissions
 					setGrade(
-						data.data.users_classes.find((v) => v.user_id == user.id)?.grade
+						data.data.class_users.find((v) => v.user_id == user.id)?.grade
 					);
 					setIsTeacher(
-						data.data.users_classes.find((v) => v.user_id == user.id)?.teacher
+						data.data.class_users.find((v) => v.user_id == user.id)?.teacher
 					);
 				}
 			}
@@ -307,9 +308,9 @@ const Class: NextPage = () => {
 													referrerPolicy="no-referrer"
 													className=" h-10 min-w-[2.5rem] rounded-full shadow-md shadow-black/25"
 												/>
-												{data.data.users_classes &&
-													Array.isArray(data.data.users_classes) && // based on my testing it will always return an array, doing this to make ts happy
-													data.data.users_classes.find(
+												{data.data.class_users &&
+													Array.isArray(data.data.class_users) && // based on my testing it will always return an array, doing this to make ts happy
+													data.data.class_users.find(
 														(userValue) =>
 															userValue.teacher && user.id == userValue.user_id
 													) && (
@@ -364,13 +365,12 @@ const Class: NextPage = () => {
 								</h3>
 							</div>
 						)}
-						{Array.isArray(data.data?.assignments) &&
+						{data.data?.assignments &&
 							user &&
-							data.data?.assignments.map((assignment) => (
-								<div // no longer needs to be a lonk
+							getDataInArray(data.data?.assignments).map((assignment) => (
+								<div
 									key={assignment.id}
 									className=" brightness-hover flex rounded-xl bg-gray-200 p-3"
-									//href={"/assignments/" + assignment.id}
 								>
 									<AssignmentPreview
 										supabase={supabase}

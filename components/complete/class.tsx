@@ -89,13 +89,13 @@ export const Class: NextPage<{
 						</ColoredPill>
 					</div>
 					<div className="mt-2 flex flex-wrap items-center">
-						{"users_classes" in classData &&
+						{"class_users" in classData &&
 							"users" in classData &&
-							(Array.isArray(classData.users_classes!) ? (
-								classData.users_classes!.filter((userData) => userData.teacher)
+							(Array.isArray(classData.class_users!) ? (
+								classData.class_users!.filter((userData) => userData.teacher)
 									.length > 0 ? (
 									classData
-										.users_classes!.filter((userData) => userData.teacher)
+										.class_users!.filter((userData) => userData.teacher)
 										.map((userData, i) => {
 											const user = !Array.isArray(classData.users!)
 												? classData.users!
@@ -115,7 +115,7 @@ export const Class: NextPage<{
 														href={`/profile/${user.id}`}
 														className=" flex flex-col items-center"
 														onClick={(e) => {
-                                                            e.stopPropagation();
+															e.stopPropagation();
 															newTab(
 																"/profile/" + user.id,
 																user.full_name.split(" ")[0] + "'s Profile"
@@ -123,6 +123,7 @@ export const Class: NextPage<{
 														}}
 													>
 														<div className="peer flex items-center rounded-full px-1 py-0.5 hover:bg-gray-300">
+															{/* eslint-disable-next-line @next/next/no-img-element */}
 															<img
 																src={user.avatar_url}
 																alt="Profile picture"
@@ -150,7 +151,7 @@ export const Class: NextPage<{
 								)
 							) : Array.isArray(classData.users) ? (
 								<p>An unknown error occured</p>
-							) : classData.users_classes?.teacher ? (
+							) : classData.class_users?.teacher ? (
 								<p>{classData.users?.full_name}</p>
 							) : (
 								<p className="text-sm italic text-gray-700">No teacher</p>

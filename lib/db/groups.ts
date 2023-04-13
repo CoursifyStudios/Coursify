@@ -6,7 +6,7 @@ export const getAllGroupsForUser = async (
 	userID: string
 ) => {
 	return await supabase
-		.from("users_groups")
+		.from("group_user")
 		.select(
 			`
         *,
@@ -28,7 +28,7 @@ export const getAllPublicGroups = async (
 		.select(
 			`
         *,
-        users_groups (
+        group_user (
             user_id, group_id
         )
 
@@ -56,7 +56,7 @@ export const getGroup = async (
                 avatar_url, full_name
             )
         ),
-        users_groups (
+        group_user (
             user_id, group_leader
         ),
         users (
@@ -75,7 +75,7 @@ export const addUserToGroup = async (
 	groupID: string,
 	userID: string
 ) => {
-	return await supabase.from("users_groups").insert({
+	return await supabase.from("group_user").insert({
 		user_id: userID,
 		group_id: groupID,
 		group_leader: null,
