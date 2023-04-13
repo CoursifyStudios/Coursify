@@ -63,9 +63,9 @@ const Class: NextPage = () => {
 	useEffect(() => {
 		(async () => {
 			if (user && typeof classid == "string") {
+				setData(undefined);
 				const data = await getClass(supabase, classid);
 				setData(data);
-				console.log(data);
 				if (data.data && Array.isArray(data.data.class_users)) {
 					//grades are temporarily done like this until we figure out assignment submissions
 					setGrade(
