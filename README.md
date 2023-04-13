@@ -20,7 +20,7 @@ Coursify
   <a href="#setup">Setup</a> •
   <a href="#styling">Styling</a> •
   <a href="#tracking">Tracking</a> •
-  <a href="#related">Credits</a> •
+  <a href="#credits">Credits</a> •
 </p>
 
 ![Coursify](https://cdn.discordapp.com/attachments/984948771198746725/1095847122630361300/Previewprojectpreview.png)
