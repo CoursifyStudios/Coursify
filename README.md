@@ -11,8 +11,9 @@ Coursify
 <p align="center" >
   <img src="https://forthebadge.com/images/badges/it-works-why.svg">
   <img src="https://forthebadge.com/images/featured/featured-built-with-love.svg" height=35 >
-  <img src="https://forthebadge.com/images/badges/made-with-typescript.svg">
+  <img src="https://hhrehffmdrcjqowwvgqg.supabase.co/storage/v1/object/public/cdn/assets/Coursify/for-students-by-students.svg">
   <img src="https://forthebadge.com/images/badges/powered-by-comcast.svg">
+
 </p>
 
 <p align="center">
@@ -84,7 +85,7 @@ While there aren't currently any style or brand guidelines, we do have a few rul
   - For regular buttons use the [Button](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/button.tsx#L5-L13) component.
   - For icons use the [Button Icon](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/button.tsx#L23-L45) component.
   - In the event that a fake button is required, to add accessibility by screen readers and keyboard navigation, add `tabIndex={0}`.
-- For tooltip's the user can copy, use the [Copied Hover](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/pill.tsx#L34-L72) component.
+- For tooltips the user can copy, use the [Copied Hover](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/pill.tsx#L34-L72) component.
 
 ### Examples
 
@@ -101,6 +102,8 @@ While there aren't currently any style or brand guidelines, we do have a few rul
 ### Features
 
 We use [github projects](https://github.com/orgs/CoursifyStudios/projects/5/views/2) for overall feature tracking. This means that if you are working something or have a feature idea, it should be there.
+
+Certain pages in development may have feature specific tracking which can be found [here](https://github.com/orgs/CoursifyStudios/projects).
 
 ### Bugs
 
