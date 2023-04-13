@@ -1,3 +1,84 @@
+<h1 align="center">
+  <br>
+  <a href="https://coursify.dev" target="_blank"><img src="https://cdn.discordapp.com/attachments/1018976233884749917/1095927183001796628/logo.png" alt="Coursify" width="200"></a>
+  <br>
+Coursify
+  <br>
+</h1>
+
+<h4 align="center">A next generation <a href="https://en.wikipedia.org/wiki/Learning_management_system">learning management system</a></h4>
+
+<p align="center" >
+  <img src="https://forthebadge.com/images/badges/it-works-why.svg">
+  <img src="https://forthebadge.com/images/featured/featured-built-with-love.svg" height=35 >
+  <img src="https://forthebadge.com/images/badges/made-with-typescript.svg">
+  <img src="https://forthebadge.com/images/badges/powered-by-comcast.svg">
+</p>
+
+<p align="center">
+  <a href="#features">Features</a> •
+  <a href="#setup">Setup</a> •
+  <a href="#Styling">Styling</a> •
+  <a href="#credits">Credits</a> •
+  <a href="#related">Related</a> •
+  <a href="#license">License</a>
+</p>
+
+![Coursify](https://cdn.discordapp.com/attachments/984948771198746725/1095847122630361300/Previewprojectpreview.png)
+
+## Features
+
+- Integrated Tabs - Stay in your tab and streamline your workflow
+  - Pages within Coursify automatically open up within our internal tab system.
+- Accurate Schedule
+  - Schedules automatically take into account the school schedule and class type to show your personal schedule and reduce confusion.
+- Rich Assignment Types
+  - Support for multiple different assignment types including link submissions, checkboxes, and google media.
+- Centralized Assignment Page
+  - Never lose track of your tasks - find and sort your assignments in one place.
+- Sleek and simple design
+- Advanced Search
+- [Rich Text Editor](https://github.com/CoursifyStudios/Dawn)
+- OAuth 2.0 Login using Google
+- Dark/Light mode
+
+## Setup
+
+### Web Interface
+
+To clone and run this application, you'll need [Git](https://git-scm.com) and [Yarn](https://classic.yarnpkg.com/en/) installed on your computer. After cloning the repo locally in your IDE, from your command line:
+
+```bash
+# Install dependencies
+$ yarn
+
+# Run the app
+$ yarn dev
+```
+
+Next, create a `.env.local` file and populate it with the following variables
+
+```
+NEXT_PUBLIC_SUPABASE_URL=https://cdn.coursify.one
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocmVoZmZtZHJjanFvd3d2Z3FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Njc1MjEyNjgsImV4cCI6MTk4MzA5NzI2OH0.f2YZkZDHL_E81DbpgnwloXUHQ9n7aCW4DF_VNMDcuqM
+```
+
+### Supabase
+
+## Styling
+
+## Credits
+
+This software uses the following open source packages:
+
+- [Electron](http://electron.atom.io/)
+- [Node.js](https://nodejs.org/)
+- [Marked - a markdown parser](https://github.com/chjj/marked)
+- [showdown](http://showdownjs.github.io/showdown/)
+- [CodeMirror](http://codemirror.net/)
+- Emojis are taken from [here](https://github.com/arvida/emoji-cheat-sheet.com)
+- [highlight.js](https://highlightjs.org/)
+
 # Courisfy
 
 ![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=karasu&style=for-the-badge&logo=true)
