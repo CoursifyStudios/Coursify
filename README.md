@@ -18,10 +18,9 @@ Coursify
 <p align="center">
   <a href="#features">Features</a> •
   <a href="#setup">Setup</a> •
-  <a href="#Styling">Styling</a> •
-  <a href="#credits">Credits</a> •
-  <a href="#related">Related</a> •
-  <a href="#license">License</a>
+  <a href="#styling">Styling</a> •
+  <a href="#tracking">Tracking</a> •
+  <a href="#related">Credits</a> •
 </p>
 
 ![Coursify](https://cdn.discordapp.com/attachments/984948771198746725/1095847122630361300/Previewprojectpreview.png)
@@ -65,69 +64,29 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd
 
 ### Supabase
 
-## Styling
-
-## Credits
-
-This software uses the following open source packages:
-
-- [Electron](http://electron.atom.io/)
-- [Node.js](https://nodejs.org/)
-- [Marked - a markdown parser](https://github.com/chjj/marked)
-- [showdown](http://showdownjs.github.io/showdown/)
-- [CodeMirror](http://codemirror.net/)
-- Emojis are taken from [here](https://github.com/arvida/emoji-cheat-sheet.com)
-- [highlight.js](https://highlightjs.org/)
-
-# Courisfy
-
-![Vercel](https://therealsujitk-vercel-badge.vercel.app/?app=karasu&style=for-the-badge&logo=true)
-
-<br />
-
-![For students by students badge](https://img.shields.io/badge/FOR%20STUDENTS-BY%20STUDENTS-blueviolet?style=for-the-badge)
-
-<br />
-
-[![forthebadge](https://forthebadge.com/images/badges/uses-badges.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/powered-by-black-magic.svg)](https://forthebadge.com) [![forthebadge](https://forthebadge.com/images/badges/it-works-why.svg)](https://forthebadge.com) ![Powered by green check marks badge](https://img.shields.io/badge/MADE%20POSSIBLE%20BY-12%20DOLLAR%20GREEN%20CHECKMARKS-brightgreen?style=for-the-badge)
-
-## Setting up Supabase Locally
-
 1. Download the [Supabase CLI](https://supabase.com/docs/guides/cli#installation) and [Docker](https://www.docker.com/products/docker-desktop/)
 
-2. Log into supabase by running `supabase login`
+2. Log into supabase by running `supabase login` or if installed by npm `npx supabase login`
 
-3. Run `supabase start`. This might take a while, esspecilly if it's your first time running it. (You can use `supabase stop` to stop the docker container). Nesxt, run `yarn slink` to link to the Coursify project. **Ask Lukas for the password**
+3. Run `supabase start`. This might take a while, especilly if it's your first time running it. (You can use `supabase stop` to stop the docker container). Next, run `yarn slink` to link to the Coursify project. **Ask Lukas for the password**
 
 4. Visit the [dashboard](http://localhost:54323)
 
-## Clickup Wiki
+## Styling
 
-Certain important things are written on our [Clickup wiki](https://app.clickup.com/42080348/docs), like how to fetch data with supabase, or how to use our custom draggable components. Clickup is no longer used as an issue tracker, please see the [project tracking](#project-tracking) section below.
+While there aren't currently any style or brand guidelines, we do have a few rules to keep in mind when styling components/pages for Coursify.
 
-If you're creating a new page, please try to adhere to these rules:
+- For **primary backgrounds** use `gray-200` and in the event gray on gray use `gray-300`
+  - If you need more grays, you're doing something wrong.
+- All pages should use `max-w-screen-xl` and have borders with `px-4 md:px-8 xl:px-0`
+- For creating labels, use the [Pill](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/pill.tsx#L5-L32) component.
+- For styling buttons there are two options:
+  - For regular buttons use the [Button](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/button.tsx#L5-L13) component.
+  - For icons use the [Button Icon](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/button.tsx#L23-L45) component.
+  - In the event that a fake button is required, to add accessibility by screen readers and keyboard navigation, add `tabIndex={0}`.
+- For tooltip's the user can copy, use the [Copied Hover](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/pill.tsx#L34-L72) component.
 
-- Use the default font. Don't write it in some weird serif font.
-- Articles should be simple and to the point. Roundabout explanations using the MLA format waste peoples time.
-- Explain with code. Rather than trying to describe the way something works in a long paragraph, try to lean on code examples as much as possible, while using writing to add context and reasoning.
-
-## Project Tracking
-
-We use [github projects](https://github.com/orgs/CoursifyStudios/projects/5/views/2) for project tracking. This means that if you are working something or have a feature idea, it should be there.
-Suggestions for new setttings on the settings page should not go on the primary project tracking sheet, and should instead go on the [settings suggestions](https://github.com/orgs/CoursifyStudios/projects/6/views/1) sheet.
-
-## Style Guide:
-
-- Use gray 200 for backgrounds when you need a gray. For gray on gray, use gray 300. If you need a gray on top of a gray on top of a gray, you're doing something wrong.
-- For labels, use the [Pill](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/pill.tsx#L5-L32) component.
-- For buttons, use the [Button](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/button.tsx#L5-L13) component, or the [ButtonIcon](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/button.tsx#L23-L45) component for using an icon as a button
-  - If for whatever reason you make a fake button that is not accessible by screen readers and keyboard navigation, add tabIndex={0}.
-- If you need a tooltip the user can copy, use the [CopiedHover](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/pill.tsx#L34-L72) component. A tooltip component is coming soon.
-- Pages should use `max-w-screen-xl` and have borders like this: `px-4 md:px-8 xl:px-0`
-
-### Examples:
-
-_Some of these can be combined/used in other ways_
+### Examples
 
 **Pill with CopedHover**
 
@@ -137,4 +96,33 @@ _Some of these can be combined/used in other ways_
 </CopiedHover>
 ```
 
-You can view Brandon's unfinished style guide [here](https://app.clickup.com/42080348/v/dc/18462w-160/18462w-300)
+## Tracking
+
+### Features
+
+We use [github projects](https://github.com/orgs/CoursifyStudios/projects/5/views/2) for overall feature tracking. This means that if you are working something or have a feature idea, it should be there.
+
+### Bugs
+
+When you find a bug be sure to [report it](https://github.com/CoursifyStudios/Coursify/issues/new) by creating a new issue tagged as a "bug". Be sure to include as many useful details as possible such as screenshots, steps for recreation if necessary, intended behavior, etc. When fixing bugs, be sure to link the original issue to the pull request.
+
+## Credits
+
+The Coursify Studios core team consists of:
+
+- [Blocksnmore](https://github.com/Blocksnmore)
+- [brandnholl](https://github.com/brandnholl)
+- [IllGive](https://github.com/IllGive)
+- [quick007](https://github.com/quick007)
+
+Coursify uses the following open source packages:
+
+- [React](http://electron.atom.io/)
+- [NextJS](https://nodejs.org/)
+- [TailwindCSS](https://github.com/chjj/marked)
+- [Supabase](http://showdownjs.github.io/showdown/)
+- [Lexical](http://codemirror.net/)
+- [HeroIcons](https://highlightjs.org/)
+- [HeadlessUI]()
+
+.. and many more.
