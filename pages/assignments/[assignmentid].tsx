@@ -33,9 +33,7 @@ import {
 } from "../../lib/db/schedule";
 import Editor from "../../components/editors/richeditor";
 import { Transition, Dialog } from "@headlessui/react";
-import { getIcon } from "../../components/complete/achievement";
-import { formatDate } from "../../lib/misc/formatDate";
-import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
+import { getDataOutArray } from "../../lib/misc/dataOutArray";
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
@@ -49,6 +47,7 @@ const Post: NextPage = () => {
 	const { assignmentid } = router.query;
 	const [fullscreen, setFullscreen] = useState(false);
 
+	// Gets the data from the db
 	useEffect(() => {
 		(async () => {
 			if (user && !allAssignments) {
@@ -56,6 +55,7 @@ const Post: NextPage = () => {
 				setAllAssignments(assignments);
 				console.log(assignments);
 			}
+			// In theory, most people will have the schedule already cached. This is a bandaid solution and won't be used later on
 			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
 				JSON.parse(sessionStorage.getItem("schedule")!);
 			if (allSchedules && allSchedules.length != 0) {
@@ -76,24 +76,29 @@ const Post: NextPage = () => {
 				user &&
 				router.isReady &&
 				typeof assignmentid == "string" &&
-				assignmentid != "0"
+				assignmentid != "0" &&
+				assignment &&
+				assignment?.data &&
+				assignment?.data.id != assignmentid
 			) {
 				setAssignment(undefined);
 				const assignment = await getAssignment(supabase, assignmentid);
 				setAssignment(assignment);
 			}
 		})();
+		// Mobile support makes it sorta like using gmail on mobile, optimized for assignments
 		if (router.isReady && assignmentid != "0" && window.innerWidth < 768) {
 			setFullscreen(true);
 		}
 	}, [user, supabase, router, assignmentid]);
 
 	return (
+		// Left pane
 		<div className="mx-auto flex w-full max-w-screen-xl px-4 pt-6 pb-6 md:px-8 xl:px-0">
 			<div
 				className={`scrollbar-fancy mr-4 grow items-stretch overflow-x-clip md:grow-0 ${
 					fullscreen ? "hidden" : "flex"
-				} w-[20.5rem] shrink-0 snap-y snap-mandatory flex-col space-y-5 overflow-y-auto pb-6 md:h-[calc(100vh-6.5rem)] `}
+				} w-[20.5rem] shrink-0 flex-col space-y-5 overflow-y-auto p-1 pb-6 md:h-[calc(100vh-6.5rem)] `}
 			>
 				{allAssignments ? (
 					!allAssignments.error &&
@@ -103,13 +108,14 @@ const Post: NextPage = () => {
 						(assignment) =>
 							assignment.classes && (
 								<div
-									className={`flex snap-start rounded-xl ${
+									className={`flex rounded-xl ${
 										assignmentid == assignment.id
-											? "bg-gray-50 shadow-xl"
+											? "bg-gray-50 shadow-lg"
 											: "brightness-hover bg-gray-200"
 									} p-3`}
 									key={assignment.id}
 								>
+									{/* List of assignments */}
 									<AssignmentPreview
 										supabase={supabase}
 										assignment={{
@@ -162,6 +168,7 @@ const Post: NextPage = () => {
 			(!assignment && assignmentid != "0")
 		) {
 			return (
+				// Loading state
 				<div className=" flex grow flex-col">
 					<ColoredPill color="gray" className="mr-auto animate-pulse">
 						<span className="invisible">trojker</span>
@@ -185,6 +192,7 @@ const Post: NextPage = () => {
 		}
 
 		if (assignmentid == "0") {
+			// 0 is a placeholder for when the user hasn't selected an assignment yet
 			return (
 				<div className="m-auto flex flex-col items-center">
 					<Image
@@ -221,6 +229,7 @@ const Post: NextPage = () => {
 			return (
 				<>
 					<div className="flex grow flex-col">
+						{/* Top part of main window */}
 						<section className="flex items-start justify-between">
 							<div className="mr-4 grow lg:max-w-lg xl:max-w-xl">
 								<Link
@@ -285,6 +294,7 @@ const Post: NextPage = () => {
 								</div>
 							</div>
 						</section>
+						{/* Submission and assignment details */}
 						<section className="scrollbar-fancy relative mt-5 flex flex-1 flex-col-reverse overflow-y-auto overflow-x-hidden whitespace-pre-line md:pr-2 xl:flex-row">
 							<div className="flex grow flex-col">
 								<h2 className="text-xl font-semibold">Details</h2>
@@ -364,7 +374,7 @@ const Post: NextPage = () => {
 				</>
 			);
 		}
-
+		// Typescript wanted me to do this. The user shouldn't ever encounter this state
 		return <div>An unknown error occured. Assignment id: {assignmentid}</div>;
 	}
 };
