@@ -53,7 +53,6 @@ const Post: NextPage = () => {
 			if (user && !allAssignments) {
 				const assignments = await getAllAssignments(supabase);
 				setAllAssignments(assignments);
-				console.log(assignments);
 			}
 			// In theory, most people will have the schedule already cached. This is a bandaid solution and won't be used later on
 			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =

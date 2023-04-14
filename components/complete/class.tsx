@@ -42,10 +42,11 @@ export const Class: NextPage<{
 				<div className="relative h-32 ">
 					<Image
 						src={classData?.image ? classData.image : exampleImage}
-						loading="eager"
+						//loading="eager"
 						alt="Example Image"
 						className="rounded-t-xl object-cover object-center"
-						fill
+						width={700}
+						height={128}
 					/>
 					<div className="absolute top-2 right-2 left-2 flex items-center justify-between space-x-2">
 						{classData.room && (

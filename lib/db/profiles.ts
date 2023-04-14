@@ -10,7 +10,7 @@ export const getProfile = async (
 		.select(
 			`
 			*, 
-			users_achievements (
+			user_achievements (
 				*, 
 				achievements (
 					*

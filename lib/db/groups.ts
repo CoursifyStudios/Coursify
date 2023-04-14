@@ -6,7 +6,7 @@ export const getAllGroupsForUser = async (
 	userID: string
 ) => {
 	return await supabase
-		.from("group_user")
+		.from("group_users")
 		.select(
 			`
         *,
