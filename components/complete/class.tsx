@@ -39,12 +39,12 @@ export const Class: NextPage<{
 					className
 				}
 			>
-				<div className="relative h-32 ">
+				<div className="">
 					<Image
 						src={classData?.image ? classData.image : exampleImage}
 						//loading="eager"
 						alt="Example Image"
-						className="rounded-t-xl object-cover object-center"
+						className="h-32 rounded-t-xl object-cover object-center"
 						width={700}
 						height={128}
 					/>
