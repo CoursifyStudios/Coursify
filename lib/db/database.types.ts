@@ -66,12 +66,13 @@ export interface Database {
 			};
 			assignments: {
 				Row: {
-					class_id: string | null;
+					class_id: string;
 					content: Json | null;
 					created_date: string | null;
 					description: string;
 					due_date: string;
 					due_type: number | null;
+					group_id: string | null;
 					id: string;
 					name: string;
 					publish_date: string | null;
@@ -80,12 +81,13 @@ export interface Database {
 					submission_type: string | null;
 				};
 				Insert: {
-					class_id?: string | null;
+					class_id: string;
 					content?: Json | null;
 					created_date?: string | null;
 					description: string;
 					due_date?: string;
 					due_type?: number | null;
+					group_id?: string | null;
 					id?: string;
 					name: string;
 					publish_date?: string | null;
@@ -94,12 +96,13 @@ export interface Database {
 					submission_type?: string | null;
 				};
 				Update: {
-					class_id?: string | null;
+					class_id?: string;
 					content?: Json | null;
 					created_date?: string | null;
 					description?: string;
 					due_date?: string;
 					due_type?: number | null;
+					group_id?: string | null;
 					id?: string;
 					name?: string;
 					publish_date?: string | null;

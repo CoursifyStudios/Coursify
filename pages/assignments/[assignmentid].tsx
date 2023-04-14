@@ -22,7 +22,10 @@ import noData from "../../public/svgs/no-data.svg";
 import Link from "next/link";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import { Button, ButtonIcon } from "../../components/misc/button";
-import { AssignmentPreview } from "../../components/complete/assignments";
+import {
+	AssignmentPreview,
+	DueType,
+} from "../../components/complete/assignments";
 import {
 	getSchedule,
 	ScheduleInterface,
@@ -32,6 +35,7 @@ import Editor from "../../components/editors/richeditor";
 import { Transition, Dialog } from "@headlessui/react";
 import { getIcon } from "../../components/complete/achievement";
 import { formatDate } from "../../lib/misc/formatDate";
+import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
@@ -47,9 +51,10 @@ const Post: NextPage = () => {
 
 	useEffect(() => {
 		(async () => {
-			if (user) {
+			if (user && !allAssignments) {
 				const assignments = await getAllAssignments(supabase);
 				setAllAssignments(assignments);
+				console.log(assignments);
 			}
 			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
 				JSON.parse(sessionStorage.getItem("schedule")!);
@@ -94,43 +99,40 @@ const Post: NextPage = () => {
 					!allAssignments.error &&
 					user &&
 					schedule &&
-					allAssignments.data.map((assignment) => (
-						<div //linking is now build in haha
-							className={`flex snap-start rounded-xl ${
-								assignmentid == assignment.id
-									? "bg-gray-50 shadow-xl"
-									: "brightness-hover bg-gray-200"
-							} p-3`}
-							//href={"/assignments/" + assignment.id}
-							key={assignment.id}
-						>
-							<AssignmentPreview
-								supabase={supabase} //@ts-ignore
-								assignment={assignment}
-								userId={user.id}
-								starredAsParam={
-									assignment.starred
-										? Array.isArray(assignment.starred)
-											? assignment.starred.length > 0
-											: !!assignment.starred
-										: false
-								}
-								//obviously we need a better solution
-								schedule={schedule!}
-								scheduleT={scheduleT!}
-								showClassPill={true}
-								//@ts-ignore
-								classes={
-									(assignment.classes_assignments &&
-									Array.isArray(assignment.classes_assignments)
-										? Array.isArray(assignment.classes_assignments[0].classes)
-											? assignment.classes_assignments[0].classes[0]
-											: assignment.classes_assignments[0].classes
-										: assignment.classes_assignments)!
-								}
-							/>
-						</div>
-					))
+					allAssignments.data.map(
+						(assignment) =>
+							assignment.classes && (
+								<div
+									className={`flex snap-start rounded-xl ${
+										assignmentid == assignment.id
+											? "bg-gray-50 shadow-xl"
+											: "brightness-hover bg-gray-200"
+									} p-3`}
+									key={assignment.id}
+								>
+									<AssignmentPreview
+										supabase={supabase}
+										assignment={{
+											...assignment,
+											due_type: assignment.due_type || DueType.DATE,
+										}}
+										userId={user.id}
+										starredAsParam={
+											assignment.starred
+												? Array.isArray(assignment.starred)
+													? assignment.starred.length > 0
+													: !!assignment.starred
+												: false
+										}
+										//obviously we need a better solution
+										schedule={schedule!}
+										scheduleT={scheduleT!}
+										showClassPill={true}
+										classes={getDataOutArray(assignment.classes)}
+									/>
+								</div>
+							)
+					)
 				) : (
 					<>
 						{[...Array(3)].map((_, i) => (
