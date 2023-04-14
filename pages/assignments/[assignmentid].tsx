@@ -76,9 +76,9 @@ const Post: NextPage = () => {
 				router.isReady &&
 				typeof assignmentid == "string" &&
 				assignmentid != "0" &&
-				assignment &&
-				assignment?.data &&
-				assignment?.data.id != assignmentid
+				(assignment
+					? assignment?.data && assignment?.data.id != assignmentid
+					: true)
 			) {
 				setAssignment(undefined);
 				const assignment = await getAssignment(supabase, assignmentid);
