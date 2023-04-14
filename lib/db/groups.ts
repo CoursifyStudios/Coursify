@@ -28,7 +28,7 @@ export const getAllPublicGroups = async (
 		.select(
 			`
         *,
-        group_user (
+        group_users (
             user_id, group_id
         )
 

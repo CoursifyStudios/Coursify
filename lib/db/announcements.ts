@@ -80,7 +80,7 @@ export const getClassesAndGroups = async (
                 name
             )
         ), 
-        group_user (
+        group_users (
             *,
             groups (
                 name

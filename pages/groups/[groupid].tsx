@@ -143,7 +143,7 @@ const Group: NextPage = () => {
 											key={user!.id}
 											user={user!}
 											leader={
-												getDataInArray(groupData.data.users_groups).find(
+												getDataInArray(groupData.data.group_user).find(
 													(userInUsersGroups) =>
 														user?.id == userInUsersGroups?.user_id
 												)?.group_leader
