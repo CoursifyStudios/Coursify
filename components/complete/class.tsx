@@ -58,7 +58,6 @@ export const Class: NextPage<{
 							</ColoredPill>
 						)}
 						<div className="flex items-center">
-							{/* <CircleCounter small amount={50} max={100} /> */}
 							<h2
 								className={`text-xl text-${classData.color}-300 ml-2 rounded-lg bg-neutral-500/20 px-2 font-bold opacity-75 backdrop-blur-xl`}
 							>
@@ -67,7 +66,7 @@ export const Class: NextPage<{
 						</div>
 					</div>
 				</div>
-				<div className="flex flex-grow flex-col  p-4 ">
+				<div className="flex flex-grow flex-col p-4">
 					<div className="flex items-start justify-between">
 						<h3 className="break-words text-xl font-semibold line-clamp-2">
 							{classData.name}
