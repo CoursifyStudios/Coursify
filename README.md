@@ -21,7 +21,8 @@ Coursify
   <a href="#setup">Setup</a> •
   <a href="#styling">Styling</a> •
   <a href="#tracking">Tracking</a> •
-  <a href="#credits">Credits</a> •
+  <a href="#wiki">Wiki</a> •
+  <a href="#credits">Credits</a>
 </p>
 
 ![Coursify](https://cdn.discordapp.com/attachments/984948771198746725/1095847122630361300/Previewprojectpreview.png)
@@ -69,7 +70,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd
 
 2. Log into supabase by running `supabase login` or if installed by npm `npx supabase login`
 
-3. Run `supabase start`. This might take a while, especilly if it's your first time running it. (You can use `supabase stop` to stop the docker container). Next, run `yarn slink` to link to the Coursify project. **Ask Lukas for the password**
+3. Run `supabase start`. This might take a while, especilly if it's your first time running it. (You can use `supabase stop` to stop the docker container). Next, run `yarn link` to link to the Coursify project. **Ask Lukas for the password**
 
 4. Visit the [dashboard](http://localhost:54323)
 
@@ -109,6 +110,16 @@ Certain pages in development may have feature specific tracking which can be fou
 
 When you find a bug be sure to [report it](https://github.com/CoursifyStudios/Coursify/issues/new) by creating a new issue tagged as a "bug". Be sure to include as many useful details as possible such as screenshots, steps for recreation if necessary, intended behavior, etc. When fixing bugs, be sure to link the original issue to the pull request.
 
+## Wiki
+
+Certain important things are written on our [Clickup wiki](https://app.clickup.com/42080348/docs), like how to fetch data with supabase, or how to use our custom draggable components.
+
+If you're creating a new page, please try to adhere to these rules:
+
+- Use the default font. Don't write it in some weird serif font.
+- Articles should be simple and to the point. Roundabout explanations using the MLA format waste peoples time.
+- Explain with code. Rather than trying to describe the way something works in a long paragraph, try to lean on code examples as much as possible, while using writing to add context and reasoning.
+
 ## Credits
 
 The Coursify Studios core team consists of:
@@ -120,12 +131,12 @@ The Coursify Studios core team consists of:
 
 Coursify uses the following open source packages:
 
-- [React](http://electron.atom.io/)
-- [NextJS](https://nodejs.org/)
-- [TailwindCSS](https://github.com/chjj/marked)
-- [Supabase](http://showdownjs.github.io/showdown/)
-- [Lexical](http://codemirror.net/)
-- [HeroIcons](https://highlightjs.org/)
-- [HeadlessUI]()
+- [React](https://react.dev/)
+- [NextJS](https://nextjs.org/)
+- [TailwindCSS](https://tailwindcss.com/)
+- [Supabase](https://supabase.com/)
+- [Lexical](https://lexical.dev/)
+- [HeroIcons](https://heroicons.com/)
+- [HeadlessUI](https://headlessui.com/)
 
 .. and many more.
