@@ -12,6 +12,7 @@ import { AllGroupsResponse, getAllGroupsForUser } from "../../lib/db/groups";
 import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
 import { GroupSmall } from "../../components/complete/group";
 import { Achievement } from "../../components/complete/achievement";
+import Image from "next/image";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
@@ -20,41 +21,41 @@ export default function Profile() {
 			PostgrestResponse<Database["public"]["Tables"]["classes"]["Row"]>
 		>();
 	const [profileGroups, setProfileGroups] = useState<AllGroupsResponse>();
-	const supabaseClient = useSupabaseClient<Database>();
+	const supabase = useSupabaseClient<Database>();
 	const router = useRouter();
 	const { profileid } = router.query;
 
 	useEffect(() => {
 		(async () => {
 			if (profileid) {
-				const profileData = await getProfile(
-					supabaseClient,
-					profileid as string
-				);
+				const profileData = await getProfile(supabase, profileid as string);
 				setProfile(profileData);
-				const classesData = await supabaseClient.rpc("get_profile_classes", {
+				const classesData = await supabase.rpc("get_profile_classes", {
 					id: profileid as string,
 				});
 				setProfileClasses(classesData);
 				const groupsData = await getAllGroupsForUser(
-					supabaseClient,
+					supabase,
 					profileid as string
 				);
 				setProfileGroups(groupsData);
 			}
 		})();
-	}, [router, supabaseClient, profileid]);
+	}, [router, supabase, profileid]);
 
 	return (
 		<div className="mx-auto flex w-full flex-col px-4 py-2 sm:py-4 md:px-8 md:py-8 lg:flex-row lg:space-x-8 xl:px-0 2xl:max-w-screen-xl">
+			{/* Left sidebar, main info */}
 			<div className="flex shrink-0 flex-col items-center md:flex-row lg:h-max lg:max-h-[calc(100vh-8rem)] lg:w-72 lg:flex-col">
 				<div className="flex w-full flex-col items-center rounded-xl bg-gray-200 p-6">
 					{profile && profile.data ? (
-						<img
+						<Image
 							src={profile.data.avatar_url}
 							alt="Profile Picture"
-							referrerPolicy="no-referrer"
+							//referrerPolicy="no-referrer"
 							className="!ml-2 h-36 w-36 rounded-full shadow-md shadow-black/25"
+							width={144}
+							height={144}
 						/>
 					) : (
 						<div className="!ml-2 h-36 w-36 animate-pulse rounded-full bg-gray-300"></div>
@@ -89,13 +90,13 @@ export default function Profile() {
 				</div>
 				{!(
 					profile?.data &&
-					getDataInArray(profile?.data?.users_achievements).length == 0
+					getDataInArray(profile?.data?.user_achievements).length == 0
 				) && (
 					<div className="scrollbar-fancy scrollbar-fancy-darker mx-0 flex w-full flex-col items-center overflow-y-auto rounded-xl bg-gray-200 p-6 md:mx-auto  lg:mx-0 lg:mt-8 ">
 						<h1 className="title mb-5">Achievements</h1>
 						<div className=" grid w-full grid-cols-1 gap-6 md:grid-cols-2">
-							{profile?.data?.users_achievements
-								? getDataInArray(profile?.data?.users_achievements).map(
+							{profile?.data?.user_achievements
+								? getDataInArray(profile?.data?.user_achievements).map(
 										(achievement, i) => (
 											<Achievement
 												data={getDataOutArray(achievement.achievements)!}
@@ -117,10 +118,16 @@ export default function Profile() {
 					</div>
 				)}
 			</div>
-
+			{/* Centerpeice, list of classes */}
 			<div className=" mx-auto mt-8 shrink-0 flex-col rounded-xl lg:mt-0 lg:h-[calc(100vh-8rem)] xl:flex">
 				<h2 className="title mb-4">Classes</h2>
-				<div className="scrollbar-fancy grid snap-y snap-proximity gap-8 overflow-y-auto md:grid-cols-2">
+				<div
+					className={`scrollbar-fancy grid snap-y snap-proximity gap-8 ${
+						profileClasses && profileClasses.data
+							? "overflow-y-auto"
+							: "overflow-hidden"
+					}  md:grid-cols-2 `}
+				>
 					{profileClasses && profileClasses.data
 						? profileClasses.data.map((currentClass, i) => (
 								<Class
@@ -138,6 +145,7 @@ export default function Profile() {
 						  ))}
 				</div>
 			</div>
+			{/* Right sidepanel, list of groups */}
 			<div className="hidden w-full flex-col rounded-xl lg:h-[calc(100vh-8rem)] xl:flex">
 				<h2 className="title mb-4">Groups</h2>
 				<div className="scrollbar-fancy flex snap-y snap-proximity flex-col space-y-5 overflow-y-auto">

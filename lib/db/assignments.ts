@@ -8,11 +8,10 @@ export const getAllAssignments = async (
 	return await supabaseClient.from("assignments").select(
 		`
 		*,
-		classes_assignments (
+		
 			classes (
 				name, id, color, block, schedule_type
-			)
-		),
+			),
 		starred (
 			assignment_id
 		)
@@ -55,10 +54,10 @@ export const handleStarred = async (
 };
 
 export const getAssignment = async (
-	supabaseClient: SupabaseClient<Database>,
+	supabase: SupabaseClient<Database>,
 	assignmentuuid: string
 ) => {
-	return await supabaseClient
+	return await supabase
 		.from("assignments")
 		.select(
 			`
@@ -72,38 +71,6 @@ export const getAssignment = async (
 };
 
 export type AssignmentResponse = Awaited<ReturnType<typeof getAssignment>>;
-
-export const newAssignment = async (
-	assignment: Assignment,
-	classuuid: string
-): Promise<AssignmentData> => {
-	const { data, error } = await supabase
-		.from("assignments")
-		.insert(assignment)
-		.select()
-		.limit(1)
-		.single();
-	if (error) {
-		return {
-			success: false,
-			error,
-		};
-	}
-	if (data) {
-		// amazing naming schema
-		const { error: secondError } = await supabase
-			.from("classes_assignments")
-			.insert({ assignment_id: data.id, class_id: classuuid });
-		if (secondError) {
-			return {
-				success: false,
-				error: secondError,
-			};
-		}
-		return { success: true };
-	}
-	return { success: false };
-};
 
 //Lukas is building the world's first 7D array
 export type Assignment = Database["public"]["Tables"]["assignments"]["Row"];

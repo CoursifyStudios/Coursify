@@ -74,13 +74,13 @@ export const getClassesAndGroups = async (
 		.select(
 			`
         id, 
-        users_classes (
+        class_users (
             *,
             classes (
                 name
             )
         ), 
-        users_groups (
+        group_users (
             *,
             groups (
                 name

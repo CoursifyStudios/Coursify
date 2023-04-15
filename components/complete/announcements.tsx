@@ -54,11 +54,13 @@ export const Announcement = ({
 				<Link
 					href={"/profile/" + announcement.author}
 					className="inline-flex shrink-0 items-center rounded-full px-1 py-0.5 hover:bg-gray-300"
-					onClick={() => newTab(
-						"/profile/" + announcement.author,
-						getDataOutArray(announcement.users!).full_name.split(" ")[0] +
-							"'s Profile"
-					)}
+					onClick={() =>
+						newTab(
+							"/profile/" + announcement.author,
+							getDataOutArray(announcement.users!).full_name.split(" ")[0] +
+								"'s Profile"
+						)
+					}
 				>
 					<img
 						src={getDataOutArray(announcement.users!).avatar_url}
@@ -128,17 +130,17 @@ export const AnnouncementPostingUI = ({
 			const groupsAndClasses: ClassOrGroupObject[] = [];
 			if (
 				dbResponse.data &&
-				Array.isArray(dbResponse.data.users_classes) &&
-				Array.isArray(dbResponse.data.users_groups)
+				Array.isArray(dbResponse.data.class_users) &&
+				Array.isArray(dbResponse.data.group_users)
 			) {
-				dbResponse.data.users_groups.map((group) => {
+				dbResponse.data.group_users.map((group) => {
 					groupsAndClasses.push({
 						id: group.group_id,
 						name: getDataOutArray(group.groups)?.name as string,
 						trueIfClass: false,
 					});
 				});
-				dbResponse.data.users_classes.map((classRow) => {
+				dbResponse.data.class_users.map((classRow) => {
 					if (classRow.teacher) {
 						groupsAndClasses.push({
 							id: classRow.class_id,

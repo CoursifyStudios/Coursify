@@ -2,13 +2,13 @@ import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { NonNullableArray } from "../misc/misc.types";
 import type { Database } from "./database.types";
 
-export async function getAllClasses(supabaseClient: SupabaseClient<Database>) {
-	const { data, error } = await supabaseClient.from("classes").select(`
+export async function getAllClasses(supabase: SupabaseClient<Database>) {
+	const { data, error } = await supabase.from("classes").select(`
 	*,
 	users (
 		avatar_url, id, full_name
 	),
-	users_classes (
+	class_users (
 		user_id, teacher, grade
 	),
     assignments (
@@ -34,10 +34,10 @@ export async function getAllClasses(supabaseClient: SupabaseClient<Database>) {
 export type AllClassesResponse = Awaited<ReturnType<typeof getAllClasses>>;
 
 export const getClass = async (
-	supabaseClient: SupabaseClient<Database>,
+	supabase: SupabaseClient<Database>,
 	classid: string
 ) => {
-	return await supabaseClient
+	return await supabase
 		.from("classes")
 		.select(
 			`
@@ -51,7 +51,7 @@ export const getClass = async (
 		assignments (
 			name, description, id, due_type, due_date
 		),
-		users_classes (
+		class_users (
 			user_id, grade, teacher
 		),
 		users (
@@ -69,10 +69,8 @@ export interface IndividialClass {
 	data: Database["public"]["Tables"]["classes"]["Row"];
 }
 
-export const getUserSchool = async (
-	supabaseClient: SupabaseClient<Database>
-) => {
-	return await supabaseClient.from("schools").select(
+export const getUserSchool = async (supabase: SupabaseClient<Database>) => {
+	return await supabase.from("schools").select(
 		`
 		name,
 		users (

@@ -29,8 +29,8 @@ export default function GroupDirectory() {
 								allGroupData.data &&
 								allGroupData.data.map(
 									(group) =>
-										(!Array.isArray(group.users_groups) ||
-											group.users_groups.length != 0) && (
+										(!Array.isArray(group.group_users) ||
+											group.group_users.length != 0) && (
 											<GroupSmall
 												key={group.id}
 												id={group.id}
