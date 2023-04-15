@@ -95,9 +95,11 @@ export function AssignmentPreview({
 
 						<div>
 							{classes && showClassPill && (
-								<ColoredPill color={classes.color} hoverState>
-									{classes.name}
-								</ColoredPill>
+								<Link href={"/classes/" + classes?.id}>
+									<ColoredPill color={classes.color} hoverState>
+										{classes.name}
+									</ColoredPill>
+								</Link>
 							)}
 						</div>
 					</div>
