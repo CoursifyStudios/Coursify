@@ -70,7 +70,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzd
 
 2. Log into supabase by running `supabase login` or if installed by npm `npx supabase login`
 
-3. Run `supabase start`. This might take a while, especilly if it's your first time running it. (You can use `supabase stop` to stop the docker container). Next, run `yarn link` to link to the Coursify project. **Ask Lukas for the password**
+3. Run `supabase start`. This might take a while, especilly if it's your first time running it. (You can use `supabase stop` to stop the docker container). Next, run `yarn slink` to link to the Coursify project. **Ask Lukas for the password**
 
 4. Visit the [dashboard](http://localhost:54323)
 
