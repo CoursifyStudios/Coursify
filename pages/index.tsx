@@ -307,38 +307,6 @@ export default function Home() {
 						</section>
 					</div>
 				</div>
-				{/* <svg width="100%" viewBox="0 0 300 100" className="fixed bottom-0 md:hidden">
-							<g
-								transform={`translate(${window.innerWidth / 4},100)`}
-								stroke="#000"
-								stroke-width="2"
-							>
-								<path d="M0 0-50 00A50 50 0 0 1-35-35Z" fill="#f00" />
-								<path d="M0 0-35-35A50 50 0 0 1 00-50Z" fill="#080" />
-								<path d="M0 0 0 -50A50 50 0 0 1 35-35" fill="#04e" />
-								<path d="M0 0 35-35A50 50 0 0 1 50 00Z" fill="#dd0" />
-							</g>
-						</svg> */}
-			</div>
-			<div
-				className="fixed bottom-0 flex w-full items-center justify-evenly space-x-2 rounded-t-2xl bg-gray-200 p-3 pb-5 sm:hidden
-                "
-			>
-				<Link tabIndex={1} href="#Schedule">
-					<ColoredPill color="gray">Schedule</ColoredPill>
-				</Link>
-
-				<Link tabIndex={1} href="#Classes">
-					<ColoredPill color="gray">Classes</ColoredPill>
-				</Link>
-
-				<Link tabIndex={1} href="#Assignments">
-					<ColoredPill color="gray">Assignments</ColoredPill>
-				</Link>
-
-				<Link tabIndex={1} href="#Starred">
-					<ColoredPill color="gray">Starred</ColoredPill>
-				</Link>
 			</div>
 		</>
 	);

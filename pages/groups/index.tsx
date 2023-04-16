@@ -113,27 +113,6 @@ export default function GroupDirectory() {
 					</div>
 				</div>
 			</div>
-			<div
-				className="fixed bottom-0 flex w-full items-center justify-evenly space-x-2 rounded-t-2xl bg-gray-200 p-3 pb-5 text-sm sm:hidden
-                "
-			>
-				<Link tabIndex={1} href="#Your_groups">
-					<ColoredPill color="gray">Your Groups</ColoredPill>
-				</Link>
-
-				<Link tabIndex={1} href="#Featured_groups">
-					<ColoredPill color="gray">Featured Groups</ColoredPill>
-				</Link>
-
-				{/* We ran out of space for these pills, they are too big */}
-				{/* <Link tabIndex={1} href="#Outdoors">
-					<ColoredPill color="gray">Outdoors</ColoredPill>
-				</Link> */}
-
-				<Link tabIndex={1} href="#No_tags">
-					<ColoredPill color="gray">No Tags</ColoredPill>
-				</Link>
-			</div>
 		</div>
 	);
 }
