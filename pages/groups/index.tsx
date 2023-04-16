@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { GroupLarge, GroupSmall } from "../../components/complete/group";
 import { getAllPublicGroups, PublicGroupsResponse } from "../../lib/db/groups";
 import supabase from "../../lib/supabase";
+import { ColoredPill } from "../../components/misc/pill";
 
 export default function GroupDirectory() {
 	const [allGroupData, setAllGroupData] = useState<PublicGroupsResponse>();
@@ -113,23 +114,24 @@ export default function GroupDirectory() {
 				</div>
 			</div>
 			<div
-				className="fixed bottom-0 flex w-full items-center justify-evenly rounded-t-2xl bg-gray-200 p-3 text-sm sm:hidden
+				className="fixed bottom-0 flex w-full items-center justify-evenly space-x-2 rounded-t-2xl bg-gray-200 p-3 pb-5 text-sm sm:hidden
                 "
 			>
 				<Link tabIndex={1} href="#Your_groups">
-					Your Groups
+					<ColoredPill color="gray">Your Groups</ColoredPill>
 				</Link>
-				•
+
 				<Link tabIndex={1} href="#Featured_groups">
-					Featured Groups
+					<ColoredPill color="gray">Featured Groups</ColoredPill>
 				</Link>
-				•
-				<Link tabIndex={1} href="#Outdoors">
-					Outdoors
-				</Link>
-				•
+
+				{/* We ran out of space for these pills, they are too big */}
+				{/* <Link tabIndex={1} href="#Outdoors">
+					<ColoredPill color="gray">Outdoors</ColoredPill>
+				</Link> */}
+
 				<Link tabIndex={1} href="#No_tags">
-					No Tags
+					<ColoredPill color="gray">No Tags</ColoredPill>
 				</Link>
 			</div>
 		</div>

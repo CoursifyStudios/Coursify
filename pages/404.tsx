@@ -8,7 +8,7 @@ export default function Custom404() {
 			<div className="flex-row items-center justify-center rounded-md">
 				<h1 className="pb-10 text-7xl font-extrabold sm:text-9xl">Whoops...</h1>
 				<h2 className="mb-5 text-center text-xl">
-					It doesnt seem like this page exists
+					That page could not be found
 				</h2>
 			</div>
 

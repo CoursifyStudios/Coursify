@@ -321,23 +321,23 @@ export default function Home() {
 						</svg> */}
 			</div>
 			<div
-				className="fixed bottom-0 flex w-full items-center justify-evenly rounded-t-2xl bg-gray-200 p-3 sm:hidden
+				className="fixed bottom-0 flex w-full items-center justify-evenly space-x-2 rounded-t-2xl bg-gray-200 p-3 pb-5 sm:hidden
                 "
 			>
 				<Link tabIndex={1} href="#Schedule">
-					Schedule
+					<ColoredPill color="gray">Schedule</ColoredPill>
 				</Link>
-				•
+
 				<Link tabIndex={1} href="#Classes">
-					Classes
+					<ColoredPill color="gray">Classes</ColoredPill>
 				</Link>
-				•
+
 				<Link tabIndex={1} href="#Assignments">
-					Assignments
+					<ColoredPill color="gray">Assignments</ColoredPill>
 				</Link>
-				•
+
 				<Link tabIndex={1} href="#Starred">
-					Starred
+					<ColoredPill color="gray">Starred</ColoredPill>
 				</Link>
 			</div>
 		</>
