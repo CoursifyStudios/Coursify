@@ -48,7 +48,7 @@ const Navbar: NextComponentType = () => {
 					(v, i) => hydrated && <TabUI key={i} canClose={true} tab={v} />
 				)}
 			</div>
-			<div className="ml-2 flex flex-grow-0 items-center space-x-4">
+			<div className="ml-4 flex flex-grow-0 items-center space-x-4">
 				<ButtonIcon icon={<MagnifyingGlassIcon className=" h-5 w-9" />} />
 				<ButtonIcon
 					icon={<CalendarDaysIcon className="h-5 w-5" />}
