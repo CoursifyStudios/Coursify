@@ -306,9 +306,8 @@ export default function Home() {
 							</div>
 						</section>
 					</div>
-					
 				</div>
-						{/* <svg width="100%" viewBox="0 0 300 100" className="fixed bottom-0 md:hidden">
+				{/* <svg width="100%" viewBox="0 0 300 100" className="fixed bottom-0 md:hidden">
 							<g
 								transform={`translate(${window.innerWidth / 4},100)`}
 								stroke="#000"
@@ -320,16 +319,27 @@ export default function Home() {
 								<path d="M0 0 35-35A50 50 0 0 1 50 00Z" fill="#dd0" />
 							</g>
 						</svg> */}
-                
 			</div>
-            <div className="fixed bottom-0 flex p-3 bg-gray-200 w-full justify-evenly items-center sm:hidden rounded-t-2xl
-                ">
-                    <Link tabIndex={1} href="#Schedule">Schedule</Link>•
-                    <Link tabIndex={1} href="#Classes">Classes</Link>•
-                    <Link tabIndex={1} href="#Assignments">Assignments</Link>•
-                    <Link tabIndex={1} href="#Starred">Starred</Link>
-                </div>
+			<div
+				className="fixed bottom-0 flex w-full items-center justify-evenly rounded-t-2xl bg-gray-200 p-3 sm:hidden
+                "
+			>
+				<Link tabIndex={1} href="#Schedule">
+					Schedule
+				</Link>
+				•
+				<Link tabIndex={1} href="#Classes">
+					Classes
+				</Link>
+				•
+				<Link tabIndex={1} href="#Assignments">
+					Assignments
+				</Link>
+				•
+				<Link tabIndex={1} href="#Starred">
+					Starred
+				</Link>
+			</div>
 		</>
 	);
 }
-

@@ -6,7 +6,7 @@ export default function Custom404() {
 	return (
 		<div className="flex flex-grow flex-col items-center justify-center">
 			<div className="flex-row items-center justify-center rounded-md">
-				<h1 className="pb-10 text-7xl sm:text-9xl font-extrabold">Whoops...</h1>
+				<h1 className="pb-10 text-7xl font-extrabold sm:text-9xl">Whoops...</h1>
 				<h2 className="mb-5 text-center text-xl">
 					It doesnt seem like this page exists
 				</h2>

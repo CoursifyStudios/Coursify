@@ -144,7 +144,7 @@ const Class: NextPage = () => {
 					{data.data && data.data.name}
 				</h1>
 			</div>
-			<div className="sm:grid-cols-1 md:flex space-x">
+			<div className="space-x sm:grid-cols-1 md:flex">
 				<Tab.Group as="div" className="flex grow flex-col">
 					<Tab.List as="div" className="mx-auto mb-6 flex space-x-6">
 						<Tab as={Fragment}>
@@ -343,7 +343,7 @@ const Class: NextPage = () => {
 						</Tab.Panel>
 					</Tab.Panels>
 				</Tab.Group>
-				<section className="sticky top-0 mx-auto sm:ml-8 w-[20.5rem] shrink-0">
+				<section className="sticky top-0 mx-auto w-[20.5rem] shrink-0 sm:ml-8">
 					{!isTeacher && (
 						<div>
 							<h2 className="title">Grade</h2>
