@@ -27,6 +27,7 @@ const Group: NextPage = () => {
 			if (typeof groupid == "string") {
 				const data = await getGroup(supabase, groupid);
 				setGroupData(data);
+                console.log(data);
 			}
 		})();
 	}, [supabase, groupid]);
@@ -143,7 +144,7 @@ const Group: NextPage = () => {
 											key={user!.id}
 											user={user!}
 											leader={
-												getDataInArray(groupData.data.group_user).find(
+												getDataInArray(groupData.data.group_users).find(
 													(userInUsersGroups) =>
 														user?.id == userInUsersGroups?.user_id
 												)?.group_leader
