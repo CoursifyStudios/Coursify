@@ -10,9 +10,9 @@ Coursify
 
 <p align="center" >
   <img src="https://forthebadge.com/images/badges/it-works-why.svg">
-  <img src="https://forthebadge.com/images/featured/featured-built-with-love.svg" height=35 >
+  <img src="https://forthebadge.com/images/badges/built-with-grammas-recipe.svg" height=35 >
   <img src="https://hhrehffmdrcjqowwvgqg.supabase.co/storage/v1/object/public/cdn/assets/Coursify/for-students-by-students.svg">
-  <img src="https://forthebadge.com/images/badges/powered-by-comcast.svg">
+  <img src="https://forthebadge.com/images/badges/works-on-my-machine.svg">
 
 </p>
 
