@@ -66,13 +66,13 @@ const Class: NextPage = () => {
 				setData(undefined);
 				const data = await getClass(supabase, classid);
 				setData(data);
-				if (data.data && Array.isArray(data.data.users_classes)) {
+				if (data.data && Array.isArray(data.data.class_users)) {
 					//grades are temporarily done like this until we figure out assignment submissions
 					setGrade(
-						data.data.users_classes.find((v) => v.user_id == user.id)?.grade
+						data.data.class_users.find((v) => v.user_id == user.id)?.grade
 					);
 					setIsTeacher(
-						data.data.users_classes.find((v) => v.user_id == user.id)?.teacher
+						data.data.class_users.find((v) => v.user_id == user.id)?.teacher
 					);
 				}
 			}
@@ -128,7 +128,7 @@ const Class: NextPage = () => {
 		);
 
 	return (
-		<div className="mx-auto my-10 w-full max-w-screen-xl">
+		<div className="mx-auto my-10 w-full max-w-screen-xl px-4">
 			{data.data && (
 				<CreateAssignment
 					block={data.data.block}
@@ -148,7 +148,7 @@ const Class: NextPage = () => {
 					{data.data && data.data.name}
 				</h1>
 			</div>
-			<div className="flex">
+			<div className="space-x sm:grid-cols-1 md:flex">
 				<Tab.Group as="div" className="flex grow flex-col">
 					<Tab.List as="div" className="mx-auto mb-6 flex space-x-6">
 						<Tab as={Fragment}>
@@ -192,7 +192,7 @@ const Class: NextPage = () => {
 						</Tab>
 					</Tab.List>
 					<Tab.Panels>
-						<Tab.Panel>
+						<Tab.Panel tabIndex={-1}>
 							<div className="mb-3 flex flex-wrap gap-2">
 								{data.data?.classpills && isTeacher != undefined && classid && (
 									<InfoPills
@@ -217,7 +217,7 @@ const Class: NextPage = () => {
 										initialState={data.data?.full_description}
 										updatedState={edited ? editorState : undefined}
 										updateState={setEditorState}
-
+										focus={true}
 										//className=" "
 									/>
 									{isTeacher &&
@@ -254,15 +254,17 @@ const Class: NextPage = () => {
 								)
 							)}
 						</Tab.Panel>
-						<Tab.Panel>
+						<Tab.Panel tabIndex={-1}>
 							<h2 className="title mb-3">Announcements</h2>
 							<div className="space-y-3">
-								<AnnouncementPostingUI
-									communityid={classid as string}
-									isClass={true}
-									prevRefreshState={refreshAnnouncements}
-									refreshAnnouncements={setRefreshAnnouncements}
-								/>
+								{isTeacher && (
+									<AnnouncementPostingUI
+										communityid={classid as string}
+										isClass={true}
+										prevRefreshState={refreshAnnouncements}
+										refreshAnnouncements={setRefreshAnnouncements}
+									/>
+								)}
 
 								{data.data &&
 									data.data.announcements && //change below when I get actual types
@@ -288,7 +290,7 @@ const Class: NextPage = () => {
 										))}
 							</div>
 						</Tab.Panel>
-						<Tab.Panel>
+						<Tab.Panel tabIndex={-1}>
 							<div className="grid grid-cols-3 gap-4">
 								{data.data?.users && Array.isArray(data.data?.users) ? (
 									data.data?.users.map((user, i) => (
@@ -310,9 +312,9 @@ const Class: NextPage = () => {
 													referrerPolicy="no-referrer"
 													className=" h-10 min-w-[2.5rem] rounded-full shadow-md shadow-black/25"
 												/>
-												{data.data.users_classes &&
-													Array.isArray(data.data.users_classes) && // based on my testing it will always return an array, doing this to make ts happy
-													data.data.users_classes.find(
+												{data.data.class_users &&
+													Array.isArray(data.data.class_users) && // based on my testing it will always return an array, doing this to make ts happy
+													data.data.class_users.find(
 														(userValue) =>
 															userValue.teacher && user.id == userValue.user_id
 													) && (
@@ -345,7 +347,7 @@ const Class: NextPage = () => {
 						</Tab.Panel>
 					</Tab.Panels>
 				</Tab.Group>
-				<section className="sticky top-0 ml-8 w-[20.5rem] shrink-0">
+				<section className="sticky top-0 mx-auto w-[20.5rem] shrink-0 sm:ml-8">
 					{!isTeacher && (
 						<div>
 							<h2 className="title">Grade</h2>
@@ -367,13 +369,12 @@ const Class: NextPage = () => {
 								</h3>
 							</div>
 						)}
-						{Array.isArray(data.data?.assignments) &&
+						{data.data?.assignments &&
 							user &&
-							data.data?.assignments.map((assignment) => (
-								<div // no longer needs to be a lonk
+							getDataInArray(data.data?.assignments).map((assignment) => (
+								<div
 									key={assignment.id}
 									className=" brightness-hover flex rounded-xl bg-gray-200 p-3"
-									//href={"/assignments/" + assignment.id}
 								>
 									<AssignmentPreview
 										supabase={supabase}

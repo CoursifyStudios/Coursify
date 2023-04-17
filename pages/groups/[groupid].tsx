@@ -32,7 +32,7 @@ const Group: NextPage = () => {
 	}, [supabase, groupid]);
 
 	return (
-		<div className="mx-auto my-10 w-full max-w-screen-xl">
+		<div className="mx-auto my-10 w-full max-w-screen-xl px-4">
 			<div className="relative mb-6 h-48 w-full">
 				{groupData?.data?.image ? (
 					<Image
@@ -48,7 +48,7 @@ const Group: NextPage = () => {
 					{groupData?.data?.name}
 				</h1>
 			</div>
-			<div className="flex">
+			<div className="sm:grid-cols-1 md:flex ">
 				<Tab.Group as="div" className="flex grow flex-col">
 					<Tab.List as="div" className="mx-auto mb-6 flex space-x-6">
 						<Tab as={Fragment}>
@@ -92,7 +92,7 @@ const Group: NextPage = () => {
 						</Tab>
 					</Tab.List>
 					<Tab.Panels>
-						<Tab.Panel>
+						<Tab.Panel tabIndex={-1} className="mb-10">
 							<div className="mb-6 rounded-xl bg-gray-200 p-4">
 								<p className="text-lg">{groupData?.data?.description}</p>
 							</div>
@@ -133,8 +133,8 @@ const Group: NextPage = () => {
 										))}
 							</div>
 						</Tab.Panel>
-						<Tab.Panel></Tab.Panel>
-						<Tab.Panel>
+						<Tab.Panel tabIndex={-1}></Tab.Panel>
+						<Tab.Panel tabIndex={-1}>
 							<div className="grid grid-cols-3 gap-4">
 								{groupData &&
 									groupData.data &&
@@ -143,7 +143,7 @@ const Group: NextPage = () => {
 											key={user!.id}
 											user={user!}
 											leader={
-												getDataInArray(groupData.data.users_groups).find(
+												getDataInArray(groupData.data.group_users).find(
 													(userInUsersGroups) =>
 														user?.id == userInUsersGroups?.user_id
 												)?.group_leader
@@ -156,7 +156,7 @@ const Group: NextPage = () => {
 						</Tab.Panel>
 					</Tab.Panels>
 				</Tab.Group>
-				<div className="sticky top-0 ml-8 w-[20.5rem] shrink-0 rounded-md blur-sm ">
+				<div className="sticky top-0 mx-auto w-[20.5rem] shrink-0 rounded-md blur-sm sm:ml-8 ">
 					<h2 className="title">Next Event</h2>
 					<Event title="Castle Rock" time="8:00 - 9:30 AM"></Event>
 					<h2 className="title mt-6 mb-6">Upcoming</h2>

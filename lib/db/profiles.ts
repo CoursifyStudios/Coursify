@@ -2,15 +2,15 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "./database.types";
 
 export const getProfile = async (
-	supabaseClient: SupabaseClient<Database>,
+	supabase: SupabaseClient<Database>,
 	profileid: string
 ) => {
-	return await supabaseClient
+	return await supabase
 		.from("users")
 		.select(
 			`
 			*, 
-			users_achievements (
+			user_achievements (
 				*, 
 				achievements (
 					*

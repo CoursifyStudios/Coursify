@@ -43,3 +43,6 @@ supabase/config.toml
 .eslintrc.json
 /public
 *.txt
+
+#sql
+/supabase

@@ -120,15 +120,15 @@ export default function Home() {
 
 	return (
 		<>
-			<div className="container my-10 mx-auto flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words px-4 md:px-8 xl:px-0">
+			<div className="container mx-auto mb-10 flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words px-4 sm:mt-10 md:px-8 xl:px-0">
 				<div className="flex w-full flex-col">
-					<div className="flex">
-						<section className="mb-12">
-							<div className="mt-8 flex items-end lg:mt-0">
+					<div className="flex flex-col sm:flex-col-reverse lg:flex-row  ">
+						<section id="Classes" className="mb-12">
+							<div className="flex items-end md:mt-8 lg:mt-0">
 								<h2 className="title">Classes</h2>
 								{loading && <Loading className="ml-4" />}
 							</div>
-							<div className="mt-5 grid gap-6 md:grid-cols-2 xl:grid-cols-3 ">
+							<div className="mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 ">
 								{classes && classes.data && schedule
 									? classes.data
 											.slice(0, classes.data.length)
@@ -159,29 +159,37 @@ export default function Home() {
 							</div>
 						</section>
 						{/* Schedule UI */}
-						<section className=" grow lg:ml-10">
-							<h2 className="title mr-2">
-								{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
-									new Date("2023-03-03")
-								)}
-							</h2>
-							<ScheduleComponent classes={classes} schedule={schedule} />
-							<h2 className="title mr-2">
-								{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
-									new Date("2023-03-04")
-								)}
-							</h2>
-							<ScheduleComponent
-								classes={classes}
-								schedule={tomorrowSchedule}
-							/>
+						<section
+							id="Schedule"
+							className="flex grow flex-col md:flex-row lg:ml-10 lg:flex-col"
+						>
+							<div className="w-full md:mr-4 lg:mr-0">
+								<h2 className="title mr-2">
+									{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
+										new Date("2023-03-03")
+									)}
+								</h2>
+
+								<ScheduleComponent classes={classes} schedule={schedule} />
+							</div>
+							<div className="w-full md:ml-4 lg:ml-0">
+								<h2 className="title mr-2">
+									{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
+										new Date("2023-03-04")
+									)}
+								</h2>
+								<ScheduleComponent
+									classes={classes}
+									schedule={tomorrowSchedule}
+								/>
+							</div>
 						</section>
 					</div>
-					<div className="flex">
+					<div className="flex flex-col xl:flex-row ">
 						{/* Assignments UI */}
-						<section>
+						<section id="Assignments">
 							<h2 className="title mb-4">Assignments</h2>
-							<div className="grid grid-cols-3 gap-4 xl:w-[58.5rem] ">
+							<div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:w-[58.5rem] ">
 								{classes &&
 									classes.data &&
 									classes.data
@@ -220,7 +228,9 @@ export default function Home() {
 															aClass.assignments.map((assignment) => (
 																<div
 																	key={assignment.id}
-																	className={"brightness-hover rounded-lg bg-gray-200 p-2"}
+																	className={
+																		"brightness-hover rounded-lg bg-gray-200 p-2"
+																	}
 																>
 																	<AssignmentPreview
 																		supabase={supabaseClient}
@@ -250,9 +260,9 @@ export default function Home() {
 										))}
 							</div>
 						</section>
-						<section className=" grow lg:ml-10">
+						<section className=" grow xl:ml-10" id="Starred">
 							<h2 className="title mr-2 mb-4">Starred</h2>
-							<div className="grid gap-4">
+							<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
 								{classes &&
 									classes.data &&
 									classes.data.map(

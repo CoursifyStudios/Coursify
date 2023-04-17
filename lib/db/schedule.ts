@@ -12,10 +12,10 @@ export interface ScheduleInterface {
 }
 
 export async function getSchedule(
-	supabaseClient: SupabaseClient<Database>,
+	supabase: SupabaseClient<Database>,
 	day: Date
 ) {
-	return await supabaseClient //when the response comes back..
+	return await supabase //when the response comes back..
 		.from("days_schedule")
 		.select(
 			`
@@ -35,10 +35,8 @@ export interface TemplateInterface {
 	schedule_items: Json;
 	name: string;
 }
-export async function getScheduleTemplates(
-	supabaseClient: SupabaseClient<Database>
-) {
-	return await supabaseClient.from("schedule_templates").select(`*`);
+export async function getScheduleTemplates(supabase: SupabaseClient<Database>) {
+	return await supabase.from("schedule_templates").select(`*`);
 }
 
 export type ScheduleTemplatesDB = Awaited<
@@ -46,12 +44,12 @@ export type ScheduleTemplatesDB = Awaited<
 >;
 
 export const createNewSchedule = async (
-	supabaseClient: SupabaseClient<Database>,
+	supabase: SupabaseClient<Database>,
 	day: unknown,
 	template: number | null,
 	scheduleDataToUse: ScheduleInterface[] | null
 ) => {
-	return await supabaseClient.from("days_schedule").insert({
+	return await supabase.from("days_schedule").insert({
 		date: day as string,
 		template: template,
 		schedule_items: scheduleDataToUse
@@ -63,11 +61,11 @@ export const createNewSchedule = async (
 export type NewSchedule = Awaited<ReturnType<typeof createNewSchedule>>;
 
 export const createNewTemplate = async (
-	supabaseClient: SupabaseClient<Database>,
+	supabase: SupabaseClient<Database>,
 	nameToUse: string,
 	scheduleDataToUse: ScheduleInterface[]
 ) => {
-	return await supabaseClient.from("schedule_templates").insert({
+	return await supabase.from("schedule_templates").insert({
 		schedule_items: JSON.parse(JSON.stringify(scheduleDataToUse)) as Json,
 		name: nameToUse,
 	});
