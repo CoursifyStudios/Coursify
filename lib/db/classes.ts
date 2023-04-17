@@ -62,6 +62,8 @@ export const getClass = async (
 	`
 		)
 		.eq("id", classid)
+		.limit(5, { foreignTable: "assignments" })
+		.order("due_date", { foreignTable: "assignments", ascending: true })
 		.single();
 };
 

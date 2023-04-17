@@ -1,12 +1,11 @@
 import { Listbox, Switch } from "@headlessui/react";
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { Button } from "../../misc/button";
 import Editor from "../../editors/richeditor";
 import { DueType } from "../assignments";
 import { NextPage } from "next";
 import { SerializedEditorState, SerializedLexicalNode } from "lexical";
-import { NewAssignmentData } from "../../../lib/db/assignments";
 import AssignmentCalender from "./assignmentCalender";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { getClassTimesForXDays } from "../../../lib/db/classes";
@@ -19,7 +18,6 @@ const AssignmentCreation: NextPage<{
 	block: number;
 	scheduleType: number;
 }> = ({ content, setStage, block, scheduleType }) => {
-	const [disabled, setDisabled] = useState(true);
 	const [selectedDueType, setSelectedDueType] = useState(types[0]);
 	const [selectedPublishType, setSelectedPublishType] = useState(types[0]);
 	const [publish, setPublished] = useState(false);
@@ -42,6 +40,28 @@ const AssignmentCreation: NextPage<{
 		);
 		setDaysData(classDays);
 	};
+
+	const canCreate = useMemo(() => {
+		console.log("ran", assignmentData);
+
+		if (
+			assignmentData &&
+			(assignmentData.dueType
+				? assignmentData.dueType && assignmentData.dueDate
+				: true) &&
+			assignmentData.publishDate &&
+			assignmentData.publishType
+		) {
+			return true;
+		}
+		return false;
+
+		// setAssignmentData({
+		// 	dueType: selectedDueType,
+		// 	dueDate: selectedDueType,
+		// 	publishType: selectedPublishType,
+		// })
+	}, [assignmentData]);
 
 	useEffect(() => {
 		if (!daysData) refreshData();
@@ -128,7 +148,7 @@ const AssignmentCreation: NextPage<{
 					<Button
 						color="bg-blue-500"
 						className="text-white "
-						disabled={disabled}
+						disabled={!canCreate}
 					>
 						Create
 					</Button>

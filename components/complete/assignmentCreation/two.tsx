@@ -10,13 +10,11 @@ import { AssignmentTypes } from "../../../lib/db/assignments";
 export default function AssignmentDetails({
 	stage,
 	setStage,
-	assignmentType,
 	content,
 	setContent,
 }: {
 	stage: number;
 	setStage: Dispatch<SetStateAction<number>>;
-	assignmentType: AssignmentTypes | undefined;
 	content: SerializedEditorState | undefined;
 	setContent: Dispatch<SetStateAction<SerializedEditorState | undefined>>;
 }) {
@@ -56,15 +54,16 @@ export default function AssignmentDetails({
 			<h2 className="mt-6 text-xl font-bold">
 				Create Assignment -{" "}
 				{
-					submissionType.find((submission) => submission.type == assignmentType)
-						?.name
+					submissionType.find(
+						(submission) => submission.type == assignmentData?.submissionType
+					)?.name
 				}
 			</h2>
 			<Formik
 				validationSchema={Yup.object({
 					name: Yup.string().min(3).max(40).required(),
 					description: Yup.string().min(3).max(60).required(),
-					submission: Yup.string().min(3).max(100),
+					submissionType: Yup.string().min(3).max(100),
 				})}
 				initialValues={{
 					name: assignmentData?.name || "",

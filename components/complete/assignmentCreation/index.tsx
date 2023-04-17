@@ -1,34 +1,23 @@
-import { Transition, Dialog, Listbox } from "@headlessui/react";
+import { Transition, Dialog } from "@headlessui/react";
 import {
 	ChatBubbleBottomCenterTextIcon,
-	ChevronUpDownIcon,
 	ClipboardDocumentListIcon,
 	DocumentCheckIcon,
 	DocumentTextIcon,
 	LinkIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { ErrorMessage, Field, Form, Formik, useFormikContext } from "formik";
 import { NextPage } from "next";
-import {
-	Dispatch,
-	Fragment,
-	ReactNode,
-	SetStateAction,
-	useEffect,
-	useState,
-} from "react";
-import { Button } from "../../misc/button";
+import { Dispatch, Fragment, ReactNode, SetStateAction, useState } from "react";
 
-import Editor from "../../editors/richeditor";
-import { EditorState, SerializedEditorState } from "lexical";
+import { SerializedEditorState } from "lexical";
 import Image from "next/image";
 import {
 	AssignmentTypes,
 	NewAssignmentData,
 } from "../../../lib/db/assignments";
 
-import AssignmentCreation, { types } from "./three";
+import AssignmentCreation from "./three";
 import { create } from "zustand";
 import AssignmentDetails from "./two";
 
@@ -54,7 +43,6 @@ export const CreateAssignment: NextPage<{
 	scheduleType: number;
 }> = ({ open, setOpen, block, scheduleType }) => {
 	const [stage, setStage] = useState(1);
-	const [assignmentType, setAssignmentType] = useState<AssignmentTypes>();
 	const [content, setContent] = useState<SerializedEditorState>();
 	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
 		setAssignmentData: state.set,
@@ -64,7 +52,7 @@ export const CreateAssignment: NextPage<{
 	const closeMenu = () => {
 		setOpen(false);
 		setStage(1);
-		setAssignmentType(undefined);
+		setAssignmentData(undefined);
 		setContent(undefined);
 		setAssignmentData(undefined);
 	};
@@ -131,7 +119,6 @@ export const CreateAssignment: NextPage<{
 								<AssignmentType />
 								<AssignmentDetails
 									stage={stage}
-									assignmentType={assignmentType}
 									content={content}
 									setContent={setContent}
 									setStage={setStage}
@@ -169,12 +156,14 @@ export const CreateAssignment: NextPage<{
 						<div key={i}>
 							<div
 								className={`brightness-hover h-full cursor-pointer rounded-md p-4 ${
-									submission.type == assignmentType
+									submission.type == assignmentData?.submissionType
 										? "bg-white shadow-md"
 										: "bg-gray-200"
 								} `}
 								onClick={() => {
-									setAssignmentType(submission.type);
+									setAssignmentData({
+										submissionType: submission.type,
+									} as NewAssignmentData);
 									setStage((stage) => stage + 1);
 								}}
 							>
