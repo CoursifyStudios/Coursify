@@ -96,7 +96,8 @@ export type NewAssignmentData = {
 	submission: string;
 	dueType?: DueType;
 	dueDate?: Date;
+	dueDay?: number;
 	publishType?: DueType;
 	publishDate?: Date;
-	day?: number;
+	publishDay?: number;
 };
