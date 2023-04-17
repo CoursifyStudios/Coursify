@@ -12,7 +12,7 @@ Coursify
   <img src="https://forthebadge.com/images/badges/it-works-why.svg">
   <img src="https://forthebadge.com/images/badges/built-with-grammas-recipe.svg" height=35 >
   <img src="https://hhrehffmdrcjqowwvgqg.supabase.co/storage/v1/object/public/cdn/assets/Coursify/for-students-by-students.svg">
-  <img src="https://forthebadge.com/images/badges/works-on-my-machine.svg">
+  <img src="https://forthebadge.com/images/badges/works-on-my-machine.svg" height=35>
 
 </p>
 
