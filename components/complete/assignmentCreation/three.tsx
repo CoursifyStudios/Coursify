@@ -48,23 +48,29 @@ const AssignmentCreation: NextPage<{
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	if (!assignmentData) return null;
+	//if (!assignmentData) return null;
 
 	return (
 		<>
 			<section className="mt-6 flex flex-col">
-				<h2 className="text-xl font-bold">{assignmentData.name}</h2>
-				<p className="mt-2 text-gray-700">
-					<span className="font-medium text-gray-800">Short description: </span>
-					{assignmentData.description}
-				</p>
-				{assignmentData.submission && (
-					<p className="mt-3 text-gray-700">
-						<span className="font-medium text-gray-800">
-							Submission Instructions:{" "}
-						</span>
-						{assignmentData.submission}
-					</p>
+				{assignmentData && (
+					<>
+						<h2 className="text-xl font-bold">{assignmentData.name}</h2>
+						<p className="mt-2 text-gray-700">
+							<span className="font-medium text-gray-800">
+								Short description:{" "}
+							</span>
+							{assignmentData.description}
+						</p>
+						{assignmentData.submission && (
+							<p className="mt-3 text-gray-700">
+								<span className="font-medium text-gray-800">
+									Submission Instructions:{" "}
+								</span>
+								{assignmentData.submission}
+							</p>
+						)}
+					</>
 				)}
 				<span className="mt-3 font-medium text-gray-800">
 					Full Description:{" "}

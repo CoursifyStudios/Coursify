@@ -17,18 +17,20 @@ const AssignmentCalender: NextPage<{
 		setAssignmentData: state.set,
 		assignmentData: state.data,
 	}));
-	const [selectedDay, setSelectedDay] = useState<number>();
+	//const [selectedDay, setSelectedDay] = useState<number>();
 
 	const updateAssignmentData = (date: Date, day: number) => {
 		if (type == "due") {
-			setAssignmentData({ dueDate: date } as NewAssignmentData);
+			setAssignmentData({ dueDate: date, day } as NewAssignmentData);
 		}
 		if (type == "publish") {
-			setAssignmentData({ publishDate: date } as NewAssignmentData);
+			setAssignmentData({ publishDate: date, day } as NewAssignmentData);
 		}
 
-		setSelectedDay(day);
+		//setSelectedDay(day);
 	};
+
+	if (!assignmentData) return null;
 
 	return (
 		<>
@@ -53,7 +55,7 @@ const AssignmentCalender: NextPage<{
 										? " brightness-hover cursor-pointer bg-gray-300"
 										: "cursor-not-allowed text-gray-500"
 								}
-								${selectedDay == i && "border border-gray-300 bg-white shadow"}
+								${assignmentData.day == i && "border border-gray-300 bg-white shadow"}
 								`}
 								onClick={() => updateAssignmentData(date, i)}
 							>

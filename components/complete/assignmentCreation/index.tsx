@@ -235,10 +235,9 @@ export const CreateAssignment: NextPage<{
 						submission: Yup.string().min(3).max(100),
 					})}
 					initialValues={{
-						name: "",
-						description: "",
-						submission: "",
-						...assignmentData,
+						name: assignmentData?.name || "",
+						description: assignmentData?.description || "",
+						submission: assignmentData?.submission || "",
 					}}
 					onSubmit={(values) => {
 						setAssignmentData(values);

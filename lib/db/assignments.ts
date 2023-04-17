@@ -98,4 +98,5 @@ export type NewAssignmentData = {
 	dueDate?: Date;
 	publishType?: DueType;
 	publishDate?: Date;
+	day?: number;
 };
