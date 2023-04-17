@@ -123,7 +123,7 @@ export default function Home() {
 			<div className="container mx-auto mb-10 flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words px-4 sm:mt-10 md:px-8 xl:px-0">
 				<div className="flex w-full flex-col">
 					<div className="flex flex-col sm:flex-col-reverse lg:flex-row  ">
-						<section className="mb-12">
+						<section id="Classes" className="mb-12">
 							<div className="flex items-end md:mt-8 lg:mt-0">
 								<h2 className="title">Classes</h2>
 								{loading && <Loading className="ml-4" />}
@@ -159,7 +159,10 @@ export default function Home() {
 							</div>
 						</section>
 						{/* Schedule UI */}
-						<section className="flex grow flex-col md:flex-row lg:ml-10 lg:flex-col">
+						<section
+							id="Schedule"
+							className="flex grow flex-col md:flex-row lg:ml-10 lg:flex-col"
+						>
 							<div className="w-full md:mr-4 lg:mr-0">
 								<h2 className="title mr-2">
 									{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
@@ -184,7 +187,7 @@ export default function Home() {
 					</div>
 					<div className="flex flex-col xl:flex-row ">
 						{/* Assignments UI */}
-						<section>
+						<section id="Assignments">
 							<h2 className="title mb-4">Assignments</h2>
 							<div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:w-[58.5rem] ">
 								{classes &&
@@ -257,7 +260,7 @@ export default function Home() {
 										))}
 							</div>
 						</section>
-						<section className=" grow xl:ml-10">
+						<section className=" grow xl:ml-10" id="Starred">
 							<h2 className="title mr-2 mb-4">Starred</h2>
 							<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
 								{classes &&

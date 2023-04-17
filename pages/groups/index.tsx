@@ -1,8 +1,10 @@
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { GroupLarge, GroupSmall } from "../../components/complete/group";
 import { getAllPublicGroups, PublicGroupsResponse } from "../../lib/db/groups";
 import supabase from "../../lib/supabase";
+import { ColoredPill } from "../../components/misc/pill";
 
 export default function GroupDirectory() {
 	const [allGroupData, setAllGroupData] = useState<PublicGroupsResponse>();
@@ -23,7 +25,9 @@ export default function GroupDirectory() {
 						<p className="ml-1.5 p-1 ">Search for Groups</p>
 					</div> */}
 					<div>
-						<h1 className="title">Your Groups</h1>
+						<h1 id="Your_groups" className="title">
+							Your Groups
+						</h1>
 						<div className="mt-4 grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 ">
 							{allGroupData &&
 								allGroupData.data &&
@@ -43,7 +47,9 @@ export default function GroupDirectory() {
 						</div>
 					</div>
 					<div>
-						<h1 className="title">Featured Groups</h1>
+						<h1 id="Featured_groups" className="title">
+							Featured Groups
+						</h1>
 						<div className="scrollbar-fancy mt-4 flex snap-x snap-proximity space-x-5 overflow-x-auto">
 							{allGroupData &&
 								allGroupData.data &&
@@ -63,7 +69,9 @@ export default function GroupDirectory() {
 						</div>
 					</div>
 					<div>
-						<h1 className="title">Outdoors</h1>
+						<h1 id="Outdoors" className="title">
+							Outdoors
+						</h1>
 						<div className="scrollbar-fancy snap-priority mt-4 flex snap-x space-x-5 overflow-x-auto">
 							{allGroupData &&
 								allGroupData.data &&
@@ -82,7 +90,9 @@ export default function GroupDirectory() {
 										)
 								)}
 						</div>
-						<h1 className="title mt-4">No Tags</h1>
+						<h1 id="No_tags" className="title mt-4">
+							No Tags
+						</h1>
 						<div className="mt-4 grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
 							{allGroupData &&
 								allGroupData.data &&
