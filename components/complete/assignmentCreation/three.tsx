@@ -62,24 +62,30 @@ const AssignmentCreation: NextPage<{
 							</span>
 							{assignmentData.description}
 						</p>
-						{assignmentData.submission && (
+						{assignmentData.submissionType && (
 							<p className="mt-3 text-gray-700">
 								<span className="font-medium text-gray-800">
 									Submission Instructions:{" "}
 								</span>
-								{assignmentData.submission}
+								{assignmentData.submissionType}
 							</p>
 						)}
 					</>
 				)}
-				<span className="mt-3 font-medium text-gray-800">
-					Full Description:{" "}
-				</span>
-				<Editor
-					editable={false}
-					initialState={content}
-					className="scrollbar-fancy max-h-[30vh] overflow-y-auto"
-				/>
+				{/* @ts-expect-error lexical-bad-typings */}
+				{content && content?.root.children[0].children.length > 0 && (
+					<>
+						<span className="mt-3 font-medium text-gray-800">
+							Full Length Description:{" "}
+						</span>
+
+						<Editor
+							editable={false}
+							initialState={content}
+							className="scrollbar-fancy max-h-[30vh] overflow-y-auto"
+						/>
+					</>
+				)}
 			</section>
 			<hr className="my-4" />
 			<section className="grid grid-cols-2 gap-4">

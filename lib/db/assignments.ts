@@ -93,7 +93,8 @@ export type AssignmentTypes =
 export type NewAssignmentData = {
 	name: string;
 	description: string;
-	submission: string;
+	submissionType: string;
+	submissionInstructions?: string;
 	dueType?: DueType;
 	dueDate?: Date;
 	dueDay?: number;

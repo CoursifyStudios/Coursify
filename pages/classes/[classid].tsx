@@ -62,7 +62,7 @@ const Class: NextPage = () => {
 
 	useEffect(() => {
 		(async () => {
-			if (user && typeof classid == "string") {
+			if (user && typeof classid == "string" && !data) {
 				setData(undefined);
 				const data = await getClass(supabase, classid);
 				setData(data);
@@ -92,7 +92,7 @@ const Class: NextPage = () => {
 		})();
 		setEdited(false);
 		setEditorState(undefined);
-	}, [classid, refreshAnnouncements]);
+	}, [classid, data, refreshAnnouncements, supabase, user]);
 
 	if (!data)
 		return (
@@ -306,11 +306,13 @@ const Class: NextPage = () => {
 											}
 										>
 											<div className="relative h-max">
-												<img
+												<Image
 													src={user.avatar_url!}
 													alt="Profile picture"
 													referrerPolicy="no-referrer"
 													className=" h-10 min-w-[2.5rem] rounded-full shadow-md shadow-black/25"
+													width={40}
+													height={40}
 												/>
 												{data.data.class_users &&
 													Array.isArray(data.data.class_users) && // based on my testing it will always return an array, doing this to make ts happy

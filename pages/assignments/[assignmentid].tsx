@@ -91,7 +91,7 @@ const Post: NextPage = () => {
 		if (router.isReady && assignmentid != "0" && window.innerWidth < 768) {
 			setFullscreen(true);
 		}
-	}, [user, supabase, router, assignmentid]);
+	}, [user, supabase, router, assignmentid, allAssignments, assignment]);
 
 	return (
 		// Left pane
