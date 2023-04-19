@@ -25,6 +25,8 @@ const AssignmentCreation: NextPage<{
 	const [daysData, setDaysData] = useState<Date[]>();
 	const supabase = useSupabaseClient<Database>();
 
+	const updateDueType = () => {};
+
 	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
 		setAssignmentData: state.set,
 		assignmentData: state.data,

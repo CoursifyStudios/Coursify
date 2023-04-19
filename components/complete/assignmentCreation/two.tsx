@@ -5,7 +5,10 @@ import { Button } from "../../misc/button";
 import { submissionType, useAssignmentStore } from ".";
 import * as Yup from "yup";
 import Editor from "../../editors/richeditor";
-import { AssignmentTypes } from "../../../lib/db/assignments";
+import {
+	AssignmentTypes,
+	NewAssignmentData,
+} from "../../../lib/db/assignments";
 
 export default function AssignmentDetails({
 	stage,
@@ -27,28 +30,6 @@ export default function AssignmentDetails({
 
 	if (stage != 2) return null;
 
-	const AssignmentWatcher = () => {
-		const { errors, values } = useFormikContext();
-
-		useEffect(() => {
-			if (
-				Object.keys(errors).length == 0 &&
-				//@ts-expect-error Formik "types" are a joke
-				values.name &&
-				//@ts-expect-error Formik "types" are a joke
-				values.description
-			) {
-				setDisabled(false);
-			} else {
-				if (disabled != true) {
-					setDisabled(true);
-				}
-			}
-		}, [errors, values]);
-
-		return null;
-	};
-
 	return (
 		<>
 			<h2 className="mt-6 text-xl font-bold">
@@ -68,15 +49,14 @@ export default function AssignmentDetails({
 				initialValues={{
 					name: assignmentData?.name || "",
 					description: assignmentData?.description || "",
-					submissionType: assignmentData?.submissionType || "",
+					submissionInstructions: assignmentData?.submissionInstructions || "",
 				}}
 				onSubmit={(values) => {
-					setAssignmentData(values);
+					setAssignmentData(values as NewAssignmentData);
 				}}
 			>
-				{({ submitForm }) => (
+				{({ submitForm, values, errors }) => (
 					<Form className="mt-10 flex flex-col space-y-3 ">
-						<AssignmentWatcher />
 						<label htmlFor="name" className="flex flex-col">
 							<span className="text-sm font-medium">
 								Assignment Name <span className="text-red-600">*</span>
@@ -103,17 +83,17 @@ export default function AssignmentDetails({
 								<ErrorMessage name="description" />
 							</div>
 						</label>
-						<label htmlFor="submissionType" className="flex flex-col">
+						<label htmlFor="submissionInstructions" className="flex flex-col">
 							<span className="text-sm font-medium">
 								Submission Instructions
 							</span>
 							<Field
 								className="mt-1 rounded-md border-gray-300  bg-white/50 focus:ring-1"
 								type="text"
-								name="submissionType"
+								name="submissionInstructions"
 							/>
 							<div className="text-sm text-red-600">
-								<ErrorMessage name="submissionType" />
+								<ErrorMessage name="submissionInstructions" />
 							</div>
 						</label>
 						<span className="text-sm font-medium">Full Length Description</span>
@@ -139,7 +119,11 @@ export default function AssignmentDetails({
 								<Button
 									color="bg-blue-500"
 									className="text-white "
-									disabled={disabled}
+									disabled={Boolean(
+										Object.keys(errors).length == 0 &&
+											values.name &&
+											values.description
+									)}
 								>
 									Next
 								</Button>
