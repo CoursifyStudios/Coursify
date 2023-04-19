@@ -119,11 +119,13 @@ export default function AssignmentDetails({
 								<Button
 									color="bg-blue-500"
 									className="text-white "
-									disabled={Boolean(
-										Object.keys(errors).length == 0 &&
+									disabled={
+										!(
+											Object.keys(errors).length == 0 &&
 											values.name &&
 											values.description
-									)}
+										)
+									}
 								>
 									Next
 								</Button>

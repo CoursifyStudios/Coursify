@@ -17,7 +17,6 @@ const AssignmentCalender: NextPage<{
 		setAssignmentData: state.set,
 		assignmentData: state.data,
 	}));
-	//const [selectedDay, setSelectedDay] = useState<number>();
 
 	const updateAssignmentData = (date: Date, day: number) => {
 		if (type == "due") {
@@ -29,8 +28,6 @@ const AssignmentCalender: NextPage<{
 				publishDay: day,
 			} as NewAssignmentData);
 		}
-
-		//setSelectedDay(day);
 	};
 
 	if (!assignmentData) return null;
