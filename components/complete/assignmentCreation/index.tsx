@@ -20,6 +20,7 @@ import {
 import AssignmentCreation from "./three";
 import { create } from "zustand";
 import AssignmentDetails from "./two";
+import { DueType } from "../assignments";
 
 interface AssignmmentState {
 	data: NewAssignmentData | undefined;
@@ -163,6 +164,8 @@ export const CreateAssignment: NextPage<{
 								onClick={() => {
 									setAssignmentData({
 										submissionType: submission.type,
+										dueType: DueType.START_OF_CLASS,
+										publishType: DueType.START_OF_CLASS,
 									} as NewAssignmentData);
 									setStage((stage) => stage + 1);
 								}}

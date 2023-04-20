@@ -11,6 +11,7 @@ import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { getClassTimesForXDays } from "../../../lib/db/classes";
 import { Database } from "../../../lib/db/database.types";
 import { useAssignmentStore } from ".";
+import { NewAssignmentData } from "../../../lib/db/assignments";
 
 const AssignmentCreation: NextPage<{
 	content?: SerializedEditorState<SerializedLexicalNode>;
@@ -25,12 +26,20 @@ const AssignmentCreation: NextPage<{
 	const [daysData, setDaysData] = useState<Date[]>();
 	const supabase = useSupabaseClient<Database>();
 
-	const updateDueType = () => {};
-
 	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
 		setAssignmentData: state.set,
 		assignmentData: state.data,
 	}));
+
+	const setType = (type: { type: DueType; name: string }, due: boolean) => {
+		if (due) {
+			setSelectedDueType(type);
+			setAssignmentData({ dueType: type.type } as NewAssignmentData);
+		} else {
+			setSelectedPublishType(type);
+			setAssignmentData({ publishType: type.type } as NewAssignmentData);
+		}
+	};
 
 	const refreshData = async () => {
 		setDaysData(undefined);
@@ -48,29 +57,20 @@ const AssignmentCreation: NextPage<{
 
 		if (
 			assignmentData &&
-			(assignmentData.dueType
-				? assignmentData.dueType && assignmentData.dueDate
-				: true) &&
-			assignmentData.publishDate &&
-			assignmentData.publishType
+			(due ? assignmentData.dueType && assignmentData.dueDate : true) &&
+			(publish
+				? assignmentData.publishType && assignmentData.publishDate
+				: true)
 		) {
 			return true;
 		}
 		return false;
-
-		// setAssignmentData({
-		// 	dueType: selectedDueType,
-		// 	dueDate: selectedDueType,
-		// 	publishType: selectedPublishType,
-		// })
-	}, [assignmentData]);
+	}, [assignmentData, due, publish]);
 
 	useEffect(() => {
 		if (!daysData) refreshData();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-
-	//if (!assignmentData) return null;
 
 	return (
 		<>
@@ -164,7 +164,7 @@ const AssignmentCreation: NextPage<{
 			<>
 				<Listbox
 					value={type == "due" ? selectedDueType : selectedPublishType}
-					onChange={type == "due" ? setSelectedDueType : setSelectedPublishType}
+					onChange={(value) => setType(value, type == "due")}
 					as="div"
 					className="z-20 mr-auto flex flex-col items-center"
 				>

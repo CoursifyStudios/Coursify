@@ -1,12 +1,5 @@
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
-import { Database } from "../../../lib/db/database.types";
 import { NewAssignmentData } from "../../../lib/db/assignments";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { Listbox } from "@headlessui/react";
-import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
-import { getDaysInMonth } from "../../../lib/misc/dates";
-import { getClassTimesForXDays } from "../../../lib/db/classes";
 import { useAssignmentStore } from ".";
 
 const AssignmentCalender: NextPage<{
