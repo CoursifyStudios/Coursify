@@ -33,10 +33,11 @@ const AssignmentCalender: NextPage<{
 	if (!assignmentData) return null;
 
 	return (
-		<>
-			{daysData ? (
-				<div className="scrollbar-fancy relatiive mt-2 flex max-h-56 flex-wrap gap-2 overflow-auto">
-					{fillArrayWithDates(new Date(), 80).map((date, i) => (
+		<div
+			className={`scrollbar-fancy relatiive mt-2 flex h-56 flex-wrap gap-2 overflow-auto`}
+		>
+			{daysData
+				? fillArrayWithDates(new Date(), 80).map((date, i) => (
 						<>
 							{(i == 0 || date.getDate() == 1) && (
 								<h2
@@ -70,26 +71,14 @@ const AssignmentCalender: NextPage<{
 								{date.getDate()}
 							</div>
 						</>
-					))}
-				</div>
-			) : (
-				<div className="flex flex-col">
-					<div className="my-2 mr-auto animate-pulse rounded bg-gray-200 px-2">
-						<span className="invisible text-lg">
-							{new Date().toLocaleString("default", { month: "long" })}
-						</span>
-					</div>
-					<div className="grid grid-cols-7 gap-4">
-						{[...new Array(14)].map((_, i) => (
-							<div
-								className="h-10 w-full animate-pulse rounded bg-gray-200"
-								key={i}
-							></div>
-						))}
-					</div>
-				</div>
-			)}
-		</>
+				  ))
+				: [...new Array(28)].map((_, i) => (
+						<div
+							className="h-10 w-10 animate-pulse rounded bg-gray-200"
+							key={i}
+						></div>
+				  ))}
+		</div>
 	);
 };
 
