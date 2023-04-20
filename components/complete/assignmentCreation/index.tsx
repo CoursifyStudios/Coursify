@@ -42,9 +42,9 @@ export const CreateAssignment: NextPage<{
 	setOpen: Dispatch<SetStateAction<boolean>>;
 	block: number;
 	scheduleType: number;
-}> = ({ open, setOpen, block, scheduleType }) => {
+	classid: string;
+}> = ({ open, setOpen, block, scheduleType, classid }) => {
 	const [stage, setStage] = useState(1);
-	const [content, setContent] = useState<SerializedEditorState>();
 	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
 		setAssignmentData: state.set,
 		assignmentData: state.data,
@@ -54,7 +54,6 @@ export const CreateAssignment: NextPage<{
 		setOpen(false);
 		setStage(1);
 		setAssignmentData(undefined);
-		setContent(undefined);
 		setAssignmentData(undefined);
 	};
 
@@ -118,18 +117,14 @@ export const CreateAssignment: NextPage<{
 								</div>
 
 								<AssignmentType />
-								<AssignmentDetails
-									stage={stage}
-									content={content}
-									setContent={setContent}
-									setStage={setStage}
-								/>
+								<AssignmentDetails stage={stage} setStage={setStage} />
 								{stage == 3 && (
 									<AssignmentCreation
 										block={block}
 										scheduleType={scheduleType}
-										content={content}
 										setStage={setStage}
+										closeMenu={closeMenu}
+										classid={classid}
 									/>
 								)}
 

@@ -13,13 +13,9 @@ import {
 export default function AssignmentDetails({
 	stage,
 	setStage,
-	content,
-	setContent,
 }: {
 	stage: number;
 	setStage: Dispatch<SetStateAction<number>>;
-	content: SerializedEditorState | undefined;
-	setContent: Dispatch<SetStateAction<SerializedEditorState | undefined>>;
 }) {
 	const [editorState, setEditorState] = useState<EditorState>();
 	const [disabled, setDisabled] = useState(true);
@@ -52,7 +48,10 @@ export default function AssignmentDetails({
 					submissionInstructions: assignmentData?.submissionInstructions || "",
 				}}
 				onSubmit={(values) => {
-					setAssignmentData(values as NewAssignmentData);
+					setAssignmentData({
+						...values,
+						content: editorState?.toJSON(),
+					} as NewAssignmentData);
 				}}
 			>
 				{({ submitForm, values, errors }) => (
@@ -100,7 +99,7 @@ export default function AssignmentDetails({
 						<Editor
 							editable
 							updateState={setEditorState}
-							initialState={content}
+							initialState={assignmentData?.content}
 							className="scrollbar-fancy mt-1 mb-6 max-h-[30vh] min-h-[6rem] overflow-y-auto overflow-x-hidden rounded-md border border-gray-300 bg-white/50 pb-2 focus:ring-1"
 							focus={true}
 						/>
@@ -112,7 +111,6 @@ export default function AssignmentDetails({
 							<span
 								onClick={() => {
 									submitForm();
-									setContent(editorState?.toJSON());
 									setStage((stage) => stage + 1);
 								}}
 							>

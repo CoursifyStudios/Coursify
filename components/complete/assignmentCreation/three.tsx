@@ -9,22 +9,26 @@ import { SerializedEditorState, SerializedLexicalNode } from "lexical";
 import AssignmentCalender from "./assignmentCalender";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { getClassTimesForXDays } from "../../../lib/db/classes";
-import { Database } from "../../../lib/db/database.types";
+import { Database, Json } from "../../../lib/db/database.types";
 import { useAssignmentStore } from ".";
 import { NewAssignmentData } from "../../../lib/db/assignments";
+import { LoadingSmall } from "../../misc/loading";
 
 const AssignmentCreation: NextPage<{
-	content?: SerializedEditorState<SerializedLexicalNode>;
 	setStage: Dispatch<SetStateAction<number>>;
 	block: number;
 	scheduleType: number;
-}> = ({ content, setStage, block, scheduleType }) => {
+	classid: string;
+	closeMenu: () => void;
+}> = ({ setStage, block, scheduleType, closeMenu, classid }) => {
+	const supabase = useSupabaseClient<Database>();
 	const [selectedDueType, setSelectedDueType] = useState(types[0]);
 	const [selectedPublishType, setSelectedPublishType] = useState(types[0]);
 	const [publish, setPublished] = useState(false);
 	const [due, setDue] = useState(true);
 	const [daysData, setDaysData] = useState<Date[]>();
-	const supabase = useSupabaseClient<Database>();
+	const [submitting, setSubmitting] = useState<boolean>();
+	const [error, setError] = useState("");
 
 	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
 		setAssignmentData: state.set,
@@ -53,8 +57,6 @@ const AssignmentCreation: NextPage<{
 	};
 
 	const canCreate = useMemo(() => {
-		console.log("ran", assignmentData);
-
 		if (
 			assignmentData &&
 			(due ? assignmentData.dueType && assignmentData.dueDate : true) &&
@@ -66,6 +68,28 @@ const AssignmentCreation: NextPage<{
 		}
 		return false;
 	}, [assignmentData, due, publish]);
+
+	const createAssignment = async () => {
+		if (!assignmentData) {
+			setError("AssignmentData not found");
+			return;
+		}
+		setSubmitting(true);
+		const data: Database["public"]["Functions"]["create_assignment"]["Args"] = {
+			class_id: classid,
+			content: assignmentData.content as unknown as Json,
+			description: assignmentData.description,
+			name: assignmentData.name,
+			submission_instructions: assignmentData.submissionInstructions,
+			submission_type: assignmentData.submissionType,
+		};
+		if (due) {
+			data.due_date = assignmentData.dueDate?.toString();
+		}
+		await supabase.rpc("create_assignment", data);
+		setSubmitting(false);
+		setTimeout(closeMenu, 500);
+	};
 
 	useEffect(() => {
 		if (!daysData) refreshData();
@@ -103,7 +127,7 @@ const AssignmentCreation: NextPage<{
 
 						<Editor
 							editable={false}
-							initialState={content}
+							initialState={assignmentData?.content}
 							className="scrollbar-fancy max-h-[30vh] overflow-y-auto"
 						/>
 					</>
@@ -146,13 +170,21 @@ const AssignmentCreation: NextPage<{
 					<Button>Prev</Button>
 				</span>
 
-				<span onClick={() => setStage((stage) => stage + 1)}>
+				<span onClick={createAssignment}>
 					<Button
 						color="bg-blue-500"
 						className="text-white "
-						disabled={!canCreate}
+						disabled={!canCreate || submitting || submitting == false}
 					>
-						Create
+						{submitting ? (
+							<>
+								Creating <LoadingSmall className="ml-2" />
+							</>
+						) : submitting == false ? (
+							"Created!"
+						) : (
+							"Create"
+						)}
 					</Button>
 				</span>
 			</section>

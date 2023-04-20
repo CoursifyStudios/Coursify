@@ -135,6 +135,7 @@ const Class: NextPage = () => {
 					scheduleType={data.data.schedule_type}
 					open={assignmentCreationOpen}
 					setOpen={setAssignmentCreationOpen}
+					classid={classid}
 				/>
 			)}
 			<div className="relative mb-6 h-48 w-full">

@@ -2,6 +2,7 @@ import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import supabase from "../supabase";
 import { Database } from "./database.types";
 import { DueType } from "../../components/complete/assignments";
+import { SerializedEditorState } from "lexical";
 
 export const getAllAssignments = async (
 	supabaseClient: SupabaseClient<Database>
@@ -93,6 +94,7 @@ export type AssignmentTypes =
 export type NewAssignmentData = {
 	name: string;
 	description: string;
+	content: SerializedEditorState;
 	submissionType: string;
 	submissionInstructions?: string;
 	dueType?: DueType;

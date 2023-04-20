@@ -70,7 +70,7 @@ export interface Database {
 					content: Json | null;
 					created_date: string | null;
 					description: string;
-					due_date: string;
+					due_date: string | null;
 					due_type: number | null;
 					group_id: string | null;
 					id: string;
@@ -85,7 +85,7 @@ export interface Database {
 					content?: Json | null;
 					created_date?: string | null;
 					description: string;
-					due_date?: string;
+					due_date?: string | null;
 					due_type?: number | null;
 					group_id?: string | null;
 					id?: string;
@@ -100,7 +100,7 @@ export interface Database {
 					content?: Json | null;
 					created_date?: string | null;
 					description?: string;
-					due_date?: string;
+					due_date?: string | null;
 					due_type?: number | null;
 					group_id?: string | null;
 					id?: string;
@@ -382,17 +382,7 @@ export interface Database {
 							name: string;
 							description: string;
 							submission_type: string;
-							content: Json;
-							due_type: number;
-							class_id: string;
-						};
-						Returns: boolean;
-				  }
-				| {
-						Args: {
-							name: string;
-							description: string;
-							submission_type: string;
+							submission_instructions: string;
 							content: Json;
 							due_type: number;
 							due_date: string;
@@ -406,7 +396,29 @@ export interface Database {
 						Args: {
 							name: string;
 							description: string;
+							submission_type: string;
+							submission_instructions: string;
+							content: Json;
 							class_id: string;
+							due_type?: number;
+							due_date?: string;
+							publish_type?: number;
+							publish_date?: string;
+						};
+						Returns: boolean;
+				  }
+				| {
+						Args: {
+							name: string;
+							description: string;
+							submission_type: string;
+							content: Json;
+							class_id: string;
+							submission_instructions?: string;
+							due_type?: number;
+							due_date?: string;
+							publish_type?: number;
+							publish_date?: string;
 						};
 						Returns: boolean;
 				  };
