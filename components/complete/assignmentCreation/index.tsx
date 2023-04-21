@@ -161,6 +161,7 @@ export const CreateAssignment: NextPage<{
 										submissionType: submission.type,
 										dueType: DueType.START_OF_CLASS,
 										publishType: DueType.START_OF_CLASS,
+										hidden: false,
 									} as NewAssignmentData);
 									setStage((stage) => stage + 1);
 								}}

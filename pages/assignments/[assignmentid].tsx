@@ -119,10 +119,7 @@ const Post: NextPage = () => {
 									{/* List of assignments */}
 									<AssignmentPreview
 										supabase={supabase}
-										assignment={{
-											...assignment,
-											due_type: assignment.due_type || DueType.DATE,
-										}}
+										assignment={assignment}
 										userId={user.id}
 										starredAsParam={
 											assignment.starred

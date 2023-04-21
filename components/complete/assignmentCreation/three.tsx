@@ -13,6 +13,8 @@ import { Database, Json } from "../../../lib/db/database.types";
 import { useAssignmentStore } from ".";
 import { NewAssignmentData } from "../../../lib/db/assignments";
 import { LoadingSmall } from "../../misc/loading";
+import { Toggle } from "../../misc/toggle";
+import { Info } from "../../tooltips/info";
 
 const AssignmentCreation: NextPage<{
 	setStage: Dispatch<SetStateAction<number>>;
@@ -29,6 +31,7 @@ const AssignmentCreation: NextPage<{
 	const [daysData, setDaysData] = useState<Date[]>();
 	const [submitting, setSubmitting] = useState<boolean>();
 	const [error, setError] = useState("");
+	const [hidden, setHidden] = useState(false);
 
 	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
 		setAssignmentData: state.set,
@@ -82,6 +85,7 @@ const AssignmentCreation: NextPage<{
 			name: assignmentData.name,
 			submission_instructions: assignmentData.submissionInstructions,
 			submission_type: assignmentData.submissionType,
+			hidden: assignmentData.hidden,
 		};
 		if (due) {
 			data.due_date = assignmentData.dueDate?.toString();
@@ -171,8 +175,9 @@ const AssignmentCreation: NextPage<{
 						<WhenDue type="due" />
 					) : (
 						<div className="text-sm text-gray-700">
-							This assignment does not have a due date, and will be hidden to
-							students. Note that this overrides auto publishing.
+							This assignment does not have a due date. It will be avalible to
+							students, and they{"'"}ll be able to submit assignments. Coursify
+							reccomends adding a due date.
 						</div>
 					)}
 				</div>
@@ -184,28 +189,46 @@ const AssignmentCreation: NextPage<{
 				</section>
 			)}
 
-			<section className="ml-auto mt-6 flex space-x-4">
-				<span onClick={() => setStage((stage) => stage - 1)}>
-					<Button>Prev</Button>
-				</span>
+			<section className="mt-6 flex items-center justify-between space-x-4">
+				<div className="flex items-center font-medium">
+					<span className="mr-2 text-gray-800">Hidden</span>
+					<Info className=" mr-4">
+						Hide this assignment from students. We reccomend setting a publish
+						date rather than enabling this option, since you can automagiclly
+						make it avalible to students at a time of your choice.
+					</Info>
+					{assignmentData && (
+						<Toggle
+							enabled={assignmentData?.hidden}
+							setEnabled={(v) =>
+								setAssignmentData({ hidden: v } as NewAssignmentData)
+							}
+						/>
+					)}
+				</div>
+				<div className="flex space-x-4">
+					<span onClick={() => setStage((stage) => stage - 1)}>
+						<Button>Prev</Button>
+					</span>
 
-				<span onClick={createAssignment}>
-					<Button
-						color="bg-blue-500"
-						className="text-white "
-						disabled={!canCreate || submitting || submitting == false}
-					>
-						{submitting ? (
-							<>
-								Creating <LoadingSmall className="ml-2" />
-							</>
-						) : submitting == false ? (
-							"Created!"
-						) : (
-							"Create"
-						)}
-					</Button>
-				</span>
+					<span onClick={createAssignment}>
+						<Button
+							color="bg-blue-500"
+							className="text-white "
+							disabled={!canCreate || submitting || submitting == false}
+						>
+							{submitting ? (
+								<>
+									Creating <LoadingSmall className="ml-2" />
+								</>
+							) : submitting == false ? (
+								"Created!"
+							) : (
+								"Create"
+							)}
+						</Button>
+					</span>
+				</div>
 			</section>
 		</>
 	);
@@ -258,31 +281,6 @@ const AssignmentCreation: NextPage<{
 		);
 	}
 };
-
-function Toggle({
-	enabled,
-	setEnabled,
-}: {
-	enabled: boolean;
-	setEnabled: Dispatch<SetStateAction<boolean>>;
-}) {
-	return (
-		<Switch
-			checked={enabled}
-			onChange={setEnabled}
-			className={`${
-				enabled ? "bg-blue-500" : "bg-gray-200"
-			} relative inline-flex h-6 w-11 items-center rounded-full transition`}
-		>
-			<span className="sr-only">Enable this feature</span>
-			<span
-				className={`${
-					enabled ? "translate-x-6" : "translate-x-1"
-				} inline-block h-4 w-4 transform rounded-full bg-white transition`}
-			/>
-		</Switch>
-	);
-}
 
 export const types: { type: DueType; name: string }[] = [
 	{

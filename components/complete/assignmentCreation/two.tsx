@@ -64,6 +64,7 @@ export default function AssignmentDetails({
 								className="mt-1 rounded-md border-gray-300 bg-white/50 focus:ring-1"
 								type="text"
 								name="name"
+								autoFocus
 							/>
 							<div className="text-sm text-red-600">
 								<ErrorMessage name="name" />
@@ -101,7 +102,7 @@ export default function AssignmentDetails({
 							updateState={setEditorState}
 							initialState={assignmentData?.content}
 							className="scrollbar-fancy mt-1 mb-6 max-h-[30vh] min-h-[6rem] overflow-y-auto overflow-x-hidden rounded-md border border-gray-300 bg-white/50 pb-2 focus:ring-1"
-							focus={true}
+							focus={false}
 						/>
 						<div className="ml-auto flex space-x-4">
 							<span onClick={() => setStage((stage) => stage - 1)}>

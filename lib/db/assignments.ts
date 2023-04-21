@@ -103,4 +103,5 @@ export type NewAssignmentData = {
 	publishType?: DueType;
 	publishDate?: Date;
 	publishDay?: number;
+	hidden: boolean;
 };
