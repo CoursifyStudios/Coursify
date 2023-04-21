@@ -75,7 +75,7 @@ const AssignmentCreation: NextPage<{
 			return;
 		}
 		setSubmitting(true);
-		const data: Database["public"]["Functions"]["create_assignment"]["Args"] = {
+		const data: Database["public"]["Tables"]["assignments"]["Insert"] = {
 			class_id: classid,
 			content: assignmentData.content as unknown as Json,
 			description: assignmentData.description,
@@ -85,8 +85,13 @@ const AssignmentCreation: NextPage<{
 		};
 		if (due) {
 			data.due_date = assignmentData.dueDate?.toString();
+			data.due_type = assignmentData.dueType;
 		}
-		await supabase.rpc("create_assignment", data);
+		if (publish) {
+			data.publish_date = assignmentData.publishDate?.toString();
+			data.publish_type = assignmentData.publishType;
+		}
+		await supabase.from("assignments").insert(data);
 		setSubmitting(false);
 		setTimeout(closeMenu, 500);
 	};
@@ -119,19 +124,20 @@ const AssignmentCreation: NextPage<{
 					</>
 				)}
 				{/* @ts-expect-error lexical-bad-typings */}
-				{content && content?.root.children[0].children.length > 0 && (
-					<>
-						<span className="mt-3 font-medium text-gray-800">
-							Full Length Description:{" "}
-						</span>
+				{assignmentData?.content &&
+					assignmentData?.content?.root.children[0].children.length > 0 && (
+						<>
+							<span className="mt-3 font-medium text-gray-800">
+								Full Length Description:{" "}
+							</span>
 
-						<Editor
-							editable={false}
-							initialState={assignmentData?.content}
-							className="scrollbar-fancy max-h-[30vh] overflow-y-auto"
-						/>
-					</>
-				)}
+							<Editor
+								editable={false}
+								initialState={assignmentData?.content}
+								className="scrollbar-fancy max-h-[30vh] overflow-y-auto"
+							/>
+						</>
+					)}
 			</section>
 			<hr className="my-4" />
 			<section className="grid grid-cols-2 gap-4">
