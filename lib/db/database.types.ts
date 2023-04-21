@@ -73,6 +73,7 @@ export interface Database {
 					due_date: string | null;
 					due_type: number | null;
 					group_id: string | null;
+					hidden: boolean;
 					id: string;
 					name: string;
 					publish_date: string | null;
@@ -88,6 +89,7 @@ export interface Database {
 					due_date?: string | null;
 					due_type?: number | null;
 					group_id?: string | null;
+					hidden?: boolean;
 					id?: string;
 					name: string;
 					publish_date?: string | null;
@@ -103,6 +105,7 @@ export interface Database {
 					due_date?: string | null;
 					due_type?: number | null;
 					group_id?: string | null;
+					hidden?: boolean;
 					id?: string;
 					name?: string;
 					publish_date?: string | null;
@@ -376,52 +379,6 @@ export interface Database {
 				};
 				Returns: boolean;
 			};
-			create_assignment:
-				| {
-						Args: {
-							name: string;
-							description: string;
-							submission_type: string;
-							submission_instructions: string;
-							content: Json;
-							due_type: number;
-							due_date: string;
-							publish_type: number;
-							publish_date: string;
-							class_id: string;
-						};
-						Returns: boolean;
-				  }
-				| {
-						Args: {
-							name: string;
-							description: string;
-							submission_type: string;
-							submission_instructions: string;
-							content: Json;
-							class_id: string;
-							due_type?: number;
-							due_date?: string;
-							publish_type?: number;
-							publish_date?: string;
-						};
-						Returns: boolean;
-				  }
-				| {
-						Args: {
-							name: string;
-							description: string;
-							submission_type: string;
-							content: Json;
-							class_id: string;
-							submission_instructions?: string;
-							due_type?: number;
-							due_date?: string;
-							publish_type?: number;
-							publish_date?: string;
-						};
-						Returns: boolean;
-				  };
 			get_profile_classes: {
 				Args: {
 					id: string;
