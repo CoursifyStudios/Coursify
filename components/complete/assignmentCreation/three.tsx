@@ -91,8 +91,12 @@ const AssignmentCreation: NextPage<{
 			data.publish_date = assignmentData.publishDate?.toString();
 			data.publish_type = assignmentData.publishType;
 		}
-		await supabase.from("assignments").insert(data);
+		const { error } = await supabase.from("assignments").insert(data);
 		setSubmitting(false);
+		if (error) {
+			setError(error.message);
+			return;
+		}
 		setTimeout(closeMenu, 500);
 	};
 
@@ -123,8 +127,9 @@ const AssignmentCreation: NextPage<{
 						)}
 					</>
 				)}
-				{/* @ts-expect-error lexical-bad-typings */}
+
 				{assignmentData?.content &&
+					/* @ts-expect-error lexical-bad-typings */
 					assignmentData?.content?.root.children[0].children.length > 0 && (
 						<>
 							<span className="mt-3 font-medium text-gray-800">
@@ -133,13 +138,15 @@ const AssignmentCreation: NextPage<{
 
 							<Editor
 								editable={false}
-								initialState={assignmentData?.content}
+								initialState={assignmentData.content}
 								className="scrollbar-fancy max-h-[30vh] overflow-y-auto"
 							/>
 						</>
 					)}
 			</section>
+
 			<hr className="my-4" />
+
 			<section className="grid grid-cols-2 gap-4">
 				<div className="flex flex-col">
 					<div className="flex justify-between">
@@ -170,6 +177,12 @@ const AssignmentCreation: NextPage<{
 					)}
 				</div>
 			</section>
+
+			{error && (
+				<section className="mt-2 font-semibold">
+					Error: <span className="text-red-700">{error}</span>
+				</section>
+			)}
 
 			<section className="ml-auto mt-6 flex space-x-4">
 				<span onClick={() => setStage((stage) => stage - 1)}>

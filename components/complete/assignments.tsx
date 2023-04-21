@@ -19,13 +19,7 @@ export function AssignmentPreview({
 	showClassPill,
 }: {
 	supabase: SupabaseClient<Database>;
-	assignment: {
-		id: string;
-		name: string;
-		description: string;
-		due_type: number;
-		due_date: string;
-	};
+	assignment: Database["public"]["Tables"]["assignments"]["Row"];
 	starredAsParam: boolean;
 	schedule: ScheduleInterface[];
 	scheduleT: ScheduleInterface[];
