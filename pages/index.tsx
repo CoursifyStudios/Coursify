@@ -12,7 +12,6 @@ import {
 } from "../lib/db/schedule";
 import ScheduleComponent from "../components/complete/schedule";
 import { AssignmentPreview } from "../components/complete/assignments";
-import { ColoredPill } from "../components/misc/pill";
 import Link from "next/link";
 
 export default function Home() {
@@ -126,7 +125,6 @@ export default function Home() {
 						<section id="Classes" className="mb-12">
 							<div className="flex items-end md:mt-8 lg:mt-0">
 								<h2 className="title">Classes</h2>
-								{loading && <Loading className="ml-4" />}
 							</div>
 							<div className="mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 ">
 								{classes && classes.data && schedule
