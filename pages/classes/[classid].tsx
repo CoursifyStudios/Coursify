@@ -129,7 +129,7 @@ const Class: NextPage = () => {
 
 	return (
 		<div className="mx-auto my-10 w-full max-w-screen-xl px-4">
-			{data.data && (
+			{data.data && typeof classid == "string" && (
 				<CreateAssignment
 					block={data.data.block}
 					scheduleType={data.data.schedule_type}
