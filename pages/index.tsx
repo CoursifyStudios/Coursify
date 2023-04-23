@@ -21,17 +21,14 @@ export default function Home() {
 	const user = useUser();
 	const [classes, setClasses] = useState<AllClassesResponse>();
 	const [loading, setLoading] = useState(true);
-	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
-	const [tomorrowSchedule, setTomorrowSchedule] =
-		useState<ScheduleInterface[]>();
-	const [schedules, setSchedules] = useState<ScheduleInterface[][]>();
+	const [schedules, setSchedules] = useState<ScheduleInterface[][]>([]);
 
 	//because Lukas left this a mess, until i get around to fixing it
-	const todayDAY = new Date();
-	let tomorrowDAY = new Date();
-	tomorrowDAY.setDate(todayDAY.getDate() + 1);
+	const dateToday = new Date();
+	let dateTomorrow = new Date();
+	dateTomorrow.setDate(dateToday.getDate() + 1);
 	let dayAfter = new Date();
-	dayAfter.setDate(todayDAY.getDate() + 2);
+	dayAfter.setDate(dateToday.getDate() + 2);
 
 	useEffect(() => {
 		const [classes, schedule] = [
@@ -44,7 +41,7 @@ export default function Home() {
 		if (schedule) {
 			const parsedSchedules: { date: string; schedule: ScheduleInterface[] }[] =
 				JSON.parse(schedule);
-			parsedSchedules.forEach((parsedSchedule) => {
+			parsedSchedules.forEach((parsedSchedule, index) => {
 				/**
 				 * this sees if the schedule matches the current day. Theoreticlly, if you close
 				 * your computer that night and open it up the next day, it *should* have the updated schedule
@@ -53,11 +50,12 @@ export default function Home() {
 				 * been the fact that I looked at it as I was getting off a plane at 3am, but y'know)
 				 *      ...sounds like a skill issue -Bill
 				 */
-				if (parsedSchedule.date === todayDAY.toISOString()) {
-					setSchedule(parsedSchedule.schedule);
-				} else if (parsedSchedule.date === dayPlus(todayDAY, 1).toISOString()) {
-					setTomorrowSchedule(parsedSchedule.schedule);
-				}
+                //PLEASE NOTE I MAY HAVE RUINED THAT FEATURE THAT LUKAS MENTIONED ABOVE
+                //PLEASE DIRECT ANY AND ALL COMPLAINT TO @Seagullz#0212 ON DISCORD
+                //IF THIS IS ACTUALLY A PROBLEM LMK -BILL
+                let temp = schedules;
+                temp[index] = parsedSchedule.schedule;
+                setSchedules(temp);
 			});
 		}
 	}, []);
@@ -67,66 +65,31 @@ export default function Home() {
 			if (user) {
 				const [
 					classes,
-					//assignments,
 					scheduleDB,
-					scheduleClasses,
-					secondDaySchedule,
-					thirdDaySchedule,
 				] = await Promise.all([
 					getAllClasses(supabaseClient),
-					//getAllAssignments(supabaseClient),
-					// read comment in above useEffect as to why I'm fetching 3 dates
+					// read comment in above useEffect as to why I'm fetching 3 dates -Lukas
+                    // I'm going to fetch like 5 because weekends or some excuse - Bill
 					getSchedulesForXDays(supabaseClient, new Date(), 5),
-					getSchedule(supabaseClient, todayDAY),
-					getSchedule(supabaseClient, tomorrowDAY),
-					getSchedule(supabaseClient, dayAfter),
 				]);
 
 				setClasses(classes);
 				const fullSchedule: { date: Date; schedule: ScheduleInterface[] }[] =
 					[];
 
-				const addScheduleData = (
-					scheduleData: ScheduleData,
-					setter?: Dispatch<SetStateAction<ScheduleInterface[] | undefined>>
-				) => {
-					if (
-						!scheduleData.data?.template &&
-						scheduleData?.data?.schedule_items
-					) {
-						const data = scheduleData.data
-							?.schedule_items as unknown as ScheduleInterface[];
-						if (setter) setter(data);
-						fullSchedule.push({
-							date: new Date(scheduleData.data.date),
-							schedule: data,
-						});
-					} else if (
-						!Array.isArray(scheduleData.data?.schedule_templates) &&
-						scheduleData.data?.schedule_templates?.schedule_items
-					) {
-						const data = scheduleData.data.schedule_templates
-							.schedule_items as unknown as ScheduleInterface[];
-						if (setter) setter(data);
-						fullSchedule.push({
-							date: new Date(scheduleData.data.date),
-							schedule: data,
-						});
-					}
-				};
-
-				if (scheduleDB) {
+				if (scheduleDB.data) {
 					scheduleDB.data?.forEach((scheduleDay) => {
-                        if (scheduleDay) {setSchedules(schedules?.concat(scheduleDay))}
-                       
+                        if (!Array.isArray(scheduleDay.schedule_templates) && scheduleDay.schedule_templates!.schedule_items) {
+                            setSchedules(schedules.concat(scheduleDay.schedule_templates!.schedule_items as unknown as ScheduleInterface[]));
+                            fullSchedule.push({date: new Date(scheduleDay.date), schedule: scheduleDay.schedule_templates?.schedule_items as unknown as ScheduleInterface[]});
+                        }
+                        else if (!scheduleDay.schedule_templates && scheduleDay.schedule_items) {
+                            setSchedules(schedules?.concat(scheduleDay.schedule_items as unknown as ScheduleInterface[]));
+                            fullSchedule.push({date: new Date(scheduleDay.date), schedule: scheduleDay.schedule_items as unknown as ScheduleInterface[]})
+                        }
                     }
 					);
 				}
-                console.log(schedules);
-
-				addScheduleData(scheduleClasses, setSchedule);
-				addScheduleData(secondDaySchedule, setTomorrowSchedule);
-				//addScheduleData(thirdDaySchedule, sett);
 
 				setLoading(false);
 				sessionStorage.setItem("classes", JSON.stringify(classes));
@@ -149,11 +112,11 @@ export default function Home() {
 								{loading && <Loading className="ml-4" />}
 							</div>
 							<div className="mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 ">
-								{classes && classes.data && schedule
+								{classes && classes.data && schedules
 									? classes.data
 											.slice(0, classes.data.length)
 											.sort((a, b) =>
-												sortClasses(a, b, schedule, tomorrowSchedule)
+												sortClasses(a, b, schedules[0], schedules[1])
 											)
 											.map((classData) => (
 												<Class
@@ -162,7 +125,7 @@ export default function Home() {
 													key={classData.id}
 													className="h-full !w-full xl:!w-[18.5rem]"
 													isLink={true}
-													time={schedule?.find(
+													time={schedules[0]?.find(
 														(s) =>
 															s.specialEvent == undefined &&
 															classData.block == s.block &&
@@ -186,21 +149,21 @@ export default function Home() {
 							<div className="w-full md:mr-4 lg:mr-0">
 								<h2 className="title mr-2">
 									{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
-										todayDAY
+										dateToday
 									)}
 								</h2>
 
-								<ScheduleComponent classes={classes} schedule={schedule} />
+								<ScheduleComponent classes={classes} schedule={schedules[0]} />
 							</div>
 							<div className="w-full md:ml-4 lg:ml-0">
 								<h2 className="title mr-2">
 									{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
-										tomorrowDAY
+										dateTomorrow
 									)}
 								</h2>
 								<ScheduleComponent
 									classes={classes}
-									schedule={tomorrowSchedule}
+									schedule={schedules[1]}
 								/>
 							</div>
 						</section>
@@ -215,7 +178,7 @@ export default function Home() {
 									classes.data
 										.slice(0, classes.data.length)
 										.sort((a, b) =>
-											sortClasses(a, b, schedule, tomorrowSchedule)
+											sortClasses(a, b, schedules[0], schedules[1])
 										)
 										.filter(
 											(element) =>
@@ -245,7 +208,7 @@ export default function Home() {
 														</h2> */}
 													<div className="mb-5 flex-col space-y-4 first-letter:space-y-4">
 														{Array.isArray(aClass.assignments) &&
-															schedule &&
+															schedules &&
 															aClass.assignments.map((assignment) => (
 																<div
 																	key={assignment.id}
@@ -269,8 +232,8 @@ export default function Home() {
 																				: false
 																		}
 																		showClassPill={false}
-																		schedule={schedule!}
-																		scheduleT={tomorrowSchedule!}
+																		schedule={schedules[0]!}
+																		scheduleT={schedules[1]!}
 																		classes={aClass}
 																	/>
 																</div>
@@ -289,7 +252,7 @@ export default function Home() {
 									classes.data.map(
 										(aClass) =>
 											Array.isArray(aClass.assignments) &&
-											schedule &&
+											schedules &&
 											aClass.assignments.map(
 												(assignment) =>
 													(assignment.starred
@@ -317,8 +280,8 @@ export default function Home() {
 																		: false
 																}
 																showClassPill={true}
-																schedule={schedule!}
-																scheduleT={tomorrowSchedule!}
+																schedule={schedules[0]!}
+																scheduleT={schedules[1]!}
 																classes={aClass}
 															/>
 														</div>

@@ -126,8 +126,8 @@ export const getSchedulesForXDays = async (
 			`
 		date,
 		schedule_items,
-		template (
-			schedule_items
+		schedule_templates (
+			*
 		)
 		`
 		)
