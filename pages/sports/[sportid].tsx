@@ -26,7 +26,7 @@ const sport: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md px-2 py-0.5 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md shadow-black/25  "
 											: "bg-gray-200"
@@ -39,7 +39,7 @@ const sport: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md px-2 py-0.5 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md shadow-black/25  "
 											: "bg-gray-200"
@@ -52,7 +52,7 @@ const sport: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md px-2 py-0.5 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md shadow-black/25  "
 											: "bg-gray-200"
@@ -126,7 +126,7 @@ const sport: NextPage = () => {
 											</h2>
 											<EllipsisVerticalIcon className="h-6 w-6" />
 										</div>
-										<div className="flex items-center pt-1 pb-2">
+										<div className="flex items-center pb-2 pt-1">
 											<div className="inline-flex shrink-0 items-center rounded-full bg-gray-300 px-2.5 py-0.5">
 												<div className="h-4 w-4 rounded-full bg-white"></div>
 												<p className="ml-1.5 font-semibold text-neutral-700">

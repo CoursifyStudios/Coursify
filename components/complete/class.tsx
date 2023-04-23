@@ -48,7 +48,7 @@ export const Class: NextPage<{
 						width={700}
 						height={128}
 					/>
-					<div className="absolute top-2 right-2 left-2 flex items-center justify-between space-x-2">
+					<div className="absolute left-2 right-2 top-2 flex items-center justify-between space-x-2">
 						{classData.room && (
 							<ColoredPill
 								//color="gray"
@@ -140,7 +140,7 @@ export const Class: NextPage<{
 														test didn't appear over elements idk why
 													</div> */}
 													</Link>
-													<p className="mr-2 -ml-0.5 [&:last-child]:hidden">
+													<p className="-ml-0.5 mr-2 [&:last-child]:hidden">
 														,
 													</p>
 												</div>

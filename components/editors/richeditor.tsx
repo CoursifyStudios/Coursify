@@ -199,7 +199,7 @@ function EditorContextProvider({
 
 function Placeholder() {
 	return (
-		<div className="absolute top-2 left-1 -z-10 text-gray-600">
+		<div className="absolute left-1 top-2 -z-10 text-gray-600">
 			Enter some rich text...
 		</div>
 	);

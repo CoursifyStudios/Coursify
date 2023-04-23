@@ -84,7 +84,7 @@ const Class: NextPage = () => {
 			} else {
 				const [scheduleToday, scheduleTomorrow] = await Promise.all([
 					getSchedule(supabase, new Date("2023-03-03")),
-					getSchedule(supabase, new Date("2023-03-04")),
+					getSchedule(supabase, new Date("2023-03-04")), //change these
 				]);
 				setThisSchedule(scheduleToday, setSchedule);
 				setThisSchedule(scheduleTomorrow, setScheduleT);
@@ -93,6 +93,9 @@ const Class: NextPage = () => {
 		setEdited(false);
 		setEditorState(undefined);
 	}, [user, supabase, classid, refreshAnnouncements]);
+
+	// We need to fix refresh announcements to focus the user on the announcements tab panel
+	// but I guess that can wait for another day - Bill
 
 	if (!data)
 		return (
@@ -117,7 +120,7 @@ const Class: NextPage = () => {
 							<div className="mt-6 h-16 animate-pulse rounded-xl	 bg-gray-200 p-4"></div>
 						</div>
 						<div className="space-y-4">
-							<h2 className="title mt-4 mb-6">Assignments</h2>
+							<h2 className="title mb-6 mt-4">Assignments</h2>
 							<div className="flex h-20 grow animate-pulse rounded-xl bg-gray-200"></div>
 							<div className="flex h-20 grow animate-pulse rounded-xl bg-gray-200"></div>
 							<div className="flex h-20 grow animate-pulse rounded-xl bg-gray-200"></div>
@@ -150,7 +153,7 @@ const Class: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2.5 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md px-2.5 py-0.5 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md shadow-black/25  "
 											: "bg-gray-200"
@@ -163,7 +166,7 @@ const Class: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2.5 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md px-2.5 py-0.5 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md shadow-black/25 "
 											: "bg-gray-200"
@@ -176,7 +179,7 @@ const Class: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2.5 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md px-2.5 py-0.5 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md  shadow-black/25 "
 											: "bg-gray-200"
@@ -230,7 +233,7 @@ const Class: NextPage = () => {
 													setEditable(false);
 													updateEditorDB();
 												}}
-												className="brightness-hover absolute right-2 bottom-2 z-10 flex cursor-pointer rounded-lg bg-gray-200 px-2.5 py-1 font-semibold"
+												className="brightness-hover absolute bottom-2 right-2 z-10 flex cursor-pointer rounded-lg bg-gray-200 px-2.5 py-1 font-semibold"
 											>
 												Save
 											</div>
@@ -256,7 +259,6 @@ const Class: NextPage = () => {
 								{isTeacher && (
 									<AnnouncementPostingUI
 										communityid={classid as string}
-										isClass={true}
 										prevRefreshState={refreshAnnouncements}
 										refreshAnnouncements={setRefreshAnnouncements}
 									/>
@@ -353,13 +355,13 @@ const Class: NextPage = () => {
 						</div>
 					)}
 					<div className="space-y-4">
-						<h2 className="title mt-8 mb-6">Assignments</h2>
+						<h2 className="title mb-6 mt-8">Assignments</h2>
 						{isTeacher && (
 							<div
 								onClick={() => setAssignmentCreationOpen(true)}
 								className="group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black"
 							>
-								<PlusIcon className="mr-4 -ml-4 h-8 w-8 transition group-hover:scale-125" />{" "}
+								<PlusIcon className="-ml-4 mr-4 h-8 w-8 transition group-hover:scale-125" />{" "}
 								<h3 className="text-lg font-medium transition">
 									New Assignment
 								</h3>

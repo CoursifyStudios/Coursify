@@ -37,32 +37,25 @@ export const crossPostAnnouncements = async (
 	announcementAuthor: string,
 	announcementTitle: string,
 	announcementContent: Json,
-	communities: ClassOrGroupObject[]
+	// this is now goign to be designed with the idea that
+	// everything (group, class, sports group, etc.) is a
+	// class on the classes table. That means no more
+	// ClassOrGroupObjects
+	communities: string[]
 ) => {
-	const announcementData = await supabase
-		.from("announcements")
-		.insert({
-			author: announcementAuthor,
-			title: announcementTitle,
-			content: announcementContent,
-		})
-		.select()
-		.single();
 	communities.forEach(async (community) => {
-		if (community.trueIfClass) {
-			//better than trying both tables
-			const thing = await supabase.from("classes_announcements").insert({
-				class_id: community.id,
-				announcement_id: announcementData.data?.id!,
-			});
-		} else {
-			const thing = await supabase.from("groups_announcements").insert({
-				announcement_id: announcementData.data?.id!,
-				group_id: community.id,
-			});
-		}
+		const announcementData = await supabase
+			.from("announcements")
+			.insert({
+				author: announcementAuthor,
+				title: announcementTitle,
+				content: announcementContent,
+				class_id: community,
+			})
+			.select()
+			.single();
 	});
-	return announcementData;
+	return true;
 };
 
 export const getClassesAndGroups = async (
@@ -91,8 +84,3 @@ export const getClassesAndGroups = async (
 		.eq("id", userID)
 		.single();
 };
-export interface ClassOrGroupObject {
-	id: string;
-	name: string;
-	trueIfClass: boolean;
-}

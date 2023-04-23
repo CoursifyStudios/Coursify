@@ -103,7 +103,7 @@ const Post: NextPage = () => {
 
 	return (
 		// Left pane
-		<div className="mx-auto flex w-full max-w-screen-xl px-4 pt-6 pb-6 md:px-8 xl:px-0">
+		<div className="mx-auto flex w-full max-w-screen-xl px-4 pb-6 pt-6 md:px-8 xl:px-0">
 			<div
 				className={`scrollbar-fancy mr-4 grow items-stretch overflow-x-clip md:grow-0 ${
 					fullscreen ? "hidden" : "flex"
@@ -254,7 +254,7 @@ const Post: NextPage = () => {
 					</div>
 					<div className="mt-6 flex grow">
 						<div className="mt-4 w-full max-w-lg rounded-xl bg-gray-200 p-4 xl:max-w-xl"></div>
-						<div className="mt-4 ml-4 max-h-48 grow rounded-xl bg-gray-200 p-4 xl:max-w-xl"></div>
+						<div className="ml-4 mt-4 max-h-48 grow rounded-xl bg-gray-200 p-4 xl:max-w-xl"></div>
 					</div>
 				</div>
 			);
@@ -370,11 +370,11 @@ const Post: NextPage = () => {
 								<Editor
 									editable={false}
 									initialState={assignment.data.content}
-									className=" scrollbar-fancy mt-2 mb-5 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
+									className=" scrollbar-fancy mb-5 mt-2 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
 									focus={false}
 								/>
 							</div>
-							<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:ml-4 xl:mb-0 xl:w-72">
+							<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:mb-0 xl:ml-4 xl:w-72">
 								<h2 className="text-xl font-semibold">Submission</h2>
 								<div className="mt-2 rounded-xl bg-gray-200 p-6">
 									{assignment.data.submission_instructions ? (

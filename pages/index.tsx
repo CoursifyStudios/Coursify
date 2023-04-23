@@ -243,7 +243,7 @@ export default function Home() {
 							</div>
 						</section>
 						<section className=" grow xl:ml-10" id="Starred">
-							<h2 className="title mr-2 mb-4">Starred</h2>
+							<h2 className="title mb-4 mr-2">Starred</h2>
 							<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
 								{classes &&
 									classes.data &&
