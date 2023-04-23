@@ -36,6 +36,7 @@ import { Transition, Dialog } from "@headlessui/react";
 import { getIcon } from "../../components/complete/achievement";
 import { formatDate } from "../../lib/misc/dates";
 import { getDataOutArray } from "../../lib/misc/dataOutArray";
+import { SerializedEditorState } from "lexical";
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
@@ -299,14 +300,24 @@ const Post: NextPage = () => {
 									: "flex-col-reverse xl:flex-row"
 							}`}
 						>
-							<div className="flex flex-col">
+							<div className="flex grow flex-col">
 								<h2 className="text-xl font-semibold">Details</h2>
-								<Editor
-									editable={false}
-									initialState={assignment.data.content}
-									className=" scrollbar-fancy mt-2 mb-5 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
-									focus={false}
-								/>
+								{assignment.data.content &&
+								(assignment.data.content as unknown as SerializedEditorState) // @ts-expect-error lexical/shit-types
+									.root.children[0].children.length != 0 ? (
+									<Editor
+										editable={false}
+										initialState={assignment.data.content}
+										className=" scrollbar-fancy mt-2 mb-5 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
+										focus={false}
+									/>
+								) : (
+									<>
+										<div className="mt-2 mb-5 grid grow place-items-center rounded-xl bg-gray-200 p-4 text-lg font-medium">
+											No assignment details
+										</div>{" "}
+									</>
+								)}
 							</div>
 							{assignment.data.submission_type != "post" ? (
 								<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:ml-4 xl:mb-0 xl:w-72">

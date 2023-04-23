@@ -62,7 +62,11 @@ const Class: NextPage = () => {
 
 	useEffect(() => {
 		(async () => {
-			if (user && typeof classid == "string" && !data) {
+			if (
+				user &&
+				typeof classid == "string" &&
+				(!data || data.data?.id != classid)
+			) {
 				setData(undefined);
 				const data = await getClass(supabase, classid);
 				setData(data);
@@ -92,6 +96,7 @@ const Class: NextPage = () => {
 		})();
 		setEdited(false);
 		setEditorState(undefined);
+		setEditable(false);
 	}, [classid, data, refreshAnnouncements, supabase, user]);
 
 	if (!data)
