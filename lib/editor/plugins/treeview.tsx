@@ -10,6 +10,7 @@ export default function TreeViewPlugin() {
 			timeTravelButtonClassName="debug-timetravel-button"
 			timeTravelPanelSliderClassName="debug-timetravel-panel-slider"
 			timeTravelPanelButtonClassName="debug-timetravel-panel-button"
+			treeTypeButtonClassName=""
 			editor={editor}
 		/>
 	);
