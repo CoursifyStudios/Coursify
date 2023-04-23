@@ -179,6 +179,8 @@ export function sortClasses(
 	scheduleTomorrow: ScheduleInterface[] | undefined
 ) {
 	if (schedule && scheduleTomorrow) {
+		// Fix the schedule sometimes being undefined and breaking stuff for the first load
+		schedule ??= [];
 		const aStartTime = schedule.find(
 			(v) => v.block == a.block && v.type == a.schedule_type
 		)?.timeStart;
