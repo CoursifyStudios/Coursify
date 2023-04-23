@@ -70,9 +70,10 @@ export interface Database {
 					content: Json | null;
 					created_date: string | null;
 					description: string;
-					due_date: string;
+					due_date: string | null;
 					due_type: number | null;
 					group_id: string | null;
+					hidden: boolean;
 					id: string;
 					name: string;
 					publish_date: string | null;
@@ -85,9 +86,10 @@ export interface Database {
 					content?: Json | null;
 					created_date?: string | null;
 					description: string;
-					due_date?: string;
+					due_date?: string | null;
 					due_type?: number | null;
 					group_id?: string | null;
+					hidden?: boolean;
 					id?: string;
 					name: string;
 					publish_date?: string | null;
@@ -100,9 +102,10 @@ export interface Database {
 					content?: Json | null;
 					created_date?: string | null;
 					description?: string;
-					due_date?: string;
+					due_date?: string | null;
 					due_type?: number | null;
 					group_id?: string | null;
+					hidden?: boolean;
 					id?: string;
 					name?: string;
 					publish_date?: string | null;
@@ -144,6 +147,7 @@ export interface Database {
 					name_full: string;
 					room: string | null;
 					schedule_type: number;
+					type: number;
 				};
 				Insert: {
 					block: number;
@@ -157,6 +161,7 @@ export interface Database {
 					name_full?: string;
 					room?: string | null;
 					schedule_type?: number;
+					type: number;
 				};
 				Update: {
 					block?: number;
@@ -170,6 +175,7 @@ export interface Database {
 					name_full?: string;
 					room?: string | null;
 					schedule_type?: number;
+					type?: number;
 				};
 			};
 			days_schedule: {
@@ -376,40 +382,6 @@ export interface Database {
 				};
 				Returns: boolean;
 			};
-			create_assignment:
-				| {
-						Args: {
-							name: string;
-							description: string;
-							submission_type: string;
-							content: Json;
-							due_type: number;
-							class_id: string;
-						};
-						Returns: boolean;
-				  }
-				| {
-						Args: {
-							name: string;
-							description: string;
-							submission_type: string;
-							content: Json;
-							due_type: number;
-							due_date: string;
-							publish_type: number;
-							publish_date: string;
-							class_id: string;
-						};
-						Returns: boolean;
-				  }
-				| {
-						Args: {
-							name: string;
-							description: string;
-							class_id: string;
-						};
-						Returns: boolean;
-				  };
 			get_profile_classes: {
 				Args: {
 					id: string;
@@ -426,6 +398,7 @@ export interface Database {
 					name_full: string;
 					room: string | null;
 					schedule_type: number;
+					type: number;
 				}[];
 			};
 		};

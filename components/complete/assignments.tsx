@@ -24,7 +24,7 @@ export function AssignmentPreview({
 		name: string;
 		description: string;
 		due_type: number;
-		due_date: string;
+		due_date: string | null; //should be impossible because I check that it isn't but I needed this error (that I had nothing to do with!) to go away.
 	};
 	starredAsParam: boolean;
 	schedule: ScheduleInterface[];
