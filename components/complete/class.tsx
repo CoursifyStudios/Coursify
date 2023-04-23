@@ -104,13 +104,13 @@ export const Class: NextPage<{
 												  );
 											if (!user)
 												return (
-													<p className="text-sm italic text-gray-700">
+													<p className="text-sm italic text-gray-700" key={i}>
 														No teacher
 													</p>
 												);
 
 											return (
-												<>
+												<div key={user.id}>
 													<Link
 														href={`/profile/${user.id}`}
 														className=" flex flex-col items-center"
@@ -143,7 +143,7 @@ export const Class: NextPage<{
 													<p className="mr-2 -ml-0.5 [&:last-child]:hidden">
 														,
 													</p>
-												</>
+												</div>
 											);
 										})
 								) : (
