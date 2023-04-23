@@ -47,7 +47,7 @@ export const Announcement = ({
 				<h2 className="text-xl font-semibold">{announcement.title}</h2>
 				<EllipsisVerticalIcon className="h-6 w-6" />
 			</div>
-			<div className="flex items-center pb-2 pt-1">
+			<div className="flex items-center pt-1">
 				<Link
 					href={"/profile/" + announcement.author}
 					className="inline-flex shrink-0 items-center rounded-full px-1 py-0.5 hover:bg-gray-300"
@@ -68,12 +68,12 @@ export const Announcement = ({
 						{getDataOutArray(announcement.users!).full_name}
 					</p>
 				</Link>
-				<p className="pl-2.5 text-gray-600">{howLongAgo(announcement.time!)}</p>
+				<p className="pl-1.5 text-gray-600">{howLongAgo(announcement.time!)}</p>
 			</div>
 			<Editor
 				editable={false}
 				initialState={announcement.content}
-				className="mt-2"
+				className="mt-0.5"
 			/>
 			{/* <div className="mt-4 flex items-center justify-between">
 				<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
