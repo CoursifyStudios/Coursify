@@ -112,3 +112,27 @@ export const setThisSchedule = (
 				: undefined
 		);
 };
+
+export const getSchedulesForXDays = async (
+	supabase: SupabaseClient<Database>,
+	startDate: Date,
+	numDays: number
+) => {
+	const endDate = new Date(startDate.getTime());
+	endDate.setDate(startDate.getDate() + numDays);
+	return await supabase
+		.from("days_schedule")
+		.select(
+			`
+		date,
+		schedule_items,
+		template (
+			schedule_items
+		)
+		`
+		)
+		.gte("date", startDate.toISOString().slice(0, 10))
+		.lte("date", endDate.toISOString().slice(0, 10));
+};
+
+export type ManySchedules = Awaited<ReturnType<typeof getSchedulesForXDays>>;

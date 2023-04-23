@@ -7,6 +7,7 @@ import Loading from "../components/misc/loading";
 import {
 	dayPlus,
 	getSchedule,
+	getSchedulesForXDays,
 	ScheduleData,
 	ScheduleInterface,
 } from "../lib/db/schedule";
@@ -23,6 +24,14 @@ export default function Home() {
 	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
 	const [tomorrowSchedule, setTomorrowSchedule] =
 		useState<ScheduleInterface[]>();
+	const [schedules, setSchedules] = useState<ScheduleInterface[][]>();
+
+	//because Lukas left this a mess, until i get around to fixing it
+	const todayDAY = new Date();
+	let tomorrowDAY = new Date();
+	tomorrowDAY.setDate(todayDAY.getDate() + 1);
+	let dayAfter = new Date();
+	dayAfter.setDate(todayDAY.getDate() + 2);
 
 	useEffect(() => {
 		const [classes, schedule] = [
@@ -35,7 +44,6 @@ export default function Home() {
 		if (schedule) {
 			const parsedSchedules: { date: string; schedule: ScheduleInterface[] }[] =
 				JSON.parse(schedule);
-			const today = new Date("2023-03-03");
 			parsedSchedules.forEach((parsedSchedule) => {
 				/**
 				 * this sees if the schedule matches the current day. Theoreticlly, if you close
@@ -45,9 +53,9 @@ export default function Home() {
 				 * been the fact that I looked at it as I was getting off a plane at 3am, but y'know)
 				 *      ...sounds like a skill issue -Bill
 				 */
-				if (parsedSchedule.date === today.toISOString()) {
+				if (parsedSchedule.date === todayDAY.toISOString()) {
 					setSchedule(parsedSchedule.schedule);
-				} else if (parsedSchedule.date === dayPlus(today, 1).toISOString()) {
+				} else if (parsedSchedule.date === dayPlus(todayDAY, 1).toISOString()) {
 					setTomorrowSchedule(parsedSchedule.schedule);
 				}
 			});
@@ -60,6 +68,7 @@ export default function Home() {
 				const [
 					classes,
 					//assignments,
+					scheduleDB,
 					scheduleClasses,
 					secondDaySchedule,
 					thirdDaySchedule,
@@ -67,9 +76,10 @@ export default function Home() {
 					getAllClasses(supabaseClient),
 					//getAllAssignments(supabaseClient),
 					// read comment in above useEffect as to why I'm fetching 3 dates
-					getSchedule(supabaseClient, new Date("2023-03-03")),
-					getSchedule(supabaseClient, new Date("2023-03-04")),
-					getSchedule(supabaseClient, new Date("2023-03-05")),
+					getSchedulesForXDays(supabaseClient, new Date(), 5),
+					getSchedule(supabaseClient, todayDAY),
+					getSchedule(supabaseClient, tomorrowDAY),
+					getSchedule(supabaseClient, dayAfter),
 				]);
 
 				setClasses(classes);
@@ -78,7 +88,6 @@ export default function Home() {
 
 				const addScheduleData = (
 					scheduleData: ScheduleData,
-					date: Date,
 					setter?: Dispatch<SetStateAction<ScheduleInterface[] | undefined>>
 				) => {
 					if (
@@ -88,7 +97,10 @@ export default function Home() {
 						const data = scheduleData.data
 							?.schedule_items as unknown as ScheduleInterface[];
 						if (setter) setter(data);
-						fullSchedule.push({ date: date, schedule: data });
+						fullSchedule.push({
+							date: new Date(scheduleData.data.date),
+							schedule: data,
+						});
 					} else if (
 						!Array.isArray(scheduleData.data?.schedule_templates) &&
 						scheduleData.data?.schedule_templates?.schedule_items
@@ -96,17 +108,25 @@ export default function Home() {
 						const data = scheduleData.data.schedule_templates
 							.schedule_items as unknown as ScheduleInterface[];
 						if (setter) setter(data);
-						fullSchedule.push({ date: date, schedule: data });
+						fullSchedule.push({
+							date: new Date(scheduleData.data.date),
+							schedule: data,
+						});
 					}
 				};
 
-				addScheduleData(scheduleClasses, new Date("2023-03-03"), setSchedule);
-				addScheduleData(
-					secondDaySchedule,
-					new Date("2023-03-04"),
-					setTomorrowSchedule
-				);
-				addScheduleData(thirdDaySchedule, new Date("2023-03-05"));
+				if (scheduleDB) {
+					scheduleDB.data?.forEach((scheduleDay) => {
+                        if (scheduleDay) {setSchedules(schedules?.concat(scheduleDay))}
+                       
+                    }
+					);
+				}
+                console.log(schedules);
+
+				addScheduleData(scheduleClasses, setSchedule);
+				addScheduleData(secondDaySchedule, setTomorrowSchedule);
+				//addScheduleData(thirdDaySchedule, sett);
 
 				setLoading(false);
 				sessionStorage.setItem("classes", JSON.stringify(classes));
@@ -166,7 +186,7 @@ export default function Home() {
 							<div className="w-full md:mr-4 lg:mr-0">
 								<h2 className="title mr-2">
 									{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
-										new Date("2023-03-03")
+										todayDAY
 									)}
 								</h2>
 
@@ -175,7 +195,7 @@ export default function Home() {
 							<div className="w-full md:ml-4 lg:ml-0">
 								<h2 className="title mr-2">
 									{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
-										new Date("2023-03-04")
+										tomorrowDAY
 									)}
 								</h2>
 								<ScheduleComponent
@@ -225,6 +245,7 @@ export default function Home() {
 														</h2> */}
 													<div className="mb-5 flex-col space-y-4 first-letter:space-y-4">
 														{Array.isArray(aClass.assignments) &&
+															schedule &&
 															aClass.assignments.map((assignment) => (
 																<div
 																	key={assignment.id}
@@ -268,6 +289,7 @@ export default function Home() {
 									classes.data.map(
 										(aClass) =>
 											Array.isArray(aClass.assignments) &&
+											schedule &&
 											aClass.assignments.map(
 												(assignment) =>
 													(assignment.starred
