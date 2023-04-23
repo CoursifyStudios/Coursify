@@ -4,13 +4,7 @@ import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
 import { Class, LoadingClass, sortClasses } from "../components/complete/class";
 import Loading from "../components/misc/loading";
-import {
-	dayPlus,
-	getSchedule,
-	getSchedulesForXDays,
-	ScheduleData,
-	ScheduleInterface,
-} from "../lib/db/schedule";
+import { getSchedulesForXDays, ScheduleInterface } from "../lib/db/schedule";
 import ScheduleComponent from "../components/complete/schedule";
 import { AssignmentPreview } from "../components/complete/assignments";
 import Link from "next/link";
@@ -79,12 +73,6 @@ export default function Home() {
 							!Array.isArray(scheduleDay.schedule_templates) &&
 							scheduleDay.schedule_templates!.schedule_items
 						) {
-							setSchedules(
-								schedules.concat(
-									scheduleDay.schedule_templates!
-										.schedule_items as unknown as ScheduleInterface[]
-								)
-							);
 							fullSchedule.push({
 								date: new Date(scheduleDay.date),
 								schedule: scheduleDay.schedule_templates
@@ -94,11 +82,6 @@ export default function Home() {
 							!scheduleDay.schedule_templates &&
 							scheduleDay.schedule_items
 						) {
-							setSchedules(
-								schedules?.concat(
-									scheduleDay.schedule_items as unknown as ScheduleInterface[]
-								)
-							);
 							fullSchedule.push({
 								date: new Date(scheduleDay.date),
 								schedule:
@@ -109,6 +92,8 @@ export default function Home() {
 				}
 
 				setLoading(false);
+				const tempFullSchedule = fullSchedule.map(({ schedule }) => schedule);
+				setSchedules(tempFullSchedule);
 				sessionStorage.setItem("classes", JSON.stringify(classes));
 				sessionStorage.setItem("schedule", JSON.stringify(fullSchedule));
 			}
