@@ -1,8 +1,6 @@
 import {
 	ArrowsPointingInIcon,
 	ArrowsPointingOutIcon,
-	CheckIcon,
-	ChevronDownIcon,
 	ChevronLeftIcon,
 	ChevronUpDownIcon,
 	LinkIcon,
@@ -128,7 +126,7 @@ const Post: NextPage = () => {
 						</div>
 						<Listbox value={selected} onChange={setSelected}>
 							<div className="relative">
-								<Listbox.Button className="relative w-40 rounded-lg bg-gray-200 py-2 pl-3 pr-10 text-sm">
+								<Listbox.Button className="flex w-40 rounded-lg bg-gray-200 py-2 pl-3 pr-10 text-sm">
 									<span className="block truncate">{selected.option}</span>
 									<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
 										<ChevronUpDownIcon className="h-5 w-5" aria-hidden="true" />
