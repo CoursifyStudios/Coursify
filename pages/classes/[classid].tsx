@@ -92,7 +92,7 @@ const Class: NextPage = () => {
 		})();
 		setEdited(false);
 		setEditorState(undefined);
-	}, [user, supabase, classid, refreshAnnouncements]);
+	}, [supabase, classid, refreshAnnouncements]);
 
 	if (!data)
 		return (

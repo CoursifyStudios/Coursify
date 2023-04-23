@@ -17,7 +17,7 @@ export async function getAllClasses(supabase: SupabaseClient<Database>) {
             *
         )
     )
-	`);
+	`).eq("type", 0);
 	if (!error) {
 		return {
 			success: true,
