@@ -50,12 +50,12 @@ export default function Home() {
 				 * been the fact that I looked at it as I was getting off a plane at 3am, but y'know)
 				 *      ...sounds like a skill issue -Bill
 				 */
-                //PLEASE NOTE I MAY HAVE RUINED THAT FEATURE THAT LUKAS MENTIONED ABOVE
-                //PLEASE DIRECT ANY AND ALL COMPLAINT TO @Seagullz#0212 ON DISCORD
-                //IF THIS IS ACTUALLY A PROBLEM LMK -BILL
-                let temp = schedules;
-                temp[index] = parsedSchedule.schedule;
-                setSchedules(temp);
+				//PLEASE NOTE I MAY HAVE RUINED THAT FEATURE THAT LUKAS MENTIONED ABOVE
+				//PLEASE DIRECT ANY AND ALL COMPLAINT TO @Seagullz#0212 ON DISCORD
+				//IF THIS IS ACTUALLY A PROBLEM LMK -BILL
+				let temp = schedules;
+				temp[index] = parsedSchedule.schedule;
+				setSchedules(temp);
 			});
 		}
 	}, []);
@@ -63,13 +63,10 @@ export default function Home() {
 	useEffect(() => {
 		(async () => {
 			if (user) {
-				const [
-					classes,
-					scheduleDB,
-				] = await Promise.all([
+				const [classes, scheduleDB] = await Promise.all([
 					getAllClasses(supabaseClient),
 					// read comment in above useEffect as to why I'm fetching 3 dates -Lukas
-                    // I'm going to fetch like 5 because weekends or some excuse - Bill
+					// I'm going to fetch like 5 because weekends or some excuse - Bill
 					getSchedulesForXDays(supabaseClient, new Date(), 5),
 				]);
 
@@ -79,16 +76,37 @@ export default function Home() {
 
 				if (scheduleDB.data) {
 					scheduleDB.data?.forEach((scheduleDay) => {
-                        if (!Array.isArray(scheduleDay.schedule_templates) && scheduleDay.schedule_templates!.schedule_items) {
-                            setSchedules(schedules.concat(scheduleDay.schedule_templates!.schedule_items as unknown as ScheduleInterface[]));
-                            fullSchedule.push({date: new Date(scheduleDay.date), schedule: scheduleDay.schedule_templates?.schedule_items as unknown as ScheduleInterface[]});
-                        }
-                        else if (!scheduleDay.schedule_templates && scheduleDay.schedule_items) {
-                            setSchedules(schedules?.concat(scheduleDay.schedule_items as unknown as ScheduleInterface[]));
-                            fullSchedule.push({date: new Date(scheduleDay.date), schedule: scheduleDay.schedule_items as unknown as ScheduleInterface[]})
-                        }
-                    }
-					);
+						if (
+							!Array.isArray(scheduleDay.schedule_templates) &&
+							scheduleDay.schedule_templates!.schedule_items
+						) {
+							setSchedules(
+								schedules.concat(
+									scheduleDay.schedule_templates!
+										.schedule_items as unknown as ScheduleInterface[]
+								)
+							);
+							fullSchedule.push({
+								date: new Date(scheduleDay.date),
+								schedule: scheduleDay.schedule_templates
+									?.schedule_items as unknown as ScheduleInterface[],
+							});
+						} else if (
+							!scheduleDay.schedule_templates &&
+							scheduleDay.schedule_items
+						) {
+							setSchedules(
+								schedules?.concat(
+									scheduleDay.schedule_items as unknown as ScheduleInterface[]
+								)
+							);
+							fullSchedule.push({
+								date: new Date(scheduleDay.date),
+								schedule:
+									scheduleDay.schedule_items as unknown as ScheduleInterface[],
+							});
+						}
+					});
 				}
 
 				setLoading(false);
@@ -161,10 +179,7 @@ export default function Home() {
 										dateTomorrow
 									)}
 								</h2>
-								<ScheduleComponent
-									classes={classes}
-									schedule={schedules[1]}
-								/>
+								<ScheduleComponent classes={classes} schedule={schedules[1]} />
 							</div>
 						</section>
 					</div>
