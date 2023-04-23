@@ -4,13 +4,7 @@ import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
 import { Class, LoadingClass, sortClasses } from "../components/complete/class";
 import Loading from "../components/misc/loading";
-import {
-	dayPlus,
-	getSchedule,
-	getSchedulesForXDays,
-	ScheduleData,
-	ScheduleInterface,
-} from "../lib/db/schedule";
+import { getSchedulesForXDays, ScheduleInterface } from "../lib/db/schedule";
 import ScheduleComponent from "../components/complete/schedule";
 import { AssignmentPreview } from "../components/complete/assignments";
 import Link from "next/link";
