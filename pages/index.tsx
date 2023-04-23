@@ -79,12 +79,6 @@ export default function Home() {
 							!Array.isArray(scheduleDay.schedule_templates) &&
 							scheduleDay.schedule_templates!.schedule_items
 						) {
-							setSchedules(
-								schedules.concat(
-									scheduleDay.schedule_templates!
-										.schedule_items as unknown as ScheduleInterface[]
-								)
-							);
 							fullSchedule.push({
 								date: new Date(scheduleDay.date),
 								schedule: scheduleDay.schedule_templates
@@ -94,11 +88,6 @@ export default function Home() {
 							!scheduleDay.schedule_templates &&
 							scheduleDay.schedule_items
 						) {
-							setSchedules(
-								schedules?.concat(
-									scheduleDay.schedule_items as unknown as ScheduleInterface[]
-								)
-							);
 							fullSchedule.push({
 								date: new Date(scheduleDay.date),
 								schedule:
@@ -109,6 +98,12 @@ export default function Home() {
 				}
 
 				setLoading(false);
+				let tempFullSchedule: ScheduleInterface[][] = [];
+				fullSchedule.forEach((scheduleDay) => {
+					tempFullSchedule.push(scheduleDay.schedule);
+				});
+				setSchedules(tempFullSchedule);
+				console.log(tempFullSchedule, schedules);
 				sessionStorage.setItem("classes", JSON.stringify(classes));
 				sessionStorage.setItem("schedule", JSON.stringify(fullSchedule));
 			}
