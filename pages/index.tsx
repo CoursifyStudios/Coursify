@@ -98,12 +98,8 @@ export default function Home() {
 				}
 
 				setLoading(false);
-				let tempFullSchedule: ScheduleInterface[][] = [];
-				fullSchedule.forEach((scheduleDay) => {
-					tempFullSchedule.push(scheduleDay.schedule);
-				});
+				const tempFullSchedule = fullSchedule.map(({ schedule }) => schedule);
 				setSchedules(tempFullSchedule);
-				console.log(tempFullSchedule, schedules);
 				sessionStorage.setItem("classes", JSON.stringify(classes));
 				sessionStorage.setItem("schedule", JSON.stringify(fullSchedule));
 			}
