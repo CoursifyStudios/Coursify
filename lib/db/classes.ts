@@ -116,19 +116,19 @@ export const getClassTimesForXDays = async (
 			const dateStart = new Date(daySchedule.date);
 			const dateEnd = new Date(daySchedule.date);
 			if (
-				daySchedule.template &&
-				getDataOutArray(daySchedule.template).schedule_items &&
+				daySchedule.schedule_templates &&
+				getDataOutArray(daySchedule.schedule_templates).schedule_items &&
 				classHappensThisDay(
 					classObject.block,
 					classObject.type,
-					getDataOutArray(daySchedule.template)
+					getDataOutArray(daySchedule.schedule_templates)
 						.schedule_items as unknown as ScheduleInterface[]
 				) != undefined
 			) {
 				const temp = classHappensThisDay(
 					classObject.block,
 					classObject.type,
-					getDataOutArray(daySchedule.template)
+					getDataOutArray(daySchedule.schedule_templates)
 						.schedule_items as unknown as ScheduleInterface[]
 				);
 				dateStart.setHours(parseInt(temp!.timeStart.substring(0, 2)));
@@ -143,7 +143,7 @@ export const getClassTimesForXDays = async (
 			}
 			if (
 				daySchedule.schedule_items &&
-				!daySchedule.template &&
+				!daySchedule.schedule_templates &&
 				classHappensThisDay(
 					classObject.block,
 					classObject.type,

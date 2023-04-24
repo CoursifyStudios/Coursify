@@ -1,6 +1,13 @@
 import { Listbox, Switch } from "@headlessui/react";
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
-import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
+import {
+	ChangeEvent,
+	Dispatch,
+	SetStateAction,
+	useEffect,
+	useMemo,
+	useState,
+} from "react";
 import { Button } from "../../misc/button";
 import Editor from "../../editors/richeditor";
 import { DueType } from "../assignments";
@@ -232,6 +239,12 @@ const AssignmentCreation: NextPage<{
 			</section>
 		</>
 	);
+	async function onDateChange(event: ChangeEvent<HTMLInputElement>) {
+		setAssignmentData({
+			dueType: DueType.DATE,
+			dueDate: new Date(event.target.value),
+		} as NewAssignmentData);
+	}
 
 	function WhenDue({ type }: { type: "due" | "publish" }) {
 		return (
@@ -263,6 +276,7 @@ const AssignmentCreation: NextPage<{
 						<input
 							type="datetime-local"
 							className="mt-4 rounded-md border-gray-300  bg-white/50 focus:ring-1"
+							onChange={onDateChange}
 						/>
 					) : (
 						<AssignmentCalender type="due" daysData={daysData} />

@@ -35,7 +35,6 @@ import {
 	setThisSchedule,
 } from "../../lib/db/schedule";
 import Editor from "../../components/editors/richeditor";
-import { Transition, Dialog } from "@headlessui/react";
 import { getIcon } from "../../components/complete/achievement";
 import { formatDate } from "../../lib/misc/dates";
 import { Transition, Dialog, Listbox } from "@headlessui/react";
