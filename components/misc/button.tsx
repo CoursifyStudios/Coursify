@@ -7,13 +7,15 @@ export const Button: NextPage<{
 	children: ReactNode;
 	color?: string;
 	disabled?: boolean;
-}> = ({ className, children, color, disabled }) => {
+	onClick?: () => void;
+}> = ({ className, children, color, disabled, onClick }) => {
 	return (
 		<button
 			disabled={disabled}
 			className={`flex cursor-pointer items-center rounded-md py-1 px-4 font-semibold focus:outline-none ${className} focus:outline-none ${
 				color ? color : "bg-gray-200"
 			} ${disabled ? "cursor-not-allowed brightness-75" : "brightness-hover"}`}
+			onClick={onClick}
 		>
 			{children}
 		</button>

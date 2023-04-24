@@ -174,7 +174,7 @@ const BlockFormatDropdown = () => {
 			as="div"
 			className="z-50 flex flex-col"
 		>
-			<Listbox.Button className=" flex items-center rounded py-1 px-2 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-800">
+			<Listbox.Button className=" flex items-center rounded px-2 py-1 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-800">
 				{selectedBlock.name}
 				<ChevronUpDownIcon className="ml-1 h-5 w-5" />
 			</Listbox.Button>

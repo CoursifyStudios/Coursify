@@ -94,6 +94,7 @@ export default function Editor({
 	initialState,
 	initialStateEditor,
 	updatedState,
+	focus,
 }: {
 	editable: boolean;
 	updateState?:
@@ -103,6 +104,7 @@ export default function Editor({
 	initialStateEditor?: EditorState;
 	className?: string;
 	updatedState?: EditorState;
+	focus?: boolean;
 }) {
 	return (
 		<GrammarlyEditorPlugin clientId="client_HhHcuxVxKgaZMFYuD57U3V">
@@ -128,7 +130,7 @@ export default function Editor({
 								ErrorBoundary={LexicalErrorBoundary}
 							/>
 							<HistoryPlugin />
-							<AutoFocusPlugin />
+							{focus && <AutoFocusPlugin />}
 							<CodeHighlightPlugin />
 							<ListPlugin />
 							<LinkPlugin />
@@ -197,7 +199,7 @@ function EditorContextProvider({
 
 function Placeholder() {
 	return (
-		<div className="absolute top-2 left-1 -z-10 text-gray-600">
+		<div className="absolute left-1 top-2 -z-10 text-gray-600">
 			Enter some rich text...
 		</div>
 	);

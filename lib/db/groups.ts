@@ -2,11 +2,11 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "./database.types";
 
 export const getAllGroupsForUser = async (
-	supabaseClient: SupabaseClient<Database>,
+	supabase: SupabaseClient<Database>,
 	userID: string
 ) => {
-	return await supabaseClient
-		.from("users_groups")
+	return await supabase
+		.from("group_users")
 		.select(
 			`
         *,
@@ -21,14 +21,14 @@ export const getAllGroupsForUser = async (
 export type AllGroupsResponse = Awaited<ReturnType<typeof getAllGroupsForUser>>;
 
 export const getAllPublicGroups = async (
-	supabaseClient: SupabaseClient<Database>
+	supabase: SupabaseClient<Database>
 ) => {
-	return await supabaseClient
+	return await supabase
 		.from("groups")
 		.select(
 			`
         *,
-        users_groups (
+        group_users (
             user_id, group_id
         )
 
@@ -42,10 +42,10 @@ export type PublicGroupsResponse = Awaited<
 >;
 
 export const getGroup = async (
-	supabaseClient: SupabaseClient<Database>,
-	groupid: string
+	supabase: SupabaseClient<Database>,
+	groupID: string
 ) => {
-	return await supabaseClient
+	return await supabase
 		.from("groups")
 		.select(
 			`
@@ -56,7 +56,7 @@ export const getGroup = async (
                 avatar_url, full_name
             )
         ),
-        users_groups (
+        group_users (
             user_id, group_leader
         ),
         users (
@@ -64,8 +64,24 @@ export const getGroup = async (
         )
     `
 		)
-		.eq("id", groupid)
+		.eq("id", groupID)
 		.single();
 };
 
 export type GroupResponse = Awaited<ReturnType<typeof getGroup>>;
+
+export const addUserToGroup = async (
+	supabase: SupabaseClient<Database>,
+	groupID: string,
+	userID: string
+) => {
+	return await supabase.from("group_user").insert({
+		user_id: userID,
+		group_id: groupID,
+		group_leader: null,
+	});
+};
+
+export type PossiblyTemporaryUserGroupType = Awaited<
+	ReturnType<typeof addUserToGroup>
+>;

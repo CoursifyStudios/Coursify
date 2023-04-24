@@ -39,15 +39,16 @@ export const Class: NextPage<{
 					className
 				}
 			>
-				<div className="relative h-32 ">
+				<div className="relative h-32">
 					<Image
 						src={classData?.image ? classData.image : exampleImage}
-						loading="eager"
+						//loading="eager"
 						alt="Example Image"
-						className="rounded-t-xl object-cover object-center"
-						fill
+						className="absolute inset-0 h-32 rounded-t-xl object-cover object-center"
+						width={700}
+						height={128}
 					/>
-					<div className="absolute top-2 right-2 left-2 flex items-center justify-between space-x-2">
+					<div className="absolute left-2 right-2 top-2 flex items-center justify-between space-x-2">
 						{classData.room && (
 							<ColoredPill
 								//color="gray"
@@ -57,7 +58,6 @@ export const Class: NextPage<{
 							</ColoredPill>
 						)}
 						<div className="flex items-center">
-							{/* <CircleCounter small amount={50} max={100} /> */}
 							<h2
 								className={`text-xl text-${classData.color}-300 ml-2 rounded-lg bg-neutral-500/20 px-2 font-bold opacity-75 backdrop-blur-xl`}
 							>
@@ -66,7 +66,7 @@ export const Class: NextPage<{
 						</div>
 					</div>
 				</div>
-				<div className="flex flex-grow flex-col  p-4 ">
+				<div className="flex flex-grow flex-col p-4">
 					<div className="flex items-start justify-between">
 						<h3 className="break-words text-xl font-semibold line-clamp-2">
 							{classData.name}
@@ -89,13 +89,13 @@ export const Class: NextPage<{
 						</ColoredPill>
 					</div>
 					<div className="mt-2 flex flex-wrap items-center">
-						{"users_classes" in classData &&
+						{"class_users" in classData &&
 							"users" in classData &&
-							(Array.isArray(classData.users_classes!) ? (
-								classData.users_classes!.filter((userData) => userData.teacher)
+							(Array.isArray(classData.class_users!) ? (
+								classData.class_users!.filter((userData) => userData.teacher)
 									.length > 0 ? (
 									classData
-										.users_classes!.filter((userData) => userData.teacher)
+										.class_users!.filter((userData) => userData.teacher)
 										.map((userData, i) => {
 											const user = !Array.isArray(classData.users!)
 												? classData.users!
@@ -104,18 +104,26 @@ export const Class: NextPage<{
 												  );
 											if (!user)
 												return (
-													<p className="text-sm italic text-gray-700">
+													<p className="text-sm italic text-gray-700" key={i}>
 														No teacher
 													</p>
 												);
 
 											return (
-												<>
+												<div key={user.id}>
 													<Link
 														href={`/profile/${user.id}`}
 														className=" flex flex-col items-center"
+														onClick={(e) => {
+															e.stopPropagation();
+															newTab(
+																"/profile/" + user.id,
+																user.full_name.split(" ")[0] + "'s Profile"
+															);
+														}}
 													>
 														<div className="peer flex items-center rounded-full px-1 py-0.5 hover:bg-gray-300">
+															{/* eslint-disable-next-line @next/next/no-img-element */}
 															<img
 																src={user.avatar_url}
 																alt="Profile picture"
@@ -132,10 +140,10 @@ export const Class: NextPage<{
 														test didn't appear over elements idk why
 													</div> */}
 													</Link>
-													<p className="mr-2 -ml-0.5 [&:last-child]:hidden">
+													<p className="-ml-0.5 mr-2 [&:last-child]:hidden">
 														,
 													</p>
-												</>
+												</div>
 											);
 										})
 								) : (
@@ -143,7 +151,7 @@ export const Class: NextPage<{
 								)
 							) : Array.isArray(classData.users) ? (
 								<p>An unknown error occured</p>
-							) : classData.users_classes?.teacher ? (
+							) : classData.class_users?.teacher ? (
 								<p>{classData.users?.full_name}</p>
 							) : (
 								<p className="text-sm italic text-gray-700">No teacher</p>
@@ -171,6 +179,8 @@ export function sortClasses(
 	scheduleTomorrow: ScheduleInterface[] | undefined
 ) {
 	if (schedule && scheduleTomorrow) {
+		// Fix the schedule sometimes being undefined and breaking stuff for the first load
+		schedule ??= [];
 		const aStartTime = schedule.find(
 			(v) => v.block == a.block && v.type == a.schedule_type
 		)?.timeStart;

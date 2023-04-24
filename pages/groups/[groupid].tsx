@@ -32,7 +32,7 @@ const Group: NextPage = () => {
 	}, [supabase, groupid]);
 
 	return (
-		<div className="mx-auto my-10 w-full max-w-screen-xl">
+		<div className="mx-auto my-10 w-full max-w-screen-xl px-4">
 			<div className="relative mb-6 h-48 w-full">
 				{groupData?.data?.image ? (
 					<Image
@@ -48,13 +48,13 @@ const Group: NextPage = () => {
 					{groupData?.data?.name}
 				</h1>
 			</div>
-			<div className="flex">
+			<div className="sm:grid-cols-1 md:flex ">
 				<Tab.Group as="div" className="flex grow flex-col">
 					<Tab.List as="div" className="mx-auto mb-6 flex space-x-6">
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md px-2 py-0.5 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md shadow-black/25  "
 											: "bg-gray-200"
@@ -67,7 +67,7 @@ const Group: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md px-2 py-0.5 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md shadow-black/25  "
 											: "bg-gray-200"
@@ -80,7 +80,7 @@ const Group: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md px-2 py-0.5 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md shadow-black/25  "
 											: "bg-gray-200"
@@ -92,7 +92,7 @@ const Group: NextPage = () => {
 						</Tab>
 					</Tab.List>
 					<Tab.Panels>
-						<Tab.Panel>
+						<Tab.Panel tabIndex={-1} className="mb-10">
 							<div className="mb-6 rounded-xl bg-gray-200 p-4">
 								<p className="text-lg">{groupData?.data?.description}</p>
 							</div>
@@ -103,11 +103,13 @@ const Group: NextPage = () => {
 							<div className="space-y-3">
 								<AnnouncementPostingUI
 									communityid={groupid as string}
-									isClass={false}
 									prevRefreshState={refreshAnnouncements}
 									refreshAnnouncements={setRefreshAnnouncements}
 								/>
-
+								<span>
+									ANNOUNCEMENTS TEMPORARILY DISABLED FOR GROUPS UNTIL GROUPS ON
+									CLASSES TABLE DB MERGE THING IS COMPLETE
+								</span>
 								{groupData &&
 									groupData.data &&
 									groupData.data.announcements && //change below when I get actual types
@@ -133,8 +135,8 @@ const Group: NextPage = () => {
 										))}
 							</div>
 						</Tab.Panel>
-						<Tab.Panel></Tab.Panel>
-						<Tab.Panel>
+						<Tab.Panel tabIndex={-1}></Tab.Panel>
+						<Tab.Panel tabIndex={-1}>
 							<div className="grid grid-cols-3 gap-4">
 								{groupData &&
 									groupData.data &&
@@ -143,7 +145,7 @@ const Group: NextPage = () => {
 											key={user!.id}
 											user={user!}
 											leader={
-												getDataInArray(groupData.data.users_groups).find(
+												getDataInArray(groupData.data.group_users).find(
 													(userInUsersGroups) =>
 														user?.id == userInUsersGroups?.user_id
 												)?.group_leader
@@ -156,10 +158,10 @@ const Group: NextPage = () => {
 						</Tab.Panel>
 					</Tab.Panels>
 				</Tab.Group>
-				<div className="sticky top-0 ml-8 w-[20.5rem] shrink-0 rounded-md blur-sm ">
+				<div className="sticky top-0 mx-auto w-[20.5rem] shrink-0 rounded-md blur-sm sm:ml-8 ">
 					<h2 className="title">Next Event</h2>
 					<Event title="Castle Rock" time="8:00 - 9:30 AM"></Event>
-					<h2 className="title mt-6 mb-6">Upcoming</h2>
+					<h2 className="title mb-6 mt-6">Upcoming</h2>
 					<Event title="Yosemite Climbing" time="12/15/22"></Event>
 					<Event title="Mission Cliffs" time="1/8/23"></Event>
 					<Event title="Boulder Sesh" time="12/9/24"></Event>

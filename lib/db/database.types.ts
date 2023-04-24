@@ -38,21 +38,27 @@ export interface Database {
 			announcements: {
 				Row: {
 					author: string;
+					class_id: string | null;
 					content: Json | null;
+					group_id: string | null;
 					id: string;
 					time: string | null;
 					title: string | null;
 				};
 				Insert: {
 					author: string;
+					class_id?: string | null;
 					content?: Json | null;
+					group_id?: string | null;
 					id?: string;
 					time?: string | null;
 					title?: string | null;
 				};
 				Update: {
 					author?: string;
+					class_id?: string | null;
 					content?: Json | null;
+					group_id?: string | null;
 					id?: string;
 					time?: string | null;
 					title?: string | null;
@@ -60,11 +66,14 @@ export interface Database {
 			};
 			assignments: {
 				Row: {
+					class_id: string;
 					content: Json | null;
 					created_date: string | null;
 					description: string;
-					due_date: string;
+					due_date: string | null;
 					due_type: number | null;
+					group_id: string | null;
+					hidden: boolean;
 					id: string;
 					name: string;
 					publish_date: string | null;
@@ -73,11 +82,14 @@ export interface Database {
 					submission_type: string | null;
 				};
 				Insert: {
+					class_id: string;
 					content?: Json | null;
 					created_date?: string | null;
 					description: string;
-					due_date?: string;
+					due_date?: string | null;
 					due_type?: number | null;
+					group_id?: string | null;
+					hidden?: boolean;
 					id?: string;
 					name: string;
 					publish_date?: string | null;
@@ -86,17 +98,40 @@ export interface Database {
 					submission_type?: string | null;
 				};
 				Update: {
+					class_id?: string;
 					content?: Json | null;
 					created_date?: string | null;
 					description?: string;
-					due_date?: string;
+					due_date?: string | null;
 					due_type?: number | null;
+					group_id?: string | null;
+					hidden?: boolean;
 					id?: string;
 					name?: string;
 					publish_date?: string | null;
 					publish_type?: number | null;
 					submission_instructions?: string | null;
 					submission_type?: string | null;
+				};
+			};
+			class_users: {
+				Row: {
+					class_id: string;
+					grade: number;
+					teacher: boolean;
+					user_id: string;
+				};
+				Insert: {
+					class_id: string;
+					grade?: number;
+					teacher?: boolean;
+					user_id: string;
+				};
+				Update: {
+					class_id?: string;
+					grade?: number;
+					teacher?: boolean;
+					user_id?: string;
 				};
 			};
 			classes: {
@@ -112,6 +147,7 @@ export interface Database {
 					name_full: string;
 					room: string | null;
 					schedule_type: number;
+					type: number;
 				};
 				Insert: {
 					block: number;
@@ -125,6 +161,7 @@ export interface Database {
 					name_full?: string;
 					room?: string | null;
 					schedule_type?: number;
+					type: number;
 				};
 				Update: {
 					block?: number;
@@ -138,34 +175,7 @@ export interface Database {
 					name_full?: string;
 					room?: string | null;
 					schedule_type?: number;
-				};
-			};
-			classes_announcements: {
-				Row: {
-					announcement_id: string;
-					class_id: string;
-				};
-				Insert: {
-					announcement_id: string;
-					class_id: string;
-				};
-				Update: {
-					announcement_id?: string;
-					class_id?: string;
-				};
-			};
-			classes_assignments: {
-				Row: {
-					assignment_id: string;
-					class_id: string;
-				};
-				Insert: {
-					assignment_id: string;
-					class_id: string;
-				};
-				Update: {
-					assignment_id?: string;
-					class_id?: string;
+					type?: number;
 				};
 			};
 			days_schedule: {
@@ -183,6 +193,37 @@ export interface Database {
 					date?: string;
 					schedule_items?: Json | null;
 					template?: number | null;
+				};
+			};
+			enrolled: {
+				Row: {
+					school_id: string;
+					user_id: string;
+				};
+				Insert: {
+					school_id: string;
+					user_id: string;
+				};
+				Update: {
+					school_id?: string;
+					user_id?: string;
+				};
+			};
+			group_users: {
+				Row: {
+					group_id: string;
+					group_leader: boolean | null;
+					user_id: string;
+				};
+				Insert: {
+					group_id: string;
+					group_leader?: boolean | null;
+					user_id: string;
+				};
+				Update: {
+					group_id?: string;
+					group_leader?: boolean | null;
+					user_id?: string;
 				};
 			};
 			groups: {
@@ -214,20 +255,6 @@ export interface Database {
 					tags?: string[] | null;
 				};
 			};
-			groups_announcements: {
-				Row: {
-					announcement_id: string;
-					group_id: string;
-				};
-				Insert: {
-					announcement_id: string;
-					group_id: string;
-				};
-				Update: {
-					announcement_id?: string;
-					group_id?: string;
-				};
-			};
 			schedule_templates: {
 				Row: {
 					id: number;
@@ -243,20 +270,6 @@ export interface Database {
 					id?: number;
 					name?: string | null;
 					schedule_items?: Json | null;
-				};
-			};
-			school_users: {
-				Row: {
-					school_id: string;
-					user_id: string;
-				};
-				Insert: {
-					school_id: string;
-					user_id: string;
-				};
-				Update: {
-					school_id?: string;
-					user_id?: string;
 				};
 			};
 			schools: {
@@ -297,14 +310,34 @@ export interface Database {
 				Row: {
 					id: number;
 					name: string | null;
+					testing: string | null;
 				};
 				Insert: {
 					id?: number;
 					name?: string | null;
+					testing?: string | null;
 				};
 				Update: {
 					id?: number;
 					name?: string | null;
+					testing?: string | null;
+				};
+			};
+			user_achievements: {
+				Row: {
+					achivement_id: string;
+					date_earned: string;
+					user_id: string;
+				};
+				Insert: {
+					achivement_id: string;
+					date_earned?: string;
+					user_id: string;
+				};
+				Update: {
+					achivement_id?: string;
+					date_earned?: string;
+					user_id?: string;
 				};
 			};
 			users: {
@@ -336,60 +369,6 @@ export interface Database {
 					year?: string | null;
 				};
 			};
-			users_achievements: {
-				Row: {
-					achivement_id: string;
-					date_earned: string;
-					user_id: string;
-				};
-				Insert: {
-					achivement_id: string;
-					date_earned?: string;
-					user_id: string;
-				};
-				Update: {
-					achivement_id?: string;
-					date_earned?: string;
-					user_id?: string;
-				};
-			};
-			users_classes: {
-				Row: {
-					class_id: string;
-					grade: number;
-					teacher: boolean;
-					user_id: string;
-				};
-				Insert: {
-					class_id: string;
-					grade?: number;
-					teacher?: boolean;
-					user_id: string;
-				};
-				Update: {
-					class_id?: string;
-					grade?: number;
-					teacher?: boolean;
-					user_id?: string;
-				};
-			};
-			users_groups: {
-				Row: {
-					group_id: string;
-					group_leader: boolean | null;
-					user_id: string;
-				};
-				Insert: {
-					group_id: string;
-					group_leader?: boolean | null;
-					user_id: string;
-				};
-				Update: {
-					group_id?: string;
-					group_leader?: boolean | null;
-					user_id?: string;
-				};
-			};
 		};
 		Views: {
 			[_ in never]: never;
@@ -403,40 +382,6 @@ export interface Database {
 				};
 				Returns: boolean;
 			};
-			create_assignment:
-				| {
-						Args: {
-							name: string;
-							description: string;
-							submission_type: string;
-							content: Json;
-							due_type: number;
-							class_id: string;
-						};
-						Returns: boolean;
-				  }
-				| {
-						Args: {
-							name: string;
-							description: string;
-							submission_type: string;
-							content: Json;
-							due_type: number;
-							due_date: string;
-							publish_type: number;
-							publish_date: string;
-							class_id: string;
-						};
-						Returns: boolean;
-				  }
-				| {
-						Args: {
-							name: string;
-							description: string;
-							class_id: string;
-						};
-						Returns: boolean;
-				  };
 			get_profile_classes: {
 				Args: {
 					id: string;
@@ -453,6 +398,7 @@ export interface Database {
 					name_full: string;
 					room: string | null;
 					schedule_type: number;
+					type: number;
 				}[];
 			};
 		};

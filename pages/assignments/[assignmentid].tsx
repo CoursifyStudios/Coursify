@@ -2,7 +2,10 @@ import {
 	ArrowsPointingInIcon,
 	ArrowsPointingOutIcon,
 	ChevronLeftIcon,
+	ChevronUpDownIcon,
 	LinkIcon,
+	PlusIcon,
+	QuestionMarkCircleIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
@@ -21,17 +24,22 @@ import launch from "../../public/svgs/launch.svg";
 import noData from "../../public/svgs/no-data.svg";
 import Link from "next/link";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
-import { ButtonIcon } from "../../components/misc/button";
-import { AssignmentPreview } from "../../components/complete/assignments";
+import { Button, ButtonIcon } from "../../components/misc/button";
+import {
+	AssignmentPreview,
+	DueType,
+} from "../../components/complete/assignments";
 import {
 	getSchedule,
 	ScheduleInterface,
 	setThisSchedule,
 } from "../../lib/db/schedule";
 import Editor from "../../components/editors/richeditor";
-import { Transition, Dialog } from "@headlessui/react";
 import { getIcon } from "../../components/complete/achievement";
-import { formatDate } from "../../lib/misc/formatDate";
+import { formatDate } from "../../lib/misc/dates";
+import { Transition, Dialog, Listbox } from "@headlessui/react";
+import { getDataOutArray } from "../../lib/misc/dataOutArray";
+import { SerializedEditorState } from "lexical";
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
@@ -45,12 +53,21 @@ const Post: NextPage = () => {
 	const { assignmentid } = router.query;
 	const [fullscreen, setFullscreen] = useState(false);
 
+	const options = [
+		{ option: "Priority" },
+		{ option: "Due First" },
+		{ option: "Due Last" },
+	];
+
+	const [selected, setSelected] = useState(options[0]);
+	// Gets the data from the db
 	useEffect(() => {
 		(async () => {
-			if (user) {
+			if (user && !allAssignments) {
 				const assignments = await getAllAssignments(supabase);
 				setAllAssignments(assignments);
 			}
+			// In theory, most people will have the schedule already cached. This is a bandaid solution and won't be used later on
 			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
 				JSON.parse(sessionStorage.getItem("schedule")!);
 			if (allSchedules && allSchedules.length != 0) {
@@ -71,66 +88,126 @@ const Post: NextPage = () => {
 				user &&
 				router.isReady &&
 				typeof assignmentid == "string" &&
-				assignmentid != "0"
+				assignmentid != "0" &&
+				(assignment
+					? assignment?.data && assignment?.data.id != assignmentid
+					: true)
 			) {
 				setAssignment(undefined);
 				const assignment = await getAssignment(supabase, assignmentid);
 				setAssignment(assignment);
 			}
 		})();
+		// Mobile support makes it sorta like using gmail on mobile, optimized for assignments
 		if (router.isReady && assignmentid != "0" && window.innerWidth < 768) {
 			setFullscreen(true);
 		}
-	}, [user, supabase, router, assignmentid]);
+	}, [user, supabase, router, assignmentid, allAssignments, assignment]);
 
 	return (
-		<div className="mx-auto flex w-full max-w-screen-xl px-4 pt-6 pb-6 md:px-8 xl:px-0">
+		// Left pane
+		<div className="mx-auto flex w-full max-w-screen-xl px-4 pb-6 pt-6 md:px-8 xl:px-0">
 			<div
 				className={`scrollbar-fancy mr-4 grow items-stretch overflow-x-clip md:grow-0 ${
 					fullscreen ? "hidden" : "flex"
-				} w-[20.5rem] shrink-0 snap-y snap-mandatory flex-col space-y-5 overflow-y-auto pb-6 md:h-[calc(100vh-6.5rem)] `}
+				} w-[20.5rem] shrink-0 flex-col space-y-5 overflow-y-auto p-1 pb-6 md:h-[calc(100vh-6.5rem)] `}
 			>
+				<div className="flex flex-col">
+					<div className="flex-col rounded-lg bg-gray-200 p-2">
+						<div className="mb-1 flex items-center">
+							<h1 className="mr-1 text-xl font-bold">Filters</h1>
+							<QuestionMarkCircleIcon className="mt-0.5 h-5 w-5" />
+						</div>
+						<div className="my-1 h-7 w-7 items-center justify-center rounded-lg bg-gray-300">
+							<PlusIcon className="p-0.5" />
+						</div>
+					</div>
+					<div className="mt-3 flex items-center justify-between">
+						<div className="flex items-center">
+							<h2 className="mr-1 text-xl font-bold">Sort</h2>
+							<QuestionMarkCircleIcon className="mt-0.5 h-5 w-5" />
+						</div>
+						<Listbox value={selected} onChange={setSelected}>
+							<div className="relative">
+								<Listbox.Button className="flex w-40 rounded-lg bg-gray-200 py-2 pl-3 pr-10 text-sm">
+									<span className="block truncate">{selected.option}</span>
+									<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+										<ChevronUpDownIcon className="h-5 w-5" aria-hidden="true" />
+									</span>
+								</Listbox.Button>
+								<Transition
+									as={Fragment}
+									leave="transition ease-in duration-100"
+									leaveFrom="opacity-100"
+									leaveTo="opacity-0"
+								>
+									<Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-gray-200/90 p-2 text-sm shadow-xl backdrop-blur-xl transition">
+										{options.map((options, optionID) => (
+											<Listbox.Option
+												key={optionID}
+												className={({ active }) =>
+													`flex select-none justify-center rounded-lg py-2 transition ${
+														active ? "bg-gray-300" : "text-gray-900"
+													}`
+												}
+												value={options}
+											>
+												{({ selected }) => (
+													<>
+														<span
+															className={`${
+																selected ? "font-large" : "font-normal"
+															}`}
+														>
+															{options.option}
+														</span>
+													</>
+												)}
+											</Listbox.Option>
+										))}
+									</Listbox.Options>
+								</Transition>
+							</div>
+						</Listbox>
+					</div>
+				</div>
 				{allAssignments ? (
 					!allAssignments.error &&
 					user &&
 					schedule &&
-					allAssignments.data.map((assignment) => (
-						<div //linking is now build in haha
-							className={`flex snap-start rounded-xl ${
-								assignmentid == assignment.id
-									? "bg-gray-50 shadow-xl"
-									: "brightness-hover bg-gray-200"
-							} p-3`}
-							//href={"/assignments/" + assignment.id}
-							key={assignment.id}
-						>
-							<AssignmentPreview
-								supabase={supabase} //@ts-ignore
-								assignment={assignment}
-								userId={user.id}
-								starredAsParam={
-									assignment.starred
-										? Array.isArray(assignment.starred)
-											? assignment.starred.length > 0
-											: !!assignment.starred
-										: false
-								}
-								//obviously we need a better solution
-								schedule={schedule!}
-								scheduleT={scheduleT!}
-								showClassPill={true}
-								//@ts-ignore
-								classes={
-									(assignment.classes_assignments &&
-									Array.isArray(assignment.classes_assignments)
-										? Array.isArray(assignment.classes_assignments[0].classes)
-											? assignment.classes_assignments[0].classes[0]
-											: assignment.classes_assignments[0].classes
-										: assignment.classes_assignments)!
-								}
-							/>
-						</div>
-					))
+					allAssignments.data.map(
+						(assignment) =>
+							assignment.classes &&
+							assignment.due_date && (
+								<div
+									className={`flex rounded-xl ${
+										assignmentid == assignment.id
+											? "bg-gray-50 shadow-lg"
+											: "brightness-hover bg-gray-200"
+									} p-3`}
+									key={assignment.id}
+								>
+									{/* List of assignments */}
+									<AssignmentPreview
+										supabase={supabase}
+										assignment={assignment}
+										userId={user.id}
+										starredAsParam={
+											assignment.starred
+												? Array.isArray(assignment.starred)
+													? assignment.starred.length > 0
+													: !!assignment.starred
+												: false
+										}
+										//obviously we need a better solution
+										schedule={schedule!}
+										scheduleT={scheduleT!}
+										showClassPill={true}
+										classes={getDataOutArray(assignment.classes)}
+									/>
+								</div>
+							)
+					)
 				) : (
 					<>
 						{[...Array(3)].map((_, i) => (
@@ -160,6 +237,7 @@ const Post: NextPage = () => {
 			(!assignment && assignmentid != "0")
 		) {
 			return (
+				// Loading state
 				<div className=" flex grow flex-col">
 					<ColoredPill color="gray" className="mr-auto animate-pulse">
 						<span className="invisible">trojker</span>
@@ -176,13 +254,14 @@ const Post: NextPage = () => {
 					</div>
 					<div className="mt-6 flex grow">
 						<div className="mt-4 w-full max-w-lg rounded-xl bg-gray-200 p-4 xl:max-w-xl"></div>
-						<div className="mt-4 ml-4 max-h-48 grow rounded-xl bg-gray-200 p-4 xl:max-w-xl"></div>
+						<div className="ml-4 mt-4 max-h-48 grow rounded-xl bg-gray-200 p-4 xl:max-w-xl"></div>
 					</div>
 				</div>
 			);
 		}
 
 		if (assignmentid == "0") {
+			// 0 is a placeholder for when the user hasn't selected an assignment yet
 			return (
 				<div className="m-auto flex flex-col items-center">
 					<Image
@@ -219,6 +298,7 @@ const Post: NextPage = () => {
 			return (
 				<>
 					<div className="flex grow flex-col">
+						{/* Top part of main window */}
 						<section className="flex items-start justify-between">
 							<div className="mr-4 grow lg:max-w-lg xl:max-w-xl">
 								<Link
@@ -283,40 +363,70 @@ const Post: NextPage = () => {
 								</div>
 							</div>
 						</section>
-						<section className="scrollbar-fancy relative mt-5 flex flex-1 flex-col-reverse overflow-y-auto overflow-x-hidden whitespace-pre-line md:pr-2 xl:flex-row">
+						<section
+							className={`scrollbar-fancy relative mt-5 flex flex-1  overflow-y-auto overflow-x-hidden whitespace-pre-line md:pr-2 ${
+								assignment.data.submission_type == "post"
+									? "flex-col"
+									: "flex-col-reverse xl:flex-row"
+							}`}
+						>
 							<div className="flex grow flex-col">
 								<h2 className="text-xl font-semibold">Details</h2>
-								<Editor
-									editable={false}
-									initialState={assignment.data.content}
-									className=" scrollbar-fancy mt-2 mb-5 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
-								/>
+								{assignment.data.content &&
+								(assignment.data.content as unknown as SerializedEditorState) // @ts-expect-error lexical/shit-types
+									.root.children[0].children.length != 0 ? (
+									<Editor
+										editable={false}
+										initialState={assignment.data.content}
+										className=" scrollbar-fancy mt-2 mb-5 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
+										focus={false}
+									/>
+								) : (
+									<>
+										<div className="mt-2 mb-5 grid grow place-items-center rounded-xl bg-gray-200 p-4 text-lg font-medium">
+											No assignment details
+										</div>{" "}
+									</>
+								)}
 							</div>
-							<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:ml-4 xl:mb-0 xl:w-72">
-								<h2 className="text-xl font-semibold">Submission</h2>
-								<div className="mt-2 rounded-xl bg-gray-200 p-6">
-									{assignment.data.submission_instructions ? (
-										<>
+							{assignment.data.submission_type != "post" ? (
+								<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:ml-4 xl:mb-0 xl:w-72">
+									<h2 className="text-xl font-semibold">Submission</h2>
+									<div className="mt-2 rounded-xl bg-gray-200 p-6">
+										{assignment.data.submission_instructions ? (
+											<>
+												<h2 className="text-lg font-semibold ">
+													Teachers Instructions:
+												</h2>
+												<p className="max-w-md text-sm text-gray-700">
+													{assignment.data.submission_instructions}
+												</p>
+											</>
+										) : (
 											<h2 className="text-lg font-semibold ">
-												Teachers Instructions:
+												Submit assignment
 											</h2>
-											<p className="max-w-md text-sm text-gray-700">
-												{assignment.data.submission_instructions}
-											</p>
-										</>
-									) : (
-										<h2 className="text-lg font-semibold ">
-											Submit assignment
-										</h2>
-									)}
-									<div
-										className="mt-6 inline-flex cursor-pointer rounded-md bg-blue-500 px-4 py-1 font-semibold text-white"
-										onClick={() => setIsOpen(true)}
-									>
-										Submit
+										)}
+										{assignment.data.submission_type == "check" ? (
+											<Button color="bg-blue-500" className="mt-6 text-white">
+												Set as completed
+											</Button>
+										) : (
+											<Button
+												className="mt-6 inline-flex cursor-pointer rounded-md px-4 py-1 font-semibold text-white"
+												color="bg-blue-500"
+												onClick={() => setIsOpen(true)}
+											>
+												Submit
+											</Button>
+										)}
 									</div>
 								</div>
-							</div>
+							) : (
+								<div>
+									<h2 className="text-xl font-semibold">Discussion Posts</h2>
+								</div>
+							)}
 						</section>
 					</div>
 					<Transition appear show={isOpen} as={Fragment}>
@@ -360,7 +470,7 @@ const Post: NextPage = () => {
 				</>
 			);
 		}
-
+		// Typescript wanted me to do this. The user shouldn't ever encounter this state
 		return <div>An unknown error occured. Assignment id: {assignmentid}</div>;
 	}
 };

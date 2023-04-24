@@ -72,7 +72,7 @@ export const InfoPills: NextPage<{
 						{isTeacher && (
 							<div
 								onClick={() => deletePill(pill)}
-								className={`absolute right-2 top-1 bottom-1 my-auto hidden h-4 w-4 cursor-pointer place-items-center rounded bg-black/50 text-white group-hover:flex`}
+								className={`absolute bottom-1 right-2 top-1 my-auto hidden h-4 w-4 cursor-pointer place-items-center rounded bg-black/50 text-white group-hover:flex`}
 							>
 								<XMarkIcon className="h-4 w-4" />
 							</div>
@@ -134,13 +134,13 @@ export const InfoPills: NextPage<{
 									<div>
 										<input
 											type="text"
-											className="mx-1.5  mb-1 w-44 rounded-lg border-none bg-gray-100 py-0.5 px-2 text-sm font-medium shadow"
+											className="mx-1.5  mb-1 w-44 rounded-lg border-none bg-gray-100 px-2 py-0.5 text-sm font-medium shadow"
 											placeholder="InfoPill name"
 											onChange={(e) => setNewName(e.target.value)}
 										/>
 										<input
 											type="text"
-											className="mx-1.5 w-44 rounded-lg border-none bg-gray-100 py-0.5 px-2 text-sm font-medium shadow"
+											className="mx-1.5 w-44 rounded-lg border-none bg-gray-100 px-2 py-0.5 text-sm font-medium shadow"
 											placeholder="Optional Link"
 											onChange={(e) => setLink(e.target.value)}
 										/>

@@ -1,6 +1,8 @@
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import supabase from "../supabase";
 import { Database } from "./database.types";
+import { DueType } from "../../components/complete/assignments";
+import { SerializedEditorState } from "lexical";
 
 export const getAllAssignments = async (
 	supabaseClient: SupabaseClient<Database>
@@ -8,11 +10,10 @@ export const getAllAssignments = async (
 	return await supabaseClient.from("assignments").select(
 		`
 		*,
-		classes_assignments (
+		
 			classes (
 				name, id, color, block, schedule_type
-			)
-		),
+			),
 		starred (
 			assignment_id
 		)
@@ -55,10 +56,10 @@ export const handleStarred = async (
 };
 
 export const getAssignment = async (
-	supabaseClient: SupabaseClient<Database>,
+	supabase: SupabaseClient<Database>,
 	assignmentuuid: string
 ) => {
-	return await supabaseClient
+	return await supabase
 		.from("assignments")
 		.select(
 			`
@@ -72,38 +73,6 @@ export const getAssignment = async (
 };
 
 export type AssignmentResponse = Awaited<ReturnType<typeof getAssignment>>;
-
-export const newAssignment = async (
-	assignment: Assignment,
-	classuuid: string
-): Promise<AssignmentData> => {
-	const { data, error } = await supabase
-		.from("assignments")
-		.insert(assignment)
-		.select()
-		.limit(1)
-		.single();
-	if (error) {
-		return {
-			success: false,
-			error,
-		};
-	}
-	if (data) {
-		// amazing naming schema
-		const { error: secondError } = await supabase
-			.from("classes_assignments")
-			.insert({ assignment_id: data.id, class_id: classuuid });
-		if (secondError) {
-			return {
-				success: false,
-				error: secondError,
-			};
-		}
-		return { success: true };
-	}
-	return { success: false };
-};
 
 //Lukas is building the world's first 7D array
 export type Assignment = Database["public"]["Tables"]["assignments"]["Row"];
@@ -121,3 +90,18 @@ export type AssignmentTypes =
 	| "check"
 	| "post"
 	| "google";
+
+export type NewAssignmentData = {
+	name: string;
+	description: string;
+	content: SerializedEditorState;
+	submissionType: string;
+	submissionInstructions?: string;
+	dueType?: DueType;
+	dueDate?: Date;
+	dueDay?: number;
+	publishType?: DueType;
+	publishDate?: Date;
+	publishDay?: number;
+	hidden: boolean;
+};
