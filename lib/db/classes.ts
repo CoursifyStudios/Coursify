@@ -1,6 +1,8 @@
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { NonNullableArray } from "../misc/misc.types";
 import type { Database } from "./database.types";
+import { getSchedulesForXDays, ScheduleInterface } from "./schedule";
+import { getDataOutArray } from "../misc/dataOutArray";
 
 export async function getAllClasses(supabase: SupabaseClient<Database>) {
 	const { data, error } = await supabase.from("classes").select(`
@@ -60,6 +62,8 @@ export const getClass = async (
 	`
 		)
 		.eq("id", classid)
+		.limit(5, { foreignTable: "assignments" })
+		.order("due_date", { foreignTable: "assignments", ascending: true })
 		.single();
 };
 
@@ -92,6 +96,99 @@ export const updateClass = async (
 	return await supabase.from("classes").update(updates).eq("id", classid);
 };
 
+export const getClassTimesForXDays = async (
+	supabase: SupabaseClient<Database>,
+	classObject: {
+		block: number;
+		type: number;
+	},
+	startDate: Date,
+	duration: number
+) => {
+	const monthSchedules = await getSchedulesForXDays(
+		supabase,
+		startDate,
+		duration
+	);
+	const dates: { startTime: Date; endTime: Date }[] = [];
+	if (monthSchedules.data) {
+		monthSchedules.data.map((daySchedule) => {
+			const dateStart = new Date(daySchedule.date);
+			const dateEnd = new Date(daySchedule.date);
+			if (
+				daySchedule.schedule_templates &&
+				getDataOutArray(daySchedule.schedule_templates).schedule_items &&
+				classHappensThisDay(
+					classObject.block,
+					classObject.type,
+					getDataOutArray(daySchedule.schedule_templates)
+						.schedule_items as unknown as ScheduleInterface[]
+				) != undefined
+			) {
+				const temp = classHappensThisDay(
+					classObject.block,
+					classObject.type,
+					getDataOutArray(daySchedule.schedule_templates)
+						.schedule_items as unknown as ScheduleInterface[]
+				);
+				dateStart.setHours(parseInt(temp!.timeStart.substring(0, 2)));
+				dateStart.setMinutes(parseInt(temp!.timeStart.substring(3)));
+				dateEnd.setHours(parseInt(temp!.timeEnd.substring(0, 2)));
+				dateEnd.setMinutes(parseInt(temp!.timeEnd.substring(3)));
+
+				dates.push({
+					startTime: dateStart,
+					endTime: dateEnd,
+				});
+			}
+			if (
+				daySchedule.schedule_items &&
+				!daySchedule.schedule_templates &&
+				classHappensThisDay(
+					classObject.block,
+					classObject.type,
+					getDataOutArray(
+						daySchedule.schedule_items
+					) as unknown as ScheduleInterface[]
+				) != undefined
+			) {
+				const temp = classHappensThisDay(
+					classObject.block,
+					classObject.type,
+					getDataOutArray(
+						daySchedule.schedule_items
+					) as unknown as ScheduleInterface[]
+				);
+				dateStart.setHours(parseInt(temp!.timeStart.substring(0, 2)));
+				dateStart.setMinutes(parseInt(temp!.timeStart.substring(3)));
+				dateEnd.setHours(parseInt(temp!.timeEnd.substring(0, 2)));
+				dateEnd.setMinutes(parseInt(temp!.timeEnd.substring(3)));
+
+				dates.push({
+					startTime: dateStart,
+					endTime: dateEnd,
+				});
+			}
+		});
+	}
+	return sortDatesAscending(dates);
+};
+
+function sortDatesAscending(
+	dates: { startTime: Date; endTime: Date }[]
+): { startTime: Date; endTime: Date }[] {
+	return dates.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
+}
+
+function classHappensThisDay(
+	block: number,
+	type: number,
+	schedule: ScheduleInterface[]
+) {
+	return schedule.find(
+		(period) => period.block == block && period.type == type
+	);
+}
 export const getClassesForUserBasic = async (
 	supabase: SupabaseClient<Database>,
 	userID: string

@@ -11,7 +11,7 @@ import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
 import { crossPostAnnouncements } from "../../lib/db/announcements";
 import { Database, Json } from "../../lib/db/database.types";
 import { getDataOutArray } from "../../lib/misc/dataOutArray";
-import { howLongAgo } from "../../lib/misc/formatDate";
+import { howLongAgo } from "../../lib/misc/dates";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import Editor from "../editors/richeditor";
 import { Button } from "../misc/button";

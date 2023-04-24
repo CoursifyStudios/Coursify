@@ -25,7 +25,7 @@ import {
 	setThisSchedule,
 } from "../../lib/db/schedule";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
-import { CreateAssignment } from "../../components/complete/createAssignment";
+import { CreateAssignment } from "../../components/complete/assignmentCreation";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
 import {
 	Announcement,
@@ -62,7 +62,11 @@ const Class: NextPage = () => {
 
 	useEffect(() => {
 		(async () => {
-			if (user && typeof classid == "string") {
+			if (
+				user &&
+				typeof classid == "string" &&
+				(!data || data.data?.id != classid)
+			) {
 				setData(undefined);
 				const data = await getClass(supabase, classid);
 				setData(data);
@@ -92,7 +96,8 @@ const Class: NextPage = () => {
 		})();
 		setEdited(false);
 		setEditorState(undefined);
-	}, [user, supabase, classid, refreshAnnouncements]);
+		setEditable(false);
+	}, [classid, data, refreshAnnouncements, supabase, user]);
 
 	// We need to fix refresh announcements to focus the user on the announcements tab panel
 	// but I guess that can wait for another day - Bill
@@ -132,10 +137,15 @@ const Class: NextPage = () => {
 
 	return (
 		<div className="mx-auto my-10 w-full max-w-screen-xl px-4">
-			<CreateAssignment
-				open={assignmentCreationOpen}
-				setOpen={setAssignmentCreationOpen}
-			/>
+			{data.data && typeof classid == "string" && (
+				<CreateAssignment
+					block={data.data.block}
+					scheduleType={data.data.schedule_type}
+					open={assignmentCreationOpen}
+					setOpen={setAssignmentCreationOpen}
+					classid={classid}
+				/>
+			)}
 			<div className="relative mb-6 h-48 w-full">
 				<Image
 					src={data.data?.image ? data.data.image : exampleClassImg}
@@ -304,11 +314,13 @@ const Class: NextPage = () => {
 											}
 										>
 											<div className="relative h-max">
-												<img
+												<Image
 													src={user.avatar_url!}
 													alt="Profile picture"
 													referrerPolicy="no-referrer"
 													className=" h-10 min-w-[2.5rem] rounded-full shadow-md shadow-black/25"
+													width={40}
+													height={40}
 												/>
 												{data.data.class_users &&
 													Array.isArray(data.data.class_users) && // based on my testing it will always return an array, doing this to make ts happy

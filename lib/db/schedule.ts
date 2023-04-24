@@ -73,22 +73,34 @@ export const createNewTemplate = async (
 
 export type NewTemplate = Awaited<ReturnType<typeof createNewTemplate>>;
 
-export function to12hourTime(timeAsString: string, includeAMPM?: boolean) {
-	if (parseInt(timeAsString.substring(0, 2)) == 12) {
-		return timeAsString + (includeAMPM ? " PM" : "");
-	} else if (parseInt(timeAsString.substring(0, 2)) <= 12) {
-		return (
-			parseInt(timeAsString.substring(0, 2)) +
-			timeAsString.substring(2) +
-			(includeAMPM ? " AM" : "")
-		);
+export function to12hourTime(date: string): string;
+export function to12hourTime(date: Date): string;
+
+export function to12hourTime(date: unknown, includeAMPM?: boolean) {
+	if (typeof date == "string") {
+		if (parseInt(date.substring(0, 2)) == 12) {
+			return date + (includeAMPM ? " PM" : "");
+		} else if (parseInt(date.substring(0, 2)) <= 12) {
+			return (
+				parseInt(date.substring(0, 2)) +
+				date.substring(2) +
+				(includeAMPM ? " AM" : "")
+			);
+		} else {
+			return (
+				parseInt(date.substring(0, 2)) -
+				12 +
+				date.substring(2) +
+				(includeAMPM ? " PM" : "")
+			);
+		}
 	} else {
-		return (
-			parseInt(timeAsString.substring(0, 2)) -
-			12 +
-			timeAsString.substring(2) +
-			(includeAMPM ? " PM" : "")
-		);
+		let hour = (date as Date).getHours();
+		const minute = (date as Date).getMinutes().toString().padStart(2, "0");
+		const AMPM = hour >= 12 ? "PM" : "AM";
+		hour = hour % 12 || 12;
+
+		return `${hour}:${minute}${includeAMPM ? ` ${AMPM}` : ""}`;
 	}
 }
 

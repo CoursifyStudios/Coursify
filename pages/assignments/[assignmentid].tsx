@@ -35,8 +35,11 @@ import {
 	setThisSchedule,
 } from "../../lib/db/schedule";
 import Editor from "../../components/editors/richeditor";
+import { getIcon } from "../../components/complete/achievement";
+import { formatDate } from "../../lib/misc/dates";
 import { Transition, Dialog, Listbox } from "@headlessui/react";
 import { getDataOutArray } from "../../lib/misc/dataOutArray";
+import { SerializedEditorState } from "lexical";
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
@@ -99,7 +102,7 @@ const Post: NextPage = () => {
 		if (router.isReady && assignmentid != "0" && window.innerWidth < 768) {
 			setFullscreen(true);
 		}
-	}, [user, supabase, router, assignmentid]);
+	}, [user, supabase, router, assignmentid, allAssignments, assignment]);
 
 	return (
 		// Left pane
@@ -187,10 +190,7 @@ const Post: NextPage = () => {
 									{/* List of assignments */}
 									<AssignmentPreview
 										supabase={supabase}
-										assignment={{
-											...assignment,
-											due_type: assignment.due_type || DueType.DATE,
-										}}
+										assignment={assignment}
 										userId={user.id}
 										starredAsParam={
 											assignment.starred
@@ -363,43 +363,70 @@ const Post: NextPage = () => {
 								</div>
 							</div>
 						</section>
-						{/* Submission and assignment details */}
-						<section className="scrollbar-fancy relative mt-5 flex flex-1 flex-col-reverse overflow-y-auto overflow-x-hidden whitespace-pre-line md:pr-2 xl:flex-row">
+						<section
+							className={`scrollbar-fancy relative mt-5 flex flex-1  overflow-y-auto overflow-x-hidden whitespace-pre-line md:pr-2 ${
+								assignment.data.submission_type == "post"
+									? "flex-col"
+									: "flex-col-reverse xl:flex-row"
+							}`}
+						>
 							<div className="flex grow flex-col">
 								<h2 className="text-xl font-semibold">Details</h2>
-								<Editor
-									editable={false}
-									initialState={assignment.data.content}
-									className=" scrollbar-fancy mb-5 mt-2 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
-									focus={false}
-								/>
+								{assignment.data.content &&
+								(assignment.data.content as unknown as SerializedEditorState) // @ts-expect-error lexical/shit-types
+									.root.children[0].children.length != 0 ? (
+									<Editor
+										editable={false}
+										initialState={assignment.data.content}
+										className=" scrollbar-fancy mt-2 mb-5 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
+										focus={false}
+									/>
+								) : (
+									<>
+										<div className="mt-2 mb-5 grid grow place-items-center rounded-xl bg-gray-200 p-4 text-lg font-medium">
+											No assignment details
+										</div>{" "}
+									</>
+								)}
 							</div>
-							<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:mb-0 xl:ml-4 xl:w-72">
-								<h2 className="text-xl font-semibold">Submission</h2>
-								<div className="mt-2 rounded-xl bg-gray-200 p-6">
-									{assignment.data.submission_instructions ? (
-										<>
+							{assignment.data.submission_type != "post" ? (
+								<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:ml-4 xl:mb-0 xl:w-72">
+									<h2 className="text-xl font-semibold">Submission</h2>
+									<div className="mt-2 rounded-xl bg-gray-200 p-6">
+										{assignment.data.submission_instructions ? (
+											<>
+												<h2 className="text-lg font-semibold ">
+													Teachers Instructions:
+												</h2>
+												<p className="max-w-md text-sm text-gray-700">
+													{assignment.data.submission_instructions}
+												</p>
+											</>
+										) : (
 											<h2 className="text-lg font-semibold ">
-												Teachers Instructions:
+												Submit assignment
 											</h2>
-											<p className="max-w-md text-sm text-gray-700">
-												{assignment.data.submission_instructions}
-											</p>
-										</>
-									) : (
-										<h2 className="text-lg font-semibold ">
-											Submit assignment
-										</h2>
-									)}
-									<Button
-										className="mt-6 inline-flex cursor-pointer rounded-md px-4 py-1 font-semibold text-white"
-										color="bg-blue-500"
-										onClick={() => setIsOpen(true)}
-									>
-										Submit
-									</Button>
+										)}
+										{assignment.data.submission_type == "check" ? (
+											<Button color="bg-blue-500" className="mt-6 text-white">
+												Set as completed
+											</Button>
+										) : (
+											<Button
+												className="mt-6 inline-flex cursor-pointer rounded-md px-4 py-1 font-semibold text-white"
+												color="bg-blue-500"
+												onClick={() => setIsOpen(true)}
+											>
+												Submit
+											</Button>
+										)}
+									</div>
 								</div>
-							</div>
+							) : (
+								<div>
+									<h2 className="text-xl font-semibold">Discussion Posts</h2>
+								</div>
+							)}
 						</section>
 					</div>
 					<Transition appear show={isOpen} as={Fragment}>
