@@ -44,7 +44,7 @@ export const crossPostAnnouncements = async (
 	communities: string[]
 ) => {
 	communities.forEach(async (community) => {
-		const announcementData = await supabase
+		const { data, error } = await supabase
 			.from("announcements")
 			.insert({
 				author: announcementAuthor,
@@ -54,6 +54,7 @@ export const crossPostAnnouncements = async (
 			})
 			.select()
 			.single();
+		if (error) return false;
 	});
 	return true;
 };
