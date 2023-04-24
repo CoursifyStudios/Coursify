@@ -1,9 +1,10 @@
 import { NextPage } from "next";
 import { NewAssignmentData } from "../../../lib/db/assignments";
 import { useAssignmentStore } from ".";
+import { DueType } from "../assignments";
 
 const AssignmentCalender: NextPage<{
-	daysData: Date[] | undefined;
+	daysData: { startTime: Date; endTime: Date }[] | undefined;
 	type: "due" | "publish";
 }> = ({ daysData, type }) => {
 	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
@@ -12,14 +13,43 @@ const AssignmentCalender: NextPage<{
 	}));
 
 	const updateAssignmentData = (date: Date, day: number) => {
+		if (!daysData) return;
+
+		const data = daysData.find(
+			(day) =>
+				day.startTime.toISOString().slice(0, 10) ==
+				date.toISOString().slice(0, 10)
+		);
+		// makes sure users don't click on days they aren't supposed to
+		if (!data) return;
+
 		if (type == "due") {
-			setAssignmentData({ dueDate: date, dueDay: day } as NewAssignmentData);
+			switch (assignmentData?.dueType) {
+				case DueType.START_OF_CLASS:
+					setAssignmentData({
+						dueDate: data.startTime,
+						dueDay: day,
+					} as NewAssignmentData);
+				case DueType.END_OF_CLASS:
+					setAssignmentData({
+						dueDate: data.endTime,
+						dueDay: day,
+					} as NewAssignmentData);
+			}
 		}
 		if (type == "publish") {
-			setAssignmentData({
-				publishDate: date,
-				publishDay: day,
-			} as NewAssignmentData);
+			switch (assignmentData?.dueType) {
+				case DueType.START_OF_CLASS:
+					setAssignmentData({
+						publishDate: data.startTime,
+						publishDay: day,
+					} as NewAssignmentData);
+				case DueType.END_OF_CLASS:
+					setAssignmentData({
+						publishDate: data.endTime,
+						publishDay: day,
+					} as NewAssignmentData);
+			}
 		}
 	};
 
@@ -42,11 +72,11 @@ const AssignmentCalender: NextPage<{
 							)}
 							<div
 								key={i}
-								className={`grid h-10 w-10 place-items-center rounded-lg  font-medium 
+								className={`grid h-10 w-10 place-items-center rounded-lg font-medium 
 								${
 									daysData.find(
 										(day) =>
-											day.toISOString().slice(0, 10) ==
+											day.startTime.toISOString().slice(0, 10) ==
 											date.toISOString().slice(0, 10)
 									)
 										? " brightness-hover cursor-pointer bg-gray-300"

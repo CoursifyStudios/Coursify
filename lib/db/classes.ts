@@ -110,9 +110,11 @@ export const getClassTimesForXDays = async (
 		startDate,
 		duration
 	);
-	const dates: Date[] = [];
+	const dates: { startTime: Date; endTime: Date }[] = [];
 	if (monthSchedules.data) {
 		monthSchedules.data.map((daySchedule) => {
+			const dateStart = new Date(daySchedule.date);
+			const dateEnd = new Date(daySchedule.date);
 			if (
 				daySchedule.template &&
 				getDataOutArray(daySchedule.template).schedule_items &&
@@ -121,10 +123,23 @@ export const getClassTimesForXDays = async (
 					classObject.type,
 					getDataOutArray(daySchedule.template)
 						.schedule_items as unknown as ScheduleInterface[]
-				)
+				) != undefined
 			) {
-				const date = new Date(daySchedule.date);
-				dates.push(date);
+				const temp = classHappensThisDay(
+					classObject.block,
+					classObject.type,
+					getDataOutArray(daySchedule.template)
+						.schedule_items as unknown as ScheduleInterface[]
+				);
+				dateStart.setHours(parseInt(temp!.timeStart.substring(0, 2)));
+				dateStart.setMinutes(parseInt(temp!.timeStart.substring(3)));
+				dateEnd.setHours(parseInt(temp!.timeEnd.substring(0, 2)));
+				dateEnd.setMinutes(parseInt(temp!.timeEnd.substring(3)));
+
+				dates.push({
+					startTime: dateStart,
+					endTime: dateEnd,
+				});
 			}
 			if (
 				daySchedule.schedule_items &&
@@ -135,18 +150,34 @@ export const getClassTimesForXDays = async (
 					getDataOutArray(
 						daySchedule.schedule_items
 					) as unknown as ScheduleInterface[]
-				)
+				) != undefined
 			) {
-				const date = new Date(daySchedule.date);
-				dates.push(date);
+				const temp = classHappensThisDay(
+					classObject.block,
+					classObject.type,
+					getDataOutArray(
+						daySchedule.schedule_items
+					) as unknown as ScheduleInterface[]
+				);
+				dateStart.setHours(parseInt(temp!.timeStart.substring(0, 2)));
+				dateStart.setMinutes(parseInt(temp!.timeStart.substring(3)));
+				dateEnd.setHours(parseInt(temp!.timeEnd.substring(0, 2)));
+				dateEnd.setMinutes(parseInt(temp!.timeEnd.substring(3)));
+
+				dates.push({
+					startTime: dateStart,
+					endTime: dateEnd,
+				});
 			}
 		});
 	}
 	return sortDatesAscending(dates);
 };
 
-function sortDatesAscending(dates: Date[]): Date[] {
-	return dates.sort((a, b) => a.getTime() - b.getTime());
+function sortDatesAscending(
+	dates: { startTime: Date; endTime: Date }[]
+): { startTime: Date; endTime: Date }[] {
+	return dates.sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
 }
 
 function classHappensThisDay(
@@ -154,8 +185,7 @@ function classHappensThisDay(
 	type: number,
 	schedule: ScheduleInterface[]
 ) {
-	return (
-		schedule.find((period) => period.block == block && period.type == type) !=
-		undefined
+	return schedule.find(
+		(period) => period.block == block && period.type == type
 	);
 }

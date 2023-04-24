@@ -4,11 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { handleStarred } from "../../lib/db/assignments";
 import { Database } from "../../lib/db/database.types";
-import {
-	ScheduleInterface,
-	convertTo12Hour,
-	to12hourTime,
-} from "../../lib/db/schedule";
+import { ScheduleInterface, to12hourTime } from "../../lib/db/schedule";
 import { ColoredPill } from "../misc/pill";
 import Starred from "../misc/starred";
 
@@ -109,7 +105,7 @@ export function AssignmentPreview({
 									{date.getMonth()}/{date.getDate()}
 								</div>
 								<ColoredPill color={classes.color}>
-									{`${convertTo12Hour(date)}`}
+									{`${to12hourTime(date)}`}
 								</ColoredPill>
 							</>
 						) : (

@@ -5,7 +5,6 @@ import { Button } from "../../misc/button";
 import Editor from "../../editors/richeditor";
 import { DueType } from "../assignments";
 import { NextPage } from "next";
-import { SerializedEditorState, SerializedLexicalNode } from "lexical";
 import AssignmentCalender from "./assignmentCalender";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { getClassTimesForXDays } from "../../../lib/db/classes";
@@ -28,10 +27,10 @@ const AssignmentCreation: NextPage<{
 	const [selectedPublishType, setSelectedPublishType] = useState(types[0]);
 	const [publish, setPublished] = useState(false);
 	const [due, setDue] = useState(true);
-	const [daysData, setDaysData] = useState<Date[]>();
+	const [daysData, setDaysData] =
+		useState<{ startTime: Date; endTime: Date }[]>();
 	const [submitting, setSubmitting] = useState<boolean>();
 	const [error, setError] = useState("");
-	const [hidden, setHidden] = useState(false);
 
 	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
 		setAssignmentData: state.set,
@@ -88,17 +87,18 @@ const AssignmentCreation: NextPage<{
 			hidden: assignmentData.hidden,
 		};
 		if (due) {
-			data.due_date = assignmentData.dueDate?.toString();
+			data.due_date = assignmentData.dueDate?.toISOString();
 			data.due_type = assignmentData.dueType;
 		}
 		if (publish) {
-			data.publish_date = assignmentData.publishDate?.toString();
+			data.publish_date = assignmentData.publishDate?.toISOString();
 			data.publish_type = assignmentData.publishType;
 		}
 		const { error } = await supabase.from("assignments").insert(data);
 		setSubmitting(false);
 		if (error) {
 			setError(error.message);
+			setSubmitting(undefined);
 			return;
 		}
 		setTimeout(closeMenu, 500);
