@@ -91,3 +91,25 @@ export const updateClass = async (
 ) => {
 	return await supabase.from("classes").update(updates).eq("id", classid);
 };
+
+export const getClassesForUserBasic = async (
+	supabase: SupabaseClient<Database>,
+	userID: string
+) => {
+	return await supabase
+		.from("class_users")
+		.select(
+			`
+    teacher,
+    classes (
+        id,
+        name,
+        type
+    )`
+		)
+		.eq("user_id", userID);
+};
+
+export type BasicClassInfoDB = Awaited<
+	ReturnType<typeof getClassesForUserBasic>
+>;

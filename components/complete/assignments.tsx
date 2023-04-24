@@ -74,7 +74,7 @@ export function AssignmentPreview({
 						dealWithStarred();
 					}
 				}}
-				className="absolute top-0 left-0"
+				className="absolute left-0 top-0"
 			>
 				<Starred starred={starred} />
 			</div>

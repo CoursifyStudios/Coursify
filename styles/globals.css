@@ -49,7 +49,7 @@
 /*Editor CSS*/
 
 .editor-paragraph {
-	@apply mt-1 mb-2 text-base;
+	@apply mb-2 mt-1 text-base;
 }
 
 .ltr {

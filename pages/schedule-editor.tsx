@@ -132,7 +132,7 @@ const ScheduleEditor = () => {
 
 							<button
 								type="submit"
-								className="mr-auto mt-4 rounded-lg bg-blue-200 py-2 px-4 text-blue-600"
+								className="mr-auto mt-4 rounded-lg bg-blue-200 px-4 py-2 text-blue-600"
 							>
 								Add schedule item
 							</button>
@@ -254,7 +254,7 @@ const ScheduleEditor = () => {
 
 						<button
 							type="submit"
-							className="mr-auto mt-4 rounded-lg bg-blue-200 py-2 px-4 text-blue-600"
+							className="mr-auto mt-4 rounded-lg bg-blue-200 px-4 py-2 text-blue-600"
 						>
 							Add as a Schedule (send to server)
 						</button>
@@ -281,7 +281,7 @@ const ScheduleEditor = () => {
 
 							<button
 								type="submit"
-								className="mr-auto mt-4 rounded-lg bg-blue-200 py-2 px-4 text-blue-600"
+								className="mr-auto mt-4 rounded-lg bg-blue-200 px-4 py-2 text-blue-600"
 							>
 								Add a New Template
 							</button>

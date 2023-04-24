@@ -73,7 +73,7 @@ export default function Profile() {
 					{profile && profile.data ? (
 						<h2 className="mb-4 text-xl">{profile?.data?.year}</h2>
 					) : (
-						<div className="mt-3 mb-5 h-8 w-16 animate-pulse rounded-md bg-gray-300"></div>
+						<div className="mb-5 mt-3 h-8 w-16 animate-pulse rounded-md bg-gray-300"></div>
 					)}
 
 					<CopiedHover copy={profile?.data?.email || "No email found"}>

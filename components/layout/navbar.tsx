@@ -120,7 +120,7 @@ const Navbar: NextComponentType = () => {
 								>
 									<Menu.Item
 										as="div"
-										className="flex items-center justify-between rounded-lg py-1 px-2 font-medium transition hover:bg-gray-300"
+										className="flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300"
 									>
 										Profile <UserIcon className="h-5 w-5" />
 									</Menu.Item>
@@ -132,7 +132,7 @@ const Navbar: NextComponentType = () => {
 								>
 									<Menu.Item
 										as="div"
-										className="flex items-center justify-between rounded-lg py-1 px-2 font-medium transition hover:bg-gray-300"
+										className="flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300"
 									>
 										Groups <UserGroupIcon className="h-5 w-5" />
 									</Menu.Item>
@@ -144,14 +144,14 @@ const Navbar: NextComponentType = () => {
 								>
 									<Menu.Item
 										as="div"
-										className="flex items-center justify-between rounded-lg py-1 px-2 font-medium transition hover:bg-gray-300"
+										className="flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300"
 									>
 										Settings <Cog6ToothIcon className="h-5 w-5" />
 									</Menu.Item>
 								</Link>
 								<Menu.Item
 									as="div"
-									className="mt-1 flex cursor-pointer items-center justify-between rounded-lg bg-red-500/25 py-1 px-2 font-medium transition hover:bg-red-400/50"
+									className="mt-1 flex cursor-pointer items-center justify-between rounded-lg bg-red-500/25 px-2 py-1 font-medium transition hover:bg-red-400/50"
 									onClick={() => logOut()}
 								>
 									Logout <ArrowLeftOnRectangleIcon className="h-5 w-5" />
@@ -175,7 +175,7 @@ const Navbar: NextComponentType = () => {
 
 		return (
 			<div
-				className={`my-1.5 mx-1 flex items-center rounded-md ${
+				className={`mx-1 my-1.5 flex items-center rounded-md ${
 					selected ? "bg-gray-50 shadow-md  " : "bg-gray-300"
 				} ${canClose && "pr-3"} text-lg font-semibold `}
 			>
