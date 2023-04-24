@@ -3,8 +3,22 @@ import { NonNullableArray } from "../misc/misc.types";
 import type { Database } from "./database.types";
 
 export async function getAllClasses(supabase: SupabaseClient<Database>) {
-	const { data, error } = await supabase.from("classes").select(`
-	*,
+	const { data, error } = await supabase
+		.from("classes")
+		.select(
+			`
+	id,
+    name,
+    description,
+    block,
+    schedule_type,
+    color,
+    name_full,
+    room,
+    full_description,
+    classpills,
+    image,
+    type,
 	users (
 		avatar_url, id, full_name
 	),
@@ -17,7 +31,9 @@ export async function getAllClasses(supabase: SupabaseClient<Database>) {
             *
         )
     )
-	`).eq("type", 0);
+	`
+		)
+		.eq("type", 0);
 	if (!error) {
 		return {
 			success: true,
@@ -41,7 +57,17 @@ export const getClass = async (
 		.from("classes")
 		.select(
 			`
-		*,
+            id,
+            name,
+            description,
+            block,
+            schedule_type,
+            color,
+            name_full,
+            room,
+            full_description,
+            classpills,
+            image,
         announcements (
             *,
             users (
@@ -91,3 +117,4 @@ export const updateClass = async (
 ) => {
 	return await supabase.from("classes").update(updates).eq("id", classid);
 };
+
