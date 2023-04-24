@@ -138,11 +138,13 @@ export const getSchedulesForXDays = async (
 			`
 		date,
 		schedule_items,
-		template (
-			schedule_items
+		schedule_templates (
+			*
 		)
 		`
 		)
 		.gte("date", startDate.toISOString().slice(0, 10))
 		.lte("date", endDate.toISOString().slice(0, 10));
 };
+
+export type ManySchedules = Awaited<ReturnType<typeof getSchedulesForXDays>>;

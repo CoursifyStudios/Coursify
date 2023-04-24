@@ -97,7 +97,7 @@ export const GroupLarge: NextPage<{
 					</div>
 					{user && (
 						<Button
-							className="isolate-auto brightness:hover rounded-lg py-1 px-2 font-medium text-white"
+							className="isolate-auto brightness:hover rounded-lg px-2 py-1 font-medium text-white"
 							color="bg-blue-500"
 							onClick={async () => {
 								addUserToGroup(supabase, id, user.id);

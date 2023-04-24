@@ -48,7 +48,7 @@ export const Class: NextPage<{
 						width={700}
 						height={128}
 					/>
-					<div className="absolute top-2 right-2 left-2 flex items-center justify-between space-x-2">
+					<div className="absolute left-2 right-2 top-2 flex items-center justify-between space-x-2">
 						{classData.room && (
 							<ColoredPill
 								//color="gray"
@@ -104,13 +104,13 @@ export const Class: NextPage<{
 												  );
 											if (!user)
 												return (
-													<p className="text-sm italic text-gray-700">
+													<p className="text-sm italic text-gray-700" key={i}>
 														No teacher
 													</p>
 												);
 
 											return (
-												<>
+												<div key={user.id}>
 													<Link
 														href={`/profile/${user.id}`}
 														className=" flex flex-col items-center"
@@ -140,10 +140,10 @@ export const Class: NextPage<{
 														test didn't appear over elements idk why
 													</div> */}
 													</Link>
-													<p className="mr-2 -ml-0.5 [&:last-child]:hidden">
+													<p className="-ml-0.5 mr-2 [&:last-child]:hidden">
 														,
 													</p>
-												</>
+												</div>
 											);
 										})
 								) : (
@@ -179,6 +179,8 @@ export function sortClasses(
 	scheduleTomorrow: ScheduleInterface[] | undefined
 ) {
 	if (schedule && scheduleTomorrow) {
+		// Fix the schedule sometimes being undefined and breaking stuff for the first load
+		schedule ??= [];
 		const aStartTime = schedule.find(
 			(v) => v.block == a.block && v.type == a.schedule_type
 		)?.timeStart;

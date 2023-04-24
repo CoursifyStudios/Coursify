@@ -147,6 +147,7 @@ export interface Database {
 					name_full: string;
 					room: string | null;
 					schedule_type: number;
+					type: number;
 				};
 				Insert: {
 					block: number;
@@ -160,6 +161,7 @@ export interface Database {
 					name_full?: string;
 					room?: string | null;
 					schedule_type?: number;
+					type: number;
 				};
 				Update: {
 					block?: number;
@@ -173,6 +175,7 @@ export interface Database {
 					name_full?: string;
 					room?: string | null;
 					schedule_type?: number;
+					type?: number;
 				};
 			};
 			days_schedule: {
@@ -395,6 +398,7 @@ export interface Database {
 					name_full: string;
 					room: string | null;
 					schedule_type: number;
+					type: number;
 				}[];
 			};
 		};

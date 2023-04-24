@@ -2,7 +2,10 @@ import {
 	ArrowsPointingInIcon,
 	ArrowsPointingOutIcon,
 	ChevronLeftIcon,
+	ChevronUpDownIcon,
 	LinkIcon,
+	PlusIcon,
+	QuestionMarkCircleIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
@@ -35,6 +38,7 @@ import Editor from "../../components/editors/richeditor";
 import { Transition, Dialog } from "@headlessui/react";
 import { getIcon } from "../../components/complete/achievement";
 import { formatDate } from "../../lib/misc/dates";
+import { Transition, Dialog, Listbox } from "@headlessui/react";
 import { getDataOutArray } from "../../lib/misc/dataOutArray";
 import { SerializedEditorState } from "lexical";
 
@@ -50,6 +54,13 @@ const Post: NextPage = () => {
 	const { assignmentid } = router.query;
 	const [fullscreen, setFullscreen] = useState(false);
 
+	const options = [
+		{ option: "Priority" },
+		{ option: "Due First" },
+		{ option: "Due Last" },
+	];
+
+	const [selected, setSelected] = useState(options[0]);
 	// Gets the data from the db
 	useEffect(() => {
 		(async () => {
@@ -96,19 +107,79 @@ const Post: NextPage = () => {
 
 	return (
 		// Left pane
-		<div className="mx-auto flex w-full max-w-screen-xl px-4 pt-6 pb-6 md:px-8 xl:px-0">
+		<div className="mx-auto flex w-full max-w-screen-xl px-4 pb-6 pt-6 md:px-8 xl:px-0">
 			<div
 				className={`scrollbar-fancy mr-4 grow items-stretch overflow-x-clip md:grow-0 ${
 					fullscreen ? "hidden" : "flex"
 				} w-[20.5rem] shrink-0 flex-col space-y-5 overflow-y-auto p-1 pb-6 md:h-[calc(100vh-6.5rem)] `}
 			>
+				<div className="flex flex-col">
+					<div className="flex-col rounded-lg bg-gray-200 p-2">
+						<div className="mb-1 flex items-center">
+							<h1 className="mr-1 text-xl font-bold">Filters</h1>
+							<QuestionMarkCircleIcon className="mt-0.5 h-5 w-5" />
+						</div>
+						<div className="my-1 h-7 w-7 items-center justify-center rounded-lg bg-gray-300">
+							<PlusIcon className="p-0.5" />
+						</div>
+					</div>
+					<div className="mt-3 flex items-center justify-between">
+						<div className="flex items-center">
+							<h2 className="mr-1 text-xl font-bold">Sort</h2>
+							<QuestionMarkCircleIcon className="mt-0.5 h-5 w-5" />
+						</div>
+						<Listbox value={selected} onChange={setSelected}>
+							<div className="relative">
+								<Listbox.Button className="flex w-40 rounded-lg bg-gray-200 py-2 pl-3 pr-10 text-sm">
+									<span className="block truncate">{selected.option}</span>
+									<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+										<ChevronUpDownIcon className="h-5 w-5" aria-hidden="true" />
+									</span>
+								</Listbox.Button>
+								<Transition
+									as={Fragment}
+									leave="transition ease-in duration-100"
+									leaveFrom="opacity-100"
+									leaveTo="opacity-0"
+								>
+									<Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-gray-200/90 p-2 text-sm shadow-xl backdrop-blur-xl transition">
+										{options.map((options, optionID) => (
+											<Listbox.Option
+												key={optionID}
+												className={({ active }) =>
+													`flex select-none justify-center rounded-lg py-2 transition ${
+														active ? "bg-gray-300" : "text-gray-900"
+													}`
+												}
+												value={options}
+											>
+												{({ selected }) => (
+													<>
+														<span
+															className={`${
+																selected ? "font-large" : "font-normal"
+															}`}
+														>
+															{options.option}
+														</span>
+													</>
+												)}
+											</Listbox.Option>
+										))}
+									</Listbox.Options>
+								</Transition>
+							</div>
+						</Listbox>
+					</div>
+				</div>
 				{allAssignments ? (
 					!allAssignments.error &&
 					user &&
 					schedule &&
 					allAssignments.data.map(
 						(assignment) =>
-							assignment.classes && (
+							assignment.classes &&
+							assignment.due_date && (
 								<div
 									className={`flex rounded-xl ${
 										assignmentid == assignment.id
@@ -184,7 +255,7 @@ const Post: NextPage = () => {
 					</div>
 					<div className="mt-6 flex grow">
 						<div className="mt-4 w-full max-w-lg rounded-xl bg-gray-200 p-4 xl:max-w-xl"></div>
-						<div className="mt-4 ml-4 max-h-48 grow rounded-xl bg-gray-200 p-4 xl:max-w-xl"></div>
+						<div className="ml-4 mt-4 max-h-48 grow rounded-xl bg-gray-200 p-4 xl:max-w-xl"></div>
 					</div>
 				</div>
 			);

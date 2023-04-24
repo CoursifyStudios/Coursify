@@ -33,6 +33,7 @@ Coursify
   - Pages within Coursify automatically open up within our internal tab system.
 - Accurate Schedule
   - Schedules automatically take into account the school schedule and class type to show your personal schedule and reduce confusion.
+  - Teachers can make assignments due at the begininning & end of a class or school day, which can be dynamically updated if the schedule changes.
 - Rich Assignment Types
   - Support for multiple different assignment types including link submissions, checkboxes, and google media.
 - Centralized Assignment Page
