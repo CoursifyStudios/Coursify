@@ -1,25 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "./database.types";
 //DEPRECATE SOON
-export const getAllGroupsForUser = async (
-	supabase: SupabaseClient<Database>,
-	userID: string
-) => {
-	return await supabase
-		.from("group_users")
-		.select(
-			`
-        *,
-        groups (
-            *
-        )
-        `
-		)
-		.eq("user_id", userID);
-};
-
-export type AllGroupsResponse = Awaited<ReturnType<typeof getAllGroupsForUser>>;
-//DEPRECATE SOON
 export const getAllPublicGroups = async (
 	supabase: SupabaseClient<Database>
 ) => {
