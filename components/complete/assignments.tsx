@@ -19,13 +19,7 @@ export function AssignmentPreview({
 	showClassPill,
 }: {
 	supabase: SupabaseClient<Database>;
-	assignment: {
-		id: string;
-		name: string;
-		description: string;
-		due_type: number;
-		due_date: string | null; //should be impossible because I check that it isn't but I needed this error (that I had nothing to do with!) to go away.
-	};
+	assignment: Database["public"]["Tables"]["assignments"]["Row"];
 	starredAsParam: boolean;
 	schedule: ScheduleInterface[];
 	scheduleT: ScheduleInterface[];
@@ -39,7 +33,7 @@ export function AssignmentPreview({
 	};
 	showClassPill: boolean;
 }) {
-	const date = new Date(assignment.due_date!);
+	const date = assignment.due_date ? new Date(assignment.due_date) : null;
 	const [starred, setStarred] = useState(starredAsParam);
 	const [dbStarred, setDbStarred] = useState(starredAsParam);
 
@@ -105,30 +99,24 @@ export function AssignmentPreview({
 					</div>
 					<div tabIndex={-1} className="flex-grow"></div>
 					<div tabIndex={-1} className="flex items-center">
-						<div className="mr-2 text-sm font-medium text-gray-700">
-							{date.getMonth()}/{date.getDate()}
-						</div>
-						<ColoredPill color={classes.color}>
-							{timeOfAssignment(
-								classes,
-								schedule,
-								scheduleT,
-								assignment.due_type!
-							)
-								? timeOfAssignment(
-										classes,
-										schedule,
-										scheduleT,
-										assignment.due_type!
-								  )
-								: to12hourTime(date.getHours() + ":" + date.getMinutes())}
-						</ColoredPill>
+						{date ? (
+							<>
+								<div className="mr-2 text-sm font-medium text-gray-700">
+									{date.getMonth()}/{date.getDate()}
+								</div>
+								<ColoredPill color={classes.color}>
+									{`${to12hourTime(date)}`}
+								</ColoredPill>
+							</>
+						) : (
+							<span className="text-sm italic">No due date</span>
+						)}
 					</div>
 				</div>
 				<div tabIndex={-1}>
 					<h1 className="text font-medium">{assignment.name}</h1>
 					<div className="flex items-end justify-between">
-						<p className="w-[12rem] break-words line-clamp-2  ">
+						<p className="w-[14rem] break-words line-clamp-2">
 							{assignment.description}
 						</p>
 						<CheckIcon className="h-6 w-6" />

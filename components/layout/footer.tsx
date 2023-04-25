@@ -25,7 +25,7 @@ export default function Footer() {
 					</h3>
 					<p className="mt-4 flex flex-col items-center md:mt-1 md:flex-row ">
 						<span>© 2023 Coursify Studios.&nbsp;</span>
-						<span>Made with ❤️ in San Francisco & Chicago.</span>
+						<span>Made with ❤️ in San Francisco (mostly).</span>
 					</p>
 				</div>
 				<div className="mt-4 space-x-4 md:mt-0">

@@ -103,11 +103,13 @@ const Group: NextPage = () => {
 							<div className="space-y-3">
 								<AnnouncementPostingUI
 									communityid={groupid as string}
-									isClass={false}
 									prevRefreshState={refreshAnnouncements}
 									refreshAnnouncements={setRefreshAnnouncements}
 								/>
-
+								<span>
+									ANNOUNCEMENTS TEMPORARILY DISABLED FOR GROUPS UNTIL GROUPS ON
+									CLASSES TABLE DB MERGE THING IS COMPLETE
+								</span>
 								{groupData &&
 									groupData.data &&
 									groupData.data.announcements && //change below when I get actual types

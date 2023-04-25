@@ -8,19 +8,16 @@ import { ErrorMessage, Field, Form, Formik, useFormikContext } from "formik";
 import { EditorState } from "lexical";
 import Link from "next/link";
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
-import {
-	ClassOrGroupObject,
-	crossPostAnnouncements,
-	getClassesAndGroups,
-} from "../../lib/db/announcements";
+import { crossPostAnnouncements } from "../../lib/db/announcements";
 import { Database, Json } from "../../lib/db/database.types";
 import { getDataOutArray } from "../../lib/misc/dataOutArray";
-import { howLongAgo } from "../../lib/misc/formatDate";
+import { howLongAgo } from "../../lib/misc/dates";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import Editor from "../editors/richeditor";
 import { Button } from "../misc/button";
 import Loading from "../misc/loading";
 import { ColoredPill } from "../misc/pill";
+import { getClassesForUserBasic } from "../../lib/db/classes";
 
 export const Announcement = ({
 	announcement,
@@ -50,7 +47,7 @@ export const Announcement = ({
 				<h2 className="text-xl font-semibold">{announcement.title}</h2>
 				<EllipsisVerticalIcon className="h-6 w-6" />
 			</div>
-			<div className="flex items-center pb-2 pt-1">
+			<div className="flex items-center pt-1">
 				<Link
 					href={"/profile/" + announcement.author}
 					className="inline-flex shrink-0 items-center rounded-full px-1 py-0.5 hover:bg-gray-300"
@@ -71,12 +68,12 @@ export const Announcement = ({
 						{getDataOutArray(announcement.users!).full_name}
 					</p>
 				</Link>
-				<p className="pl-2.5 text-gray-600">{howLongAgo(announcement.time!)}</p>
+				<p className="pl-1.5 text-gray-600">{howLongAgo(announcement.time!)}</p>
 			</div>
 			<Editor
 				editable={false}
 				initialState={announcement.content}
-				className="mt-2"
+				className="mt-0.5"
 			/>
 			{/* <div className="mt-4 flex items-center justify-between">
 				<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
@@ -92,12 +89,10 @@ export const Announcement = ({
 
 export const AnnouncementPostingUI = ({
 	communityid,
-	isClass,
 	prevRefreshState,
 	refreshAnnouncements,
 }: {
 	communityid: string;
-	isClass: boolean;
 	prevRefreshState: boolean;
 	refreshAnnouncements: (value: boolean) => void;
 }) => {
@@ -106,10 +101,17 @@ export const AnnouncementPostingUI = ({
 	const [title, setTitle] = useState("");
 	const [editorState, setEditorState] = useState<EditorState>();
 	const [showLoading, setShowLoading] = useState(false);
-	const [communities, setCommunities] = useState<ClassOrGroupObject[]>([]);
-	const [chosenCommunities, setChosenCommunities] = useState<
-		ClassOrGroupObject[]
+	const [communities, setCommunities] = useState<
+		{ id: string; name: string }[]
 	>([]);
+	const [chosenCommunities, setChosenCommunities] = useState<
+		{ id: string; name: string }[]
+	>([
+		{
+			id: communityid,
+			name: "",
+		},
+	]);
 	const [showCrossPosting, setShowCrossPosting] = useState(false);
 
 	const user = useUser();
@@ -126,30 +128,21 @@ export const AnnouncementPostingUI = ({
 
 	async function getCommunities() {
 		if (user && communities.length == 0) {
-			const dbResponse = await getClassesAndGroups(supabase, user.id);
-			const groupsAndClasses: ClassOrGroupObject[] = [];
-			if (
-				dbResponse.data &&
-				Array.isArray(dbResponse.data.class_users) &&
-				Array.isArray(dbResponse.data.group_users)
-			) {
-				dbResponse.data.group_users.map((group) => {
-					groupsAndClasses.push({
-						id: group.group_id,
-						name: getDataOutArray(group.groups)?.name as string,
-						trueIfClass: false,
-					});
-				});
-				dbResponse.data.class_users.map((classRow) => {
-					if (classRow.teacher) {
-						groupsAndClasses.push({
-							id: classRow.class_id,
-							name: getDataOutArray(classRow.classes)?.name as string,
-							trueIfClass: true,
+			const dbResponse = await getClassesForUserBasic(supabase, user.id);
+			const classes: { id: string; name: string }[] = [];
+			if (dbResponse.data) {
+				dbResponse.data.map((basicClassInfo) => {
+					if (
+						(basicClassInfo.classes && basicClassInfo.teacher) ||
+						getDataOutArray(basicClassInfo.classes)?.type == 1
+					) {
+						classes.push({
+							id: getDataOutArray(basicClassInfo.classes)!.id,
+							name: getDataOutArray(basicClassInfo.classes)!.name,
 						});
 					}
 				});
-				setCommunities(groupsAndClasses);
+				setCommunities(classes);
 			}
 		}
 	}
@@ -209,7 +202,8 @@ export const AnnouncementPostingUI = ({
 					{chosenCommunities &&
 						chosenCommunities.map(
 							(chosenCommunity) =>
-								chosenCommunity && (
+								chosenCommunity &&
+								chosenCommunity.id != communityid && (
 									<ColoredPill key={chosenCommunity.id} color="gray">
 										{chosenCommunity.name}
 									</ColoredPill>
@@ -231,7 +225,12 @@ export const AnnouncementPostingUI = ({
 						<Button
 							className="brightness-hover transition hover:bg-red-300"
 							onClick={() => {
-								setChosenCommunities([]);
+								setChosenCommunities([
+									{
+										id: communityid,
+										name: "",
+									},
+								]);
 								setShowPost(false);
 							}}
 						>
@@ -242,25 +241,21 @@ export const AnnouncementPostingUI = ({
 							color="bg-blue-500"
 							onClick={async () => {
 								if (!isEditorEmpty(editorState) && !(title.length == 0)) {
-									setChosenCommunities((communities) =>
-										communities.concat([
-											{
-												id: communityid,
-												name: "",
-												trueIfClass: isClass,
-											},
-										])
-									);
 									setShowLoading(true); //change below later
 									const testing = await crossPostAnnouncements(
 										supabase,
 										user?.id!,
 										title,
 										editorState?.toJSON() as unknown as Json,
-										communities
+										chosenCommunities.map(({ id }) => id)
 									);
 									if (testing) setShowLoading(false);
-									setChosenCommunities([]);
+									setChosenCommunities([
+										{
+											id: communityid,
+											name: "",
+										},
+									]);
 									refreshAnnouncements(!prevRefreshState);
 								}
 							}}
@@ -297,9 +292,11 @@ const CommunityPicker = ({
 }: {
 	showCrossPosting: boolean;
 	setShowCrossPosting: Dispatch<SetStateAction<boolean>>;
-	communities: ClassOrGroupObject[];
-	chosenCommunities: ClassOrGroupObject[];
-	setChosenCommunities: Dispatch<SetStateAction<ClassOrGroupObject[]>>;
+	communities: { id: string; name: string }[];
+	chosenCommunities: { id: string; name: string }[];
+	setChosenCommunities: Dispatch<
+		SetStateAction<{ id: string; name: string }[]>
+	>;
 	communityid: string;
 }) => {
 	return (
@@ -373,7 +370,7 @@ const CommunityPicker = ({
 	);
 
 	function addOrRemoveCommunity(
-		community: ClassOrGroupObject,
+		community: { id: string; name: string },
 		trueIfAdd: boolean
 	) {
 		if (trueIfAdd) {
