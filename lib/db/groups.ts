@@ -41,8 +41,8 @@ export const getGroup = async (
                 avatar_url, full_name
             )
         ),
-        group_users (
-            user_id, group_leader
+        class_users (
+            user_id, teacher
         ),
         users (
             *

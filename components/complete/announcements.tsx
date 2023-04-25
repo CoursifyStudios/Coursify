@@ -199,7 +199,7 @@ export const AnnouncementPostingUI = ({
 				/>
 
 				<div className="mb-4 flex flex-wrap gap-4">
-					{chosenCommunities &&
+					{chosenCommunities && chosenCommunities.length > 1 &&
 						chosenCommunities.map(
 							(chosenCommunity) =>
 								chosenCommunity &&
