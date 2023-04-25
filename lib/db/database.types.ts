@@ -40,7 +40,6 @@ export interface Database {
 					author: string;
 					class_id: string | null;
 					content: Json | null;
-					group_id: string | null;
 					id: string;
 					time: string | null;
 					title: string | null;
@@ -49,7 +48,6 @@ export interface Database {
 					author: string;
 					class_id?: string | null;
 					content?: Json | null;
-					group_id?: string | null;
 					id?: string;
 					time?: string | null;
 					title?: string | null;
@@ -58,7 +56,6 @@ export interface Database {
 					author?: string;
 					class_id?: string | null;
 					content?: Json | null;
-					group_id?: string | null;
 					id?: string;
 					time?: string | null;
 					title?: string | null;
@@ -147,6 +144,7 @@ export interface Database {
 					name_full: string;
 					room: string | null;
 					schedule_type: number;
+					tags: string[] | null;
 					type: number;
 				};
 				Insert: {
@@ -161,6 +159,7 @@ export interface Database {
 					name_full?: string;
 					room?: string | null;
 					schedule_type?: number;
+					tags?: string[] | null;
 					type: number;
 				};
 				Update: {
@@ -175,6 +174,7 @@ export interface Database {
 					name_full?: string;
 					room?: string | null;
 					schedule_type?: number;
+					tags?: string[] | null;
 					type?: number;
 				};
 			};
@@ -398,6 +398,7 @@ export interface Database {
 					name_full: string;
 					room: string | null;
 					schedule_type: number;
+					tags: string[] | null;
 					type: number;
 				}[];
 			};

@@ -124,6 +124,7 @@ export const updateClass = async (
 export enum CommunityType {
 	CLASS = 0,
 	GROUP = 1,
+	PUBLIC_GROUP = 2,
 	//add stuff here for sports group, or maybe even stuff such as invite only groups
 }
 export const getClassTimesForXDays = async (
@@ -240,4 +241,3 @@ export const getClassesForUserBasic = async (
 export type BasicClassInfoDB = Awaited<
 	ReturnType<typeof getClassesForUserBasic>
 >;
-

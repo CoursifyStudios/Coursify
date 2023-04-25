@@ -4,15 +4,17 @@ import { useEffect, useState } from "react";
 import { GroupLarge, GroupSmall } from "../../components/complete/group";
 import { getAllPublicGroups, PublicGroupsResponse } from "../../lib/db/groups";
 import supabase from "../../lib/supabase";
-import { ColoredPill } from "../../components/misc/pill";
+import { useUser } from "@supabase/auth-helpers-react";
 
 export default function GroupDirectory() {
 	const [allGroupData, setAllGroupData] = useState<PublicGroupsResponse>();
-
+	const user = useUser();
 	useEffect(() => {
 		(async () => {
-			const data = await getAllPublicGroups(supabase);
-			setAllGroupData(data);
+			if (user) {
+				const data = await getAllPublicGroups(supabase, user?.id);
+				setAllGroupData(data);
+			}
 		})();
 	}, [supabase]);
 
@@ -33,8 +35,8 @@ export default function GroupDirectory() {
 								allGroupData.data &&
 								allGroupData.data.map(
 									(group) =>
-										(!Array.isArray(group.group_users) ||
-											group.group_users.length != 0) && (
+										(!Array.isArray(group.class_users) ||
+											group.class_users.length != 0) && (
 											<GroupSmall
 												key={group.id}
 												id={group.id}
@@ -55,7 +57,8 @@ export default function GroupDirectory() {
 								allGroupData.data &&
 								allGroupData.data.map(
 									(group) =>
-										group.featured && (
+										group.tags &&
+										group.tags.includes("featured") && (
 											<GroupLarge
 												key={group.id}
 												id={group.id}

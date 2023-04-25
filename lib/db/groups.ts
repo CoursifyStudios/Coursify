@@ -1,21 +1,31 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "./database.types";
+import { CommunityType } from "./classes";
 //DEPRECATE SOON
 export const getAllPublicGroups = async (
-	supabase: SupabaseClient<Database>
+	supabase: SupabaseClient<Database>,
+	userID: string
 ) => {
 	return await supabase
-		.from("groups")
+		.from("classes")
 		.select(
 			`
-        *,
-        group_users (
-            user_id, group_id
+        id,
+        name,
+        description,
+        image,
+        type,
+        tags,
+        class_users (
+            user_id, class_id
         )
 
         `
 		)
-		.eq("public", true);
+		//check that type is equal to 2 OR type is equal to 1 AND class_users contains the userID
+		//.or('type.eq.2,and(type.eq.1,class_users.cs)');//fix this line
+		.or(`type.eq.2,and(type.eq.1,class_users.user_id.eq.'${userID}')`);
+	//.or(`type.eq.2,and(type.eq.1,class_users.cs(user_id.eq.'${userID}'))`);
 };
 
 export type PublicGroupsResponse = Awaited<

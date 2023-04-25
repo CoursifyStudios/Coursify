@@ -383,14 +383,14 @@ const Post: NextPage = () => {
 									/>
 								) : (
 									<>
-										<div className="mt-2 mb-5 grid grow place-items-center rounded-xl bg-gray-200 p-4 text-lg font-medium">
+										<div className="mb-5 mt-2 grid grow place-items-center rounded-xl bg-gray-200 p-4 text-lg font-medium">
 											No assignment details
 										</div>{" "}
 									</>
 								)}
 							</div>
 							{assignment.data.submission_type != "post" ? (
-								<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:ml-4 xl:mb-0 xl:w-72">
+								<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:mb-0 xl:ml-4 xl:w-72">
 									<h2 className="text-xl font-semibold">Submission</h2>
 									<div className="mt-2 rounded-xl bg-gray-200 p-6">
 										{assignment.data.submission_instructions ? (
