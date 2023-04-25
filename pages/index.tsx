@@ -1,5 +1,5 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
 import { Class, LoadingClass, sortClasses } from "../components/complete/class";

@@ -3,7 +3,6 @@ import { Tab } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 import { ColoredPill } from "../../components/misc/pill";
 import Image from "next/image";
-import exampleGroupImg from "../../public/example-img.jpg";
 import { useRouter } from "next/router";
 import { getGroup, GroupResponse } from "../../lib/db/groups";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
@@ -106,10 +105,6 @@ const Group: NextPage = () => {
 									prevRefreshState={refreshAnnouncements}
 									refreshAnnouncements={setRefreshAnnouncements}
 								/>
-								<span>
-									ANNOUNCEMENTS TEMPORARILY DISABLED FOR GROUPS UNTIL GROUPS ON
-									CLASSES TABLE DB MERGE THING IS COMPLETE
-								</span>
 								{groupData &&
 									groupData.data &&
 									groupData.data.announcements && //change below when I get actual types

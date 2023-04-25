@@ -40,16 +40,20 @@ export const getAllPublicGroups = async (
 export type PublicGroupsResponse = Awaited<
 	ReturnType<typeof getAllPublicGroups>
 >;
-//DEPRECATE SOON
 export const getGroup = async (
 	supabase: SupabaseClient<Database>,
 	groupID: string
 ) => {
 	return await supabase
-		.from("groups")
+		.from("classes")
 		.select(
 			`
-        *,
+        id,
+        name,
+        description,
+        name_full,
+        full_description,
+        image,
         announcements (
             *,
             users (
@@ -69,15 +73,15 @@ export const getGroup = async (
 };
 
 export type GroupResponse = Awaited<ReturnType<typeof getGroup>>;
-//DEPRECATE SOON
+
 export const addUserToGroup = async (
 	supabase: SupabaseClient<Database>,
 	groupID: string,
 	userID: string
 ) => {
-	return await supabase.from("group_user").insert({
+	return await supabase.from("class_users").insert({
 		user_id: userID,
-		group_id: groupID,
+		class_id: groupID,
 		group_leader: null,
 	});
 };
