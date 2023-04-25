@@ -34,7 +34,7 @@ export async function getAllClasses(supabase: SupabaseClient<Database>) {
     )
 	`
 		)
-		.eq("type", 0);
+		.eq("type", CommunityType.CLASS);
 	if (!error) {
 		return {
 			success: true,

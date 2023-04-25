@@ -3,18 +3,18 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { GroupLarge, GroupSmall } from "../../components/complete/group";
 import { getAllPublicGroups, PublicGroupsResponse } from "../../lib/db/groups";
-import supabase from "../../lib/supabase";
-import { useUser } from "@supabase/auth-helpers-react";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { Database } from "../../lib/db/database.types";
 
 export default function GroupDirectory() {
 	const [allGroupData, setAllGroupData] = useState<PublicGroupsResponse>();
-	const user = useUser();
+    
+	const supabase = useSupabaseClient<Database>();
 	useEffect(() => {
 		(async () => {
-			if (user) {
-				const data = await getAllPublicGroups(supabase, user?.id);
+				const data = await getAllPublicGroups(supabase);
+                console.log(data);
 				setAllGroupData(data);
-			}
 		})();
 	}, [supabase]);
 

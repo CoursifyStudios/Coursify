@@ -1,10 +1,8 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "./database.types";
 import { CommunityType } from "./classes";
-//DEPRECATE SOON
 export const getAllPublicGroups = async (
-	supabase: SupabaseClient<Database>,
-	userID: string
+	supabase: SupabaseClient<Database>
 ) => {
 	return await supabase
 		.from("classes")
@@ -23,9 +21,10 @@ export const getAllPublicGroups = async (
         `
 		)
 		//check that type is equal to 2 OR type is equal to 1 AND class_users contains the userID
-		//.or('type.eq.2,and(type.eq.1,class_users.cs)');//fix this line
-		.or(`type.eq.2,and(type.eq.1,class_users.user_id.eq.'${userID}')`);
-	//.or(`type.eq.2,and(type.eq.1,class_users.cs(user_id.eq.'${userID}'))`);
+		//turns out that above thing is impossible right now... I can't use the or filter but I think that
+        //we canuse rls for this part instead --> people can view groups that are public or that they are in
+        .or(`type.eq.${CommunityType.GROUP}, type.eq.${CommunityType.PUBLIC_GROUP}`)
+        .limit(250);
 };
 
 export type PublicGroupsResponse = Awaited<
