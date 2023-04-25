@@ -63,6 +63,8 @@ export default function GroupDirectory() {
 												key={group.id}
 												id={group.id}
 												photo={group.image}
+                                                isMember={!Array.isArray(group.class_users) ||
+                                                    group.class_users.length != 0}
 												name={group.name!}
 												membernum={Math.floor(Math.random() * 2000)}
 												isLink={true}
@@ -86,6 +88,8 @@ export default function GroupDirectory() {
 												key={group.id}
 												id={group.id}
 												photo={group.image}
+                                                isMember={!Array.isArray(group.class_users) ||
+                                                    group.class_users.length != 0}
 												name={group.name!}
 												membernum={Math.floor(Math.random() * 2000)}
 												isLink={true}
@@ -106,6 +110,8 @@ export default function GroupDirectory() {
 												key={group.id}
 												id={group.id}
 												photo={group.image}
+                                                isMember={!Array.isArray(group.class_users) ||
+                                                    group.class_users.length != 0}
 												name={group.name!}
 												membernum={Math.floor(Math.random() * 2000)}
 												isLink={true}
