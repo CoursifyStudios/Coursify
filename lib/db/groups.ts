@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "./database.types";
-
+//DEPRECATE SOON
 export const getAllGroupsForUser = async (
 	supabase: SupabaseClient<Database>,
 	userID: string
@@ -19,7 +19,7 @@ export const getAllGroupsForUser = async (
 };
 
 export type AllGroupsResponse = Awaited<ReturnType<typeof getAllGroupsForUser>>;
-
+//DEPRECATE SOON
 export const getAllPublicGroups = async (
 	supabase: SupabaseClient<Database>
 ) => {
@@ -40,7 +40,7 @@ export const getAllPublicGroups = async (
 export type PublicGroupsResponse = Awaited<
 	ReturnType<typeof getAllPublicGroups>
 >;
-
+//DEPRECATE SOON
 export const getGroup = async (
 	supabase: SupabaseClient<Database>,
 	groupID: string
@@ -69,7 +69,7 @@ export const getGroup = async (
 };
 
 export type GroupResponse = Awaited<ReturnType<typeof getGroup>>;
-
+//DEPRECATE SOON
 export const addUserToGroup = async (
 	supabase: SupabaseClient<Database>,
 	groupID: string,

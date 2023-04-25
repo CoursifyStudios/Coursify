@@ -50,7 +50,7 @@ export const Announcement = ({
 				<h2 className="text-xl font-semibold">{announcement.title}</h2>
 				<EllipsisVerticalIcon className="h-6 w-6" />
 			</div>
-			<div className="flex items-center pt-1 pb-2">
+			<div className="flex items-center pb-2 pt-1">
 				<Link
 					href={"/profile/" + announcement.author}
 					className="inline-flex shrink-0 items-center rounded-full px-1 py-0.5 hover:bg-gray-300"
@@ -339,7 +339,7 @@ const CommunityPicker = ({
 												return (
 													<button
 														key={community.id}
-														className={`flex cursor-pointer items-center justify-between rounded-lg py-2 px-3 text-left font-medium ${
+														className={`flex cursor-pointer items-center justify-between rounded-lg px-3 py-2 text-left font-medium ${
 															isChosen
 																? "brightness-hover bg-gray-200"
 																: "hover:bg-gray-200"

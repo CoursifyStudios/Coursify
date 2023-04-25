@@ -44,8 +44,8 @@ export default function Home() {
 				 *      ...sounds like a skill issue -Bill
 				 */
 				//PLEASE NOTE I MAY HAVE RUINED THAT FEATURE THAT LUKAS MENTIONED ABOVE
-				//PLEASE DIRECT ANY AND ALL COMPLAINT TO @Seagullz#0212 ON DISCORD
-				//IF THIS IS ACTUALLY A PROBLEM LMK -BILL
+				//PLEASE DIRECT ANY AND ALL COMPLAINTS TO @Seagullz#0212 ON DISCORD
+				//IF THIS IS ACTUALLY A PROBLEM LET ME KNOW -BILL
 				let temp = schedules;
 				temp[index] = parsedSchedule.schedule;
 				setSchedules(temp);
@@ -243,7 +243,7 @@ export default function Home() {
 							</div>
 						</section>
 						<section className=" grow xl:ml-10" id="Starred">
-							<h2 className="title mr-2 mb-4">Starred</h2>
+							<h2 className="title mb-4 mr-2">Starred</h2>
 							<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
 								{classes &&
 									classes.data &&

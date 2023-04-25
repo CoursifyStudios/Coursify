@@ -54,7 +54,7 @@ const Group: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md px-2 py-0.5 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md shadow-black/25  "
 											: "bg-gray-200"
@@ -67,7 +67,7 @@ const Group: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md px-2 py-0.5 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md shadow-black/25  "
 											: "bg-gray-200"
@@ -80,7 +80,7 @@ const Group: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md py-0.5 px-2 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md px-2 py-0.5 focus:outline-none ${
 										selected
 											? "bg-gray-50 shadow-md shadow-black/25  "
 											: "bg-gray-200"
@@ -159,7 +159,7 @@ const Group: NextPage = () => {
 				<div className="sticky top-0 mx-auto w-[20.5rem] shrink-0 rounded-md blur-sm sm:ml-8 ">
 					<h2 className="title">Next Event</h2>
 					<Event title="Castle Rock" time="8:00 - 9:30 AM"></Event>
-					<h2 className="title mt-6 mb-6">Upcoming</h2>
+					<h2 className="title mb-6 mt-6">Upcoming</h2>
 					<Event title="Yosemite Climbing" time="12/15/22"></Event>
 					<Event title="Mission Cliffs" time="1/8/23"></Event>
 					<Event title="Boulder Sesh" time="12/9/24"></Event>

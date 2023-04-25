@@ -1,5 +1,4 @@
-import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
-import { NonNullableArray } from "../misc/misc.types";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "./database.types";
 
 export async function getAllClasses(supabase: SupabaseClient<Database>) {
@@ -118,3 +117,8 @@ export const updateClass = async (
 	return await supabase.from("classes").update(updates).eq("id", classid);
 };
 
+export enum CommunityType {
+	CLASS = 0,
+	GROUP = 1,
+	//add stuff here for sports group, or maybe even stuff such as invite only groups
+}
