@@ -40,7 +40,7 @@ export const GroupSmall: NextPage<{
 					)}
 				</div>
 				<div className="flex justify-center">
-					<h3 className="text-l p-3 font-medium line-clamp-2">{title}</h3>
+					<h3 className="text-l line-clamp-2 p-3 font-medium">{title}</h3>
 				</div>
 			</div>
 		);
@@ -90,7 +90,7 @@ export const GroupLarge: NextPage<{
 				<div className="flex items-center justify-between p-4">
 					<div>
 						<div className="flex items-start justify-between">
-							<h3 className="break-words text-xl font-semibold line-clamp-2">
+							<h3 className="line-clamp-2 break-words text-xl font-semibold">
 								{name}
 							</h3>
 						</div>

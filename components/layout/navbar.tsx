@@ -100,7 +100,7 @@ const Navbar: NextComponentType = () => {
 									}
 								>
 									<Menu.Item as="div" className="mx-2 flex flex-col">
-										<h3 className="font-medium line-clamp-2">
+										<h3 className="line-clamp-2 font-medium">
 											{user?.user_metadata.full_name}
 										</h3>
 										<p className="truncate text-xs">

@@ -243,10 +243,10 @@ const Post: NextPage = () => {
 						<span className="invisible">trojker</span>
 					</ColoredPill>
 					<div className="mt-4 w-full max-w-lg rounded-xl bg-gray-200 p-4 xl:max-w-xl">
-						<h1 className="title mb-2 w-max rounded-md bg-gray-300 line-clamp-2">
+						<h1 className="title mb-2 line-clamp-2 w-max rounded-md bg-gray-300">
 							<span className="invisible">trojker anem name ass</span>
 						</h1>
-						<p className="mt-4 w-max rounded-md bg-gray-300 line-clamp-2">
+						<p className="mt-4 line-clamp-2 w-max rounded-md bg-gray-300">
 							<span className="invisible">
 								trojker longer description would go hereeeeeeeee coolio
 							</span>
@@ -340,7 +340,7 @@ const Post: NextPage = () => {
 									<h1 className="title mb-2 line-clamp-2">
 										{assignment.data.name}
 									</h1>
-									<p className="text-gray-700 line-clamp-2">
+									<p className="line-clamp-2 text-gray-700">
 										{assignment.data.description}
 									</p>
 								</div>

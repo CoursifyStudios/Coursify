@@ -16,7 +16,7 @@ import { CommunityType } from "../../lib/db/classes";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
-	const [communities, setcommunities] =
+	const [communities, setCommunities] =
 		useState<
 			PostgrestResponse<Database["public"]["Tables"]["classes"]["Row"]>
 		>();
@@ -33,7 +33,7 @@ export default function Profile() {
 				const communitiesData = await supabase.rpc("get_profile_classes", {
 					id: profileid as string,
 				});
-				setcommunities(communitiesData);
+				setCommunities(communitiesData);
 			}
 		})();
 	}, [router, supabase, profileid]);

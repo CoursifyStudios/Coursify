@@ -125,6 +125,8 @@ export enum CommunityType {
 	CLASS = 0,
 	GROUP = 1,
 	PUBLIC_GROUP = 2,
+	SCHOOLWIDE_GROUP = 3,
+	SPORT_GROUPS = 4,
 	//add stuff here for sports group, or maybe even stuff such as invite only groups
 }
 export const getClassTimesForXDays = async (

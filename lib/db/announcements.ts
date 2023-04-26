@@ -1,4 +1,4 @@
-import { SupabaseClient } from "@supabase/supabase-js";
+import { PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
 import { Database, Json } from "./database.types";
 
 export const createNewAnnouncement = async (
@@ -43,8 +43,16 @@ export const crossPostAnnouncements = async (
 	// ClassOrGroupObjects
 	communities: string[]
 ) => {
+	const announcements: PostgrestSingleResponse<{
+		author: string;
+		class_id: string | null;
+		content: Json;
+		id: string;
+		time: string | null;
+		title: string | null;
+	}>[] = [];
 	communities.forEach(async (community) => {
-		const { data, error } = await supabase
+		const announcement = await supabase
 			.from("announcements")
 			.insert({
 				author: announcementAuthor,
@@ -54,34 +62,7 @@ export const crossPostAnnouncements = async (
 			})
 			.select()
 			.single();
-		if (error) return false;
+		announcements.push(announcement);
 	});
-	return true;
-};
-
-export const getClassesAndGroups = async (
-	supabase: SupabaseClient<Database>,
-	userID: string
-) => {
-	return await supabase
-		.from("users")
-		.select(
-			`
-        id, 
-        class_users (
-            *,
-            classes (
-                name
-            )
-        ), 
-        group_users (
-            *,
-            groups (
-                name
-            )
-        )
-        `
-		)
-		.eq("id", userID)
-		.single();
+	return announcements;
 };
