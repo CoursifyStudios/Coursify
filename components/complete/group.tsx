@@ -50,7 +50,7 @@ export const GroupLarge: NextPage<{
 	id: string;
 	photo: string | null | undefined;
 	name: string;
-    isMember: boolean;
+	isMember: boolean;
 	membernum: number;
 	isLink?: boolean;
 }> = ({ id, photo, name, isMember, membernum, isLink }) => {
@@ -103,9 +103,9 @@ export const GroupLarge: NextPage<{
 							onClick={async () => {
 								addUserToGroup(supabase, id, user.id);
 							}}
-                            disabled={isMember}
+							disabled={isMember}
 						>
-							Join{isMember && ("ed")}
+							Join{isMember && "ed"}
 						</Button>
 					)}
 				</div>
