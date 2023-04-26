@@ -13,7 +13,6 @@ export default function GroupDirectory() {
 	useEffect(() => {
 		(async () => {
 			const data = await getAllPublicGroups(supabase);
-			console.log(data);
 			setAllGroupData(data);
 		})();
 	}, [supabase]);

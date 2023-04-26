@@ -26,7 +26,6 @@ const Group: NextPage = () => {
 			if (typeof groupid == "string") {
 				const data = await getGroup(supabase, groupid);
 				setGroupData(data);
-				console.log(data);
 			}
 		})();
 	}, [refreshAnnouncements, supabase, groupid]);
