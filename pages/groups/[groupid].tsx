@@ -11,7 +11,7 @@ import {
 	Announcement,
 	AnnouncementPostingUI,
 } from "../../components/complete/announcements";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { Database } from "../../lib/db/database.types";
 
 const Group: NextPage = () => {
@@ -20,7 +20,7 @@ const Group: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
 	const [groupData, setGroupData] = useState<GroupResponse>();
 	const [refreshAnnouncements, setRefreshAnnouncements] = useState(false);
-
+	const user = useUser();
 	useEffect(() => {
 		(async () => {
 			if (typeof groupid == "string") {
@@ -100,11 +100,19 @@ const Group: NextPage = () => {
 							</div>
 
 							<div className="space-y-3">
-								<AnnouncementPostingUI
-									communityid={groupid as string}
-									prevRefreshState={refreshAnnouncements}
-									refreshAnnouncements={setRefreshAnnouncements}
-								/>
+								{user &&
+									groupData &&
+									groupData.data &&
+									groupData.data.users &&
+									getDataInArray(groupData.data.users).some(
+										(userInGroup) => userInGroup.id == user.id
+									) && (
+										<AnnouncementPostingUI
+											communityid={groupid as string}
+											prevRefreshState={refreshAnnouncements}
+											refreshAnnouncements={setRefreshAnnouncements}
+										/>
+									)}
 								{groupData &&
 									groupData.data &&
 									groupData.data.announcements && //change below when I get actual types
