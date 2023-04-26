@@ -2,20 +2,23 @@ import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
 import { ReactNode, useState } from "react";
 
-export const Info: NextPage<{ children: ReactNode; className?: string }> = ({
-	children,
-	className,
-}) => {
+export const Info: NextPage<{
+	children: ReactNode;
+	className?: string;
+	size?: "small" | "large";
+}> = ({ children, className, size = "large" }) => {
 	return (
 		<div className="group relative cursor-pointer select-none ">
 			<div
-				className={`${className} grid h-5 w-5 place-items-center rounded-full bg-gray-200 text-sm`}
+				className={`${className} grid h-4 w-4 place-items-center rounded-full bg-gray-200 text-xs font-medium`}
 			>
 				?
 			</div>
-			<div className="absolute left-0 right-0 mt-2 flex justify-center brightness-105">
+			<div className="absolute left-0 right-0 z-30 mt-2 flex justify-center">
 				<div
-					className={`min-w-[16rem] scale-90 rounded bg-white p-2 text-center text-xs font-normal opacity-0 shadow-lg transition group-hover:scale-100 group-hover:opacity-100`}
+					className={`${
+						size == "large" ? "min-w-[16rem]" : "min-w-[8rem]"
+					} hidden rounded bg-white p-2 text-center text-xs font-normal opacity-0 shadow-lg transition group-hover:block group-hover:opacity-100`}
 				>
 					{children}
 				</div>

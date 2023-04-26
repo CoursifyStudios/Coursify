@@ -40,6 +40,7 @@ import { formatDate } from "../../lib/misc/dates";
 import { Transition, Dialog, Listbox } from "@headlessui/react";
 import { getDataOutArray } from "../../lib/misc/dataOutArray";
 import { SerializedEditorState } from "lexical";
+import { Info } from "../../components/tooltips/info";
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
@@ -54,9 +55,9 @@ const Post: NextPage = () => {
 	const [fullscreen, setFullscreen] = useState(false);
 
 	const options = [
-		{ option: "Priority" },
-		{ option: "Due First" },
-		{ option: "Due Last" },
+		{ option: "Relevancy" },
+		{ option: "Due Newest" },
+		{ option: "Due Oldest" },
 	];
 
 	const [selected, setSelected] = useState(options[0]);
@@ -116,20 +117,36 @@ const Post: NextPage = () => {
 					<div className="flex-col rounded-lg bg-gray-200 p-2">
 						<div className="mb-1 flex items-center">
 							<h1 className="mr-1 text-xl font-bold">Filters</h1>
-							<QuestionMarkCircleIcon className="mt-0.5 h-5 w-5" />
+							<Info
+								size="small"
+								className="my-auto ml-2 shadow shadow-black/25"
+							>
+								Add filters that allow you to specify what type of assignment
+								you like to see. For example, you can add a starred filter,
+								which will only show you assignments that are starred.
+							</Info>
 						</div>
-						<div className="my-1 h-7 w-7 items-center justify-center rounded-lg bg-gray-300">
-							<PlusIcon className="p-0.5" />
+						<div className="flex flex-wrap">
+							<div className="mt-2 items-center justify-center rounded-lg bg-gray-300 p-1">
+								<PlusIcon className=" h-6 w-6" />
+							</div>
 						</div>
 					</div>
 					<div className="mt-3 flex items-center justify-between">
 						<div className="flex items-center">
 							<h2 className="mr-1 text-xl font-bold">Sort</h2>
-							<QuestionMarkCircleIcon className="mt-0.5 h-5 w-5" />
+							<Info size="small" className="my-auto ml-2">
+								Sort based on different modes
+							</Info>
 						</div>
-						<Listbox value={selected} onChange={setSelected}>
+						<Listbox
+							value={selected}
+							onChange={setSelected}
+							as="div"
+							className="font-semibold"
+						>
 							<div className="relative">
-								<Listbox.Button className="flex w-40 rounded-lg bg-gray-200 py-2 pl-3 pr-10 text-sm">
+								<Listbox.Button className="flex w-36 rounded-lg bg-gray-200 py-2 pl-3 pr-10 text-sm">
 									<span className="block truncate">{selected.option}</span>
 									<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
 										<ChevronUpDownIcon className="h-5 w-5" aria-hidden="true" />
@@ -141,22 +158,23 @@ const Post: NextPage = () => {
 									leaveFrom="opacity-100"
 									leaveTo="opacity-0"
 								>
-									<Listbox.Options className="absolute z-10 mt-1 max-h-60 w-full overflow-auto rounded-xl bg-gray-200/90 p-2 text-sm shadow-xl backdrop-blur-xl transition">
+									<Listbox.Options className="absolute z-10 mt-2 flex max-h-60 w-max flex-col overflow-auto rounded-xl bg-gray-200/90 p-2 text-sm shadow-xl backdrop-blur-xl transition">
 										{options.map((options, optionID) => (
 											<Listbox.Option
 												key={optionID}
 												className={({ active }) =>
-													`flex select-none justify-center rounded-lg py-2 transition ${
+													`flex select-none justify-center rounded-lg px-4 py-2 transition ${
 														active ? "bg-gray-300" : "text-gray-900"
 													}`
 												}
 												value={options}
+												as="button"
 											>
 												{({ selected }) => (
 													<>
 														<span
 															className={`${
-																selected ? "font-large" : "font-normal"
+																selected ? "text-green-500" : "font-semibold"
 															}`}
 														>
 															{options.option}
@@ -243,10 +261,10 @@ const Post: NextPage = () => {
 						<span className="invisible">trojker</span>
 					</ColoredPill>
 					<div className="mt-4 w-full max-w-lg rounded-xl bg-gray-200 p-4 xl:max-w-xl">
-						<h1 className="title mb-2 w-max rounded-md bg-gray-300 line-clamp-2">
+						<h1 className="title mb-2 line-clamp-2 w-max rounded-md bg-gray-300">
 							<span className="invisible">trojker anem name ass</span>
 						</h1>
-						<p className="mt-4 w-max rounded-md bg-gray-300 line-clamp-2">
+						<p className="mt-4 line-clamp-2 w-max rounded-md bg-gray-300">
 							<span className="invisible">
 								trojker longer description would go hereeeeeeeee coolio
 							</span>
@@ -340,7 +358,7 @@ const Post: NextPage = () => {
 									<h1 className="title mb-2 line-clamp-2">
 										{assignment.data.name}
 									</h1>
-									<p className="text-gray-700 line-clamp-2">
+									<p className="line-clamp-2 text-gray-700">
 										{assignment.data.description}
 									</p>
 								</div>
@@ -378,19 +396,19 @@ const Post: NextPage = () => {
 									<Editor
 										editable={false}
 										initialState={assignment.data.content}
-										className=" scrollbar-fancy mt-2 mb-5 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
+										className=" scrollbar-fancy mb-5 mt-2 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
 										focus={false}
 									/>
 								) : (
 									<>
-										<div className="mt-2 mb-5 grid grow place-items-center rounded-xl bg-gray-200 p-4 text-lg font-medium">
+										<div className="mb-5 mt-2 grid grow place-items-center rounded-xl bg-gray-200 p-4 text-lg font-medium">
 											No assignment details
 										</div>{" "}
 									</>
 								)}
 							</div>
 							{assignment.data.submission_type != "post" ? (
-								<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:ml-4 xl:mb-0 xl:w-72">
+								<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:mb-0 xl:ml-4 xl:w-72">
 									<h2 className="text-xl font-semibold">Submission</h2>
 									<div className="mt-2 rounded-xl bg-gray-200 p-6">
 										{assignment.data.submission_instructions ? (
