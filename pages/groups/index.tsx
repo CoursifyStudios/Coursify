@@ -3,12 +3,13 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { GroupLarge, GroupSmall } from "../../components/complete/group";
 import { getAllPublicGroups, PublicGroupsResponse } from "../../lib/db/groups";
-import supabase from "../../lib/supabase";
-import { ColoredPill } from "../../components/misc/pill";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { Database } from "../../lib/db/database.types";
 
 export default function GroupDirectory() {
 	const [allGroupData, setAllGroupData] = useState<PublicGroupsResponse>();
 
+	const supabase = useSupabaseClient<Database>();
 	useEffect(() => {
 		(async () => {
 			const data = await getAllPublicGroups(supabase);
@@ -33,8 +34,8 @@ export default function GroupDirectory() {
 								allGroupData.data &&
 								allGroupData.data.map(
 									(group) =>
-										(!Array.isArray(group.group_users) ||
-											group.group_users.length != 0) && (
+										(!Array.isArray(group.class_users) ||
+											group.class_users.length != 0) && (
 											<GroupSmall
 												key={group.id}
 												id={group.id}
@@ -55,11 +56,16 @@ export default function GroupDirectory() {
 								allGroupData.data &&
 								allGroupData.data.map(
 									(group) =>
-										group.featured && (
+										group.tags &&
+										group.tags.includes("featured") && (
 											<GroupLarge
 												key={group.id}
 												id={group.id}
 												photo={group.image}
+												isMember={
+													!Array.isArray(group.class_users) ||
+													group.class_users.length != 0
+												}
 												name={group.name!}
 												membernum={Math.floor(Math.random() * 2000)}
 												isLink={true}
@@ -83,6 +89,10 @@ export default function GroupDirectory() {
 												key={group.id}
 												id={group.id}
 												photo={group.image}
+												isMember={
+													!Array.isArray(group.class_users) ||
+													group.class_users.length != 0
+												}
 												name={group.name!}
 												membernum={Math.floor(Math.random() * 2000)}
 												isLink={true}
@@ -103,6 +113,10 @@ export default function GroupDirectory() {
 												key={group.id}
 												id={group.id}
 												photo={group.image}
+												isMember={
+													!Array.isArray(group.class_users) ||
+													group.class_users.length != 0
+												}
 												name={group.name!}
 												membernum={Math.floor(Math.random() * 2000)}
 												isLink={true}

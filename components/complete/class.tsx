@@ -68,7 +68,7 @@ export const Class: NextPage<{
 				</div>
 				<div className="flex flex-grow flex-col p-4">
 					<div className="flex items-start justify-between">
-						<h3 className="break-words text-xl font-semibold line-clamp-2">
+						<h3 className="line-clamp-2 break-words text-xl font-semibold">
 							{classData.name}
 						</h3>
 						<ColoredPill

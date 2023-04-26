@@ -12,7 +12,7 @@ export const Button: NextPage<{
 	return (
 		<button
 			disabled={disabled}
-			className={`flex cursor-pointer items-center rounded-md py-1 px-4 font-semibold focus:outline-none ${className} focus:outline-none ${
+			className={`flex cursor-pointer items-center rounded-md px-4 py-1 font-semibold focus:outline-none ${className} focus:outline-none ${
 				color ? color : "bg-gray-200"
 			} ${disabled ? "cursor-not-allowed brightness-75" : "brightness-hover"}`}
 			onClick={onClick}

@@ -255,7 +255,7 @@ const AssignmentCreation: NextPage<{
 					as="div"
 					className="z-20 mr-auto flex flex-col items-center"
 				>
-					<Listbox.Button className="brightness-hover flex items-center rounded-xl bg-gray-200  py-1 px-2 font-semibold">
+					<Listbox.Button className="brightness-hover flex items-center rounded-xl bg-gray-200  px-2 py-1 font-semibold">
 						{(type == "due" ? selectedDueType : selectedPublishType).name}{" "}
 						<ChevronUpDownIcon className="ml-2 h-5 w-5" />
 					</Listbox.Button>

@@ -195,8 +195,7 @@ const Post: NextPage = () => {
 					schedule &&
 					allAssignments.data.map(
 						(assignment) =>
-							assignment.classes &&
-							assignment.due_date && (
+							assignment.classes && (
 								<div
 									className={`flex rounded-xl ${
 										assignmentid == assignment.id
