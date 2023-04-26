@@ -11,9 +11,9 @@ export const getAllAssignments = async (
 		`
 		*,
 		
-			classes (
-				name, id, color, block, schedule_type
-			),
+		classes (
+			name, id, color, block, schedule_type
+		),
 		starred (
 			assignment_id
 		)
