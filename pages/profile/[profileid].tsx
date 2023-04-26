@@ -8,19 +8,19 @@ import { Database } from "../../lib/db/database.types";
 import { useRouter } from "next/router";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import type { PostgrestResponse } from "@supabase/supabase-js";
-import { AllGroupsResponse, getAllGroupsForUser } from "../../lib/db/groups";
 import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
 import { GroupSmall } from "../../components/complete/group";
 import { Achievement } from "../../components/complete/achievement";
 import Image from "next/image";
+import { CommunityType } from "../../lib/db/classes";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
-	const [profileClasses, setProfileClasses] =
+	const [communities, setCommunities] =
 		useState<
 			PostgrestResponse<Database["public"]["Tables"]["classes"]["Row"]>
 		>();
-	const [profileGroups, setProfileGroups] = useState<AllGroupsResponse>();
+	//const [profileGroups, setProfileGroups] = useState<AllGroupsResponse>();
 	const supabase = useSupabaseClient<Database>();
 	const router = useRouter();
 	const { profileid } = router.query;
@@ -30,15 +30,10 @@ export default function Profile() {
 			if (profileid) {
 				const profileData = await getProfile(supabase, profileid as string);
 				setProfile(profileData);
-				const classesData = await supabase.rpc("get_profile_classes", {
+				const communitiesData = await supabase.rpc("get_profile_classes", {
 					id: profileid as string,
 				});
-				setProfileClasses(classesData);
-				const groupsData = await getAllGroupsForUser(
-					supabase,
-					profileid as string
-				);
-				setProfileGroups(groupsData);
+				setCommunities(communitiesData);
 			}
 		})();
 	}, [router, supabase, profileid]);
@@ -97,10 +92,10 @@ export default function Profile() {
 						<div className=" grid w-full grid-cols-1 gap-6 md:grid-cols-2">
 							{profile?.data?.user_achievements
 								? getDataInArray(profile?.data?.user_achievements).map(
-										(achievement, i) => (
+										(achievement) => (
 											<Achievement
 												data={getDataOutArray(achievement.achievements)!}
-												key={i}
+												key={achievement.achivement_id}
 												earned={new Date(achievement.date_earned)}
 											/>
 										)
@@ -123,20 +118,23 @@ export default function Profile() {
 				<h2 className="title mb-4">Classes</h2>
 				<div
 					className={`scrollbar-fancy grid snap-y snap-proximity gap-8 ${
-						profileClasses && profileClasses.data
+						communities && communities.data
 							? "overflow-y-auto"
 							: "overflow-hidden"
 					}  md:grid-cols-2 `}
 				>
-					{profileClasses && profileClasses.data
-						? profileClasses.data.map((currentClass, i) => (
-								<Class
-									className="snap-start"
-									classData={currentClass}
-									key={currentClass.id}
-									isLink={true}
-								/>
-						  ))
+					{communities && communities.data
+						? communities.data.map(
+								(currentClass) =>
+									currentClass.type == CommunityType.CLASS && (
+										<Class
+											className="snap-start"
+											classData={currentClass}
+											key={currentClass.id}
+											isLink={true}
+										/>
+									)
+						  )
 						: [...new Array(6)].map((_, i) => (
 								<div
 									key={i}
@@ -149,19 +147,17 @@ export default function Profile() {
 			<div className="hidden w-full flex-col rounded-xl lg:h-[calc(100vh-8rem)] xl:flex">
 				<h2 className="title mb-4">Groups</h2>
 				<div className="scrollbar-fancy flex snap-y snap-proximity flex-col space-y-5 overflow-y-auto">
-					{profileGroups && profileGroups.data
-						? profileGroups.data.map(
-								(groupLink) =>
-									!Array.isArray(groupLink) && (
+					{communities && communities.data
+						? communities.data.map(
+								(group) =>
+									//Could have used greater than or equal to, but let's not shoot our future selves in the foot - Bill
+									(group.type == CommunityType.GROUP ||
+										group.type == CommunityType.PUBLIC_GROUP) && (
 										<GroupSmall
-											key={groupLink.group_id}
-											photo={getDataOutArray(groupLink.groups!).image}
-											title={
-												(Array.isArray(groupLink.groups)
-													? groupLink.groups[0].name
-													: groupLink.groups?.name) as string
-											}
-											id={groupLink.group_id}
+											key={group.id}
+											photo={group.image}
+											title={group.name}
+											id={group.id}
 											isLink={true}
 										/>
 									)

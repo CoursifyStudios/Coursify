@@ -3,7 +3,6 @@ import { Tab } from "@headlessui/react";
 import { Fragment, useEffect, useState } from "react";
 import { ColoredPill } from "../../components/misc/pill";
 import Image from "next/image";
-import exampleGroupImg from "../../public/example-img.jpg";
 import { useRouter } from "next/router";
 import { getGroup, GroupResponse } from "../../lib/db/groups";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
@@ -12,7 +11,7 @@ import {
 	Announcement,
 	AnnouncementPostingUI,
 } from "../../components/complete/announcements";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { Database } from "../../lib/db/database.types";
 
 const Group: NextPage = () => {
@@ -21,7 +20,7 @@ const Group: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
 	const [groupData, setGroupData] = useState<GroupResponse>();
 	const [refreshAnnouncements, setRefreshAnnouncements] = useState(false);
-
+	const user = useUser();
 	useEffect(() => {
 		(async () => {
 			if (typeof groupid == "string") {
@@ -29,7 +28,7 @@ const Group: NextPage = () => {
 				setGroupData(data);
 			}
 		})();
-	}, [supabase, groupid]);
+	}, [refreshAnnouncements, supabase, groupid]);
 
 	return (
 		<div className="mx-auto my-10 w-full max-w-screen-xl px-4">
@@ -101,15 +100,19 @@ const Group: NextPage = () => {
 							</div>
 
 							<div className="space-y-3">
-								<AnnouncementPostingUI
-									communityid={groupid as string}
-									prevRefreshState={refreshAnnouncements}
-									refreshAnnouncements={setRefreshAnnouncements}
-								/>
-								<span>
-									ANNOUNCEMENTS TEMPORARILY DISABLED FOR GROUPS UNTIL GROUPS ON
-									CLASSES TABLE DB MERGE THING IS COMPLETE
-								</span>
+								{user &&
+									groupData &&
+									groupData.data &&
+									groupData.data.users &&
+									getDataInArray(groupData.data.users).some(
+										(userInGroup) => userInGroup.id == user.id
+									) && (
+										<AnnouncementPostingUI
+											communityid={groupid as string}
+											prevRefreshState={refreshAnnouncements}
+											refreshAnnouncements={setRefreshAnnouncements}
+										/>
+									)}
 								{groupData &&
 									groupData.data &&
 									groupData.data.announcements && //change below when I get actual types
@@ -145,10 +148,10 @@ const Group: NextPage = () => {
 											key={user!.id}
 											user={user!}
 											leader={
-												getDataInArray(groupData.data.group_users).find(
+												getDataInArray(groupData.data.class_users).find(
 													(userInUsersGroups) =>
 														user?.id == userInUsersGroups?.user_id
-												)?.group_leader
+												)?.teacher
 													? true
 													: false
 											}
@@ -158,7 +161,7 @@ const Group: NextPage = () => {
 						</Tab.Panel>
 					</Tab.Panels>
 				</Tab.Group>
-				<div className="sticky top-0 mx-auto w-[20.5rem] shrink-0 rounded-md blur-sm sm:ml-8 ">
+				<div className="sticky top-0 mx-auto w-[20.5rem] shrink-0 rounded-md sm:ml-8 ">
 					<h2 className="title">Next Event</h2>
 					<Event title="Castle Rock" time="8:00 - 9:30 AM"></Event>
 					<h2 className="title mb-6 mt-6">Upcoming</h2>

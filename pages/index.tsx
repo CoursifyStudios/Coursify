@@ -1,5 +1,5 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import { Database } from "../lib/db/database.types";
 import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
 import { Class, LoadingClass, sortClasses } from "../components/complete/class";
@@ -44,8 +44,8 @@ export default function Home() {
 				 *      ...sounds like a skill issue -Bill
 				 */
 				//PLEASE NOTE I MAY HAVE RUINED THAT FEATURE THAT LUKAS MENTIONED ABOVE
-				//PLEASE DIRECT ANY AND ALL COMPLAINT TO @Seagullz#0212 ON DISCORD
-				//IF THIS IS ACTUALLY A PROBLEM LMK -BILL
+				//PLEASE DIRECT ANY AND ALL COMPLAINTS TO @Seagullz#0212 ON DISCORD
+				//IF THIS IS ACTUALLY A PROBLEM LET ME KNOW -BILL
 				let temp = schedules;
 				temp[index] = parsedSchedule.schedule;
 				setSchedules(temp);
