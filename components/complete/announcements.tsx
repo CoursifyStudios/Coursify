@@ -241,7 +241,7 @@ export const AnnouncementPostingUI = ({
 							className="text-white"
 							color="bg-blue-500"
 							onClick={async () => {
-								if (!isEditorEmpty(editorState) && !(title.length == 0)) {
+								if (user && !isEditorEmpty(editorState) && !(title.length == 0)) {
 									setShowLoading(true); //change below later
 									const testing = await crossPostAnnouncements(
 										supabase,

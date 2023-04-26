@@ -58,17 +58,7 @@ export const getClass = async (
 		.from("classes")
 		.select(
 			`
-            id,
-            name,
-            description,
-            block,
-            schedule_type,
-            color,
-            name_full,
-            room,
-            full_description,
-            classpills,
-            image,
+            *,
         announcements (
             *,
             users (

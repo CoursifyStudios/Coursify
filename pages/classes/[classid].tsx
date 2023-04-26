@@ -73,6 +73,7 @@ const Class: NextPage = () => {
 				setFetchedClassId(classid);
 				const data = await getClass(supabase, classid);
 				setData(data);
+                console.log(data); //REMOVE LATER
 				if (data.data && Array.isArray(data.data.class_users)) {
 					//grades are temporarily done like this until we figure out assignment submissions
 					setGrade(
