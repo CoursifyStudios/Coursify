@@ -31,6 +31,7 @@ import {
 	Announcement,
 	AnnouncementPostingUI,
 } from "../../components/complete/announcements";
+import { Button } from "../../components/misc/button";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -48,6 +49,7 @@ const Class: NextPage = () => {
 	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
 	const [assignmentCreationOpen, setAssignmentCreationOpen] = useState(false);
 	const [refreshAnnouncements, setRefreshAnnouncements] = useState(false);
+	const [fetchedClassId, setFetchedClassId] = useState("");
 
 	const updateEditorDB = async () => {
 		setEdited(true);
@@ -65,9 +67,10 @@ const Class: NextPage = () => {
 			if (
 				user &&
 				typeof classid == "string" &&
-				(!data || data.data?.id != classid)
+				(!data || fetchedClassId != classid)
 			) {
 				setData(undefined);
+				setFetchedClassId(classid);
 				const data = await getClass(supabase, classid);
 				setData(data);
 				if (data.data && Array.isArray(data.data.class_users)) {
@@ -97,11 +100,19 @@ const Class: NextPage = () => {
 		setEdited(false);
 		setEditorState(undefined);
 		setEditable(false);
-	}, [classid, data, refreshAnnouncements, supabase, user]);
+	}, [classid, data, supabase, user]);
 
 	// We need to fix refresh announcements to focus the user on the announcements tab panel
 	// but I guess that can wait for another day - Bill
-
+	useEffect(() => {
+		(async () => {
+			if (typeof classid == "string") {
+				const data = await getClass(supabase, classid);
+				setData(data);
+				router.push("#Announcements");
+			}
+		})();
+	}, [refreshAnnouncements]);
 	if (!data)
 		return (
 			<div className="mx-auto my-10 w-full max-w-screen-xl">
@@ -135,6 +146,21 @@ const Class: NextPage = () => {
 			</div>
 		);
 
+	if (!data.data && data.error) {
+		return (
+			<div className="mx-auto my-32 flex w-full max-w-screen-xl flex-col items-center px-4">
+				<h2 className="text-3xl font-bold">
+					We couldn{"'"}t find this class...
+				</h2>
+				<Link href="/">
+					<Button color="bg-blue-500 text-white" className="mt-8">
+						Back to home!
+					</Button>
+				</Link>
+			</div>
+		);
+	}
+
 	return (
 		<div className="mx-auto my-10 w-full max-w-screen-xl px-4">
 			{data.data && typeof classid == "string" && (
@@ -148,7 +174,7 @@ const Class: NextPage = () => {
 			)}
 			<div className="relative mb-6 h-48 w-full">
 				<Image
-					src={data.data?.image ? data.data.image : exampleClassImg}
+					src={data.data.image || ""}
 					alt="Example Image"
 					className="rounded-xl object-cover object-center"
 					fill
@@ -263,7 +289,7 @@ const Class: NextPage = () => {
 								)
 							)}
 						</Tab.Panel>
-						<Tab.Panel tabIndex={-1}>
+						<Tab.Panel tabIndex={-1} id="Announcements">
 							<h2 className="title mb-3">Announcements</h2>
 							<div className="space-y-3">
 								{isTeacher && (

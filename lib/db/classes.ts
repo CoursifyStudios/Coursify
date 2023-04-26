@@ -1,12 +1,25 @@
-import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
-import { NonNullableArray } from "../misc/misc.types";
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "./database.types";
 import { getSchedulesForXDays, ScheduleInterface } from "./schedule";
 import { getDataOutArray } from "../misc/dataOutArray";
 
 export async function getAllClasses(supabase: SupabaseClient<Database>) {
-	const { data, error } = await supabase.from("classes").select(`
-	*,
+	const { data, error } = await supabase
+		.from("classes")
+		.select(
+			`
+	id,
+    name,
+    description,
+    block,
+    schedule_type,
+    color,
+    name_full,
+    room,
+    full_description,
+    classpills,
+    image,
+    type,
 	users (
 		avatar_url, id, full_name
 	),
@@ -19,7 +32,9 @@ export async function getAllClasses(supabase: SupabaseClient<Database>) {
             *
         )
     )
-	`);
+	`
+		)
+		.eq("type", CommunityType.CLASS);
 	if (!error) {
 		return {
 			success: true,
@@ -43,7 +58,7 @@ export const getClass = async (
 		.from("classes")
 		.select(
 			`
-		*,
+            *,
         announcements (
             *,
             users (
@@ -96,6 +111,14 @@ export const updateClass = async (
 	return await supabase.from("classes").update(updates).eq("id", classid);
 };
 
+export enum CommunityType {
+	CLASS = 0,
+	GROUP = 1,
+	PUBLIC_GROUP = 2,
+	SCHOOLWIDE_GROUP = 3,
+	SPORT_GROUPS = 4,
+	//add stuff here for sports group, or maybe even stuff such as invite only groups
+}
 export const getClassTimesForXDays = async (
 	supabase: SupabaseClient<Database>,
 	classObject: {

@@ -177,8 +177,7 @@ const Post: NextPage = () => {
 					schedule &&
 					allAssignments.data.map(
 						(assignment) =>
-							assignment.classes &&
-							assignment.due_date && (
+							assignment.classes && (
 								<div
 									className={`flex rounded-xl ${
 										assignmentid == assignment.id
@@ -243,10 +242,10 @@ const Post: NextPage = () => {
 						<span className="invisible">trojker</span>
 					</ColoredPill>
 					<div className="mt-4 w-full max-w-lg rounded-xl bg-gray-200 p-4 xl:max-w-xl">
-						<h1 className="title mb-2 w-max rounded-md bg-gray-300 line-clamp-2">
+						<h1 className="title mb-2 line-clamp-2 w-max rounded-md bg-gray-300">
 							<span className="invisible">trojker anem name ass</span>
 						</h1>
-						<p className="mt-4 w-max rounded-md bg-gray-300 line-clamp-2">
+						<p className="mt-4 line-clamp-2 w-max rounded-md bg-gray-300">
 							<span className="invisible">
 								trojker longer description would go hereeeeeeeee coolio
 							</span>
@@ -340,7 +339,7 @@ const Post: NextPage = () => {
 									<h1 className="title mb-2 line-clamp-2">
 										{assignment.data.name}
 									</h1>
-									<p className="text-gray-700 line-clamp-2">
+									<p className="line-clamp-2 text-gray-700">
 										{assignment.data.description}
 									</p>
 								</div>
@@ -378,19 +377,19 @@ const Post: NextPage = () => {
 									<Editor
 										editable={false}
 										initialState={assignment.data.content}
-										className=" scrollbar-fancy mt-2 mb-5 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
+										className=" scrollbar-fancy mb-5 mt-2 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
 										focus={false}
 									/>
 								) : (
 									<>
-										<div className="mt-2 mb-5 grid grow place-items-center rounded-xl bg-gray-200 p-4 text-lg font-medium">
+										<div className="mb-5 mt-2 grid grow place-items-center rounded-xl bg-gray-200 p-4 text-lg font-medium">
 											No assignment details
 										</div>{" "}
 									</>
 								)}
 							</div>
 							{assignment.data.submission_type != "post" ? (
-								<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:ml-4 xl:mb-0 xl:w-72">
+								<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:mb-0 xl:ml-4 xl:w-72">
 									<h2 className="text-xl font-semibold">Submission</h2>
 									<div className="mt-2 rounded-xl bg-gray-200 p-6">
 										{assignment.data.submission_instructions ? (

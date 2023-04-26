@@ -1,63 +1,58 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "./database.types";
-
-export const getAllGroupsForUser = async (
-	supabase: SupabaseClient<Database>,
-	userID: string
-) => {
-	return await supabase
-		.from("group_users")
-		.select(
-			`
-        *,
-        groups (
-            *
-        )
-        `
-		)
-		.eq("user_id", userID);
-};
-
-export type AllGroupsResponse = Awaited<ReturnType<typeof getAllGroupsForUser>>;
-
+import { CommunityType } from "./classes";
 export const getAllPublicGroups = async (
 	supabase: SupabaseClient<Database>
 ) => {
 	return await supabase
-		.from("groups")
+		.from("classes")
 		.select(
 			`
-        *,
-        group_users (
-            user_id, group_id
+        id,
+        name,
+        image,
+        type,
+        tags,
+        class_users (
+            user_id, class_id
         )
 
         `
 		)
-		.eq("public", true);
+		//check that type is equal to 2 OR type is equal to 1 AND class_users contains the userID
+		//turns out that above thing is impossible right now... I can't use the or filter but I think that
+		//we can use rls for this part instead --> people can view groups that are public or that they are in
+
+		//for now it is just groups and more group types
+		.gte("type", CommunityType.GROUP)
+		.limit(250);
 };
 
 export type PublicGroupsResponse = Awaited<
 	ReturnType<typeof getAllPublicGroups>
 >;
-
 export const getGroup = async (
 	supabase: SupabaseClient<Database>,
 	groupID: string
 ) => {
 	return await supabase
-		.from("groups")
+		.from("classes")
 		.select(
 			`
-        *,
+        id,
+        name,
+        description,
+        name_full,
+        full_description,
+        image,
         announcements (
             *,
             users (
                 avatar_url, full_name
             )
         ),
-        group_users (
-            user_id, group_leader
+        class_users (
+            user_id, teacher
         ),
         users (
             *
@@ -75,9 +70,9 @@ export const addUserToGroup = async (
 	groupID: string,
 	userID: string
 ) => {
-	return await supabase.from("group_user").insert({
+	return await supabase.from("class_users").insert({
 		user_id: userID,
-		group_id: groupID,
+		class_id: groupID,
 		group_leader: null,
 	});
 };

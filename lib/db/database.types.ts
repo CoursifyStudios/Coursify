@@ -40,7 +40,6 @@ export interface Database {
 					author: string;
 					class_id: string | null;
 					content: Json | null;
-					group_id: string | null;
 					id: string;
 					time: string | null;
 					title: string | null;
@@ -49,7 +48,6 @@ export interface Database {
 					author: string;
 					class_id?: string | null;
 					content?: Json | null;
-					group_id?: string | null;
 					id?: string;
 					time?: string | null;
 					title?: string | null;
@@ -58,7 +56,6 @@ export interface Database {
 					author?: string;
 					class_id?: string | null;
 					content?: Json | null;
-					group_id?: string | null;
 					id?: string;
 					time?: string | null;
 					title?: string | null;
@@ -147,6 +144,8 @@ export interface Database {
 					name_full: string;
 					room: string | null;
 					schedule_type: number;
+					school: string;
+					tags: string[] | null;
 					type: number;
 				};
 				Insert: {
@@ -161,6 +160,8 @@ export interface Database {
 					name_full?: string;
 					room?: string | null;
 					schedule_type?: number;
+					school: string;
+					tags?: string[] | null;
 					type: number;
 				};
 				Update: {
@@ -175,6 +176,8 @@ export interface Database {
 					name_full?: string;
 					room?: string | null;
 					schedule_type?: number;
+					school?: string;
+					tags?: string[] | null;
 					type?: number;
 				};
 			};
@@ -306,23 +309,6 @@ export interface Database {
 					user_id?: string;
 				};
 			};
-			test: {
-				Row: {
-					id: number;
-					name: string | null;
-					testing: string | null;
-				};
-				Insert: {
-					id?: number;
-					name?: string | null;
-					testing?: string | null;
-				};
-				Update: {
-					id?: number;
-					name?: string | null;
-					testing?: string | null;
-				};
-			};
 			user_achievements: {
 				Row: {
 					achivement_id: string;
@@ -398,6 +384,8 @@ export interface Database {
 					name_full: string;
 					room: string | null;
 					schedule_type: number;
+					school: string;
+					tags: string[] | null;
 					type: number;
 				}[];
 			};

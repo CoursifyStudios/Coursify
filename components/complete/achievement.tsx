@@ -51,7 +51,7 @@ export const Achievement = ({
 											<Dialog.Title className="text-lg font-bold">
 												{data.name}
 											</Dialog.Title>
-											<Dialog.Description className="text-sm text-gray-700 line-clamp-2">
+											<Dialog.Description className="line-clamp-2 text-sm text-gray-700">
 												{data.desc_short}
 											</Dialog.Description>
 										</div>
@@ -84,8 +84,8 @@ export const Achievement = ({
 				<div className="mx-auto rounded-full bg-white p-4">
 					{getIcon(data.icon)}
 				</div>
-				<h3 className="mt-2 font-bold line-clamp-2 ">{data.name}</h3>
-				<h4 className="text-sm line-clamp-2">{data.desc_short}</h4>
+				<h3 className="mt-2 line-clamp-2 font-bold ">{data.name}</h3>
+				<h4 className="line-clamp-2 text-sm">{data.desc_short}</h4>
 			</div>
 		</>
 	);
