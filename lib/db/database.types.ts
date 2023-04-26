@@ -144,6 +144,7 @@ export interface Database {
 					name_full: string;
 					room: string | null;
 					schedule_type: number;
+					school: string;
 					tags: string[] | null;
 					type: number;
 				};
@@ -159,6 +160,7 @@ export interface Database {
 					name_full?: string;
 					room?: string | null;
 					schedule_type?: number;
+					school: string;
 					tags?: string[] | null;
 					type: number;
 				};
@@ -174,6 +176,7 @@ export interface Database {
 					name_full?: string;
 					room?: string | null;
 					schedule_type?: number;
+					school?: string;
 					tags?: string[] | null;
 					type?: number;
 				};
@@ -306,23 +309,6 @@ export interface Database {
 					user_id?: string;
 				};
 			};
-			test: {
-				Row: {
-					id: number;
-					name: string | null;
-					testing: string | null;
-				};
-				Insert: {
-					id?: number;
-					name?: string | null;
-					testing?: string | null;
-				};
-				Update: {
-					id?: number;
-					name?: string | null;
-					testing?: string | null;
-				};
-			};
 			user_achievements: {
 				Row: {
 					achivement_id: string;
@@ -398,6 +384,7 @@ export interface Database {
 					name_full: string;
 					room: string | null;
 					schedule_type: number;
+					school: string;
 					tags: string[] | null;
 					type: number;
 				}[];

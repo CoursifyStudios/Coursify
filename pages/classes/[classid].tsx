@@ -73,7 +73,6 @@ const Class: NextPage = () => {
 				setFetchedClassId(classid);
 				const data = await getClass(supabase, classid);
 				setData(data);
-                console.log(data); //REMOVE LATER
 				if (data.data && Array.isArray(data.data.class_users)) {
 					//grades are temporarily done like this until we figure out assignment submissions
 					setGrade(
@@ -101,11 +100,19 @@ const Class: NextPage = () => {
 		setEdited(false);
 		setEditorState(undefined);
 		setEditable(false);
-	}, [classid, data, refreshAnnouncements, supabase, user]);
+	}, [classid, data, supabase, user]);
 
 	// We need to fix refresh announcements to focus the user on the announcements tab panel
 	// but I guess that can wait for another day - Bill
-
+	useEffect(() => {
+		(async () => {
+			if (typeof classid == "string") {
+				const data = await getClass(supabase, classid);
+				setData(data);
+				router.push("#Announcements");
+			}
+		})();
+	}, [refreshAnnouncements]);
 	if (!data)
 		return (
 			<div className="mx-auto my-10 w-full max-w-screen-xl">
@@ -282,7 +289,7 @@ const Class: NextPage = () => {
 								)
 							)}
 						</Tab.Panel>
-						<Tab.Panel tabIndex={-1}>
+						<Tab.Panel tabIndex={-1} id="Announcements">
 							<h2 className="title mb-3">Announcements</h2>
 							<div className="space-y-3">
 								{isTeacher && (

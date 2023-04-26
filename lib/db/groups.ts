@@ -10,7 +10,6 @@ export const getAllPublicGroups = async (
 			`
         id,
         name,
-        description,
         image,
         type,
         tags,
@@ -22,7 +21,7 @@ export const getAllPublicGroups = async (
 		)
 		//check that type is equal to 2 OR type is equal to 1 AND class_users contains the userID
 		//turns out that above thing is impossible right now... I can't use the or filter but I think that
-		//we canuse rls for this part instead --> people can view groups that are public or that they are in
+		//we can use rls for this part instead --> people can view groups that are public or that they are in
 
 		//for now it is just groups and more group types
 		.gte("type", CommunityType.GROUP)

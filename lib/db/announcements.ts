@@ -20,7 +20,12 @@ export const crossPostAnnouncements = async (
 		time: string | null;
 		title: string | null;
 	}>[] = [];
-    console.log(announcementAuthor, announcementTitle, announcementContent, communities);
+	console.log(
+		announcementAuthor,
+		announcementTitle,
+		announcementContent,
+		communities
+	);
 	communities.forEach(async (community) => {
 		const announcement = await supabase
 			.from("announcements")
@@ -32,8 +37,8 @@ export const crossPostAnnouncements = async (
 			})
 			.select()
 			.single();
-        announcements.concat(announcement);
-        console.log(announcement);//remove when rls si fixed
+		announcements.concat(announcement);
+		console.log(announcement); //remove when rls si fixed
 	});
 	return announcements;
 };

@@ -26,10 +26,10 @@ const Group: NextPage = () => {
 			if (typeof groupid == "string") {
 				const data = await getGroup(supabase, groupid);
 				setGroupData(data);
-                console.log(data);
+				console.log(data);
 			}
 		})();
-	}, [supabase, groupid]);
+	}, [refreshAnnouncements, supabase, groupid]);
 
 	return (
 		<div className="mx-auto my-10 w-full max-w-screen-xl px-4">
