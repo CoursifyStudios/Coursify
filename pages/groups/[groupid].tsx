@@ -164,7 +164,7 @@ const Group: NextPage = () => {
 				<div className="sticky top-0 mx-auto w-[20.5rem] shrink-0 rounded-md sm:ml-8 ">
 					<h2 className="title">Next Event</h2>
 					<Event title="Castle Rock" time="8:00 - 9:30 AM"></Event>
-					<h2 className="title mb-6 mt-6">Upcoming</h2>
+					<h2 className="title mb-6 mt-4">Upcoming</h2>
 					<Event title="Yosemite Climbing" time="12/15/22"></Event>
 					<Event title="Mission Cliffs" time="1/8/23"></Event>
 					<Event title="Boulder Sesh" time="12/9/24"></Event>
@@ -176,7 +176,7 @@ const Group: NextPage = () => {
 
 const Event = ({ title, time }: { title: string; time: string }) => {
 	return (
-		<div className="mt-6 flex items-center justify-between rounded-xl bg-gray-200 p-4">
+		<div className="my-3 flex items-center justify-between rounded-xl bg-gray-200 p-3">
 			<p className="font-semibold">{title}</p>
 			<div className="">
 				<ColoredPill color={"green"}>{time}</ColoredPill>
