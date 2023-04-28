@@ -35,3 +35,47 @@ export const crossPostAnnouncements = async (
 	});
 	return announcements;
 };
+// Removes the announcement(s) that match the author, title and content.
+// This is what happens when no merge table. To remove the announcement
+// from just one group or class, use removeAnnouncementFromCommunity(),
+// which is defined below
+export const deleteAnnouncement = async (
+	supabase: SupabaseClient<Database>,
+	announcement: { author: string; content: Json; title: string }
+) => {
+	return await supabase
+		.from("announcements")
+		.delete()
+		.eq("author", announcement.author)
+		.eq("content", announcement.content)
+		.eq("title", announcement.title);
+};
+
+export const editAnnouncement = async (
+	supabase: SupabaseClient<Database>,
+	oldAnnouncement: { author: string; content: Json; title: string },
+	newAnnouncement: { content: Json; title: string }
+) => {
+	return await supabase
+		.from("announcements")
+		.update({
+			content: newAnnouncement.content,
+			title: newAnnouncement.title,
+		})
+		.eq("author", oldAnnouncement.author)
+		.eq("content", oldAnnouncement.content)
+		.eq("title", oldAnnouncement.title)
+		.select();
+};
+
+export const removeAnnouncementFromCommunity = async (
+	supabase: SupabaseClient<Database>,
+	announcementID: string,
+	communityID: string
+) => {
+	return await supabase
+		.from("announcements")
+		.delete()
+		.eq("id", announcementID)
+		.eq("class_id", communityID);
+};

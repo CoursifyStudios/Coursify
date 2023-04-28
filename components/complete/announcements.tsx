@@ -45,7 +45,11 @@ export const Announcement = ({
 		<div className="rounded-xl bg-gray-200 p-4">
 			<div className="flex items-center justify-between">
 				<h2 className="text-xl font-semibold">{announcement.title}</h2>
-				<EllipsisVerticalIcon className="h-6 w-6" />
+				<Button onClick={() => {
+                    
+                }}>
+					<EllipsisVerticalIcon className="h-6 w-6" />
+				</Button>
 			</div>
 			<div className="flex items-center pt-1">
 				<Link
