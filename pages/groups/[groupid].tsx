@@ -47,7 +47,7 @@ const Group: NextPage = () => {
 					{groupData?.data?.name}
 				</h1>
 			</div>
-			<div className="sm:grid-cols-1 md:flex ">
+			<div className="sm:flex">
 				<Tab.Group as="div" className="flex grow flex-col">
 					<Tab.List as="div" className="mx-auto mb-6 flex space-x-6">
 						<Tab as={Fragment}>
@@ -140,7 +140,7 @@ const Group: NextPage = () => {
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}></Tab.Panel>
 						<Tab.Panel tabIndex={-1}>
-							<div className="grid grid-cols-3 gap-4">
+							<div className="grid gap-4 max-sm:mx-auto max-sm:w-[20.5rem] lg:grid-cols-2 xl:grid-cols-3">
 								{groupData &&
 									groupData.data &&
 									getDataInArray(groupData.data.users).map((user) => (
@@ -164,7 +164,7 @@ const Group: NextPage = () => {
 				<div className="sticky top-0 mx-auto w-[20.5rem] shrink-0 rounded-md sm:ml-8 ">
 					<h2 className="title">Next Event</h2>
 					<Event title="Castle Rock" time="8:00 - 9:30 AM"></Event>
-					<h2 className="title mb-6 mt-4">Upcoming</h2>
+					<h2 className="title my-4">Upcoming</h2>
 					<Event title="Yosemite Climbing" time="12/15/22"></Event>
 					<Event title="Mission Cliffs" time="1/8/23"></Event>
 					<Event title="Boulder Sesh" time="12/9/24"></Event>
@@ -186,3 +186,4 @@ const Event = ({ title, time }: { title: string; time: string }) => {
 };
 
 export default Group;
+

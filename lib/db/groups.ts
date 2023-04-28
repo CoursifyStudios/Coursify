@@ -73,7 +73,7 @@ export const addUserToGroup = async (
 	return await supabase.from("class_users").insert({
 		user_id: userID,
 		class_id: groupID,
-		group_leader: null,
+		teacher: false,
 	});
 };
 
