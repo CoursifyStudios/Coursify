@@ -186,4 +186,3 @@ const Event = ({ title, time }: { title: string; time: string }) => {
 };
 
 export default Group;
-

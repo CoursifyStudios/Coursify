@@ -113,10 +113,13 @@ export const updateClass = async (
 
 export enum CommunityType {
 	CLASS = 0,
-	GROUP = 1,
+	SCHOOLWIDE_GROUP = 1,
 	PUBLIC_GROUP = 2,
-	SCHOOLWIDE_GROUP = 3,
-	SPORT_GROUPS = 4,
+	MEMBER_INVITE_GROUP = 3,
+	LEADER_INVITE_GROUP = 4,
+	PUBLIC_SPORT = 5,
+	MEMBER_INVITE_SPORT = 6,
+	LEADER_INVITE_SPORT = 7,
 	//add stuff here for sports group, or maybe even stuff such as invite only groups
 }
 export const getClassTimesForXDays = async (

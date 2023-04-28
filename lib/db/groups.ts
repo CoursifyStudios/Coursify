@@ -24,7 +24,7 @@ export const getAllPublicGroups = async (
 		//we can use rls for this part instead --> people can view groups that are public or that they are in
 
 		//for now it is just groups and more group types
-		.gte("type", CommunityType.GROUP)
+		.gte("type", CommunityType.SCHOOLWIDE_GROUP)
 		.limit(250);
 };
 

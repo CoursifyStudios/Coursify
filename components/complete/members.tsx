@@ -47,9 +47,9 @@ export const Member = ({
 				<h2 className="mb-1 font-medium">{user.full_name}</h2>
 				<CopiedHover copy={user.email ?? "No email found"}>
 					<ColoredPill color="gray">
-						<div className="flex items-center xl:w-44 lg:w-52">
+						<div className="flex items-center lg:w-52 xl:w-44">
 							<EnvelopeIcon className="mr-1.5 h-4 w-4 text-gray-800" />
-                            <p className="truncate">{user.email}</p>
+							<p className="truncate">{user.email}</p>
 						</div>
 					</ColoredPill>
 				</CopiedHover>
