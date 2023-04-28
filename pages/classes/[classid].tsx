@@ -32,6 +32,7 @@ import {
 	AnnouncementPostingUI,
 } from "../../components/complete/announcements";
 import { Button } from "../../components/misc/button";
+import { Member } from "../../components/complete/members";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -325,54 +326,21 @@ const Class: NextPage = () => {
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}>
-							<div className="grid grid-cols-3 gap-4">
-								{data.data?.users && Array.isArray(data.data?.users) ? (
-									data.data?.users.map((user, i) => (
-										<Link
-											className="brightness-hover flex rounded-xl bg-gray-200 p-6"
-											key={i}
-											href={"/profile/" + user.id}
-											onClick={() =>
-												newTab(
-													"/profile/" + user.id,
-													user.full_name.split(" ")[0] + "'s Profile"
-												)
+							<div className="grid gap-4 max-sm:mx-auto max-sm:w-[20.5rem] lg:grid-cols-2 xl:grid-cols-3">
+								{data.data.users ? (
+									getDataInArray(data.data.users).map((user) => (
+										<Member
+											key={user.id}
+											user={user}
+											leader={
+												getDataInArray(data.data.class_users).find(
+													(userInUsersGroups) =>
+														user?.id == userInUsersGroups?.user_id
+												)?.teacher
+													? true
+													: false
 											}
-										>
-											<div className="relative h-max">
-												<Image
-													src={user.avatar_url!}
-													alt="Profile picture"
-													referrerPolicy="no-referrer"
-													className=" h-10 min-w-[2.5rem] rounded-full shadow-md shadow-black/25"
-													width={40}
-													height={40}
-												/>
-												{data.data.class_users &&
-													Array.isArray(data.data.class_users) && // based on my testing it will always return an array, doing this to make ts happy
-													data.data.class_users.find(
-														(userValue) =>
-															userValue.teacher && user.id == userValue.user_id
-													) && (
-														<div className="absolute -bottom-1 -right-1  flex rounded-full bg-yellow-100 p-0.5">
-															<IdentificationIcon className="h-4 w-4 text-yellow-600" />
-														</div>
-													)}
-											</div>
-											<div className="ml-4 flex flex-col">
-												<h2 className="mb-1 font-medium">{user.full_name}</h2>
-												<CopiedHover copy={user.email ?? "No email found"}>
-													<ColoredPill color="gray">
-														<div className="flex items-center">
-															<EnvelopeIcon className="mr-1.5 h-4 w-4 text-gray-800" />
-															{user.email &&
-																user.email.slice(0, 15) +
-																	(user.email?.length > 15 ? "..." : "")}
-														</div>
-													</ColoredPill>
-												</CopiedHover>
-											</div>
-										</Link>
+										></Member>
 									))
 								) : (
 									<div className="rounded-xl bg-gray-200 p-4">
