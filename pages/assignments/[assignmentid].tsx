@@ -416,7 +416,7 @@ const Post: NextPage = () => {
 										{assignment.data.submission_instructions ? (
 											<>
 												<h2 className="text-lg font-semibold ">
-													Teachers Instructions:
+													Teacher{"'"}s Instructions:
 												</h2>
 												<p className="max-w-md text-sm text-gray-700">
 													{assignment.data.submission_instructions}
@@ -429,7 +429,7 @@ const Post: NextPage = () => {
 										)}
 										{assignment.data.submission_type == "check" ? (
 											<Button color="bg-blue-500" className="mt-6 text-white">
-												Set as completed
+												Mark as complete
 											</Button>
 										) : (
 											<Button
