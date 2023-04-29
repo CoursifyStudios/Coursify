@@ -59,8 +59,6 @@ export const Announcement = ({
 	const [selected, setSelected] = useState(options[0]);
 	const [showRemoveFromGroup, setShowRemoveFromGroup] = useState(false);
 	const [showDeleteAnnouncement, setShowDeleteAnnouncement] = useState(false);
-
-	useEffect(() => {}, [selected]);
 	return (
 		<div className="rounded-xl bg-gray-200 p-4">
 			<div className="flex items-center justify-between">
@@ -97,15 +95,30 @@ export const Announcement = ({
 													}`
 												}
 												value={options}
+												onClick={() => {
+													if (
+														options.option == "Delete From This Group" &&
+														selected
+													) {
+														setShowRemoveFromGroup(true);
+													} else if (
+														options.option == "Delete From All Groups" &&
+														selected
+													) {
+														setShowDeleteAnnouncement(true);
+													}
+												}}
 												as="button"
 											>
-												{({ selected }) => (
-													<>
-														<span className="font-semibold">
-															{options.option}
-														</span>
-													</>
-												)}
+												{({ selected }) => {
+													return (
+														<>
+															<span className="font-semibold">
+																{options.option}
+															</span>
+														</>
+													);
+												}}
 											</Listbox.Option>
 										)
 								)}
@@ -161,6 +174,18 @@ export const Announcement = ({
 					);
 				}}
 				text="Are you sure you would like to remove this announcement from this group? This action cannot be undone."
+			></ConfirmDialog>
+			<ConfirmDialog
+				show={showDeleteAnnouncement}
+				setShow={setShowDeleteAnnouncement}
+				onConfirm={async () => {
+					const test = await removeAnnouncementFromCommunity(
+						supabase,
+						announcement.id,
+						classID
+					);
+				}}
+				text="Are you sure you would like to remove this announcement from all groups? This action cannot be undone."
 			></ConfirmDialog>
 		</div>
 	);

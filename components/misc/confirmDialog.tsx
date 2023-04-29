@@ -36,12 +36,12 @@ export function ConfirmDialog({
 							as={Fragment}
 						>
 							<Dialog.Panel className="relative w-full max-w-lg rounded-xl bg-white/90 p-4 shadow-md backdrop-blur-xl">
-								<p>{text}</p>
-								<div className="ml-auto space-x-3">
-									<Button className="brightness-hover transition hover:bg-red-300">
+								<p className="font-semibold">{text}</p>
+								<div className="flex justify-end space-x-3 mt-4">
+									<Button className="brightness-hover transition hover:bg-red-300" onClick={() => setShow(false)}>
 										Cancel
 									</Button>
-									<Button onClick={() => onConfirm}>Confirm</Button>
+									<Button color="bg-blue-300" className="brightness-hover transition hover:bg-blue-400" onClick={() => {onConfirm; setShow(false)}}>Confirm</Button>
 								</div>
 							</Dialog.Panel>
 						</Transition.Child>
