@@ -260,7 +260,7 @@ export const AnnouncementPostingUI = ({
 				>
 					<h3 className="mb-4 font-semibold">New Announcement</h3>
 
-					<div className="h-10 w-96 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium text-gray-700">
+					<div className="h-10 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium text-gray-700">
 						Enter a title...
 					</div>
 					<div className="mt-4 h-10 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium text-gray-700">

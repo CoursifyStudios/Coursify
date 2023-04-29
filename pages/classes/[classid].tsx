@@ -186,7 +186,7 @@ const Class: NextPage = () => {
 			</div>
 			<div className="space-x sm:grid-cols-1 md:flex">
 				<Tab.Group as="div" className="flex grow flex-col">
-					<Tab.List as="div" className="mx-auto mb-6 flex space-x-6">
+					<Tab.List as="div" className="mx-auto mb-6 flex sm:space-x-6 max-sm:space-x-2">
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
