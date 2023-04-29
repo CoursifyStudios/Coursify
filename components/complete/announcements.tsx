@@ -1,4 +1,4 @@
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog, Listbox, Transition } from "@headlessui/react";
 import {
 	CheckCircleIcon,
 	EllipsisVerticalIcon,
@@ -8,7 +8,10 @@ import { ErrorMessage, Field, Form, Formik, useFormikContext } from "formik";
 import { EditorState } from "lexical";
 import Link from "next/link";
 import { Dispatch, Fragment, SetStateAction, useEffect, useState } from "react";
-import { crossPostAnnouncements } from "../../lib/db/announcements";
+import {
+	crossPostAnnouncements,
+	removeAnnouncementFromCommunity,
+} from "../../lib/db/announcements";
 import { Database, Json } from "../../lib/db/database.types";
 import { getDataOutArray } from "../../lib/misc/dataOutArray";
 import { howLongAgo } from "../../lib/misc/dates";
@@ -18,9 +21,11 @@ import { Button } from "../misc/button";
 import Loading from "../misc/loading";
 import { ColoredPill } from "../misc/pill";
 import { getClassesForUserBasic } from "../../lib/db/classes";
+import { ConfirmDialog } from "../misc/confirmDialog";
 
 export const Announcement = ({
 	announcement,
+	classID,
 }: {
 	announcement: {
 		author: string;
@@ -39,17 +44,75 @@ export const Announcement = ({
 			  }[]
 			| null;
 	};
+	classID: string;
 }) => {
+	const supabase = useSupabaseClient<Database>();
+	const user = useUser();
 	const { newTab } = useTabs();
+	//add icons to these somehow...
+	const options = [
+		{ option: "Share" }, //some sort of share icon
+		{ option: "Edit" }, //Pencil Icon
+		{ option: "Delete From This Group" }, //trashcan icon
+		{ option: "Delete From All Groups" }, //trashcan icon
+	];
+	const [selected, setSelected] = useState(options[0]);
+	const [showRemoveFromGroup, setShowRemoveFromGroup] = useState(false);
+	const [showDeleteAnnouncement, setShowDeleteAnnouncement] = useState(false);
+
+	useEffect(() => {}, [selected]);
 	return (
 		<div className="rounded-xl bg-gray-200 p-4">
 			<div className="flex items-center justify-between">
 				<h2 className="text-xl font-semibold">{announcement.title}</h2>
-				<Button onClick={() => {
-                    
-                }}>
-					<EllipsisVerticalIcon className="h-6 w-6" />
-				</Button>
+				<Listbox
+					value={selected}
+					onChange={setSelected}
+					as="div"
+					className="font-semibold"
+				>
+					<div className="relative">
+						<Listbox.Button className="flex w-36 rounded-lg bg-gray-200 py-2 pl-3 pr-10 text-sm">
+							<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+								<EllipsisVerticalIcon className="h-6 w-6" />
+							</span>
+						</Listbox.Button>
+						<Transition
+							as={Fragment}
+							leave="transition ease-in duration-100"
+							leaveFrom="opacity-100"
+							leaveTo="opacity-0"
+						>
+							<Listbox.Options className="absolute -right-5 top-0 z-10 mt-2 flex max-h-60 w-max flex-col overflow-auto rounded-xl bg-white p-1.5 text-sm shadow-xl backdrop-blur-xl transition">
+								{options.map(
+									(options, optionID) =>
+										user &&
+										(user.id == announcement.author ||
+											options.option == "Share") && (
+											<Listbox.Option
+												key={optionID}
+												className={({ active }) =>
+													`my-0.5 flex w-48 select-none justify-center rounded-md px-2 py-0.5 transition ${
+														active ? "bg-gray-200" : "text-gray-900"
+													}`
+												}
+												value={options}
+												as="button"
+											>
+												{({ selected }) => (
+													<>
+														<span className="font-semibold">
+															{options.option}
+														</span>
+													</>
+												)}
+											</Listbox.Option>
+										)
+								)}
+							</Listbox.Options>
+						</Transition>
+					</div>
+				</Listbox>
 			</div>
 			<div className="flex items-center pt-1">
 				<Link
@@ -87,6 +150,18 @@ export const Announcement = ({
 					<FaceSmileIcon className="h-6 w-6" />
 				</div>
 			</div> */}
+			<ConfirmDialog
+				show={showRemoveFromGroup}
+				setShow={setShowRemoveFromGroup}
+				onConfirm={async () => {
+					const test = await removeAnnouncementFromCommunity(
+						supabase,
+						announcement.id,
+						classID
+					);
+				}}
+				text="Are you sure you would like to remove this announcement from this group? This action cannot be undone."
+			></ConfirmDialog>
 		</div>
 	);
 };
@@ -333,7 +408,7 @@ const CommunityPicker = ({
 							leaveTo="opacity-75 scale-95"
 							as={Fragment}
 						>
-							<Dialog.Panel className="relative w-full max-w-md rounded-xl bg-white/75 p-4 shadow-md backdrop-blur-xl">
+							<Dialog.Panel className="relative w-full max-w-lg rounded-xl bg-white/90 p-4 shadow-md backdrop-blur-xl">
 								<h2 className="mb-5 text-lg font-medium">Select Groups...</h2>
 								<div className="h- grid grid-cols-2 gap-2">
 									{communities.length != 0

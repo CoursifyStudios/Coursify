@@ -301,7 +301,8 @@ const Class: NextPage = () => {
 									/>
 								)}
 
-								{data.data &&
+								{typeof classid == "string" &&
+									data.data &&
 									data.data.announcements && //change below when I get actual types
 									getDataInArray(data.data.announcements)
 										.sort((a, b) => {
@@ -321,6 +322,7 @@ const Class: NextPage = () => {
 											<Announcement
 												key={announcement.id}
 												announcement={announcement}
+												classID={classid}
 											></Announcement>
 										))}
 							</div>

@@ -47,7 +47,7 @@ const Group: NextPage = () => {
 					{groupData?.data?.name}
 				</h1>
 			</div>
-			<div className="sm:flex">
+			<div className="md:flex">
 				<Tab.Group as="div" className="flex grow flex-col">
 					<Tab.List as="div" className="mx-auto mb-6 flex space-x-6">
 						<Tab as={Fragment}>
@@ -114,8 +114,10 @@ const Group: NextPage = () => {
 										/>
 									)}
 								{groupData &&
+									groupid &&
+                                    typeof groupid == "string" && //really should not need to check this as it is checked above, but anything to make ts happy ig
 									groupData.data &&
-									groupData.data.announcements && //change below when I get actual types
+									groupData.data.announcements &&
 									getDataInArray(groupData.data.announcements)
 										.sort((a, b) => {
 											if (
@@ -134,6 +136,7 @@ const Group: NextPage = () => {
 											<Announcement
 												key={announcement.id}
 												announcement={announcement}
+												classID={groupid}
 											></Announcement>
 										))}
 							</div>
@@ -161,7 +164,7 @@ const Group: NextPage = () => {
 						</Tab.Panel>
 					</Tab.Panels>
 				</Tab.Group>
-				<div className="sticky top-0 mx-auto w-[20.5rem] shrink-0 rounded-md sm:ml-8 ">
+				<div className="sticky top-0 mx-auto w-[19rem] shrink-0 rounded-md sm:ml-8">
 					<h2 className="title">Next Event</h2>
 					<Event title="Castle Rock" time="8:00 - 9:30 AM"></Event>
 					<h2 className="title my-4">Upcoming</h2>
