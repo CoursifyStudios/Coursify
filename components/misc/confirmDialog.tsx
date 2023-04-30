@@ -11,7 +11,7 @@ export function ConfirmDialog({
 	show: boolean;
 	setShow: (value: boolean) => void;
 	text: string;
-	onConfirm: (value: unknown) => unknown;
+	onConfirm: () => unknown;
 }) {
 	return (
 		<Transition appear show={show} as={Fragment}>
@@ -37,11 +37,23 @@ export function ConfirmDialog({
 						>
 							<Dialog.Panel className="relative w-full max-w-lg rounded-xl bg-white/90 p-4 shadow-md backdrop-blur-xl">
 								<p className="font-semibold">{text}</p>
-								<div className="flex justify-end space-x-3 mt-4">
-									<Button className="brightness-hover transition hover:bg-red-300" onClick={() => setShow(false)}>
+								<div className="mt-4 flex justify-end space-x-3">
+									<Button
+										className="brightness-hover transition hover:bg-red-300"
+										onClick={() => setShow(false)}
+									>
 										Cancel
 									</Button>
-									<Button color="bg-blue-300" className="brightness-hover transition hover:bg-blue-400" onClick={() => {onConfirm; setShow(false)}}>Confirm</Button>
+									<Button
+										color="bg-blue-300"
+										className="brightness-hover transition hover:bg-blue-400"
+										onClick={() => {
+											onConfirm();
+											setShow(false);
+										}}
+									>
+										Confirm
+									</Button>
 								</div>
 							</Dialog.Panel>
 						</Transition.Child>
@@ -51,4 +63,3 @@ export function ConfirmDialog({
 		</Transition>
 	);
 }
-

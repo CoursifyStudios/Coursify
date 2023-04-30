@@ -151,8 +151,8 @@ export default function Profile() {
 						? communities.data.map(
 								(group) =>
 									//Could have used greater than or equal to, but let's not shoot our future selves in the foot - Bill
-                                    //well at this point
-									(group.type >= CommunityType.SCHOOLWIDE_GROUP) && (
+									//well at this point
+									group.type >= CommunityType.SCHOOLWIDE_GROUP && (
 										<GroupSmall
 											key={group.id}
 											photo={group.image}

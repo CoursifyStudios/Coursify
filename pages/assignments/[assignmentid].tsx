@@ -75,9 +75,9 @@ const Post: NextPage = () => {
 				setSchedule(allSchedules[0].schedule);
 				setScheduleT(allSchedules[1].schedule);
 			} else {
-                const today = new Date();
-                const tomorrow = new Date();
-                tomorrow.setDate(today.getDate() + 1);
+				const today = new Date();
+				const tomorrow = new Date();
+				tomorrow.setDate(today.getDate() + 1);
 				const [scheduleToday, scheduleTomorrow] = await Promise.all([
 					getSchedule(supabase, today),
 					getSchedule(supabase, tomorrow),
@@ -124,9 +124,9 @@ const Post: NextPage = () => {
 								size="small"
 								className="my-auto ml-2 shadow shadow-black/25"
 							>
-								Add filters to specify which types of assignments
-								 you see. For example, you can add a starred filter,
-								which will only show you assignments that are starred.
+								Add filters to specify which types of assignments you see. For
+								example, you can add a starred filter, which will only show you
+								assignments that are starred.
 							</Info>
 						</div>
 						<div className="flex flex-wrap">

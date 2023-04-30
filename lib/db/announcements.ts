@@ -41,14 +41,15 @@ export const crossPostAnnouncements = async (
 // which is defined below
 export const deleteAnnouncement = async (
 	supabase: SupabaseClient<Database>,
-	announcement: { author: string; content: Json; title: string }
+	announcement: { author: string; title: string; time: string }
 ) => {
+    console.log(announcement.time);
 	return await supabase
 		.from("announcements")
 		.delete()
 		.eq("author", announcement.author)
-		.eq("content", announcement.content)
-		.eq("title", announcement.title);
+		.eq("title", announcement.title)
+        .gte("time", announcement.time);
 };
 
 export const editAnnouncement = async (
@@ -77,5 +78,6 @@ export const removeAnnouncementFromCommunity = async (
 		.from("announcements")
 		.delete()
 		.eq("id", announcementID)
-		.eq("class_id", communityID);
+		.eq("class_id", communityID)
+		.select();
 };

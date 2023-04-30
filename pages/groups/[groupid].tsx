@@ -7,12 +7,10 @@ import { useRouter } from "next/router";
 import { getGroup, GroupResponse } from "../../lib/db/groups";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
 import { Member } from "../../components/complete/members";
-import {
-	Announcement,
-	AnnouncementPostingUI,
-} from "../../components/complete/announcements";
+import { Announcement } from "../../components/complete/announcements";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { Database } from "../../lib/db/database.types";
+import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
 
 const Group: NextPage = () => {
 	const router = useRouter();
@@ -115,7 +113,7 @@ const Group: NextPage = () => {
 									)}
 								{groupData &&
 									groupid &&
-                                    typeof groupid == "string" && //really should not need to check this as it is checked above, but anything to make ts happy ig
+									typeof groupid == "string" && //really should not need to check this as it is checked above, but anything to make ts happy ig
 									groupData.data &&
 									groupData.data.announcements &&
 									getDataInArray(groupData.data.announcements)

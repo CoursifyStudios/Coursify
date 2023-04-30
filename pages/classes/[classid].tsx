@@ -27,12 +27,10 @@ import {
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
 import { CreateAssignment } from "../../components/complete/assignmentCreation";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
-import {
-	Announcement,
-	AnnouncementPostingUI,
-} from "../../components/complete/announcements";
+import { Announcement } from "../../components/complete/announcements";
 import { Button } from "../../components/misc/button";
 import { Member } from "../../components/complete/members";
+import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -186,7 +184,10 @@ const Class: NextPage = () => {
 			</div>
 			<div className="space-x sm:grid-cols-1 md:flex">
 				<Tab.Group as="div" className="flex grow flex-col">
-					<Tab.List as="div" className="mx-auto mb-6 flex sm:space-x-6 max-sm:space-x-2">
+					<Tab.List
+						as="div"
+						className="mx-auto mb-6 flex max-sm:space-x-2 sm:space-x-6"
+					>
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
