@@ -12,29 +12,29 @@ export const crossPostAnnouncements = async (
 	// ClassOrGroupObjects
 	communities: string[]
 ) => {
-	const announcements: PostgrestSingleResponse<{
+	const announcements: {
 		author: string;
 		class_id: string | null;
 		content: Json;
-		id: string;
-		time: string | null;
 		title: string | null;
-	}>[] = [];
-	communities.forEach(async (community) => {
-		const announcement = await supabase
-			.from("announcements")
-			.insert({
-				author: announcementAuthor,
-				title: announcementTitle,
-				content: announcementContent,
-				class_id: community,
-			})
-			.select()
-			.single();
-		announcements.concat(announcement);
+	}[] = [];
+	communities.forEach((community) => {
+		announcements.push({
+			author: announcementAuthor,
+			title: announcementTitle,
+			content: announcementContent,
+			class_id: community,
+		});
 	});
-	return announcements;
+	return await supabase
+		.from("announcements")
+		.insert(announcements)
+		.select();
 };
+
+export type crossPostingReturn = Awaited<
+	ReturnType<typeof crossPostAnnouncements>
+>;
 // Removes the announcement(s) that match the author, title and content.
 // This is what happens when no merge table. To remove the announcement
 // from just one group or class, use removeAnnouncementFromCommunity(),
@@ -43,13 +43,15 @@ export const deleteAnnouncement = async (
 	supabase: SupabaseClient<Database>,
 	announcement: { author: string; title: string; time: string }
 ) => {
-    console.log(announcement.time);
+	const earlyDate: Date = new Date(new Date(announcement.time).getTime() - 500);
+	const laterDate: Date = new Date(new Date(announcement.time).getTime() + 500);
 	return await supabase
 		.from("announcements")
 		.delete()
 		.eq("author", announcement.author)
 		.eq("title", announcement.title)
-        .gte("time", announcement.time);
+		.gte("time", earlyDate.toISOString())
+		.lte("time", laterDate.toISOString());
 };
 
 export const editAnnouncement = async (

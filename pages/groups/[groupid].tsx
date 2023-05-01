@@ -9,7 +9,7 @@ import { getDataInArray } from "../../lib/misc/dataOutArray";
 import { Member } from "../../components/complete/members";
 import { Announcement } from "../../components/complete/announcements";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { Database } from "../../lib/db/database.types";
+import { Database, Json } from "../../lib/db/database.types";
 import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
 
 const Group: NextPage = () => {
@@ -17,7 +17,6 @@ const Group: NextPage = () => {
 	const { groupid } = router.query;
 	const supabase = useSupabaseClient<Database>();
 	const [groupData, setGroupData] = useState<GroupResponse>();
-	const [refreshAnnouncements, setRefreshAnnouncements] = useState(false);
 	const user = useUser();
 	useEffect(() => {
 		(async () => {
@@ -26,7 +25,7 @@ const Group: NextPage = () => {
 				setGroupData(data);
 			}
 		})();
-	}, [refreshAnnouncements, supabase, groupid]);
+	}, [supabase, groupid]);
 
 	return (
 		<div className="mx-auto my-10 w-full max-w-screen-xl px-4">
@@ -105,11 +104,7 @@ const Group: NextPage = () => {
 									getDataInArray(groupData.data.users).some(
 										(userInGroup) => userInGroup.id == user.id
 									) && (
-										<AnnouncementPostingUI
-											communityid={groupid as string}
-											prevRefreshState={refreshAnnouncements}
-											refreshAnnouncements={setRefreshAnnouncements}
-										/>
+										<AnnouncementPostingUI communityid={groupid as string} />
 									)}
 								{groupData &&
 									groupid &&
