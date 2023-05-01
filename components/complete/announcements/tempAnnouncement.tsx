@@ -15,10 +15,10 @@ export const TempAnnouncement = ({
 	};
 }) => {
 	const user = useUser();
-    const { newTab } = useTabs();
+	const { newTab } = useTabs();
 
 	return (
-		<div className="rounded-xl bg-gray-200 p-4 mt-2">
+		<div className="mt-2 rounded-xl bg-gray-200 p-4">
 			<div className="flex items-center justify-between">
 				<h2 className="text-xl font-semibold">{announcement.title}</h2>
 				<EllipsisVerticalIcon className="h-6 w-6" />
@@ -43,11 +43,9 @@ export const TempAnnouncement = ({
 						{user?.user_metadata.name}
 					</p>
 				</Link>
-				<p className="pl-1.5 text-gray-600">
-					Posted just now
-				</p>
+				<p className="pl-1.5 text-gray-600">Posted just now</p>
 			</div>
-            <Editor
+			<Editor
 				editable={false}
 				initialState={announcement.content}
 				className="mt-0.5"

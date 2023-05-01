@@ -1,7 +1,5 @@
 import { Listbox, Transition } from "@headlessui/react";
-import {
-	EllipsisVerticalIcon,
-} from "@heroicons/react/24/outline";
+import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { Fragment, useState } from "react";
@@ -15,6 +13,7 @@ import { howLongAgo } from "../../../lib/misc/dates";
 import { useTabs } from "../../../lib/tabs/handleTabs";
 import Editor from "../../editors/richeditor";
 import { ConfirmDialog } from "../../misc/confirmDialog";
+import { AnnouncementPostingUI } from "./announcementPosting";
 
 /**
  * editing announcements
@@ -60,6 +59,19 @@ export const Announcement = ({
 	const [showDeleteAnnouncement, setShowDeleteAnnouncement] = useState(false);
 	const [deleted, setDeleted] = useState(false);
 	if (!deleted) {
+		if (showEditing) {
+			return (
+				<AnnouncementPostingUI
+					communityid={classID}
+					editingInfo={{
+						title: announcement.title!,
+						content: announcement.content,
+						time: announcement.time!,
+					}}
+					setEditing={setShowEditing}
+				></AnnouncementPostingUI>
+			);
+		}
 		return (
 			<div className="rounded-xl bg-gray-200 p-4">
 				<div className="flex items-center justify-between">
@@ -107,6 +119,8 @@ export const Announcement = ({
 															selected
 														) {
 															setShowDeleteAnnouncement(true);
+														} else if (options.option == "Edit" && selected) {
+															setShowEditing(true);
 														}
 													}}
 													as="button"
@@ -175,7 +189,7 @@ export const Announcement = ({
 							announcement.id,
 							classID
 						);
-                        setDeleted(true);
+						setDeleted(true);
 					}}
 					text="Are you sure you would like to remove this announcement from this group? This action cannot be undone."
 				></ConfirmDialog>
@@ -189,7 +203,7 @@ export const Announcement = ({
 							title: announcement.title!,
 							time: announcement.time!,
 						});
-                        setDeleted(true);
+						setDeleted(true);
 					}}
 					text="Are you sure you would like to remove this announcement from all groups? This action cannot be undone."
 				></ConfirmDialog>

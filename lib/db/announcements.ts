@@ -26,10 +26,7 @@ export const crossPostAnnouncements = async (
 			class_id: community,
 		});
 	});
-	return await supabase
-		.from("announcements")
-		.insert(announcements)
-		.select();
+	return await supabase.from("announcements").insert(announcements).select();
 };
 
 export type crossPostingReturn = Awaited<
@@ -54,20 +51,27 @@ export const deleteAnnouncement = async (
 		.lte("time", laterDate.toISOString());
 };
 
+// Can't use id because we need to change the
+// announcements in all of the groups it was posted to
+// also turns out that content is too finicky so using time instead
 export const editAnnouncement = async (
 	supabase: SupabaseClient<Database>,
-	oldAnnouncement: { author: string; content: Json; title: string },
-	newAnnouncement: { content: Json; title: string }
+	oldAnnouncement: { author: string; title: string; time: string },
+	newAnnouncement: { title: string; content: Json }
 ) => {
+	const earlyDate: Date = new Date(
+		new Date(oldAnnouncement.time).getTime() - 500
+	);
+	const laterDate: Date = new Date(
+		new Date(oldAnnouncement.time).getTime() + 500
+	);
 	return await supabase
 		.from("announcements")
-		.update({
-			content: newAnnouncement.content,
-			title: newAnnouncement.title,
-		})
+		.update({ title: newAnnouncement.title, content: newAnnouncement.content })
 		.eq("author", oldAnnouncement.author)
-		.eq("content", oldAnnouncement.content)
 		.eq("title", oldAnnouncement.title)
+		.gte("time", earlyDate.toISOString())
+		.lte("time", laterDate.toISOString())
 		.select();
 };
 

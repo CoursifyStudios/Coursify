@@ -2,7 +2,10 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useFormikContext, Formik, Form, Field, ErrorMessage } from "formik";
 import { EditorState } from "lexical";
 import { useState, useEffect } from "react";
-import { crossPostAnnouncements } from "../../../lib/db/announcements";
+import {
+	crossPostAnnouncements,
+	editAnnouncement,
+} from "../../../lib/db/announcements";
 import { getClassesForUserBasic } from "../../../lib/db/classes";
 import { Database, Json } from "../../../lib/db/database.types";
 import { getDataOutArray } from "../../../lib/misc/dataOutArray";
@@ -16,13 +19,15 @@ import { Announcement } from ".";
 
 export const AnnouncementPostingUI = ({
 	communityid,
-	editing,
+	editingInfo,
+	setEditing,
 }: {
 	communityid: string;
-	editing?: boolean;
+	editingInfo?: { title: string; content: Json; time: string };
+	setEditing?: (value: any) => void;
 }) => {
 	const supabase = useSupabaseClient<Database>();
-	const [showPost, setShowPost] = useState(false);
+	const [showPost, setShowPost] = useState(editingInfo ? true : false);
 	const [title, setTitle] = useState("");
 	const [editorState, setEditorState] = useState<EditorState>();
 	const [showLoading, setShowLoading] = useState(false);
@@ -93,10 +98,12 @@ export const AnnouncementPostingUI = ({
 			<div>
 				{showPost ? (
 					<div className="flex flex-col rounded-xl border-2  border-gray-300 bg-gray-50 p-4">
-						<h3 className="mb-4 font-semibold">New Announcement</h3>
+						{!editingInfo && (
+							<h3 className="mb-4 font-semibold">New Announcement</h3>
+						)}
 						<Formik
 							initialValues={{
-								title: "",
+								title: editingInfo ? editingInfo.title : "",
 							}}
 							onSubmit={() => {}}
 						>
@@ -121,6 +128,7 @@ export const AnnouncementPostingUI = ({
 							editable={true}
 							className="my-4 rounded border border-gray-300 bg-white p-2"
 							updateState={setEditorState}
+							initialState={editingInfo && editingInfo.content}
 							focus={false}
 						/>
 
@@ -138,16 +146,24 @@ export const AnnouncementPostingUI = ({
 								)}
 						</div>
 
-						<div className="flex justify-between space-x-4">
-							<Button
-								className="mr-auto"
-								onClick={async () => {
-									getCommunities();
-									setShowCrossPosting(true);
-								}}
-							>
-								Post to other groups...
-							</Button>
+						<div
+							className={
+								editingInfo
+									? "flex justify-end"
+									: "flex justify-between space-x-4"
+							}
+						>
+							{!editingInfo && (
+								<Button
+									className="mr-auto"
+									onClick={async () => {
+										getCommunities();
+										setShowCrossPosting(true);
+									}}
+								>
+									Post to other groups...
+								</Button>
+							)}
 							<div className="flex space-x-4">
 								<Button
 									className="brightness-hover transition hover:bg-red-300"
@@ -158,7 +174,7 @@ export const AnnouncementPostingUI = ({
 												name: "",
 											},
 										]);
-										setShowPost(false);
+										setEditing ? setEditing(false) : setShowPost(false);
 									}}
 								>
 									Cancel
@@ -167,54 +183,85 @@ export const AnnouncementPostingUI = ({
 									className="text-white"
 									color="bg-blue-500"
 									onClick={async () => {
-										if (
-											user &&
-											!isEditorEmpty(editorState) &&
-											!(title.length == 0)
-										) {
-											setFakeAnnouncements(
-												fakeAnnouncements.concat({
-													author: user.id,
-													class_id: communityid,
-													content: editorState?.toJSON() as unknown as Json,
-													title: title,
-												})
-											);
+										if (editingInfo && setEditing) {
+											if (
+												user &&
+												((editorState?.toJSON() as unknown as Json) !=
+													editingInfo.content ||
+													title != editingInfo.title)
+											) {
+												setFakeAnnouncements(
+													fakeAnnouncements.concat({
+														author: user.id,
+														class_id: communityid,
+														content: editorState?.toJSON() as unknown as Json,
+														title: title,
+													})
+												);
+												setShowPost(false);
+												const newAnnouncement = await editAnnouncement(
+													supabase,
+													{
+														author: user.id,
+														title: editingInfo.title,
+														time: editingInfo.time,
+													},
+													{
+														title: title,
+														content: editorState?.toJSON() as unknown as Json,
+													}
+												);
+											}
+										} else {
+											if (
+												user &&
+												!isEditorEmpty(editorState) &&
+												!(title.length == 0)
+											) {
+												setFakeAnnouncements(
+													fakeAnnouncements.concat({
+														author: user.id,
+														class_id: communityid,
+														content: editorState?.toJSON() as unknown as Json,
+														title: title,
+													})
+												);
 
-											setShowPost(false);
-											const dBReturn = await crossPostAnnouncements(
-												supabase,
-												user?.id!,
-												title,
-												editorState?.toJSON() as unknown as Json,
-												chosenCommunities.map(({ id }) => id)
-											);
-											setFakeAnnouncements(
-												fakeAnnouncements.filter(
-													(announcement) =>
-														announcement.title != dBReturn.data![0].title
-												)
-											);
-											setRealAnnouncements(
-												realAnnouncements.concat(
-													dBReturn.data!.find(
+												setShowPost(false);
+												const dBReturn = await crossPostAnnouncements(
+													supabase,
+													user?.id!,
+													title,
+													editorState?.toJSON() as unknown as Json,
+													chosenCommunities.map(({ id }) => id)
+												);
+												setFakeAnnouncements(
+													fakeAnnouncements.filter(
 														(announcement) =>
-															announcement.class_id == communityid
-													)!
-												)
-											);
+															announcement.title != dBReturn.data![0].title
+													)
+												);
+												setRealAnnouncements(
+													realAnnouncements.concat(
+														dBReturn.data!.find(
+															(announcement) =>
+																announcement.class_id == communityid
+														)!
+													)
+												);
 
-											setChosenCommunities([
-												{
-													id: communityid,
-													name: "",
-												},
-											]);
+												setChosenCommunities([
+													{
+														id: communityid,
+														name: "",
+													},
+												]);
+											}
 										}
 									}}
 									disabled={isEditorEmpty(editorState) || title.length == 0}
 								>
-									Post
+									{editingInfo ? "Save" : "Post"}
 								</Button>
 							</div>
 						</div>
@@ -230,19 +277,21 @@ export const AnnouncementPostingUI = ({
 						)}
 					</div>
 				) : (
-					<div
-						className="cursor-pointer rounded-xl border-2 border-dashed border-gray-300 p-4 transition hover:border-solid hover:bg-gray-50"
-						onClick={() => setShowPost(true)}
-					>
-						<h3 className="mb-4 font-semibold">New Announcement</h3>
+					!editingInfo && (
+						<div
+							className="cursor-pointer rounded-xl border-2 border-dashed border-gray-300 p-4 transition hover:border-solid hover:bg-gray-50"
+							onClick={() => setShowPost(true)}
+						>
+							<h3 className="mb-4 font-semibold">New Announcement</h3>
 
-						<div className="h-10 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium text-gray-700">
-							Enter a title...
+							<div className="h-10 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium text-gray-700">
+								Enter a title...
+							</div>
+							<div className="mt-4 h-10 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium text-gray-700">
+								Description...
+							</div>
 						</div>
-						<div className="mt-4 h-10 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium text-gray-700">
-							Description...
-						</div>
-					</div>
+					)
 				)}
 
 				<div className="mt-2 space-y-2">
