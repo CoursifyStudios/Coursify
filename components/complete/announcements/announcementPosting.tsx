@@ -205,12 +205,13 @@ export const AnnouncementPostingUI = ({
 							<Button
 								className="brightness-hover transition hover:bg-red-300"
 								onClick={() => {
-									setChosenCommunities([
-										{
-											id: communityid,
-											name: "",
-										},
-									]);
+									!sharingInfo &&
+										setChosenCommunities([
+											{
+												id: communityid,
+												name: "",
+											},
+										]);
 									// If you are in sharing or editing mode, cancelling should take you back to
 									// the original announcement, not the "New Announcement" UI
 									sharingInfo?.setSharing
@@ -305,13 +306,13 @@ export const AnnouncementPostingUI = ({
 													)!
 												)
 											);
-
-											setChosenCommunities([
-												{
-													id: communityid,
-													name: "",
-												},
-											]);
+											!sharingInfo &&
+												setChosenCommunities([
+													{
+														id: communityid,
+														name: "",
+													},
+												]);
 										}
 									}
 								}}

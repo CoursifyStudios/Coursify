@@ -79,7 +79,6 @@ export const Announcement = ({
 	const [showRemoveFromGroup, setShowRemoveFromGroup] = useState(false);
 	const [showDeleteAnnouncement, setShowDeleteAnnouncement] = useState(false);
 	const [deleted, setDeleted] = useState(false);
-	console.log(announcement);
 	if (!deleted) {
 		if (showEditing) {
 			return (
@@ -208,13 +207,14 @@ export const Announcement = ({
 					className="mt-0.5"
 				/>
 				{announcement.parent && (
-					<div>
+					<div className="flex">
+                        <div className="flex flex-shrink-0 w-2 bg-slate-400 p-1 ml-1 mr-3"></div>
 						<TempAnnouncement
 							announcement={announcement.parent}
 						></TempAnnouncement>
-						adfughlkafdkga
 					</div>
 				)}
+                {/* LUKAS DO COMMENT UI RIGHT HERE */}
 				{/* <div className="mt-4 flex items-center justify-between">
 				<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
 					<p className="ml-1.5 p-1">Insert response here</p>

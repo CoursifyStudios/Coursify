@@ -5,6 +5,7 @@ import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { useTabs } from "../../../lib/tabs/handleTabs";
 import Editor from "../../editors/richeditor";
 import { getDataOutArray } from "../../../lib/misc/dataOutArray";
+import { howLongAgo } from "../../../lib/misc/dates";
 
 export const TempAnnouncement = ({
 	announcement,
@@ -31,10 +32,12 @@ export const TempAnnouncement = ({
 	const { newTab } = useTabs();
 
 	return (
-		<div className="mt-2 rounded-xl bg-gray-200 p-4">
-			<div className="flex items-center justify-between">
+		<div className={(announcement.time ? "" : "p-4") + "mt-2 rounded-xl bg-gray-200"}>
+			<div
+				className={announcement.time ? "" : "flex items-center justify-between"}
+			>
 				<h2 className="text-xl font-semibold">{announcement.title}</h2>
-				<EllipsisVerticalIcon className="h-6 w-6" />
+				{!announcement.time && <EllipsisVerticalIcon className="h-6 w-6" />}
 			</div>
 			<div className="flex items-center pt-1">
 				<Link
@@ -66,7 +69,9 @@ export const TempAnnouncement = ({
 					</p>
 				</Link>
 				<p className="pl-1.5 text-gray-600">
-					{announcement.time ? announcement.time : "Posted just now"}
+					{announcement.time
+						? howLongAgo(announcement.time)
+						: "Posted just now"}
 				</p>
 			</div>
 			<Editor
