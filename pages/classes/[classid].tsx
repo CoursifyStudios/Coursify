@@ -104,6 +104,8 @@ const Class: NextPage = () => {
 
 	// We need to fix refresh announcements to focus the user on the announcements tab panel
 	// but I guess that can wait for another day - Bill
+
+	// Shouldn't need to call the db again at all
 	useEffect(() => {
 		(async () => {
 			if (typeof classid == "string") {

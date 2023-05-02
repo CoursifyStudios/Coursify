@@ -35,50 +35,37 @@ export function AssignmentPreview({
 }) {
 	const date = assignment.due_date ? new Date(assignment.due_date) : null;
 	const [starred, setStarred] = useState(starredAsParam);
-	const [dbStarred, setDbStarred] = useState(starredAsParam);
 
-	const dealWithStarred = async () => {
-		const newStarred = await handleStarred(
-			supabase,
-			starred,
-			dbStarred,
-			assignment.id,
-			userId
-		);
-		setDbStarred(newStarred);
-	};
-
-	useEffect(() => {
-		setStarred(starredAsParam);
-		setDbStarred(starredAsParam);
-	}, [starredAsParam]);
 	return (
 		<div className="relative grow">
 			<div
 				tabIndex={0}
-				onClick={() => setStarred((starred) => !starred)}
+				onClick={() => {
+					setStarred((starred) => {
+						handleStarred(supabase, !starred, assignment.id, userId);
+						return !starred;
+					});
+				}}
 				/* This mess is to replicate the mouseLeave functionality (to reduce uneeded db requests)
 				 * What I'm doing is changeing the value of the useState starred whenever the user presses
 				 * the enter or space keys (i.e. clicks it on a screen reader), and then when they move on
 				 * by pressing the tab key again or they decide to press escape, I update on the db -Bill */
 				onKeyDown={(key) => {
 					if (key.key == "Enter" || key.key == " ") {
-						setStarred((starred) => !starred);
-					} else if (key.key == "Enter" || key.key == "Escape") {
-						dealWithStarred();
+						setStarred((starred) => {
+							handleStarred(supabase, !starred, assignment.id, userId);
+							return !starred;
+						});
 					}
 				}}
-				className="absolute left-0 top-0"
+				className="absolute left-0.5 top-0.5 cursor-pointer"
 			>
 				<Starred starred={starred} />
 			</div>
 			<Link href={"/assignments/" + assignment.id}>
 				<div className="mb-1 flex">
 					<div className="flex">
-						<div
-							className="h-6 w-8 "
-							onMouseLeave={() => dealWithStarred()}
-						></div>
+						<div className="h-6 w-8"></div>
 						{/* I'm going to use this outer div as the vehicle for tab support linking ot assignments for now
 						 * It isn't the prettiest thing in the world, but it's in the right order and it's less work,
 						 * which for screen reader support is all that matters [If you're wondering what this is about,
