@@ -4,6 +4,7 @@ import Link from "next/link";
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { useTabs } from "../../../lib/tabs/handleTabs";
 import Editor from "../../editors/richeditor";
+import { getDataOutArray } from "../../../lib/misc/dataOutArray";
 
 export const TempAnnouncement = ({
 	announcement,
@@ -11,7 +12,19 @@ export const TempAnnouncement = ({
 	announcement: {
 		author: string;
 		content: Json;
-		title: string;
+		title: string | null;
+		id?: string;
+		time?: string | null;
+		users?:
+			| {
+					avatar_url: string;
+					full_name: string;
+			  }
+			| {
+					avatar_url: string;
+					full_name: string;
+			  }[]
+			| null;
 	};
 }) => {
 	const user = useUser();
@@ -30,20 +43,31 @@ export const TempAnnouncement = ({
 					onClick={() =>
 						newTab(
 							"/profile/" + announcement.author,
-							user?.user_metadata.name.split(" ")[0] + "'s Profile"
+							(announcement.users
+								? getDataOutArray(announcement.users).full_name
+								: user?.user_metadata.name
+							).split(" ")[0] + "'s Profile"
 						)
 					}
 				>
 					<img
-						src={user?.user_metadata.picture}
+						src={
+							announcement.users
+								? getDataOutArray(announcement.users!).avatar_url
+								: user?.user_metadata.picture
+						}
 						alt="Profile picture"
 						className="h-5 w-5 rounded-full"
 					/>
 					<p className="ml-1.5 mr-1 font-semibold text-neutral-700">
-						{user?.user_metadata.name}
+						{announcement.users
+							? getDataOutArray(announcement.users!).full_name
+							: user?.user_metadata.name}
 					</p>
 				</Link>
-				<p className="pl-1.5 text-gray-600">Posted just now</p>
+				<p className="pl-1.5 text-gray-600">
+					{announcement.time ? announcement.time : "Posted just now"}
+				</p>
 			</div>
 			<Editor
 				editable={false}

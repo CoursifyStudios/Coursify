@@ -5,12 +5,13 @@ import { ColoredPill } from "../../components/misc/pill";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { getGroup, GroupResponse } from "../../lib/db/groups";
-import { getDataInArray } from "../../lib/misc/dataOutArray";
+import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
 import { Member } from "../../components/complete/members";
 import { Announcement } from "../../components/complete/announcements";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { Database, Json } from "../../lib/db/database.types";
+import { Database } from "../../lib/db/database.types";
 import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
+import { ParentType } from "../../lib/db/announcements";
 
 const Group: NextPage = () => {
 	const router = useRouter();
@@ -128,7 +129,18 @@ const Group: NextPage = () => {
 										.map((announcement) => (
 											<Announcement
 												key={announcement.id}
-												announcement={announcement}
+												announcement={{
+													id: announcement.id,
+													author: announcement.author,
+													title: announcement.title,
+													content: announcement.content,
+													time: announcement.time,
+													type: announcement.type,
+													users: announcement.users,
+													parent: getDataOutArray(
+														announcement.parent
+													) as ParentType | null,
+												}}
 												classID={groupid}
 											></Announcement>
 										))}

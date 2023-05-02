@@ -1,4 +1,4 @@
-import { PostgrestSingleResponse, SupabaseClient } from "@supabase/supabase-js";
+import { SupabaseClient } from "@supabase/supabase-js";
 import { Database, Json } from "./database.types";
 
 export const crossPostAnnouncements = async (
@@ -40,8 +40,14 @@ export const deleteAnnouncement = async (
 	supabase: SupabaseClient<Database>,
 	announcement: { author: string; title: string; time: string }
 ) => {
-	const earlyDate: Date = new Date(new Date(announcement.time).getTime() - 500);
-	const laterDate: Date = new Date(new Date(announcement.time).getTime() + 500);
+	// I think that +/- 2 seconds is appropriate for now, but please (honestly)
+	// tell me if you think it should be longer or shorter
+	const earlyDate: Date = new Date(
+		new Date(announcement.time).getTime() - 2000
+	);
+	const laterDate: Date = new Date(
+		new Date(announcement.time).getTime() + 2000
+	);
 	return await supabase
 		.from("announcements")
 		.delete()
@@ -75,6 +81,10 @@ export const editAnnouncement = async (
 		.select();
 };
 
+// A bit like the deleting function above, but this one only
+// removes the announcement from one group or class.
+// These will have the same behavior if the announcement is
+// posted to only one group or class
 export const removeAnnouncementFromCommunity = async (
 	supabase: SupabaseClient<Database>,
 	announcementID: string,
@@ -86,4 +96,66 @@ export const removeAnnouncementFromCommunity = async (
 		.eq("id", announcementID)
 		.eq("class_id", communityID)
 		.select();
+};
+
+export const shareAnnouncement = async (
+	supabase: SupabaseClient<Database>,
+	announcementID: string,
+	newAnnouncement: { author: string; title: string; content: Json },
+	communities: string[]
+) => {
+	const announcements: {
+		author: string;
+		title: string | null;
+		content: Json;
+		class_id: string | null;
+		parent: string;
+		type: number;
+	}[] = [];
+	communities.forEach((community) => {
+		announcements.push({
+			author: newAnnouncement.author,
+			title: newAnnouncement.title,
+			content: newAnnouncement.content,
+			class_id: community,
+			parent: announcementID,
+			type: AnnouncementType.CROSSPOST,
+		});
+	});
+	return await supabase.from("announcements").insert(announcements).select();
+	// return await supabase
+	// 	.from("announcements")
+	// 	.insert({
+	// 		author: newAnnouncement.author,
+	// 		title: newAnnouncement.title,
+	// 		content: newAnnouncement.content,
+	// 		class_id: newCommunity,
+	// 		parent: announcementID,
+	// 		type: AnnouncementType.CROSSPOST,
+	// 	});
+};
+
+export enum AnnouncementType {
+	ANNOUNCMENT = 0,
+	COMMENT = 1,
+	CROSSPOST = 2,
+}
+
+export type ParentType = {
+	author: string;
+	content: Json;
+	id: string;
+	time: string | null;
+	title: string | null;
+	users:
+		| {
+				avatar_url: string;
+				full_name: string;
+		  }
+		| {
+				avatar_url: string;
+				full_name: string;
+		  }[]
+		| null;
+	type: number;
 };

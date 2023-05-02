@@ -46,9 +46,21 @@ export const getGroup = async (
         full_description,
         image,
         announcements (
-            *,
+            id,
+            author,
+            title,
+            content,
+            time,
+            class_id,
+            type,
             users (
                 avatar_url, full_name
+            ),
+            parent (
+                *,
+                users (
+                    id, full_name, avatar_url
+                )
             )
         ),
         class_users (

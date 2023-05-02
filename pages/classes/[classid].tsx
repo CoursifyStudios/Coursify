@@ -11,11 +11,7 @@ import CircleCounter from "../../components/misc/circleCounter";
 import Link from "next/link";
 import { AssignmentPreview } from "../../components/complete/assignments";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
-import {
-	IdentificationIcon,
-	EnvelopeIcon,
-	PlusIcon,
-} from "@heroicons/react/24/outline";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import Editor from "../../components/editors/richeditor";
 import { EditorState } from "lexical";
@@ -26,7 +22,7 @@ import {
 } from "../../lib/db/schedule";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
 import { CreateAssignment } from "../../components/complete/assignmentCreation";
-import { getDataInArray } from "../../lib/misc/dataOutArray";
+import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
 import { Announcement } from "../../components/complete/announcements";
 import { Button } from "../../components/misc/button";
 import { Member } from "../../components/complete/members";
@@ -313,13 +309,31 @@ const Class: NextPage = () => {
 												return 1;
 											return 0;
 										})
-										.map((announcement) => (
-											<Announcement
-												key={announcement.id}
-												announcement={announcement}
-												classID={classid}
-											></Announcement>
-										))}
+										.map(
+											(announcement) =>
+												announcement.users &&
+												typeof getDataOutArray(announcement.users).avatar_url ==
+													"string" &&
+												typeof getDataOutArray(announcement.users).full_name ==
+													"string" && (
+													<Announcement
+														key={announcement.id}
+														// Because Supabase is dingus thinks parent could be an array
+														announcement={{
+															id: announcement.id,
+															author: announcement.author,
+															title: announcement.title,
+															content: announcement.content,
+															time: announcement.time,
+															type: announcement.type,
+															users: announcement.users,
+                                                            //@ts-ignore
+															parent: getDataOutArray(announcement.parent),
+														}}
+														classID={classid}
+													></Announcement>
+												)
+										)}
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}>

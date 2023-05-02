@@ -54,15 +54,34 @@ export const getClass = async (
 	supabase: SupabaseClient<Database>,
 	classid: string
 ) => {
+	//Can't fetch parent as a string because then you get problems with naming
 	return await supabase
 		.from("classes")
 		.select(
 			`
             *,
         announcements (
-            *,
+            id,
+            author,
+            title,
+            content,
+            time,
+            class_id,
+            type,
             users (
-                *
+                full_name, avatar_url
+            ),
+            parent (
+                id,
+                author,
+                title,
+                content,
+                time,
+                class_id,
+                type,
+                users (
+                    full_name, avatar_url
+                )
             )
         ),
 		assignments (

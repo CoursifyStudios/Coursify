@@ -41,24 +41,30 @@ export interface Database {
 					class_id: string | null;
 					content: Json | null;
 					id: string;
+					parent: string | null;
 					time: string | null;
 					title: string | null;
+					type: number;
 				};
 				Insert: {
 					author: string;
 					class_id?: string | null;
 					content?: Json | null;
 					id?: string;
+					parent?: string | null;
 					time?: string | null;
 					title?: string | null;
+					type?: number;
 				};
 				Update: {
 					author?: string;
 					class_id?: string | null;
 					content?: Json | null;
 					id?: string;
+					parent?: string | null;
 					time?: string | null;
 					title?: string | null;
+					type?: number;
 				};
 			};
 			assignments: {

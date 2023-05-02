@@ -14,6 +14,7 @@ import { useTabs } from "../../../lib/tabs/handleTabs";
 import Editor from "../../editors/richeditor";
 import { ConfirmDialog } from "../../misc/confirmDialog";
 import { AnnouncementPostingUI } from "./announcementPosting";
+import { TempAnnouncement } from "./tempAnnouncement";
 
 /**
  * editing announcements
@@ -25,11 +26,12 @@ export const Announcement = ({
 	classID,
 }: {
 	announcement: {
-		author: string;
-		content: Json;
 		id: string;
-		time: string | null;
+		author: string;
 		title: string | null;
+		content: Json;
+		time: string | null;
+		type: number;
 		users:
 			| {
 					avatar_url: string;
@@ -40,6 +42,24 @@ export const Announcement = ({
 					full_name: string;
 			  }[]
 			| null;
+		parent: {
+			author: string;
+			content: Json;
+			id: string;
+			time: string | null;
+			title: string | null;
+			users:
+				| {
+						avatar_url: string;
+						full_name: string;
+				  }
+				| {
+						avatar_url: string;
+						full_name: string;
+				  }[]
+				| null;
+			type: number;
+		} | null;
 	};
 	classID: string;
 }) => {
@@ -55,20 +75,33 @@ export const Announcement = ({
 	];
 	const [selected, setSelected] = useState(options[0]);
 	const [showEditing, setShowEditing] = useState(false);
+	const [showSharing, setShowSharing] = useState(false);
 	const [showRemoveFromGroup, setShowRemoveFromGroup] = useState(false);
 	const [showDeleteAnnouncement, setShowDeleteAnnouncement] = useState(false);
 	const [deleted, setDeleted] = useState(false);
+	console.log(announcement);
 	if (!deleted) {
 		if (showEditing) {
 			return (
 				<AnnouncementPostingUI
 					communityid={classID}
+					sharingInfo={null}
 					editingInfo={{
 						title: announcement.title!,
 						content: announcement.content,
 						time: announcement.time!,
+						setEditing: setShowEditing,
 					}}
-					setEditing={setShowEditing}
+				></AnnouncementPostingUI>
+			);
+		} else if (showSharing) {
+			return (
+				<AnnouncementPostingUI
+					communityid={classID}
+					sharingInfo={{
+						announcement: announcement,
+						setSharing: setShowSharing,
+					}}
 				></AnnouncementPostingUI>
 			);
 		}
@@ -121,6 +154,8 @@ export const Announcement = ({
 															setShowDeleteAnnouncement(true);
 														} else if (options.option == "Edit" && selected) {
 															setShowEditing(true);
+														} else if (options.option == "Share" && selected) {
+															setShowSharing(true);
 														}
 													}}
 													as="button"
@@ -172,6 +207,14 @@ export const Announcement = ({
 					initialState={announcement.content}
 					className="mt-0.5"
 				/>
+				{announcement.parent && (
+					<div>
+						<TempAnnouncement
+							announcement={announcement.parent}
+						></TempAnnouncement>
+						adfughlkafdkga
+					</div>
+				)}
 				{/* <div className="mt-4 flex items-center justify-between">
 				<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
 					<p className="ml-1.5 p-1">Insert response here</p>
