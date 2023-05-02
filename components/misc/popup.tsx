@@ -4,11 +4,12 @@ import { NextPage } from "next";
 import { Fragment } from "react";
 import { ReactNode } from "react";
 
-export const Popup: NextPage<{ open: boolean; closeMenu: () => void; children: ReactNode }> = ({
-	closeMenu,
-	open,
-	children
-}) => {
+export const Popup: NextPage<{
+	open: boolean;
+	closeMenu: () => void;
+	children: ReactNode;
+	small?: boolean;
+}> = ({ closeMenu, open, children, small = false }) => {
 	return (
 		<Transition appear show={open} as={Fragment}>
 			<Dialog open={open} onClose={closeMenu}>
@@ -31,7 +32,11 @@ export const Popup: NextPage<{ open: boolean; closeMenu: () => void; children: R
 							leaveTo="opacity-75 scale-95"
 							as={Fragment}
 						>
-							<Dialog.Panel className="relative flex w-full max-w-screen-md flex-col rounded-xl bg-white/75 p-4 shadow-md backdrop-blur-xl">
+							<Dialog.Panel
+								className={`relative flex w-full ${
+									small ? "max-w-screen-sm" : "max-w-screen-md"
+								} flex-col rounded-xl bg-white/75 p-4 shadow-md backdrop-blur-xl`}
+							>
 								{children}
 								<button
 									onClick={closeMenu}

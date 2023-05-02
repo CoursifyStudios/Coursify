@@ -6,6 +6,10 @@
 	@apply text-2xl font-bold;
 }
 
+.title-sm {
+	@apply text-xl font-semibold;
+}
+
 .graydient {
 	background: rgb(209, 213, 219);
 	background: linear-gradient(

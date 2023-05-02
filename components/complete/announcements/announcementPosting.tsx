@@ -6,6 +6,8 @@ import {
 	crossPostAnnouncements,
 	editAnnouncement,
 	shareAnnouncement,
+	TypeOfAnnouncements,
+	BasicAnnouncement,
 } from "../../../lib/db/announcements";
 import { getClassesForUserBasic } from "../../../lib/db/classes";
 import { Database, Json } from "../../../lib/db/database.types";
@@ -17,17 +19,16 @@ import Editor from "../../editors/richeditor";
 import { TempAnnouncement } from "./tempAnnouncement";
 import { Announcement } from ".";
 import { howLongAgo } from "../../../lib/misc/dates";
-
 export const AnnouncementPostingUI = ({
 	communityid,
-    announcements,
-    setAnnouncements,
+	announcements,
+	setAnnouncements,
 	sharingInfo,
 	editingInfo,
 }: {
 	communityid: string;
-    announcements: {};
-    setAnnouncements: {};
+	announcements: BasicAnnouncement[];
+	setAnnouncements: (value: BasicAnnouncement[]) => void;
 	sharingInfo?: {
 		announcement: {
 			author: string;
@@ -80,15 +81,6 @@ export const AnnouncementPostingUI = ({
 			class_id: string;
 			content: Json;
 			title: string;
-		}[]
-	>([]);
-	const [realAnnouncements, setRealAnnouncements] = useState<
-		{
-			author: string;
-			content: Json;
-			id: string;
-			time: string | null;
-			title: string | null;
 		}[]
 	>([]);
 	const user = useUser();
@@ -302,13 +294,20 @@ export const AnnouncementPostingUI = ({
 														announcement.title != dBReturn.data![0].title
 												)
 											);
-											setRealAnnouncements(
-												realAnnouncements.concat(
-													dBReturn.data!.find(
-														(announcement) =>
-															announcement.class_id == communityid
-													)!
-												)
+											setAnnouncements(
+												announcements.concat([
+													{
+														author: dBReturn.data![0].author,
+														class_id: communityid,
+														content: dBReturn.data![0].content,
+														id: dBReturn.data![0].id,
+														parent: null,
+														time: dBReturn.data![0].time,
+														title: dBReturn.data![0].title,
+														type: dBReturn.data![0].type,
+														users: dBReturn.data![0].users,
+													},
+												])
 											);
 											!sharingInfo &&
 												setChosenCommunities([
@@ -363,32 +362,6 @@ export const AnnouncementPostingUI = ({
 							key={i}
 							announcement={fakeAnnouncement}
 						></TempAnnouncement>
-					))}
-				{realAnnouncements.sort((a, b) => {
-					if (new Date(a.time!).getTime() > new Date(b.time!).getTime())
-						return -1;
-					if (new Date(a.time!).getTime() < new Date(b.time!).getTime())
-						return 1;
-					return 0;
-				}) &&
-					realAnnouncements.map((realAnnouncement) => (
-						<Announcement
-							key={realAnnouncement.id}
-							announcement={{
-								author: realAnnouncement.author,
-								content: realAnnouncement.content,
-								id: realAnnouncement.id,
-								parent: null,
-								time: realAnnouncement.time,
-								title: realAnnouncement.title,
-								users: {
-									avatar_url: user?.user_metadata.picture,
-									full_name: user?.user_metadata.name,
-								},
-								type: 0,
-							}}
-							classID={communityid}
-						></Announcement>
 					))}
 			</div>
 		</div>

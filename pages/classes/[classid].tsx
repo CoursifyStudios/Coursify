@@ -27,6 +27,10 @@ import { Announcement } from "../../components/complete/announcements";
 import { Button } from "../../components/misc/button";
 import { Member } from "../../components/complete/members";
 import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
+import {
+	TypeOfAnnouncements,
+	BasicAnnouncement,
+} from "../../lib/db/announcements";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -43,15 +47,8 @@ const Class: NextPage = () => {
 	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
 	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
 	const [assignmentCreationOpen, setAssignmentCreationOpen] = useState(false);
-	const [fakeAnnouncements, setFakeAnnouncements] = useState<
-		{
-			author: string;
-			class_id: string;
-			content: Json;
-			id: string;
-			time: string;
-			title: string;
-		}[]
+	const [extraAnnouncements, setExtraAnnouncements] = useState<
+		BasicAnnouncement[]
 	>([]);
 	const [fetchedClassId, setFetchedClassId] = useState("");
 
@@ -289,7 +286,11 @@ const Class: NextPage = () => {
 							<h2 className="title mb-3">Announcements</h2>
 							<div className="space-y-3">
 								{isTeacher && (
-									<AnnouncementPostingUI communityid={classid as string} />
+									<AnnouncementPostingUI
+										announcements={extraAnnouncements}
+										setAnnouncements={setExtraAnnouncements}
+										communityid={classid as string}
+									/>
 								)}
 
 								{typeof classid == "string" &&
@@ -318,22 +319,34 @@ const Class: NextPage = () => {
 													"string" && (
 													<Announcement
 														key={announcement.id}
-														// Because Supabase is dingus thinks parent could be an array
-														announcement={{
-															id: announcement.id,
-															author: announcement.author,
-															title: announcement.title,
-															content: announcement.content,
-															time: announcement.time,
-															type: announcement.type,
-															users: announcement.users,
-                                                            //@ts-ignore
-															parent: getDataOutArray(announcement.parent),
-														}}
+														announcement={announcement as TypeOfAnnouncements}
 														classID={classid}
+														announcements={extraAnnouncements}
+														setAnnouncements={setExtraAnnouncements}
 													></Announcement>
 												)
 										)}
+								{extraAnnouncements &&
+									extraAnnouncements.map(
+										(announcement) =>
+											announcement && (
+												<Announcement
+													key={announcement.id}
+													announcement={{
+														id: announcement.id,
+														author: announcement.author,
+														title: announcement.title,
+														content: announcement.content,
+														time: announcement.time,
+														type: announcement.type,
+														users: announcement.users,
+													}}
+													classID={classid as string}
+													announcements={extraAnnouncements}
+													setAnnouncements={setExtraAnnouncements}
+												></Announcement>
+											)
+									)}
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}>

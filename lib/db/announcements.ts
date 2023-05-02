@@ -26,7 +26,11 @@ export const crossPostAnnouncements = async (
 			class_id: community,
 		});
 	});
-	return await supabase.from("announcements").insert(announcements).select();
+	return await supabase.from("announcements").insert(announcements).select(`
+			*,
+			users (
+				id, full_name, avatar_url
+			)`);
 };
 
 export type crossPostingReturn = Awaited<
@@ -141,12 +145,36 @@ export enum AnnouncementType {
 	CROSSPOST = 2,
 }
 
-export type ParentType = {
+export type BasicAnnouncement = {
 	author: string;
+	class_id: string | null;
 	content: Json;
 	id: string;
+	parent: string | null;
 	time: string | null;
 	title: string | null;
+	type: number;
+	users:
+		| {
+				id: string;
+				full_name: string;
+				avatar_url: string;
+		  }
+		| {
+				id: string;
+				full_name: string;
+				avatar_url: string;
+		  }[]
+		| null;
+};
+
+export type TypeOfAnnouncements = {
+	id: string;
+	author: string;
+	title: string | null;
+	content: Json;
+	time: string | null;
+	type: number;
 	users:
 		| {
 				avatar_url: string;
@@ -157,5 +185,22 @@ export type ParentType = {
 				full_name: string;
 		  }[]
 		| null;
-	type: number;
+	parent?: {
+		author: string;
+		content: Json;
+		id: string;
+		time: string | null;
+		title: string | null;
+		users:
+			| {
+					avatar_url: string;
+					full_name: string;
+			  }
+			| {
+					avatar_url: string;
+					full_name: string;
+			  }[]
+			| null;
+		type: number;
+	} | null;
 };

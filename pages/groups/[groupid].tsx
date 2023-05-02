@@ -11,15 +11,19 @@ import { Announcement } from "../../components/complete/announcements";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { Database, Json } from "../../lib/db/database.types";
 import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
-import { ParentType } from "../../lib/db/announcements";
+import {
+	TypeOfAnnouncements,
+	BasicAnnouncement,
+} from "../../lib/db/announcements";
 
 const Group: NextPage = () => {
 	const router = useRouter();
 	const { groupid } = router.query;
 	const supabase = useSupabaseClient<Database>();
 	const [groupData, setGroupData] = useState<GroupResponse>();
-    const [extraAnnouncements, setExtraAnnouncements] = useState<>();
-	};
+	const [extraAnnouncements, setExtraAnnouncements] = useState<
+		BasicAnnouncement[]
+	>([]);
 	const user = useUser();
 	useEffect(() => {
 		(async () => {
@@ -107,7 +111,11 @@ const Group: NextPage = () => {
 									getDataInArray(groupData.data.users).some(
 										(userInGroup) => userInGroup.id == user.id
 									) && (
-										<AnnouncementPostingUI communityid={groupid as string} />
+										<AnnouncementPostingUI
+											communityid={groupid as string}
+											announcements={extraAnnouncements}
+											setAnnouncements={setExtraAnnouncements}
+										/>
 									)}
 								{groupData &&
 									groupid &&
@@ -131,21 +139,33 @@ const Group: NextPage = () => {
 										.map((announcement) => (
 											<Announcement
 												key={announcement.id}
-												announcement={{
-													id: announcement.id,
-													author: announcement.author,
-													title: announcement.title,
-													content: announcement.content,
-													time: announcement.time,
-													type: announcement.type,
-													users: announcement.users,
-													parent: getDataOutArray(
-														announcement.parent
-													) as ParentType | null,
-												}}
+												announcement={announcement as TypeOfAnnouncements}
 												classID={groupid}
+												announcements={extraAnnouncements}
+												setAnnouncements={setExtraAnnouncements}
 											></Announcement>
 										))}
+								{extraAnnouncements &&
+									extraAnnouncements.map(
+										(announcement) =>
+											announcement && (
+												<Announcement
+													key={announcement.id}
+													announcement={{
+														id: announcement.id,
+														author: announcement.author,
+														title: announcement.title,
+														content: announcement.content,
+														time: announcement.time,
+														type: announcement.type,
+														users: announcement.users,
+													}}
+													classID={groupid as string}
+													announcements={extraAnnouncements}
+													setAnnouncements={setExtraAnnouncements}
+												></Announcement>
+											)
+									)}
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}></Tab.Panel>
