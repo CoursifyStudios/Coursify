@@ -9,7 +9,7 @@ import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
 import { Member } from "../../components/complete/members";
 import { Announcement } from "../../components/complete/announcements";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { Database } from "../../lib/db/database.types";
+import { Database, Json } from "../../lib/db/database.types";
 import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
 import { ParentType } from "../../lib/db/announcements";
 
@@ -18,6 +18,8 @@ const Group: NextPage = () => {
 	const { groupid } = router.query;
 	const supabase = useSupabaseClient<Database>();
 	const [groupData, setGroupData] = useState<GroupResponse>();
+    const [extraAnnouncements, setExtraAnnouncements] = useState<>();
+	};
 	const user = useUser();
 	useEffect(() => {
 		(async () => {

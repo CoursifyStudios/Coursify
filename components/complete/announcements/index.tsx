@@ -1,5 +1,5 @@
 import { Listbox, Transition } from "@headlessui/react";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
+import { EllipsisVerticalIcon, PencilIcon, ShareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { Fragment, useState } from "react";
@@ -15,6 +15,7 @@ import Editor from "../../editors/richeditor";
 import { ConfirmDialog } from "../../misc/confirmDialog";
 import { AnnouncementPostingUI } from "./announcementPosting";
 import { TempAnnouncement } from "./tempAnnouncement";
+import { Delete } from "./delete";
 
 /**
  * editing announcements
@@ -68,16 +69,15 @@ export const Announcement = ({
 	const { newTab } = useTabs();
 	//add icons to these somehow...
 	const options = [
-		{ option: "Share" }, //some sort of share icon
-		{ option: "Edit" }, //Pencil Icon
-		{ option: "Delete From This Group" }, //trashcan icon
-		{ option: "Delete From All Groups" }, //trashcan icon
+		{ option: "Share", icon: <ShareIcon></ShareIcon> }, //some sort of share icon
+		{ option: "Edit", icon: <PencilIcon></PencilIcon> }, //Pencil Icon
+		{ option: "Delete", icon: <TrashIcon></TrashIcon> }, //trashcan icon
+		//{ option: "Delete From All Groups" }, //trashcan icon
 	];
 	const [selected, setSelected] = useState(options[0]);
 	const [showEditing, setShowEditing] = useState(false);
 	const [showSharing, setShowSharing] = useState(false);
-	const [showRemoveFromGroup, setShowRemoveFromGroup] = useState(false);
-	const [showDeleteAnnouncement, setShowDeleteAnnouncement] = useState(false);
+	const [deleteOpen, setDeleteOpen] = useState(false)
 	const [deleted, setDeleted] = useState(false);
 	if (!deleted) {
 		if (showEditing) {
@@ -105,6 +105,8 @@ export const Announcement = ({
 			);
 		}
 		return (
+			<>
+				<Delete />
 			<div className="rounded-xl bg-gray-200 p-4">
 				<div className="flex items-center justify-between">
 					<h2 className="text-xl font-semibold">{announcement.title}</h2>
@@ -141,29 +143,30 @@ export const Announcement = ({
 													}
 													value={options}
 													onClick={() => {
-														if (
-															options.option == "Delete From This Group" &&
-															selected
-														) {
-															setShowRemoveFromGroup(true);
-														} else if (
-															options.option == "Delete From All Groups" &&
-															selected
-														) {
-															setShowDeleteAnnouncement(true);
-														} else if (options.option == "Edit" && selected) {
+														switch (options.option) {
+															case "Share": 
+																setShowSharing(true);
+																break;
+															case "Edit": 
+																setShowEditing(true);
+																break;
+															case default:
+																
+														}
+														if (options.option == "Edit" && selected) {
 															setShowEditing(true);
 														} else if (options.option == "Share" && selected) {
 															setShowSharing(true);
-														}
+														} else
 													}}
 													as="button"
 												>
 													{({ selected }) => {
 														return (
 															<>
-																<span className="font-semibold">
+																<span className="font-semibold flex justify-between">
 																	{options.option}
+                                                                    {options.icon}
 																</span>
 															</>
 														);
@@ -251,6 +254,7 @@ export const Announcement = ({
 					text="Are you sure you would like to remove this announcement from all groups? This action cannot be undone."
 				></ConfirmDialog>
 			</div>
+			</>
 		);
 	} else {
 		return null;

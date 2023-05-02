@@ -20,10 +20,14 @@ import { howLongAgo } from "../../../lib/misc/dates";
 
 export const AnnouncementPostingUI = ({
 	communityid,
+    announcements,
+    setAnnouncements,
 	sharingInfo,
 	editingInfo,
 }: {
 	communityid: string;
+    announcements: {};
+    setAnnouncements: {};
 	sharingInfo?: {
 		announcement: {
 			author: string;
