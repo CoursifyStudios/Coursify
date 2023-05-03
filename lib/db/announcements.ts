@@ -26,11 +26,26 @@ export const crossPostAnnouncements = async (
 			class_id: community,
 		});
 	});
-	return await supabase.from("announcements").insert(announcements).select(`
+	return await supabase
+        .from("announcements")
+        .insert(announcements)
+        .select(`
 			*,
 			users (
 				id, full_name, avatar_url
-			)`);
+			),
+            parent (
+                id,
+                author,
+                title,
+                content,
+                time,
+                class_id,
+                type,
+                users (
+                    full_name, avatar_url
+                )
+            )`);
 };
 
 export type crossPostingReturn = Awaited<
@@ -82,7 +97,23 @@ export const editAnnouncement = async (
 		.eq("title", oldAnnouncement.title)
 		.gte("time", earlyDate.toISOString())
 		.lte("time", laterDate.toISOString())
-		.select();
+		.select(`
+			*,
+			users (
+				id, full_name, avatar_url
+			),
+            parent (
+                id,
+                author,
+                title,
+                content,
+                time,
+                class_id,
+                type,
+                users (
+                    full_name, avatar_url
+                )
+            )`);
 };
 
 // A bit like the deleting function above, but this one only
@@ -126,17 +157,42 @@ export const shareAnnouncement = async (
 			type: AnnouncementType.CROSSPOST,
 		});
 	});
-	return await supabase.from("announcements").insert(announcements).select();
-	// return await supabase
-	// 	.from("announcements")
-	// 	.insert({
-	// 		author: newAnnouncement.author,
-	// 		title: newAnnouncement.title,
-	// 		content: newAnnouncement.content,
-	// 		class_id: newCommunity,
-	// 		parent: announcementID,
-	// 		type: AnnouncementType.CROSSPOST,
-	// 	});
+	return await supabase
+        .from("announcements")
+        .insert(announcements)
+        .select(`
+        *,
+        users (
+            id, full_name, avatar_url
+        ),
+        parent (
+            id,
+            author,
+            title,
+            content,
+            time,
+            class_id,
+            type,
+            users (
+                full_name, avatar_url
+            )
+        )`);
+};
+
+export const postComment = async (
+	supabase: SupabaseClient<Database>,
+	author: string,
+	announcementID: string,
+	content: string
+) => {
+	return await supabase
+		.from("comments")
+		.insert({
+			content: content,
+			author: author,
+			announcement_id: announcementID,
+		})
+		.select();
 };
 
 export enum AnnouncementType {

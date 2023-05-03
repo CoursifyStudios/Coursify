@@ -6,13 +6,11 @@ import { Fragment, useEffect, useState } from "react";
 import { Tab } from "@headlessui/react";
 import { getClass, ClassResponse, updateClass } from "../../lib/db/classes";
 import { Database, Json } from "../../lib/db/database.types";
-import exampleClassImg from "../../public/example-img.jpg";
 import CircleCounter from "../../components/misc/circleCounter";
 import Link from "next/link";
 import { AssignmentPreview } from "../../components/complete/assignments";
-import { ColoredPill, CopiedHover } from "../../components/misc/pill";
+import { ColoredPill } from "../../components/misc/pill";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { useTabs } from "../../lib/tabs/handleTabs";
 import Editor from "../../components/editors/richeditor";
 import { EditorState } from "lexical";
 import {
@@ -29,7 +27,6 @@ import { Member } from "../../components/complete/members";
 import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
 import {
 	TypeOfAnnouncements,
-	BasicAnnouncement,
 } from "../../lib/db/announcements";
 
 const Class: NextPage = () => {
@@ -40,7 +37,6 @@ const Class: NextPage = () => {
 	const [data, setData] = useState<ClassResponse>();
 	const [grade, setGrade] = useState<number>();
 	const [isTeacher, setIsTeacher] = useState<boolean>();
-	const { newTab } = useTabs();
 	const [editable, setEditable] = useState(false);
 	const [editorState, setEditorState] = useState<EditorState>();
 	const [edited, setEdited] = useState(false);
@@ -48,7 +44,7 @@ const Class: NextPage = () => {
 	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
 	const [assignmentCreationOpen, setAssignmentCreationOpen] = useState(false);
 	const [extraAnnouncements, setExtraAnnouncements] = useState<
-		BasicAnnouncement[]
+		TypeOfAnnouncements[]
 	>([]);
 	const [fetchedClassId, setFetchedClassId] = useState("");
 
@@ -292,11 +288,32 @@ const Class: NextPage = () => {
 										communityid={classid as string}
 									/>
 								)}
-
+								{extraAnnouncements &&
+									extraAnnouncements.reverse().map(
+										(announcement) =>
+											announcement && (
+												<Announcement
+													key={announcement.id}
+													announcement={{
+														id: announcement.id,
+														author: announcement.author,
+														title: announcement.title,
+														content: announcement.content,
+														time: announcement.time,
+														type: announcement.type,
+														users: announcement.users,
+													}}
+													classID={classid as string}
+													announcements={extraAnnouncements}
+													setAnnouncements={setExtraAnnouncements}
+												></Announcement>
+											)
+									)}
 								{typeof classid == "string" &&
 									data.data &&
 									data.data.announcements && //change below when I get actual types
 									getDataInArray(data.data.announcements)
+                                        
 										.sort((a, b) => {
 											if (
 												new Date(a.time!).getTime() >
@@ -326,27 +343,6 @@ const Class: NextPage = () => {
 													></Announcement>
 												)
 										)}
-								{extraAnnouncements &&
-									extraAnnouncements.map(
-										(announcement) =>
-											announcement && (
-												<Announcement
-													key={announcement.id}
-													announcement={{
-														id: announcement.id,
-														author: announcement.author,
-														title: announcement.title,
-														content: announcement.content,
-														time: announcement.time,
-														type: announcement.type,
-														users: announcement.users,
-													}}
-													classID={classid as string}
-													announcements={extraAnnouncements}
-													setAnnouncements={setExtraAnnouncements}
-												></Announcement>
-											)
-									)}
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}>
@@ -426,3 +422,4 @@ const Class: NextPage = () => {
 };
 
 export default Class;
+

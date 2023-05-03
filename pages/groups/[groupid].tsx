@@ -5,15 +5,14 @@ import { ColoredPill } from "../../components/misc/pill";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { getGroup, GroupResponse } from "../../lib/db/groups";
-import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
+import { getDataInArray } from "../../lib/misc/dataOutArray";
 import { Member } from "../../components/complete/members";
 import { Announcement } from "../../components/complete/announcements";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { Database, Json } from "../../lib/db/database.types";
+import { Database } from "../../lib/db/database.types";
 import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
 import {
-	TypeOfAnnouncements,
-	BasicAnnouncement,
+	TypeOfAnnouncements
 } from "../../lib/db/announcements";
 
 const Group: NextPage = () => {
@@ -22,7 +21,7 @@ const Group: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
 	const [groupData, setGroupData] = useState<GroupResponse>();
 	const [extraAnnouncements, setExtraAnnouncements] = useState<
-		BasicAnnouncement[]
+		TypeOfAnnouncements[]
 	>([]);
 	const user = useUser();
 	useEffect(() => {
@@ -117,6 +116,27 @@ const Group: NextPage = () => {
 											setAnnouncements={setExtraAnnouncements}
 										/>
 									)}
+								{extraAnnouncements &&
+									extraAnnouncements.reverse().map(
+										(announcement) =>
+											announcement && (
+												<Announcement
+													key={announcement.id}
+													announcement={{
+														id: announcement.id,
+														author: announcement.author,
+														title: announcement.title,
+														content: announcement.content,
+														time: announcement.time,
+														type: announcement.type,
+														users: announcement.users,
+													}}
+													classID={groupid as string}
+													announcements={extraAnnouncements}
+													setAnnouncements={setExtraAnnouncements}
+												></Announcement>
+											)
+									)}
 								{groupData &&
 									groupid &&
 									typeof groupid == "string" && //really should not need to check this as it is checked above, but anything to make ts happy ig
@@ -145,27 +165,6 @@ const Group: NextPage = () => {
 												setAnnouncements={setExtraAnnouncements}
 											></Announcement>
 										))}
-								{extraAnnouncements &&
-									extraAnnouncements.map(
-										(announcement) =>
-											announcement && (
-												<Announcement
-													key={announcement.id}
-													announcement={{
-														id: announcement.id,
-														author: announcement.author,
-														title: announcement.title,
-														content: announcement.content,
-														time: announcement.time,
-														type: announcement.type,
-														users: announcement.users,
-													}}
-													classID={groupid as string}
-													announcements={extraAnnouncements}
-													setAnnouncements={setExtraAnnouncements}
-												></Announcement>
-											)
-									)}
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}></Tab.Panel>
@@ -216,3 +215,4 @@ const Event = ({ title, time }: { title: string; time: string }) => {
 };
 
 export default Group;
+

@@ -9,18 +9,17 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { Fragment, useState } from "react";
 import {
-	TypeOfAnnouncements,
-	BasicAnnouncement,
+	TypeOfAnnouncements
 } from "../../../lib/db/announcements";
-import { Database, Json } from "../../../lib/db/database.types";
+import { Database } from "../../../lib/db/database.types";
 import { getDataOutArray } from "../../../lib/misc/dataOutArray";
 import { howLongAgo } from "../../../lib/misc/dates";
 import { useTabs } from "../../../lib/tabs/handleTabs";
 import Editor from "../../editors/richeditor";
-import { ConfirmDialog } from "../../misc/confirmDialog";
 import { AnnouncementPostingUI } from "./announcementPosting";
 import { TempAnnouncement } from "./tempAnnouncement";
 import { Delete } from "./delete";
+import { Commenting } from "./commenting";
 
 /**
  * editing announcements
@@ -35,8 +34,8 @@ export const Announcement = ({
 }: {
 	announcement: TypeOfAnnouncements;
 	classID: string;
-	announcements: BasicAnnouncement[];
-	setAnnouncements: (value: BasicAnnouncement[]) => void;
+	announcements: TypeOfAnnouncements[];
+	setAnnouncements: (value: TypeOfAnnouncements[]) => void;
 }) => {
 	const supabase = useSupabaseClient<Database>();
 	const user = useUser();
@@ -196,15 +195,10 @@ export const Announcement = ({
 							></TempAnnouncement>
 						</div>
 					)}
-					{/* LUKAS DO COMMENT UI RIGHT HERE */}
-					{/* <div className="mt-4 flex items-center justify-between">
-				<div className="mr-24 flex-grow items-center rounded-full bg-gray-300 p-1">
-					<p className="ml-1.5 p-1">Insert response here</p>
-				</div>
-				<div className="rounded-full bg-gray-300 p-2">
-					<FaceSmileIcon className="h-6 w-6" />
-				</div>
-			</div> */}
+					<Commenting
+						communityid={classID}
+						announcementid={announcement.id}
+					></Commenting>
 				</div>
 			</>
 		);
@@ -212,3 +206,4 @@ export const Announcement = ({
 		return null;
 	}
 };
+
