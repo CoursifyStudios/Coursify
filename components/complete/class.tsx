@@ -52,7 +52,7 @@ export const Class: NextPage<{
 						{classData.room && (
 							<ColoredPill
 								//color="gray"
-								className="-mb-0.5 -mt-1 !bg-neutral-500/20 text-xs !text-gray-300 backdrop-blur-xl"
+								className="-mb-0.5 -mt-1 !bg-neutral-500/20 text-xs !text-gray-300 backdrop-blur-xl dark:!text-gray-100"
 							>
 								Rm. {classData.room}
 							</ColoredPill>

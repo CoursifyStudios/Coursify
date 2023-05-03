@@ -108,6 +108,7 @@ export default function Home() {
 			<div className="container mx-auto mb-10 flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words px-4 sm:mt-10 md:px-8 xl:px-0">
 				<div className="flex w-full flex-col">
 					<div className="flex flex-col sm:flex-col-reverse lg:flex-row  ">
+						{/* Classes UI */}
 						<section id="Classes" className="mb-12">
 							<div className="flex items-end md:mt-8 lg:mt-0">
 								<h2 className="title">Classes</h2>

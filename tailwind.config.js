@@ -1,13 +1,56 @@
+const themeSwapper = require("tailwindcss-theme-swapper");
+
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-	content: [
-		"./app/**/*.{js,ts,jsx,tsx}", // Note the addition of the `app` directory.
-		"./pages/**/*.{js,ts,jsx,tsx}",
-		"./components/**/*.{js,ts,jsx,tsx}",
-		"./lib/**/*.{js,ts,jsx,tsx}",
-	],
-	theme: {
-		extend: {},
+export const content = [
+	"./app/**/*.{js,ts,jsx,tsx}",
+	"./pages/**/*.{js,ts,jsx,tsx}",
+	"./components/**/*.{js,ts,jsx,tsx}",
+	"./lib/**/*.{js,ts,jsx,tsx}",
+];
+
+export const darkMode = "class";
+
+const light = {
+	colors: {
+		white: "#FFFFFF",
+		backdrop: "white",
+		gray: {
+			200: "#e5e7eb",
+			300: "#27272a",
+			800: "#e4e4e7",
+		},
 	},
-	plugins: [require("@tailwindcss/typography"), require("@tailwindcss/forms")],
 };
+
+const dark = {
+	colors: {
+		white: "#00000",
+		backdrop: "black",
+		gray: {
+			200: "#18181b",
+			300: "#27272a",
+			800: "#e4e4e7",
+		},
+	},
+};
+
+const themes = {
+	themes: [
+		{
+			name: "base",
+			selectors: [":root"],
+			theme: light,
+		},
+		{
+			name: "dark",
+			selectors: [".dark"],
+			theme: dark,
+		},
+	],
+};
+
+export const plugins = [
+	require("@tailwindcss/typography"),
+	require("@tailwindcss/forms"),
+	themeSwapper(themes),
+];
