@@ -1,8 +1,57 @@
 import { Field, Form, Formik } from "formik";
-import { postComment } from "../../../lib/db/announcements";
+import { postComment, CommentType } from "../../../lib/db/announcements";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import { Button } from "../../misc/button";
+import Link from "next/link";
+import { useTabs } from "../../../lib/tabs/handleTabs";
+
+export const Comment = ({
+	id,
+	created_at,
+	content,
+	author,
+}: {
+	id: string;
+	created_at: string;
+	content: string;
+	author: {
+		id: string;
+		full_name: string;
+		avatar_url: string;
+	};
+}) => {
+	const { newTab } = useTabs();
+	return (
+		<div>
+			{/* <div className="flex items-center pt-1">
+        <Link
+            href={"/profile/" + author}
+            className="inline-flex shrink-0 items-center rounded-full px-1 py-0.5 hover:bg-gray-300"
+            onClick={() =>
+                newTab(
+                    "/profile/" + announcement.author,
+                    getDataOutArray(announcement.users!).full_name.split(" ")[0] +
+                        "'s Profile"
+                )
+            }
+        >
+            <img
+                src={getDataOutArray(announcement.users!).avatar_url}
+                alt=""
+                className="h-5 w-5 rounded-full"
+            />
+            <p className="ml-1.5 mr-1 font-semibold text-neutral-700">
+                {getDataOutArray(announcement.users!).full_name}
+            </p>
+        </Link>
+        <p className="pl-1.5 text-gray-600">
+            {howLongAgo(announcement.time!)}
+        </p>
+    </div> */}
+		</div>
+	);
+};
 
 export const Commenting = ({
 	communityid,
@@ -30,12 +79,18 @@ export const Commenting = ({
 	return (
 		<div className="rounded-lg bg-gray-300 p-1">
 			{user && (
+				//Find something else to use than formik maybe, because this stupid one-line thing is awful
 				<Formik
 					initialValues={{
 						content: "",
 					}}
 					onSubmit={async (formData) => {
-						postComment(supabase, user.id, announcementid, formData.content);
+						const test = await postComment(
+							supabase,
+							user.id,
+							announcementid,
+							formData.content
+						);
 					}}
 				>
 					<Form>
@@ -50,7 +105,7 @@ export const Commenting = ({
 				</Formik>
 			)}
 
-			<div className="flex justify-end gap-2 m-1">
+			<div className="m-1 flex justify-end gap-2">
 				<Button
 					className="brightness-hover transition hover:bg-red-300"
 					onClick={() => setShowCommenting(false)}
@@ -64,4 +119,3 @@ export const Commenting = ({
 		</div>
 	);
 };
-

@@ -85,7 +85,7 @@ export const AnnouncementPostingUI = ({
 			title: string;
 		}[]
 	>([]);
-	const [showSharing, setShowSharing] = useState(true);
+	const [showSharing, setShowSharing] = useState(false);
 	const user = useUser();
 
 	const FormObserver: React.FC = () => {
@@ -246,6 +246,7 @@ export const AnnouncementPostingUI = ({
 
 										// If the announcement is being shared, perform the following behaviors:
 										if (sharingInfo && chosenCommunities.length >= 1) {
+											setShowSharing(true);
 											// post it to the DB
 											const sharedAnnouncement = await shareAnnouncement(
 												supabase,
@@ -257,6 +258,7 @@ export const AnnouncementPostingUI = ({
 												},
 												chosenCommunities.map(({ id }) => id)
 											);
+											setShowSharing(false);
 											sharingInfo.setSharing(false);
 
 											// here we check if we are editing the announcement, and either the title or content
@@ -390,6 +392,7 @@ export const AnnouncementPostingUI = ({
 						></TempAnnouncement>
 					))}
 				{showSharing && (
+					//Lukas clean this up!
 					<div className="flex h-32 content-center rounded-xl bg-gray-200 p-4">
 						<div className="grid grid-cols-2">
 							<LoadingSmall></LoadingSmall>Sharing...
@@ -405,4 +408,3 @@ export const AnnouncementPostingUI = ({
 		return true;
 	}
 };
-

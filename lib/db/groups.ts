@@ -61,6 +61,15 @@ export const getGroup = async (
                 users (
                     id, full_name, avatar_url
                 )
+            ),
+            comments (
+                id,
+                created_at,
+                content,
+                announcement_id,
+                author (
+                    id, full_name, avatar_url
+                )
             )
         ),
         class_users (

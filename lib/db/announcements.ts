@@ -26,10 +26,7 @@ export const crossPostAnnouncements = async (
 			class_id: community,
 		});
 	});
-	return await supabase
-        .from("announcements")
-        .insert(announcements)
-        .select(`
+	return await supabase.from("announcements").insert(announcements).select(`
 			*,
 			users (
 				id, full_name, avatar_url
@@ -96,8 +93,7 @@ export const editAnnouncement = async (
 		.eq("author", oldAnnouncement.author)
 		.eq("title", oldAnnouncement.title)
 		.gte("time", earlyDate.toISOString())
-		.lte("time", laterDate.toISOString())
-		.select(`
+		.lte("time", laterDate.toISOString()).select(`
 			*,
 			users (
 				id, full_name, avatar_url
@@ -157,10 +153,7 @@ export const shareAnnouncement = async (
 			type: AnnouncementType.CROSSPOST,
 		});
 	});
-	return await supabase
-        .from("announcements")
-        .insert(announcements)
-        .select(`
+	return await supabase.from("announcements").insert(announcements).select(`
         *,
         users (
             id, full_name, avatar_url
@@ -194,6 +187,8 @@ export const postComment = async (
 		})
 		.select();
 };
+
+export type CommentType = Awaited<ReturnType<typeof postComment>>;
 
 export enum AnnouncementType {
 	ANNOUNCMENT = 0,
@@ -259,4 +254,15 @@ export type TypeOfAnnouncements = {
 			| null;
 		type: number;
 	} | null;
+	comments?: {
+		announcement_id: string;
+		author: {
+            id: string;
+            full_name: string;
+            avatar_url: string;
+        };
+		content: string | null;
+		created_at: string | null;
+		id: string;
+	}[];
 };

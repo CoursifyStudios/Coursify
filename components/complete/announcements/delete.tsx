@@ -52,8 +52,8 @@ export const Delete: NextPage<{
 		<Popup closeMenu={() => setOpen(false)} open={open} small={true}>
 			<h2 className="title-sm">Delete Announcement</h2>
 			<div className="mb-4 mt-2">
-				Are you sure you want to delete this announcement? This action cannot be undone.
-                To delete announcement from all groups, select Delete All.
+				Are you sure you want to delete this announcement? This action cannot be
+				undone. To delete announcement from all groups, select Delete All.
 			</div>
 			{error && (
 				<div className="font-medium">

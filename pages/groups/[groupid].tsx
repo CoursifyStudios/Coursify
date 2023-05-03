@@ -11,9 +11,7 @@ import { Announcement } from "../../components/complete/announcements";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { Database } from "../../lib/db/database.types";
 import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
-import {
-	TypeOfAnnouncements
-} from "../../lib/db/announcements";
+import { TypeOfAnnouncements } from "../../lib/db/announcements";
 
 const Group: NextPage = () => {
 	const router = useRouter();
@@ -215,4 +213,3 @@ const Event = ({ title, time }: { title: string; time: string }) => {
 };
 
 export default Group;
-

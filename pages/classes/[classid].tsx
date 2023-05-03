@@ -25,9 +25,7 @@ import { Announcement } from "../../components/complete/announcements";
 import { Button } from "../../components/misc/button";
 import { Member } from "../../components/complete/members";
 import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
-import {
-	TypeOfAnnouncements,
-} from "../../lib/db/announcements";
+import { TypeOfAnnouncements } from "../../lib/db/announcements";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -313,7 +311,6 @@ const Class: NextPage = () => {
 									data.data &&
 									data.data.announcements && //change below when I get actual types
 									getDataInArray(data.data.announcements)
-                                        
 										.sort((a, b) => {
 											if (
 												new Date(a.time!).getTime() >
@@ -422,4 +419,3 @@ const Class: NextPage = () => {
 };
 
 export default Class;
-

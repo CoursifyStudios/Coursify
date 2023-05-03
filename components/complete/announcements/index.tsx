@@ -8,9 +8,7 @@ import {
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { Fragment, useState } from "react";
-import {
-	TypeOfAnnouncements
-} from "../../../lib/db/announcements";
+import { TypeOfAnnouncements } from "../../../lib/db/announcements";
 import { Database } from "../../../lib/db/database.types";
 import { getDataOutArray } from "../../../lib/misc/dataOutArray";
 import { howLongAgo } from "../../../lib/misc/dates";
@@ -206,4 +204,3 @@ export const Announcement = ({
 		return null;
 	}
 };
-

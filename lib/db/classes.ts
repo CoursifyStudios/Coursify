@@ -81,6 +81,15 @@ export const getClass = async (
                 users (
                     full_name, avatar_url
                 )
+            ),
+            comments (
+                id,
+                created_at,
+                content,
+                announcement_id,
+                author (
+                    id, full_name, avatar_url
+                )
             )
         ),
 		assignments (
@@ -95,6 +104,7 @@ export const getClass = async (
 	`
 		)
 		.eq("id", classid)
+		.limit(3, { foreignTable: "comments" })
 		.limit(5, { foreignTable: "assignments" })
 		.order("due_date", { foreignTable: "assignments", ascending: true })
 		.single();
