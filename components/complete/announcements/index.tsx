@@ -17,7 +17,7 @@ import Editor from "../../editors/richeditor";
 import { AnnouncementPostingUI } from "./announcementPosting";
 import { TempAnnouncement } from "./tempAnnouncement";
 import { Delete } from "./delete";
-import { Commenting } from "./commenting";
+import { Comment, Commenting } from "./commenting";
 
 /**
  * editing announcements
@@ -27,11 +27,13 @@ import { Commenting } from "./commenting";
 export const Announcement = ({
 	announcement,
 	classID,
+	comments,
 	announcements,
 	setAnnouncements,
 }: {
 	announcement: TypeOfAnnouncements;
 	classID: string;
+	comments: TypeOfAnnouncements[];
 	announcements: TypeOfAnnouncements[];
 	setAnnouncements: (value: TypeOfAnnouncements[]) => void;
 }) => {
@@ -197,6 +199,19 @@ export const Announcement = ({
 						communityid={classID}
 						announcementid={announcement.id}
 					></Commenting>
+					<div className="ml-2 space-y-1">
+						{comments &&
+							comments.map((comment) => (
+								<Comment
+									id={comment.id}
+									author={comment.author}
+									time={howLongAgo(comment.time!)}
+									// THIS IS INTENTIONAL, COMMENTS ARE PLAIN TEXT AND THUS USE THE TITLE FIELD FOR CONTENT
+									content={comment.title!}
+									users={getDataOutArray(comment.users)!}
+								></Comment>
+							))}
+					</div>
 				</div>
 			</>
 		);

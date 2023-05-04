@@ -175,17 +175,22 @@ export const shareAnnouncement = async (
 export const postComment = async (
 	supabase: SupabaseClient<Database>,
 	author: string,
+	classID: string,
 	announcementID: string,
 	content: string
 ) => {
 	return await supabase
-		.from("comments")
+		.from("announcements")
 		.insert({
-			content: content,
 			author: author,
-			announcement_id: announcementID,
+			title: content, //using title value for comments
+			content: null,
+			class_id: classID,
+			parent: announcementID,
+			type: AnnouncementType.COMMENT,
 		})
-		.select();
+		.select()
+		.single();
 };
 
 export type CommentType = Awaited<ReturnType<typeof postComment>>;
@@ -194,6 +199,7 @@ export enum AnnouncementType {
 	ANNOUNCMENT = 0,
 	COMMENT = 1,
 	CROSSPOST = 2,
+	REPLY = 3,
 }
 
 export type BasicAnnouncement = {

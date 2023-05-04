@@ -11,7 +11,10 @@ import { Announcement } from "../../components/complete/announcements";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { Database } from "../../lib/db/database.types";
 import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
-import { TypeOfAnnouncements } from "../../lib/db/announcements";
+import {
+	AnnouncementType,
+	TypeOfAnnouncements,
+} from "../../lib/db/announcements";
 
 const Group: NextPage = () => {
 	const router = useRouter();
@@ -105,6 +108,7 @@ const Group: NextPage = () => {
 									groupData &&
 									groupData.data &&
 									groupData.data.users &&
+									// Checks that user is in group, only hten show posting UI
 									getDataInArray(groupData.data.users).some(
 										(userInGroup) => userInGroup.id == user.id
 									) && (
@@ -114,27 +118,32 @@ const Group: NextPage = () => {
 											setAnnouncements={setExtraAnnouncements}
 										/>
 									)}
-								{extraAnnouncements &&
-									extraAnnouncements.reverse().map(
-										(announcement) =>
-											announcement && (
-												<Announcement
-													key={announcement.id}
-													announcement={{
-														id: announcement.id,
-														author: announcement.author,
-														title: announcement.title,
-														content: announcement.content,
-														time: announcement.time,
-														type: announcement.type,
-														users: announcement.users,
-													}}
-													classID={groupid as string}
-													announcements={extraAnnouncements}
-													setAnnouncements={setExtraAnnouncements}
-												></Announcement>
-											)
-									)}
+								{extraAnnouncements.reverse().map(
+									(announcement) =>
+										announcement && (
+											<Announcement
+												key={announcement.id}
+												announcement={{
+													id: announcement.id,
+													author: announcement.author,
+													title: announcement.title,
+													content: announcement.content,
+													time: announcement.time,
+													type: announcement.type,
+													users: announcement.users,
+												}}
+												classID={groupid as string}
+												comments={
+													getDataInArray(groupData?.data?.announcements).filter(
+														(possibleComment) =>
+															possibleComment?.type == AnnouncementType.COMMENT
+													) as TypeOfAnnouncements[]
+												}
+												announcements={extraAnnouncements}
+												setAnnouncements={setExtraAnnouncements}
+											></Announcement>
+										)
+								)}
 								{groupData &&
 									groupid &&
 									typeof groupid == "string" && //really should not need to check this as it is checked above, but anything to make ts happy ig
@@ -154,15 +163,28 @@ const Group: NextPage = () => {
 												return 1;
 											return 0;
 										})
-										.map((announcement) => (
-											<Announcement
-												key={announcement.id}
-												announcement={announcement as TypeOfAnnouncements}
-												classID={groupid}
-												announcements={extraAnnouncements}
-												setAnnouncements={setExtraAnnouncements}
-											></Announcement>
-										))}
+										.map(
+											(announcement) =>
+												(announcement.type == AnnouncementType.ANNOUNCMENT ||
+													announcement.type == AnnouncementType.CROSSPOST) && (
+													<Announcement
+														key={announcement.id}
+														announcement={announcement as TypeOfAnnouncements}
+														comments={
+															getDataInArray(
+																groupData.data.announcements
+															).filter(
+																(possibleComment) =>
+																	possibleComment?.type ==
+																	AnnouncementType.COMMENT
+															) as TypeOfAnnouncements[]
+														}
+														classID={groupid}
+														announcements={extraAnnouncements}
+														setAnnouncements={setExtraAnnouncements}
+													></Announcement>
+												)
+										)}
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}></Tab.Panel>

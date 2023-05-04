@@ -25,7 +25,10 @@ import { Announcement } from "../../components/complete/announcements";
 import { Button } from "../../components/misc/button";
 import { Member } from "../../components/complete/members";
 import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
-import { TypeOfAnnouncements } from "../../lib/db/announcements";
+import {
+	AnnouncementType,
+	TypeOfAnnouncements,
+} from "../../lib/db/announcements";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -299,27 +302,32 @@ const Class: NextPage = () => {
 										communityid={classid as string}
 									/>
 								)}
-								{extraAnnouncements &&
-									extraAnnouncements.reverse().map(
-										(announcement) =>
-											announcement && (
-												<Announcement
-													key={announcement.id}
-													announcement={{
-														id: announcement.id,
-														author: announcement.author,
-														title: announcement.title,
-														content: announcement.content,
-														time: announcement.time,
-														type: announcement.type,
-														users: announcement.users,
-													}}
-													classID={classid as string}
-													announcements={extraAnnouncements}
-													setAnnouncements={setExtraAnnouncements}
-												></Announcement>
-											)
-									)}
+								{extraAnnouncements.reverse().map(
+									(announcement) =>
+										announcement && (
+											<Announcement
+												key={announcement.id}
+												announcement={{
+													id: announcement.id,
+													author: announcement.author,
+													title: announcement.title,
+													content: announcement.content,
+													time: announcement.time,
+													type: announcement.type,
+													users: announcement.users,
+												}}
+												classID={classid as string}
+												comments={
+													getDataInArray(data.data.announcements).filter(
+														(possibleComment) =>
+															possibleComment?.type == AnnouncementType.COMMENT
+													) as TypeOfAnnouncements[]
+												}
+												announcements={extraAnnouncements}
+												setAnnouncements={setExtraAnnouncements}
+											></Announcement>
+										)
+								)}
 								{typeof classid == "string" &&
 									data.data &&
 									data.data.announcements && //change below when I get actual types
@@ -339,6 +347,8 @@ const Class: NextPage = () => {
 										})
 										.map(
 											(announcement) =>
+												(announcement.type == AnnouncementType.ANNOUNCMENT ||
+													announcement.type == AnnouncementType.CROSSPOST) &&
 												announcement.users &&
 												typeof getDataOutArray(announcement.users).avatar_url ==
 													"string" &&
@@ -348,6 +358,15 @@ const Class: NextPage = () => {
 														key={announcement.id}
 														announcement={announcement as TypeOfAnnouncements}
 														classID={classid}
+														comments={
+															getDataInArray(data.data.announcements).filter(
+																(possibleComment) =>
+																	possibleComment?.type ==
+																		AnnouncementType.COMMENT &&
+																	getDataOutArray(possibleComment.parent)?.id ==
+																		announcement.id
+															) as TypeOfAnnouncements[]
+														}
 														announcements={extraAnnouncements}
 														setAnnouncements={setExtraAnnouncements}
 													></Announcement>
