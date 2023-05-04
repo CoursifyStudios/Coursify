@@ -42,7 +42,7 @@ export default function Profile() {
 		<div className="mx-auto flex w-full flex-col px-4 py-2 sm:py-4 md:px-8 md:py-8 lg:flex-row lg:space-x-8 xl:px-0 2xl:max-w-screen-xl">
 			{/* Left sidebar, main info */}
 			<div className="flex shrink-0 flex-col items-center md:flex-row lg:h-max lg:max-h-[calc(100vh-8rem)] lg:w-72 lg:flex-col">
-				<div className="flex w-full flex-col items-center rounded-xl bg-gray-200 p-6">
+				<div className="flex w-full flex-col items-center rounded-xl bg-backdrop-200 p-6">
 					{profile && profile.data ? (
 						<Image
 							src={profile.data.avatar_url}
@@ -87,7 +87,7 @@ export default function Profile() {
 					profile?.data &&
 					getDataInArray(profile?.data?.user_achievements).length == 0
 				) && (
-					<div className="scrollbar-fancy scrollbar-fancy-darker mx-0 flex w-full flex-col items-center overflow-y-auto rounded-xl bg-gray-200 p-6 md:mx-auto  lg:mx-0 lg:mt-8 ">
+					<div className="scrollbar-fancy scrollbar-fancy-darker mx-0 flex w-full flex-col items-center overflow-y-auto rounded-xl bg-backdrop-200 p-6 md:mx-auto lg:mx-0 lg:mt-8 ">
 						<h1 className="title mb-5">Achievements</h1>
 						<div className=" grid w-full grid-cols-1 gap-6 md:grid-cols-2">
 							{profile?.data?.user_achievements

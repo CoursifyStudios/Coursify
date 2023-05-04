@@ -43,7 +43,7 @@
 }
 
 .brightness-hover {
-	@apply border border-transparent transition duration-300 hover:shadow-lg hover:brightness-95 dark:hover:border-gray-200;
+	@apply border border-transparent transition duration-300 hover:shadow-lg hover:brightness-95 dark:hover:border-gray-300;
 }
 
 input[type="text"] {
@@ -97,7 +97,7 @@ input[type="text"] {
 }
 
 .editor-code {
-	@apply rounded-xl bg-gray-800 font-mono text-gray-200;
+	@apply rounded-xl bg-gray-800 font-mono text-gray-200 dark:bg-gray-900 dark:text-gray-800;
 	display: block;
 	padding: 8px 8px 8px 52px;
 	line-height: 1.53;
@@ -112,7 +112,7 @@ input[type="text"] {
 }
 
 .editor-code:before {
-	@apply bg-gray-700 text-gray-400;
+	@apply bg-gray-700 text-gray-400 dark:bg-gray-950;
 	content: attr(data-gutter);
 	position: absolute;
 	left: 0;

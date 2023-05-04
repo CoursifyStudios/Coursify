@@ -44,7 +44,7 @@ export const Achievement = ({
 							>
 								<Dialog.Panel className="relative w-full max-w-md rounded-xl bg-white/75 p-4 shadow-md backdrop-blur-xl">
 									<section className="flex items-center">
-										<div className="rounded-full bg-white p-4">
+										<div className="rounded-full bg-backdrop p-4">
 											{getIcon(data.icon)}
 										</div>
 										<div className="ml-4">
@@ -81,7 +81,7 @@ export const Achievement = ({
 				className="flex cursor-pointer flex-col rounded-lg py-2 text-center transition hover:bg-gray-300"
 				onClick={() => setIsOpen(true)}
 			>
-				<div className="mx-auto rounded-full bg-white p-4">
+				<div className="mx-auto rounded-full bg-backdrop p-4 text-white">
 					{getIcon(data.icon)}
 				</div>
 				<h3 className="mt-2 line-clamp-2 font-bold ">{data.name}</h3>
