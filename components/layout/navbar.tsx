@@ -175,8 +175,10 @@ const Navbar: NextComponentType = () => {
 
 		return (
 			<div
-				className={`mx-1 my-1.5 flex items-center rounded-md ${
-					selected ? "bg-gray-50 shadow-md  " : "bg-gray-300"
+				className={`mx-1 my-1.5 flex items-center rounded-md border border-transparent ${
+					selected
+						? "bg-gray-50 shadow-md dark:border-gray-300 dark:bg-backdrop "
+						: "bg-gray-300"
 				} ${canClose && "pr-3"} text-lg font-semibold `}
 			>
 				<Link href={tab.route}>
@@ -203,7 +205,7 @@ const Navbar: NextComponentType = () => {
 						// I could use router.push(), but then we would have to be in charge of preloading pages
 						// I decicded to instead just make the text the link. It not great but is just works:tm:
 						// - Lukas
-						className={`ml-2 h-5 w-5 cursor-pointer  rounded-sm text-gray-500 transition hover:text-gray-800
+						className={`ml-2 h-5 w-5 cursor-pointer rounded-sm text-gray-500 transition hover:text-gray-800 dark:text-gray-100
 									 ${selected ? "hover:bg-gray-100" : "hover:bg-gray-400/20"}`}
 					/>
 				)}
