@@ -136,15 +136,15 @@ input[type="text"] {
 }
 
 .editor-heading-h1 {
-	@apply mb-4 mt-2 text-xl font-bold text-gray-900;
+	@apply mb-4 mt-2 text-xl font-bold text-gray-900 dark:text-gray-100;
 }
 
 .editor-heading-h2 {
-	@apply mb-3 mt-2 text-lg font-bold text-gray-900;
+	@apply mb-3 mt-2 text-lg font-bold text-gray-900 dark:text-gray-100;
 }
 
 .editor-heading-h3 {
-	@apply mb-2 mt-2 text-base font-bold text-gray-900;
+	@apply mb-2 mt-2 text-base font-bold text-gray-900 dark:text-gray-100;
 }
 
 .editor-quote {

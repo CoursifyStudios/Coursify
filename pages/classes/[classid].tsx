@@ -181,7 +181,7 @@ const Class: NextPage = () => {
 					className="rounded-xl object-cover object-center"
 					fill
 				/>
-				<h1 className="title absolute bottom-5 left-5 !text-4xl text-gray-200">
+				<h1 className="title absolute bottom-5 left-5 !text-4xl text-gray-200 dark:text-gray-100">
 					{data.data && data.data.name}
 				</h1>
 			</div>
@@ -191,10 +191,10 @@ const Class: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md px-2.5 py-0.5 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md border px-2.5 py-0.5 focus:outline-none ${
 										selected
-											? "bg-gray-50 shadow-md shadow-black/25  "
-											: "bg-gray-200"
+											? "border-gray-300 bg-gray-50 shadow-md shadow-black/25  dark:bg-backdrop-200 "
+											: "border-transparent bg-gray-200"
 									} text-lg font-semibold `}
 								>
 									Home
@@ -204,10 +204,10 @@ const Class: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md px-2.5 py-0.5 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md border px-2.5 py-0.5 focus:outline-none ${
 										selected
-											? "bg-gray-50 shadow-md shadow-black/25 "
-											: "bg-gray-200"
+											? "border-gray-300 bg-gray-50 shadow-md shadow-black/25  dark:bg-backdrop-200"
+											: "border-transparent bg-gray-200"
 									} text-lg font-semibold `}
 								>
 									Announcements
@@ -217,10 +217,10 @@ const Class: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md px-2.5 py-0.5 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md border px-2.5 py-0.5 focus:outline-none ${
 										selected
-											? "bg-gray-50 shadow-md  shadow-black/25 "
-											: "bg-gray-200"
+											? "border-gray-300 bg-gray-50  shadow-md shadow-black/25  dark:bg-backdrop-200 "
+											: "border-transparent bg-gray-200"
 									} text-lg font-semibold `}
 								>
 									Members
@@ -399,7 +399,7 @@ const Class: NextPage = () => {
 						{isTeacher && (
 							<div
 								onClick={() => setAssignmentCreationOpen(true)}
-								className="group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black"
+								className="group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white"
 							>
 								<PlusIcon className="-ml-4 mr-4 h-8 w-8 transition group-hover:scale-125" />{" "}
 								<h3 className="text-lg font-medium transition">
@@ -412,7 +412,7 @@ const Class: NextPage = () => {
 							getDataInArray(data.data?.assignments).map((assignment) => (
 								<div
 									key={assignment.id}
-									className=" brightness-hover flex rounded-xl bg-gray-200 p-3"
+									className=" brightness-hover flex rounded-xl bg-backdrop-200 p-3"
 								>
 									<AssignmentPreview
 										supabase={supabase}
