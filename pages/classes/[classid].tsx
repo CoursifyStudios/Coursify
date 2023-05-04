@@ -181,6 +181,19 @@ const Class: NextPage = () => {
 					className="rounded-xl object-cover object-center"
 					fill
 				/>
+				<ColoredPill className="absolute left-5 top-5 !bg-neutral-500/20 text-lg !text-gray-300 backdrop-blur-xl">
+					Rm. {data.data.room}
+				</ColoredPill>
+				<div className="absolute right-5 top-5">
+					<div className="flex items-center">
+						<h2
+							className={`text-2xl text-${data.data.color}-300 rounded-lg bg-neutral-500/20 px-2 font-bold opacity-75 backdrop-blur-xl`}
+						>
+							{data.data.block}
+						</h2>
+					</div>
+				</div>
+
 				<h1 className="title absolute bottom-5 left-5 !text-4xl text-gray-200">
 					{data.data && data.data.name}
 				</h1>
