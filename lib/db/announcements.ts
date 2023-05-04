@@ -254,15 +254,4 @@ export type TypeOfAnnouncements = {
 			| null;
 		type: number;
 	} | null;
-	comments?: {
-		announcement_id: string;
-		author: {
-            id: string;
-            full_name: string;
-            avatar_url: string;
-        };
-		content: string | null;
-		created_at: string | null;
-		id: string;
-	}[];
 };

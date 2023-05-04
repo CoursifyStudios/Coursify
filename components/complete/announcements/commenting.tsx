@@ -5,17 +5,18 @@ import { useState } from "react";
 import { Button } from "../../misc/button";
 import Link from "next/link";
 import { useTabs } from "../../../lib/tabs/handleTabs";
+import { howLongAgo } from "../../../lib/misc/dates";
 
 export const Comment = ({
 	id,
-	created_at,
+	time,
 	content,
-	author,
+	users,
 }: {
 	id: string;
-	created_at: string;
+	time: string;
 	content: string;
-	author: {
+	users: {
 		id: string;
 		full_name: string;
 		avatar_url: string;
@@ -26,27 +27,27 @@ export const Comment = ({
 		<div>
 			{/* <div className="flex items-center pt-1">
         <Link
-            href={"/profile/" + author}
+            href={"/profile/" + users.id}
             className="inline-flex shrink-0 items-center rounded-full px-1 py-0.5 hover:bg-gray-300"
             onClick={() =>
                 newTab(
-                    "/profile/" + announcement.author,
-                    getDataOutArray(announcement.users!).full_name.split(" ")[0] +
+                    "/profile/" + users.id,
+                    users.full_name.split(" ")[0] +
                         "'s Profile"
                 )
             }
         >
             <img
-                src={getDataOutArray(announcement.users!).avatar_url}
+                src={users.avatar_url}
                 alt=""
                 className="h-5 w-5 rounded-full"
             />
             <p className="ml-1.5 mr-1 font-semibold text-neutral-700">
-                {getDataOutArray(announcement.users!).full_name}
+                {users.full_name}
             </p>
         </Link>
         <p className="pl-1.5 text-gray-600">
-            {howLongAgo(announcement.time!)}
+            {howLongAgo(time)}
         </p>
     </div> */}
 		</div>

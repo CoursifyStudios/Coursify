@@ -187,29 +187,6 @@ export interface Database {
           type?: number
         }
       }
-      comments: {
-        Row: {
-          announcement_id: string
-          author: string
-          content: string | null
-          created_at: string | null
-          id: string
-        }
-        Insert: {
-          announcement_id: string
-          author: string
-          content?: string | null
-          created_at?: string | null
-          id?: string
-        }
-        Update: {
-          announcement_id?: string
-          author?: string
-          content?: string | null
-          created_at?: string | null
-          id?: string
-        }
-      }
       days_schedule: {
         Row: {
           date: string
@@ -239,52 +216,6 @@ export interface Database {
         Update: {
           school_id?: string
           user_id?: string
-        }
-      }
-      group_users: {
-        Row: {
-          group_id: string
-          group_leader: boolean | null
-          user_id: string
-        }
-        Insert: {
-          group_id: string
-          group_leader?: boolean | null
-          user_id: string
-        }
-        Update: {
-          group_id?: string
-          group_leader?: boolean | null
-          user_id?: string
-        }
-      }
-      groups: {
-        Row: {
-          description: string | null
-          featured: boolean | null
-          id: string
-          image: string | null
-          name: string | null
-          public: boolean | null
-          tags: string[] | null
-        }
-        Insert: {
-          description?: string | null
-          featured?: boolean | null
-          id?: string
-          image?: string | null
-          name?: string | null
-          public?: boolean | null
-          tags?: string[] | null
-        }
-        Update: {
-          description?: string | null
-          featured?: boolean | null
-          id?: string
-          image?: string | null
-          name?: string | null
-          public?: boolean | null
-          tags?: string[] | null
         }
       }
       schedule_templates: {
@@ -322,6 +253,20 @@ export interface Database {
           id?: string
           name?: string
           schedule?: Json[] | null
+        }
+      }
+      settings: {
+        Row: {
+          settings: Json
+          user_id: string
+        }
+        Insert: {
+          settings: Json
+          user_id: string
+        }
+        Update: {
+          settings?: Json
+          user_id?: string
         }
       }
       starred: {
