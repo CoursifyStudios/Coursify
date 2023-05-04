@@ -13,10 +13,8 @@ interface SettingsStore {
 export const useSettings = create<SettingsStore>()((set) => ({
 	data: { theme: "dark" },
 	set: async (data) => {
-		// eslint-disable-next-line react-hooks/rules-of-hooks
-		const supabase = useSupabaseClient();
-		// eslint-disable-next-line react-hooks/rules-of-hooks
-		const user = useUser();
+		// const supabase = useSupabaseClient();
+		// const user = useUser();
 
 		set((state) => ({
 			data: data

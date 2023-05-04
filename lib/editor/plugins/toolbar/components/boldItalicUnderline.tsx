@@ -14,7 +14,9 @@ export const BoldButton = () => {
 			}}
 			className={
 				"h-6 w-6 rounded transition hover:bg-gray-200 " +
-				(isBold ? "font-bold" : "font-semibold  text-gray-500")
+				(isBold
+					? "font-medium"
+					: "font-semibold  text-gray-500 dark:text-neutral-500")
 			}
 			aria-label="bold"
 			type="button"
@@ -35,7 +37,7 @@ export const ItalicButton = () => {
 			}}
 			className={
 				"h-6 w-6 rounded font-serif italic transition hover:bg-gray-200 " +
-				(isItalic ? "" : "text-gray-500")
+				(isItalic ? "" : "text-gray-500 dark:text-neutral-500")
 			}
 			aria-label="italic"
 			type="button"
@@ -56,7 +58,7 @@ export const UnderlineButton = () => {
 			}}
 			className={
 				"h-6 w-6 rounded font-medium underline transition hover:bg-gray-200 " +
-				(isUnderline ? "" : "text-gray-500")
+				(isUnderline ? "" : "text-gray-500 dark:text-neutral-500")
 			}
 			aria-label="Italic"
 			type="button"

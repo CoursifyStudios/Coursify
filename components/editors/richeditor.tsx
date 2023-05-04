@@ -124,7 +124,7 @@ export default function Editor({
 						<div className="relative">
 							<RichTextPlugin
 								contentEditable={
-									<ContentEditable className="prose h-full !max-w-full p-1 focus:outline-none [&>h1:first-child]:mt-0" />
+									<ContentEditable className="prose h-full !max-w-full p-1 focus:outline-none dark:text-neutral-200 [&>h1:first-child]:mt-0" />
 								}
 								placeholder={editable ? <Placeholder /> : <></>}
 								ErrorBoundary={LexicalErrorBoundary}

@@ -21,6 +21,7 @@ import AssignmentCreation from "./three";
 import { create } from "zustand";
 import AssignmentDetails from "./two";
 import { DueType } from "../assignments";
+import { useSettings } from "../../../lib/stores/settings";
 
 interface AssignmmentState {
 	data: NewAssignmentData | undefined;
@@ -44,6 +45,7 @@ export const CreateAssignment: NextPage<{
 	scheduleType: number;
 	classid: string;
 }> = ({ open, setOpen, block, scheduleType, classid }) => {
+	const { data: settings } = useSettings();
 	const [stage, setStage] = useState(1);
 	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
 		setAssignmentData: state.set,
@@ -69,7 +71,11 @@ export const CreateAssignment: NextPage<{
 					leaveTo="opacity-75"
 					as={Fragment}
 				>
-					<div className="fixed inset-0 flex items-center justify-center bg-black/20 p-4">
+					<div
+						className={`fixed inset-0 flex items-center justify-center bg-black/20 p-4 ${
+							settings.theme == "dark" && "dark bg-black/40"
+						}`}
+					>
 						<Transition.Child
 							enter="ease-out transition"
 							enterFrom="opacity-75 scale-95"
@@ -79,9 +85,9 @@ export const CreateAssignment: NextPage<{
 							leaveTo="opacity-75 scale-95"
 							as={Fragment}
 						>
-							<Dialog.Panel className="relative flex w-full max-w-screen-md flex-col rounded-xl bg-white/75 p-4 shadow-md backdrop-blur-xl">
+							<Dialog.Panel className="relative flex w-full max-w-screen-md flex-col rounded-xl bg-white/75 p-4 shadow-md  backdrop-blur-xl dark:bg-neutral-950/75 dark:text-gray-100">
 								<div className="flex items-center">
-									<div className="z-10 grid h-8 w-8 place-items-center rounded-full bg-blue-500 font-semibold text-white">
+									<div className="z-10 grid h-8 w-8 place-items-center rounded-full bg-blue-500  font-semibold text-white">
 										1
 									</div>
 
@@ -89,13 +95,15 @@ export const CreateAssignment: NextPage<{
 										className={`-ml-2 h-2 w-36 ${
 											stage == 1
 												? "mr-8 bg-gradient-to-r from-blue-500 to-transparent"
-												: "bg-blue-500 pr-8"
+												: " bg-blue-500 pr-8"
 										} `}
 									></div>
 
 									<div
 										className={`${
-											stage == 1 ? "bg-white" : "bg-blue-500 text-white"
+											stage == 1
+												? "bg-backdrop dark:text-white"
+												: " bg-blue-500 text-white"
 										}  z-10 -ml-2 grid h-8 w-8 place-items-center rounded-full  font-semibold `}
 									>
 										2
@@ -109,7 +117,9 @@ export const CreateAssignment: NextPage<{
 
 									<div
 										className={`z-10 grid h-8 w-8 ${
-											stage == 3 ? "bg-blue-500 text-white" : " bg-white"
+											stage == 3
+												? " bg-blue-500 text-white"
+												: "bg-backdrop dark:text-white"
 										} -ml-2 place-items-center rounded-full  font-semibold`}
 									>
 										3
@@ -130,7 +140,7 @@ export const CreateAssignment: NextPage<{
 
 								<button
 									onClick={closeMenu}
-									className="absolute right-4 top-4 rounded p-0.5 text-gray-700 transition hover:bg-gray-300 hover:text-gray-900 focus:outline-none"
+									className="absolute right-4 top-4 rounded p-0.5 text-gray-700 transition hover:bg-gray-300 hover:text-gray-900 focus:outline-none dark:text-gray-100"
 								>
 									<XMarkIcon className="h-5 w-5" />
 								</button>
@@ -146,15 +156,15 @@ export const CreateAssignment: NextPage<{
 
 		return (
 			<>
-				<h2 className="mt-6 text-xl font-bold">Submission Type</h2>
+				<h2 className="title mt-6">Submission Type</h2>
 				<div className="mt-4 grid grid-cols-3 gap-5">
 					{submissionType.map((submission, i) => (
 						<div key={i}>
 							<div
 								className={`brightness-hover h-full cursor-pointer rounded-md p-4 ${
 									submission.type == assignmentData?.submissionType
-										? "bg-white shadow-md"
-										: "bg-gray-200"
+										? "bg-white shadow-md dark:bg-gray-200"
+										: "bg-gray-200 dark:border dark:bg-black"
 								} `}
 								onClick={() => {
 									setAssignmentData({
@@ -186,7 +196,7 @@ export const CreateAssignment: NextPage<{
 	}
 };
 
-const className = "h-5 w-5 min-w-[1.25rem]";
+const className = "h-5 w-5 min-w-[1.25rem] dark:brightness-90";
 
 export const submissionType: {
 	icon: ReactNode;
@@ -236,7 +246,8 @@ export const submissionType: {
 			/>
 		),
 		name: "Google Media",
-		description: "Submission box for google docs, slides, sheets, etc.",
+		description:
+			"Submission box for Google products like docs, slides, sheets, etc.",
 		type: "google",
 	},
 ];

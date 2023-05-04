@@ -64,7 +64,7 @@ const AssignmentCalender: NextPage<{
 						<>
 							{(i == 0 || date.getDate() == 1) && (
 								<h2
-									className="sticky top-0 z-10 w-full bg-[#f2f2f2] text-lg font-medium"
+									className="sticky top-0 z-10 w-full bg-[#f2f2f2] text-lg font-medium dark:bg-[#070707]"
 									key={i + "title"}
 								>
 									{date.toLocaleString("default", { month: "long" })}

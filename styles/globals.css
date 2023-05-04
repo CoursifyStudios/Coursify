@@ -46,6 +46,10 @@
 	@apply transition duration-300 hover:shadow-lg hover:brightness-95;
 }
 
+input[type="text"] {
+	@apply rounded-md border-gray-300 bg-backdrop/50 focus:ring-1;
+}
+
 /*Editor CSS*/
 
 .editor-paragraph {

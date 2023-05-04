@@ -284,7 +284,7 @@ const ToolbarPlugin = ({
 		>
 			<div
 				className={`sticky top-0 z-40 rounded-b ${
-					backdrop && "bg-white/50 backdrop-blur"
+					backdrop && "bg-white/50 backdrop-blur dark:bg-neutral-900"
 				} `}
 			>
 				<div className=" flex items-center ">
@@ -317,7 +317,7 @@ const ToolbarPlugin = ({
 						<RedoButton />
 					</div>
 				</div>
-				<div className="mt-1 h-0.5 w-full rounded-full bg-gray-100"></div>
+				<div className="mt-1 h-0.5 w-full rounded-full bg-gray-100 dark:bg-gray-300"></div>
 			</div>
 		</ToolbarContext.Provider>
 	);
