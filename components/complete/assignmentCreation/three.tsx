@@ -259,12 +259,12 @@ const AssignmentCreation: NextPage<{
 						{(type == "due" ? selectedDueType : selectedPublishType).name}{" "}
 						<ChevronUpDownIcon className="ml-2 h-5 w-5" />
 					</Listbox.Button>
-					<Listbox.Options className="absolute mt-12 space-y-2 rounded-xl bg-white/75 p-2 backdrop-blur-xl ">
+					<Listbox.Options className="absolute mt-12 space-y-2 rounded-xl bg-white/75 p-2 backdrop-blur-xl dark:bg-gray-200/75 ">
 						{types.map((type, i) => (
 							<Listbox.Option
 								key={i}
 								value={type}
-								className="cursor-pointer rounded-lg px-2 py-1 font-medium text-gray-700 transition hover:bg-gray-200 hover:text-gray-900"
+								className="brightness-hover cursor-pointer rounded-lg px-2 py-1 font-medium text-gray-700 transition hover:bg-gray-200 hover:text-gray-900 dark:hover:text-white"
 							>
 								{type.name}
 							</Listbox.Option>

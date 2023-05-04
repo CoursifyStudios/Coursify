@@ -34,7 +34,7 @@ const dark = {
 		//white: "#00000",
 		backdrop: {
 			DEFAULT: "black",
-			200: "#0c0c0e",
+			200: "#111114",
 		},
 		gray: {
 			200: "#18181b",

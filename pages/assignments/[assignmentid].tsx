@@ -114,7 +114,7 @@ const Post: NextPage = () => {
 				} w-[20.5rem] shrink-0 flex-col space-y-5 overflow-y-auto p-1 pb-6 md:h-[calc(100vh-6.5rem)] `}
 			>
 				<div className="flex flex-col">
-					<div className="flex-col rounded-lg bg-gray-200 p-2">
+					<div className="flex-col rounded-lg bg-backdrop-200 p-2">
 						<div className="mb-1 flex items-center">
 							<h1 className="mr-1 text-xl font-bold">Filters</h1>
 							<Info
@@ -146,7 +146,7 @@ const Post: NextPage = () => {
 							className="font-semibold"
 						>
 							<div className="relative">
-								<Listbox.Button className="flex w-36 rounded-lg bg-gray-200 py-2 pl-3 pr-10 text-sm">
+								<Listbox.Button className="brightness-hover flex w-36 rounded-lg bg-backdrop-200 py-2 pl-3 pr-10 text-sm">
 									<span className="block truncate">{selected.option}</span>
 									<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
 										<ChevronUpDownIcon className="h-5 w-5" aria-hidden="true" />
@@ -200,7 +200,7 @@ const Post: NextPage = () => {
 									className={`flex rounded-xl ${
 										assignmentid == assignment.id
 											? "bg-gray-50 shadow-lg"
-											: "brightness-hover bg-gray-200"
+											: "brightness-hover bg-backdrop-200"
 									} p-3`}
 									key={assignment.id}
 								>

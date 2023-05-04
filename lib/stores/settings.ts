@@ -11,7 +11,7 @@ interface SettingsStore {
 }
 
 export const useSettings = create<SettingsStore>()((set) => ({
-	data: { theme: "dark" },
+	data: { theme: "light" },
 	set: async (data) => {
 		// const supabase = useSupabaseClient();
 		// const user = useUser();
