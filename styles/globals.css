@@ -7,6 +7,7 @@
 }
 
 .graydient {
+	@apply dark:invert;
 	background: rgb(209, 213, 219);
 	background: linear-gradient(
 		rgba(209, 213, 219, 0) 0%,
@@ -17,6 +18,7 @@
 }
 
 .graydient-90deg {
+	@apply dark:invert;
 	background: rgb(209, 213, 219);
 	background: linear-gradient(
 		to right,
@@ -32,6 +34,7 @@
 }
 
 .scrollbar-fancy::-webkit-scrollbar-thumb {
+	@apply dark:bg-neutral-900;
 	border: 4px solid rgba(0, 0, 0, 0);
 	background-clip: padding-box;
 	border-radius: 9999px;

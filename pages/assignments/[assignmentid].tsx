@@ -122,8 +122,7 @@ const Post: NextPage = () => {
 								className="my-auto ml-2 shadow shadow-black/25"
 							>
 								Add filters that allow you to specify what type of assignment
-								you like to see. For example, you can add a starred filter,
-								which will only show you assignments that are starred.
+								you like to see.
 							</Info>
 						</div>
 						<div className="flex flex-wrap">

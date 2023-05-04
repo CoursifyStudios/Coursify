@@ -53,10 +53,10 @@ const Group: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md px-2 py-0.5 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md border px-2 py-0.5 focus:outline-none ${
 										selected
-											? "bg-gray-50 shadow-md shadow-black/25  "
-											: "bg-gray-200"
+											? "border-gray-300 bg-gray-50 shadow-md shadow-black/25  dark:bg-backdrop "
+											: "border-transparent bg-gray-200"
 									} text-lg font-semibold `}
 								>
 									Home
@@ -66,10 +66,10 @@ const Group: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md px-2 py-0.5 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md border px-2 py-0.5 focus:outline-none ${
 										selected
-											? "bg-gray-50 shadow-md shadow-black/25  "
-											: "bg-gray-200"
+											? "border-gray-300 bg-gray-50 shadow-md shadow-black/25  dark:bg-backdrop "
+											: "border-transparent bg-gray-200"
 									} text-lg font-semibold `}
 								>
 									Resources
@@ -79,10 +79,10 @@ const Group: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md px-2 py-0.5 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-md border px-2 py-0.5 focus:outline-none ${
 										selected
-											? "bg-gray-50 shadow-md shadow-black/25  "
-											: "bg-gray-200"
+											? "border-gray-300 bg-gray-50 shadow-md shadow-black/25  dark:bg-backdrop "
+											: "border-transparent bg-gray-200"
 									} text-lg font-semibold `}
 								>
 									Members
