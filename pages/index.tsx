@@ -192,19 +192,10 @@ export default function Home() {
 											<div key={aClass.id}>
 												<div>
 													<Link href={"/classes/" + aClass.id}>
-														{/* <ColoredPill
-																color={aClass.color}
-																className="my-4"
-															>
-																<p className="text-lg">{aClass.name}</p>
-															</ColoredPill> */}
 														<h2 className="mb-2 text-xl font-semibold">
 															{aClass.name}
 														</h2>
 													</Link>
-													{/* <h2 className="my-4 text-lg font-semibold">
-															{aClass.name}
-														</h2> */}
 													<div className="mb-5 flex-col space-y-4 first-letter:space-y-4">
 														{Array.isArray(aClass.assignments) &&
 															schedules &&
@@ -212,7 +203,7 @@ export default function Home() {
 																<div
 																	key={assignment.id}
 																	className={
-																		"brightness-hover rounded-lg bg-gray-200 p-2"
+																		"brightness-hover rounded-lg bg-backdrop-200 p-2"
 																	}
 																>
 																	<AssignmentPreview
@@ -261,7 +252,7 @@ export default function Home() {
 														: false) && (
 														<div
 															key={assignment.id}
-															className={" rounded-lg bg-gray-200 p-2"}
+															className={" rounded-lg bg-backdrop-200 p-2"}
 														>
 															<AssignmentPreview
 																supabase={supabaseClient}

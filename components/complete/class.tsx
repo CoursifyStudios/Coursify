@@ -35,7 +35,7 @@ export const Class: NextPage<{
 		return (
 			<div
 				className={
-					"brightness-hover group flex w-[19rem] cursor-pointer select-none flex-col rounded-xl bg-gray-200 " +
+					"brightness-hover group flex w-[19rem] cursor-pointer select-none flex-col rounded-xl bg-backdrop-200 " +
 					className
 				}
 			>
@@ -52,7 +52,7 @@ export const Class: NextPage<{
 						{classData.room && (
 							<ColoredPill
 								//color="gray"
-								className="-mb-0.5 -mt-1 !bg-neutral-500/20 text-xs !text-gray-300 backdrop-blur-xl dark:!text-gray-100"
+								className="-mb-0.5 -mt-1 !bg-neutral-500/50 text-xs text-gray-100 backdrop-blur-xl"
 							>
 								Rm. {classData.room}
 							</ColoredPill>

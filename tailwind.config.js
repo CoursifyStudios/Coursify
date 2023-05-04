@@ -13,7 +13,10 @@ export const darkMode = "class";
 const light = {
 	colors: {
 		//white: "#FFFFFF",
-		backdrop: "white",
+		backdrop: {
+			DEFAULT: "white",
+			200: "#e5e7eb",
+		},
 		gray: {
 			200: "#e5e7eb",
 			300: "#d1d5db",
@@ -29,7 +32,10 @@ const light = {
 const dark = {
 	colors: {
 		//white: "#00000",
-		backdrop: "black",
+		backdrop: {
+			DEFAULT: "black",
+			200: "#0c0c0e",
+		},
 		gray: {
 			200: "#18181b",
 			300: "#27272a",

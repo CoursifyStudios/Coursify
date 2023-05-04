@@ -43,7 +43,7 @@
 }
 
 .brightness-hover {
-	@apply transition duration-300 hover:shadow-lg hover:brightness-95;
+	@apply border border-transparent transition duration-300 hover:shadow-lg hover:brightness-95 dark:hover:border-gray-200;
 }
 
 input[type="text"] {
