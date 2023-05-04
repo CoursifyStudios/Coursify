@@ -181,7 +181,7 @@ const Class: NextPage = () => {
 					className="rounded-xl object-cover object-center"
 					fill
 				/>
-				<ColoredPill className="absolute left-5 top-5 !bg-neutral-500/20 text-lg !text-gray-300 backdrop-blur-xl">
+				<ColoredPill className="absolute left-5 top-5 !bg-neutral-500/20 text-lg !text-gray-300 backdrop-blur-xl dark:!text-gray-100">
 					Rm. {data.data.room}
 				</ColoredPill>
 				<div className="absolute right-5 top-5">

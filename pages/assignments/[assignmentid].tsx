@@ -199,9 +199,9 @@ const Post: NextPage = () => {
 								<div
 									className={`flex rounded-xl ${
 										assignmentid == assignment.id
-											? "bg-gray-50 shadow-lg"
+											? "bg-gray-50 shadow-lg dark:border-gray-300 dark:bg-slate-900/10"
 											: "brightness-hover bg-backdrop-200"
-									} p-3`}
+									} border border-transparent p-3`}
 									key={assignment.id}
 								>
 									{/* List of assignments */}
