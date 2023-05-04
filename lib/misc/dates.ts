@@ -33,7 +33,7 @@ export const howLongAgo = (date: string) => {
 	if (interval > 2) {
 		return Math.floor(interval) + " minutes ago";
 	}
-    //Using math.max to stop the -1 seconds ago thing
+	//Using math.max to stop the -1 seconds ago thing
 	return Math.max(Math.floor(seconds), 0) + " seconds ago";
 };
 

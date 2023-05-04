@@ -203,6 +203,7 @@ export const Announcement = ({
 						{comments &&
 							comments.map((comment) => (
 								<Comment
+									key={comment.id}
 									id={comment.id}
 									author={comment.author}
 									time={howLongAgo(comment.time!)}

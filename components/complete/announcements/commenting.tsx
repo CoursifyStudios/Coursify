@@ -171,6 +171,7 @@ export const Commenting = ({
 			<div className="ml-2 space-y-1">
 				{tempComments.reverse().map((comment) => (
 					<Comment
+						key={comment.id}
 						id={comment.id}
 						author={comment.author}
 						time={comment.time}
