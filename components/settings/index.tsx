@@ -1,5 +1,6 @@
 import {
 	BellIcon,
+	LinkIcon,
 	LockClosedIcon,
 	SwatchIcon,
 	UserIcon,
@@ -8,6 +9,7 @@ import Profile from "./pages/profile";
 import { ReactNode } from "react";
 import Appearence from "./pages/appearence";
 import Securityandprivacy from "./pages/securityandprivacy";
+import Connections from "./pages/connections";
 
 const iconClasses = "w-6 h-6";
 
@@ -26,10 +28,16 @@ export const settingsPages: {
 		icon: <SwatchIcon className={iconClasses} />,
 		content: <Appearence />,
 	},
+
 	{
 		name: "Notifications",
 		icon: <BellIcon className={iconClasses} />,
 		content: <Profile />,
+	},
+	{
+		name: "Connections",
+		icon: <LinkIcon className={iconClasses} />,
+		content: <Connections />,
 	},
 	{
 		name: "Security & Privacy",
