@@ -49,6 +49,10 @@
 	@apply border border-transparent transition duration-300 hover:shadow-lg hover:brightness-95 dark:hover:border-gray-300;
 }
 
+.brightness-focus {
+	@apply bg-gray-50 shadow-lg dark:border-gray-300 dark:bg-[#020204];
+}
+
 input[type="text"] {
 	@apply rounded-md border-gray-300 bg-backdrop/50 focus:ring-1;
 }

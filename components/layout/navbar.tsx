@@ -175,16 +175,16 @@ const Navbar: NextComponentType = () => {
 
 		return (
 			<div
-				className={`mx-1 my-1.5 flex items-center rounded-md border border-transparent ${
+				className={`mx-1 my-1.5 flex items-center rounded-lg border ${
 					selected
-						? "bg-gray-50 shadow-md dark:border-gray-300 dark:bg-backdrop "
-						: "bg-gray-300"
-				} ${canClose && "pr-3"} text-lg font-semibold `}
+						? "brightness-focus !shadow-md"
+						: "border-transparent bg-gray-300"
+				} ${canClose && "pr-2"} text-lg font-semibold `}
 			>
 				<Link href={tab.route}>
 					<div
-						className={`max-w-[10rem] truncate py-0.5  ${
-							canClose ? "pl-3" : "px-3"
+						className={`max-w-[10rem] truncate py-[0.05rem]  ${
+							canClose ? "pl-2.5" : "px-2.5"
 						}`}
 					>
 						{tab.name}
