@@ -122,7 +122,7 @@ export const AnnouncementPostingUI = ({
 	return (
 		<div>
 			{showPost ? (
-				<div className="flex flex-col rounded-xl border-2 border-gray-300 bg-gray-50 p-4">
+				<div className="flex flex-col rounded-xl border-2 border-gray-300 bg-backdrop-50 p-4">
 					{!editingInfo && !sharingInfo && (
 						<h3 className="mb-4 font-semibold">New Announcement</h3>
 					)}
@@ -150,7 +150,7 @@ export const AnnouncementPostingUI = ({
 					</Formik>
 					<Editor
 						editable={true}
-						className="mt-4 rounded border border-gray-300 bg-white p-2"
+						className="mt-4 rounded border border-gray-300 bg-backdrop p-2"
 						updateState={setEditorState}
 						initialState={editingInfo && editingInfo.content}
 						focus={false}
@@ -367,7 +367,7 @@ export const AnnouncementPostingUI = ({
 				!editingInfo &&
 				!sharingInfo && (
 					<div
-						className="cursor-pointer rounded-xl border-2 border-dashed border-gray-300 p-4 transition hover:border-solid hover:bg-gray-50"
+						className="cursor-pointer rounded-xl border-2 border-dashed border-gray-300 p-4 transition hover:border-solid hover:bg-backdrop-50"
 						onClick={() => setShowPost(true)}
 					>
 						<h3 className="mb-4 font-semibold">New Announcement</h3>
