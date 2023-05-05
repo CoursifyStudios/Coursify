@@ -7,19 +7,23 @@ import { useRouter } from "next/router";
 import { getGroup, GroupResponse } from "../../lib/db/groups";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
 import { Member } from "../../components/complete/members";
-import {
-	Announcement,
-	AnnouncementPostingUI,
-} from "../../components/complete/announcements";
+import { Announcement } from "../../components/complete/announcements";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { Database } from "../../lib/db/database.types";
+import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
+import {
+	AnnouncementType,
+	TypeOfAnnouncements,
+} from "../../lib/db/announcements";
 
 const Group: NextPage = () => {
 	const router = useRouter();
 	const { groupid } = router.query;
 	const supabase = useSupabaseClient<Database>();
 	const [groupData, setGroupData] = useState<GroupResponse>();
-	const [refreshAnnouncements, setRefreshAnnouncements] = useState(false);
+	const [extraAnnouncements, setExtraAnnouncements] = useState<
+		TypeOfAnnouncements[]
+	>([]);
 	const user = useUser();
 	useEffect(() => {
 		(async () => {
@@ -28,7 +32,7 @@ const Group: NextPage = () => {
 				setGroupData(data);
 			}
 		})();
-	}, [refreshAnnouncements, supabase, groupid]);
+	}, [supabase, groupid]);
 
 	return (
 		<div className="mx-auto my-10 w-full max-w-screen-xl px-4">
@@ -47,7 +51,7 @@ const Group: NextPage = () => {
 					{groupData?.data?.name}
 				</h1>
 			</div>
-			<div className="sm:grid-cols-1 md:flex ">
+			<div className="md:flex">
 				<Tab.Group as="div" className="flex grow flex-col">
 					<Tab.List as="div" className="mx-auto mb-6 flex space-x-6">
 						<Tab as={Fragment}>
@@ -104,18 +108,47 @@ const Group: NextPage = () => {
 									groupData &&
 									groupData.data &&
 									groupData.data.users &&
+									// Checks that user is in group, only hten show posting UI
 									getDataInArray(groupData.data.users).some(
 										(userInGroup) => userInGroup.id == user.id
 									) && (
 										<AnnouncementPostingUI
 											communityid={groupid as string}
-											prevRefreshState={refreshAnnouncements}
-											refreshAnnouncements={setRefreshAnnouncements}
+											announcements={extraAnnouncements}
+											setAnnouncements={setExtraAnnouncements}
 										/>
 									)}
+								{extraAnnouncements.reverse().map(
+									(announcement) =>
+										announcement && (
+											<Announcement
+												key={announcement.id}
+												announcement={{
+													id: announcement.id,
+													author: announcement.author,
+													title: announcement.title,
+													content: announcement.content,
+													time: announcement.time,
+													type: announcement.type,
+													users: announcement.users,
+												}}
+												classID={groupid as string}
+												comments={
+													getDataInArray(groupData?.data?.announcements).filter(
+														(possibleComment) =>
+															possibleComment?.type == AnnouncementType.COMMENT
+													) as TypeOfAnnouncements[]
+												}
+												announcements={extraAnnouncements}
+												setAnnouncements={setExtraAnnouncements}
+											></Announcement>
+										)
+								)}
 								{groupData &&
+									groupid &&
+									typeof groupid == "string" && //really should not need to check this as it is checked above, but anything to make ts happy ig
 									groupData.data &&
-									groupData.data.announcements && //change below when I get actual types
+									groupData.data.announcements &&
 									getDataInArray(groupData.data.announcements)
 										.sort((a, b) => {
 											if (
@@ -130,17 +163,33 @@ const Group: NextPage = () => {
 												return 1;
 											return 0;
 										})
-										.map((announcement) => (
-											<Announcement
-												key={announcement.id}
-												announcement={announcement}
-											></Announcement>
-										))}
+										.map(
+											(announcement) =>
+												(announcement.type == AnnouncementType.ANNOUNCMENT ||
+													announcement.type == AnnouncementType.CROSSPOST) && (
+													<Announcement
+														key={announcement.id}
+														announcement={announcement as TypeOfAnnouncements}
+														comments={
+															getDataInArray(
+																groupData.data.announcements
+															).filter(
+																(possibleComment) =>
+																	possibleComment?.type ==
+																	AnnouncementType.COMMENT
+															) as TypeOfAnnouncements[]
+														}
+														classID={groupid}
+														announcements={extraAnnouncements}
+														setAnnouncements={setExtraAnnouncements}
+													></Announcement>
+												)
+										)}
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}></Tab.Panel>
 						<Tab.Panel tabIndex={-1}>
-							<div className="grid grid-cols-3 gap-4">
+							<div className="grid gap-4 max-sm:mx-auto max-sm:w-[20.5rem] lg:grid-cols-2 xl:grid-cols-3">
 								{groupData &&
 									groupData.data &&
 									getDataInArray(groupData.data.users).map((user) => (
@@ -161,10 +210,10 @@ const Group: NextPage = () => {
 						</Tab.Panel>
 					</Tab.Panels>
 				</Tab.Group>
-				<div className="sticky top-0 mx-auto w-[20.5rem] shrink-0 rounded-md sm:ml-8 ">
+				<div className="sticky top-0 mx-auto w-[19rem] shrink-0 rounded-md sm:ml-8">
 					<h2 className="title">Next Event</h2>
 					<Event title="Castle Rock" time="8:00 - 9:30 AM"></Event>
-					<h2 className="title mb-6 mt-6">Upcoming</h2>
+					<h2 className="title my-4">Upcoming</h2>
 					<Event title="Yosemite Climbing" time="12/15/22"></Event>
 					<Event title="Mission Cliffs" time="1/8/23"></Event>
 					<Event title="Boulder Sesh" time="12/9/24"></Event>
@@ -176,7 +225,7 @@ const Group: NextPage = () => {
 
 const Event = ({ title, time }: { title: string; time: string }) => {
 	return (
-		<div className="mt-6 flex items-center justify-between rounded-xl bg-gray-200 p-4">
+		<div className="my-3 flex items-center justify-between rounded-xl bg-gray-200 p-3">
 			<p className="font-semibold">{title}</p>
 			<div className="">
 				<ColoredPill color={"green"}>{time}</ColoredPill>

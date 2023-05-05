@@ -55,9 +55,9 @@ const Post: NextPage = () => {
 	const [fullscreen, setFullscreen] = useState(false);
 
 	const options = [
-		{ option: "Relevancy" },
-		{ option: "Due Newest" },
-		{ option: "Due Oldest" },
+		{ option: "Relevance" },
+		{ option: "Due Sooner" },
+		{ option: "Due Later" },
 	];
 
 	const [selected, setSelected] = useState(options[0]);
@@ -75,9 +75,12 @@ const Post: NextPage = () => {
 				setSchedule(allSchedules[0].schedule);
 				setScheduleT(allSchedules[1].schedule);
 			} else {
+				const today = new Date();
+				const tomorrow = new Date();
+				tomorrow.setDate(today.getDate() + 1);
 				const [scheduleToday, scheduleTomorrow] = await Promise.all([
-					getSchedule(supabase, new Date("2023-03-03")),
-					getSchedule(supabase, new Date("2023-03-04")),
+					getSchedule(supabase, today),
+					getSchedule(supabase, tomorrow),
 				]);
 				setThisSchedule(scheduleToday, setSchedule);
 				setThisSchedule(scheduleTomorrow, setScheduleT);
@@ -121,8 +124,7 @@ const Post: NextPage = () => {
 								size="small"
 								className="my-auto ml-2 shadow shadow-black/25"
 							>
-								Add filters that allow you to specify what type of assignment
-								you like to see.
+								Add filters to specify which types of assignments you see.
 							</Info>
 						</div>
 						<div className="flex flex-wrap">
@@ -135,7 +137,7 @@ const Post: NextPage = () => {
 						<div className="flex items-center">
 							<h2 className="mr-1 text-xl font-bold">Sort</h2>
 							<Info size="small" className="my-auto ml-2">
-								Sort based on different modes
+								Sort by different attributes of assignments
 							</Info>
 						</div>
 						<Listbox
@@ -412,7 +414,7 @@ const Post: NextPage = () => {
 										{assignment.data.submission_instructions ? (
 											<>
 												<h2 className="text-lg font-semibold ">
-													Teachers Instructions:
+													Teacher{"'"}s Instructions:
 												</h2>
 												<p className="max-w-md text-sm text-gray-700">
 													{assignment.data.submission_instructions}
@@ -425,7 +427,7 @@ const Post: NextPage = () => {
 										)}
 										{assignment.data.submission_type == "check" ? (
 											<Button color="bg-blue-500" className="mt-6 text-white">
-												Set as completed
+												Mark as complete
 											</Button>
 										) : (
 											<Button
