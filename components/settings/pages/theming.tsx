@@ -12,7 +12,7 @@ const Theming: NextPage<{}> = () => {
 				<div>
 					<h4 className="font-medium">Color Mode</h4>
 					<p className="text-sm text-gray-700">
-						Change the color mode of Coursify.
+						Change between dark and light mode.
 					</p>
 				</div>
 				<Toggle

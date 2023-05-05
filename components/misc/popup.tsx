@@ -3,13 +3,16 @@ import { XMarkIcon } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
 import { Fragment } from "react";
 import { ReactNode } from "react";
+import { useSettings } from "../../lib/stores/settings";
 
 export const Popup: NextPage<{
 	open: boolean;
 	closeMenu: () => void;
 	children: ReactNode;
-	small?: boolean;
-}> = ({ closeMenu, open, children, small = false }) => {
+	size?: "sm" | "md" | "lg";
+}> = ({ closeMenu, open, children, size = "md" }) => {
+	const { data: settings } = useSettings();
+
 	return (
 		<Transition appear show={open} as={Fragment}>
 			<Dialog open={open} onClose={closeMenu}>
@@ -22,7 +25,11 @@ export const Popup: NextPage<{
 					leaveTo="opacity-75"
 					as={Fragment}
 				>
-					<div className="fixed inset-0 flex items-center justify-center bg-black/20 p-4">
+					<div
+						className={`fixed inset-0 flex items-center justify-center bg-black/20 p-4 ${
+							settings.theme == "dark" && "dark bg-black/40"
+						}`}
+					>
 						<Transition.Child
 							enter="ease-out transition"
 							enterFrom="opacity-75 scale-95"
@@ -34,8 +41,12 @@ export const Popup: NextPage<{
 						>
 							<Dialog.Panel
 								className={`relative flex w-full ${
-									small ? "max-w-screen-sm" : "max-w-screen-md"
-								} flex-col rounded-xl bg-white/75 p-4 shadow-md backdrop-blur-xl`}
+									size == "sm"
+										? "max-w-screen-sm"
+										: size == "md"
+										? "max-w-screen-md"
+										: "max-w-screen-lg"
+								}  flex-col rounded-xl bg-white/75 p-4 shadow-md  backdrop-blur-xl dark:bg-neutral-950/75 dark:text-gray-100`}
 							>
 								{children}
 								<button

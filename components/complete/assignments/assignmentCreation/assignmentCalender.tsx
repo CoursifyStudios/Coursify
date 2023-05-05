@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { NewAssignmentData } from "../../../lib/db/assignments";
+import { NewAssignmentData } from "../../../../lib/db/assignments";
 import { useAssignmentStore } from ".";
 import { DueType } from "../assignments";
 

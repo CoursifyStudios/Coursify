@@ -1,14 +1,11 @@
-import { useFormikContext, Formik, Form, Field, ErrorMessage } from "formik";
-import { EditorState, SerializedEditorState } from "lexical";
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { Button } from "../../misc/button";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { EditorState } from "lexical";
+import { useState, Dispatch, SetStateAction } from "react";
+import { Button } from "../../../misc/button";
 import { submissionType, useAssignmentStore } from ".";
 import * as Yup from "yup";
-import Editor from "../../editors/richeditor";
-import {
-	AssignmentTypes,
-	NewAssignmentData,
-} from "../../../lib/db/assignments";
+import Editor from "../../../editors/richeditor";
+import { NewAssignmentData } from "../../../../lib/db/assignments";
 
 export default function AssignmentDetails({
 	stage,

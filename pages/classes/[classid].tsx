@@ -8,7 +8,7 @@ import { getClass, ClassResponse, updateClass } from "../../lib/db/classes";
 import { Database, Json } from "../../lib/db/database.types";
 import CircleCounter from "../../components/misc/circleCounter";
 import Link from "next/link";
-import { AssignmentPreview } from "../../components/complete/assignments";
+import { AssignmentPreview } from "../../components/complete/assignments/assignments";
 import { ColoredPill } from "../../components/misc/pill";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Editor from "../../components/editors/richeditor";
@@ -19,7 +19,7 @@ import {
 	setThisSchedule,
 } from "../../lib/db/schedule";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
-import { CreateAssignment } from "../../components/complete/assignmentCreation";
+import { CreateAssignment } from "../../components/complete/assignments/assignmentCreation";
 import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
 import { Announcement } from "../../components/complete/announcements";
 import { Button } from "../../components/misc/button";

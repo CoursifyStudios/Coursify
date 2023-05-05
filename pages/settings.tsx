@@ -11,8 +11,6 @@ import { settingsPages } from "../components/settings";
  */
 
 const Settings: NextPage = () => {
-	const router = useRouter();
-
 	return (
 		<div className="container mx-auto mb-10 flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words px-4 sm:mt-10 md:px-8 xl:px-0">
 			<div className="flex w-full flex-col">

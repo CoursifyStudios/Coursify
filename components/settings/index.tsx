@@ -20,7 +20,7 @@ export const settingsPages: {
 		content: <Profile />,
 	},
 	{
-		name: "Themes",
+		name: "Personalization",
 		icon: <SwatchIcon className={iconClasses} />,
 		content: <Theming />,
 	},
