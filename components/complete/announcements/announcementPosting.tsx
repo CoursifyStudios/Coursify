@@ -122,7 +122,7 @@ export const AnnouncementPostingUI = ({
 	return (
 		<div>
 			{showPost ? (
-				<div className="flex flex-col rounded-xl border-2  border-gray-300 bg-gray-50 p-4">
+				<div className="flex flex-col rounded-xl border-2 border-gray-300 bg-gray-50 p-4">
 					{!editingInfo && !sharingInfo && (
 						<h3 className="mb-4 font-semibold">New Announcement</h3>
 					)}
@@ -145,7 +145,6 @@ export const AnnouncementPostingUI = ({
 								></Field>
 							</label>
 							<ErrorMessage name="title"></ErrorMessage>
-
 							<FormObserver />
 						</Form>
 					</Formik>

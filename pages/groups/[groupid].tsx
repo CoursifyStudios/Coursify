@@ -57,10 +57,10 @@ const Group: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md px-2 py-0.5 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none ${
 										selected
-											? "bg-gray-50 shadow-md shadow-black/25  "
-											: "bg-gray-200"
+											? "brightness-focus"
+											: "border-transparent bg-gray-200"
 									} text-lg font-semibold `}
 								>
 									Home
@@ -70,10 +70,10 @@ const Group: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md px-2 py-0.5 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none ${
 										selected
-											? "bg-gray-50 shadow-md shadow-black/25  "
-											: "bg-gray-200"
+											? "brightness-focus"
+											: "border-transparent bg-gray-200"
 									} text-lg font-semibold `}
 								>
 									Resources
@@ -83,10 +83,10 @@ const Group: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md px-2 py-0.5 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none ${
 										selected
-											? "bg-gray-50 shadow-md shadow-black/25  "
-											: "bg-gray-200"
+											? "brightness-focus"
+											: "border-transparent bg-gray-200"
 									} text-lg font-semibold `}
 								>
 									Members

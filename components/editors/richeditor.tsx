@@ -117,14 +117,16 @@ export default function Editor({
 				>
 					<div
 						className={`relative ${
-							className ? className : "mb-2 rounded-xl p-4 shadow-lg"
+							className
+								? className
+								: "mb-2 rounded-xl p-4 shadow-lg dark:border"
 						}`}
 					>
 						{editable && <ToolbarPlugin />}
 						<div className="relative">
 							<RichTextPlugin
 								contentEditable={
-									<ContentEditable className="prose h-full !max-w-full p-1 focus:outline-none [&>h1:first-child]:mt-0" />
+									<ContentEditable className="prose h-full !max-w-full p-1 dark:prose-invert focus:outline-none dark:!text-neutral-200 [&>h1:first-child]:mt-0" />
 								}
 								placeholder={editable ? <Placeholder /> : <></>}
 								ErrorBoundary={LexicalErrorBoundary}

@@ -11,6 +11,7 @@
 }
 
 .graydient {
+	@apply dark:invert;
 	background: rgb(209, 213, 219);
 	background: linear-gradient(
 		rgba(209, 213, 219, 0) 0%,
@@ -21,6 +22,7 @@
 }
 
 .graydient-90deg {
+	@apply dark:invert;
 	background: rgb(209, 213, 219);
 	background: linear-gradient(
 		to right,
@@ -36,6 +38,7 @@
 }
 
 .scrollbar-fancy::-webkit-scrollbar-thumb {
+	@apply dark:bg-neutral-900;
 	border: 4px solid rgba(0, 0, 0, 0);
 	background-clip: padding-box;
 	border-radius: 9999px;
@@ -47,7 +50,15 @@
 }
 
 .brightness-hover {
-	@apply transition duration-300 hover:shadow-lg hover:brightness-95;
+	@apply border border-transparent transition duration-300 hover:shadow-lg hover:brightness-95 dark:hover:border-gray-300;
+}
+
+.brightness-focus {
+	@apply bg-gray-50 shadow-lg dark:border-gray-300 dark:bg-[#020204];
+}
+
+input[type="text"] {
+	@apply rounded-md border-gray-300 bg-backdrop/50 focus:ring-1;
 }
 
 /*Editor CSS*/
@@ -97,7 +108,7 @@
 }
 
 .editor-code {
-	@apply rounded-xl bg-gray-800 font-mono text-gray-200;
+	@apply rounded-xl bg-gray-800 font-mono text-gray-200 dark:bg-gray-900 dark:text-gray-800;
 	display: block;
 	padding: 8px 8px 8px 52px;
 	line-height: 1.53;
@@ -112,7 +123,7 @@
 }
 
 .editor-code:before {
-	@apply bg-gray-700 text-gray-400;
+	@apply bg-gray-700 text-gray-400 dark:bg-gray-950;
 	content: attr(data-gutter);
 	position: absolute;
 	left: 0;
@@ -136,15 +147,15 @@
 }
 
 .editor-heading-h1 {
-	@apply mb-4 mt-2 text-xl font-bold text-gray-900;
+	@apply mb-4 mt-2 text-xl font-bold text-gray-900 dark:text-gray-100;
 }
 
 .editor-heading-h2 {
-	@apply mb-3 mt-2 text-lg font-bold text-gray-900;
+	@apply mb-3 mt-2 text-lg font-bold text-gray-900 dark:text-gray-100;
 }
 
 .editor-heading-h3 {
-	@apply mb-2 mt-2 text-base font-bold text-gray-900;
+	@apply mb-2 mt-2 text-base font-bold text-gray-900 dark:text-gray-100;
 }
 
 .editor-quote {

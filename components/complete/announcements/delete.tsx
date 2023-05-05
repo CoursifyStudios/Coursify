@@ -49,7 +49,7 @@ export const Delete: NextPage<{
 	};
 
 	return (
-		<Popup closeMenu={() => setOpen(false)} open={open} small={true}>
+		<Popup closeMenu={() => setOpen(false)} open={open} size="sm">
 			<h2 className="title-sm">Delete Announcement</h2>
 			<div className="mb-4 mt-2">
 				Are you sure you want to delete this announcement? This action cannot be

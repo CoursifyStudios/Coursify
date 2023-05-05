@@ -28,7 +28,7 @@ import { Button, ButtonIcon } from "../../components/misc/button";
 import {
 	AssignmentPreview,
 	DueType,
-} from "../../components/complete/assignments";
+} from "../../components/complete/assignments/assignments";
 import {
 	getSchedule,
 	ScheduleInterface,
@@ -41,6 +41,7 @@ import { Transition, Dialog, Listbox } from "@headlessui/react";
 import { getDataOutArray } from "../../lib/misc/dataOutArray";
 import { SerializedEditorState } from "lexical";
 import { Info } from "../../components/tooltips/info";
+import Dropdown from "../../components/misc/dropdown";
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
@@ -55,9 +56,9 @@ const Post: NextPage = () => {
 	const [fullscreen, setFullscreen] = useState(false);
 
 	const options = [
-		{ option: "Relevance" },
-		{ option: "Due Sooner" },
-		{ option: "Due Later" },
+		{ name: "Relevance" },
+		{ name: "Due Latest" },
+		{ name: "Due Oldest" },
 	];
 
 	const [selected, setSelected] = useState(options[0]);
@@ -117,7 +118,7 @@ const Post: NextPage = () => {
 				} w-[20.5rem] shrink-0 flex-col space-y-5 overflow-y-auto p-1 pb-6 md:h-[calc(100vh-6.5rem)] `}
 			>
 				<div className="flex flex-col">
-					<div className="flex-col rounded-lg bg-gray-200 p-2">
+					<div className="flex-col rounded-lg bg-backdrop-200 p-2">
 						<div className="mb-1 flex items-center">
 							<h1 className="mr-1 text-xl font-bold">Filters</h1>
 							<Info
@@ -140,54 +141,11 @@ const Post: NextPage = () => {
 								Sort by different attributes of assignments
 							</Info>
 						</div>
-						<Listbox
-							value={selected}
+						<Dropdown
 							onChange={setSelected}
-							as="div"
-							className="font-semibold"
-						>
-							<div className="relative">
-								<Listbox.Button className="flex w-36 rounded-lg bg-gray-200 py-2 pl-3 pr-10 text-sm">
-									<span className="block truncate">{selected.option}</span>
-									<span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-										<ChevronUpDownIcon className="h-5 w-5" aria-hidden="true" />
-									</span>
-								</Listbox.Button>
-								<Transition
-									as={Fragment}
-									leave="transition ease-in duration-100"
-									leaveFrom="opacity-100"
-									leaveTo="opacity-0"
-								>
-									<Listbox.Options className="absolute z-10 mt-2 flex max-h-60 w-max flex-col overflow-auto rounded-xl bg-gray-200/90 p-2 text-sm shadow-xl backdrop-blur-xl transition">
-										{options.map((options, optionID) => (
-											<Listbox.Option
-												key={optionID}
-												className={({ active }) =>
-													`flex select-none justify-center rounded-lg px-4 py-2 transition ${
-														active ? "bg-gray-300" : "text-gray-900"
-													}`
-												}
-												value={options}
-												as="button"
-											>
-												{({ selected }) => (
-													<>
-														<span
-															className={`${
-																selected ? "text-green-500" : "font-semibold"
-															}`}
-														>
-															{options.option}
-														</span>
-													</>
-												)}
-											</Listbox.Option>
-										))}
-									</Listbox.Options>
-								</Transition>
-							</div>
-						</Listbox>
+							selectedValue={selected}
+							values={options}
+						/>
 					</div>
 				</div>
 				{allAssignments ? (
@@ -200,9 +158,9 @@ const Post: NextPage = () => {
 								<div
 									className={`flex rounded-xl ${
 										assignmentid == assignment.id
-											? "bg-gray-50 shadow-lg"
-											: "brightness-hover bg-gray-200"
-									} p-3`}
+											? "brightness-focus"
+											: "brightness-hover bg-backdrop-200"
+									} border border-transparent p-3`}
 									key={assignment.id}
 								>
 									{/* List of assignments */}

@@ -8,7 +8,7 @@ import { getClass, ClassResponse, updateClass } from "../../lib/db/classes";
 import { Database, Json } from "../../lib/db/database.types";
 import CircleCounter from "../../components/misc/circleCounter";
 import Link from "next/link";
-import { AssignmentPreview } from "../../components/complete/assignments";
+import { AssignmentPreview } from "../../components/complete/assignments/assignments";
 import { ColoredPill } from "../../components/misc/pill";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import Editor from "../../components/editors/richeditor";
@@ -19,7 +19,7 @@ import {
 	setThisSchedule,
 } from "../../lib/db/schedule";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
-import { CreateAssignment } from "../../components/complete/assignmentCreation";
+import { CreateAssignment } from "../../components/complete/assignments/assignmentCreation";
 import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
 import { Announcement } from "../../components/complete/announcements";
 import { Button } from "../../components/misc/button";
@@ -166,7 +166,7 @@ const Class: NextPage = () => {
 					className="rounded-xl object-cover object-center"
 					fill
 				/>
-				<ColoredPill className="absolute left-5 top-5 !bg-neutral-500/20 text-lg !text-gray-300 backdrop-blur-xl">
+				<ColoredPill className="absolute left-5 top-5 !bg-neutral-500/20 text-lg !text-gray-300 backdrop-blur-xl dark:!text-gray-100">
 					Rm. {data.data.room}
 				</ColoredPill>
 				<div className="absolute right-5 top-5">
@@ -179,7 +179,7 @@ const Class: NextPage = () => {
 					</div>
 				</div>
 
-				<h1 className="title absolute bottom-5 left-5 !text-4xl text-gray-200">
+				<h1 className="title absolute bottom-5 left-5 !text-4xl text-gray-200 dark:text-gray-100">
 					{data.data && data.data.name}
 				</h1>
 			</div>
@@ -192,11 +192,11 @@ const Class: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md px-2.5 py-0.5 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none ${
 										selected
-											? "bg-gray-50 shadow-md shadow-black/25  "
-											: "bg-gray-200"
-									} text-lg font-semibold `}
+											? "brightness-focus"
+											: "border-transparent bg-gray-200"
+									} text-lg font-semibold`}
 								>
 									Home
 								</div>
@@ -205,10 +205,10 @@ const Class: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md px-2.5 py-0.5 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none ${
 										selected
-											? "bg-gray-50 shadow-md shadow-black/25 "
-											: "bg-gray-200"
+											? "brightness-focus"
+											: "border-transparent bg-gray-200"
 									} text-lg font-semibold `}
 								>
 									Announcements
@@ -218,10 +218,10 @@ const Class: NextPage = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
-									className={`flex cursor-pointer items-center rounded-md px-2.5 py-0.5 focus:outline-none ${
+									className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none ${
 										selected
-											? "bg-gray-50 shadow-md  shadow-black/25 "
-											: "bg-gray-200"
+											? "brightness-focus"
+											: "border-transparent bg-gray-200"
 									} text-lg font-semibold `}
 								>
 									Members
@@ -414,7 +414,7 @@ const Class: NextPage = () => {
 						{isTeacher && (
 							<div
 								onClick={() => setAssignmentCreationOpen(true)}
-								className="group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black"
+								className="group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white"
 							>
 								<PlusIcon className="-ml-4 mr-4 h-8 w-8 transition group-hover:scale-125" />{" "}
 								<h3 className="text-lg font-medium transition">
@@ -427,7 +427,7 @@ const Class: NextPage = () => {
 							getDataInArray(data.data?.assignments).map((assignment) => (
 								<div
 									key={assignment.id}
-									className=" brightness-hover flex rounded-xl bg-gray-200 p-3"
+									className=" brightness-hover flex rounded-xl bg-backdrop-200 p-3"
 								>
 									<AssignmentPreview
 										supabase={supabase}

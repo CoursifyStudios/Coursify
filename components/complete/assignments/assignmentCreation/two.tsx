@@ -1,14 +1,11 @@
-import { useFormikContext, Formik, Form, Field, ErrorMessage } from "formik";
-import { EditorState, SerializedEditorState } from "lexical";
-import { useState, useEffect, Dispatch, SetStateAction } from "react";
-import { Button } from "../../misc/button";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import { EditorState } from "lexical";
+import { useState, Dispatch, SetStateAction } from "react";
+import { Button } from "../../../misc/button";
 import { submissionType, useAssignmentStore } from ".";
 import * as Yup from "yup";
-import Editor from "../../editors/richeditor";
-import {
-	AssignmentTypes,
-	NewAssignmentData,
-} from "../../../lib/db/assignments";
+import Editor from "../../../editors/richeditor";
+import { NewAssignmentData } from "../../../../lib/db/assignments";
 
 export default function AssignmentDetails({
 	stage,
@@ -60,12 +57,7 @@ export default function AssignmentDetails({
 							<span className="text-sm font-medium">
 								Assignment Name <span className="text-red-600">*</span>
 							</span>
-							<Field
-								className="mt-1 rounded-md border-gray-300 bg-white/50 focus:ring-1"
-								type="text"
-								name="name"
-								autoFocus
-							/>
+							<Field className="mt-1" type="text" name="name" autoFocus />
 							<div className="text-sm text-red-600">
 								<ErrorMessage name="name" />
 							</div>
@@ -74,11 +66,7 @@ export default function AssignmentDetails({
 							<span className="text-sm font-medium">
 								Short Description <span className="text-red-600">*</span>
 							</span>
-							<Field
-								className="mt-1 rounded-md border-gray-300  bg-white/50 focus:ring-1"
-								type="text"
-								name="description"
-							/>
+							<Field className="mt-1" type="text" name="description" />
 							<div className="text-sm text-red-600">
 								<ErrorMessage name="description" />
 							</div>
@@ -88,7 +76,7 @@ export default function AssignmentDetails({
 								Submission Instructions
 							</span>
 							<Field
-								className="mt-1 rounded-md border-gray-300  bg-white/50 focus:ring-1"
+								className="mt-1"
 								type="text"
 								name="submissionInstructions"
 							/>
@@ -96,12 +84,14 @@ export default function AssignmentDetails({
 								<ErrorMessage name="submissionInstructions" />
 							</div>
 						</label>
-						<span className="text-sm font-medium">Full Length Description</span>
+						<span className="translate-y-2 text-sm font-medium">
+							Full Length Description
+						</span>
 						<Editor
 							editable
 							updateState={setEditorState}
 							initialState={assignmentData?.content}
-							className="scrollbar-fancy mb-6 mt-1 max-h-[30vh] min-h-[6rem] overflow-y-auto overflow-x-hidden rounded-md border border-gray-300 bg-white/50 pb-2 focus:ring-1"
+							className="scrollbar-fancy mb-6 max-h-[30vh] min-h-[6rem] overflow-y-auto overflow-x-hidden rounded-md border border-gray-300 bg-backdrop/50 pb-2 focus:ring-1"
 							focus={false}
 						/>
 						<div className="ml-auto flex space-x-4">
