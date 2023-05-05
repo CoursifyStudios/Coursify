@@ -10,7 +10,6 @@ import {
 import { NextPage } from "next";
 import { Dispatch, Fragment, ReactNode, SetStateAction, useState } from "react";
 
-import { SerializedEditorState } from "lexical";
 import Image from "next/image";
 import {
 	AssignmentTypes,

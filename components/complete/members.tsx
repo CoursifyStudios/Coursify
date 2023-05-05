@@ -18,7 +18,7 @@ export const Member = ({
 	const { newTab } = useTabs();
 	return (
 		<Link
-			className="brightness-hover flex rounded-xl bg-gray-200 p-6"
+			className="brightness-hover flex rounded-xl bg-gray-200 p-3"
 			key={user.id}
 			href={"/profile/" + user.id}
 			onClick={() =>
@@ -33,7 +33,9 @@ export const Member = ({
 					src={user.avatar_url!}
 					alt="Profile picture"
 					referrerPolicy="no-referrer"
-					className=" h-10 rounded-full shadow-md shadow-black/25"
+					className="h-10 min-w-[2.5rem] rounded-full shadow-md shadow-black/25"
+					width={40}
+					height={40}
 				/>
 				{leader && (
 					<div className="absolute -bottom-1 -right-1  flex rounded-full bg-yellow-100 p-0.5">
@@ -41,15 +43,13 @@ export const Member = ({
 					</div>
 				)}
 			</div>
-			<div className="ml-4 flex flex-col">
+			<div className="ml-4">
 				<h2 className="mb-1 font-medium">{user.full_name}</h2>
 				<CopiedHover copy={user.email ?? "No email found"}>
 					<ColoredPill color="gray">
-						<div className="flex items-center">
+						<div className="flex items-center lg:w-52 xl:w-44">
 							<EnvelopeIcon className="mr-1.5 h-4 w-4 text-gray-800" />
-							{user.email &&
-								user.email.slice(0, 20) +
-									(user.email?.length > 20 ? "..." : "")}
+							<p className="truncate">{user.email}</p>
 						</div>
 					</ColoredPill>
 				</CopiedHover>

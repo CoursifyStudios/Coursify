@@ -24,7 +24,7 @@ export const getAllPublicGroups = async (
 		//we can use rls for this part instead --> people can view groups that are public or that they are in
 
 		//for now it is just groups and more group types
-		.gte("type", CommunityType.GROUP)
+		.gte("type", CommunityType.SCHOOLWIDE_GROUP)
 		.limit(250);
 };
 
@@ -46,9 +46,21 @@ export const getGroup = async (
         full_description,
         image,
         announcements (
-            *,
+            id,
+            author,
+            title,
+            content,
+            time,
+            class_id,
+            type,
             users (
                 avatar_url, full_name
+            ),
+            parent (
+                *,
+                users (
+                    id, full_name, avatar_url
+                )
             )
         ),
         class_users (
@@ -73,7 +85,7 @@ export const addUserToGroup = async (
 	return await supabase.from("class_users").insert({
 		user_id: userID,
 		class_id: groupID,
-		group_leader: null,
+		teacher: false,
 	});
 };
 
