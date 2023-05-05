@@ -15,7 +15,7 @@ const Settings: NextPage = () => {
 		<div className="container mx-auto mb-10 flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words px-4 sm:mt-10 md:px-8 xl:px-0">
 			<div className="flex w-full flex-col">
 				<h1 className="title mb-4">Settings</h1>
-				<Tab.Group as="div" className="flex grow flex-row">
+				<Tab.Group as="div" className="flex grow flex-row" vertical>
 					<Tab.List as="div" className="flex w-56 flex-col gap-4">
 						{settingsPages.map((page) => (
 							<Tab key={page.name} as="button" className="focus:outline-none">
