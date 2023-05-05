@@ -1,10 +1,29 @@
 import { NextPage } from "next";
+import { Toggle } from "../../misc/toggle";
+import { useSettings } from "../../../lib/stores/settings";
 
 const Theming: NextPage<{}> = () => {
+	const { data, set } = useSettings();
+
 	return (
 		<>
-			<h2 className="title-sm">Color</h2>
-			<div className="flex"></div>
+			<h3 className="title-sm mb-6">Color</h3>
+			<div className="flex grow justify-between">
+				<div>
+					<h4 className="font-medium">Color Mode</h4>
+					<p className="text-sm text-gray-700">
+						Change the color mode of Coursify.
+					</p>
+				</div>
+				<Toggle
+					enabled={data.theme == "dark"}
+					setEnabled={() =>
+						set({
+							theme: data.theme == "light" ? "dark" : "light",
+						})
+					}
+				/>
+			</div>
 		</>
 	);
 };

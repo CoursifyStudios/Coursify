@@ -11,21 +11,22 @@ import { settingsPages } from "../components/settings";
  */
 
 const Settings: NextPage = () => {
-	const { data, set } = useSettings();
 	const router = useRouter();
 
 	return (
 		<div className="container mx-auto mb-10 flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words px-4 sm:mt-10 md:px-8 xl:px-0">
 			<div className="flex w-full flex-col">
 				<h1 className="title mb-4">Settings</h1>
-				<Tab.Group as="div" className="flex flex-row">
+				<Tab.Group as="div" className="flex grow flex-row">
 					<Tab.List as="div" className="flex w-56 flex-col gap-4">
 						{settingsPages.map((page) => (
-							<Tab key={page.name}>
+							<Tab key={page.name} as="button" className="focus:outline-none">
 								{({ selected }) => (
 									<div
-										className={`brightness-hover flex items-center justify-between rounded-lg bg-backdrop-200 px-3 py-1.5 ${
-											selected ? "brightness-focus" : ""
+										className={`flex items-center justify-between rounded-lg border bg-backdrop-200  px-3 py-1.5 font-medium ${
+											selected
+												? "brightness-focus"
+												: "brightness-hover border-transparent"
 										}`}
 									>
 										{page.name}
@@ -36,7 +37,7 @@ const Settings: NextPage = () => {
 						))}
 					</Tab.List>
 
-					<Tab.Panels>
+					<Tab.Panels className="grow">
 						{settingsPages.map((page) => (
 							<Tab.Panel
 								as="div"
