@@ -18,7 +18,7 @@ const Settings: NextPage = () => {
 	useEffect(() => {
 		if (typeof page == "string") {
 			setCurrentTab(parseInt(page));
-			if (typeof name == "string") {
+			if (typeof category == "string") {
 				const name = document.getElementById(category);
 				if (name) {
 					name.scrollIntoView({ behavior: "smooth" });
