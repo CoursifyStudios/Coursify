@@ -52,7 +52,7 @@ const Profile: NextPage<{}> = () => {
 					onSubmit={(values) => alert(JSON.stringify(values))}
 				>
 					<Form>
-						<Field name="bio" type="text" />
+						<Field name="bio" type="text" className="w-full text-sm" rows={5} />
 						<Button type="submit">Submit</Button>
 					</Form>
 				</Formik>
