@@ -95,6 +95,7 @@ export default function Editor({
 	initialStateEditor,
 	updatedState,
 	focus,
+	backdrop,
 }: {
 	editable: boolean;
 	updateState?:
@@ -105,6 +106,7 @@ export default function Editor({
 	className?: string;
 	updatedState?: EditorState;
 	focus?: boolean;
+	backdrop?: boolean;
 }) {
 	return (
 		<GrammarlyEditorPlugin clientId="client_HhHcuxVxKgaZMFYuD57U3V">
@@ -122,7 +124,7 @@ export default function Editor({
 								: "mb-2 rounded-xl p-4 shadow-lg dark:border"
 						}`}
 					>
-						{editable && <ToolbarPlugin />}
+						{editable && <ToolbarPlugin backdrop={backdrop} />}
 						<div className="relative">
 							<RichTextPlugin
 								contentEditable={

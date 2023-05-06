@@ -18,6 +18,7 @@ import { AnnouncementPostingUI } from "./announcementPosting";
 import { TempAnnouncement } from "./tempAnnouncement";
 import { Delete } from "./delete";
 import { Comment, Commenting } from "./commenting";
+import Image from "next/image";
 
 /**
  * editing announcements
@@ -91,7 +92,7 @@ export const Announcement = ({
 					announcement={announcement}
 					classID={classID}
 				/>
-				<div className="rounded-xl bg-gray-200 p-4">
+				<div className="rounded-xl bg-backdrop-200 p-4">
 					<div className="flex items-center justify-between">
 						<h2 className="text-xl font-semibold">{announcement.title}</h2>
 						<Listbox
@@ -113,7 +114,7 @@ export const Announcement = ({
 									leaveFrom="opacity-100"
 									leaveTo="opacity-0"
 								>
-									<Listbox.Options className="absolute right-0 top-6 z-10 mt-2 flex w-28 flex-col overflow-auto rounded-xl bg-white/75 p-1.5 text-sm shadow-xl backdrop-blur-xl transition">
+									<Listbox.Options className="absolute right-0 top-6 z-10 mt-2 flex w-28 flex-col overflow-auto rounded-xl bg-backdrop/75  p-1.5 text-sm shadow-xl backdrop-blur-xl transition">
 										{options.map(
 											(options, optionID) =>
 												user &&
@@ -123,7 +124,9 @@ export const Announcement = ({
 														key={optionID}
 														className={({ active }) =>
 															`my-0.5 flex select-none items-center justify-between rounded-md px-4 py-1 transition ${
-																active ? "bg-gray-200" : "text-gray-900"
+																active
+																	? "bg-gray-200"
+																	: "text-gray-900 dark:text-gray-100"
 															}`
 														}
 														value={options}
@@ -169,16 +172,19 @@ export const Announcement = ({
 								)
 							}
 						>
-							<img
+							<Image
 								src={getDataOutArray(announcement.users!).avatar_url}
-								alt=""
+								alt="User image"
 								className="h-5 w-5 rounded-full"
+								referrerPolicy="no-referrer"
+								width={20}
+								height={20}
 							/>
-							<p className="ml-1.5 mr-1 font-semibold text-neutral-700">
+							<p className="ml-1.5 mr-1 font-semibold text-gray-700">
 								{getDataOutArray(announcement.users!).full_name}
 							</p>
 						</Link>
-						<p className="pl-1.5 text-gray-600">
+						<p className="pl-1.5 text-gray-600 dark:text-gray-400">
 							{howLongAgo(announcement.time!)}
 						</p>
 					</div>
@@ -189,17 +195,18 @@ export const Announcement = ({
 					/>
 					{announcement.parent && (
 						<div className="flex">
-							<div className="ml-1 mr-3 flex w-2 flex-shrink-0 bg-slate-400 p-1"></div>
+							<div className=""></div>
 							<TempAnnouncement
 								announcement={announcement.parent}
 							></TempAnnouncement>
 						</div>
 					)}
-					<Commenting
-						communityid={classID}
-						announcementid={announcement.id}
-					></Commenting>
-					<div className="ml-2 space-y-1">
+					<div className="space-y-4">
+						<Commenting
+							communityid={classID}
+							announcementid={announcement.id}
+						/>
+
 						{comments &&
 							comments.map((comment) => (
 								<Comment
