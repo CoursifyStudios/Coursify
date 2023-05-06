@@ -126,7 +126,7 @@ export interface Database {
 				};
 				Insert: {
 					class_id: string;
-					grade?: number;
+					grade: number;
 					teacher?: boolean;
 					user_id: string;
 				};
@@ -303,29 +303,32 @@ export interface Database {
 			users: {
 				Row: {
 					avatar_url: string;
+					bio: string | null;
 					created: string | null;
 					email: string | null;
 					full_name: string;
 					id: string;
-					username: string | null;
+					preferred_name: string | null;
 					year: string | null;
 				};
 				Insert: {
 					avatar_url: string;
+					bio?: string | null;
 					created?: string | null;
 					email?: string | null;
 					full_name: string;
 					id: string;
-					username?: string | null;
+					preferred_name?: string | null;
 					year?: string | null;
 				};
 				Update: {
 					avatar_url?: string;
+					bio?: string | null;
 					created?: string | null;
 					email?: string | null;
 					full_name?: string;
 					id?: string;
-					username?: string | null;
+					preferred_name?: string | null;
 					year?: string | null;
 				};
 			};

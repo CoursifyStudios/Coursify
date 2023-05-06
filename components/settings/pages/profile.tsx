@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { UserDataType, getUserData } from "../../../lib/db/settings";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Image from "next/image";
+import { Field, Form, Formik } from "formik";
+import { Button } from "../../misc/button";
 
 const Profile: NextPage<{}> = () => {
 	const supabase = useSupabaseClient();
@@ -27,15 +29,34 @@ const Profile: NextPage<{}> = () => {
 
 	return (
 		<div>
-			<h1 className="title mb-4">Profile</h1>
-			<Image
-				src={userData.data.avatar_url}
-				alt="Profile picture"
-				referrerPolicy="no-referrer"
-				className="w-40 rounded-full shadow-md shadow-black/25"
-				height={90}
-				width={90}
-			/>
+			<div className="flex items-center ">
+				<Image
+					src={userData.data.avatar_url}
+					alt="Profile picture"
+					referrerPolicy="no-referrer"
+					className="w-40 rounded-full shadow-md shadow-black/25"
+					height={90}
+					width={90}
+				/>
+				<div className="ml-5">
+					<p className="text-3xl font-bold">{userData.data.full_name}</p>
+					<p className="text-xl">{userData.data.year}</p>
+				</div>
+			</div>
+			<div className="mt-3">
+				<h1 className="text-xl font-medium">Bio</h1>
+				<Formik
+					initialValues={{
+						bio: userData.data.bio,
+					}}
+					onSubmit={(values) => alert(JSON.stringify(values))}
+				>
+					<Form>
+						<Field name="bio" type="text" />
+						<Button type="submit">Submit</Button>
+					</Form>
+				</Formik>
+			</div>
 		</div>
 	);
 };

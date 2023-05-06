@@ -8,7 +8,8 @@ export const Button: NextPage<{
 	color?: string;
 	disabled?: boolean;
 	onClick?: () => void;
-}> = ({ className, children, color, disabled, onClick }) => {
+	type?: "submit" | "reset" | "button";
+}> = ({ className, children, color, disabled, onClick, type }) => {
 	return (
 		<button
 			disabled={disabled}
@@ -16,6 +17,7 @@ export const Button: NextPage<{
 				color ? color : "bg-gray-200"
 			} ${disabled ? "cursor-not-allowed brightness-75" : "brightness-hover"}`}
 			onClick={onClick}
+			type={type}
 		>
 			{children}
 		</button>
