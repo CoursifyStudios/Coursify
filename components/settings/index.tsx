@@ -7,7 +7,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Profile from "./pages/profile";
 import { ReactNode } from "react";
-import Appearence from "./pages/appearence";
+import Appearance from "./pages/appearance";
 import Securityandprivacy from "./pages/securityandprivacy";
 import Connections from "./pages/connections";
 
@@ -24,9 +24,9 @@ export const settingsPages: {
 		content: <Profile />,
 	},
 	{
-		name: "Appearence	",
+		name: "Appearance	",
 		icon: <SwatchIcon className={iconClasses} />,
-		content: <Appearence />,
+		content: <Appearance />,
 	},
 
 	{
