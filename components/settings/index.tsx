@@ -8,7 +8,7 @@ import {
 import Profile from "./pages/profile";
 import { ReactNode } from "react";
 import Appearence from "./pages/appearence";
-import Securityandprivacy from "./pages/securityandprivacy";
+import Securityandprivacy from "./pages/securityPrivacy";
 import Connections from "./pages/connections";
 
 const iconClasses = "w-6 h-6";

@@ -122,7 +122,7 @@ export const AnnouncementPostingUI = ({
 	return (
 		<div>
 			{showPost ? (
-				<div className="flex flex-col rounded-xl border-2 border-gray-300 bg-backdrop-50 p-4">
+				<div className="flex flex-col rounded-xl border-2 border-gray-300 bg-gray-50 p-4 dark:bg-zinc-950">
 					{!editingInfo && !sharingInfo && (
 						<h3 className="mb-4 font-semibold">New Announcement</h3>
 					)}
@@ -140,8 +140,9 @@ export const AnnouncementPostingUI = ({
 								<Field
 									name="title"
 									type="text"
-									className="h-10 rounded border-gray-300 bg-white py-1.5 pl-3 text-lg font-normal placeholder:text-gray-700 focus:ring-1"
+									className="h-10   py-1.5 pl-3 text-lg font-normal placeholder:text-gray-600 focus:ring-1 dark:placeholder:text-neutral-500"
 									autoFocus
+									placeholder="Enter a title..."
 								></Field>
 							</label>
 							<ErrorMessage name="title"></ErrorMessage>
@@ -150,7 +151,8 @@ export const AnnouncementPostingUI = ({
 					</Formik>
 					<Editor
 						editable={true}
-						className="mt-4 rounded border border-gray-300 bg-backdrop p-2"
+						className="mt-4 rounded-md border border-gray-300 bg-backdrop/50 p-2 "
+						backdrop={false}
 						updateState={setEditorState}
 						initialState={editingInfo && editingInfo.content}
 						focus={false}
@@ -201,7 +203,7 @@ export const AnnouncementPostingUI = ({
 						)}
 						<div className="flex space-x-4">
 							<Button
-								className="brightness-hover transition hover:bg-red-300"
+								className="brightness-hover transition hover:bg-red-300 dark:hover:bg-red-900"
 								onClick={() => {
 									!sharingInfo &&
 										setChosenCommunities([
@@ -364,22 +366,7 @@ export const AnnouncementPostingUI = ({
 					)}
 				</div>
 			) : (
-				!editingInfo &&
-				!sharingInfo && (
-					<div
-						className="cursor-pointer rounded-xl border-2 border-dashed border-gray-300 p-4 transition hover:border-solid hover:bg-backdrop-50"
-						onClick={() => setShowPost(true)}
-					>
-						<h3 className="mb-4 font-semibold">New Announcement</h3>
-
-						<div className="h-10 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium text-gray-700">
-							Enter a title...
-						</div>
-						<div className="mt-4 h-10 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium text-gray-700">
-							Description...
-						</div>
-					</div>
-				)
+				!editingInfo && !sharingInfo && <TempUI />
 			)}
 
 			<div className="mt-2 space-y-2">
@@ -405,5 +392,23 @@ export const AnnouncementPostingUI = ({
 	function isEditorEmpty(editor: EditorState | undefined) {
 		if (editor) return editor.toJSON().root.direction === null;
 		return true;
+	}
+
+	function TempUI() {
+		return (
+			<div
+				className="cursor-pointer rounded-xl border-2 border-dashed border-gray-300 p-4 transition hover:border-solid hover:bg-gray-50 dark:hover:bg-zinc-950"
+				onClick={() => setShowPost(true)}
+			>
+				<h3 className="mb-4 font-semibold">New Announcement</h3>
+
+				<div className="h-10 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium text-gray-700">
+					Enter a title...
+				</div>
+				<div className="mt-4 h-10 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium text-gray-700">
+					Description...
+				</div>
+			</div>
+		);
 	}
 };

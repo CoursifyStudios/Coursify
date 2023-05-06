@@ -18,6 +18,7 @@ import { ButtonIcon } from "../misc/button";
 import { Menu, Transition } from "@headlessui/react";
 import { addPossesive } from "../../lib/misc/stringManipulation";
 import { Database } from "../../lib/db/database.types";
+import Image from "next/image";
 
 const Navbar: NextComponentType = () => {
 	const { newTab, closeTab, tabs } = useTabs();
@@ -64,7 +65,7 @@ const Navbar: NextComponentType = () => {
 				>
 					<Menu.Button>
 						{user ? (
-							<img
+							<Image
 								src={user.user_metadata.picture}
 								alt="Profile picture"
 								referrerPolicy="no-referrer"
