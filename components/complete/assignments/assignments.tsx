@@ -103,7 +103,7 @@ export function AssignmentPreview({
 				<div tabIndex={-1}>
 					<h1 className="text font-medium">{assignment.name}</h1>
 					<div className="flex items-end justify-between">
-						<p className="line-clamp-2 w-[14rem] break-words">
+						<p className="line-clamp-2 w-[14rem] break-words compact:line-clamp-1 compact:text-sm">
 							{assignment.description}
 						</p>
 						<CheckIcon className="h-6 w-6" />

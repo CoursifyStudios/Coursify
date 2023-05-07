@@ -1,4 +1,5 @@
 const themeSwapper = require("tailwindcss-theme-swapper");
+const plugin = require("tailwindcss/plugin");
 
 /** @type {import('tailwindcss').Config} */
 export const content = [
@@ -63,8 +64,15 @@ const themes = {
 	],
 };
 
+// :is(.dark .dark\:hover\:bg-neutral-950:hover)
+
+const variants = plugin(({ addVariant }) => {
+	addVariant("compact", ":is(.compact &)");
+});
+
 export const plugins = [
 	require("@tailwindcss/typography"),
 	require("@tailwindcss/forms"),
 	themeSwapper(themes),
+	variants,
 ];

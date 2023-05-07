@@ -40,7 +40,7 @@ export const ButtonIcon: NextPage<{
 	const r = (
 		<div
 			className={
-				"grid h-9 w-9 cursor-pointer place-items-center rounded-full bg-gray-300 text-gray-800 transition  duration-300 hover:brightness-95 " +
+				"grid h-9 w-9 cursor-pointer place-items-center rounded-full bg-gray-300 text-gray-800 transition duration-300 hover:brightness-95  compact:h-8 compact:w-8 " +
 				className
 			}
 		>

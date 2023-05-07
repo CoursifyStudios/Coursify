@@ -29,6 +29,7 @@ import {
 	AnnouncementType,
 	TypeOfAnnouncements,
 } from "../../lib/db/announcements";
+import { useSettings } from "../../lib/stores/settings";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -48,6 +49,9 @@ const Class: NextPage = () => {
 		TypeOfAnnouncements[]
 	>([]);
 	const [fetchedClassId, setFetchedClassId] = useState("");
+	const {
+		data: { compact },
+	} = useSettings();
 
 	const updateEditorDB = async () => {
 		setEdited(true);
@@ -74,7 +78,7 @@ const Class: NextPage = () => {
 				if (data.data && Array.isArray(data.data.class_users)) {
 					//grades are temporarily done like this until we figure out assignment submissions
 					setGrade(
-						data.data.class_users.find((v) => v.user_id == user.id)?.grade 
+						data.data.class_users.find((v) => v.user_id == user.id)?.grade
 					);
 					setIsTeacher(
 						data.data.class_users.find((v) => v.user_id == user.id)?.teacher
@@ -149,7 +153,7 @@ const Class: NextPage = () => {
 	}
 
 	return (
-		<div className="mx-auto my-10 w-full max-w-screen-xl px-4">
+		<div className="mx-auto my-10 flex w-full max-w-screen-xl flex-col px-4">
 			{data.data && typeof classid == "string" && (
 				<CreateAssignment
 					block={data.data.block}
@@ -159,30 +163,42 @@ const Class: NextPage = () => {
 					classid={classid}
 				/>
 			)}
-			<div className="relative mb-6 h-48 w-full">
-				<Image
-					src={data.data.image || ""}
-					alt="Example Image"
-					className="rounded-xl object-cover object-center"
-					fill
-				/>
-				<ColoredPill className="absolute left-5 top-5 !bg-neutral-500/20 text-lg !text-gray-300 backdrop-blur-xl dark:!text-gray-100">
-					Rm. {data.data.room}
-				</ColoredPill>
-				<div className="absolute right-5 top-5">
-					<div className="flex items-center">
-						<h2
-							className={`text-2xl text-${data.data.color}-300 rounded-lg bg-neutral-500/20 px-2 font-bold opacity-75 backdrop-blur-xl`}
-						>
-							{data.data.block}
-						</h2>
+			{!compact ? (
+				<div className="relative mb-6 h-48 w-full">
+					<Image
+						src={data.data.image || ""}
+						alt="Example Image"
+						className="rounded-xl object-cover object-center"
+						fill
+					/>
+					<ColoredPill className="absolute left-5 top-5 !bg-neutral-500/20 text-lg !text-gray-300 backdrop-blur-xl dark:!text-gray-100">
+						Rm. {data.data.room}
+					</ColoredPill>
+					<div className="absolute right-5 top-5">
+						<div className="flex items-center">
+							<h2
+								className={`text-2xl text-${data.data.color}-300 rounded-lg bg-neutral-500/20 px-2 font-bold opacity-75 backdrop-blur-xl`}
+							>
+								{data.data.block}
+							</h2>
+						</div>
+					</div>
+
+					<h1 className="title absolute bottom-5 left-5 !text-4xl text-gray-200 dark:text-gray-100">
+						{data.data && data.data.name}
+					</h1>
+				</div>
+			) : (
+				<div className="mx-auto mb-10 flex flex-col items-center">
+					<h1 className="title mb-3 !text-4xl text-gray-200 dark:text-gray-100">
+						{data.data && data.data.name}
+					</h1>
+					<div className="flex gap-4">
+						<ColoredPill color="gray">Rm. {data.data.room}</ColoredPill>
+						<ColoredPill color="gray">Block {data.data.block}</ColoredPill>
 					</div>
 				</div>
-
-				<h1 className="title absolute bottom-5 left-5 !text-4xl text-gray-200 dark:text-gray-100">
-					{data.data && data.data.name}
-				</h1>
-			</div>
+			)}
 			<div className="space-x sm:grid-cols-1 md:flex">
 				<Tab.Group as="div" className="flex grow flex-col">
 					<Tab.List
