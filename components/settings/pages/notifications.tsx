@@ -1,7 +1,8 @@
 import { NextPage } from "next";
+import { Header } from "../components/header";
 
 const Notifications: NextPage<{}> = () => {
-	return <>test</>;
+	return <></>;
 };
 
 export default Notifications;

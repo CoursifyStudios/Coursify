@@ -19,7 +19,7 @@ export const ToggleSection: NextPage<{
 						<Betatag />
 					</div>
 				</div>
-				<p className="max-w-md text-sm text-gray-700">{description}</p>
+				<p className="max-w-xl text-sm text-gray-700">{description}</p>
 			</div>
 			<Toggle enabled={enabled} setEnabled={setEnabled} />
 		</div>

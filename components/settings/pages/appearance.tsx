@@ -1,5 +1,4 @@
 import { NextPage } from "next";
-import { Toggle } from "../../misc/toggle";
 import { useSettings } from "../../../lib/stores/settings";
 import { Header } from "../components/header";
 import { ToggleSection } from "../components/sections";
@@ -22,7 +21,6 @@ const Theming: NextPage<{}> = () => {
 					})
 				}
 			/>
-
 			<Header name="layout" page={1}>
 				Layout Settings
 			</Header>

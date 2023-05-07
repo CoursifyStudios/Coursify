@@ -5,11 +5,12 @@ import {
 	SwatchIcon,
 	UserIcon,
 } from "@heroicons/react/24/outline";
-import Profile from "./pages/profile";
 import { ReactNode } from "react";
+import Profile from "./pages/profile";
 import Appearance from "./pages/appearance";
 import Connections from "./pages/connections";
 import Securityandprivacy from "./pages/securityPrivacy";
+import Notifications from "./pages/notifications";
 
 const iconClasses = "w-6 h-6";
 
@@ -24,7 +25,7 @@ export const settingsPages: {
 		content: <Profile />,
 	},
 	{
-		name: "Appearance	",
+		name: "Appearance",
 		icon: <SwatchIcon className={iconClasses} />,
 		content: <Appearance />,
 	},
@@ -32,7 +33,7 @@ export const settingsPages: {
 	{
 		name: "Notifications",
 		icon: <BellIcon className={iconClasses} />,
-		content: <Profile />,
+		content: <Notifications />,
 	},
 	{
 		name: "Connections",
