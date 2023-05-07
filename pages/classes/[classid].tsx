@@ -36,7 +36,7 @@ const Class: NextPage = () => {
 	const user = useUser();
 	const supabase = useSupabaseClient<Database>();
 	const [data, setData] = useState<ClassResponse>();
-	const [grade, setGrade] = useState<number>();
+	const [grade, setGrade] = useState<number | null>();
 	const [isTeacher, setIsTeacher] = useState<boolean>();
 	const [editable, setEditable] = useState(false);
 	const [editorState, setEditorState] = useState<EditorState>();
@@ -74,7 +74,7 @@ const Class: NextPage = () => {
 				if (data.data && Array.isArray(data.data.class_users)) {
 					//grades are temporarily done like this until we figure out assignment submissions
 					setGrade(
-						data.data.class_users.find((v) => v.user_id == user.id)?.grade
+						data.data.class_users.find((v) => v.user_id == user.id)?.grade 
 					);
 					setIsTeacher(
 						data.data.class_users.find((v) => v.user_id == user.id)?.teacher
