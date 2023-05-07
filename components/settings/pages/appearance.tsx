@@ -22,7 +22,6 @@ const Theming: NextPage<{}> = () => {
 					})
 				}
 			/>
-
 			<Header name="layout" page={1}>
 				Layout Settings
 			</Header>
