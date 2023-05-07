@@ -19,6 +19,7 @@ export const Header: NextPage<{
 					{
 						pathname: "/settings",
 						query: { page, category: name },
+						//hash: `#${name}`
 					},
 					{
 						pathname: "/settings",

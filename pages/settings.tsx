@@ -19,10 +19,14 @@ const Settings: NextPage = () => {
 		if (typeof page == "string") {
 			setCurrentTab(parseInt(page));
 			if (typeof category == "string") {
-				const name = document.getElementById(category);
-				if (name) {
-					name.scrollIntoView({ behavior: "smooth" });
-				}
+				const interval = setInterval(() => {
+					const name = document.getElementById(category);
+					if (name) {
+						
+						name.scrollIntoView({ behavior: "smooth" });
+						clearInterval(interval);
+					}
+				}, 100);
 			}
 		}
 	}, [page, category]);
