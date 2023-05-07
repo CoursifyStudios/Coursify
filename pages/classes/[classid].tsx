@@ -190,7 +190,7 @@ const Class: NextPage = () => {
 				</div>
 			) : (
 				<div className="mx-auto mb-10 flex flex-col items-center">
-					<h1 className="title mb-3 !text-4xl text-gray-200 dark:text-gray-200">
+					<h1 className="title text-white-200 mb-3 !text-4xl">
 						{data.data && data.data.name}
 					</h1>
 					<div className="flex gap-4">
