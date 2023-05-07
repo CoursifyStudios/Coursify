@@ -5,6 +5,7 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Image from "next/image";
 import { Field, Form, Formik } from "formik";
 import { Button } from "../../misc/button";
+import { GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
 
 const Profile: NextPage<{}> = () => {
 	const supabase = useSupabaseClient();
@@ -29,6 +30,10 @@ const Profile: NextPage<{}> = () => {
 
 	return (
 		<div>
+			<div className="mb-3 flex items-center justify-between">
+				<h1 className="text-3xl font-bold">Profile</h1>
+				<Button type="submit">Save</Button>
+			</div>
 			<div className="flex items-center ">
 				<Image
 					src={userData.data.avatar_url}
@@ -39,12 +44,12 @@ const Profile: NextPage<{}> = () => {
 					width={90}
 				/>
 				<div className="ml-5">
-					<p className="text-3xl font-bold">{userData.data.full_name}</p>
+					<p className="text-2xl font-bold">{userData.data.full_name}</p>
 					<p className="text-xl">{userData.data.year}</p>
 				</div>
 			</div>
 			<div className="mt-3">
-				<h1 className="text-xl font-medium">Bio</h1>
+				<h1 className="mb-1 text-xl font-medium">Bio</h1>
 				<Formik
 					initialValues={{
 						bio: userData.data.bio,
@@ -52,8 +57,14 @@ const Profile: NextPage<{}> = () => {
 					onSubmit={(values) => alert(JSON.stringify(values))}
 				>
 					<Form>
-						<Field name="bio" type="text" className="w-full text-sm" rows={5} />
-						<Button type="submit">Submit</Button>
+						<GrammarlyEditorPlugin clientId="client_HhHcuxVxKgaZMFYuD57U3V">
+							<textarea
+								className="flex w-full resize-none rounded-lg bg-backdrop focus:outline-none"
+								name="bio"
+								rows={4}
+								maxLength={150}
+							/>
+						</GrammarlyEditorPlugin>
 					</Form>
 				</Formik>
 			</div>
