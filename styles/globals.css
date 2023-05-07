@@ -7,7 +7,7 @@
 }
 
 .title-sm {
-	@apply text-xl font-semibold;
+	@apply text-[1.35rem] font-bold dark:text-white;
 }
 
 .graydient {

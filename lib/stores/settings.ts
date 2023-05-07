@@ -3,6 +3,7 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 
 interface Settings {
 	theme: "light" | "dark";
+	compact: boolean;
 }
 
 interface SettingsStore {
@@ -11,7 +12,7 @@ interface SettingsStore {
 }
 
 export const useSettings = create<SettingsStore>()((set) => ({
-	data: { theme: "light" },
+	data: { theme: "light", compact: false },
 	set: async (data) => {
 		// const supabase = useSupabaseClient();
 		// const user = useUser();
@@ -24,6 +25,7 @@ export const useSettings = create<SettingsStore>()((set) => ({
 				  }
 				: {
 						theme: "dark",
+						compact: false,
 				  },
 		}));
 

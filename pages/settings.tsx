@@ -19,10 +19,10 @@ const Settings: NextPage = () => {
 		if (typeof page == "string") {
 			setCurrentTab(parseInt(page));
 			if (typeof category == "string") {
+				// This setInterval isn't ideal, but useLayoutEffect doens't seem to work
 				const interval = setInterval(() => {
 					const name = document.getElementById(category);
 					if (name) {
-						
 						name.scrollIntoView({ behavior: "smooth" });
 						clearInterval(interval);
 					}
@@ -31,15 +31,20 @@ const Settings: NextPage = () => {
 		}
 	}, [page, category]);
 
+	const setTab = (tab: number) => {
+		setCurrentTab(tab);
+		router.push("/settings");
+	};
+
 	return (
-		<div className="container mx-auto mb-10 flex w-full max-w-screen-xl  flex-col space-y-5 break-words px-4 sm:mt-10 md:px-8 xl:px-0">
+		<div className="container mx-auto mb-10 flex w-full max-w-screen-xl flex-col space-y-5 break-words px-4 sm:mt-10 md:px-8 xl:px-0">
 			<div className="">
 				<Tab.Group
 					as="div"
 					className="relative flex w-full grow flex-row"
 					vertical
 					selectedIndex={currentTab}
-					onChange={setCurrentTab}
+					onChange={setTab}
 				>
 					<div>
 						<h1 className="title sticky top-4 h-16">Settings</h1>
