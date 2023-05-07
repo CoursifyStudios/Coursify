@@ -1,5 +1,6 @@
 import { create } from "zustand";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { SupabaseClient } from "@supabase/auth-helpers-react";
+import { Database } from "../db/database.types";
 
 interface Settings {
 	theme: "light" | "dark";
@@ -9,30 +10,36 @@ interface Settings {
 interface SettingsStore {
 	data: Settings;
 	set: (data: Partial<Settings>) => void;
+	loadSettings: (supabase: SupabaseClient<Database>, userid: string) => void;
 }
 
 export const useSettings = create<SettingsStore>()((set) => ({
 	data: { theme: "light", compact: false },
 	set: async (data) => {
-		// const supabase = useSupabaseClient();
-		// const user = useUser();
-
-		set((state) => ({
-			data: data
-				? {
-						...state.data,
-						...data,
-				  }
-				: {
-						theme: "dark",
-						compact: false,
-				  },
-		}));
-
-		// if (user != undefined) {
-		// 	supabase.from("settings").update({
-
-		// 	})
-		// }
+		set((state) => ( {
+				data: data
+					? {
+							...state.data,
+							...data,
+					  }
+					: {
+							theme: "dark",
+							compact: false,
+					  },
+			}));
 	},
+
+	loadSettings: async (supabase: SupabaseClient<Database>, userid: string) => {
+		const { data } = await supabase.from("settings").select("*").eq("user_id", userid).limit(1).single();
+		
+		if (data != undefined) {
+			set((state) => ({
+				data: {
+					...state.data,
+					...data,
+				},
+			}));
+		}
+	}
 }));
+

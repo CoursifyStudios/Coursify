@@ -102,7 +102,7 @@ const Class: NextPage = () => {
 		setEdited(false);
 		setEditorState(undefined);
 		setEditable(false);
-	}, [classid, data, supabase, user]);
+	}, [classid, data, supabase, user, fetchedClassId]);
 
 	if (!data)
 		return (
