@@ -18,7 +18,7 @@ export const Header: NextPage<{
 
 	return (
 		<div
-			className="group mb-2 flex cursor-pointer items-center pb-2 [&:not(:first-child)]:mt-14"
+			className="group mb-2 flex cursor-pointer items-center pb-2 [&:not(:first-child)]:mt-10"
 			id={name}
 			onClick={() =>
 				router.push(
