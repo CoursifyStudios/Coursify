@@ -1,0 +1,12 @@
+{
+	"recommendations": [
+		"ms-azuretools.vscode-docker",
+		"irongeek.vscode-env",
+		"dbaeumer.vscode-eslint",
+		"visualstudioexptteam.vscodeintellicode",
+		"ms-vscode.live-server",
+		"esbenp.prettier-vscode",
+		"wayou.vscode-todo-highlight",
+		"bradlc.vscode-tailwindcss"
+	]
+}
