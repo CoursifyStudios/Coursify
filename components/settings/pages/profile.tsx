@@ -30,22 +30,31 @@ const Profile: NextPage<{}> = () => {
 
 	return (
 		<div>
-			<div className="mb-3 flex items-center justify-between">
-				<h1 className="text-3xl font-bold">Profile</h1>
-				<Button type="submit">Save</Button>
+			<div className="flex justify-between">
+				<div className="flex items-center ">
+					<Image
+						src={userData.data.avatar_url}
+						alt="Profile picture"
+						referrerPolicy="no-referrer"
+						className="w-40 rounded-full shadow-md shadow-black/25"
+						height={90}
+						width={90}
+					/>
+					<div className="ml-5">
+						<p className="text-2xl font-bold">{userData.data.full_name}</p>
+						<p className="text-xl">{userData.data.year}</p>
+					</div>
+				</div>
+				<div>
+					<Button type="submit">Save</Button>
+				</div>
 			</div>
-			<div className="flex items-center ">
-				<Image
-					src={userData.data.avatar_url}
-					alt="Profile picture"
-					referrerPolicy="no-referrer"
-					className="w-40 rounded-full shadow-md shadow-black/25"
-					height={90}
-					width={90}
-				/>
-				<div className="ml-5">
-					<p className="text-2xl font-bold">{userData.data.full_name}</p>
-					<p className="text-xl">{userData.data.year}</p>
+			<div className="mt-3 flex space-x-8">
+				<div>
+					<h2 className="mb-1 text-xl font-medium">Email</h2>
+					<div className="select-none rounded-lg bg-gray-200 p-2 pr-10 font-semibold">
+						{userData.data.email}
+					</div>
 				</div>
 			</div>
 			<div className="mt-3">
@@ -56,16 +65,14 @@ const Profile: NextPage<{}> = () => {
 					}}
 					onSubmit={(values) => alert(JSON.stringify(values))}
 				>
-					<Form>
-						<GrammarlyEditorPlugin clientId="client_HhHcuxVxKgaZMFYuD57U3V">
-							<textarea
-								className="flex w-full resize-none rounded-lg bg-backdrop focus:outline-none"
-								name="bio"
-								rows={4}
-								maxLength={150}
-							/>
-						</GrammarlyEditorPlugin>
-					</Form>
+					<GrammarlyEditorPlugin clientId="client_HhHcuxVxKgaZMFYuD57U3V">
+						<textarea
+							className="flex w-full resize-none rounded-lg bg-gray-200 outline-none focus:outline-none"
+							name="bio"
+							rows={4}
+							maxLength={150}
+						/>
+					</GrammarlyEditorPlugin>
 				</Formik>
 			</div>
 		</div>
