@@ -115,19 +115,39 @@ export const Commenting = ({
 							);
 						}}
 					>
-						<Form className="focus:outline-none">
-							<label htmlFor="content">
-								<Field
-									component="textarea"
-									name="content"
-									type="text"
-									className="mt-2 min-h-[2.5rem] w-full resize-y rounded-3xl  border-none bg-gray-300 px-4 py-2 !ring-0 dark:placeholder:text-gray-400"
-									placeholder="Add a comment.."
-									autoFocus
-								></Field>
-							</label>
-							<ErrorMessage name="content" />
-						</Form>
+						{({ values }) => (
+							<Form className="focus:outline-none">
+								<label htmlFor="content">
+									<Field
+										component="textarea"
+										name="content"
+										type="text"
+										className="mt-2 min-h-[2.5rem] w-full resize-y rounded-3xl border-none bg-gray-300 px-4 py-2 !ring-0 dark:placeholder:text-gray-400"
+										placeholder="Add a comment.."
+										autoFocus
+									></Field>
+								</label>
+								<ErrorMessage name="content" />
+								<div className="m-1 flex justify-end gap-2">
+									<Button
+										className="brightness-hover transition hover:bg-red-300"
+										onClick={() => setShowCommenting(false)}
+									>
+										Cancel
+									</Button>
+									<button
+										className={`rounded-md bg-blue-500 px-4 py-1 font-semibold text-white ${
+											values.content.length < 1
+												? "cursor-not-allowed brightness-75"
+												: "brightness-hover"
+										}`}
+										type="submit"
+									>
+										Post
+									</button>
+								</div>
+							</Form>
+						)}
 					</Formik>
 				)
 			) : (
