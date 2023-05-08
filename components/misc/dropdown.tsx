@@ -29,7 +29,7 @@ const Dropdown: NextPage<{
 				leaveFrom="opacity-100"
 				leaveTo="opacity-0"
 			>
-				<Listbox.Options className="absolute mt-12 space-y-2 rounded-xl bg-white/75 p-2 backdrop-blur-xl dark:bg-gray-200/75 ">
+				<Listbox.Options className="absolute mt-12 space-y-2 rounded-xl border border-gray-300 bg-white/75 p-2 backdrop-blur-xl dark:bg-gray-200/75 ">
 					{values.map((type, i) => (
 						<Listbox.Option
 							key={i}

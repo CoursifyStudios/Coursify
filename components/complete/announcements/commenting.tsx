@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useTabs } from "../../../lib/tabs/handleTabs";
 import { howLongAgo } from "../../../lib/misc/dates";
 import Loading from "../../misc/loading";
+import Image from "next/image";
 
 export const Comment = ({
 	id,
@@ -26,8 +27,8 @@ export const Comment = ({
 }) => {
 	const { newTab } = useTabs();
 	return (
-		<div>
-			<div className="flex items-center pt-1">
+		<div className="ml-4">
+			<div className="flex items-center pt-1 ">
 				<Link
 					href={"/profile/" + author}
 					className="inline-flex shrink-0 items-center rounded-full px-1 py-0.5 hover:bg-gray-300"
@@ -38,12 +39,19 @@ export const Comment = ({
 						)
 					}
 				>
-					<img src={users.avatar_url} alt="" className="h-5 w-5 rounded-full" />
-					<p className="ml-1.5 mr-1 font-semibold text-neutral-700">
+					<Image
+						src={users.avatar_url}
+						alt="User image"
+						className="h-5 w-5 rounded-full"
+						referrerPolicy="no-referrer"
+						width={20}
+						height={20}
+					/>
+					<p className="ml-1.5 mr-1 font-semibold text-gray-700">
 						{users.full_name}
 					</p>
 				</Link>
-				<p className="pl-1.5 text-gray-600">{time}</p>
+				<p className="pl-1.5 text-gray-600 dark:text-gray-400">{time}</p>
 			</div>
 			<p>{content}</p>
 		</div>
@@ -60,8 +68,6 @@ export const Commenting = ({
 	const supabase = useSupabaseClient();
 	const user = useUser();
 	const [showCommenting, setShowCommenting] = useState(false);
-	const [loading, setLoading] = useState(false);
-	const [content, setContent] = useState("");
 	const [tempComments, setTempComments] = useState<
 		{
 			id?: string;
@@ -75,64 +81,53 @@ export const Commenting = ({
 		}[]
 	>([]);
 
-	// I actually despise the fact that I'm using this, yay Formik!
-	const FormObserver: React.FC = () => {
-		const { values } = useFormikContext();
-
-		useEffect(() => {
-			setContent((values as { content: string }).content);
-		}, [values]);
-
-		return null;
-	};
 	return (
-		<div>
+		<>
 			{showCommenting ? (
-				<div className="rounded-lg bg-gray-300 p-1">
-					{user && (
-						//Find something else to use than formik maybe, because this stupid one-line thing is awful
-						<Formik
-							initialValues={{
-								content: "",
-							}}
-							onSubmit={async (formData) => {
-								setShowCommenting(false);
-								const test = await postComment(
-									supabase,
-									user.id,
-									communityid,
-									announcementid,
-									formData.content
-								);
-								setTempComments(
-									tempComments.concat({
-										id: test.data?.id,
-										author: user.id,
-										time: test.data?.time
-											? howLongAgo(test.data.time)
-											: "Posted just now",
-										content: formData.content,
-										users: {
-											full_name: user.user_metadata.name,
-											avatar_url: user.user_metadata.picture,
-										},
-									})
-								);
-							}}
-						>
+				user && (
+					//Find something else to use than formik maybe, because this stupid one-line thing is awful
+					<Formik
+						initialValues={{
+							content: "",
+						}}
+						onSubmit={async (formData) => {
+							setShowCommenting(false);
+							const test = await postComment(
+								supabase,
+								user.id,
+								communityid,
+								announcementid,
+								formData.content
+							);
+							setTempComments(
+								tempComments.concat({
+									id: test.data?.id,
+									author: user.id,
+									time: test.data?.time
+										? howLongAgo(test.data.time)
+										: "Posted just now",
+									content: formData.content,
+									users: {
+										full_name: user.user_metadata.name,
+										avatar_url: user.user_metadata.picture,
+									},
+								})
+							);
+						}}
+					>
+						{({ values }) => (
 							<Form className="focus:outline-none">
 								<label htmlFor="content">
 									<Field
 										component="textarea"
 										name="content"
 										type="text"
-										className="w-full resize-y rounded-2xl border-none bg-gray-300 p-1 !ring-0"
+										className="mt-2 min-h-[2.5rem] w-full resize-y rounded-3xl border-none bg-gray-300 px-4 py-2 !ring-0 dark:placeholder:text-gray-400"
+										placeholder="Add a comment..."
 										autoFocus
 									></Field>
 								</label>
-								<ErrorMessage name="content"></ErrorMessage>
-								<FormObserver />
-
+								<ErrorMessage name="content" />
 								<div className="m-1 flex justify-end gap-2">
 									<Button
 										className="brightness-hover transition hover:bg-red-300"
@@ -142,7 +137,7 @@ export const Commenting = ({
 									</Button>
 									<button
 										className={`rounded-md bg-blue-500 px-4 py-1 font-semibold text-white ${
-											content.length < 1
+											values.content.length < 1
 												? "cursor-not-allowed brightness-75"
 												: "brightness-hover"
 										}`}
@@ -152,34 +147,30 @@ export const Commenting = ({
 									</button>
 								</div>
 							</Form>
-						</Formik>
-					)}
-				</div>
+						)}
+					</Formik>
+				)
 			) : (
 				<div className="my-2 flex">
 					<div
-						className="mr-6 flex-grow items-center rounded-full bg-gray-300 p-1"
+						className=" h-10 flex-grow items-center rounded-full bg-gray-300 p-2"
 						tabIndex={0}
 						onClick={() => setShowCommenting(true)}
 					>
-						<p className="ml-1.5 p-1">Insert response here</p>
+						<p className="ml-1.5 text-gray-400">Add a comment...</p>
 					</div>
 				</div>
 			)}
-
-			{loading && <Loading></Loading>}
-			<div className="ml-2 space-y-1">
-				{tempComments.reverse().map((comment) => (
-					<Comment
-						key={comment.id}
-						id={comment.id}
-						author={comment.author}
-						time={comment.time}
-						content={comment.content}
-						users={comment.users}
-					></Comment>
-				))}
-			</div>
-		</div>
+			{tempComments.reverse().map((comment) => (
+				<Comment
+					key={comment.id}
+					id={comment.id}
+					author={comment.author}
+					time={comment.time}
+					content={comment.content}
+					users={comment.users}
+				></Comment>
+			))}
+		</>
 	);
 };

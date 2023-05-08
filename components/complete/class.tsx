@@ -7,6 +7,7 @@ import exampleImage from "../../public/example-img.jpg";
 import { ScheduleInterface, to12hourTime } from "../../lib/db/schedule";
 import { NextPage } from "next";
 import { NonNullableArray } from "../../lib/misc/misc.types";
+import { useSettings } from "../../lib/stores/settings";
 
 export const Class: NextPage<{
 	classData:
@@ -18,6 +19,9 @@ export const Class: NextPage<{
 	isLink?: boolean;
 }> = ({ classData, showLoading, time, className, isLink }) => {
 	const { newTab } = useTabs();
+	const {
+		data: { compact },
+	} = useSettings();
 
 	if (isLink)
 		return (
@@ -35,38 +39,41 @@ export const Class: NextPage<{
 		return (
 			<div
 				className={
-					"brightness-hover group flex w-[19rem] cursor-pointer select-none flex-col rounded-xl bg-backdrop-200 " +
+					"brightness-hover group flex h-full w-[19rem] cursor-pointer select-none flex-col rounded-xl bg-backdrop-200 compact:p-2" +
 					className
 				}
 			>
-				<div className="relative h-32">
-					<Image
-						src={classData?.image ? classData.image : exampleImage}
-						//loading="eager"
-						alt="Example Image"
-						className="absolute inset-0 h-32 rounded-t-xl object-cover object-center"
-						width={700}
-						height={128}
-					/>
-					<div className="absolute left-2 right-2 top-2 flex items-center justify-between space-x-2">
+				<div className="relative h-32 compact:static compact:h-max">
+					{!compact && (
+						<Image
+							src={classData?.image ? classData.image : exampleImage}
+							//loading="eager"
+							alt="Example Image"
+							className="absolute inset-0 h-32 rounded-t-xl object-cover object-center"
+							width={700}
+							height={128}
+						/>
+					)}
+					<div className="absolute left-2 right-2 top-2 flex items-center justify-between space-x-2 compact:static compact:px-2 compact:pt-2">
 						{classData.room && (
 							<ColoredPill
 								//color="gray"
-								className="-mb-0.5 -mt-1 !bg-neutral-500/50 text-xs text-gray-100 backdrop-blur-xl"
+								className="-mb-0.5 -mt-1 !bg-neutral-500/50 text-xs text-gray-100 backdrop-blur-xl compact:!bg-neutral-500/20 compact:text-sm compact:text-gray-800"
 							>
 								Rm. {classData.room}
 							</ColoredPill>
 						)}
 						<div className="flex items-center">
 							<h2
-								className={`text-xl text-${classData.color}-300 ml-2 rounded-lg bg-neutral-500/20 px-2 font-bold opacity-75 backdrop-blur-xl`}
+								className={`text-xl compact:text-sm text-${classData.color}-300 ml-2 rounded-lg bg-neutral-500/20 px-2 font-bold opacity-75 backdrop-blur-xl compact:flex compact:text-gray-800`}
 							>
+								<span className="mr-1.5 hidden compact:block">Block </span>
 								{classData.block}
 							</h2>
 						</div>
 					</div>
 				</div>
-				<div className="flex flex-grow flex-col p-4">
+				<div className="flex grow flex-col p-4 compact:p-2">
 					<div className="flex items-start justify-between">
 						<h3 className="line-clamp-2 break-words text-xl font-semibold">
 							{classData.name}
@@ -88,7 +95,7 @@ export const Class: NextPage<{
 								: ""}
 						</ColoredPill>
 					</div>
-					<div className="mt-2 flex flex-wrap items-center">
+					<div className="mt-2 flex flex-wrap items-center compact:flex-nowrap compact:overflow-hidden">
 						{"class_users" in classData &&
 							"users" in classData &&
 							(Array.isArray(classData.class_users!) ? (
@@ -96,6 +103,7 @@ export const Class: NextPage<{
 									.length > 0 ? (
 									classData
 										.class_users!.filter((userData) => userData.teacher)
+										.splice(0, compact ? 2 : 6)
 										.map((userData, i) => {
 											const user = !Array.isArray(classData.users!)
 												? classData.users!
@@ -132,7 +140,7 @@ export const Class: NextPage<{
 																height={20}
 																width={20}
 															/>
-															<div className="font-semibold">
+															<div className="font-semibold compact:truncate ">
 																{user.full_name}
 															</div>
 														</div>

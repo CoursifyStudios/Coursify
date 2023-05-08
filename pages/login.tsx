@@ -21,8 +21,8 @@ export default function Login() {
 	}, [user, router]);
 
 	return (
-		<div className="flex h-screen bg-teal-500 [background-image:url('/svgs/falling-triangles.svg')]">
-			<div className=" flex items-center justify-center md:grow">
+		<div className="flex h-screen bg-teal-500 [background-image:url('/svgs/falling-triangles.svg')] dark:bg-red-300">
+			<div className=" flex items-center justify-center dark:backdrop-invert md:grow">
 				{/* <div className="relative rounded-xl bg-white p-4 shadow-md z-0 max-w-md">
 					<p className="font-mono text-[12rem] text-gray-400 absolute -z-10 -top-14 -left-1">"</p>
 					<div className="flex flex-col z-10">
@@ -31,7 +31,7 @@ export default function Login() {
 					</div>
 				</div> */}
 			</div>
-			<div className="mx-10 my-auto flex flex-grow flex-col items-center justify-center rounded-lg bg-white py-20 md:mx-0 md:my-0 md:max-w-xl md:basis-1/3 md:rounded-none md:py-0">
+			<div className="mx-10 my-auto flex flex-grow flex-col items-center justify-center rounded-lg bg-backdrop py-20 md:mx-0 md:my-0 md:max-w-xl md:basis-1/3 md:rounded-none md:py-0">
 				<h1 className="mb-14 text-3xl font-bold">Welcome Back</h1>
 				<div className="flex flex-col">
 					<button

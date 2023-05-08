@@ -120,19 +120,19 @@ export interface Database {
 			class_users: {
 				Row: {
 					class_id: string;
-					grade: number;
+					grade: number | null;
 					teacher: boolean;
 					user_id: string;
 				};
 				Insert: {
 					class_id: string;
-					grade?: number;
+					grade?: number | null;
 					teacher?: boolean;
 					user_id: string;
 				};
 				Update: {
 					class_id?: string;
-					grade?: number;
+					grade?: number | null;
 					teacher?: boolean;
 					user_id?: string;
 				};
@@ -303,29 +303,32 @@ export interface Database {
 			users: {
 				Row: {
 					avatar_url: string;
+					bio: string | null;
 					created: string | null;
 					email: string | null;
 					full_name: string;
 					id: string;
-					username: string | null;
+					preferred_name: string | null;
 					year: string | null;
 				};
 				Insert: {
 					avatar_url: string;
+					bio?: string | null;
 					created?: string | null;
 					email?: string | null;
 					full_name: string;
 					id: string;
-					username?: string | null;
+					preferred_name?: string | null;
 					year?: string | null;
 				};
 				Update: {
 					avatar_url?: string;
+					bio?: string | null;
 					created?: string | null;
 					email?: string | null;
 					full_name?: string;
 					id?: string;
-					username?: string | null;
+					preferred_name?: string | null;
 					year?: string | null;
 				};
 			};

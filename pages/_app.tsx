@@ -1,11 +1,18 @@
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import { SessionContextProvider, Session } from "@supabase/auth-helpers-react";
+import {
+	SessionContextProvider,
+	Session,
+	useSupabaseClient,
+	useUser,
+} from "@supabase/auth-helpers-react";
 import { Analytics } from "@vercel/analytics/react";
 import { AppProps } from "next/app";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "../components/layout/layout";
 import "../styles/globals.css";
 import Head from "next/head";
+import { useSettings } from "../lib/stores/settings";
+import { ThemeProvider } from "next-themes";
 
 function MyApp({
 	Component,
@@ -24,9 +31,11 @@ function MyApp({
 				supabaseClient={supabaseClient}
 				initialSession={pageProps.initialSession}
 			>
-				<Layout>
-					<Component />
-				</Layout>
+				<ThemeProvider attribute="class" disableTransitionOnChange>
+					<Layout>
+						<Component />
+					</Layout>
+				</ThemeProvider>
 			</SessionContextProvider>
 			<Analytics />
 		</>

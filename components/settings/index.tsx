@@ -1,11 +1,16 @@
 import {
-	PaintBrushIcon,
+	BellIcon,
+	LinkIcon,
+	LockClosedIcon,
 	SwatchIcon,
 	UserIcon,
 } from "@heroicons/react/24/outline";
-import Profile from "./pages/profile";
 import { ReactNode } from "react";
-import Theming from "./pages/theming";
+import Profile from "./pages/profile";
+import Appearance from "./pages/appearance";
+import Connections from "./pages/connections";
+import Securityandprivacy from "./pages/securityPrivacy";
+import Notifications from "./pages/notifications";
 
 const iconClasses = "w-6 h-6";
 
@@ -20,18 +25,24 @@ export const settingsPages: {
 		content: <Profile />,
 	},
 	{
-		name: "Personalization",
+		name: "Appearance",
 		icon: <SwatchIcon className={iconClasses} />,
-		content: <Theming />,
+		content: <Appearance />,
+	},
+
+	{
+		name: "Notifications",
+		icon: <BellIcon className={iconClasses} />,
+		content: <Notifications />,
 	},
 	{
-		name: "Third for testing",
-		icon: <UserIcon className={iconClasses} />,
-		content: <Profile />,
+		name: "Connections",
+		icon: <LinkIcon className={iconClasses} />,
+		content: <Connections />,
 	},
 	{
-		name: "4th for testing",
-		icon: <UserIcon className={iconClasses} />,
-		content: <Profile />,
+		name: "Security & Privacy",
+		icon: <LockClosedIcon className={iconClasses} />,
+		content: <Securityandprivacy />,
 	},
 ];

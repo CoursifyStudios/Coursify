@@ -23,7 +23,7 @@ export default function ScheduleComponent({
 		);
 	return (
 		<div className="flex flex-col">
-			<div className="my-4 grid max-w-md gap-5 rounded-xl bg-backdrop-200 p-4">
+			<div className="my-4 grid max-w-md gap-5 rounded-xl bg-backdrop-200 p-4 compact:my-2 compact:gap-2">
 				{/* I've left some comments to clear up some stuff */}
 				{schedule && //checks if the useState that stores the schedule UI is not null
 					schedule.map(

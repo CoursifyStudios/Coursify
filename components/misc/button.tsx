@@ -8,7 +8,8 @@ export const Button: NextPage<{
 	color?: string;
 	disabled?: boolean;
 	onClick?: () => void;
-}> = ({ className, children, color, disabled, onClick }) => {
+	type?: "submit" | "reset" | "button";
+}> = ({ className, children, color, disabled, onClick, type }) => {
 	return (
 		<button
 			disabled={disabled}
@@ -16,6 +17,7 @@ export const Button: NextPage<{
 				color ? color : "bg-gray-200"
 			} ${disabled ? "cursor-not-allowed brightness-75" : "brightness-hover"}`}
 			onClick={onClick}
+			type={type}
 		>
 			{children}
 		</button>
@@ -38,7 +40,7 @@ export const ButtonIcon: NextPage<{
 	const r = (
 		<div
 			className={
-				"grid h-9 w-9 cursor-pointer place-items-center rounded-full bg-gray-300 text-gray-800 transition  duration-300 hover:brightness-95 " +
+				"grid h-9 w-9 cursor-pointer place-items-center rounded-full bg-gray-300 text-gray-800 transition duration-300 hover:brightness-95  compact:h-8 compact:w-8 " +
 				className
 			}
 		>

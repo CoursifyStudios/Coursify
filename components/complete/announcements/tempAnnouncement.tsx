@@ -32,7 +32,7 @@ export const TempAnnouncement = ({
 	const { newTab } = useTabs();
 
 	return (
-		<div className="mt-2 rounded-xl bg-gray-200 p-4">
+		<div className="brightness-hover mt-2 w-full rounded-xl bg-gray-300 p-4 dark:bg-gray-200">
 			<div
 				className={announcement.time ? "" : "flex items-center justify-between"}
 			>

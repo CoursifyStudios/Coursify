@@ -9,9 +9,11 @@ export const Popup: NextPage<{
 	open: boolean;
 	closeMenu: () => void;
 	children: ReactNode;
-	size?: "sm" | "md" | "lg";
+	size?: "sm" | "md" | "lg" | "xs";
 }> = ({ closeMenu, open, children, size = "md" }) => {
-	const { data: settings } = useSettings();
+	const {
+		data: { theme },
+	} = useSettings();
 
 	return (
 		<Transition appear show={open} as={Fragment}>
@@ -26,8 +28,10 @@ export const Popup: NextPage<{
 					as={Fragment}
 				>
 					<div
-						className={`fixed inset-0 flex items-center justify-center bg-black/20 p-4 ${
-							settings.theme == "dark" && "dark bg-black/40"
+						className={`fixed inset-0  z-50 flex items-center justify-center bg-black/20 p-4 ${
+							theme == "system"
+								? "[@media(prefers-color-scheme:dark)]:dark [@media(prefers-color-scheme:dark)]:bg-black/40"
+								: theme == "dark" && "dark bg-black/40"
 						}`}
 					>
 						<Transition.Child
@@ -45,7 +49,9 @@ export const Popup: NextPage<{
 										? "max-w-screen-sm"
 										: size == "md"
 										? "max-w-screen-md"
-										: "max-w-screen-lg"
+										: size == "lg"
+										? "max-w-screen-lg"
+										: "max-w-xl"
 								}  flex-col rounded-xl bg-white/75 p-4 shadow-md  backdrop-blur-xl dark:bg-neutral-950/75 dark:text-gray-100`}
 							>
 								{children}

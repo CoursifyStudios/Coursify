@@ -82,6 +82,7 @@ export default function Profile() {
 							</div>
 						</ColoredPill>
 					</CopiedHover>
+					<p className="mt-3 text-center text-sm">{profile?.data?.bio}</p>
 				</div>
 				{!(
 					profile?.data &&

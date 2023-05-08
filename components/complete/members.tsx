@@ -2,6 +2,7 @@ import { EnvelopeIcon, IdentificationIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import { ColoredPill, CopiedHover } from "../misc/pill";
+import Image from "next/image";
 
 export const Member = ({
 	user,
@@ -29,7 +30,7 @@ export const Member = ({
 			}
 		>
 			<div className="relative h-max">
-				<img
+				<Image
 					src={user.avatar_url!}
 					alt="Profile picture"
 					referrerPolicy="no-referrer"

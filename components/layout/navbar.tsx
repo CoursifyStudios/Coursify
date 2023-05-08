@@ -16,8 +16,8 @@ import { NextComponentType } from "next";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import { ButtonIcon } from "../misc/button";
 import { Menu, Transition } from "@headlessui/react";
-import { addPossesive } from "../../lib/misc/stringManipulation";
 import { Database } from "../../lib/db/database.types";
+import Image from "next/image";
 
 const Navbar: NextComponentType = () => {
 	const { newTab, closeTab, tabs } = useTabs();
@@ -29,7 +29,7 @@ const Navbar: NextComponentType = () => {
 	useEffect(() => setHydrated(true), []);
 
 	if (router.isReady && hydrated && router.asPath.startsWith("/login")) {
-		return null;
+		return <></>;
 	}
 
 	const logOut = async () => {
@@ -38,7 +38,7 @@ const Navbar: NextComponentType = () => {
 	};
 
 	return (
-		<nav className="flex h-14 items-center justify-between bg-gray-200 px-8">
+		<nav className="flex h-14 items-center justify-between bg-gray-200 px-8 compact:h-12">
 			<div className="scrollbar-fancy flex shrink items-center space-x-4 overflow-x-auto">
 				{defaultTabs.map((v, i) => (
 					<TabUI key={i} canClose={false} tab={v} />
@@ -49,7 +49,7 @@ const Navbar: NextComponentType = () => {
 				)}
 			</div>
 			<div className="ml-4 flex flex-grow-0 items-center space-x-4">
-				<ButtonIcon icon={<MagnifyingGlassIcon className=" h-5 w-9" />} />
+				<ButtonIcon icon={<MagnifyingGlassIcon className=" h-5 w-5" />} />
 				<ButtonIcon
 					icon={<CalendarDaysIcon className="h-5 w-5" />}
 					to="/calendar"
@@ -64,11 +64,11 @@ const Navbar: NextComponentType = () => {
 				>
 					<Menu.Button>
 						{user ? (
-							<img
+							<Image
 								src={user.user_metadata.picture}
 								alt="Profile picture"
 								referrerPolicy="no-referrer"
-								className=" w-10 rounded-full shadow-md shadow-black/25"
+								className=" w-10 rounded-full shadow-md shadow-black/25 compact:w-9"
 								height={40}
 								width={40}
 							/>
@@ -179,7 +179,7 @@ const Navbar: NextComponentType = () => {
 					selected
 						? "brightness-focus !shadow-md"
 						: "border-transparent bg-gray-300"
-				} ${canClose && "pr-2"} text-lg font-semibold `}
+				} ${canClose && "pr-2"} text-lg font-semibold compact:text-base `}
 			>
 				<Link href={tab.route}>
 					<div

@@ -10,11 +10,11 @@ const Settings: NextPage = () => {
 		<div className=" flex flex-col items-start">
 			Testing tabs
 			<button
-				onClick={async () =>
-					console.log(
-						await getSchedulesForXDays(supabase, new Date(2023, 1, 2), 60)
-					)
-				}
+			// onClick={async () =>
+			// 	console.log(
+			// 		await getSchedulesForXDays(supabase, new Date(2023, 1, 2), 60)
+			// 	)
+			// }
 			>
 				PRESS ME{" "}
 			</button>

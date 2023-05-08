@@ -115,7 +115,7 @@ const Post: NextPage = () => {
 			<div
 				className={`scrollbar-fancy mr-4 grow items-stretch overflow-x-clip md:grow-0 ${
 					fullscreen ? "hidden" : "flex"
-				} w-[20.5rem] shrink-0 flex-col space-y-5 overflow-y-auto p-1 pb-6 md:h-[calc(100vh-6.5rem)] `}
+				} w-[20.5rem] shrink-0 flex-col space-y-5 overflow-y-auto p-1 pb-6 compact:space-y-3 md:h-[calc(100vh-6.5rem)] `}
 			>
 				<div className="flex flex-col">
 					<div className="flex-col rounded-lg bg-backdrop-200 p-2">

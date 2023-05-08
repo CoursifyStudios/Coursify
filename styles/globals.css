@@ -3,11 +3,11 @@
 @tailwind utilities;
 
 .title {
-	@apply text-2xl font-bold;
+	@apply text-2xl font-bold compact:text-xl;
 }
 
 .title-sm {
-	@apply text-xl font-semibold;
+	@apply text-[1.35rem] font-bold compact:text-lg;
 }
 
 .graydient {
