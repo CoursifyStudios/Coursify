@@ -66,8 +66,9 @@ const themes = {
 
 // :is(.dark .dark\:hover\:bg-neutral-950:hover)
 
-const variants = plugin(({ addVariant }) => {
+const variants = plugin(({ addVariant, matchVariant }) => {
 	addVariant("compact", ":is(.compact &)");
+	//addVariant("darkmode", "@media(prefers-color-scheme:dark){:is(.system &)}{:is(.dark &)}",);
 });
 
 export const plugins = [

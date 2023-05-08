@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 import { useSettings } from "../../../lib/stores/settings";
 import { Header } from "../components/header";
-import { ToggleSection } from "../components/sections";
+import { ToggleSection, DropdownSection } from "../components/sections";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
 import { Database, Json } from "../../../lib/db/database.types";
@@ -9,36 +9,38 @@ import { Database, Json } from "../../../lib/db/database.types";
 const Theming: NextPage<{}> = () => {
 	const user = useUser();
 	const supabase = useSupabaseClient<Database>();
-	const { data, set } = useSettings();
-	const [loading, setLoading] = useState(false);
+	const { data, set, loadSettings } = useSettings();
 
-	useEffect(() => {
-		if (loading) return;
-		if (user == undefined || user.id == undefined) return;
-		setLoading(true);
-		useSettings.getState().loadSettings(supabase, user.id);
-		useSettings.subscribe(async (state) => {
-			await supabase.from("settings").upsert({
-				user_id: user.id,
-				settings: state.data as unknown as Json,
-			}).eq("user_id", user.id);
-		})
-	}, [loading, supabase, user])
+	const types: { id: string; name: string }[] = [
+		{
+			id: "system",
+			name: "System Default",
+		},
+		{
+			id: "light",
+			name: "Light Mode",
+		},
+		{
+			id: "dark",
+			name: "Dark Mode",
+		},
+	];
 
 	return (
 		<>
 			<Header name="color" page={1}>
 				Color
 			</Header>
-			<ToggleSection
+			<DropdownSection
 				name="Color Mode"
 				description="Change between dark and light mode."
-				enabled={data.theme == "dark"}
-				setEnabled={() =>
+				currentValue={types.find((t) => t.id == data.theme)!}
+				values={types}
+				onChange={(value) => {
 					set({
-						theme: data.theme == "light" ? "dark" : "light",
-					})
-				}
+						theme: value.id as "dark" | "light" | "system",
+					});
+				}}
 			/>
 			<Header name="layout" page={1}>
 				Layout Settings

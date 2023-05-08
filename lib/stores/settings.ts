@@ -1,9 +1,10 @@
 import { create } from "zustand";
 import { SupabaseClient } from "@supabase/auth-helpers-react";
 import { Database } from "../db/database.types";
+import { createJSONStorage, persist } from "zustand/middleware";
 
 interface Settings {
-	theme: "light" | "dark";
+	theme: "light" | "dark" | "system";
 	compact: boolean;
 }
 
@@ -13,33 +14,49 @@ interface SettingsStore {
 	loadSettings: (supabase: SupabaseClient<Database>, userid: string) => void;
 }
 
-export const useSettings = create<SettingsStore>()((set) => ({
-	data: { theme: "light", compact: false },
-	set: async (data) => {
-		set((state) => ( {
-				data: data
-					? {
+export const useSettings = create<SettingsStore>()(
+	persist(
+		(set) => ({
+			data: { theme: "system", compact: false },
+			set: async (data) => {
+				set((state) => ({
+					data: data
+						? {
+								...state.data,
+								...data,
+						  }
+						: {
+								theme: "system",
+								compact: false,
+						  },
+				}));
+			},
+
+			loadSettings: async (
+				supabase: SupabaseClient<Database>,
+				userid: string
+			) => {
+				const { data } = await supabase
+					.from("settings")
+					.select("*")
+					.eq("user_id", userid)
+					.limit(1)
+					.single();
+
+				if (data != undefined) {
+					set((state) => ({
+						data: {
 							...state.data,
-							...data,
-					  }
-					: {
-							theme: "dark",
-							compact: false,
-					  },
-			}));
-	},
-
-	loadSettings: async (supabase: SupabaseClient<Database>, userid: string) => {
-		const { data } = await supabase.from("settings").select("*").eq("user_id", userid).limit(1).single();
-		
-		if (data != undefined) {
-			set((state) => ({
-				data: {
-					...state.data,
-					...data,
-				},
-			}));
+							...JSON.parse(
+								JSON.stringify(data.settings as Record<string, unknown>)
+							),
+						},
+					}));
+				}
+			},
+		}),
+		{
+			name: "settings",
 		}
-	}
-}));
-
+	)
+);

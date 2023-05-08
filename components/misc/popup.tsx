@@ -11,7 +11,9 @@ export const Popup: NextPage<{
 	children: ReactNode;
 	size?: "sm" | "md" | "lg" | "xs";
 }> = ({ closeMenu, open, children, size = "md" }) => {
-	const { data: settings } = useSettings();
+	const {
+		data: { theme },
+	} = useSettings();
 
 	return (
 		<Transition appear show={open} as={Fragment}>
@@ -27,7 +29,9 @@ export const Popup: NextPage<{
 				>
 					<div
 						className={`fixed inset-0  z-50 flex items-center justify-center bg-black/20 p-4 ${
-							settings.theme == "dark" && "dark bg-black/40"
+							theme == "system"
+								? "[@media(prefers-color-scheme:dark)]:dark [@media(prefers-color-scheme:dark)]:bg-black/40"
+								: theme == "dark" && "dark bg-black/40"
 						}`}
 					>
 						<Transition.Child

@@ -16,7 +16,6 @@ import { NextComponentType } from "next";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import { ButtonIcon } from "../misc/button";
 import { Menu, Transition } from "@headlessui/react";
-import { addPossesive } from "../../lib/misc/stringManipulation";
 import { Database } from "../../lib/db/database.types";
 import Image from "next/image";
 
@@ -30,7 +29,7 @@ const Navbar: NextComponentType = () => {
 	useEffect(() => setHydrated(true), []);
 
 	if (router.isReady && hydrated && router.asPath.startsWith("/login")) {
-		return null;
+		return <></>;
 	}
 
 	const logOut = async () => {

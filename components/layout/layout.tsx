@@ -1,16 +1,41 @@
-import { ReactNode } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { useSettings } from "../../lib/stores/settings";
+import { Database, Json } from "../../lib/db/database.types";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Footer from "./footer";
 import Navbar from "./navbar";
+import { ThemeProvider, useTheme } from "next-themes";
 
 export default function Layout(props: { children: ReactNode }) {
-	const { data, set } = useSettings();
+	const { data, set, loadSettings } = useSettings();
+	const user = useUser();
+	const supabase = useSupabaseClient<Database>();
+	const [loading, setLoading] = useState(false);
+	const [hydrated, setHydrated] = useState(false);
+	const { theme, setTheme, systemTheme } = useTheme();
+
+	useEffect(() => setHydrated(true), []);
+
+	useEffect(() => {
+		if (loading) return;
+		if (user == undefined || user.id == undefined) return;
+		setLoading(true);
+		loadSettings(supabase, user.id);
+		useSettings.subscribe(async (state) => {
+			setTheme(
+				state.data.theme == "system" ? systemTheme || "light" : state.data.theme
+			);
+			await supabase.from("settings").upsert({
+				user_id: user.id,
+				settings: state.data as unknown as Json,
+			});
+		});
+	}, [loading, supabase, user, loadSettings]);
 
 	return (
 		<div
-			className={`flex min-h-screen flex-col bg-backdrop text-gray-800 transition-all duration-300 ${
-				data.theme == "dark" && "dark"
-			} ${data.compact && "compact"}`}
+			className={`flex min-h-screen flex-col bg-backdrop text-gray-800 transition-all duration-300
+			 ${data.compact && hydrated ? "compact" : ""}`}
 		>
 			<Navbar />
 			<div className="flex flex-1 flex-col">{props.children}</div>
