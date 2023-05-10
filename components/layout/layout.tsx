@@ -32,6 +32,15 @@ export default function Layout(props: { children: ReactNode }) {
 		});
 	}, [loading, supabase, user, loadSettings]);
 
+	useEffect(() => {
+		// Edge case for if someone logs in as the demo teacher
+		// So I don't need to also code that
+		if (user == undefined) return;
+		if (user.id == "afd1de7d-df61-4350-9a6a-f5fd3052ead8") {
+			supabase.auth.signOut();
+		}
+	}, [user, supabase.auth])
+
 	return (
 		<div
 			className={`flex min-h-screen flex-col bg-backdrop text-gray-800 transition-all duration-300

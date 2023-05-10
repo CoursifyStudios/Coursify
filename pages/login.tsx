@@ -68,6 +68,17 @@ export default function Login() {
 						/>{" "}
 						Continue with Microsoft
 					</button>
+					<button
+						className="mt-8 flex rounded-md bg-gray-200 px-4 py-3 text-[1.05rem] font-medium hover:bg-gray-300"
+						onClick={() =>
+							supabaseClient.auth.signInWithPassword({
+								email: "demo@coursify.one",
+								password: "demo"
+							})
+						}
+					>
+						Demo our app
+					</button>
 					<p className="mx-auto w-44 pt-4 text-center text-xs text-gray-600">
 						By logging in, you agree to our{" "}
 						<a className="text-blue-500">terms and conditons</a>
