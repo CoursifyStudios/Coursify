@@ -1,5 +1,5 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { Fragment, ReactNode, useEffect, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import {
 	ArrowLeftOnRectangleIcon,
 	CalendarDaysIcon,
@@ -25,6 +25,16 @@ const Navbar: NextComponentType = () => {
 	const user = useUser();
 	const [hydrated, setHydrated] = useState(false);
 	const supabase = useSupabaseClient<Database>();
+	const isDemoUser = user?.id == "d62d46a3-138b-4014-852e-f32f0421213b";
+	const userMetadata = isDemoUser
+		? {
+				name: "Jane Doe",
+				picture:
+					"https://hhrehffmdrcjqowwvgqg.supabase.co/storage/v1/object/public/cdn/assets/groupImages/janedoe",
+				email: "demo@coursify.one",
+				full_name: "Jane Doe",
+		  }
+		: user?.user_metadata ?? {};
 
 	useEffect(() => setHydrated(true), []);
 
@@ -65,7 +75,7 @@ const Navbar: NextComponentType = () => {
 					<Menu.Button>
 						{user ? (
 							<Image
-								src={user.user_metadata.picture}
+								src={userMetadata.picture}
 								alt="Profile picture"
 								referrerPolicy="no-referrer"
 								className=" w-10 rounded-full shadow-md shadow-black/25 compact:w-9"
@@ -95,17 +105,15 @@ const Navbar: NextComponentType = () => {
 									onClick={() =>
 										newTab(
 											"/profile/1e5024f5-d493-4e32-9822-87f080ad5516",
-											`${user?.user_metadata.name}'s Profile`
+											`${userMetadata.name}'s Profile`
 										)
 									}
 								>
 									<Menu.Item as="div" className="mx-2 flex flex-col">
 										<h3 className="line-clamp-2 font-medium">
-											{user?.user_metadata.full_name}
+											{userMetadata.full_name}
 										</h3>
-										<p className="truncate text-xs">
-											{user?.user_metadata.email}
-										</p>
+										<p className="truncate text-xs">{userMetadata.email}</p>
 									</Menu.Item>
 								</Link>
 								<div className="graydient-90deg my-3 h-0.5 w-full"></div>
@@ -114,7 +122,7 @@ const Navbar: NextComponentType = () => {
 									onClick={() =>
 										newTab(
 											`/profile/${user?.id}`,
-											`${user?.user_metadata.name}'s Profile`
+											`${userMetadata.name}'s Profile`
 										)
 									}
 								>
