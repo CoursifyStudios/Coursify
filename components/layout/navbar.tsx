@@ -253,4 +253,3 @@ const defaultTabs: Tab[] = [
 ];
 
 export default Navbar;
-

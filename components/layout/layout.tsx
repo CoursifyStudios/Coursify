@@ -39,7 +39,7 @@ export default function Layout(props: { children: ReactNode }) {
 		if (user.id == "afd1de7d-df61-4350-9a6a-f5fd3052ead8") {
 			supabase.auth.signOut();
 		}
-	}, [user, supabase.auth])
+	}, [user, supabase.auth]);
 
 	return (
 		<div

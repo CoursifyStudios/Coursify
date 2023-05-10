@@ -7,7 +7,7 @@ const nextConfig = {
 			"lh3.googleusercontent.com",
 			// Used for demo user
 			"cdn.discordapp.com",
-			"media.discordapp.net"
+			"media.discordapp.net",
 		],
 	},
 	async redirects() {
