@@ -67,7 +67,7 @@ const Profile: NextPage<{}> = () => {
 				>
 					<GrammarlyEditorPlugin clientId="client_HhHcuxVxKgaZMFYuD57U3V">
 						<textarea
-							className="flex w-full resize-none rounded-lg bg-gray-200 outline-none focus:outline-none"
+							className="flex w-full resize-none rounded-lg border-transparent bg-gray-200 outline-none focus:outline-none"
 							name="bio"
 							rows={4}
 							maxLength={150}

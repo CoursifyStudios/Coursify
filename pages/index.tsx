@@ -252,7 +252,9 @@ export default function Home() {
 														: false) && (
 														<div
 															key={assignment.id}
-															className={" rounded-lg bg-backdrop-200 p-2"}
+															className={
+																"brightness-hover rounded-lg bg-backdrop-200 p-2"
+															}
 														>
 															<AssignmentPreview
 																supabase={supabaseClient}
