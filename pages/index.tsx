@@ -14,7 +14,10 @@ import Link from "next/link";
 import { useSettings } from "../lib/stores/settings";
 import { sortClasses } from "../components/class/sorting";
 import { Class } from "../components/class";
-import { LoadingClass } from "../components/class/loading";
+import {
+	LoadingStudentClass,
+	LoadingTeacherClass,
+} from "../components/class/loading";
 
 export default function Home() {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -122,7 +125,7 @@ export default function Home() {
 								<h2 className="title">Classes</h2>
 							</div>
 							<div className="mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 ">
-								{classes && classes.data && schedules
+								{classes && classes.data && schedules && false
 									? classes.data
 											.slice(0, classes.data.length)
 											.sort((a, b) =>
@@ -146,7 +149,7 @@ export default function Home() {
 												/>
 											))
 									: [...Array(6)].map((_, i) => (
-											<LoadingClass
+											<LoadingStudentClass
 												key={i}
 												className="!w-full xl:!w-[18.5rem]"
 											/>
