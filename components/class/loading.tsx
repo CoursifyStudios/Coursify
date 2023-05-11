@@ -11,10 +11,9 @@ export const LoadingStudentClass = ({ className }: { className: string }) => {
 					<h3 className="line-clamp-2 break-words rounded-md bg-gray-200 text-xl font-semibold">
 						<span className="invisible">:trojker: emoji</span>
 					</h3>
-					<ColoredPill
-						color={"gray"}
-						className={"h-5 w-20 animate-pulse"}
-					></ColoredPill>
+					<ColoredPill color={"gray"} className={"h-5 w-20 animate-pulse"}>
+						{" "}
+					</ColoredPill>
 				</div>
 			</div>
 		</div>

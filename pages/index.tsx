@@ -125,7 +125,7 @@ export default function Home() {
 								<h2 className="title">Classes</h2>
 							</div>
 							<div className="mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 ">
-								{classes && classes.data && schedules && false
+								{classes && classes.data && schedules
 									? classes.data
 											.slice(0, classes.data.length)
 											.sort((a, b) =>
