@@ -3,7 +3,7 @@ import { SupabaseClient } from "@supabase/auth-helpers-react";
 import { Database } from "../db/database.types";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-interface Settings {
+export interface Settings {
 	theme: "light" | "dark" | "system";
 	compact: boolean;
 }

@@ -1,7 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { Database } from "./database.types";
 import { getSchedulesForXDays, ScheduleInterface } from "./schedule";
-import { getDataOutArray } from "../misc/dataOutArray";
+import { getDataInArray, getDataOutArray } from "../misc/dataOutArray";
+import { ClassData } from "../../components/class";
+import { NonNullableArray } from "../misc/misc.types";
 export async function getAllClasses(supabase: SupabaseClient<Database>) {
 	const { data, error } = await supabase
 		.from("classes")
@@ -254,3 +256,14 @@ export const getClassesForUserBasic = async (
 export type BasicClassInfoDB = Awaited<
 	ReturnType<typeof getClassesForUserBasic>
 >;
+
+export const isTeacher = (
+	classData: NonNullableArray<AllClassesResponse["data"]>,
+	userID: string
+) => {
+	return Boolean(
+		getDataInArray(classData.class_users).find(
+			(user) => user?.user_id == userID && user?.teacher
+		)
+	);
+};

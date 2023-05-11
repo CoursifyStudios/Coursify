@@ -1,6 +1,6 @@
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
-import { Class } from "../../components/complete/class";
+import { Class } from "../../components/class/student";
 import { ProfilesResponse } from "../../lib/db/profiles";
 import { getProfile } from "../../lib/db/profiles";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";

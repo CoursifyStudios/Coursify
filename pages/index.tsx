@@ -1,13 +1,20 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useState, useEffect } from "react";
 import { Database } from "../lib/db/database.types";
-import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
-import { Class, LoadingClass, sortClasses } from "../components/complete/class";
+import {
+	getAllClasses,
+	AllClassesResponse,
+	isTeacher,
+} from "../lib/db/classes";
 import Loading from "../components/misc/loading";
 import { getSchedulesForXDays, ScheduleInterface } from "../lib/db/schedule";
 import ScheduleComponent from "../components/complete/schedule";
 import { AssignmentPreview } from "../components/complete/assignments/assignments";
 import Link from "next/link";
+import { useSettings } from "../lib/stores/settings";
+import { sortClasses } from "../components/class/sorting";
+import { Class } from "../components/class";
+import { LoadingClass } from "../components/class/loading";
 
 export default function Home() {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -15,6 +22,7 @@ export default function Home() {
 	const [classes, setClasses] = useState<AllClassesResponse>();
 	const [loading, setLoading] = useState(true);
 	const [schedules, setSchedules] = useState<ScheduleInterface[][]>([]);
+	const { data: settings } = useSettings();
 
 	//because Lukas left this a mess, until i get around to fixing it
 	const dateToday = new Date();
@@ -123,7 +131,9 @@ export default function Home() {
 											.map((classData) => (
 												<Class
 													classData={classData}
-													showLoading={loading}
+													showTimeLoading={loading}
+													settings={settings}
+													teacher={isTeacher(classData, user.id)}
 													key={classData.id}
 													className="h-full !w-full xl:!w-[18.5rem]"
 													isLink={true}
