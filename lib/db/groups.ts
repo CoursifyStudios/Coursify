@@ -57,9 +57,15 @@ export const getGroup = async (
                 avatar_url, full_name
             ),
             parent (
-                *,
+                id,
+                author,
+                title,
+                content,
+                time,
+                class_id,
+                type,
                 users (
-                    id, full_name, avatar_url
+                    full_name, avatar_url
                 )
             )
         ),

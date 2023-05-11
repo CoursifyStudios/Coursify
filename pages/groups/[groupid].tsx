@@ -5,7 +5,7 @@ import { ColoredPill } from "../../components/misc/pill";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { getGroup, GroupResponse } from "../../lib/db/groups";
-import { getDataInArray } from "../../lib/misc/dataOutArray";
+import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
 import { Member } from "../../components/complete/members";
 import { Announcement } from "../../components/complete/announcements";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
@@ -15,6 +15,7 @@ import {
 	AnnouncementType,
 	TypeOfAnnouncements,
 } from "../../lib/db/announcements";
+import { AnnouncementsComponent } from "../../components/complete/announcements/announcementsComponent";
 
 const Group: NextPage = () => {
 	const router = useRouter();
@@ -118,73 +119,20 @@ const Group: NextPage = () => {
 											setAnnouncements={setExtraAnnouncements}
 										/>
 									)}
-								{extraAnnouncements.reverse().map(
-									(announcement) =>
-										announcement && (
-											<Announcement
-												key={announcement.id}
-												announcement={{
-													id: announcement.id,
-													author: announcement.author,
-													title: announcement.title,
-													content: announcement.content,
-													time: announcement.time,
-													type: announcement.type,
-													users: announcement.users,
-												}}
-												classID={groupid as string}
-												comments={
-													getDataInArray(groupData?.data?.announcements).filter(
-														(possibleComment) =>
-															possibleComment?.type == AnnouncementType.COMMENT
-													) as TypeOfAnnouncements[]
-												}
-												announcements={extraAnnouncements}
-												setAnnouncements={setExtraAnnouncements}
-											></Announcement>
-										)
-								)}
 								{groupData &&
-									groupid &&
-									typeof groupid == "string" && //really should not need to check this as it is checked above, but anything to make ts happy ig
 									groupData.data &&
 									groupData.data.announcements &&
-									getDataInArray(groupData.data.announcements)
-										.sort((a, b) => {
-											if (
-												new Date(a.time!).getTime() >
-												new Date(b.time!).getTime()
-											)
-												return -1;
-											if (
-												new Date(a.time!).getTime() <
-												new Date(b.time!).getTime()
-											)
-												return 1;
-											return 0;
-										})
-										.map(
-											(announcement) =>
-												(announcement.type == AnnouncementType.ANNOUNCMENT ||
-													announcement.type == AnnouncementType.CROSSPOST) && (
-													<Announcement
-														key={announcement.id}
-														announcement={announcement as TypeOfAnnouncements}
-														comments={
-															getDataInArray(
-																groupData.data.announcements
-															).filter(
-																(possibleComment) =>
-																	possibleComment?.type ==
-																	AnnouncementType.COMMENT
-															) as TypeOfAnnouncements[]
-														}
-														classID={groupid}
-														announcements={extraAnnouncements}
-														setAnnouncements={setExtraAnnouncements}
-													></Announcement>
-												)
-										)}
+									groupid &&
+									typeof groupid == "string" && (
+										<AnnouncementsComponent
+											announcements={
+												getDataInArray(
+													groupData.data.announcements
+												) as TypeOfAnnouncements[]
+											}
+											communityid={groupid}
+										></AnnouncementsComponent>
+									)}
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}></Tab.Panel>

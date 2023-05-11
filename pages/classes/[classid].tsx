@@ -30,6 +30,7 @@ import {
 	TypeOfAnnouncements,
 } from "../../lib/db/announcements";
 import { useSettings } from "../../lib/stores/settings";
+import { AnnouncementsComponent } from "../../components/complete/announcements/announcementsComponent";
 
 const Class: NextPage = () => {
 	const router = useRouter();
@@ -318,76 +319,16 @@ const Class: NextPage = () => {
 										communityid={classid as string}
 									/>
 								)}
-								{extraAnnouncements.reverse().map(
-									(announcement) =>
-										announcement && (
-											<Announcement
-												key={announcement.id}
-												announcement={{
-													id: announcement.id,
-													author: announcement.author,
-													title: announcement.title,
-													content: announcement.content,
-													time: announcement.time,
-													type: announcement.type,
-													users: announcement.users,
-												}}
-												classID={classid as string}
-												comments={
-													getDataInArray(data.data.announcements).filter(
-														(possibleComment) =>
-															possibleComment?.type == AnnouncementType.COMMENT
-													) as TypeOfAnnouncements[]
-												}
-												announcements={extraAnnouncements}
-												setAnnouncements={setExtraAnnouncements}
-											></Announcement>
-										)
+								{classid && typeof classid == "string" && (
+									<AnnouncementsComponent
+										announcements={
+											getDataInArray(
+												data.data.announcements
+											) as TypeOfAnnouncements[]
+										}
+										communityid={classid}
+									></AnnouncementsComponent>
 								)}
-								{typeof classid == "string" &&
-									data.data &&
-									data.data.announcements && //change below when I get actual types
-									getDataInArray(data.data.announcements)
-										.sort((a, b) => {
-											if (
-												new Date(a.time!).getTime() >
-												new Date(b.time!).getTime()
-											)
-												return -1;
-											if (
-												new Date(a.time!).getTime() <
-												new Date(b.time!).getTime()
-											)
-												return 1;
-											return 0;
-										})
-										.map(
-											(announcement) =>
-												(announcement.type == AnnouncementType.ANNOUNCMENT ||
-													announcement.type == AnnouncementType.CROSSPOST) &&
-												announcement.users &&
-												typeof getDataOutArray(announcement.users).avatar_url ==
-													"string" &&
-												typeof getDataOutArray(announcement.users).full_name ==
-													"string" && (
-													<Announcement
-														key={announcement.id}
-														announcement={announcement as TypeOfAnnouncements}
-														classID={classid}
-														comments={
-															getDataInArray(data.data.announcements).filter(
-																(possibleComment) =>
-																	possibleComment?.type ==
-																		AnnouncementType.COMMENT &&
-																	getDataOutArray(possibleComment.parent)?.id ==
-																		announcement.id
-															) as TypeOfAnnouncements[]
-														}
-														announcements={extraAnnouncements}
-														setAnnouncements={setExtraAnnouncements}
-													></Announcement>
-												)
-										)}
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}>
