@@ -155,7 +155,7 @@ export interface Database {
 					type: number;
 				};
 				Insert: {
-					block: number;
+					block?: number;
 					classpills?: Json[];
 					color?: string;
 					description?: string;

@@ -36,7 +36,8 @@ export const AnnouncementsComponent = ({
 							comments={
 								announcements.filter(
 									(possibleComment) =>
-										(possibleComment?.type == AnnouncementType.COMMENT &&
+										(possibleComment &&
+											possibleComment?.type == AnnouncementType.COMMENT &&
 											getDataOutArray(possibleComment?.parent)?.id ==
 												announcement.id) ||
 										(possibleComment?.type == AnnouncementType.REPLY &&
@@ -67,7 +68,13 @@ export const AnnouncementsComponent = ({
 								comments={
 									announcements.filter(
 										(possibleComment) =>
-											possibleComment?.type == AnnouncementType.COMMENT
+											(possibleComment &&
+												possibleComment?.type == AnnouncementType.COMMENT &&
+												getDataOutArray(possibleComment?.parent)?.id ==
+													announcement.id) ||
+											(possibleComment?.type == AnnouncementType.REPLY &&
+												getDataOutArray(possibleComment.parent)?.type ==
+													AnnouncementType.COMMENT)
 									) as TypeOfAnnouncements[]
 								}
 								classID={communityid}
