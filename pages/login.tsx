@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { Database } from "../lib/db/database.types";
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { Info } from "../components/tooltips/info";
 
 export default function Login() {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -66,7 +67,25 @@ export default function Login() {
 							height={25}
 							className="mr-4"
 						/>{" "}
-						Continue with Microsoft
+						Continue with Microsoft{" "}
+					</button>
+					<button
+						className="mt-8 flex content-center rounded-md bg-gray-200 px-4 py-3 text-[1.05rem] font-medium hover:bg-gray-300"
+						onClick={() =>
+							supabaseClient.auth.signInWithPassword({
+								email: "demo@coursify.one",
+								password: "demo",
+							})
+						}
+					>
+						<Image
+							src="/brand-logos/coursify.svg"
+							alt="Microsoft Logo"
+							width={25}
+							height={25}
+							className="mr-4"
+						/>
+						Demo Coursify LMS
 					</button>
 					<p className="mx-auto w-44 pt-4 text-center text-xs text-gray-600">
 						By logging in, you agree to our{" "}
