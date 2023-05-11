@@ -1,6 +1,5 @@
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
-import { Class } from "../../components/class/student";
 import { ProfilesResponse } from "../../lib/db/profiles";
 import { getProfile } from "../../lib/db/profiles";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
@@ -13,6 +12,8 @@ import { GroupSmall } from "../../components/complete/group";
 import { Achievement } from "../../components/complete/achievement";
 import Image from "next/image";
 import { CommunityType } from "../../lib/db/classes";
+import { Class } from "../../components/class";
+import { useSettings } from "../../lib/stores/settings";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
@@ -24,6 +25,7 @@ export default function Profile() {
 	const supabase = useSupabaseClient<Database>();
 	const router = useRouter();
 	const { profileid } = router.query;
+	const { data: settings } = useSettings();
 
 	useEffect(() => {
 		(async () => {
@@ -133,6 +135,7 @@ export default function Profile() {
 											classData={currentClass}
 											key={currentClass.id}
 											isLink={true}
+											settings={settings}
 										/>
 									)
 						  )
