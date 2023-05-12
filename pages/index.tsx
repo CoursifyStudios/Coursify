@@ -18,6 +18,7 @@ import {
 	LoadingStudentClass,
 	LoadingTeacherClass,
 } from "../components/class/loading";
+import HomepageClassesUI from "../components/class/homepage";
 
 export default function Home() {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -118,43 +119,15 @@ export default function Home() {
 		<>
 			<div className="container mx-auto mb-10 flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words px-4 sm:mt-10 md:px-8 xl:px-0">
 				<div className="flex w-full flex-col">
-					<div className="flex flex-col sm:flex-col-reverse lg:flex-row  ">
+					<div className="mb-12 flex flex-col sm:flex-col-reverse lg:flex-row ">
 						{/* Classes UI */}
-						<section id="Classes" className="mb-12">
-							<div className="flex items-end md:mt-8 lg:mt-0">
-								<h2 className="title">Classes</h2>
-							</div>
-							<div className="mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 ">
-								{classes && classes.data && schedules
-									? classes.data
-											.slice(0, classes.data.length)
-											.sort((a, b) =>
-												sortClasses(a, b, schedules[0], schedules[1])
-											)
-											.map((classData) => (
-												<Class
-													classData={classData}
-													showTimeLoading={loading}
-													settings={settings}
-													teacher={isTeacher(classData, user.id)}
-													key={classData.id}
-													className="h-full !w-full xl:!w-[18.5rem]"
-													isLink={true}
-													time={schedules[0]?.find(
-														(s) =>
-															s.specialEvent == undefined &&
-															classData.block == s.block &&
-															classData.schedule_type == s.type
-													)}
-												/>
-											))
-									: [...Array(6)].map((_, i) => (
-											<LoadingStudentClass
-												key={i}
-												className="!w-full xl:!w-[18.5rem]"
-											/>
-									  ))}
-							</div>
+						<section id="Classes" className="">
+							<HomepageClassesUI
+								classes={classes}
+								loading={loading}
+								schedules={schedules}
+								userID={user.id}
+							/>
 						</section>
 						{/* Schedule UI */}
 						<section
