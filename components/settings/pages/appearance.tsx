@@ -25,7 +25,10 @@ const Theming: NextPage<{}> = () => {
 		},
 	];
 
-	const homepageAssignmentTypes: { id: string; name: string }[] = [
+	const homepageAssignmentTypes: {
+		id: Settings["homepageAssignments"];
+		name: string;
+	}[] = [
 		{
 			id: "all",
 			name: "All",
@@ -43,11 +46,11 @@ const Theming: NextPage<{}> = () => {
 	const homepageViewTypes: { id: Settings["homepageView"]; name: string }[] = [
 		{
 			id: "auto",
-			name: "Automagiclly",
+			name: "Automagically",
 		},
 		{
 			id: "tabbed",
-			name: "Tabs",
+			name: "Tabbed",
 		},
 		{
 			id: "student",
@@ -103,7 +106,7 @@ const Theming: NextPage<{}> = () => {
 				}
 			/>
 			<DropdownSection
-				name="Homepage Classes View Mode"
+				name="Classes on Homepage View"
 				description="Change the way you view classes on the homepage. By default, we sample your classes to determine which one fits best for you."
 				currentValue={
 					homepageViewTypes.find((view) => view.id == settings.homepageView)!
@@ -118,6 +121,21 @@ const Theming: NextPage<{}> = () => {
 			<Header name="assignment" page={1}>
 				Assignments
 			</Header>
+			<DropdownSection
+				name="Assignments on Homepage View"
+				description="Change the way you view classes on the homepage. By default, we sample your classes to determine which one fits best for you."
+				currentValue={
+					homepageAssignmentTypes.find(
+						(view) => view.id == settings.homepageAssignments
+					)!
+				}
+				values={homepageAssignmentTypes}
+				onChange={(value) => {
+					set({
+						homepageAssignments: value.id as Settings["homepageAssignments"],
+					});
+				}}
+			/>
 		</>
 	);
 };
