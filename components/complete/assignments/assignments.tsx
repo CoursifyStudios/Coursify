@@ -37,30 +37,31 @@ export function AssignmentPreview({
 	const [starred, setStarred] = useState(starredAsParam);
 
 	return (
-		<div className="flex h-[6.25rem] w-full flex-col">
-			<div className="flex justify-between">
-				<div className="flex">
-					<div
-						tabIndex={0}
-						onClick={() => {
-							setStarred((starred) => {
-								handleStarred(supabase, !starred, assignment.id, userId);
-								return !starred;
-							});
-						}}
-						onKeyDown={(key) => {
-							if (key.key == "Enter" || key.key == " ") {
-								setStarred((starred) => {
-									handleStarred(supabase, !starred, assignment.id, userId);
-									return !starred;
-								});
-							}
-						}}
-					>
-						<Starred starred={starred} />
-					</div>
-					<Link href={"/assignments/" + assignment.id}>
-						<div className="ml-2">
+		<div className="relative flex h-[6.25rem] w-full flex-col ">
+			<div
+				className="absolute left-0 top-0"
+				tabIndex={0}
+				onClick={() => {
+					setStarred((starred) => {
+						handleStarred(supabase, !starred, assignment.id, userId);
+						return !starred;
+					});
+				}}
+				onKeyDown={(key) => {
+					if (key.key == "Enter" || key.key == " ") {
+						setStarred((starred) => {
+							handleStarred(supabase, !starred, assignment.id, userId);
+							return !starred;
+						});
+					}
+				}}
+			>
+				<Starred starred={starred} />
+			</div>
+			<Link href={"/assignments/" + assignment.id}>
+				<div className="flex items-end justify-between">
+					<div className="flex">
+						<div className="ml-8">
 							{classes && showClassPill && (
 								<Link href={"/classes/" + classes?.id}>
 									<ColoredPill color={classes.color} hoverState>
@@ -69,37 +70,34 @@ export function AssignmentPreview({
 								</Link>
 							)}
 						</div>
-					</Link>
-				</div>
-				<Link href={"/assignments/" + assignment.id}>
-					<div tabIndex={-1} className="flex">
-						{date ? (
-							<>
-								<div className="mr-2">
-									{date.getMonth()}/{date.getDate()}
-								</div>
-								<ColoredPill color={classes.color}>
-									{`${to12hourTime(date)}`}
-								</ColoredPill>
-							</>
-						) : (
-							<span className="text-sm italic">No due date</span>
-						)}
 					</div>
-				</Link>
-			</div>
-
-			<div tabIndex={-1} className="mt-0.5 flex h-full justify-between">
-				<div>
-					<Link href={"/assignments/" + assignment.id}>
+					<div>
+						<div tabIndex={-1} className="flex">
+							{date ? (
+								<>
+									<div className="mr-2">
+										{date.getMonth()}/{date.getDate()}
+									</div>
+									<ColoredPill color={classes.color}>
+										{`${to12hourTime(date)}`}
+									</ColoredPill>
+								</>
+							) : (
+								<span className="text-sm italic">No due date</span>
+							)}
+						</div>
+					</div>
+				</div>
+				<div tabIndex={-1} className="mt-0.5 flex h-[4.5rem] justify-between">
+					<div className="">
 						<h1 className="font-medium">{assignment.name}</h1>
 						<p className="line-clamp-2">{assignment.description}</p>
-					</Link>
+					</div>
+					<div className="flex items-end">
+						<CheckIcon className="h-6 w-6 shrink-0" />
+					</div>
 				</div>
-				<div className="flex items-end">
-					<CheckIcon className="h-6 w-6 shrink-0" />
-				</div>
-			</div>
+			</Link>
 		</div>
 	);
 }
