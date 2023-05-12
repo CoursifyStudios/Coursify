@@ -74,10 +74,9 @@ const HomepageClassesUI: NextPage<{
 								<Class
 									classData={singleClass}
 									showTimeLoading={loading}
-									settings={settings}
 									teacher={teacher}
 									key={singleClass.id}
-									className="h-full !w-full xl:!w-[18.5rem]"
+									className="h-full !w-full lg:!w-[18.5rem]"
 									isLink={true}
 									time={schedules[0]?.find(
 										(s) =>

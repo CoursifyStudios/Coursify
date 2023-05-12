@@ -135,7 +135,6 @@ export default function Profile() {
 											classData={currentClass}
 											key={currentClass.id}
 											isLink={true}
-											settings={settings}
 										/>
 									)
 						  )

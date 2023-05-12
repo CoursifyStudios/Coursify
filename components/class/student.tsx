@@ -6,15 +6,17 @@ import exampleImage from "../../public/example-img.jpg";
 import { to12hourTime } from "../../lib/db/schedule";
 import { NextPage } from "next";
 import { StudentClassType } from ".";
+import { useSettings } from "../../lib/stores/settings";
 
 const StudentClass: NextPage<StudentClassType> = ({
 	classData,
-	settings,
 	className,
 	showTimeLoading,
 	time,
 }) => {
 	const { newTab } = useTabs();
+	const { data: settings } = useSettings();
+
 	return (
 		<div
 			className={
@@ -26,11 +28,11 @@ const StudentClass: NextPage<StudentClassType> = ({
 				{!settings.compact && (
 					<Image
 						src={classData?.image ? classData.image : exampleImage}
-						//loading="eager"
+						loading="eager"
 						alt="Example Image"
 						className="absolute inset-0 h-32 rounded-t-xl object-cover object-center"
-						width={700}
-						height={128}
+						fill
+						sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
 					/>
 				)}
 				<div className="absolute left-2 right-2 top-2 flex items-center justify-between space-x-2 compact:static compact:px-2 compact:pt-2">

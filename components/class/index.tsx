@@ -24,27 +24,33 @@ export function Class({
 	className,
 	isLink,
 	teacher = true,
-}: TeacherClassType & { isLink?: boolean }): JSX.Element;
+}: TeacherClassType): JSX.Element;
 
 export function Class({
 	classData,
 	showTimeLoading,
 	time,
 	className,
-	settings,
 	isLink,
 	teacher = false,
-}:
-	| (StudentClassType & { isLink?: boolean })
-	| (TeacherClassType & { isLink?: boolean })) {
+}: (StudentClassType & { isLink?: boolean }) | TeacherClassType) {
 	const { newTab } = useTabs();
 
 	const ClassComponent = () => {
-		if (teacher) return <TeacherClass />;
+		// @ts-expect-error ts is wierd
+		if (teacher && classData.class_users)
+			return (
+				<TeacherClass
+					classData={classData as NonNullableArray<AllClassesResponse["data"]>}
+					className={className}
+					showTimeLoading={showTimeLoading}
+					teacher={teacher}
+					time={time}
+				/>
+			);
 		return (
 			<StudentClass
 				classData={classData}
-				settings={settings}
 				className={className}
 				showTimeLoading={showTimeLoading}
 				time={time}
@@ -52,10 +58,10 @@ export function Class({
 		);
 	};
 
-	if (isLink)
+	if (isLink && !teacher)
 		return (
 			<Link
-				href={isLink && "/classes/" + classData.id}
+				href={"/classes/" + classData.id}
 				onClick={() => newTab("/classes/" + classData.id, classData.name)}
 			>
 				<ClassComponent />
@@ -71,11 +77,12 @@ export interface StudentClassType {
 	className?: string;
 	teacher?: boolean;
 	classData: ClassData;
-	settings: Settings;
 }
 
 export interface TeacherClassType extends StudentClassType {
 	teacher: true;
+	classData: NonNullableArray<AllClassesResponse["data"]>;
+	isLink?: boolean;
 }
 
 export type ClassData =
