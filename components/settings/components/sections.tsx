@@ -12,7 +12,7 @@ export const ToggleSection: NextPage<{
 	beta?: boolean;
 }> = ({ name, description, enabled, setEnabled, beta = false }) => {
 	return (
-		<div className="flex grow justify-between">
+		<div className="mt-4 flex grow justify-between">
 			<div>
 				<div className="mb-1 flex items-center">
 					<h4 className="mr-3 font-medium">{name}</h4>
@@ -42,7 +42,7 @@ export const DropdownSection: NextPage<{
 	beta?: boolean;
 }> = ({ name, description, currentValue, onChange, beta = false, values }) => {
 	return (
-		<div className="flex grow justify-between">
+		<div className="mt-4 flex grow  justify-between">
 			<div>
 				<div className="mb-1 flex items-center">
 					<h4 className="mr-3 font-medium">{name}</h4>

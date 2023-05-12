@@ -1,17 +1,16 @@
 import { NextPage } from "next";
-import { useSettings } from "../../../lib/stores/settings";
+import { Settings, useSettings } from "../../../lib/stores/settings";
 import { Header } from "../components/header";
 import { ToggleSection, DropdownSection } from "../components/sections";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useEffect, useState } from "react";
-import { Database, Json } from "../../../lib/db/database.types";
+import { Database } from "../../../lib/db/database.types";
 
 const Theming: NextPage<{}> = () => {
 	const user = useUser();
 	const supabase = useSupabaseClient<Database>();
-	const { data, set, loadSettings } = useSettings();
+	const { data: settings, set } = useSettings();
 
-	const types: { id: string; name: string }[] = [
+	const colorTypes: { id: string; name: string }[] = [
 		{
 			id: "system",
 			name: "System Default",
@@ -26,6 +25,40 @@ const Theming: NextPage<{}> = () => {
 		},
 	];
 
+	const homepageAssignmentTypes: { id: string; name: string }[] = [
+		{
+			id: "all",
+			name: "All",
+		},
+		{
+			id: "student",
+			name: "Student Only",
+		},
+		{
+			id: "none",
+			name: "None",
+		},
+	];
+
+	const homepageViewTypes: { id: Settings["homepageView"]; name: string }[] = [
+		{
+			id: "auto",
+			name: "Automagiclly",
+		},
+		{
+			id: "tabbed",
+			name: "Tabs",
+		},
+		{
+			id: "student",
+			name: "Student Only",
+		},
+		{
+			id: "teacher",
+			name: "Teacher Only",
+		},
+	];
+
 	return (
 		<>
 			<Header name="color" page={1}>
@@ -34,8 +67,8 @@ const Theming: NextPage<{}> = () => {
 			<DropdownSection
 				name="Color Mode"
 				description="Change between dark and light mode."
-				currentValue={types.find((t) => t.id == data.theme)!}
-				values={types}
+				currentValue={colorTypes.find((t) => t.id == settings.theme)!}
+				values={colorTypes}
 				onChange={(value) => {
 					set({
 						theme: value.id as "dark" | "light" | "system",
@@ -43,19 +76,48 @@ const Theming: NextPage<{}> = () => {
 				}}
 			/>
 			<Header name="layout" page={1}>
-				Layout Settings
+				Layout
 			</Header>
 			<ToggleSection
 				name="Compact Mode"
 				beta={true}
 				description="Compacts down element in order to have more room on the screen. Recommended for power users."
-				enabled={data.compact}
+				enabled={settings.compact}
 				setEnabled={() =>
 					set({
-						compact: !data.compact,
+						compact: !settings.compact,
 					})
 				}
 			/>
+			<Header name="class" page={1}>
+				Classes
+			</Header>
+			<ToggleSection
+				name="Sort Classes by Schedule"
+				description="Sort classes based on your schedule and day. If off, it sorts by block number."
+				enabled={settings.sortBySchedule}
+				setEnabled={() =>
+					set({
+						sortBySchedule: !settings.sortBySchedule,
+					})
+				}
+			/>
+			<DropdownSection
+				name="Homepage Classes View Mode"
+				description="Change the way you view classes on the homepage. By default, we sample your classes to determine which one fits best for you."
+				currentValue={
+					homepageViewTypes.find((view) => view.id == settings.homepageView)!
+				}
+				values={homepageViewTypes}
+				onChange={(value) => {
+					set({
+						homepageView: value.id as Settings["homepageView"],
+					});
+				}}
+			/>
+			<Header name="assignment" page={1}>
+				Assignments
+			</Header>
 		</>
 	);
 };
