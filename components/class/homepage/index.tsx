@@ -59,7 +59,7 @@ const HomepageClassesUI: NextPage<{
 			return "tabbed";
 		}, [classes, settings.homepageView, userID]);
 
-	const Classes = () => {
+	const Classes = ({ teaching }: { teaching: boolean }) => {
 		if (classes && classes.data && schedules)
 			return (
 				<>
@@ -68,7 +68,7 @@ const HomepageClassesUI: NextPage<{
 						.sort((a, b) => sortClasses(a, b, schedules[0], schedules[1]))
 						.map((singleClass) => {
 							const teacher = isTeacher(singleClass, userID);
-							if ((tab == 0 && !teacher) || (tab == 1 && teacher)) return null;
+							if ((teaching && !teacher) || (!teaching && teacher)) return null;
 
 							return (
 								<Class
@@ -134,9 +134,20 @@ const HomepageClassesUI: NextPage<{
 					</Tab.List>
 				)}
 			</div>
-			<div className="mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 ">
-				<Classes />
-			</div>
+			<Tab.Panels>
+				<Tab.Panel
+					as="div"
+					className="mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 "
+				>
+					<Classes teaching={true} />
+				</Tab.Panel>
+				<Tab.Panel
+					as="div"
+					className="mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 "
+				>
+					<Classes teaching={false} />
+				</Tab.Panel>
+			</Tab.Panels>
 		</Tab.Group>
 	);
 };
