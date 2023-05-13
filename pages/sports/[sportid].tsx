@@ -1,10 +1,10 @@
+import { Tab } from "@headlessui/react";
+import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
 import Image from "next/image";
-import exampleGroupImg from "../../public/example-img.jpg";
-import { Tab } from "@headlessui/react";
 import { Fragment } from "react";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import Betatag from "../../components/misc/betatag";
+import exampleGroupImg from "../../public/example-img.jpg";
 
 const sport: NextPage = () => {
 	return (

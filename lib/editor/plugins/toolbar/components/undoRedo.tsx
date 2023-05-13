@@ -1,11 +1,10 @@
-import * as React from "react";
-import { useContext } from "react";
-import { REDO_COMMAND, UNDO_COMMAND } from "lexical";
-import { ToolbarContext, EditorContext } from "../contextProviders";
 import {
 	ArrowUturnLeftIcon,
 	ArrowUturnRightIcon,
 } from "@heroicons/react/24/outline";
+import { REDO_COMMAND, UNDO_COMMAND } from "lexical";
+import { useContext } from "react";
+import { EditorContext, ToolbarContext } from "../contextProviders";
 
 export const UndoButton = () => {
 	const { canUndo } = useContext(ToolbarContext);

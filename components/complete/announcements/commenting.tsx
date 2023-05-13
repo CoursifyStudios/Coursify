@@ -1,13 +1,12 @@
-import { ErrorMessage, Field, Form, Formik, useFormikContext } from "formik";
-import { postComment } from "../../../lib/db/announcements";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useEffect, useState } from "react";
-import { Button } from "../../misc/button";
-import Link from "next/link";
-import { useTabs } from "../../../lib/tabs/handleTabs";
-import { howLongAgo } from "../../../lib/misc/dates";
-import Loading from "../../misc/loading";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import Image from "next/image";
+import Link from "next/link";
+import { useState } from "react";
+import { postComment } from "../../../lib/db/announcements";
+import { howLongAgo } from "../../../lib/misc/dates";
+import { useTabs } from "../../../lib/tabs/handleTabs";
+import { Button } from "../../misc/button";
 
 export const Comment = ({
 	id,

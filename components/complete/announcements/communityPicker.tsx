@@ -1,6 +1,5 @@
-import { Transition, Dialog } from "@headlessui/react";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
-import { Dispatch, Fragment, SetStateAction } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { Popup } from "../../misc/popup";
 
 export const CommunityPicker = ({

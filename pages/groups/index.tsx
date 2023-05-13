@@ -1,10 +1,8 @@
-import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useEffect, useState } from "react";
 import { GroupLarge, GroupSmall } from "../../components/complete/group";
-import { getAllPublicGroups, PublicGroupsResponse } from "../../lib/db/groups";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Database } from "../../lib/db/database.types";
+import { PublicGroupsResponse, getAllPublicGroups } from "../../lib/db/groups";
 
 export default function GroupDirectory() {
 	const [allGroupData, setAllGroupData] = useState<PublicGroupsResponse>();

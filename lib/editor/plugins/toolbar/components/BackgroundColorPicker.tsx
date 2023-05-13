@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from "react";
+import { useCallback, useContext } from "react";
 import { ToolbarContext } from "../contextProviders";
 //import ColorPicker from '../../../ui/ColorPicker';
 

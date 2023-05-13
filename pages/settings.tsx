@@ -1,9 +1,7 @@
+import { Tab } from "@headlessui/react";
 import { NextPage } from "next";
-import { useSettings } from "../lib/stores/settings";
-import { Toggle } from "../components/misc/toggle";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Tab } from "@headlessui/react";
 import { settingsPages } from "../components/settings";
 
 /**

@@ -1,18 +1,18 @@
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useEffect, useState } from "react";
-import { useTabs } from "../lib/tabs/handleTabs";
+import { ColoredPill } from "../components/misc/pill";
+import { Database } from "../lib/db/database.types";
 import {
-	createNewSchedule,
-	createNewTemplate,
-	getScheduleTemplates,
 	ScheduleInterface,
 	ScheduleTemplatesDB,
 	TemplateInterface,
+	createNewSchedule,
+	createNewTemplate,
+	getScheduleTemplates,
 	to12hourTime,
 } from "../lib/db/schedule";
-import { ColoredPill } from "../components/misc/pill";
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { Database } from "../lib/db/database.types";
+import { useTabs } from "../lib/tabs/handleTabs";
 
 const ScheduleEditor = () => {
 	const supabaseClient = useSupabaseClient<Database>();

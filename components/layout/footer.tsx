@@ -1,8 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import karasuLogo from "../../public/brand-logos/karasu.png";
 import { ColoredPill } from "../misc/pill";
 
 export default function Footer() {

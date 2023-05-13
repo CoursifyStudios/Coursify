@@ -17,8 +17,7 @@ import {
 	COMMAND_PRIORITY_CRITICAL,
 	SELECTION_CHANGE_COMMAND,
 } from "lexical";
-import * as React from "react";
-import { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import useChild from "use-child";
 
 import { $isAtNodeEnd } from "@lexical/selection";
@@ -30,15 +29,15 @@ import AlignDropdown from "./components/AlignDropdown";
 //import RedoButton from './components/RedoButton';
 //import CodeLanguageDropdown from './components/CodeLanguageDropdown';
 //import BlockFormatDropdown from './components/BlockFormatDropdown';
-import { EditorContext, ToolbarContext } from "./contextProviders";
 import {
-	UndoButton,
-	RedoButton,
+	BlockFormatDropdown,
 	BoldButton,
 	ItalicButton,
+	RedoButton,
 	UnderlineButton,
-	BlockFormatDropdown,
+	UndoButton,
 } from "./components";
+import { EditorContext, ToolbarContext } from "./contextProviders";
 
 const supportedBlockTypes = new Set([
 	"paragraph",
