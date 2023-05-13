@@ -1,8 +1,7 @@
-import { Transition, Dialog } from "@headlessui/react";
+import { Dialog, Transition } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
-import { Fragment } from "react";
-import { ReactNode } from "react";
+import { Fragment, ReactNode } from "react";
 import { useSettings } from "../../lib/stores/settings";
 
 export const Popup: NextPage<{

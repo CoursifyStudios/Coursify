@@ -1,7 +1,7 @@
 import { Listbox, Transition } from "@headlessui/react";
 import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
-import { Fragment, ReactNode } from "react";
+import { Fragment } from "react";
 
 const Dropdown: NextPage<{
 	selectedValue: Partial<{ name: string }>;

@@ -1,13 +1,13 @@
-import { AllClassesResponse, IndividialClass } from "../../lib/db/classes";
-import Image from "next/image";
-import { ColoredPill } from "../misc/pill";
-import Link from "next/link";
-import { useTabs } from "../../lib/tabs/handleTabs";
-import exampleImage from "../../public/example-img.jpg";
-import { ScheduleInterface, to12hourTime } from "../../lib/db/schedule";
 import { NextPage } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { AllClassesResponse, IndividialClass } from "../../lib/db/classes";
+import { ScheduleInterface, to12hourTime } from "../../lib/db/schedule";
 import { NonNullableArray } from "../../lib/misc/misc.types";
 import { useSettings } from "../../lib/stores/settings";
+import { useTabs } from "../../lib/tabs/handleTabs";
+import exampleImage from "../../public/example-img.jpg";
+import { ColoredPill } from "../misc/pill";
 
 export const Class: NextPage<{
 	classData:

@@ -1,6 +1,6 @@
-import { Transition, Dialog } from "@headlessui/react";
+import { Dialog } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { useState, Fragment } from "react";
+import { useState } from "react";
 import { formatDate } from "../../lib/misc/dates";
 import { IconConverter, InfoPill } from "../misc/infopills";
 import { Popup } from "../misc/popup";

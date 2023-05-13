@@ -1,9 +1,8 @@
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { Tab } from "../../components/layout/navbar";
-import { createJSONStorage, persist } from "zustand/middleware";
-import { deserialize, serialize } from "v8";
-import { deserializeTabs, serializeTabs } from "./serialize";
 import { getLinkRegex } from "./linkRegex";
+import { deserializeTabs, serializeTabs } from "./serialize";
 
 export const useTabs = create<{
 	/** The currently opened tabs */

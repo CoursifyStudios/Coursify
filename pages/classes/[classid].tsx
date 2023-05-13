@@ -1,34 +1,34 @@
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { NextPage } from "next";
-import { useRouter } from "next/router";
-import Image from "next/image";
-import { Fragment, useEffect, useState } from "react";
 import { Tab } from "@headlessui/react";
-import { getClass, ClassResponse, updateClass } from "../../lib/db/classes";
-import { Database, Json } from "../../lib/db/database.types";
-import CircleCounter from "../../components/misc/circleCounter";
-import Link from "next/link";
-import { AssignmentPreview } from "../../components/complete/assignments/assignments";
-import { ColoredPill } from "../../components/misc/pill";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import Editor from "../../components/editors/richeditor";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { EditorState } from "lexical";
-import {
-	getSchedule,
-	ScheduleInterface,
-	setThisSchedule,
-} from "../../lib/db/schedule";
-import { InfoPill, InfoPills } from "../../components/misc/infopills";
-import { CreateAssignment } from "../../components/complete/assignments/assignmentCreation";
-import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
+import { NextPage } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { Fragment, useEffect, useState } from "react";
 import { Announcement } from "../../components/complete/announcements";
-import { Button } from "../../components/misc/button";
-import { Member } from "../../components/complete/members";
 import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
+import { CreateAssignment } from "../../components/complete/assignments/assignmentCreation";
+import { AssignmentPreview } from "../../components/complete/assignments/assignments";
+import { Member } from "../../components/complete/members";
+import Editor from "../../components/editors/richeditor";
+import { Button } from "../../components/misc/button";
+import CircleCounter from "../../components/misc/circleCounter";
+import { InfoPill, InfoPills } from "../../components/misc/infopills";
+import { ColoredPill } from "../../components/misc/pill";
 import {
 	AnnouncementType,
 	TypeOfAnnouncements,
 } from "../../lib/db/announcements";
+import { ClassResponse, getClass, updateClass } from "../../lib/db/classes";
+import { Database, Json } from "../../lib/db/database.types";
+import {
+	ScheduleInterface,
+	getSchedule,
+	setThisSchedule,
+} from "../../lib/db/schedule";
+import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
 import { useSettings } from "../../lib/stores/settings";
 
 const Class: NextPage = () => {

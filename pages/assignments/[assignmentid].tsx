@@ -2,17 +2,22 @@ import {
 	ArrowsPointingInIcon,
 	ArrowsPointingOutIcon,
 	ChevronLeftIcon,
-	ChevronUpDownIcon,
 	LinkIcon,
 	PlusIcon,
-	QuestionMarkCircleIcon,
-	XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { NextPage } from "next";
-import { useRouter } from "next/router";
-import { Fragment, useEffect, useState } from "react";
-import Image from "next/image";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { SerializedEditorState } from "lexical";
+import { NextPage } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { AssignmentPreview } from "../../components/complete/assignments/assignments";
+import Editor from "../../components/editors/richeditor";
+import { Button, ButtonIcon } from "../../components/misc/button";
+import Dropdown from "../../components/misc/dropdown";
+import { ColoredPill, CopiedHover } from "../../components/misc/pill";
+import { Info } from "../../components/tooltips/info";
 import {
 	AllAssignmentResponse,
 	AssignmentResponse,
@@ -20,28 +25,14 @@ import {
 	getAssignment,
 } from "../../lib/db/assignments";
 import { Database } from "../../lib/db/database.types";
-import launch from "../../public/svgs/launch.svg";
-import noData from "../../public/svgs/no-data.svg";
-import Link from "next/link";
-import { ColoredPill, CopiedHover } from "../../components/misc/pill";
-import { Button, ButtonIcon } from "../../components/misc/button";
 import {
-	AssignmentPreview,
-	DueType,
-} from "../../components/complete/assignments/assignments";
-import {
-	getSchedule,
 	ScheduleInterface,
+	getSchedule,
 	setThisSchedule,
 } from "../../lib/db/schedule";
-import Editor from "../../components/editors/richeditor";
-import { getIcon } from "../../components/complete/achievement";
-import { formatDate } from "../../lib/misc/dates";
-import { Transition, Dialog, Listbox } from "@headlessui/react";
 import { getDataOutArray } from "../../lib/misc/dataOutArray";
-import { SerializedEditorState } from "lexical";
-import { Info } from "../../components/tooltips/info";
-import Dropdown from "../../components/misc/dropdown";
+import launch from "../../public/svgs/launch.svg";
+import noData from "../../public/svgs/no-data.svg";
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
@@ -220,7 +211,7 @@ const Post: NextPage = () => {
 					</ColoredPill>
 					<div className="mt-4 w-full max-w-lg rounded-xl bg-gray-200 p-4 xl:max-w-xl">
 						<h1 className="title mb-2 line-clamp-2 w-max rounded-md bg-gray-300">
-							<span className="invisible">trojker anem name ass</span>
+							<span className="invisible">trojker anime ass - Bloxs</span>
 						</h1>
 						<p className="mt-4 line-clamp-2 w-max rounded-md bg-gray-300">
 							<span className="invisible">
@@ -405,44 +396,6 @@ const Post: NextPage = () => {
 							)}
 						</section>
 					</div>
-					<Transition appear show={isOpen} as={Fragment}>
-						<Dialog open={isOpen} onClose={() => setIsOpen(false)}>
-							<Transition.Child
-								enter="ease-out transition"
-								enterFrom="opacity-75"
-								enterTo="opacity-100 scale-100"
-								leave="ease-in transition"
-								leaveFrom="opacity-100 scale-100"
-								leaveTo="opacity-75"
-								as={Fragment}
-							>
-								<div className="fixed inset-0 flex items-center justify-center bg-black/20 p-4">
-									<Transition.Child
-										enter="ease-out transition"
-										enterFrom="opacity-75 scale-95"
-										enterTo="opacity-100 scale-100"
-										leave="ease-in transition"
-										leaveFrom="opacity-100 scale-100"
-										leaveTo="opacity-75 scale-95"
-										as={Fragment}
-									>
-										<Dialog.Panel className="relative w-full max-w-md rounded-xl bg-white/75 p-4 shadow-md backdrop-blur-xl">
-											<section className="my-10 flex items-center text-lg font-medium">
-												This feature is temporarily disabled for the i2 showcase
-											</section>
-
-											<button
-												onClick={() => setIsOpen(false)}
-												className="absolute right-4 top-4 rounded p-0.5 text-gray-700 transition hover:bg-gray-300 hover:text-gray-900 focus:outline-none"
-											>
-												<XMarkIcon className="h-5 w-5" />
-											</button>
-										</Dialog.Panel>
-									</Transition.Child>
-								</div>
-							</Transition.Child>
-						</Dialog>
-					</Transition>
 				</>
 			);
 		}
