@@ -1,11 +1,11 @@
+import { GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { Formik } from "formik";
 import { NextPage } from "next";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { UserDataType, getUserData } from "../../../lib/db/settings";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import Image from "next/image";
-import { Field, Form, Formik } from "formik";
 import { Button } from "../../misc/button";
-import { GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
 
 const Profile: NextPage<{}> = () => {
 	const supabase = useSupabaseClient();

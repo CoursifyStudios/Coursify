@@ -1,3 +1,5 @@
+import { Listbox, Transition } from "@headlessui/react";
+import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { $createCodeNode } from "@lexical/code";
 import {
 	INSERT_CHECK_LIST_COMMAND,
@@ -16,10 +18,8 @@ import {
 	$getSelection,
 	$isRangeSelection,
 } from "lexical";
-import React, { Fragment, useContext, useEffect, useState } from "react";
-import { ToolbarContext, EditorContext } from "../contextProviders";
-import { Listbox, Transition } from "@headlessui/react";
-import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
+import { Fragment, useContext, useEffect, useState } from "react";
+import { EditorContext, ToolbarContext } from "../contextProviders";
 
 const BlockFormatDropdown = () => {
 	const { initialEditor } = useContext(EditorContext);

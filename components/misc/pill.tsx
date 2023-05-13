@@ -1,5 +1,4 @@
 import { NextPage } from "next";
-import Link from "next/link";
 import { ReactNode, useState } from "react";
 
 export const ColoredPill: NextPage<{

@@ -1,7 +1,7 @@
 import { CheckIcon } from "@heroicons/react/24/outline";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { handleStarred } from "../../../lib/db/assignments";
 import { Database } from "../../../lib/db/database.types";
 import { ScheduleInterface, to12hourTime } from "../../../lib/db/schedule";

@@ -1,18 +1,17 @@
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
-import { Class } from "../../components/complete/class";
-import { ProfilesResponse } from "../../lib/db/profiles";
-import { getProfile } from "../../lib/db/profiles";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { Database } from "../../lib/db/database.types";
-import { useRouter } from "next/router";
-import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import type { PostgrestResponse } from "@supabase/supabase-js";
-import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
-import { GroupSmall } from "../../components/complete/group";
-import { Achievement } from "../../components/complete/achievement";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { Achievement } from "../../components/complete/achievement";
+import { Class } from "../../components/complete/class";
+import { GroupSmall } from "../../components/complete/group";
+import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import { CommunityType } from "../../lib/db/classes";
+import { Database } from "../../lib/db/database.types";
+import { ProfilesResponse, getProfile } from "../../lib/db/profiles";
+import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();

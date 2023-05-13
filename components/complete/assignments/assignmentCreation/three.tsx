@@ -1,5 +1,5 @@
-import { Listbox, Switch } from "@headlessui/react";
-import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { NextPage } from "next";
 import {
 	ChangeEvent,
 	Dispatch,
@@ -8,20 +8,18 @@ import {
 	useMemo,
 	useState,
 } from "react";
-import { Button } from "../../../misc/button";
-import Editor from "../../../editors/richeditor";
-import { DueType } from "../assignments";
-import { NextPage } from "next";
-import AssignmentCalender from "./assignmentCalender";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { getClassTimesForXDays } from "../../../../lib/db/classes";
-import { Database, Json } from "../../../../lib/db/database.types";
 import { useAssignmentStore } from ".";
 import { NewAssignmentData } from "../../../../lib/db/assignments";
+import { getClassTimesForXDays } from "../../../../lib/db/classes";
+import { Database, Json } from "../../../../lib/db/database.types";
+import Editor from "../../../editors/richeditor";
+import { Button } from "../../../misc/button";
+import Dropdown from "../../../misc/dropdown";
 import { LoadingSmall } from "../../../misc/loading";
 import { Toggle } from "../../../misc/toggle";
 import { Info } from "../../../tooltips/info";
-import Dropdown from "../../../misc/dropdown";
+import { DueType } from "../assignments";
+import AssignmentCalender from "./assignmentCalender";
 
 const AssignmentCreation: NextPage<{
 	setStage: Dispatch<SetStateAction<number>>;
