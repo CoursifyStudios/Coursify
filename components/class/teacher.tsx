@@ -1,13 +1,14 @@
 import { NextPage } from "next";
-import { TeacherClassType } from ".";
-import { ColoredPill } from "../misc/pill";
 import Image from "next/image";
-import { useSettings } from "../../lib/stores/settings";
-import exampleImage from "../../public/example-img.jpg";
 import Link from "next/link";
+import { useMemo, useState } from "react";
+import { TeacherClassType } from ".";
+import { average, median, middle50 } from "../../lib/misc/arrayMath";
+import { getDataInArray } from "../../lib/misc/dataOutArray";
+import { useSettings } from "../../lib/stores/settings";
 import { useTabs } from "../../lib/tabs/handleTabs";
+import exampleImage from "../../public/example-img.jpg";
 import Dropdown from "../misc/dropdown";
-import { useState } from "react";
 
 const TeacherClass: NextPage<TeacherClassType> = ({
 	classData,
@@ -19,22 +20,40 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 	const { data: settings } = useSettings();
 	const { newTab } = useTabs();
 
-	const sortTypes: { id: string; name: string }[] = [
+	const sortTypes: { id: number; name: string }[] = [
 		{
-			id: "average",
+			id: 0,
 			name: "Average",
 		},
 		{
-			id: "median",
+			id: 1,
 			name: "Median",
 		},
 		{
-			id: "middle50",
+			id: 2,
 			name: "Avg. Middle 50%",
 		},
 	];
-
 	const [selectedSort, setSelectedSort] = useState(sortTypes[0]);
+
+	const grades: number[] = getDataInArray(classData.class_users!).map(
+		(user) => user.grade || 0
+	);
+	const getGrade = (grades: number[], type: number) => {
+		switch (type) {
+			case 0:
+				return average(grades);
+			case 1:
+				return median(grades);
+			case 2:
+				return middle50(grades);
+		}
+	};
+	const allGrades = useMemo(() => {
+		const overall = getGrade(grades, selectedSort.id);
+		// TODO: add categories of grades as defined by teacher (thats what the zeros are temporatily)
+		return [overall, 0, 0];
+	}, [selectedSort]);
 
 	const Header = () => (
 		<div className="brightness-hover group relative h-16  overflow-hidden rounded-xl">
@@ -72,7 +91,9 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 			>
 				<Header />
 			</Link>
-			<div className="brightness-hover group flex  cursor-pointer flex-col rounded-xl bg-backdrop-200 px-3 py-2 compact:p-2">
+			<div
+				className={`group flex cursor-pointer flex-col rounded-xl bg-backdrop-200 px-3 py-2 hover:z-20 compact:p-2`}
+			>
 				<div className="flex justify-between">
 					<div>
 						<h3 className="text-lg font-bold">Statistics</h3>
@@ -83,7 +104,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 						onChange={(value) => setSelectedSort(value)}
 						values={sortTypes}
 						className="my-2 text-sm"
-						optionsClassName="w-36"
+						optionsClassName="w-36 "
 					/>
 				</div>
 			</div>
