@@ -1,39 +1,38 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type { Database } from "./database.types";
-import { getSchedulesForXDays, ScheduleInterface } from "./schedule";
 import { getDataInArray, getDataOutArray } from "../misc/dataOutArray";
-import { ClassData } from "../../components/class";
 import { NonNullableArray } from "../misc/misc.types";
+import type { Database } from "./database.types";
+import { ScheduleInterface, getSchedulesForXDays } from "./schedule";
 export async function getAllClasses(supabase: SupabaseClient<Database>) {
 	const { data, error } = await supabase
 		.from("classes")
 		.select(
 			`
-	id,
-    name,
-    description,
-    block,
-    schedule_type,
-    color,
-    name_full,
-    room,
-    full_description,
-    classpills,
-    image,
-    type,
-	users (
-		avatar_url, id, full_name
-	),
-	class_users (
-		user_id, teacher, grade
-	),
-    assignments (
-        *,
-        starred (
-            *
-        )
-    )
-	`
+			id,
+			name,
+			description,
+			block,
+			schedule_type,
+			color,
+			name_full,
+			room,
+			full_description,
+			classpills,
+			image,
+			type,
+			users (
+				avatar_url, id, full_name
+			),
+			class_users (
+				user_id, teacher, grade
+			),
+			assignments (
+					*,
+					starred (
+							*
+					)
+			)
+			`
 		)
 		.eq("type", CommunityType.CLASS);
 	if (!error) {

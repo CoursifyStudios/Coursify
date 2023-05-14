@@ -3,20 +3,22 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { TeacherClassType } from ".";
+import { to12hourTime } from "../../lib/db/schedule";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
 import { average, median, middle50, round } from "../../lib/misc/math";
 import { useSettings } from "../../lib/stores/settings";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import exampleImage from "../../public/example-img.jpg";
+import { submissionType } from "../complete/assignments/assignmentCreation";
 import LineCounter from "../counters/line";
 import Dropdown from "../misc/dropdown";
+import { ColoredPill } from "../misc/pill";
 
 const TeacherClass: NextPage<TeacherClassType> = ({
 	classData,
 	className,
 	showTimeLoading,
 	time,
-	isLink,
 }) => {
 	const { data: settings } = useSettings();
 	const { newTab } = useTabs();
@@ -65,7 +67,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 					src={classData?.image ? classData.image : exampleImage}
 					loading="eager"
 					alt="Example Image"
-					className=" absolute inset-0 h-16 w-full object-cover object-center brightness-75 group-hover:brightness-100"
+					className=" absolute inset-0 h-16 w-full object-cover object-center brightness-75 transition duration-300 group-hover:brightness-90"
 					fill
 					sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, (max-width: 1536px) 25vw, 20vw"
 				/>
@@ -130,6 +132,47 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 					<GradesSection name="Formative (20%)" grade={allGrades[2]} />
 				</div>
 			</section>
+			{classData.assignments &&
+				getDataInArray(classData.assignments).map((assignment, i) => {
+					const dueDate = assignment.due_date
+						? new Date(assignment.due_date)
+						: null;
+					return (
+						<section
+							className={`group flex cursor-pointer items-center rounded-xl bg-backdrop-200 px-3 py-2 hover:z-20 compact:p-2`}
+							key={i}
+						>
+							<div className="mr-3 grid h-9 w-9 min-w-[2.25rem] place-items-center rounded-full bg-gray-300 dark:bg-gray-200">
+								{
+									submissionType.find(
+										(type) => type.type == assignment.submission_type
+									)?.icon
+								}
+							</div>
+							<div className="flex flex-col ">
+								<h4 className="max-w-[10.5rem] truncate text-sm font-medium">
+									{assignment.name}
+								</h4>
+								<p className="text-xs">12/24 students submitted</p>
+							</div>
+							<div
+								tabIndex={-1}
+								className="ml-auto flex flex-col items-center text-xs"
+							>
+								{dueDate && (
+									<>
+										<div className="mb-0.5 font-medium text-gray-700">
+											{dueDate.getMonth()}/{dueDate.getDate()}
+										</div>
+										<ColoredPill color={classData.color} className="text-xs">
+											{`${to12hourTime(dueDate)}`}
+										</ColoredPill>
+									</>
+								)}
+							</div>
+						</section>
+					);
+				})}
 		</div>
 	);
 };
