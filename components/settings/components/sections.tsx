@@ -1,8 +1,7 @@
 import { NextPage } from "next";
-import { ReactNode } from "react";
-import { Toggle } from "../../misc/toggle";
 import Betatag from "../../misc/betatag";
 import Dropdown from "../../misc/dropdown";
+import { Toggle } from "../../misc/toggle";
 
 export const ToggleSection: NextPage<{
 	description: string;

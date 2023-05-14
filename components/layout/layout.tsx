@@ -1,10 +1,10 @@
-import { ReactNode, useState, useEffect } from "react";
-import { useSettings } from "../../lib/stores/settings";
-import { Database, Json } from "../../lib/db/database.types";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { useTheme } from "next-themes";
+import { ReactNode, useEffect, useState } from "react";
+import { Database, Json } from "../../lib/db/database.types";
+import { useSettings } from "../../lib/stores/settings";
 import Footer from "./footer";
 import Navbar from "./navbar";
-import { ThemeProvider, useTheme } from "next-themes";
 
 export default function Layout(props: { children: ReactNode }) {
 	const { data, set, loadSettings } = useSettings();

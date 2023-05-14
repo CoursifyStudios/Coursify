@@ -1,28 +1,25 @@
-import richTheme from "../../lib/editor/richtheme";
-import { LexicalComposer } from "@lexical/react/LexicalComposer";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
-import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
-import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
-import { HeadingNode, QuoteNode } from "@lexical/rich-text";
-import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
-import { ListItemNode, ListNode } from "@lexical/list";
 import { CodeHighlightNode, CodeNode } from "@lexical/code";
 import { AutoLinkNode, LinkNode } from "@lexical/link";
-import TreeViewPlugin from "../../lib/editor/plugins/treeview";
+import { ListItemNode, ListNode } from "@lexical/list";
+import { TRANSFORMERS } from "@lexical/markdown";
+import { AutoFocusPlugin } from "@lexical/react/LexicalAutoFocusPlugin";
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import LexicalErrorBoundary from "@lexical/react/LexicalErrorBoundary";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
 import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin";
 import { ListPlugin } from "@lexical/react/LexicalListPlugin";
 import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
-import { TRANSFORMERS } from "@lexical/markdown";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { HeadingNode, QuoteNode } from "@lexical/rich-text";
+import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
+import richTheme from "../../lib/editor/richtheme";
 
-import CodeHighlightPlugin from "../../lib/editor/plugins/codehighlightplugin";
-import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 import { GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
-import ToolbarPlugin from "../../lib/editor/plugins/toolbar/main";
-import { EditorContext } from "../../lib/editor/plugins/toolbar/contextProviders";
+import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+import { EditorState, SerializedEditorState } from "lexical/LexicalEditorState";
 import {
 	Dispatch,
 	ReactNode,
@@ -30,8 +27,10 @@ import {
 	useEffect,
 	useState,
 } from "react";
-import { EditorState, SerializedEditorState } from "lexical/LexicalEditorState";
 import { Json } from "../../lib/db/database.types";
+import CodeHighlightPlugin from "../../lib/editor/plugins/codehighlightplugin";
+import { EditorContext } from "../../lib/editor/plugins/toolbar/contextProviders";
+import ToolbarPlugin from "../../lib/editor/plugins/toolbar/main";
 
 const editorConfig = {
 	// The editor theme

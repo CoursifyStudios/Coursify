@@ -1,9 +1,9 @@
-import { NextPage } from "next";
-import Link from "next/link";
-import { useTabs } from "../../lib/tabs/handleTabs";
-import Image from "next/image";
-import { addUserToGroup } from "../../lib/db/groups";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { NextPage } from "next";
+import Image from "next/image";
+import Link from "next/link";
+import { addUserToGroup } from "../../lib/db/groups";
+import { useTabs } from "../../lib/tabs/handleTabs";
 import { Button } from "../misc/button";
 
 export const GroupSmall: NextPage<{

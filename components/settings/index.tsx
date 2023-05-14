@@ -6,11 +6,11 @@ import {
 	UserIcon,
 } from "@heroicons/react/24/outline";
 import { ReactNode } from "react";
-import Profile from "./pages/profile";
 import Appearance from "./pages/appearance";
 import Connections from "./pages/connections";
-import Securityandprivacy from "./pages/securityPrivacy";
 import Notifications from "./pages/notifications";
+import Profile from "./pages/profile";
+import Securityandprivacy from "./pages/securityPrivacy";
 
 const iconClasses = "w-6 h-6";
 

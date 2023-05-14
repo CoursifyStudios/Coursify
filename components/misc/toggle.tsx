@@ -1,5 +1,4 @@
 import { Switch } from "@headlessui/react";
-import { Dispatch, SetStateAction } from "react";
 
 export function Toggle({
 	enabled,

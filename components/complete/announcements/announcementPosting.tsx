@@ -1,22 +1,22 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useFormikContext, Formik, Form, Field, ErrorMessage } from "formik";
+import { ErrorMessage, Field, Form, Formik, useFormikContext } from "formik";
 import { EditorState } from "lexical";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import {
+	TypeOfAnnouncements,
 	crossPostAnnouncements,
 	editAnnouncement,
 	shareAnnouncement,
-	TypeOfAnnouncements,
 } from "../../../lib/db/announcements";
 import { getClassesForUserBasic } from "../../../lib/db/classes";
 import { Database, Json } from "../../../lib/db/database.types";
 import { getDataOutArray } from "../../../lib/misc/dataOutArray";
+import Editor from "../../editors/richeditor";
 import { Button } from "../../misc/button";
+import { LoadingSmall } from "../../misc/loading";
 import { ColoredPill } from "../../misc/pill";
 import { CommunityPicker } from "./communityPicker";
-import Editor from "../../editors/richeditor";
 import { TempAnnouncement } from "./tempAnnouncement";
-import { LoadingSmall } from "../../misc/loading";
 export const AnnouncementPostingUI = ({
 	communityid,
 	announcements,

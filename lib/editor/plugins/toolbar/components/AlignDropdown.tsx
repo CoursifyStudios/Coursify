@@ -1,13 +1,12 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 
-import { FORMAT_ELEMENT_COMMAND } from "lexical";
-import { EditorContext, ToolbarContext } from "../contextProviders";
 import {
 	Bars3BottomLeftIcon,
 	Bars3BottomRightIcon,
-	Bars3CenterLeftIcon,
 	Bars3Icon,
 } from "@heroicons/react/24/outline";
+import { FORMAT_ELEMENT_COMMAND } from "lexical";
+import { EditorContext } from "../contextProviders";
 
 const AlignDropdown = () => {
 	const { activeEditor } = useContext(EditorContext);

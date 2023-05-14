@@ -1,4 +1,3 @@
-import { Transition, Dialog } from "@headlessui/react";
 import {
 	ChatBubbleBottomCenterTextIcon,
 	ClipboardDocumentListIcon,
@@ -8,7 +7,7 @@ import {
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
-import { Dispatch, Fragment, ReactNode, SetStateAction, useState } from "react";
+import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 
 import Image from "next/image";
 import {
@@ -16,12 +15,12 @@ import {
 	NewAssignmentData,
 } from "../../../../lib/db/assignments";
 
-import AssignmentCreation from "./three";
 import { create } from "zustand";
-import AssignmentDetails from "./two";
-import { DueType } from "../assignments";
 import { useSettings } from "../../../../lib/stores/settings";
 import { Popup } from "../../../misc/popup";
+import { DueType } from "../assignments";
+import AssignmentCreation from "./three";
+import AssignmentDetails from "./two";
 
 interface AssignmmentState {
 	data: NewAssignmentData | undefined;
