@@ -73,7 +73,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 				/>
 			)}
 			<div className="absolute bottom-2 left-4 top-2 flex flex-col justify-center">
-				<h3 className="max-w-[15rem] truncate text-xl font-semibold ">
+				<h3 className="max-w-[15rem] truncate text-xl font-semibold text-gray-200 dark:text-gray-800">
 					{classData.name}
 				</h3>
 			</div>
