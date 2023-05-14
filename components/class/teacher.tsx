@@ -102,7 +102,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 	);
 
 	return (
-		<div className={`${className} flex w-[19rem] flex-col gap-4`}>
+		<div className={`${className} flex w-[19rem] flex-col gap-3.5`}>
 			<Link
 				href={"/classes/" + classData.id}
 				onClick={() => newTab("/classes/" + classData.id, classData.name)}
@@ -162,7 +162,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 								{dueDate && (
 									<>
 										<div className="mb-0.5 font-medium text-gray-700">
-											{dueDate.getMonth()}/{dueDate.getDate()}
+											{dueDate.getMonth() + 1}/{dueDate.getDate()}
 										</div>
 										<ColoredPill color={classData.color} className="text-xs">
 											{`${to12hourTime(dueDate)}`}
