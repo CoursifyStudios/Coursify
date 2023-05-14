@@ -3,11 +3,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import { TeacherClassType } from ".";
-import { average, median, middle50 } from "../../lib/misc/arrayMath";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
+import { average, median, middle50, round } from "../../lib/misc/math";
 import { useSettings } from "../../lib/stores/settings";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import exampleImage from "../../public/example-img.jpg";
+import LineCounter from "../counters/line";
 import Dropdown from "../misc/dropdown";
 
 const TeacherClass: NextPage<TeacherClassType> = ({
@@ -39,7 +40,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 	const grades: number[] = getDataInArray(classData.class_users!).map(
 		(user) => user.grade || 0
 	);
-	const getGrade = (grades: number[], type: number) => {
+	const getGrade = (grades: number[], type: number): number => {
 		switch (type) {
 			case 0:
 				return average(grades);
@@ -47,13 +48,15 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 				return median(grades);
 			case 2:
 				return middle50(grades);
+			default:
+				return 0;
 		}
 	};
 	const allGrades = useMemo(() => {
-		const overall = getGrade(grades, selectedSort.id);
+		const overall = round(getGrade(grades, selectedSort.id));
 		// TODO: add categories of grades as defined by teacher (thats what the zeros are temporatily)
-		return [overall, 0, 0];
-	}, [selectedSort]);
+		return [overall, 75, 50];
+	}, [grades, selectedSort.id]);
 
 	const Header = () => (
 		<div className="brightness-hover group relative h-16  overflow-hidden rounded-xl">
@@ -83,6 +86,19 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 		</div>
 	);
 
+	const GradesSection: NextPage<{ name: string; grade: number }> = ({
+		grade,
+		name,
+	}) => (
+		<div>
+			<h4>{name}</h4>
+			<div className="flex items-center text-base leading-4">
+				<LineCounter amount={grade} />
+				<p className="ml-2">{grade}%</p>
+			</div>
+		</div>
+	);
+
 	return (
 		<div className={`${className} flex w-[19rem] flex-col gap-4`}>
 			<Link
@@ -91,7 +107,8 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 			>
 				<Header />
 			</Link>
-			<div
+			{/* Grades */}
+			<section
 				className={`group flex cursor-pointer flex-col rounded-xl bg-backdrop-200 px-3 py-2 hover:z-20 compact:p-2`}
 			>
 				<div className="flex justify-between">
@@ -107,7 +124,12 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 						optionsClassName="w-36 "
 					/>
 				</div>
-			</div>
+				<div className="mt-3 flex flex-col gap-2 text-sm font-medium leading-3">
+					<GradesSection name="Overall" grade={allGrades[0]} />
+					<GradesSection name="Summitive (80%)" grade={allGrades[1]} />
+					<GradesSection name="Formative (20%)" grade={allGrades[2]} />
+				</div>
+			</section>
 		</div>
 	);
 };

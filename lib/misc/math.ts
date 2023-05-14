@@ -11,7 +11,18 @@ export const median = (numbs: number[]) => {
 };
 
 export const middle50 = (numbs: number[]) => {
-	return [...numbs]
-		.sort((a, b) => a - b)
-		.slice(Math.floor(numbs.length * 0.25), Math.ceil(numbs.length * 0.75));
+	return average(
+		numbs
+			.sort((a, b) => a - b)
+			.slice(Math.floor(numbs.length * 0.25), Math.ceil(numbs.length * 0.75))
+	);
+};
+
+export const round = (number: number, decimals?: number) => {
+	if (decimals === undefined) {
+		return Math.round(number);
+	} else {
+		const factor = Math.pow(10, decimals);
+		return Math.round(number * factor) / factor;
+	}
 };
