@@ -172,12 +172,13 @@ export const shareAnnouncement = async (
         )`);
 };
 
-export const postComment = async (
+export const postCommentOrReply = async (
 	supabase: SupabaseClient<Database>,
 	author: string,
 	classID: string,
 	announcementID: string,
-	content: string
+	content: string,
+	type: AnnouncementType
 ) => {
 	return await supabase
 		.from("announcements")
@@ -187,13 +188,13 @@ export const postComment = async (
 			content: null,
 			class_id: classID,
 			parent: announcementID,
-			type: AnnouncementType.COMMENT,
+			type: type,
 		})
 		.select()
 		.single();
 };
 
-export type CommentType = Awaited<ReturnType<typeof postComment>>;
+export type CommentType = Awaited<ReturnType<typeof postCommentOrReply>>;
 
 export enum AnnouncementType {
 	ANNOUNCMENT = 0,

@@ -1,13 +1,18 @@
-import { ErrorMessage, Field, Form, Formik, useFormikContext } from "formik";
-import { postComment } from "../../../lib/db/announcements";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import {
+	AnnouncementType,
+	postCommentOrReply,
+} from "../../../lib/db/announcements";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../../misc/button";
 import Link from "next/link";
 import { useTabs } from "../../../lib/tabs/handleTabs";
 import { howLongAgo } from "../../../lib/misc/dates";
-import Loading from "../../misc/loading";
 import Image from "next/image";
+import { Menu } from "@headlessui/react";
+import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
+import Dropdown from "../../misc/dropdown";
 
 export const Comment = ({
 	id,
@@ -15,6 +20,7 @@ export const Comment = ({
 	time,
 	content,
 	users,
+    communityid,
 }: {
 	author: string;
 	time: string;
@@ -23,9 +29,12 @@ export const Comment = ({
 		full_name: string;
 		avatar_url: string;
 	};
+    communityid: string;
 	id?: string;
 }) => {
+	const user = useUser();
 	const { newTab } = useTabs();
+	const [showPosting, setShowPosting] = useState(false);
 	return (
 		<div className="ml-4">
 			<div className="flex items-center pt-1 ">
@@ -52,18 +61,44 @@ export const Comment = ({
 					</p>
 				</Link>
 				<p className="pl-1.5 text-gray-600 dark:text-gray-400">{time}</p>
+				{user && user.id == author && (
+					<Menu>
+						<Menu.Button className="ml-auto">
+							<EllipsisVerticalIcon className="w-5"></EllipsisVerticalIcon>
+						</Menu.Button>
+						<div className="absolute z-50 mt-14">
+							<Menu.Items
+								as="div"
+								className="flex w-48 flex-col relative rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-xl"
+							>
+                                <Menu.Item as="div" className="font-medium p-1">Edit</Menu.Item>
+                                <Menu.Item as="div" className="font-medium p-1">Share</Menu.Item>
+                                <Menu.Item as="div" className="font-medium p-1">Delete</Menu.Item>
+							</Menu.Items>
+						</div>
+					</Menu>
+				)}
 			</div>
 			<p>{content}</p>
+			<button
+            className="ml-2"
+				onClick={() => {
+					setShowPosting(true);
+				}}
+			>
+				{showPosting? "Replying to " + users.full_name : "Reply"}
+			</button>
+            {showPosting && <Commenting communityid={communityid} parentID={id!}></Commenting>}
 		</div>
 	);
 };
 
 export const Commenting = ({
 	communityid,
-	announcementid,
+	parentID,
 }: {
 	communityid: string;
-	announcementid: string;
+	parentID: string;
 }) => {
 	const supabase = useSupabaseClient();
 	const user = useUser();
@@ -92,12 +127,13 @@ export const Commenting = ({
 						}}
 						onSubmit={async (formData) => {
 							setShowCommenting(false);
-							const test = await postComment(
+							const test = await postCommentOrReply(
 								supabase,
 								user.id,
 								communityid,
-								announcementid,
-								formData.content
+								parentID,
+								formData.content,
+								AnnouncementType.COMMENT
 							);
 							setTempComments(
 								tempComments.concat({
@@ -169,6 +205,7 @@ export const Commenting = ({
 					time={comment.time}
 					content={comment.content}
 					users={comment.users}
+                    communityid={communityid}
 				></Comment>
 			))}
 		</>

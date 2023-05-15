@@ -9,7 +9,8 @@ export const Button: NextPage<{
 	disabled?: boolean;
 	onClick?: () => void;
 	type?: "submit" | "reset" | "button";
-}> = ({ className, children, color, disabled, onClick, type }) => {
+	tabIndex?: number;
+}> = ({ className, children, color, disabled, onClick, type, tabIndex }) => {
 	return (
 		<button
 			disabled={disabled}
@@ -18,6 +19,7 @@ export const Button: NextPage<{
 			} ${disabled ? "cursor-not-allowed brightness-75" : "brightness-hover"}`}
 			onClick={onClick}
 			type={type}
+			tabIndex={tabIndex}
 		>
 			{children}
 		</button>

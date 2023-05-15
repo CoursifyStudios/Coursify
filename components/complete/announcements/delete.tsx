@@ -61,9 +61,20 @@ export const Delete: NextPage<{
 				</div>
 			)}
 			<div className="mt-2 flex justify-between">
-				<Button>Cancel</Button>
+				<Button
+					tabIndex={0}
+					onClick={() => setOpen(false)}
+					className=" focus:outline-1 focus:outline-black" //Make this UI better later
+				>
+					Cancel
+				</Button>
 				<div className="flex">
-					<Button onClick={deleteSingle} disabled={deleting != undefined}>
+					<Button
+						tabIndex={0}
+						className=" focus:outline-1 focus:outline-black" //Make this UI better later
+						onClick={deleteSingle}
+						disabled={deleting != undefined}
+					>
 						{deleting == "single" ? (
 							<>
 								Deleting <LoadingSmall className="ml-2" />
@@ -73,9 +84,10 @@ export const Delete: NextPage<{
 						)}{" "}
 					</Button>
 					<Button
+						tabIndex={0}
 						onClick={deleteMultiple}
 						disabled={deleting != undefined}
-						className="ml-4"
+						className="ml-4 focus:outline-1 focus:outline-black" //Make this UI better later
 						color="bg-red-700 text-white"
 					>
 						{deleting == "single" ? (

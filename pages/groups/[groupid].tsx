@@ -5,16 +5,12 @@ import { ColoredPill } from "../../components/misc/pill";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { getGroup, GroupResponse } from "../../lib/db/groups";
-import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
+import { getDataInArray } from "../../lib/misc/dataOutArray";
 import { Member } from "../../components/complete/members";
-import { Announcement } from "../../components/complete/announcements";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { Database } from "../../lib/db/database.types";
 import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
-import {
-	AnnouncementType,
-	TypeOfAnnouncements,
-} from "../../lib/db/announcements";
+import { TypeOfAnnouncements } from "../../lib/db/announcements";
 import { AnnouncementsComponent } from "../../components/complete/announcements/announcementsComponent";
 
 const Group: NextPage = () => {
@@ -183,3 +179,4 @@ const Event = ({ title, time }: { title: string; time: string }) => {
 };
 
 export default Group;
+

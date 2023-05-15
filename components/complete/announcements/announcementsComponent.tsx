@@ -17,7 +17,7 @@ export const AnnouncementsComponent = ({
 		TypeOfAnnouncements[]
 	>([]);
 	return (
-		<div>
+		<div className="space-y-4">
 			{tempAnnouncements.reverse().map(
 				(announcement) =>
 					announcement && (

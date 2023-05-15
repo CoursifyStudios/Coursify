@@ -114,7 +114,8 @@ export const Announcement = ({
 									leaveFrom="opacity-100"
 									leaveTo="opacity-0"
 								>
-									<Listbox.Options className="absolute right-0 top-6 z-10 mt-2 flex w-28 flex-col overflow-auto rounded-xl bg-backdrop/75  p-1.5 text-sm shadow-xl backdrop-blur-xl transition">
+									<Listbox.Options
+                                 className="absolute right-0 top-6 z-10 mt-2 flex w-28 flex-col overflow-auto rounded-xl bg-backdrop/75  p-1.5 text-sm shadow-xl backdrop-blur-xl transition">
 										{options.map(
 											(options, optionID) =>
 												user &&
@@ -204,7 +205,7 @@ export const Announcement = ({
 					<div className="space-y-4">
 						<Commenting
 							communityid={classID}
-							announcementid={announcement.id}
+							parentID={announcement.id}
 						/>
 
 						{comments &&
@@ -217,6 +218,7 @@ export const Announcement = ({
 									// THIS IS INTENTIONAL, COMMENTS ARE PLAIN TEXT AND THUS USE THE TITLE FIELD FOR CONTENT
 									content={comment.title!}
 									users={getDataOutArray(comment.users)!}
+                                    communityid={classID}
 								></Comment>
 							))}
 					</div>
