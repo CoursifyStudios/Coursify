@@ -1,37 +1,38 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { getDataOutArray } from "../misc/dataOutArray";
+import { getDataInArray, getDataOutArray } from "../misc/dataOutArray";
+import { NonNullableArray } from "../misc/misc.types";
 import type { Database } from "./database.types";
-import { getSchedulesForXDays, ScheduleInterface } from "./schedule";
+import { ScheduleInterface, getSchedulesForXDays } from "./schedule";
 export async function getAllClasses(supabase: SupabaseClient<Database>) {
 	const { data, error } = await supabase
 		.from("classes")
 		.select(
 			`
-	id,
-    name,
-    description,
-    block,
-    schedule_type,
-    color,
-    name_full,
-    room,
-    full_description,
-    classpills,
-    image,
-    type,
-	users (
-		avatar_url, id, full_name
-	),
-	class_users (
-		user_id, teacher, grade
-	),
-    assignments (
-        *,
-        starred (
-            *
-        )
-    )
-	`
+			id,
+			name,
+			description,
+			block,
+			schedule_type,
+			color,
+			name_full,
+			room,
+			full_description,
+			classpills,
+			image,
+			type,
+			users (
+				avatar_url, id, full_name
+			),
+			class_users (
+				user_id, teacher, grade
+			),
+			assignments (
+					*,
+					starred (
+							*
+					)
+			)
+			`
 		)
 		.eq("type", CommunityType.CLASS);
 	if (!error) {
@@ -254,3 +255,14 @@ export const getClassesForUserBasic = async (
 export type BasicClassInfoDB = Awaited<
 	ReturnType<typeof getClassesForUserBasic>
 >;
+
+export const isTeacher = (
+	classData: NonNullableArray<AllClassesResponse["data"]>,
+	userID: string
+) => {
+	return Boolean(
+		getDataInArray(classData.class_users).find(
+			(user) => user?.user_id == userID && user?.teacher
+		)
+	);
+};

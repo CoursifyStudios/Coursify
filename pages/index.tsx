@@ -1,12 +1,24 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { AssignmentPreview } from "../components/complete/assignments/assignments";
-import { Class, LoadingClass, sortClasses } from "../components/complete/class";
-import ScheduleComponent from "../components/complete/schedule";
-import { AllClassesResponse, getAllClasses } from "../lib/db/classes";
+import { useState, useEffect } from "react";
 import { Database } from "../lib/db/database.types";
-import { ScheduleInterface, getSchedulesForXDays } from "../lib/db/schedule";
+import {
+	getAllClasses,
+	AllClassesResponse,
+	isTeacher,
+} from "../lib/db/classes";
+import Loading from "../components/misc/loading";
+import { getSchedulesForXDays, ScheduleInterface } from "../lib/db/schedule";
+import ScheduleComponent from "../components/complete/schedule";
+import { AssignmentPreview } from "../components/complete/assignments/assignments";
+import Link from "next/link";
+import { useSettings } from "../lib/stores/settings";
+import { sortClasses } from "../components/class/sorting";
+import { Class } from "../components/class";
+import {
+	LoadingStudentClass,
+	LoadingTeacherClass,
+} from "../components/class/loading";
+import HomepageClassesUI from "../components/class/homepage";
 
 export default function Home() {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -14,6 +26,7 @@ export default function Home() {
 	const [classes, setClasses] = useState<AllClassesResponse>();
 	const [loading, setLoading] = useState(true);
 	const [schedules, setSchedules] = useState<ScheduleInterface[][]>([]);
+	const { data: settings } = useSettings();
 
 	//because Lukas left this a mess, until i get around to fixing it
 	const dateToday = new Date();
@@ -106,41 +119,15 @@ export default function Home() {
 		<>
 			<div className="container mx-auto mb-10 flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words px-4 sm:mt-10 md:px-8 xl:px-0">
 				<div className="flex w-full flex-col">
-					<div className="flex flex-col sm:flex-col-reverse lg:flex-row  ">
+					<div className="mb-12 flex flex-col sm:flex-col-reverse lg:flex-row ">
 						{/* Classes UI */}
-						<section id="Classes" className="mb-12">
-							<div className="flex items-end md:mt-8 lg:mt-0">
-								<h2 className="title">Classes</h2>
-							</div>
-							<div className="mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 ">
-								{classes && classes.data && schedules
-									? classes.data
-											.slice(0, classes.data.length)
-											.sort((a, b) =>
-												sortClasses(a, b, schedules[0], schedules[1])
-											)
-											.map((classData) => (
-												<Class
-													classData={classData}
-													showLoading={loading}
-													key={classData.id}
-													className="h-full !w-full xl:!w-[18.5rem]"
-													isLink={true}
-													time={schedules[0]?.find(
-														(s) =>
-															s.specialEvent == undefined &&
-															classData.block == s.block &&
-															classData.schedule_type == s.type
-													)}
-												/>
-											))
-									: [...Array(6)].map((_, i) => (
-											<LoadingClass
-												key={i}
-												className="!w-full xl:!w-[18.5rem]"
-											/>
-									  ))}
-							</div>
+						<section id="Classes" className="">
+							<HomepageClassesUI
+								classes={classes}
+								loading={loading}
+								schedules={schedules}
+								userID={user.id}
+							/>
 						</section>
 						{/* Schedule UI */}
 						<section

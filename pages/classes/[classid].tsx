@@ -12,9 +12,9 @@ import { AnnouncementPostingUI } from "../../components/complete/announcements/a
 import { CreateAssignment } from "../../components/complete/assignments/assignmentCreation";
 import { AssignmentPreview } from "../../components/complete/assignments/assignments";
 import { Member } from "../../components/complete/members";
+import CircleCounter from "../../components/counters/circle";
 import Editor from "../../components/editors/richeditor";
 import { Button } from "../../components/misc/button";
-import CircleCounter from "../../components/misc/circleCounter";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
 import { ColoredPill } from "../../components/misc/pill";
 import {

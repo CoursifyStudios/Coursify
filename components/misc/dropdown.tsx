@@ -8,13 +8,14 @@ const Dropdown: NextPage<{
 	onChange: (value: any) => void;
 	values: Partial<{ name: string }>[];
 	className?: string;
-}> = ({ values, selectedValue, onChange, className }) => {
+	optionsClassName?: string;
+}> = ({ values, selectedValue, onChange, className, optionsClassName }) => {
 	return (
 		<Listbox
 			value={selectedValue}
 			onChange={onChange}
 			as="div"
-			className={`z-20 ${className} flex flex-col items-center`}
+			className={` ${className} flex flex-col items-center`}
 		>
 			<Listbox.Button className="brightness-hover flex items-center rounded-lg bg-gray-200  px-2 py-1 font-semibold">
 				{selectedValue.name}
@@ -29,7 +30,9 @@ const Dropdown: NextPage<{
 				leaveFrom="opacity-100"
 				leaveTo="opacity-0"
 			>
-				<Listbox.Options className="absolute mt-12 space-y-2 rounded-xl border border-gray-300 bg-white/75 p-2 backdrop-blur-xl dark:bg-gray-200/75 ">
+				<Listbox.Options
+					className={`${optionsClassName} absolute z-20 mt-12 space-y-2 rounded-xl border border-gray-300 bg-white/75 p-2 backdrop-blur-xl dark:bg-gray-200/75`}
+				>
 					{values.map((type, i) => (
 						<Listbox.Option
 							key={i}
