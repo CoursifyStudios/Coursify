@@ -441,23 +441,20 @@ const Class: NextPage = () => {
 						{data.data?.assignments &&
 							user &&
 							getDataInArray(data.data?.assignments).map((assignment) => (
-								<div
+								<AssignmentPreview
 									key={assignment.id}
-									className=" brightness-hover flex rounded-xl bg-backdrop-200 p-3"
-								>
-									<AssignmentPreview
-										supabase={supabase}
-										assignment={
-											Array.isArray(assignment) ? assignment[0] : assignment
-										}
-										showClassPill={false}
-										starredAsParam={false}
-										schedule={schedule!}
-										scheduleT={scheduleT!}
-										userId={user.id}
-										classes={data.data}
-									/>
-								</div>
+									className="brightness-hover"
+									supabase={supabase}
+									assignment={
+										Array.isArray(assignment) ? assignment[0] : assignment
+									}
+									showClassPill={false}
+									starredAsParam={false}
+									schedule={schedule!}
+									scheduleT={scheduleT!}
+									userId={user.id}
+									classes={data.data}
+								/>
 							))}
 					</div>
 				</section>

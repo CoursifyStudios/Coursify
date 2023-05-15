@@ -199,33 +199,28 @@ export default function Home() {
 														{Array.isArray(aClass.assignments) &&
 															schedules &&
 															aClass.assignments.map((assignment) => (
-																<div
+																<AssignmentPreview
+																	className="brightness-hover"
 																	key={assignment.id}
-																	className={
-																		"brightness-hover rounded-lg bg-backdrop-200 p-2"
+																	supabase={supabaseClient}
+																	assignment={
+																		Array.isArray(assignment)
+																			? assignment[0]
+																			: assignment
 																	}
-																>
-																	<AssignmentPreview
-																		supabase={supabaseClient}
-																		assignment={
-																			Array.isArray(assignment)
-																				? assignment[0]
-																				: assignment
-																		}
-																		userId={user.id}
-																		starredAsParam={
-																			assignment.starred
-																				? Array.isArray(assignment.starred)
-																					? assignment.starred.length > 0
-																					: !!assignment.starred
-																				: false
-																		}
-																		showClassPill={false}
-																		schedule={schedules[0]!}
-																		scheduleT={schedules[1]!}
-																		classes={aClass}
-																	/>
-																</div>
+																	userId={user.id}
+																	starredAsParam={
+																		assignment.starred
+																			? Array.isArray(assignment.starred)
+																				? assignment.starred.length > 0
+																				: !!assignment.starred
+																			: false
+																	}
+																	showClassPill={false}
+																	schedule={schedules[0]!}
+																	scheduleT={schedules[1]!}
+																	classes={aClass}
+																/>
 															))}
 													</div>
 												</div>
@@ -249,31 +244,28 @@ export default function Home() {
 															? assignment.starred.length > 0
 															: !!assignment.starred
 														: false) && (
-														<div
+														<AssignmentPreview
 															key={assignment.id}
-															className={" rounded-lg bg-backdrop-200 p-2"}
-														>
-															<AssignmentPreview
-																supabase={supabaseClient}
-																assignment={
-																	Array.isArray(assignment)
-																		? assignment[0]
-																		: assignment
-																}
-																userId={user.id}
-																starredAsParam={
-																	assignment.starred
-																		? Array.isArray(assignment.starred)
-																			? assignment.starred.length > 0
-																			: !!assignment.starred
-																		: false
-																}
-																showClassPill={true}
-																schedule={schedules[0]!}
-																scheduleT={schedules[1]!}
-																classes={aClass}
-															/>
-														</div>
+															className="brightness-hover"
+															supabase={supabaseClient}
+															assignment={
+																Array.isArray(assignment)
+																	? assignment[0]
+																	: assignment
+															}
+															userId={user.id}
+															starredAsParam={
+																assignment.starred
+																	? Array.isArray(assignment.starred)
+																		? assignment.starred.length > 0
+																		: !!assignment.starred
+																	: false
+															}
+															showClassPill={true}
+															schedule={schedules[0]!}
+															scheduleT={schedules[1]!}
+															classes={aClass}
+														/>
 													)
 											)
 									)}

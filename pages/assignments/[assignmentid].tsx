@@ -146,33 +146,29 @@ const Post: NextPage = () => {
 					allAssignments.data.map(
 						(assignment) =>
 							assignment.classes && (
-								<div
-									className={`flex rounded-xl ${
+								<AssignmentPreview
+									key={assignment.id}
+									supabase={supabase}
+									assignment={assignment}
+									userId={user.id}
+									starredAsParam={
+										assignment.starred
+											? Array.isArray(assignment.starred)
+												? assignment.starred.length > 0
+												: !!assignment.starred
+											: false
+									}
+									//obviously we need a better solution
+									schedule={schedule!}
+									scheduleT={scheduleT!}
+									showClassPill={true}
+									classes={getDataOutArray(assignment.classes)}
+									className={`${
 										assignmentid == assignment.id
 											? "brightness-focus"
 											: "brightness-hover bg-backdrop-200"
-									} border border-transparent p-3`}
-									key={assignment.id}
-								>
-									{/* List of assignments */}
-									<AssignmentPreview
-										supabase={supabase}
-										assignment={assignment}
-										userId={user.id}
-										starredAsParam={
-											assignment.starred
-												? Array.isArray(assignment.starred)
-													? assignment.starred.length > 0
-													: !!assignment.starred
-												: false
-										}
-										//obviously we need a better solution
-										schedule={schedule!}
-										scheduleT={scheduleT!}
-										showClassPill={true}
-										classes={getDataOutArray(assignment.classes)}
-									/>
-								</div>
+									} border border-transparent `}
+								/>
 							)
 					)
 				) : (
