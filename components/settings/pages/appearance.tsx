@@ -1,10 +1,9 @@
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
+import { Database } from "../../../lib/db/database.types";
 import { useSettings } from "../../../lib/stores/settings";
 import { Header } from "../components/header";
-import { ToggleSection, DropdownSection } from "../components/sections";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useEffect, useState } from "react";
-import { Database, Json } from "../../../lib/db/database.types";
+import { DropdownSection, ToggleSection } from "../components/sections";
 
 const Theming: NextPage<{}> = () => {
 	const user = useUser();

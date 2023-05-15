@@ -1,20 +1,20 @@
-import { NextPage } from "next";
 import { Tab } from "@headlessui/react";
-import { Fragment, useEffect, useState } from "react";
-import { ColoredPill } from "../../components/misc/pill";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { getGroup, GroupResponse } from "../../lib/db/groups";
-import { getDataInArray } from "../../lib/misc/dataOutArray";
-import { Member } from "../../components/complete/members";
+import { Fragment, useEffect, useState } from "react";
 import { Announcement } from "../../components/complete/announcements";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { Database } from "../../lib/db/database.types";
 import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
+import { Member } from "../../components/complete/members";
+import { ColoredPill } from "../../components/misc/pill";
 import {
 	AnnouncementType,
 	TypeOfAnnouncements,
 } from "../../lib/db/announcements";
+import { Database } from "../../lib/db/database.types";
+import { GroupResponse, getGroup } from "../../lib/db/groups";
+import { getDataInArray } from "../../lib/misc/dataOutArray";
 
 const Group: NextPage = () => {
 	const router = useRouter();

@@ -15,7 +15,7 @@ import CodeLanguageDropdown from "./CodeLanguageDropdown";
 //import InsertLinkButton from './InsertLinkButton';
 //import TextColorPicker from './TextColorPicker';
 //import TextFormatDropdown from './TextFormatDropdown';
-import { UndoButton, RedoButton } from "./undoRedo";
+import { RedoButton, UndoButton } from "./undoRedo";
 
 export {
 	AlignDropdown,
