@@ -1,5 +1,4 @@
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Menu, Transition } from "@headlessui/react";
 import {
 	ArrowLeftOnRectangleIcon,
 	CalendarDaysIcon,
@@ -10,14 +9,15 @@ import {
 	UserIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { NextComponentType } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { NextComponentType } from "next";
+import { Fragment, useEffect, useMemo, useState } from "react";
+import { Database } from "../../lib/db/database.types";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import { ButtonIcon } from "../misc/button";
-import { Menu, Transition } from "@headlessui/react";
-import { Database } from "../../lib/db/database.types";
-import Image from "next/image";
 
 const Navbar: NextComponentType = () => {
 	const { newTab, closeTab, tabs } = useTabs();

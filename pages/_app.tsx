@@ -1,18 +1,12 @@
 import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
-import {
-	SessionContextProvider,
-	Session,
-	useSupabaseClient,
-	useUser,
-} from "@supabase/auth-helpers-react";
+import { Session, SessionContextProvider } from "@supabase/auth-helpers-react";
 import { Analytics } from "@vercel/analytics/react";
+import { ThemeProvider } from "next-themes";
 import { AppProps } from "next/app";
-import { useState, useEffect } from "react";
+import Head from "next/head";
+import { useState } from "react";
 import Layout from "../components/layout/layout";
 import "../styles/globals.css";
-import Head from "next/head";
-import { useSettings } from "../lib/stores/settings";
-import { ThemeProvider } from "next-themes";
 
 function MyApp({
 	Component,

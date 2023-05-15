@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { getDataOutArray } from "../misc/dataOutArray";
 import type { Database } from "./database.types";
 import { getSchedulesForXDays, ScheduleInterface } from "./schedule";
-import { getDataOutArray } from "../misc/dataOutArray";
 export async function getAllClasses(supabase: SupabaseClient<Database>) {
 	const { data, error } = await supabase
 		.from("classes")

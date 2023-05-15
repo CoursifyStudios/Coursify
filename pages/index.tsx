@@ -1,13 +1,12 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useState, useEffect } from "react";
-import { Database } from "../lib/db/database.types";
-import { getAllClasses, AllClassesResponse } from "../lib/db/classes";
-import { Class, LoadingClass, sortClasses } from "../components/complete/class";
-import Loading from "../components/misc/loading";
-import { getSchedulesForXDays, ScheduleInterface } from "../lib/db/schedule";
-import ScheduleComponent from "../components/complete/schedule";
-import { AssignmentPreview } from "../components/complete/assignments/assignments";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import { AssignmentPreview } from "../components/complete/assignments/assignments";
+import { Class, LoadingClass, sortClasses } from "../components/complete/class";
+import ScheduleComponent from "../components/complete/schedule";
+import { AllClassesResponse, getAllClasses } from "../lib/db/classes";
+import { Database } from "../lib/db/database.types";
+import { ScheduleInterface, getSchedulesForXDays } from "../lib/db/schedule";
 
 export default function Home() {
 	const supabaseClient = useSupabaseClient<Database>();

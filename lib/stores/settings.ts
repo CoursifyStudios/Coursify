@@ -1,7 +1,7 @@
-import { create } from "zustand";
 import { SupabaseClient } from "@supabase/auth-helpers-react";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { Database } from "../db/database.types";
-import { createJSONStorage, persist } from "zustand/middleware";
 
 interface Settings {
 	theme: "light" | "dark" | "system";

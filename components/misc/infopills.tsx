@@ -10,10 +10,8 @@ import {
 	PlusIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { Field, Form, Formik } from "formik";
 import { NextPage } from "next";
-import Link from "next/link";
-import { Fragment, ReactNode, useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Button } from "./button";
 import { ColoredPill } from "./pill";
 

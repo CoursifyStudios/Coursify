@@ -1,7 +1,7 @@
 import { NextPage } from "next";
+import { useSettings } from "../../../lib/stores/settings";
 import { Header } from "../components/header";
 import { ToggleSection } from "../components/sections";
-import { useSettings } from "../../../lib/stores/settings";
 
 const Securityandprivacy: NextPage<{}> = () => {
 	const { data, set } = useSettings();

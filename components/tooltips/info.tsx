@@ -1,6 +1,5 @@
-import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 
 export const Info: NextPage<{
 	children: ReactNode;

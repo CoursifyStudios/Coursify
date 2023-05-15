@@ -1,6 +1,6 @@
 import { NextPage } from "next";
-import { NewAssignmentData } from "../../../../lib/db/assignments";
 import { useAssignmentStore } from ".";
+import { NewAssignmentData } from "../../../../lib/db/assignments";
 import { DueType } from "../assignments";
 
 const AssignmentCalender: NextPage<{
