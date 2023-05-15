@@ -1,6 +1,5 @@
-import { QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
-import { ReactNode, useState } from "react";
+import { ReactNode } from "react";
 
 export const Info: NextPage<{
 	children: ReactNode;
@@ -18,7 +17,7 @@ export const Info: NextPage<{
 				<div
 					className={`${
 						size == "large" ? "min-w-[16rem]" : "min-w-[8rem]"
-					} hidden rounded bg-white p-2 text-center text-xs font-normal opacity-0 shadow-lg transition group-hover:block group-hover:opacity-100`}
+					} hidden rounded border border-transparent bg-backdrop/75 p-2 text-center text-xs font-normal opacity-0 shadow-lg backdrop-blur-xl transition group-hover:block group-hover:opacity-100 dark:border-gray-300`}
 				>
 					{children}
 				</div>

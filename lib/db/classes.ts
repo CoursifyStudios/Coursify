@@ -1,38 +1,38 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { getDataInArray, getDataOutArray } from "../misc/dataOutArray";
+import { NonNullableArray } from "../misc/misc.types";
 import type { Database } from "./database.types";
-import { getSchedulesForXDays, ScheduleInterface } from "./schedule";
-import { getDataOutArray } from "../misc/dataOutArray";
-
+import { ScheduleInterface, getSchedulesForXDays } from "./schedule";
 export async function getAllClasses(supabase: SupabaseClient<Database>) {
 	const { data, error } = await supabase
 		.from("classes")
 		.select(
 			`
-	id,
-    name,
-    description,
-    block,
-    schedule_type,
-    color,
-    name_full,
-    room,
-    full_description,
-    classpills,
-    image,
-    type,
-	users (
-		avatar_url, id, full_name
-	),
-	class_users (
-		user_id, teacher, grade
-	),
-    assignments (
-        *,
-        starred (
-            *
-        )
-    )
-	`
+			id,
+			name,
+			description,
+			block,
+			schedule_type,
+			color,
+			name_full,
+			room,
+			full_description,
+			classpills,
+			image,
+			type,
+			users (
+				avatar_url, id, full_name
+			),
+			class_users (
+				user_id, teacher, grade
+			),
+			assignments (
+					*,
+					starred (
+							*
+					)
+			)
+			`
 		)
 		.eq("type", CommunityType.CLASS);
 	if (!error) {
@@ -54,15 +54,34 @@ export const getClass = async (
 	supabase: SupabaseClient<Database>,
 	classid: string
 ) => {
+	//Can't fetch parent as a string because then you get problems with naming
 	return await supabase
 		.from("classes")
 		.select(
 			`
             *,
         announcements (
-            *,
+            id,
+            author,
+            title,
+            content,
+            time,
+            class_id,
+            type,
             users (
-                *
+                full_name, avatar_url
+            ),
+            parent (
+                id,
+                author,
+                title,
+                content,
+                time,
+                class_id,
+                type,
+                users (
+                    full_name, avatar_url
+                )
             )
         ),
 		assignments (
@@ -113,10 +132,13 @@ export const updateClass = async (
 
 export enum CommunityType {
 	CLASS = 0,
-	GROUP = 1,
+	SCHOOLWIDE_GROUP = 1,
 	PUBLIC_GROUP = 2,
-	SCHOOLWIDE_GROUP = 3,
-	SPORT_GROUPS = 4,
+	MEMBER_INVITE_GROUP = 3,
+	LEADER_INVITE_GROUP = 4,
+	PUBLIC_SPORT = 5,
+	MEMBER_INVITE_SPORT = 6,
+	LEADER_INVITE_SPORT = 7,
 	//add stuff here for sports group, or maybe even stuff such as invite only groups
 }
 export const getClassTimesForXDays = async (
@@ -233,3 +255,14 @@ export const getClassesForUserBasic = async (
 export type BasicClassInfoDB = Awaited<
 	ReturnType<typeof getClassesForUserBasic>
 >;
+
+export const isTeacher = (
+	classData: NonNullableArray<AllClassesResponse["data"]>,
+	userID: string
+) => {
+	return Boolean(
+		getDataInArray(classData.class_users).find(
+			(user) => user?.user_id == userID && user?.teacher
+		)
+	);
+};

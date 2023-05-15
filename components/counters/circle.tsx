@@ -1,7 +1,7 @@
 import type { NextPage } from "next";
 
 const CircleCounter: NextPage<{
-	amount?: number;
+	amount?: number | null;
 	max: number;
 	small?: boolean;
 }> = ({ amount, max, small }) => {

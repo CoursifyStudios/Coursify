@@ -1,18 +1,18 @@
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
-import { useEffect, useState } from "react";
-import { Class } from "../../components/complete/class";
-import { ProfilesResponse } from "../../lib/db/profiles";
-import { getProfile } from "../../lib/db/profiles";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { Database } from "../../lib/db/database.types";
-import { useRouter } from "next/router";
-import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import type { PostgrestResponse } from "@supabase/supabase-js";
-import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
-import { GroupSmall } from "../../components/complete/group";
-import { Achievement } from "../../components/complete/achievement";
 import Image from "next/image";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import { Class } from "../../components/class";
+import { Achievement } from "../../components/complete/achievement";
+import { GroupSmall } from "../../components/complete/group";
+import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import { CommunityType } from "../../lib/db/classes";
+import { Database } from "../../lib/db/database.types";
+import { ProfilesResponse, getProfile } from "../../lib/db/profiles";
+import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
+import { useSettings } from "../../lib/stores/settings";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
@@ -24,6 +24,7 @@ export default function Profile() {
 	const supabase = useSupabaseClient<Database>();
 	const router = useRouter();
 	const { profileid } = router.query;
+	const { data: settings } = useSettings();
 
 	useEffect(() => {
 		(async () => {
@@ -42,7 +43,7 @@ export default function Profile() {
 		<div className="mx-auto flex w-full flex-col px-4 py-2 sm:py-4 md:px-8 md:py-8 lg:flex-row lg:space-x-8 xl:px-0 2xl:max-w-screen-xl">
 			{/* Left sidebar, main info */}
 			<div className="flex shrink-0 flex-col items-center md:flex-row lg:h-max lg:max-h-[calc(100vh-8rem)] lg:w-72 lg:flex-col">
-				<div className="flex w-full flex-col items-center rounded-xl bg-gray-200 p-6">
+				<div className="flex w-full flex-col items-center rounded-xl bg-backdrop-200 p-6">
 					{profile && profile.data ? (
 						<Image
 							src={profile.data.avatar_url}
@@ -82,12 +83,13 @@ export default function Profile() {
 							</div>
 						</ColoredPill>
 					</CopiedHover>
+					<p className="mt-3 text-center text-sm">{profile?.data?.bio}</p>
 				</div>
 				{!(
 					profile?.data &&
 					getDataInArray(profile?.data?.user_achievements).length == 0
 				) && (
-					<div className="scrollbar-fancy scrollbar-fancy-darker mx-0 flex w-full flex-col items-center overflow-y-auto rounded-xl bg-gray-200 p-6 md:mx-auto  lg:mx-0 lg:mt-8 ">
+					<div className="scrollbar-fancy scrollbar-fancy-darker mx-0 flex w-full flex-col items-center overflow-y-auto rounded-xl bg-backdrop-200 p-6 md:mx-auto lg:mx-0 lg:mt-8 ">
 						<h1 className="title mb-5">Achievements</h1>
 						<div className=" grid w-full grid-cols-1 gap-6 md:grid-cols-2">
 							{profile?.data?.user_achievements
@@ -151,8 +153,8 @@ export default function Profile() {
 						? communities.data.map(
 								(group) =>
 									//Could have used greater than or equal to, but let's not shoot our future selves in the foot - Bill
-									(group.type == CommunityType.GROUP ||
-										group.type == CommunityType.PUBLIC_GROUP) && (
+									//well at this point
+									group.type >= CommunityType.SCHOOLWIDE_GROUP && (
 										<GroupSmall
 											key={group.id}
 											photo={group.image}

@@ -1,5 +1,4 @@
 import { FORMAT_TEXT_COMMAND } from "lexical";
-import React from "react";
 import { useContext } from "react";
 import { EditorContext, ToolbarContext } from "../contextProviders";
 

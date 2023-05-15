@@ -1,5 +1,5 @@
-import { Listbox, Switch } from "@headlessui/react";
-import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { NextPage } from "next";
 import {
 	ChangeEvent,
 	Dispatch,
@@ -8,19 +8,18 @@ import {
 	useMemo,
 	useState,
 } from "react";
-import { Button } from "../../misc/button";
-import Editor from "../../editors/richeditor";
-import { DueType } from "../assignments";
-import { NextPage } from "next";
-import AssignmentCalender from "./assignmentCalender";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { getClassTimesForXDays } from "../../../lib/db/classes";
-import { Database, Json } from "../../../lib/db/database.types";
 import { useAssignmentStore } from ".";
-import { NewAssignmentData } from "../../../lib/db/assignments";
-import { LoadingSmall } from "../../misc/loading";
-import { Toggle } from "../../misc/toggle";
-import { Info } from "../../tooltips/info";
+import { NewAssignmentData } from "../../../../lib/db/assignments";
+import { getClassTimesForXDays } from "../../../../lib/db/classes";
+import { Database, Json } from "../../../../lib/db/database.types";
+import Editor from "../../../editors/richeditor";
+import { Button } from "../../../misc/button";
+import Dropdown from "../../../misc/dropdown";
+import { LoadingSmall } from "../../../misc/loading";
+import { Toggle } from "../../../misc/toggle";
+import { Info } from "../../../tooltips/info";
+import { DueType } from "../assignments";
+import AssignmentCalender from "./assignmentCalender";
 
 const AssignmentCreation: NextPage<{
 	setStage: Dispatch<SetStateAction<number>>;
@@ -249,28 +248,12 @@ const AssignmentCreation: NextPage<{
 	function WhenDue({ type }: { type: "due" | "publish" }) {
 		return (
 			<>
-				<Listbox
-					value={type == "due" ? selectedDueType : selectedPublishType}
+				<Dropdown
 					onChange={(value) => setType(value, type == "due")}
-					as="div"
-					className="z-20 mr-auto flex flex-col items-center"
-				>
-					<Listbox.Button className="brightness-hover flex items-center rounded-xl bg-gray-200  px-2 py-1 font-semibold">
-						{(type == "due" ? selectedDueType : selectedPublishType).name}{" "}
-						<ChevronUpDownIcon className="ml-2 h-5 w-5" />
-					</Listbox.Button>
-					<Listbox.Options className="absolute mt-12 space-y-2 rounded-xl bg-white/75 p-2 backdrop-blur-xl ">
-						{types.map((type, i) => (
-							<Listbox.Option
-								key={i}
-								value={type}
-								className="cursor-pointer rounded-lg px-2 py-1 font-medium text-gray-700 transition hover:bg-gray-200 hover:text-gray-900"
-							>
-								{type.name}
-							</Listbox.Option>
-						))}
-					</Listbox.Options>
-				</Listbox>
+					selectedValue={type == "due" ? selectedDueType : selectedPublishType}
+					values={types}
+					className="mr-auto"
+				/>
 				{type == "due" &&
 					(selectedDueType.type == DueType.DATE ? (
 						<input

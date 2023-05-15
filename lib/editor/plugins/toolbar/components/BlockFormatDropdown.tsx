@@ -1,3 +1,5 @@
+import { Listbox, Transition } from "@headlessui/react";
+import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
 import { $createCodeNode } from "@lexical/code";
 import {
 	INSERT_CHECK_LIST_COMMAND,
@@ -16,10 +18,8 @@ import {
 	$getSelection,
 	$isRangeSelection,
 } from "lexical";
-import React, { Fragment, useContext, useEffect, useState } from "react";
-import { ToolbarContext, EditorContext } from "../contextProviders";
-import { Listbox, Transition } from "@headlessui/react";
-import { ChevronUpDownIcon } from "@heroicons/react/24/outline";
+import { Fragment, useContext, useEffect, useState } from "react";
+import { EditorContext, ToolbarContext } from "../contextProviders";
 
 const BlockFormatDropdown = () => {
 	const { initialEditor } = useContext(EditorContext);
@@ -174,7 +174,7 @@ const BlockFormatDropdown = () => {
 			as="div"
 			className="z-50 flex flex-col"
 		>
-			<Listbox.Button className=" flex items-center rounded px-2 py-1 text-sm font-medium text-gray-600 hover:bg-gray-200 hover:text-gray-800">
+			<Listbox.Button className=" flex items-center rounded px-2 py-1 text-sm font-medium text-gray-600 transition hover:bg-gray-200 hover:text-gray-800 dark:text-neutral-500">
 				{selectedBlock.name}
 				<ChevronUpDownIcon className="ml-1 h-5 w-5" />
 			</Listbox.Button>

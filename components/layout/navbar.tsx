@@ -1,5 +1,4 @@
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { Fragment, ReactNode, useEffect, useMemo, useState } from "react";
+import { Menu, Transition } from "@headlessui/react";
 import {
 	ArrowLeftOnRectangleIcon,
 	CalendarDaysIcon,
@@ -10,14 +9,15 @@ import {
 	UserIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { NextComponentType } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { NextComponentType } from "next";
+import { Fragment, useEffect, useMemo, useState } from "react";
+import { Database } from "../../lib/db/database.types";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import { ButtonIcon } from "../misc/button";
-import { Menu, Transition } from "@headlessui/react";
-import { addPossesive } from "../../lib/misc/stringManipulation";
-import { Database } from "../../lib/db/database.types";
 
 const Navbar: NextComponentType = () => {
 	const { newTab, closeTab, tabs } = useTabs();
@@ -25,11 +25,21 @@ const Navbar: NextComponentType = () => {
 	const user = useUser();
 	const [hydrated, setHydrated] = useState(false);
 	const supabase = useSupabaseClient<Database>();
+	const isDemoUser = user?.id == "d62d46a3-138b-4014-852e-f32f0421213b";
+	const userMetadata = isDemoUser
+		? {
+				name: "Jane Doe",
+				picture:
+					"https://hhrehffmdrcjqowwvgqg.supabase.co/storage/v1/object/public/cdn/assets/groupImages/janedoe",
+				email: "demo@coursify.one",
+				full_name: "Jane Doe",
+		  }
+		: user?.user_metadata ?? {};
 
 	useEffect(() => setHydrated(true), []);
 
 	if (router.isReady && hydrated && router.asPath.startsWith("/login")) {
-		return null;
+		return <></>;
 	}
 
 	const logOut = async () => {
@@ -38,7 +48,7 @@ const Navbar: NextComponentType = () => {
 	};
 
 	return (
-		<nav className="flex h-14 items-center justify-between bg-gray-200 px-8">
+		<nav className="flex h-14 items-center justify-between bg-gray-200 px-8 compact:h-12">
 			<div className="scrollbar-fancy flex shrink items-center space-x-4 overflow-x-auto">
 				{defaultTabs.map((v, i) => (
 					<TabUI key={i} canClose={false} tab={v} />
@@ -49,7 +59,7 @@ const Navbar: NextComponentType = () => {
 				)}
 			</div>
 			<div className="ml-4 flex flex-grow-0 items-center space-x-4">
-				<ButtonIcon icon={<MagnifyingGlassIcon className=" h-5 w-9" />} />
+				<ButtonIcon icon={<MagnifyingGlassIcon className=" h-5 w-5" />} />
 				<ButtonIcon
 					icon={<CalendarDaysIcon className="h-5 w-5" />}
 					to="/calendar"
@@ -64,11 +74,11 @@ const Navbar: NextComponentType = () => {
 				>
 					<Menu.Button>
 						{user ? (
-							<img
-								src={user.user_metadata.picture}
+							<Image
+								src={userMetadata.picture}
 								alt="Profile picture"
 								referrerPolicy="no-referrer"
-								className=" w-10 rounded-full shadow-md shadow-black/25"
+								className=" w-10 rounded-full shadow-md shadow-black/25 compact:w-9"
 								height={40}
 								width={40}
 							/>
@@ -95,17 +105,15 @@ const Navbar: NextComponentType = () => {
 									onClick={() =>
 										newTab(
 											"/profile/1e5024f5-d493-4e32-9822-87f080ad5516",
-											`${user?.user_metadata.name}'s Profile`
+											`${userMetadata.name}'s Profile`
 										)
 									}
 								>
 									<Menu.Item as="div" className="mx-2 flex flex-col">
 										<h3 className="line-clamp-2 font-medium">
-											{user?.user_metadata.full_name}
+											{userMetadata.full_name}
 										</h3>
-										<p className="truncate text-xs">
-											{user?.user_metadata.email}
-										</p>
+										<p className="truncate text-xs">{userMetadata.email}</p>
 									</Menu.Item>
 								</Link>
 								<div className="graydient-90deg my-3 h-0.5 w-full"></div>
@@ -114,7 +122,7 @@ const Navbar: NextComponentType = () => {
 									onClick={() =>
 										newTab(
 											`/profile/${user?.id}`,
-											`${user?.user_metadata.name}'s Profile`
+											`${userMetadata.name}'s Profile`
 										)
 									}
 								>
@@ -175,14 +183,16 @@ const Navbar: NextComponentType = () => {
 
 		return (
 			<div
-				className={`mx-1 my-1.5 flex items-center rounded-md ${
-					selected ? "bg-gray-50 shadow-md  " : "bg-gray-300"
-				} ${canClose && "pr-3"} text-lg font-semibold `}
+				className={`mx-1 my-1.5 flex items-center rounded-lg border ${
+					selected
+						? "brightness-focus !shadow-md"
+						: "border-transparent bg-gray-300"
+				} ${canClose && "pr-2"} text-lg font-semibold compact:text-base `}
 			>
 				<Link href={tab.route}>
 					<div
-						className={`max-w-[10rem] truncate py-0.5  ${
-							canClose ? "pl-3" : "px-3"
+						className={`max-w-[10rem] truncate py-[0.05rem]  ${
+							canClose ? "pl-2.5" : "px-2.5"
 						}`}
 					>
 						{tab.name}
@@ -203,7 +213,7 @@ const Navbar: NextComponentType = () => {
 						// I could use router.push(), but then we would have to be in charge of preloading pages
 						// I decicded to instead just make the text the link. It not great but is just works:tm:
 						// - Lukas
-						className={`ml-2 h-5 w-5 cursor-pointer  rounded-sm text-gray-500 transition hover:text-gray-800
+						className={`ml-2 h-5 w-5 cursor-pointer rounded-sm text-gray-500 transition hover:text-gray-800 dark:text-gray-100
 									 ${selected ? "hover:bg-gray-100" : "hover:bg-gray-400/20"}`}
 					/>
 				)}

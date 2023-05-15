@@ -41,24 +41,30 @@ export interface Database {
 					class_id: string | null;
 					content: Json | null;
 					id: string;
+					parent: string | null;
 					time: string | null;
 					title: string | null;
+					type: number;
 				};
 				Insert: {
 					author: string;
 					class_id?: string | null;
 					content?: Json | null;
 					id?: string;
+					parent?: string | null;
 					time?: string | null;
 					title?: string | null;
+					type?: number;
 				};
 				Update: {
 					author?: string;
 					class_id?: string | null;
 					content?: Json | null;
 					id?: string;
+					parent?: string | null;
 					time?: string | null;
 					title?: string | null;
+					type?: number;
 				};
 			};
 			assignments: {
@@ -114,19 +120,19 @@ export interface Database {
 			class_users: {
 				Row: {
 					class_id: string;
-					grade: number;
+					grade: number | null;
 					teacher: boolean;
 					user_id: string;
 				};
 				Insert: {
 					class_id: string;
-					grade?: number;
+					grade?: number | null;
 					teacher?: boolean;
 					user_id: string;
 				};
 				Update: {
 					class_id?: string;
-					grade?: number;
+					grade?: number | null;
 					teacher?: boolean;
 					user_id?: string;
 				};
@@ -212,52 +218,6 @@ export interface Database {
 					user_id?: string;
 				};
 			};
-			group_users: {
-				Row: {
-					group_id: string;
-					group_leader: boolean | null;
-					user_id: string;
-				};
-				Insert: {
-					group_id: string;
-					group_leader?: boolean | null;
-					user_id: string;
-				};
-				Update: {
-					group_id?: string;
-					group_leader?: boolean | null;
-					user_id?: string;
-				};
-			};
-			groups: {
-				Row: {
-					description: string | null;
-					featured: boolean | null;
-					id: string;
-					image: string | null;
-					name: string | null;
-					public: boolean | null;
-					tags: string[] | null;
-				};
-				Insert: {
-					description?: string | null;
-					featured?: boolean | null;
-					id?: string;
-					image?: string | null;
-					name?: string | null;
-					public?: boolean | null;
-					tags?: string[] | null;
-				};
-				Update: {
-					description?: string | null;
-					featured?: boolean | null;
-					id?: string;
-					image?: string | null;
-					name?: string | null;
-					public?: boolean | null;
-					tags?: string[] | null;
-				};
-			};
 			schedule_templates: {
 				Row: {
 					id: number;
@@ -295,6 +255,20 @@ export interface Database {
 					schedule?: Json[] | null;
 				};
 			};
+			settings: {
+				Row: {
+					settings: Json;
+					user_id: string;
+				};
+				Insert: {
+					settings: Json;
+					user_id: string;
+				};
+				Update: {
+					settings?: Json;
+					user_id?: string;
+				};
+			};
 			starred: {
 				Row: {
 					assignment_id: string;
@@ -329,29 +303,32 @@ export interface Database {
 			users: {
 				Row: {
 					avatar_url: string;
+					bio: string | null;
 					created: string | null;
 					email: string | null;
 					full_name: string;
 					id: string;
-					username: string | null;
+					preferred_name: string | null;
 					year: string | null;
 				};
 				Insert: {
 					avatar_url: string;
+					bio?: string | null;
 					created?: string | null;
 					email?: string | null;
 					full_name: string;
 					id: string;
-					username?: string | null;
+					preferred_name?: string | null;
 					year?: string | null;
 				};
 				Update: {
 					avatar_url?: string;
+					bio?: string | null;
 					created?: string | null;
 					email?: string | null;
 					full_name?: string;
 					id?: string;
-					username?: string | null;
+					preferred_name?: string | null;
 					year?: string | null;
 				};
 			};
