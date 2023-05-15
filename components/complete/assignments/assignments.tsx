@@ -1,7 +1,7 @@
 import { CheckIcon } from "@heroicons/react/24/outline";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { handleStarred } from "../../../lib/db/assignments";
 import { Database } from "../../../lib/db/database.types";
 import { ScheduleInterface, to12hourTime } from "../../../lib/db/schedule";
@@ -12,6 +12,7 @@ export function AssignmentPreview({
 	supabase,
 	assignment,
 	classes,
+	className,
 	starredAsParam,
 	schedule,
 	scheduleT,
@@ -32,14 +33,56 @@ export function AssignmentPreview({
 		schedule_type: number;
 	};
 	showClassPill: boolean;
+	className?: string;
 }) {
 	const date = assignment.due_date ? new Date(assignment.due_date) : null;
 	const [starred, setStarred] = useState(starredAsParam);
 
 	return (
-		<div className="relative flex h-[6.25rem] w-full flex-col ">
+		<div className="relative">
+			<Link
+				href={"/assignments/" + assignment.id}
+				className={`${className} flex  w-full flex-col rounded-xl bg-backdrop-200 p-2.5 `}
+			>
+				<div className="flex items-end justify-between">
+					<div className="ml-8">
+						{classes && showClassPill && (
+							<Link href={"/classes/" + classes?.id}>
+								<ColoredPill color={classes.color} hoverState>
+									{classes.name}
+								</ColoredPill>
+							</Link>
+						)}
+					</div>
+					<div>
+						<div tabIndex={-1} className="flex">
+							{date ? (
+								<>
+									<div className="mr-2 font-medium">
+										{date.getMonth()}/{date.getDate()}
+									</div>
+									<ColoredPill color={classes.color}>
+										{`${to12hourTime(date)}`}
+									</ColoredPill>
+								</>
+							) : (
+								<span className="text-sm italic">No due date</span>
+							)}
+						</div>
+					</div>
+				</div>
+				<div tabIndex={-1} className="mt-0.5 flex h-[4.5rem] justify-between">
+					<div className="">
+						<h1 className="font-medium">{assignment.name}</h1>
+						<p className="mr-7 line-clamp-2 ">{assignment.description}</p>
+					</div>
+				</div>
+			</Link>
+			<div className="absolute bottom-2 right-2">
+				<CheckIcon className="h-6 w-6 shrink-0" />
+			</div>
 			<div
-				className="absolute left-0 top-0"
+				className="absolute left-2 top-2"
 				tabIndex={0}
 				onClick={() => {
 					setStarred((starred) => {
@@ -58,46 +101,6 @@ export function AssignmentPreview({
 			>
 				<Starred starred={starred} />
 			</div>
-			<Link href={"/assignments/" + assignment.id}>
-				<div className="flex items-end justify-between">
-					<div className="flex">
-						<div className="ml-8">
-							{classes && showClassPill && (
-								<Link href={"/classes/" + classes?.id}>
-									<ColoredPill color={classes.color} hoverState>
-										{classes.name}
-									</ColoredPill>
-								</Link>
-							)}
-						</div>
-					</div>
-					<div>
-						<div tabIndex={-1} className="flex">
-							{date ? (
-								<>
-									<div className="mr-2">
-										{date.getMonth()}/{date.getDate()}
-									</div>
-									<ColoredPill color={classes.color}>
-										{`${to12hourTime(date)}`}
-									</ColoredPill>
-								</>
-							) : (
-								<span className="text-sm italic">No due date</span>
-							)}
-						</div>
-					</div>
-				</div>
-				<div tabIndex={-1} className="mt-0.5 flex h-[4.5rem] justify-between">
-					<div className="">
-						<h1 className="font-medium">{assignment.name}</h1>
-						<p className="line-clamp-2">{assignment.description}</p>
-					</div>
-					<div className="flex items-end">
-						<CheckIcon className="h-6 w-6 shrink-0" />
-					</div>
-				</div>
-			</Link>
 		</div>
 	);
 }

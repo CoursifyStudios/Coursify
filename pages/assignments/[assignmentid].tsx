@@ -1,18 +1,25 @@
+import { Dialog, Transition } from "@headlessui/react";
 import {
 	ArrowsPointingInIcon,
 	ArrowsPointingOutIcon,
 	ChevronLeftIcon,
-	ChevronUpDownIcon,
 	LinkIcon,
 	PlusIcon,
-	QuestionMarkCircleIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { SerializedEditorState } from "lexical";
 import { NextPage } from "next";
+import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
-import Image from "next/image";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { AssignmentPreview } from "../../components/complete/assignments/assignments";
+import Editor from "../../components/editors/richeditor";
+import { Button, ButtonIcon } from "../../components/misc/button";
+import Dropdown from "../../components/misc/dropdown";
+import { ColoredPill, CopiedHover } from "../../components/misc/pill";
+import { Info } from "../../components/tooltips/info";
 import {
 	AllAssignmentResponse,
 	AssignmentResponse,
@@ -20,28 +27,14 @@ import {
 	getAssignment,
 } from "../../lib/db/assignments";
 import { Database } from "../../lib/db/database.types";
-import launch from "../../public/svgs/launch.svg";
-import noData from "../../public/svgs/no-data.svg";
-import Link from "next/link";
-import { ColoredPill, CopiedHover } from "../../components/misc/pill";
-import { Button, ButtonIcon } from "../../components/misc/button";
 import {
-	AssignmentPreview,
-	DueType,
-} from "../../components/complete/assignments/assignments";
-import {
-	getSchedule,
 	ScheduleInterface,
+	getSchedule,
 	setThisSchedule,
 } from "../../lib/db/schedule";
-import Editor from "../../components/editors/richeditor";
-import { getIcon } from "../../components/complete/achievement";
-import { formatDate } from "../../lib/misc/dates";
-import { Transition, Dialog, Listbox } from "@headlessui/react";
 import { getDataOutArray } from "../../lib/misc/dataOutArray";
-import { SerializedEditorState } from "lexical";
-import { Info } from "../../components/tooltips/info";
-import Dropdown from "../../components/misc/dropdown";
+import launch from "../../public/svgs/launch.svg";
+import noData from "../../public/svgs/no-data.svg";
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
@@ -155,33 +148,29 @@ const Post: NextPage = () => {
 					allAssignments.data.map(
 						(assignment) =>
 							assignment.classes && (
-								<div
-									className={`flex rounded-xl ${
+								<AssignmentPreview
+									key={assignment.id}
+									supabase={supabase}
+									assignment={assignment}
+									userId={user.id}
+									starredAsParam={
+										assignment.starred
+											? Array.isArray(assignment.starred)
+												? assignment.starred.length > 0
+												: !!assignment.starred
+											: false
+									}
+									//obviously we need a better solution
+									schedule={schedule!}
+									scheduleT={scheduleT!}
+									showClassPill={true}
+									classes={getDataOutArray(assignment.classes)}
+									className={`${
 										assignmentid == assignment.id
 											? "brightness-focus"
 											: "brightness-hover bg-backdrop-200"
-									} border border-transparent p-3`}
-									key={assignment.id}
-								>
-									{/* List of assignments */}
-									<AssignmentPreview
-										supabase={supabase}
-										assignment={assignment}
-										userId={user.id}
-										starredAsParam={
-											assignment.starred
-												? Array.isArray(assignment.starred)
-													? assignment.starred.length > 0
-													: !!assignment.starred
-												: false
-										}
-										//obviously we need a better solution
-										schedule={schedule!}
-										scheduleT={scheduleT!}
-										showClassPill={true}
-										classes={getDataOutArray(assignment.classes)}
-									/>
-								</div>
+									} border border-transparent `}
+								/>
 							)
 					)
 				) : (
