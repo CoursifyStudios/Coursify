@@ -1,18 +1,13 @@
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import {
-	AnnouncementType,
-	postCommentOrReply,
-} from "../../../lib/db/announcements";
+import { postCommentOrReply } from "../../../lib/db/announcements";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useState } from "react";
 import { Button } from "../../misc/button";
 import Link from "next/link";
+import { useState } from "react";
 import { useTabs } from "../../../lib/tabs/handleTabs";
 import { howLongAgo } from "../../../lib/misc/dates";
+import Loading from "../../misc/loading";
 import Image from "next/image";
-import { Menu } from "@headlessui/react";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
-import Dropdown from "../../misc/dropdown";
 
 export const Comment = ({
 	id,

@@ -6,6 +6,7 @@ import {
 	TrashIcon,
 } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useState } from "react";
 import { TypeOfAnnouncements } from "../../../lib/db/announcements";
@@ -15,10 +16,9 @@ import { howLongAgo } from "../../../lib/misc/dates";
 import { useTabs } from "../../../lib/tabs/handleTabs";
 import Editor from "../../editors/richeditor";
 import { AnnouncementPostingUI } from "./announcementPosting";
-import { TempAnnouncement } from "./tempAnnouncement";
-import { Delete } from "./delete";
 import { Comment, Commenting } from "./commenting";
-import Image from "next/image";
+import { Delete } from "./delete";
+import { TempAnnouncement } from "./tempAnnouncement";
 
 /**
  * editing announcements

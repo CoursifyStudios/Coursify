@@ -1,11 +1,14 @@
-import { create } from "zustand";
 import { SupabaseClient } from "@supabase/auth-helpers-react";
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 import { Database } from "../db/database.types";
-import { createJSONStorage, persist } from "zustand/middleware";
 
-interface Settings {
+export interface Settings {
 	theme: "light" | "dark" | "system";
 	compact: boolean;
+	sortBySchedule: boolean;
+	homepageAssignments: "all" | "student" | "none";
+	homepageView: "auto" | "tabbed" | "student" | "teacher";
 }
 
 interface SettingsStore {
@@ -14,10 +17,18 @@ interface SettingsStore {
 	loadSettings: (supabase: SupabaseClient<Database>, userid: string) => void;
 }
 
+const defaultSettings: Settings = {
+	theme: "system",
+	compact: false,
+	sortBySchedule: true,
+	homepageAssignments: "student",
+	homepageView: "auto",
+};
+
 export const useSettings = create<SettingsStore>()(
 	persist(
 		(set) => ({
-			data: { theme: "system", compact: false },
+			data: defaultSettings,
 			set: async (data) => {
 				set((state) => ({
 					data: data
@@ -25,10 +36,7 @@ export const useSettings = create<SettingsStore>()(
 								...state.data,
 								...data,
 						  }
-						: {
-								theme: "system",
-								compact: false,
-						  },
+						: defaultSettings,
 				}));
 			},
 
@@ -46,6 +54,7 @@ export const useSettings = create<SettingsStore>()(
 				if (data != undefined) {
 					set((state) => ({
 						data: {
+							...defaultSettings,
 							...state.data,
 							...JSON.parse(
 								JSON.stringify(data.settings as Record<string, unknown>)

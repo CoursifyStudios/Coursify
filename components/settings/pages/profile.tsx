@@ -1,11 +1,11 @@
+import { GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { Formik } from "formik";
 import { NextPage } from "next";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { UserDataType, getUserData } from "../../../lib/db/settings";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import Image from "next/image";
-import { Field, Form, Formik } from "formik";
 import { Button } from "../../misc/button";
-import { GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
 
 const Profile: NextPage<{}> = () => {
 	const supabase = useSupabaseClient();
@@ -52,7 +52,7 @@ const Profile: NextPage<{}> = () => {
 			<div className="mt-3 flex space-x-8">
 				<div>
 					<h2 className="mb-1 text-xl font-medium">Email</h2>
-					<div className="select-none rounded-lg bg-gray-200 p-2 pr-10 font-semibold">
+					<div className="select-none rounded-md bg-gray-200 p-2 pr-10 font-semibold">
 						{userData.data.email}
 					</div>
 				</div>
@@ -67,7 +67,7 @@ const Profile: NextPage<{}> = () => {
 				>
 					<GrammarlyEditorPlugin clientId="client_HhHcuxVxKgaZMFYuD57U3V">
 						<textarea
-							className="flex w-full resize-none rounded-lg bg-gray-200 outline-none focus:outline-none"
+							className="flex w-full resize-none rounded-md border border-gray-300 bg-backdrop/50 bg-gray-200 pb-2 focus:ring-1"
 							name="bio"
 							rows={4}
 							maxLength={150}

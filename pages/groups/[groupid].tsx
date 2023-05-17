@@ -1,7 +1,5 @@
-import { NextPage } from "next";
 import { Tab } from "@headlessui/react";
-import { Fragment, useEffect, useState } from "react";
-import { ColoredPill } from "../../components/misc/pill";
+import { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { getGroup, GroupResponse } from "../../lib/db/groups";
@@ -12,6 +10,8 @@ import { Database } from "../../lib/db/database.types";
 import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
 import { TypeOfAnnouncements } from "../../lib/db/announcements";
 import { AnnouncementsComponent } from "../../components/complete/announcements/announcementsComponent";
+import { Fragment, useEffect, useState } from "react";
+import { ColoredPill } from "../../components/misc/pill";
 
 const Group: NextPage = () => {
 	const router = useRouter();

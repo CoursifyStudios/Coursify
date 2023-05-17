@@ -1,15 +1,15 @@
-import { NextPage } from "next";
-import { Popup } from "../../misc/popup";
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Database } from "../../../lib/db/database.types";
-import { Button } from "../../misc/button";
+import { NextPage } from "next";
 import { useState } from "react";
 import {
 	TypeOfAnnouncements,
 	deleteAnnouncement,
 	removeAnnouncementFromCommunity,
 } from "../../../lib/db/announcements";
+import { Database } from "../../../lib/db/database.types";
+import { Button } from "../../misc/button";
 import { LoadingSmall } from "../../misc/loading";
+import { Popup } from "../../misc/popup";
 
 export const Delete: NextPage<{
 	open: boolean;

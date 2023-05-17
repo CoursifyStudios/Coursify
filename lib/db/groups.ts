@@ -1,6 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
-import { Database } from "./database.types";
 import { CommunityType } from "./classes";
+import { Database } from "./database.types";
 export const getAllPublicGroups = async (
 	supabase: SupabaseClient<Database>
 ) => {

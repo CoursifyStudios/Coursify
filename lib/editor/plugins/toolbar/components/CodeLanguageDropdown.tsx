@@ -1,6 +1,6 @@
 import { $isCodeNode } from "@lexical/code";
 import { $getNodeByKey } from "lexical";
-import React, { useCallback, useContext } from "react";
+import { useCallback, useContext } from "react";
 import { EditorContext, ToolbarContext } from "../contextProviders";
 
 const CODE_LANGUAGE_OPTIONS: [string, string][] = [
