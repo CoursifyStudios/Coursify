@@ -7,8 +7,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
-import { Announcement } from "../../components/complete/announcements";
 import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
+import { AnnouncementsComponent } from "../../components/complete/announcements/announcementsComponent";
 import { CreateAssignment } from "../../components/complete/assignments/assignmentCreation";
 import { AssignmentPreview } from "../../components/complete/assignments/assignments";
 import { Member } from "../../components/complete/members";
@@ -17,10 +17,7 @@ import Editor from "../../components/editors/richeditor";
 import { Button } from "../../components/misc/button";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
 import { ColoredPill } from "../../components/misc/pill";
-import {
-	AnnouncementType,
-	TypeOfAnnouncements,
-} from "../../lib/db/announcements";
+import { TypeOfAnnouncements } from "../../lib/db/announcements";
 import { ClassResponse, getClass, updateClass } from "../../lib/db/classes";
 import { Database, Json } from "../../lib/db/database.types";
 import {
@@ -28,9 +25,8 @@ import {
 	getSchedule,
 	setThisSchedule,
 } from "../../lib/db/schedule";
-import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
+import { getDataInArray } from "../../lib/misc/dataOutArray";
 import { useSettings } from "../../lib/stores/settings";
-import { AnnouncementsComponent } from "../../components/complete/announcements/announcementsComponent";
 
 const Class: NextPage = () => {
 	const router = useRouter();

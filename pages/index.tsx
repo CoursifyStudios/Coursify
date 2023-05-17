@@ -1,24 +1,14 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { useState, useEffect } from "react";
-import { Database } from "../lib/db/database.types";
-import {
-	getAllClasses,
-	AllClassesResponse,
-	isTeacher,
-} from "../lib/db/classes";
-import Loading from "../components/misc/loading";
-import { getSchedulesForXDays, ScheduleInterface } from "../lib/db/schedule";
-import ScheduleComponent from "../components/complete/schedule";
-import { AssignmentPreview } from "../components/complete/assignments/assignments";
 import Link from "next/link";
-import { useSettings } from "../lib/stores/settings";
-import { sortClasses } from "../components/class/sorting";
-import { Class } from "../components/class";
-import {
-	LoadingStudentClass,
-	LoadingTeacherClass,
-} from "../components/class/loading";
+import { useEffect, useState } from "react";
 import HomepageClassesUI from "../components/class/homepage";
+import { sortClasses } from "../components/class/sorting";
+import { AssignmentPreview } from "../components/complete/assignments/assignments";
+import ScheduleComponent from "../components/complete/schedule";
+import { AllClassesResponse, getAllClasses } from "../lib/db/classes";
+import { Database } from "../lib/db/database.types";
+import { ScheduleInterface, getSchedulesForXDays } from "../lib/db/schedule";
+import { useSettings } from "../lib/stores/settings";
 
 export default function Home() {
 	const supabaseClient = useSupabaseClient<Database>();

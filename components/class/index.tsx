@@ -1,12 +1,10 @@
 import Link from "next/link";
-import { IndividialClass, AllClassesResponse } from "../../lib/db/classes";
+import { AllClassesResponse, IndividialClass } from "../../lib/db/classes";
 import { ScheduleInterface } from "../../lib/db/schedule";
 import { NonNullableArray } from "../../lib/misc/misc.types";
-import { Settings, useSettings } from "../../lib/stores/settings";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import StudentClass from "./student";
 import TeacherClass from "./teacher";
-import { ReactNode } from "react";
 
 export function Class({
 	classData,

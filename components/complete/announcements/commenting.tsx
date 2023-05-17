@@ -1,13 +1,17 @@
-import { ErrorMessage, Field, Form, Formik } from "formik";
-import { postCommentOrReply } from "../../../lib/db/announcements";
+import { Menu } from "@headlessui/react";
+import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { Button } from "../../misc/button";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { useTabs } from "../../../lib/tabs/handleTabs";
+import {
+	AnnouncementType,
+	postCommentOrReply,
+} from "../../../lib/db/announcements";
 import { howLongAgo } from "../../../lib/misc/dates";
-import Loading from "../../misc/loading";
-import Image from "next/image";
+import { useTabs } from "../../../lib/tabs/handleTabs";
+import { Button } from "../../misc/button";
 
 export const Comment = ({
 	id,
@@ -15,7 +19,7 @@ export const Comment = ({
 	time,
 	content,
 	users,
-    communityid,
+	communityid,
 }: {
 	author: string;
 	time: string;
@@ -24,7 +28,7 @@ export const Comment = ({
 		full_name: string;
 		avatar_url: string;
 	};
-    communityid: string;
+	communityid: string;
 	id?: string;
 }) => {
 	const user = useUser();
@@ -64,11 +68,17 @@ export const Comment = ({
 						<div className="absolute z-50 mt-14">
 							<Menu.Items
 								as="div"
-								className="flex w-48 flex-col relative rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-xl"
+								className="relative flex w-48 flex-col rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-xl"
 							>
-                                <Menu.Item as="div" className="font-medium p-1">Edit</Menu.Item>
-                                <Menu.Item as="div" className="font-medium p-1">Share</Menu.Item>
-                                <Menu.Item as="div" className="font-medium p-1">Delete</Menu.Item>
+								<Menu.Item as="div" className="p-1 font-medium">
+									Edit
+								</Menu.Item>
+								<Menu.Item as="div" className="p-1 font-medium">
+									Share
+								</Menu.Item>
+								<Menu.Item as="div" className="p-1 font-medium">
+									Delete
+								</Menu.Item>
 							</Menu.Items>
 						</div>
 					</Menu>
@@ -76,14 +86,16 @@ export const Comment = ({
 			</div>
 			<p>{content}</p>
 			<button
-            className="ml-2"
+				className="ml-2"
 				onClick={() => {
 					setShowPosting(true);
 				}}
 			>
-				{showPosting? "Replying to " + users.full_name : "Reply"}
+				{showPosting ? "Replying to " + users.full_name : "Reply"}
 			</button>
-            {showPosting && <Commenting communityid={communityid} parentID={id!}></Commenting>}
+			{showPosting && (
+				<Commenting communityid={communityid} parentID={id!}></Commenting>
+			)}
 		</div>
 	);
 };
@@ -200,7 +212,7 @@ export const Commenting = ({
 					time={comment.time}
 					content={comment.content}
 					users={comment.users}
-                    communityid={communityid}
+					communityid={communityid}
 				></Comment>
 			))}
 		</>

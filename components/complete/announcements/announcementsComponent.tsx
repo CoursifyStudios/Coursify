@@ -1,9 +1,9 @@
 import { useState } from "react";
+import { Announcement } from ".";
 import {
 	AnnouncementType,
 	TypeOfAnnouncements,
 } from "../../../lib/db/announcements";
-import { Announcement } from ".";
 import { getDataOutArray } from "../../../lib/misc/dataOutArray";
 
 export const AnnouncementsComponent = ({

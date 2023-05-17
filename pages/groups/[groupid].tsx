@@ -1,17 +1,17 @@
 import { Tab } from "@headlessui/react";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import { Fragment, useEffect, useState } from "react";
+import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
+import { AnnouncementsComponent } from "../../components/complete/announcements/announcementsComponent";
+import { Member } from "../../components/complete/members";
+import { ColoredPill } from "../../components/misc/pill";
+import { TypeOfAnnouncements } from "../../lib/db/announcements";
+import { Database } from "../../lib/db/database.types";
 import { getGroup, GroupResponse } from "../../lib/db/groups";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
-import { Member } from "../../components/complete/members";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { Database } from "../../lib/db/database.types";
-import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
-import { TypeOfAnnouncements } from "../../lib/db/announcements";
-import { AnnouncementsComponent } from "../../components/complete/announcements/announcementsComponent";
-import { Fragment, useEffect, useState } from "react";
-import { ColoredPill } from "../../components/misc/pill";
 
 const Group: NextPage = () => {
 	const router = useRouter();
@@ -179,4 +179,3 @@ const Event = ({ title, time }: { title: string; time: string }) => {
 };
 
 export default Group;
-
