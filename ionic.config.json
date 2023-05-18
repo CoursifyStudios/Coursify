@@ -1,7 +1,7 @@
 {
-  "name": "coursify",
-  "integrations": {
-    "capacitor": {}
-  },
-  "type": "custom"
+	"name": "coursify",
+	"integrations": {
+		"capacitor": {}
+	},
+	"type": "custom"
 }
