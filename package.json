@@ -12,8 +12,8 @@
 		"fmt": "yarn prettier --write .",
 		"types": "supabase gen types typescript --project-id hhrehffmdrcjqowwvgqg > lib/db/database.types.ts",
 		"slink": "supabase link --project-ref hhrehffmdrcjqowwvgqg",
-		"static": "next build && next export",
-		"ionic:build": "npm run build",
+		"static": "next export",
+		"ionic:build": "yarn build && yarn static",
 		"ionic:serve": "npm run start"
 	},
 	"dependencies": {
