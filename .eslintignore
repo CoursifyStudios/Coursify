@@ -19,6 +19,7 @@ README.md
 /android/
 /ios/
 ionic.config.json
+codemagic.yaml
 
 # production
 /build
