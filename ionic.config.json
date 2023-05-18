@@ -1,0 +1,7 @@
+{
+  "name": "coursify",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "custom"
+}
