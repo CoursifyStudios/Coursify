@@ -49,7 +49,7 @@ export default function Profile() {
 							src={profile.data.avatar_url}
 							alt="Profile Picture"
 							//referrerPolicy="no-referrer"
-							className="!ml-2 h-36 w-36 rounded-full shadow-md shadow-black/25"
+							className="!ml-2 h-36 w-36 rounded-full shadow-md shadow-black/25 object-cover"
 							width={144}
 							height={144}
 						/>
