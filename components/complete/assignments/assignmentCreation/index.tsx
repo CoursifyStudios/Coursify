@@ -22,12 +22,12 @@ import { DueType } from "../assignments";
 import AssignmentCreation from "./three";
 import AssignmentDetails from "./two";
 
-interface AssignmmentState {
+interface AssignmentState {
 	data: NewAssignmentData | undefined;
 	set: (data: NewAssignmentData | undefined) => void;
 }
 
-export const useAssignmentStore = create<AssignmmentState>()((set) => ({
+export const useAssignmentStore = create<AssignmentState>()((set) => ({
 	data: undefined,
 	set: (data) =>
 		set((state) => ({
@@ -192,12 +192,12 @@ export const submissionType: {
 	{
 		icon: <ChatBubbleBottomCenterTextIcon className={className} />,
 		name: "Discussion Post",
-		description: "Students can post discusstions and reply to others",
+		description: "Students can post discussions and reply to others",
 		type: "post",
 	},
 	{
 		icon: <ClipboardDocumentListIcon className={className} />,
-		name: "Assesment",
+		name: "Assessment",
 		description:
 			"Combine free responses and/or multiple choice questions for a test",
 		type: "test",
