@@ -18,7 +18,6 @@ export default function Login() {
 				router.push(decodeURI(redirectedFrom));
 			else router.push("/");
 		}
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, router]);
 
 	return (
@@ -27,7 +26,7 @@ export default function Login() {
 				{/* <div className="relative rounded-xl bg-white p-4 shadow-md z-0 max-w-md">
 					<p className="font-mono text-[12rem] text-gray-400 absolute -z-10 -top-14 -left-1">"</p>
 					<div className="flex flex-col z-10">
-						<p className="text-3xl ml-3 mt-3 font-bold ">A war is one is the something something, rest of the quote will go here ok?</p>
+						<p className="text-3xl ml-3 mt-3 font-bold ">A war is one is the sometjong something, rest of the qoute will go here ok?</p>
 						<ColoredPill className="ml-auto mt-6" color="gray">Sun Tzu, The Art Of War</ColoredPill> 
 					</div>
 				</div> */}
@@ -89,7 +88,7 @@ export default function Login() {
 					</button>
 					<p className="mx-auto w-44 pt-4 text-center text-xs text-gray-600">
 						By logging in, you agree to our{" "}
-						<a className="text-blue-500">terms and conditions</a>
+						<a className="text-blue-500">terms and conditons</a>
 					</p>
 				</div>
 			</div>

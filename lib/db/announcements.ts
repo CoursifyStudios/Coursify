@@ -6,7 +6,7 @@ export const crossPostAnnouncements = async (
 	announcementAuthor: string,
 	announcementTitle: string,
 	announcementContent: Json,
-	// this is now going to be designed with the idea that
+	// this is now goign to be designed with the idea that
 	// everything (group, class, sports group, etc.) is a
 	// class on the classes table. That means no more
 	// ClassOrGroupObjects
@@ -196,7 +196,7 @@ export const postComment = async (
 export type CommentType = Awaited<ReturnType<typeof postComment>>;
 
 export enum AnnouncementType {
-	ANNOUNCEMENT = 0,
+	ANNOUNCMENT = 0,
 	COMMENT = 1,
 	CROSSPOST = 2,
 	REPLY = 3,

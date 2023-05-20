@@ -30,7 +30,6 @@ export default function Layout(props: { children: ReactNode }) {
 				settings: state.data as unknown as Json,
 			});
 		});
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [loading, supabase, user, loadSettings]);
 
 	useEffect(() => {

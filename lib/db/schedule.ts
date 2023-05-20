@@ -55,7 +55,7 @@ export const createNewSchedule = async (
 		schedule_items: scheduleDataToUse
 			? (JSON.parse(JSON.stringify(scheduleDataToUse)) as Json)
 			: null,
-	});
+	}); //This is so unbelievably stup-
 };
 
 export type NewSchedule = Awaited<ReturnType<typeof createNewSchedule>>;

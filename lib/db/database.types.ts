@@ -42,7 +42,6 @@ export interface Database {
 					content: Json | null;
 					id: string;
 					parent: string | null;
-					sharing_id: string | null;
 					time: string | null;
 					title: string | null;
 					type: number;
@@ -53,7 +52,6 @@ export interface Database {
 					content?: Json | null;
 					id?: string;
 					parent?: string | null;
-					sharing_id?: string | null;
 					time?: string | null;
 					title?: string | null;
 					type?: number;
@@ -64,7 +62,6 @@ export interface Database {
 					content?: Json | null;
 					id?: string;
 					parent?: string | null;
-					sharing_id?: string | null;
 					time?: string | null;
 					title?: string | null;
 					type?: number;
@@ -158,7 +155,7 @@ export interface Database {
 					type: number;
 				};
 				Insert: {
-					block?: number;
+					block: number;
 					classpills?: Json[];
 					color?: string;
 					description?: string;
@@ -286,48 +283,19 @@ export interface Database {
 					user_id?: string;
 				};
 			};
-			submissions: {
-				Row: {
-					assignment_id: string | null;
-					content: string;
-					created_at: string;
-					id: string;
-					json_content: Json | null;
-					revision_number: number;
-					user_id: string | null;
-				};
-				Insert: {
-					assignment_id?: string | null;
-					content: string;
-					created_at?: string;
-					id: string;
-					json_content?: Json | null;
-					revision_number: number;
-					user_id?: string | null;
-				};
-				Update: {
-					assignment_id?: string | null;
-					content?: string;
-					created_at?: string;
-					id?: string;
-					json_content?: Json | null;
-					revision_number?: number;
-					user_id?: string | null;
-				};
-			};
 			user_achievements: {
 				Row: {
-					achievement_id: string;
+					achivement_id: string;
 					date_earned: string;
 					user_id: string;
 				};
 				Insert: {
-					achievement_id: string;
+					achivement_id: string;
 					date_earned?: string;
 					user_id: string;
 				};
 				Update: {
-					achievement_id?: string;
+					achivement_id?: string;
 					date_earned?: string;
 					user_id?: string;
 				};
@@ -340,7 +308,6 @@ export interface Database {
 					email: string | null;
 					full_name: string;
 					id: string;
-					phone_number: number | null;
 					preferred_name: string | null;
 					year: string | null;
 				};
@@ -351,7 +318,6 @@ export interface Database {
 					email?: string | null;
 					full_name: string;
 					id: string;
-					phone_number?: number | null;
 					preferred_name?: string | null;
 					year?: string | null;
 				};
@@ -362,7 +328,6 @@ export interface Database {
 					email?: string | null;
 					full_name?: string;
 					id?: string;
-					phone_number?: number | null;
 					preferred_name?: string | null;
 					year?: string | null;
 				};

@@ -181,9 +181,9 @@ const AssignmentCreation: NextPage<{
 						<WhenDue type="due" />
 					) : (
 						<div className="text-sm text-gray-700">
-							This assignment does not have a due date. It will be available to
+							This assignment does not have a due date. It will be avalible to
 							students, and they{"'"}ll be able to submit assignments. Coursify
-							recommends adding a due date.
+							reccomends adding a due date.
 						</div>
 					)}
 				</div>
@@ -199,9 +199,9 @@ const AssignmentCreation: NextPage<{
 				<div className="flex items-center font-medium">
 					<span className="mr-2 text-gray-800">Hidden</span>
 					<Info className=" mr-4">
-						Hide this assignment from students. We recommend setting a publish
-						date rather than enabling this option, since you can automagically
-						make it available to students at a time of your choice.
+						Hide this assignment from students. We reccomend setting a publish
+						date rather than enabling this option, since you can automagiclly
+						make it avalible to students at a time of your choice.
 					</Info>
 					{assignmentData && (
 						<Toggle

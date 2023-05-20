@@ -22,7 +22,7 @@ import { TempAnnouncement } from "./tempAnnouncement";
 
 /**
  * editing announcements
- *  editing state for announcement posting
+ *  editing state for annoucnement posting
  * Need the ui to update on announcement deletion & for posting
  */
 export const Announcement = ({

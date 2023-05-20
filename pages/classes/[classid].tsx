@@ -363,7 +363,7 @@ const Class: NextPage = () => {
 										})
 										.map(
 											(announcement) =>
-												(announcement.type == AnnouncementType.ANNOUNCEMENT ||
+												(announcement.type == AnnouncementType.ANNOUNCMENT ||
 													announcement.type == AnnouncementType.CROSSPOST) &&
 												announcement.users &&
 												typeof getDataOutArray(announcement.users).avatar_url ==
@@ -409,7 +409,7 @@ const Class: NextPage = () => {
 									))
 								) : (
 									<div className="rounded-xl bg-gray-200 p-4">
-										An error occurred
+										An error occured
 									</div>
 								)}
 							</div>
