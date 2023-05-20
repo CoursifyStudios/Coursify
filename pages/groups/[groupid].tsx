@@ -108,7 +108,7 @@ const Group: NextPage = () => {
 									groupData &&
 									groupData.data &&
 									groupData.data.users &&
-									// Checks that user is in group, only then show posting UI
+									// Checks that user is in group, only hten show posting UI
 									getDataInArray(groupData.data.users).some(
 										(userInGroup) => userInGroup.id == user.id
 									) && (
@@ -165,7 +165,7 @@ const Group: NextPage = () => {
 										})
 										.map(
 											(announcement) =>
-												(announcement.type == AnnouncementType.ANNOUNCEMENT ||
+												(announcement.type == AnnouncementType.ANNOUNCMENT ||
 													announcement.type == AnnouncementType.CROSSPOST) && (
 													<Announcement
 														key={announcement.id}

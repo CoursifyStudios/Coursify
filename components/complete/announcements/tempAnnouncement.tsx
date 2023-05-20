@@ -1,6 +1,5 @@
 import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { useUser } from "@supabase/auth-helpers-react";
-import Image from "next/image";
 import Link from "next/link";
 import { Json } from "../../../lib/db/database.types";
 import { getDataOutArray } from "../../../lib/misc/dataOutArray";
@@ -54,7 +53,7 @@ export const TempAnnouncement = ({
 						)
 					}
 				>
-					<Image
+					<img
 						src={
 							announcement.users
 								? getDataOutArray(announcement.users!).avatar_url
@@ -62,8 +61,6 @@ export const TempAnnouncement = ({
 						}
 						alt="Profile picture"
 						className="h-5 w-5 rounded-full"
-						height={20}
-						width={20}
 					/>
 					<p className="ml-1.5 mr-1 font-semibold text-neutral-700">
 						{announcement.users

@@ -57,7 +57,7 @@ const AssignmentCalender: NextPage<{
 
 	return (
 		<div
-			className={`scrollbar-fancy relative mt-2 flex h-56 flex-wrap gap-2 overflow-auto`}
+			className={`scrollbar-fancy relatiive mt-2 flex h-56 flex-wrap gap-2 overflow-auto`}
 		>
 			{daysData
 				? fillArrayWithDates(new Date(), 80).map((date, i) => (

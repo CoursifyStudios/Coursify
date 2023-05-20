@@ -7,7 +7,6 @@
 		"esbenp.prettier-vscode",
 		"wayou.vscode-todo-highlight",
 		"bradlc.vscode-tailwindcss",
-		"ionic.ionic",
-		"usernamehw.errorlens"
+		"ionic.ionic"
 	]
 }

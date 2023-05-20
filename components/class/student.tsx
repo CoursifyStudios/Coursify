@@ -1,12 +1,12 @@
-import { NextPage } from "next";
 import Image from "next/image";
+import { ColoredPill } from "../misc/pill";
 import Link from "next/link";
-import { StudentClassType } from ".";
-import { to12hourTime } from "../../lib/db/schedule";
-import { useSettings } from "../../lib/stores/settings";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import exampleImage from "../../public/example-img.jpg";
-import { ColoredPill } from "../misc/pill";
+import { to12hourTime } from "../../lib/db/schedule";
+import { NextPage } from "next";
+import { StudentClassType } from ".";
+import { useSettings } from "../../lib/stores/settings";
 
 const StudentClass: NextPage<StudentClassType> = ({
 	classData,
@@ -133,7 +133,7 @@ const StudentClass: NextPage<StudentClassType> = ({
 								<p className="text-sm italic text-gray-700">No teacher</p>
 							)
 						) : Array.isArray(classData.users) ? (
-							<p>An unknown error occurred</p>
+							<p>An unknown error occured</p>
 						) : classData.class_users?.teacher ? (
 							<p>{classData.users?.full_name}</p>
 						) : (

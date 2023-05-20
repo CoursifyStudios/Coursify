@@ -26,7 +26,7 @@ export const Button: NextPage<{
 
 /**
  *
- * @param icon Use an svg with a width and height of 5 magical tailwind units (technically 5/4ths of a rem)
+ * @param icon Use an svg with a width and height of 5 magical tailwind units (techicanlly 5/4ths of a rem)
  * @param to (optional) link of where you want it to go when clicked
  * @param className extra
  * @returns

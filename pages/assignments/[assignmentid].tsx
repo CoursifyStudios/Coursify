@@ -60,7 +60,7 @@ const Post: NextPage = () => {
 				const assignments = await getAllAssignments(supabase);
 				setAllAssignments(assignments);
 			}
-			// In theory, most people will have the schedule already cached. This is a band-aid solution and won't be used later on
+			// In theory, most people will have the schedule already cached. This is a bandaid solution and won't be used later on
 			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
 				JSON.parse(sessionStorage.getItem("schedule")!);
 			if (allSchedules && allSchedules.length != 0) {
@@ -211,7 +211,7 @@ const Post: NextPage = () => {
 						</h1>
 						<p className="mt-4 line-clamp-2 w-max rounded-md bg-gray-300">
 							<span className="invisible">
-								trojker longer description would go here cool story mark
+								trojker longer description would go hereeeeeeeee coolio
 							</span>
 						</p>
 					</div>
@@ -250,7 +250,7 @@ const Post: NextPage = () => {
 						height={150}
 					/>
 					<h1 className=" mt-4 max-w-xs text-center font-semibold">
-						This assignment {"doesn't"} exist (or you don{"'"}t have access to
+						This assignment doesn{"'"}t exist (or you don{"'"}t have access to
 						it)
 					</h1>
 				</div>
@@ -396,7 +396,7 @@ const Post: NextPage = () => {
 			);
 		}
 		// Typescript wanted me to do this. The user shouldn't ever encounter this state
-		return <div>An unknown error occurred. Assignment id: {assignmentid}</div>;
+		return <div>An unknown error occured. Assignment id: {assignmentid}</div>;
 	}
 };
 
