@@ -28,11 +28,11 @@ const Navbar: NextComponentType = () => {
 	const isDemoUser = user?.id == "d62d46a3-138b-4014-852e-f32f0421213b";
 	const userMetadata = isDemoUser
 		? {
-				name: "Jane Doe",
+				name: "Coursify Demo User",
 				picture:
-					"https://hhrehffmdrcjqowwvgqg.supabase.co/storage/v1/object/public/cdn/assets/groupImages/janedoe",
+					"https://hhrehffmdrcjqowwvgqg.supabase.co/storage/v1/object/public/cdn/assets/demo-images/user",
 				email: "demo@coursify.one",
-				full_name: "Jane Doe",
+				full_name: "Coursify Demo User",
 		  }
 		: user?.user_metadata ?? {};
 
