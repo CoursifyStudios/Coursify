@@ -11,9 +11,20 @@
 		"prepare": "husky install",
 		"fmt": "yarn prettier --write .",
 		"types": "supabase gen types typescript --project-id hhrehffmdrcjqowwvgqg > lib/db/database.types.ts",
-		"slink": "supabase link --project-ref hhrehffmdrcjqowwvgqg"
+		"slink": "supabase link --project-ref hhrehffmdrcjqowwvgqg",
+		"static": "next export",
+		"ionic:build": "yarn build && yarn static",
+		"ionic:serve": "npm run start"
 	},
 	"dependencies": {
+		"@capacitor/android": "5.0.3",
+		"@capacitor/app": "5.0.2",
+		"@capacitor/cli": "5.0.3",
+		"@capacitor/core": "5.0.3",
+		"@capacitor/haptics": "5.0.2",
+		"@capacitor/ios": "5.0.3",
+		"@capacitor/keyboard": "5.0.2",
+		"@capacitor/status-bar": "5.0.2",
 		"@grammarly/editor-sdk-react": "^2.3.18",
 		"@headlessui/react": "^1.7.14",
 		"@heroicons/react": "^2.0.18",

@@ -15,6 +15,12 @@ README.md
 /.next/
 /out/
 
+# capacitor
+/android/
+/ios/
+ionic.config.json
+codemagic.yaml
+
 # production
 /build
 
