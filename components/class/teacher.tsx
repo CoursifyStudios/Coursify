@@ -56,7 +56,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 	};
 	const allGrades = useMemo(() => {
 		const overall = round(getGrade(grades, selectedSort.id));
-		// TODO: add categories of grades as defined by teacher (thats what the zeros are temporatily)
+		// TODO: add categories of grades as defined by teacher (thats what the zeros are temporarily)
 		return [overall, 75, 50];
 	}, [grades, selectedSort.id]);
 
@@ -128,7 +128,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 				</div>
 				<div className="mt-3 flex flex-col gap-2 text-sm font-medium leading-3">
 					<GradesSection name="Overall" grade={allGrades[0]} />
-					<GradesSection name="Summitive (80%)" grade={allGrades[1]} />
+					<GradesSection name="Summative (80%)" grade={allGrades[1]} />
 					<GradesSection name="Formative (20%)" grade={allGrades[2]} />
 				</div>
 			</section>
