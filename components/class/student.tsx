@@ -20,7 +20,7 @@ const StudentClass: NextPage<StudentClassType> = ({
 	return (
 		<div
 			className={
-				"brightness-hover group flex h-full w-[19rem] cursor-pointer select-none flex-col rounded-xl bg-backdrop-200 compact:p-2" +
+				"brightness-hover  group flex h-full w-[19rem] cursor-pointer select-none flex-col rounded-xl bg-backdrop-200 compact:p-2" +
 				className
 			}
 		>
