@@ -17,7 +17,7 @@ const Settings: NextPage = () => {
 		if (typeof page == "string") {
 			setCurrentTab(parseInt(page));
 			if (typeof category == "string") {
-				// This setInterval isn't ideal, but useLayoutEffect doens't seem to work
+				// This setInterval isn't ideal, but useLayoutEffect doesn't seem to work
 				const interval = setInterval(() => {
 					const name = document.getElementById(category);
 					if (name) {
