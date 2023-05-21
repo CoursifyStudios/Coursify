@@ -1,12 +1,12 @@
+import { Tab } from "@headlessui/react";
 import { NextPage } from "next";
+import { Fragment, useMemo, useState } from "react";
 import { Class } from "..";
 import { AllClassesResponse, isTeacher } from "../../../lib/db/classes";
+import { ScheduleInterface } from "../../../lib/db/schedule";
+import { Settings, useSettings } from "../../../lib/stores/settings";
 import { LoadingStudentClass } from "../loading";
 import { sortClasses } from "../sorting";
-import { Settings, useSettings } from "../../../lib/stores/settings";
-import { ScheduleInterface } from "../../../lib/db/schedule";
-import { Tab } from "@headlessui/react";
-import { Fragment, useMemo, useState } from "react";
 
 const HomepageClassesUI: NextPage<{
 	loading: boolean;
