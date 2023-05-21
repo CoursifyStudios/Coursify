@@ -78,7 +78,7 @@ const Navbar: NextComponentType = () => {
 								src={userMetadata.picture}
 								alt="Profile picture"
 								referrerPolicy="no-referrer"
-								className=" w-10 rounded-full shadow-md shadow-black/25 compact:w-9"
+								className="h-10 w-10 rounded-full object-cover shadow-md shadow-black/25 compact:h-9 compact:w-9"
 								height={40}
 								width={40}
 							/>
