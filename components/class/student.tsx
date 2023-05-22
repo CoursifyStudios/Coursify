@@ -116,7 +116,7 @@ const StudentClass: NextPage<StudentClassType> = ({
 															src={user.avatar_url}
 															alt="Profile picture"
 															referrerPolicy="no-referrer"
-															className=" mr-1 rounded-full shadow shadow-black/25 "
+															className=" mr-1 rounded-full object-cover shadow shadow-black/25"
 															height={20}
 															width={20}
 														/>
