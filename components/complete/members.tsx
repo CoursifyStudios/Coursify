@@ -34,7 +34,7 @@ export const Member = ({
 					src={user.avatar_url!}
 					alt="Profile picture"
 					referrerPolicy="no-referrer"
-					className="h-10 min-w-[2.5rem] rounded-full shadow-md shadow-black/25"
+					className="h-10 min-w-[2.5rem] rounded-full object-cover shadow-md shadow-black/25"
 					width={40}
 					height={40}
 				/>
