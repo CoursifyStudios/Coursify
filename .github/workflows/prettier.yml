@@ -25,10 +25,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "16"
-          cache: "yarn"
+          cache: "npm"
 
       - name: Add dependencies
-        run: yarn
+        run: npm
 
       - name: Prettier Check
-        run: yarn fmt:check
+        run: npm run fmt:check
