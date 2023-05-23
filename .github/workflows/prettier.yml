@@ -25,10 +25,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: "16"
-          cache: "npm"
-
-      - name: Setup Prettier
-        run: npm install prettier
+          cache: "yarn"
 
       - name: Prettier Check
-        run: npx prettier --check .
+        run: yarn fmt:check

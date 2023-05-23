@@ -10,6 +10,7 @@
 		"next-lint": "next lint",
 		"prepare": "husky install",
 		"fmt": "yarn prettier --write .",
+		"fmt:check": "yarn prettier --check .",
 		"types": "supabase gen types typescript --project-id hhrehffmdrcjqowwvgqg > lib/db/database.types.ts",
 		"slink": "supabase link --project-ref hhrehffmdrcjqowwvgqg",
 		"static": "next export",
