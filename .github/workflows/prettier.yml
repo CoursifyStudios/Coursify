@@ -28,7 +28,7 @@ jobs:
           cache: "npm"
 
       - name: Add dependencies
-        run: npm
+        run: npm install
 
       - name: Prettier Check
         run: npm run fmt:check
