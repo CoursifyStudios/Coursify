@@ -28,7 +28,7 @@ jobs:
           cache: "yarn"
 
       - name: Add dependencies
-        run: yarn 
+        run: yarn
 
       - name: Prettier Check
         run: yarn fmt:check

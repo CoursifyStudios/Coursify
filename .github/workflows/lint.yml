@@ -23,7 +23,7 @@ jobs:
           cache: "yarn"
 
       - name: Add Dependencies
-        run: yarn 
+        run: yarn
 
       - name: Test ESLint
         run: yarn lint
