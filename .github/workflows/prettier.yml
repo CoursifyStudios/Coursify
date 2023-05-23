@@ -27,5 +27,8 @@ jobs:
           node-version: "16"
           cache: "yarn"
 
+      - name: Add dependencies
+        run: yarn 
+
       - name: Prettier Check
         run: yarn fmt:check

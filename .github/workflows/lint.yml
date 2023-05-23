@@ -22,5 +22,8 @@ jobs:
           node-version: "16"
           cache: "yarn"
 
+      - name: Add Dependencies
+        run: yarn 
+
       - name: Test ESLint
         run: yarn lint
