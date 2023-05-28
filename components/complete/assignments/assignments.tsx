@@ -73,9 +73,10 @@ export function AssignmentPreview({
 				</div>
 				<div tabIndex={-1} className="mt-0.5 flex h-[4.5rem] justify-between">
 					<div>
-						<h1 className="line-clamp-2 font-medium">{assignment.name}</h1>
-						<p className="mr-7 line-clamp-2 md:line-clamp-1">
-							{assignment.description}
+						<p className="line-clamp-3">
+							<a className="font-medium">{assignment.name}</a>
+							<br />
+							<p className="mr-7">{assignment.description}</p>
 						</p>
 					</div>
 				</div>
