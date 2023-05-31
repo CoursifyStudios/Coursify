@@ -5,7 +5,6 @@ const nextConfig = {
 			"hhrehffmdrcjqowwvgqg.supabase.co",
 			"cdn.coursify.one",
 			"lh3.googleusercontent.com",
-			// Used for demo user
 			"cdn.discordapp.com",
 			"media.discordapp.net",
 		],

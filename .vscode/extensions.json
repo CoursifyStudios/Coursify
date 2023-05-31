@@ -6,6 +6,7 @@
 		"visualstudioexptteam.vscodeintellicode",
 		"esbenp.prettier-vscode",
 		"wayou.vscode-todo-highlight",
-		"bradlc.vscode-tailwindcss"
+		"bradlc.vscode-tailwindcss",
+		"ionic.ionic"
 	]
 }
