@@ -303,8 +303,6 @@ export const AnnouncementPostingUI = ({
 												);
 											}
 										} else {
-											// This i for when you are neither ahring nor editing (posting)
-											// it just checks that both the title and contnet of the announcement are populated
 											if (!isEditorEmpty(editorState) && !(title.length == 0)) {
 												const dBReturn = await crossPostAnnouncements(
 													supabase,

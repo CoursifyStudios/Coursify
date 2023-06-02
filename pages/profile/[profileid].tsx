@@ -49,7 +49,7 @@ export default function Profile() {
 							src={profile.data.avatar_url}
 							alt="Profile Picture"
 							//referrerPolicy="no-referrer"
-							className="!ml-2 h-36 w-36 rounded-full shadow-md shadow-black/25"
+							className="!ml-2 h-36 w-36 rounded-full object-cover shadow-md shadow-black/25"
 							width={144}
 							height={144}
 						/>
@@ -97,7 +97,7 @@ export default function Profile() {
 										(achievement) => (
 											<Achievement
 												data={getDataOutArray(achievement.achievements)!}
-												key={achievement.achivement_id}
+												key={achievement.achievement_id}
 												earned={new Date(achievement.date_earned)}
 											/>
 										)
@@ -115,7 +115,7 @@ export default function Profile() {
 					</div>
 				)}
 			</div>
-			{/* Centerpeice, list of classes */}
+			{/* Centerpiece, list of classes */}
 			<div className=" mx-auto mt-8 shrink-0 flex-col rounded-xl lg:mt-0 lg:h-[calc(100vh-8rem)] xl:flex">
 				<h2 className="title mb-4">Classes</h2>
 				<div

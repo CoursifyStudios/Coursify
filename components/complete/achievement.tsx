@@ -1,5 +1,6 @@
 import { Dialog } from "@headlessui/react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
+import Image from "next/image";
 import { useState } from "react";
 import { formatDate } from "../../lib/misc/dates";
 import { IconConverter, InfoPill } from "../misc/infopills";
@@ -73,5 +74,14 @@ export const getIcon = (icon: string | null) => {
 	if (["doc", "link", "chat", "calendar", "folder", "music"].includes(icon)) {
 		return <IconConverter.toIcon str={icon as InfoPill["icon"]} />;
 	}
-	return <img className="h-5 w-5" referrerPolicy="no-referrer" src={icon} />;
+	return (
+		<Image
+			className="h-5 w-5"
+			referrerPolicy="no-referrer"
+			src={icon}
+			alt="icon"
+			width={20}
+			height={20}
+		/>
+	);
 };

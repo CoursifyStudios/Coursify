@@ -36,7 +36,7 @@ const Profile: NextPage<{}> = () => {
 						src={userData.data.avatar_url}
 						alt="Profile picture"
 						referrerPolicy="no-referrer"
-						className="w-40 rounded-full shadow-md shadow-black/25"
+						className="h-40 w-40 rounded-full object-cover shadow-md shadow-black/25"
 						height={90}
 						width={90}
 					/>

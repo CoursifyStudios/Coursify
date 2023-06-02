@@ -28,11 +28,11 @@ const Navbar: NextComponentType = () => {
 	const isDemoUser = user?.id == "d62d46a3-138b-4014-852e-f32f0421213b";
 	const userMetadata = isDemoUser
 		? {
-				name: "Jane Doe",
+				name: "Coursify Demo User",
 				picture:
-					"https://hhrehffmdrcjqowwvgqg.supabase.co/storage/v1/object/public/cdn/assets/groupImages/janedoe",
+					"https://hhrehffmdrcjqowwvgqg.supabase.co/storage/v1/object/public/cdn/assets/demo-images/user",
 				email: "demo@coursify.one",
-				full_name: "Jane Doe",
+				full_name: "Coursify Demo User",
 		  }
 		: user?.user_metadata ?? {};
 
@@ -78,7 +78,7 @@ const Navbar: NextComponentType = () => {
 								src={userMetadata.picture}
 								alt="Profile picture"
 								referrerPolicy="no-referrer"
-								className=" w-10 rounded-full shadow-md shadow-black/25 compact:w-9"
+								className="h-10 w-10 rounded-full object-cover shadow-md shadow-black/25 compact:h-9 compact:w-9"
 								height={40}
 								width={40}
 							/>
@@ -209,9 +209,9 @@ const Navbar: NextComponentType = () => {
 							(key.key == "Enter" || key.key == " ") &&
 							(key.stopPropagation(), handleClose(tab.name, selected))
 						}
-						// apparently stop propigation doesn't work with nextjs links.
+						// apparently stop propagation doesn't work with nextjs links.
 						// I could use router.push(), but then we would have to be in charge of preloading pages
-						// I decicded to instead just make the text the link. It not great but is just works:tm:
+						// I decided to instead just make the text the link. It not great but is just works:tm:
 						// - Lukas
 						className={`ml-2 h-5 w-5 cursor-pointer rounded-sm text-gray-500 transition hover:text-gray-800 dark:text-gray-100
 									 ${selected ? "hover:bg-gray-100" : "hover:bg-gray-400/20"}`}

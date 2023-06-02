@@ -103,7 +103,7 @@ export const getClass = async (
 
 export type ClassResponse = Awaited<ReturnType<typeof getClass>>;
 
-export interface IndividialClass {
+export interface IndividualClass {
 	data: Database["public"]["Tables"]["classes"]["Row"];
 }
 
