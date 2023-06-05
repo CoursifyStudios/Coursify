@@ -12,18 +12,24 @@ export const crossPostAnnouncements = async (
 	// ClassOrGroupObjects
 	communities: string[]
 ) => {
+	let cloneID: string | null = null;
 	const announcements: {
 		author: string;
 		class_id: string | null;
-		content: Json;
+		content: Json | null;
 		title: string | null;
+		clone_id: string | null;
 	}[] = [];
+	if (communities.length > 1) {
+		cloneID = crypto.randomUUID();
+	}
 	communities.forEach((community) => {
 		announcements.push({
 			author: announcementAuthor,
 			title: announcementTitle,
 			content: announcementContent,
 			class_id: community,
+			clone_id: cloneID,
 		});
 	});
 	return await supabase.from("announcements").insert(announcements).select(`
@@ -39,6 +45,7 @@ export const crossPostAnnouncements = async (
                 time,
                 class_id,
                 type,
+                clone_id,
                 users (
                     full_name, avatar_url
                 )
@@ -73,27 +80,44 @@ export const deleteAnnouncement = async (
 		.lte("time", laterDate.toISOString());
 };
 
-// Can't use id because we need to change the
-// announcements in all of the groups it was posted to
-// also turns out that content is too finicky so using time instead
+///Now using clone_id that was generated client side
 export const editAnnouncement = async (
 	supabase: SupabaseClient<Database>,
-	oldAnnouncement: { author: string; title: string; time: string },
+	oldAnnouncement: {
+		id: string;
+		author: string;
+		title: string;
+		clone_id: string | null;
+	},
 	newAnnouncement: { title: string; content: Json }
 ) => {
-	const earlyDate: Date = new Date(
-		new Date(oldAnnouncement.time).getTime() - 500
-	);
-	const laterDate: Date = new Date(
-		new Date(oldAnnouncement.time).getTime() + 500
-	);
-	return await supabase
+	// let query = supabase.from("announcements").update({
+	// 	title: newAnnouncement.title,
+	// 	content: newAnnouncement.content,
+	// }).eq("author", oldAnnouncement.author).eq("title", oldAnnouncement.title);
+
+	// if (oldAnnouncement.clone_id) {
+	// 	query = query.or("");
+	// }
+
+	// const testQuery = await supabase.from("announcements").update({
+	// 	title: newAnnouncement.title,
+	// 	content: newAnnouncement.content,
+	// })
+	// // Check if the author editing is the same person
+	// .or(`and(author.eq.${oldAnnouncement.author},id.eq.${oldAnnouncement.id})`)
+	// // Check if the announcement being edited is a clone of the original announcement
+	// .or(`clone_id.eq.${oldAnnouncement.id}`);
+	
+    
+        const test = await supabase
 		.from("announcements")
 		.update({ title: newAnnouncement.title, content: newAnnouncement.content })
 		.eq("author", oldAnnouncement.author)
 		.eq("title", oldAnnouncement.title)
-		.gte("time", earlyDate.toISOString())
-		.lte("time", laterDate.toISOString()).select(`
+        //Check that either the announcement id is the same, or that the clone_id is the same (and that it exists)
+        .or(`and(clone_id.not.eq.null,clone_id.eq.${oldAnnouncement.clone_id}),id.eq.${oldAnnouncement.id}`)
+        .select(`
 			*,
 			users (
 				id, full_name, avatar_url
@@ -110,6 +134,10 @@ export const editAnnouncement = async (
                     full_name, avatar_url
                 )
             )`);
+    
+	
+                    console.log(test, oldAnnouncement)
+    return test;
 };
 
 // A bit like the deleting function above, but this one only
@@ -233,6 +261,7 @@ export type TypeOfAnnouncements = {
 	content: Json;
 	time: string | null;
 	type: number;
+    clone_id: string | null;
 	users:
 		| {
 				avatar_url: string;

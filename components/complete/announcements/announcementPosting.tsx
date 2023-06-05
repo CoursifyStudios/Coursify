@@ -49,9 +49,10 @@ export const AnnouncementPostingUI = ({
 		setSharing: (value: boolean) => void;
 	} | null;
 	editingInfo?: {
+        id: string;
 		title: string;
 		content: Json;
-		time: string;
+        clone_id: string | null;
 		setEditing?: (value: boolean) => void;
 	};
 }) => {
@@ -275,9 +276,10 @@ export const AnnouncementPostingUI = ({
 											const newAnnouncement = await editAnnouncement(
 												supabase,
 												{
+                                                    id: editingInfo.id,
 													author: user.id,
 													title: editingInfo.title,
-													time: editingInfo.time,
+                                                    clone_id: editingInfo.clone_id,
 												},
 												{
 													title: title,
@@ -303,7 +305,7 @@ export const AnnouncementPostingUI = ({
 												);
 											}
 										} else {
-											// This i for when you are neither ahring nor editing (posting)
+											// This i for when you are neither sharing nor editing (just posting normally)
 											// it just checks that both the title and contnet of the announcement are populated
 											if (!isEditorEmpty(editorState) && !(title.length == 0)) {
 												const dBReturn = await crossPostAnnouncements(
@@ -329,6 +331,7 @@ export const AnnouncementPostingUI = ({
 															time: dBReturn.data![0].time,
 															title: dBReturn.data![0].title,
 															type: dBReturn.data![0].type,
+                                                            clone_id: dBReturn.data![0].clone_id,
 															users: dBReturn.data![0].users,
 														},
 													])

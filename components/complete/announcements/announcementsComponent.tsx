@@ -22,7 +22,7 @@ export const AnnouncementsComponent = ({
 				(announcement) =>
 					announcement && (
 						<Announcement
-							key={announcement.id}
+							key={announcement.id + "temp"}
 							announcement={{
 								id: announcement.id,
 								author: announcement.author,
@@ -30,6 +30,7 @@ export const AnnouncementsComponent = ({
 								content: announcement.content,
 								time: announcement.time,
 								type: announcement.type,
+                                clone_id: announcement.clone_id,
 								users: announcement.users,
 							}}
 							classID={communityid}
@@ -63,7 +64,7 @@ export const AnnouncementsComponent = ({
 						(announcement.type == AnnouncementType.ANNOUNCMENT ||
 							announcement.type == AnnouncementType.CROSSPOST) && (
 							<Announcement
-								key={announcement.id}
+								key={announcement.id + "other"}
 								announcement={announcement as TypeOfAnnouncements}
 								comments={
 									announcements.filter(

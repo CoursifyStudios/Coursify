@@ -7,6 +7,7 @@ import Link from "next/link";
 import { useState } from "react";
 import {
 	AnnouncementType,
+	editAnnouncement,
 	postCommentOrReply,
 } from "../../../lib/db/announcements";
 import { howLongAgo } from "../../../lib/misc/dates";
@@ -33,7 +34,9 @@ export const Comment = ({
 }) => {
 	const user = useUser();
 	const { newTab } = useTabs();
+    const [text, setText] = useState(content);
 	const [showPosting, setShowPosting] = useState(false);
+	const [editing, setEditing] = useState(false);
 	return (
 		<div className="ml-4">
 			<div className="flex items-center pt-1 ">
@@ -70,7 +73,11 @@ export const Comment = ({
 								as="div"
 								className="relative flex w-48 flex-col rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-xl"
 							>
-								<Menu.Item as="div" className="p-1 font-medium">
+								<Menu.Item
+									as="div"
+									className="p-1 font-medium"
+									onClick={() => setShowPosting(true)}
+								>
 									Edit
 								</Menu.Item>
 								<Menu.Item as="div" className="p-1 font-medium">
@@ -84,14 +91,73 @@ export const Comment = ({
 					</Menu>
 				)}
 			</div>
-			<p>{content}</p>
+			{editing ? (
+				<Formik
+					initialValues={{
+						content: "",
+					}}
+					onSubmit={async (formData) => {
+						setEditing(false);
+						const test = await editAnnouncement(
+							supabase,
+							user.id,
+							communityid,
+							parentID,
+							formData.content,
+							AnnouncementType.COMMENT
+						);
+						setText(formData.content);
+					}}
+				>
+					{({ values }) => (
+						<Form className="focus:outline-none">
+							<label htmlFor="content">
+								<Field
+									component="textarea"
+									name="content"
+									type="text"
+									className="mt-2 min-h-[2.5rem] w-full resize-y rounded-3xl border-none bg-gray-300 px-4 py-2 !ring-0 dark:placeholder:text-gray-400"
+									placeholder="Add a comment..."
+									autoFocus
+								></Field>
+							</label>
+							<ErrorMessage name="content" />
+							<div className="m-1 flex justify-end gap-2">
+								<Button
+									className="brightness-hover transition hover:bg-red-300"
+									onClick={() => setShowCommenting(false)}
+								>
+									Cancel
+								</Button>
+								<button
+									className={`rounded-md bg-blue-500 px-4 py-1 font-semibold text-white ${
+										values.content.length < 1
+											? "cursor-not-allowed brightness-75"
+											: "brightness-hover"
+									}`}
+									type="submit"
+								>
+									Post
+								</button>
+							</div>
+						</Form>
+					)}
+				</Formik>
+			) : (
+				<p>{text}</p>
+			)}
+
 			<button
 				className="ml-2"
 				onClick={() => {
 					setShowPosting(true);
 				}}
 			>
-				{showPosting ? "Replying to " + users.full_name : "Reply"}
+				{showPosting ? (
+					"Replying to " + users.full_name
+				) : (
+					<p className="text-">Reply</p>
+				)}
 			</button>
 			{showPosting && (
 				<Commenting communityid={communityid} parentID={id!}></Commenting>

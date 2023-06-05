@@ -60,9 +60,10 @@ export const Announcement = ({
 					communityid={classID}
 					sharingInfo={null}
 					editingInfo={{
+                        id: announcement.id,
 						title: announcement.title!,
 						content: announcement.content,
-						time: announcement.time!,
+                        clone_id: announcement.clone_id,
 						setEditing: setShowEditing,
 					}}
 					announcements={announcements}

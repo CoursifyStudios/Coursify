@@ -53,6 +53,7 @@ export const getGroup = async (
             time,
             class_id,
             type,
+            clone_id,
             users (
                 avatar_url, full_name
             ),
@@ -64,6 +65,7 @@ export const getGroup = async (
                 time,
                 class_id,
                 type,
+                clone_id,
                 users (
                     full_name, avatar_url
                 )
