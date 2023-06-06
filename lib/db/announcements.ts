@@ -12,45 +12,44 @@ export const crossPostAnnouncements = async (
 	// ClassOrGroupObjects
 	communities: string[]
 ) => {
-	// This is lukas approved but not bill approved
-	const [parent, ...rest] = communities;
-
-	const res = await supabase.from("announcements").insert({
-		author: announcementAuthor,
-		title: announcementTitle,
-		content: announcementContent,
-		class_id: parent,
-	}).select(`
+	let cloneID: string | null = null;
+	const announcements: {
+		author: string;
+		class_id: string | null;
+		content: Json | null;
+		title: string | null;
+		clone_id: string | null;
+	}[] = [];
+	if (communities.length > 1) {
+		cloneID = crypto.randomUUID();
+	}
+	communities.forEach((community) => {
+		announcements.push({
+			author: announcementAuthor,
+			title: announcementTitle,
+			content: announcementContent,
+			class_id: community,
+			clone_id: cloneID,
+		});
+	});
+	return await supabase.from("announcements").insert(announcements).select(`
 			*,
 			users (
 				id, full_name, avatar_url
 			),
-	        parent (
-	            id,
-	            author,
-	            title,
-	            content,
-	            time,
-	            class_id,
-	            type,
-	            clone_id,
-	            users (
-	                full_name, avatar_url
-	            )
-	        )`);
-
-	if (rest.length > 0) {
-		const announcements = rest.map((c) => ({
-			author: announcementAuthor,
-			title: announcementTitle,
-			content: announcementContent,
-			class_id: c,
-			clone_id: res.data![0].id,
-		}));
-		await supabase.from("announcements").insert(announcements);
-	}
-
-	return res;
+            parent (
+                id,
+                author,
+                title,
+                content,
+                time,
+                class_id,
+                type,
+                clone_id,
+                users (
+                    full_name, avatar_url
+                )
+            )`);
 };
 
 export type crossPostingReturn = Awaited<
@@ -92,35 +91,53 @@ export const editAnnouncement = async (
 	},
 	newAnnouncement: { title: string; content: Json }
 ) => {
-	return await supabase
+	// let query = supabase.from("announcements").update({
+	// 	title: newAnnouncement.title,
+	// 	content: newAnnouncement.content,
+	// }).eq("author", oldAnnouncement.author).eq("title", oldAnnouncement.title);
+
+	// if (oldAnnouncement.clone_id) {
+	// 	query = query.or("");
+	// }
+
+	// const testQuery = await supabase.from("announcements").update({
+	// 	title: newAnnouncement.title,
+	// 	content: newAnnouncement.content,
+	// })
+	// // Check if the author editing is the same person
+	// .or(`and(author.eq.${oldAnnouncement.author},id.eq.${oldAnnouncement.id})`)
+	// // Check if the announcement being edited is a clone of the original announcement
+	// .or(`clone_id.eq.${oldAnnouncement.id}`);
+	
+    
+        const test = await supabase
 		.from("announcements")
-		.update({
-			title: newAnnouncement.title,
-			content: newAnnouncement.content,
-		})
-		.or(
-			[
-				`and(author.eq.${oldAnnouncement.author},id.eq.${oldAnnouncement.id})`,
-				`,clone_id.eq.${oldAnnouncement.id}`,
-				oldAnnouncement.clone_id ? `,id.eq.${oldAnnouncement.clone_id}` : ``,
-			].join("")
-		).select(`
-		*,
-		users (
-			id, full_name, avatar_url
-		),
-		parent (
-			id,
-			author,
-			title,
-			content,
-			time,
-			class_id,
-			type,
+		.update({ title: newAnnouncement.title, content: newAnnouncement.content })
+		.eq("author", oldAnnouncement.author)
+		.eq("title", oldAnnouncement.title)
+        //Check that either the announcement id is the same, or that the clone_id is the same (and that it exists)
+        .or(`and(clone_id.not.eq.null,clone_id.eq.${oldAnnouncement.clone_id}),id.eq.${oldAnnouncement.id}`)
+        .select(`
+			*,
 			users (
-				full_name, avatar_url
-			)
-		)`);
+				id, full_name, avatar_url
+			),
+            parent (
+                id,
+                author,
+                title,
+                content,
+                time,
+                class_id,
+                type,
+                users (
+                    full_name, avatar_url
+                )
+            )`);
+    
+	
+                    console.log(test, oldAnnouncement)
+    return test;
 };
 
 // A bit like the deleting function above, but this one only
@@ -244,7 +261,7 @@ export type TypeOfAnnouncements = {
 	content: Json;
 	time: string | null;
 	type: number;
-	clone_id: string | null;
+    clone_id: string | null;
 	users:
 		| {
 				avatar_url: string;
@@ -274,4 +291,3 @@ export type TypeOfAnnouncements = {
 		type: number;
 	} | null;
 };
-
