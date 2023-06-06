@@ -49,10 +49,10 @@ export const AnnouncementPostingUI = ({
 		setSharing: (value: boolean) => void;
 	} | null;
 	editingInfo?: {
-        id: string;
+		id: string;
 		title: string;
 		content: Json;
-        clone_id: string | null;
+		clone_id: string | null;
 		setEditing?: (value: boolean) => void;
 	};
 }) => {
@@ -276,10 +276,10 @@ export const AnnouncementPostingUI = ({
 											const newAnnouncement = await editAnnouncement(
 												supabase,
 												{
-                                                    id: editingInfo.id,
+													id: editingInfo.id,
 													author: user.id,
 													title: editingInfo.title,
-                                                    clone_id: editingInfo.clone_id,
+													clone_id: editingInfo.clone_id,
 												},
 												{
 													title: title,
@@ -331,7 +331,7 @@ export const AnnouncementPostingUI = ({
 															time: dBReturn.data![0].time,
 															title: dBReturn.data![0].title,
 															type: dBReturn.data![0].type,
-                                                            clone_id: dBReturn.data![0].clone_id,
+															clone_id: dBReturn.data![0].clone_id,
 															users: dBReturn.data![0].users,
 														},
 													])

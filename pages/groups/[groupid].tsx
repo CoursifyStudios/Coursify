@@ -10,7 +10,7 @@ import { Member } from "../../components/complete/members";
 import { ColoredPill } from "../../components/misc/pill";
 import { TypeOfAnnouncements } from "../../lib/db/announcements";
 import { Database } from "../../lib/db/database.types";
-import { getGroup, GroupResponse } from "../../lib/db/groups";
+import { GroupResponse, getGroup } from "../../lib/db/groups";
 import { getDataInArray } from "../../lib/misc/dataOutArray";
 
 const Group: NextPage = () => {

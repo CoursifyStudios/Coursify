@@ -30,7 +30,7 @@ export const AnnouncementsComponent = ({
 								content: announcement.content,
 								time: announcement.time,
 								type: announcement.type,
-                                clone_id: announcement.clone_id,
+								clone_id: announcement.clone_id,
 								users: announcement.users,
 							}}
 							classID={communityid}

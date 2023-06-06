@@ -34,7 +34,7 @@ export const Comment = ({
 }) => {
 	const user = useUser();
 	const { newTab } = useTabs();
-    const [text, setText] = useState(content);
+	const [text, setText] = useState(content);
 	const [showPosting, setShowPosting] = useState(false);
 	const [editing, setEditing] = useState(false);
 	return (
