@@ -120,14 +120,20 @@ const Group: NextPage = () => {
 									groupData.data.announcements &&
 									groupid &&
 									typeof groupid == "string" && (
-										<AnnouncementsComponent
-											announcements={
-												getDataInArray(
-													groupData.data.announcements
-												) as TypeOfAnnouncements[]
-											}
-											communityid={groupid}
-										></AnnouncementsComponent>
+                                        <div>
+                                            <AnnouncementsComponent
+                                                announcements={extraAnnouncements}
+                                                communityid={groupid}
+                                            ></AnnouncementsComponent>
+                                            <AnnouncementsComponent
+                                                announcements={
+                                                    getDataInArray(
+                                                        groupData.data.announcements
+                                                    ) as TypeOfAnnouncements[]
+                                                }
+                                                communityid={groupid}
+                                            ></AnnouncementsComponent>
+                                        </div>
 									)}
 							</div>
 						</Tab.Panel>

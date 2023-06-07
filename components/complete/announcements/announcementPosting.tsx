@@ -4,8 +4,8 @@ import { EditorState } from "lexical";
 import { useEffect, useState } from "react";
 import {
 	TypeOfAnnouncements,
-	crossPostAnnouncements,
 	editAnnouncement,
+	postAnnouncements,
 	shareAnnouncement,
 } from "../../../lib/db/announcements";
 import { getClassesForUserBasic } from "../../../lib/db/classes";
@@ -286,7 +286,7 @@ export const AnnouncementPostingUI = ({
 													content: editorState?.toJSON() as unknown as Json,
 												}
 											);
-											// ...And on its return removes teh fake announcement..
+											// ...And on its return removes the fake announcement..
 											setFakeAnnouncements(
 												fakeAnnouncements.filter(
 													(announcement) =>
@@ -305,10 +305,10 @@ export const AnnouncementPostingUI = ({
 												);
 											}
 										} else {
-											// This i for when you are neither sharing nor editing (just posting normally)
+											// This is for when you are neither sharing nor editing (just posting normally)
 											// it just checks that both the title and contnet of the announcement are populated
 											if (!isEditorEmpty(editorState) && !(title.length == 0)) {
-												const dBReturn = await crossPostAnnouncements(
+												const dBReturn = await postAnnouncements(
 													supabase,
 													user?.id!,
 													title,
@@ -321,21 +321,20 @@ export const AnnouncementPostingUI = ({
 															announcement.title != dBReturn.data![0].title
 													)
 												);
-												setAnnouncements(
-													announcements.concat([
-														{
-															author: dBReturn.data![0].author,
-															content: dBReturn.data![0].content,
-															id: dBReturn.data![0].id,
-															parent: null,
-															time: dBReturn.data![0].time,
-															title: dBReturn.data![0].title,
-															type: dBReturn.data![0].type,
-															clone_id: dBReturn.data![0].clone_id,
-															users: dBReturn.data![0].users,
-														},
-													])
-												);
+												if (dBReturn && dBReturn.data) {
+													setAnnouncements(
+														announcements.concat(
+															announcements.concat(
+																dBReturn.data.find(
+																	(announcement) =>
+																		announcement.class_id == communityid
+																) as unknown as TypeOfAnnouncements
+															)
+														)
+													);
+												}
+
+												//reset which communities to share to
 												!sharingInfo &&
 													setChosenCommunities([
 														{
@@ -415,3 +414,4 @@ export const AnnouncementPostingUI = ({
 		);
 	}
 };
+

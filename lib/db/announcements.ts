@@ -1,7 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database, Json } from "./database.types";
 
-export const crossPostAnnouncements = async (
+export const postAnnouncements = async (
 	supabase: SupabaseClient<Database>,
 	announcementAuthor: string,
 	announcementTitle: string,
@@ -52,8 +52,8 @@ export const crossPostAnnouncements = async (
             )`);
 };
 
-export type crossPostingReturn = Awaited<
-	ReturnType<typeof crossPostAnnouncements>
+export type postingReturn = Awaited<
+	ReturnType<typeof postAnnouncements>
 >;
 // Removes the announcement(s) that match the author, title and content.
 // This is what happens when no merge table. To remove the announcement

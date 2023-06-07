@@ -316,14 +316,20 @@ const Class: NextPage = () => {
 									/>
 								)}
 								{classid && typeof classid == "string" && (
-									<AnnouncementsComponent
-										announcements={
-											getDataInArray(
-												data.data.announcements
-											) as TypeOfAnnouncements[]
-										}
-										communityid={classid}
-									></AnnouncementsComponent>
+									<div className="space-y-4">
+										<AnnouncementsComponent
+											announcements={extraAnnouncements}
+											communityid={classid}
+										></AnnouncementsComponent>
+										<AnnouncementsComponent
+											announcements={
+												getDataInArray(
+													data.data.announcements
+												) as TypeOfAnnouncements[]
+											}
+											communityid={classid}
+										></AnnouncementsComponent>
+									</div>
 								)}
 							</div>
 						</Tab.Panel>
