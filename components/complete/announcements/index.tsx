@@ -93,7 +93,7 @@ export const Announcement = ({
 					announcement={announcement}
 					classID={classID}
 				/>
-				<div className="rounded-xl bg-backdrop-200 p-4">
+				<div className="rounded-xl bg-backdrop-200 p-4 pb-3">
 					<div className="flex items-center justify-between">
 						<h2 className="text-xl font-semibold">{announcement.title}</h2>
 						<Listbox

@@ -105,7 +105,7 @@ const Group: NextPage = () => {
 									groupData &&
 									groupData.data &&
 									groupData.data.users &&
-									// Checks that user is in group, only hten show posting UI
+									// Checks that user is in group, only then should it show the posting UI
 									getDataInArray(groupData.data.users).some(
 										(userInGroup) => userInGroup.id == user.id
 									) && (

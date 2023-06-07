@@ -52,9 +52,7 @@ export const postAnnouncements = async (
             )`);
 };
 
-export type postingReturn = Awaited<
-	ReturnType<typeof postAnnouncements>
->;
+export type postingReturn = Awaited<ReturnType<typeof postAnnouncements>>;
 // Removes the announcement(s) that match the author, title and content.
 // This is what happens when no merge table. To remove the announcement
 // from just one group or class, use removeAnnouncementFromCommunity(),
@@ -91,17 +89,19 @@ export const editAnnouncement = async (
 	},
 	newAnnouncement: { title: string; content: Json }
 ) => {
-    //not the most elegant, sure, but it works an only uses one request. Until we get an SQL function, we use this. I'm Bill, this is my pr,
-	if (oldAnnouncement.clone_id) {
-		return await supabase
-			.from("announcements")
-			.update({
-				title: newAnnouncement.title,
-				content: newAnnouncement.content,
-			})
-			.eq("author", oldAnnouncement.author)
-			.eq("title", oldAnnouncement.title)
-			.eq("clone_id", oldAnnouncement.clone_id).select(`
+	//not the most elegant, sure, but it works an only uses one request. Until we get an SQL function, we use this. I'm Bill, this is my pr,
+	return await supabase
+		.from("announcements")
+		.update({
+			title: newAnnouncement.title,
+			content: newAnnouncement.content,
+		})
+		.eq("author", oldAnnouncement.author)
+		.eq("title", oldAnnouncement.title)
+		.eq(
+			oldAnnouncement.clone_id ? "clone_id" : "id",
+			oldAnnouncement.clone_id ? oldAnnouncement.clone_id : oldAnnouncement.id
+		).select(`
 			*,
 			users (
 				id, full_name, avatar_url
@@ -118,35 +118,6 @@ export const editAnnouncement = async (
                     full_name, avatar_url
                 )
             )`);
-	} else {
-		return await supabase
-			.from("announcements")
-			.update({
-				title: newAnnouncement.title,
-				content: newAnnouncement.content,
-			})
-			.eq("author", oldAnnouncement.author)
-			.eq("title", oldAnnouncement.title)
-			//Check that either the announcement id is the same, or that the clone_id is the same (and that it exists)
-			//.or(`and(clone_id.not.eq.null,clone_id.eq.${oldAnnouncement.clone_id}),id.eq.${oldAnnouncement.id}`)
-			.eq("id", oldAnnouncement.id).select(`
-			*,
-			users (
-				id, full_name, avatar_url
-			),
-            parent (
-                id,
-                author,
-                title,
-                content,
-                time,
-                class_id,
-                type,
-                users (
-                    full_name, avatar_url
-                )
-            )`);
-	}
 };
 
 // A bit like the deleting function above, but this one only
@@ -300,3 +271,4 @@ export type TypeOfAnnouncements = {
 		type: number;
 	} | null;
 };
+

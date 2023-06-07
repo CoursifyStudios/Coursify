@@ -324,12 +324,10 @@ export const AnnouncementPostingUI = ({
 												if (dBReturn && dBReturn.data) {
 													setAnnouncements(
 														announcements.concat(
-															announcements.concat(
-																dBReturn.data.find(
-																	(announcement) =>
-																		announcement.class_id == communityid
-																) as unknown as TypeOfAnnouncements
-															)
+															dBReturn.data.find(
+																(announcement) =>
+																	announcement.class_id == communityid
+															) as unknown as TypeOfAnnouncements
 														)
 													);
 												}
