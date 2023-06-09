@@ -318,16 +318,16 @@ const Class: NextPage = () => {
 								{classid && typeof classid == "string" && (
 									<div className="space-y-4">
                                         {/* Newly created/edited annoucnements here */}
-										<AnnouncementsComponent
+										{/* <AnnouncementsComponent
 											announcements={extraAnnouncements}
 											communityid={classid}
-										></AnnouncementsComponent>
+										></AnnouncementsComponent> */}
                                         {/* Announcements on DB from first page load here */}
 										<AnnouncementsComponent
 											announcements={
-												getDataInArray(
+												extraAnnouncements.concat(getDataInArray(
 													data.data.announcements
-												) as TypeOfAnnouncements[]
+												) as TypeOfAnnouncements[])
 											}
 											communityid={classid}
 										></AnnouncementsComponent>

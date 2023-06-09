@@ -48,11 +48,14 @@ export const Announcement = ({
 		{ option: "Edit", icon: <PencilIcon className={optionsClasses} /> },
 		{ option: "Delete", icon: <TrashIcon className={optionsClasses} /> },
 	];
+    //so that it can be changed when edited
+    const [info, setInfo] = useState({title: announcement.title, content: announcement.content})
 	const [selected, setSelected] = useState(options[0]);
 	const [showEditing, setShowEditing] = useState(false);
 	const [showSharing, setShowSharing] = useState(false);
 	const [showDeleting, setShowDeleting] = useState(false);
 	const [deleted, setDeleted] = useState(false);
+    console.log(info)
 	if (!deleted) {
 		if (showEditing) {
 			return (
@@ -60,12 +63,13 @@ export const Announcement = ({
 					communityid={classID}
 					sharingInfo={null}
 					editingInfo={{
-						id: announcement.id,
-						title: announcement.title!,
-						content: announcement.content,
+						id: announcement.id,//does not change
+						title: info.title!,//can be edited
+						content: info.content,//editable too
 						clone_id: announcement.clone_id,
 						setEditing: setShowEditing,
 					}}
+                    setNewInfo={setInfo}
 					announcements={announcements}
 					setAnnouncements={setAnnouncements}
 				></AnnouncementPostingUI>
@@ -95,7 +99,7 @@ export const Announcement = ({
 				/>
 				<div className="rounded-xl bg-backdrop-200 p-4 pb-3">
 					<div className="flex items-center justify-between">
-						<h2 className="text-xl font-semibold">{announcement.title}</h2>
+						<h2 className="text-xl font-semibold">{info.title}</h2>
 						<Listbox
 							value={selected}
 							onChange={setSelected}
@@ -191,7 +195,7 @@ export const Announcement = ({
 					</div>
 					<Editor
 						editable={false}
-						initialState={announcement.content}
+						initialState={info.content}
 						className="mt-0.5"
 					/>
 					{announcement.parent && (
