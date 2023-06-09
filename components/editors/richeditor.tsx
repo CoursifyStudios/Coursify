@@ -189,6 +189,7 @@ function EditorContextProvider({
 						)
 				);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [editable, initialState, updatedState, initialStateEditor]);
 
 	return (

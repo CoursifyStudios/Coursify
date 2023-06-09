@@ -137,7 +137,7 @@ const Group: NextPage = () => {
 													getDataInArray(groupData?.data?.announcements).filter(
 														(possibleComment) =>
 															possibleComment?.type == AnnouncementType.COMMENT
-													) as TypeOfAnnouncements[]
+													) as unknown as TypeOfAnnouncements[]
 												}
 												announcements={extraAnnouncements}
 												setAnnouncements={setExtraAnnouncements}
@@ -169,7 +169,9 @@ const Group: NextPage = () => {
 													announcement.type == AnnouncementType.CROSSPOST) && (
 													<Announcement
 														key={announcement.id}
-														announcement={announcement as TypeOfAnnouncements}
+														announcement={
+															announcement as unknown as TypeOfAnnouncements
+														}
 														comments={
 															getDataInArray(
 																groupData.data.announcements
@@ -177,7 +179,7 @@ const Group: NextPage = () => {
 																(possibleComment) =>
 																	possibleComment?.type ==
 																	AnnouncementType.COMMENT
-															) as TypeOfAnnouncements[]
+															) as unknown as TypeOfAnnouncements[]
 														}
 														classID={groupid}
 														announcements={extraAnnouncements}
