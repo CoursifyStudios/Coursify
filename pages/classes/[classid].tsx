@@ -337,7 +337,7 @@ const Class: NextPage = () => {
 													getDataInArray(data.data.announcements).filter(
 														(possibleComment) =>
 															possibleComment?.type == AnnouncementType.COMMENT
-													) as TypeOfAnnouncements[]
+													) as unknown as TypeOfAnnouncements[]
 												}
 												announcements={extraAnnouncements}
 												setAnnouncements={setExtraAnnouncements}
@@ -372,7 +372,9 @@ const Class: NextPage = () => {
 													"string" && (
 													<Announcement
 														key={announcement.id}
-														announcement={announcement as TypeOfAnnouncements}
+														announcement={
+															announcement as unknown as TypeOfAnnouncements
+														}
 														classID={classid}
 														comments={
 															getDataInArray(data.data.announcements).filter(
@@ -381,7 +383,7 @@ const Class: NextPage = () => {
 																		AnnouncementType.COMMENT &&
 																	getDataOutArray(possibleComment.parent)?.id ==
 																		announcement.id
-															) as TypeOfAnnouncements[]
+															) as unknown as TypeOfAnnouncements[]
 														}
 														announcements={extraAnnouncements}
 														setAnnouncements={setExtraAnnouncements}

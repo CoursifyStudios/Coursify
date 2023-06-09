@@ -132,14 +132,9 @@ const StudentClass: NextPage<StudentClassType> = ({
 							) : (
 								<p className="text-sm italic text-gray-700">No teacher</p>
 							)
-						) : Array.isArray(classData.users) ? (
-							<p>An unknown error occurred</p>
-						) : classData.class_users?.teacher ? (
-							<p>{classData.users?.full_name}</p>
 						) : (
-							<p className="text-sm italic text-gray-700">No teacher</p>
+							<p>An unknown error occurred</p>
 						))}
-					{/* <p>{classData.id}</p> */}
 				</div>
 			</div>
 		</div>

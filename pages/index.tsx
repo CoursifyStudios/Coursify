@@ -53,6 +53,7 @@ export default function Home() {
 				setSchedules(temp);
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {

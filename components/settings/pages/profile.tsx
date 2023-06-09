@@ -18,6 +18,7 @@ const Profile: NextPage<{}> = () => {
 				setUserData(profile);
 			}
 		})();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user]);
 
 	if (!userData) {
