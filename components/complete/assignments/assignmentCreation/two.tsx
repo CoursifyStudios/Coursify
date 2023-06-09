@@ -2,10 +2,12 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { EditorState } from "lexical";
 import { Dispatch, SetStateAction, useState } from "react";
 import * as Yup from "yup";
-import { submissionType, useAssignmentStore } from ".";
+import { useAssignmentStore } from ".";
+
 import { NewAssignmentData } from "../../../../lib/db/assignments";
 import Editor from "../../../editors/richeditor";
 import { Button } from "../../../misc/button";
+import { submissionType } from "./submissionType";
 
 export default function AssignmentDetails({
 	stage,
@@ -29,7 +31,7 @@ export default function AssignmentDetails({
 				Create Assignment -{" "}
 				{
 					submissionType.find(
-						(submission) => submission.type == assignmentData?.submissionType
+						(submission) => submission.type == assignmentData?.type
 					)?.name
 				}
 			</h2>

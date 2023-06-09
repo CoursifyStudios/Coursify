@@ -113,7 +113,7 @@ export interface Database {
 					publish_date: string | null;
 					publish_type: number | null;
 					submission_instructions: string | null;
-					submission_type: string | null;
+					type: number;
 				};
 				Insert: {
 					class_id: string;
@@ -129,7 +129,7 @@ export interface Database {
 					publish_date?: string | null;
 					publish_type?: number | null;
 					submission_instructions?: string | null;
-					submission_type?: string | null;
+					type?: number;
 				};
 				Update: {
 					class_id?: string;
@@ -145,7 +145,7 @@ export interface Database {
 					publish_date?: string | null;
 					publish_type?: number | null;
 					submission_instructions?: string | null;
-					submission_type?: string | null;
+					type?: number;
 				};
 				Relationships: [
 					{

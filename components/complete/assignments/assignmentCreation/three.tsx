@@ -20,6 +20,7 @@ import { Toggle } from "../../../misc/toggle";
 import { Info } from "../../../tooltips/info";
 import { DueType } from "../assignments";
 import AssignmentCalender from "./assignmentCalender";
+import { submissionType } from "./submissionType";
 
 const AssignmentCreation: NextPage<{
 	setStage: Dispatch<SetStateAction<number>>;
@@ -89,7 +90,7 @@ const AssignmentCreation: NextPage<{
 			description: assignmentData.description,
 			name: assignmentData.name,
 			submission_instructions: assignmentData.submissionInstructions,
-			submission_type: assignmentData.submissionType,
+			type: assignmentData.type,
 			hidden: assignmentData.hidden,
 		};
 		if (due) {
@@ -121,18 +122,25 @@ const AssignmentCreation: NextPage<{
 				{assignmentData && (
 					<>
 						<h2 className="text-xl font-bold">{assignmentData.name}</h2>
+						<p className="text-xs text-gray-700">
+							{
+								submissionType.find(
+									(submission) => submission.type == assignmentData?.type
+								)?.name
+							}
+						</p>
 						<p className="mt-2 text-gray-700">
 							<span className="font-medium text-gray-800">
 								Short description:{" "}
 							</span>
 							{assignmentData.description}
 						</p>
-						{assignmentData.submissionType && (
+						{assignmentData.submissionInstructions != undefined && (
 							<p className="mt-3 text-gray-700">
 								<span className="font-medium text-gray-800">
 									Submission Instructions:{" "}
 								</span>
-								{assignmentData.submissionType}
+								{assignmentData.submissionInstructions}
 							</p>
 						)}
 					</>

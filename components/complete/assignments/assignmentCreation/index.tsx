@@ -1,24 +1,13 @@
-import {
-	ChatBubbleBottomCenterTextIcon,
-	ClipboardDocumentListIcon,
-	DocumentCheckIcon,
-	DocumentTextIcon,
-	LinkIcon,
-	XMarkIcon,
-} from "@heroicons/react/24/outline";
 import { NextPage } from "next";
-import { Dispatch, ReactNode, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 
-import Image from "next/image";
-import {
-	AssignmentTypes,
-	NewAssignmentData,
-} from "../../../../lib/db/assignments";
+import { NewAssignmentData } from "../../../../lib/db/assignments";
 
 import { create } from "zustand";
 import { useSettings } from "../../../../lib/stores/settings";
 import { Popup } from "../../../misc/popup";
 import { DueType } from "../assignments";
+import { submissionType } from "./submissionType";
 import AssignmentCreation from "./three";
 import AssignmentDetails from "./two";
 
@@ -59,7 +48,7 @@ export const CreateAssignment: NextPage<{
 	};
 
 	return (
-		<Popup open={open} closeMenu={() => setOpen(false)}>
+		<Popup open={open} closeMenu={() => closeMenu()}>
 			{" "}
 			<div className="flex items-center">
 				<div className="z-10 grid h-8 w-8 place-items-center rounded-full bg-blue-500  font-semibold text-white">
@@ -110,12 +99,6 @@ export const CreateAssignment: NextPage<{
 					classid={classid}
 				/>
 			)}
-			<button
-				onClick={closeMenu}
-				className="absolute right-4 top-4 rounded p-0.5 text-gray-700 transition hover:bg-gray-300 hover:text-gray-900 focus:outline-none dark:text-gray-100"
-			>
-				<XMarkIcon className="h-5 w-5" />
-			</button>
 		</Popup>
 	);
 	function AssignmentType() {
@@ -129,13 +112,13 @@ export const CreateAssignment: NextPage<{
 						<div key={i}>
 							<div
 								className={`brightness-hover h-full cursor-pointer rounded-md p-4 ${
-									submission.type == assignmentData?.submissionType
+									submission.type == assignmentData?.type
 										? "bg-white shadow-md dark:bg-gray-200"
 										: "bg-gray-200 dark:border dark:bg-black"
 								} `}
 								onClick={() => {
 									setAssignmentData({
-										submissionType: submission.type,
+										type: submission.type,
 										dueType: DueType.START_OF_CLASS,
 										publishType: DueType.START_OF_CLASS,
 										hidden: false,
@@ -162,59 +145,3 @@ export const CreateAssignment: NextPage<{
 		);
 	}
 };
-
-const className = "h-5 w-5 min-w-[1.25rem] dark:brightness-90";
-
-export const submissionType: {
-	icon: ReactNode;
-	name: string;
-	description: string;
-	type: AssignmentTypes;
-}[] = [
-	{
-		icon: <LinkIcon className={className} />,
-		name: "Link",
-		description: "Submission for links",
-		type: "link",
-	},
-	{
-		icon: <DocumentTextIcon className={className} />,
-		name: "Rich Media",
-		description: "Submission for images, videos, etc.",
-		type: "media",
-	},
-	{
-		icon: <DocumentCheckIcon className={className} />,
-		name: "Checkbox",
-		description: "Checkoff, i.e. complete an assignment in a packet",
-		type: "check",
-	},
-	{
-		icon: <ChatBubbleBottomCenterTextIcon className={className} />,
-		name: "Discussion Post",
-		description: "Students can post discussions and reply to others",
-		type: "post",
-	},
-	{
-		icon: <ClipboardDocumentListIcon className={className} />,
-		name: "Assessment",
-		description:
-			"Combine free responses and/or multiple choice questions for a test",
-		type: "test",
-	},
-	{
-		icon: (
-			<Image
-				src="/brand-logos/googledrive.svg"
-				alt="Google Logo"
-				width={24}
-				height={24}
-				className={className + " invert"}
-			/>
-		),
-		name: "Google Media",
-		description:
-			"Submission box for Google products like docs, slides, sheets, etc.",
-		type: "google",
-	},
-];
