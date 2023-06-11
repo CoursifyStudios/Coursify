@@ -74,7 +74,7 @@ export const submissionType: {
 	},
 	{
 		icon: <FolderOpenIcon className={className} />,
-		name: "Free form",
+		name: "Free Form",
 		description: "Allows students to submit media, text, links, etc.",
 		type: AssignmentTypes.ALL,
 	},

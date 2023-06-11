@@ -127,7 +127,10 @@ const AssignmentCreation: NextPage<{
 								submissionType.find(
 									(submission) => submission.type == assignmentData?.type
 								)?.name
-							}
+							}{" "}
+							Submission{" "}
+							{assignmentData.maxGrade &&
+								`- ${assignmentData.maxGrade} Points Maximum`}
 						</p>
 						<p className="mt-2 text-gray-700">
 							<span className="font-medium text-gray-800">
@@ -253,7 +256,19 @@ const AssignmentCreation: NextPage<{
 		} as NewAssignmentData);
 	}
 
+	async function onDateChangePublish(event: ChangeEvent<HTMLInputElement>) {
+		setAssignmentData({
+			publishType: DueType.DATE,
+			publishDate: new Date(event.target.value),
+		} as NewAssignmentData);
+	}
+
 	function WhenDue({ type }: { type: "due" | "publish" }) {
+		const dateForDateTimeInputValue = (date: Date) =>
+			new Date(date.getTime() + new Date().getTimezoneOffset() * -60 * 1000)
+				.toISOString()
+				.slice(0, 19);
+
 		return (
 			<>
 				<Dropdown
@@ -266,8 +281,13 @@ const AssignmentCreation: NextPage<{
 					(selectedDueType.type == DueType.DATE ? (
 						<input
 							type="datetime-local"
-							className="mt-4 rounded-md border-gray-300  bg-white/50 focus:ring-1"
+							className="mt-4 rounded-md border-gray-300  bg-white/50 focus:ring-1 dark:bg-backdrop"
 							onChange={onDateChange}
+							value={
+								assignmentData?.dueDate != undefined
+									? dateForDateTimeInputValue(assignmentData.dueDate)
+									: undefined
+							}
 						/>
 					) : (
 						<AssignmentCalender type="due" daysData={daysData} />
@@ -277,7 +297,13 @@ const AssignmentCreation: NextPage<{
 					(selectedPublishType.type == DueType.DATE ? (
 						<input
 							type="datetime-local"
-							className="mt-4 rounded-md border-gray-300  bg-white/50 focus:ring-1"
+							className="mt-4 rounded-md border-gray-300 bg-white/50 focus:ring-1 dark:bg-backdrop"
+							onChange={onDateChangePublish}
+							value={
+								assignmentData?.publishDate != undefined
+									? dateForDateTimeInputValue(assignmentData.publishDate)
+									: undefined
+							}
 						/>
 					) : (
 						<AssignmentCalender type="publish" daysData={daysData} />

@@ -7,8 +7,8 @@ import { create } from "zustand";
 import { useSettings } from "../../../../lib/stores/settings";
 import { Popup } from "../../../misc/popup";
 import { DueType } from "../assignments";
+import AssignmentCreation from "./four";
 import { submissionType } from "./submissionType";
-import AssignmentCreation from "./three";
 import AssignmentDetails from "./two";
 
 interface AssignmentState {

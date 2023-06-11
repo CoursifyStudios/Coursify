@@ -7,6 +7,7 @@ import { useAssignmentStore } from ".";
 import { NewAssignmentData } from "../../../../lib/db/assignments";
 import Editor from "../../../editors/richeditor";
 import { Button } from "../../../misc/button";
+import { Info } from "../../../tooltips/info";
 import { submissionType } from "./submissionType";
 
 export default function AssignmentDetails({
@@ -40,11 +41,13 @@ export default function AssignmentDetails({
 					name: Yup.string().min(3).max(40).required(),
 					description: Yup.string().min(3).max(60).required(),
 					submissionType: Yup.string().min(3).max(100),
+					maxGrade: Yup.number(),
 				})}
 				initialValues={{
 					name: assignmentData?.name || "",
 					description: assignmentData?.description || "",
 					submissionInstructions: assignmentData?.submissionInstructions || "",
+					maxGrade: assignmentData?.maxGrade || undefined,
 				}}
 				onSubmit={(values) => {
 					setAssignmentData({
@@ -55,15 +58,32 @@ export default function AssignmentDetails({
 			>
 				{({ submitForm, values, errors }) => (
 					<Form className="mt-10 flex flex-col space-y-3 ">
-						<label htmlFor="name" className="flex flex-col">
-							<span className="text-sm font-medium">
-								Assignment Name <span className="text-red-600">*</span>
-							</span>
-							<Field className="mt-1" type="text" name="name" autoFocus />
-							<div className="text-sm text-red-600">
-								<ErrorMessage name="name" />
-							</div>
-						</label>
+						<div className="flex w-full gap-3">
+							<label htmlFor="name" className="flex grow flex-col">
+								<span className="text-sm font-medium">
+									Assignment Name <span className="text-red-600">*</span>
+								</span>
+								<Field className="mt-1" type="text" name="name" autoFocus />
+								<div className="text-sm text-red-600">
+									<ErrorMessage name="name" />
+								</div>
+							</label>
+							<label htmlFor="maxGrade" className="flex w-[5.5rem] flex-col">
+								<div className="flex w-full items-center justify-between">
+									<span className="text-sm font-medium">Max Points</span>
+									<Info size="large">
+										The max amount of points that a student can earn on the
+										assignment. Going over the set value will be extra credit.
+									</Info>
+								</div>
+
+								<Field className="mt-1" type="number" name="maxGrade" />
+								<div className="text-sm text-red-600">
+									<ErrorMessage name="maxGrade" />
+								</div>
+							</label>
+						</div>
+
 						<label htmlFor="description" className="flex flex-col">
 							<span className="text-sm font-medium">
 								Short Description <span className="text-red-600">*</span>
@@ -73,19 +93,21 @@ export default function AssignmentDetails({
 								<ErrorMessage name="description" />
 							</div>
 						</label>
-						<label htmlFor="submissionInstructions" className="flex flex-col">
-							<span className="text-sm font-medium">
-								Submission Instructions
-							</span>
-							<Field
-								className="mt-1"
-								type="text"
-								name="submissionInstructions"
-							/>
-							<div className="text-sm text-red-600">
-								<ErrorMessage name="submissionInstructions" />
-							</div>
-						</label>
+						{assignmentData?.submissionInstructions && (
+							<label htmlFor="submissionInstructions" className="flex flex-col">
+								<span className="text-sm font-medium">
+									Submission Instructions
+								</span>
+								<Field
+									className="mt-1"
+									type="text"
+									name="submissionInstructions"
+								/>
+								<div className="text-sm text-red-600">
+									<ErrorMessage name="submissionInstructions" />
+								</div>
+							</label>
+						)}
 						<span className="translate-y-2 text-sm font-medium">
 							Full Length Description
 						</span>

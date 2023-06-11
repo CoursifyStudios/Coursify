@@ -99,4 +99,5 @@ export type NewAssignmentData = {
 	publishDate?: Date;
 	publishDay?: number;
 	hidden: boolean;
+	maxGrade?: number;
 };

@@ -57,7 +57,8 @@
 	@apply bg-gray-50 shadow-lg dark:border-gray-300 dark:bg-[#020204];
 }
 
-input[type="text"] {
+input[type="text"],
+input[type="number"] {
 	@apply rounded-md border-gray-300 bg-backdrop/50 focus:ring-1;
 }
 
