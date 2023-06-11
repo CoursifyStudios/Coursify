@@ -6,7 +6,7 @@ import { NewAssignmentData } from "../../../../lib/db/assignments";
 import { useSettings } from "../../../../lib/stores/settings";
 import { Popup } from "../../../misc/popup";
 import { DueType } from "../assignments";
-import AssignmentSpecificDetails from "../three";
+import AssignmentSettings from "../three";
 import AssignmentCreation from "./four";
 import { submissionType } from "./submissionType";
 import AssignmentDetails from "./two";
@@ -102,7 +102,7 @@ export const CreateAssignment: NextPage<{
 			</div>
 			<AssignmentType />
 			<AssignmentDetails stage={stage} setStage={setStage} />
-			<AssignmentSpecificDetails stage={stage} setStage={setStage} />
+			<AssignmentSettings stage={stage} setStage={setStage} />
 			{stage == 4 && (
 				<AssignmentCreation
 					block={block}
