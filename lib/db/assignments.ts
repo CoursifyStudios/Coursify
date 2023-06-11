@@ -78,7 +78,8 @@ export interface AssignmentData {
 export enum AssignmentTypes {
 	LINK = 0,
 	MEDIA = 1,
-	ASSESSMENT = 2,
+	FILE_UPLOAD = 2,
+	//ASSESSMENT = 2,
 	CHECKOFF = 3,
 	DISCUSSION_POST = 4,
 	GOOGLE = 5,

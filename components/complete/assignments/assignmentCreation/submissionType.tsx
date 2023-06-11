@@ -1,6 +1,6 @@
 import {
 	ChatBubbleBottomCenterTextIcon,
-	ClipboardDocumentListIcon,
+	DocumentArrowUpIcon,
 	DocumentCheckIcon,
 	DocumentTextIcon,
 	FolderOpenIcon,
@@ -9,6 +9,7 @@ import {
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { ReactNode } from "react";
+
 import { AssignmentTypes } from "../../../../lib/db/assignments";
 import googleDrive from "/public/brand-logos/googledrive.svg";
 
@@ -28,9 +29,15 @@ export const submissionType: {
 	},
 	{
 		icon: <PhotoIcon className={className} />,
-		name: "Rich Media",
-		description: "Submission for images, videos, etc.",
+		name: "Media Content",
+		description: "Submission for images, videos, and gifs.",
 		type: AssignmentTypes.MEDIA,
+	},
+	{
+		icon: <DocumentArrowUpIcon className={className} />,
+		name: "File Upload",
+		description: "Submissions for any type of file",
+		type: AssignmentTypes.FILE_UPLOAD,
 	},
 	{
 		icon: <DocumentCheckIcon className={className} />,
@@ -44,13 +51,13 @@ export const submissionType: {
 		description: "Students can post discussions and reply to others",
 		type: AssignmentTypes.DISCUSSION_POST,
 	},
-	{
-		icon: <ClipboardDocumentListIcon className={className} />,
-		name: "Assessment",
-		description:
-			"Combine free responses and/or multiple choice questions for a test",
-		type: AssignmentTypes.ASSESSMENT,
-	},
+	// {
+	// 	icon: <ClipboardDocumentListIcon className={className} />,
+	// 	name: "Assessment",
+	// 	description:
+	// 		"Combine free responses and/or multiple choice questions for a test",
+	// 	type: AssignmentTypes.ASSESSMENT,
+	// },
 	{
 		icon: (
 			<Image
@@ -75,7 +82,7 @@ export const submissionType: {
 	{
 		icon: <FolderOpenIcon className={className} />,
 		name: "Free Form",
-		description: "Allows students to submit media, text, links, etc.",
+		description: "Allows students to submit media, files, text, links, etc.",
 		type: AssignmentTypes.ALL,
 	},
 ];

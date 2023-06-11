@@ -8,6 +8,7 @@ import {
 	useMemo,
 	useState,
 } from "react";
+
 import { useAssignmentStore } from ".";
 import { NewAssignmentData } from "../../../../lib/db/assignments";
 import { getClassTimesForXDays } from "../../../../lib/db/classes";
@@ -39,10 +40,7 @@ const AssignmentCreation: NextPage<{
 	const [submitting, setSubmitting] = useState<boolean>();
 	const [error, setError] = useState("");
 
-	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
-		setAssignmentData: state.set,
-		assignmentData: state.data,
-	}));
+	const { data: assignmentData, set: setAssignmentData } = useAssignmentStore();
 
 	const setType = (type: { type: DueType; name: string }, due: boolean) => {
 		if (due) {

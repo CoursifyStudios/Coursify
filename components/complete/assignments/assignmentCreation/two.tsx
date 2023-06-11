@@ -18,11 +18,7 @@ export default function AssignmentDetails({
 	setStage: Dispatch<SetStateAction<number>>;
 }) {
 	const [editorState, setEditorState] = useState<EditorState>();
-	const [disabled, setDisabled] = useState(true);
-	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
-		setAssignmentData: state.set,
-		assignmentData: state.data,
-	}));
+	const { data: assignmentData, set: setAssignmentData } = useAssignmentStore();
 
 	if (stage != 2) return null;
 

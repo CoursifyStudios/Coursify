@@ -1,12 +1,12 @@
 import { NextPage } from "next";
 import { Dispatch, SetStateAction, useState } from "react";
+import { create } from "zustand";
 
 import { NewAssignmentData } from "../../../../lib/db/assignments";
-
-import { create } from "zustand";
 import { useSettings } from "../../../../lib/stores/settings";
 import { Popup } from "../../../misc/popup";
 import { DueType } from "../assignments";
+import AssignmentSpecificDetails from "../three";
 import AssignmentCreation from "./four";
 import { submissionType } from "./submissionType";
 import AssignmentDetails from "./two";
@@ -35,10 +35,7 @@ export const CreateAssignment: NextPage<{
 }> = ({ open, setOpen, block, scheduleType, classid }) => {
 	const { data: settings } = useSettings();
 	const [stage, setStage] = useState(1);
-	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
-		setAssignmentData: state.set,
-		assignmentData: state.data,
-	}));
+	const { data: assignmentData, set: setAssignmentData } = useAssignmentStore();
 
 	const closeMenu = () => {
 		setOpen(false);
@@ -73,24 +70,40 @@ export const CreateAssignment: NextPage<{
 					2
 				</div>
 				<div
-					className={`-ml-2 h-2 w-36 ${stage == 3 && "bg-blue-500"} ${
+					className={`-ml-2 h-2 w-36 ${stage >= 3 && "bg-blue-500"} ${
 						stage == 2 && "bg-gradient-to-r from-blue-500 to-transparent"
 					}`}
 				></div>
 
 				<div
+					className={`${
+						stage < 3
+							? "bg-backdrop dark:text-white"
+							: " bg-blue-500 text-white"
+					}  z-10 -ml-2 grid h-8 w-8 place-items-center rounded-full  font-semibold `}
+				>
+					3
+				</div>
+				<div
+					className={`-ml-2 h-2 w-36 ${stage == 4 && "bg-blue-500"} ${
+						stage == 3 && "bg-gradient-to-r from-blue-500 to-transparent"
+					}`}
+				></div>
+
+				<div
 					className={`z-10 grid h-8 w-8 ${
-						stage == 3
+						stage == 4
 							? " bg-blue-500 text-white"
 							: "bg-backdrop dark:text-white"
 					} -ml-2 place-items-center rounded-full  font-semibold`}
 				>
-					3
+					4
 				</div>
 			</div>
 			<AssignmentType />
 			<AssignmentDetails stage={stage} setStage={setStage} />
-			{stage == 3 && (
+			<AssignmentSpecificDetails stage={stage} setStage={setStage} />
+			{stage == 4 && (
 				<AssignmentCreation
 					block={block}
 					scheduleType={scheduleType}
