@@ -401,7 +401,7 @@ const Class: NextPage = () => {
 								<div className="relative flex items-center">
 									<input
 										type="text"
-										className="w-44 !rounded-xl py-0.5 focus:w-96 placeholder:dark:text-gray-400"
+										className="w-44 !rounded-xl py-0.5 transition-all focus:w-96 placeholder:dark:text-gray-400"
 										placeholder="Search users..."
 									/>
 									<MagnifyingGlassIcon className="absolute right-3 h-4 w-4" />
