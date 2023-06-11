@@ -138,7 +138,7 @@ const AssignmentCreation: NextPage<{
 							</span>
 							{assignmentData.description}
 						</p>
-						{assignmentData.submissionInstructions != undefined && (
+						{assignmentData.submissionInstructions && (
 							<p className="mt-3 text-gray-700">
 								<span className="font-medium text-gray-800">
 									Submission Instructions:{" "}
@@ -193,8 +193,9 @@ const AssignmentCreation: NextPage<{
 					) : (
 						<div className="text-sm text-gray-700">
 							This assignment does not have a due date. It will be available to
-							students, and they{"'"}ll be able to submit assignments. Coursify
-							recommends adding a due date.
+							students, and they{"'"}ll be able to submit assignments like
+							normal. Coursify recommends adding a due date so we can better
+							prioritize student work.
 						</div>
 					)}
 				</div>

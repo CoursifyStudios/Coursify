@@ -93,21 +93,19 @@ export default function AssignmentDetails({
 								<ErrorMessage name="description" />
 							</div>
 						</label>
-						{assignmentData?.submissionInstructions && (
-							<label htmlFor="submissionInstructions" className="flex flex-col">
-								<span className="text-sm font-medium">
-									Submission Instructions
-								</span>
-								<Field
-									className="mt-1"
-									type="text"
-									name="submissionInstructions"
-								/>
-								<div className="text-sm text-red-600">
-									<ErrorMessage name="submissionInstructions" />
-								</div>
-							</label>
-						)}
+						<label htmlFor="submissionInstructions" className="flex flex-col">
+							<span className="text-sm font-medium">
+								Submission Instructions
+							</span>
+							<Field
+								className="mt-1"
+								type="text"
+								name="submissionInstructions"
+							/>
+							<div className="text-sm text-red-600">
+								<ErrorMessage name="submissionInstructions" />
+							</div>
+						</label>
 						<span className="translate-y-2 text-sm font-medium">
 							Full Length Description
 						</span>
