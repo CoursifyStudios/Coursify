@@ -1,5 +1,9 @@
 import { Tab } from "@headlessui/react";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import {
+	ArrowTopRightOnSquareIcon,
+	MagnifyingGlassIcon,
+	PlusIcon,
+} from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { EditorState } from "lexical";
 import { NextPage } from "next";
@@ -336,6 +340,48 @@ const Class: NextPage = () => {
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}>
+							<div className="mb-4 flex justify-between">
+								<div className="relative flex items-center">
+									<input
+										type="text"
+										className="w-44 !rounded-xl py-0.5 transition-all focus:w-96 placeholder:dark:text-gray-400"
+										placeholder="Search users..."
+									/>
+									<MagnifyingGlassIcon className="absolute right-3 h-4 w-4" />
+								</div>
+								{isTeacher && data.data.users && (
+									<div className="flex gap-2">
+										<span
+											onClick={() =>
+												navigator.clipboard.writeText(
+													getDataInArray(data.data.users)
+														.map((v) => v!.email)
+														.join(",")
+												)
+											}
+										>
+											<ColoredPill
+												color="gray"
+												className="brightness-hover grid h-full cursor-pointer place-items-center !rounded-lg !bg-backdrop-200"
+												hoverState
+											>
+												Copy Emails
+											</ColoredPill>
+										</span>
+										<a
+											href={`mailto:${getDataInArray(data.data.users)
+												.map((v) => v.email)
+												.join(",")}`}
+											rel="noopener norefferer"
+											target="_blank"
+											className="brightness-hover grid cursor-pointer place-items-center rounded-lg bg-backdrop-200 px-1.5"
+										>
+											<ArrowTopRightOnSquareIcon className="h-5 w-5" />
+										</a>
+									</div>
+								)}
+							</div>
+
 							<div className="grid gap-4 max-sm:mx-auto max-sm:w-[20.5rem] lg:grid-cols-2 xl:grid-cols-3">
 								{data.data.users ? (
 									getDataInArray(data.data.users).map((user) => (

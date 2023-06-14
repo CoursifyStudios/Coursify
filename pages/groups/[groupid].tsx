@@ -122,10 +122,6 @@ const Group: NextPage = () => {
 									typeof groupid == "string" && (
 										<div>
 											<AnnouncementsComponent
-												announcements={extraAnnouncements}
-												communityid={groupid}
-											></AnnouncementsComponent>
-											<AnnouncementsComponent
 												announcements={
 													getDataInArray(
 														groupData.data.announcements

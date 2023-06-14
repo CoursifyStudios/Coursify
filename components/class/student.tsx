@@ -139,7 +139,6 @@ const StudentClass: NextPage<StudentClassType> = ({
 						) : (
 							<p className="text-sm italic text-gray-700">No teacher</p>
 						))}
-					{/* <p>{classData.id}</p> */}
 				</div>
 			</div>
 		</div>
