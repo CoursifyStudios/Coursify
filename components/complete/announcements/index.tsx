@@ -48,14 +48,16 @@ export const Announcement = ({
 		{ option: "Edit", icon: <PencilIcon className={optionsClasses} /> },
 		{ option: "Delete", icon: <TrashIcon className={optionsClasses} /> },
 	];
-    //so that it can be changed when edited
-    const [info, setInfo] = useState({title: announcement.title, content: announcement.content})
+	//so that it can be changed when edited
+	const [info, setInfo] = useState({
+		title: announcement.title,
+		content: announcement.content,
+	});
 	const [selected, setSelected] = useState(options[0]);
 	const [showEditing, setShowEditing] = useState(false);
 	const [showSharing, setShowSharing] = useState(false);
 	const [showDeleting, setShowDeleting] = useState(false);
 	const [deleted, setDeleted] = useState(false);
-    console.log(info)
 	if (!deleted) {
 		if (showEditing) {
 			return (
@@ -63,13 +65,13 @@ export const Announcement = ({
 					communityid={classID}
 					sharingInfo={null}
 					editingInfo={{
-						id: announcement.id,//does not change
-						title: info.title!,//can be edited
-						content: info.content,//editable too
+						id: announcement.id, //does not change
+						title: info.title!, //can be edited
+						content: info.content, //editable too
 						clone_id: announcement.clone_id,
 						setEditing: setShowEditing,
 					}}
-                    setNewInfo={setInfo}
+					setNewInfo={setInfo}
 					announcements={announcements}
 					setAnnouncements={setAnnouncements}
 				></AnnouncementPostingUI>
@@ -220,6 +222,7 @@ export const Announcement = ({
 									content={comment.title!}
 									users={getDataOutArray(comment.users)!}
 									communityid={classID}
+									type={comment.type}
 								></Comment>
 							))}
 					</div>

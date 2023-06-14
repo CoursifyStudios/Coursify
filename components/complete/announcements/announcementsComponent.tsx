@@ -18,7 +18,7 @@ export const AnnouncementsComponent = ({
 	>([]);
 	return (
 		<div className="space-y-4">
-            {/* rendering temporary announcements */}
+			{/* rendering temporary announcements */}
 			{tempAnnouncements.reverse().map(
 				(announcement) =>
 					announcement && (
@@ -52,7 +52,7 @@ export const AnnouncementsComponent = ({
 						></Announcement>
 					)
 			)}
-            {/* render announcements that exist on the db, both pre-existing and new ones (i.e. newly posted, edited announcements)  */}
+			{/* render announcements that exist on the db, both pre-existing and new ones (i.e. newly posted, edited announcements)  */}
 			{announcements
 				.sort((a, b) => {
 					if (new Date(a.time!).getTime() > new Date(b.time!).getTime())

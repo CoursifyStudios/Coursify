@@ -97,7 +97,7 @@ export default function Profile() {
 										(achievement) => (
 											<Achievement
 												data={getDataOutArray(achievement.achievements)!}
-												key={achievement.achivement_id}
+												key={achievement.achievement_id}
 												earned={new Date(achievement.date_earned)}
 											/>
 										)

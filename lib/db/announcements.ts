@@ -87,7 +87,7 @@ export const editAnnouncement = async (
 		title: string;
 		clone_id: string | null;
 	},
-	newAnnouncement: { title: string; content: Json }
+	newAnnouncement: { title: string; content: Json | null }
 ) => {
 	//not the most elegant, sure, but it works an only uses one request. Until we get an SQL function, we use this. I'm Bill, this is my pr,
 	return await supabase
@@ -271,4 +271,3 @@ export type TypeOfAnnouncements = {
 		type: number;
 	} | null;
 };
-

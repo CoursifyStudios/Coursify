@@ -21,6 +21,7 @@ export const Comment = ({
 	content,
 	users,
 	communityid,
+	type,
 }: {
 	author: string;
 	time: string;
@@ -30,12 +31,14 @@ export const Comment = ({
 		avatar_url: string;
 	};
 	communityid: string;
-	id?: string;
+	id: string;
+	type: AnnouncementType;
 }) => {
+	const supabase = useSupabaseClient();
 	const user = useUser();
 	const { newTab } = useTabs();
 	const [text, setText] = useState(content);
-	const [showPosting, setShowPosting] = useState(false);
+	const [showReplying, setShowReplying] = useState(false);
 	const [editing, setEditing] = useState(false);
 	return (
 		<div className="ml-4">
@@ -76,7 +79,7 @@ export const Comment = ({
 								<Menu.Item
 									as="div"
 									className="p-1 font-medium"
-									onClick={() => setShowPosting(true)}
+									onClick={() => setShowReplying(true)}
 								>
 									Edit
 								</Menu.Item>
@@ -97,20 +100,18 @@ export const Comment = ({
 						content: "",
 					}}
 					onSubmit={async (formData) => {
-						setEditing(false);
 						const test = await editAnnouncement(
 							supabase,
-							user.id,
-							communityid,
-							parentID,
-							formData.content,
-							AnnouncementType.COMMENT
+							//kind of confusing but a comment's content uses the title field
+							{ id: id, author: user!.id, title: content, clone_id: null },
+							{ title: formData.content, content: null }
 						);
+						setEditing(false);
 						setText(formData.content);
 					}}
 				>
 					{({ values }) => (
-						<Form className="focus:outline-none">
+						<Form className="bg-red-400 p-4 focus:outline-none">
 							<label htmlFor="content">
 								<Field
 									component="textarea"
@@ -125,7 +126,7 @@ export const Comment = ({
 							<div className="m-1 flex justify-end gap-2">
 								<Button
 									className="brightness-hover transition hover:bg-red-300"
-									onClick={() => setShowCommenting(false)}
+									onClick={() => setEditing(false)}
 								>
 									Cancel
 								</Button>
@@ -150,22 +151,29 @@ export const Comment = ({
 			<button
 				className="ml-2"
 				onClick={() => {
-					setShowPosting(true);
+					setShowReplying(true);
 				}}
 			>
-				{showPosting ? (
+				{showReplying ? (
 					"Replying to " + users.full_name
 				) : (
 					<p className="text-">Reply</p>
 				)}
 			</button>
-			{showPosting && (
+			{showReplying && (
 				<Commenting communityid={communityid} parentID={id!}></Commenting>
 			)}
 		</div>
 	);
 };
 
+export const Replying = ({
+	parentComment,
+	showMe,
+}: {
+	parentComment: string;
+	showMe: (value: boolean) => void;
+}) => {};
 export const Commenting = ({
 	communityid,
 	parentID,
@@ -178,7 +186,7 @@ export const Commenting = ({
 	const [showCommenting, setShowCommenting] = useState(false);
 	const [tempComments, setTempComments] = useState<
 		{
-			id?: string;
+			id: string;
 			author: string;
 			time: string;
 			content: string;
@@ -210,7 +218,8 @@ export const Commenting = ({
 							);
 							setTempComments(
 								tempComments.concat({
-									id: test.data?.id,
+									//possibly a sumb idea
+									id: test.data!.id,
 									author: user.id,
 									time: test.data?.time
 										? howLongAgo(test.data.time)
@@ -279,6 +288,7 @@ export const Commenting = ({
 					content={comment.content}
 					users={comment.users}
 					communityid={communityid}
+					type={AnnouncementType.COMMENT}
 				></Comment>
 			))}
 		</>
