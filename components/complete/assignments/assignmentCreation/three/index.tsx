@@ -1,8 +1,8 @@
 import { NextPage } from "next";
 import { Dispatch, SetStateAction, useState } from "react";
-import { Button } from "../../../misc/button";
-import { useAssignmentStore } from "../assignmentCreation";
-import { submissionType } from "../assignmentCreation/submissionType";
+import { useAssignmentStore } from "..";
+import { Button } from "../../../../misc/button";
+import { submissionType } from "../submissionType";
 
 const AssignmentSettings: NextPage<{
 	stage: number;

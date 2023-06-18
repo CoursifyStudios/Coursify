@@ -6,9 +6,9 @@ import { NewAssignmentData } from "../../../../lib/db/assignments";
 import { useSettings } from "../../../../lib/stores/settings";
 import { Popup } from "../../../misc/popup";
 import { DueType } from "../assignments";
-import AssignmentSettings from "../three";
 import AssignmentCreation from "./four";
 import { submissionType } from "./submissionType";
+import AssignmentSettings from "./three";
 import AssignmentDetails from "./two";
 
 interface AssignmentState {

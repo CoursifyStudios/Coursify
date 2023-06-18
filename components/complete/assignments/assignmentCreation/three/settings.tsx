@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 import { Dispatch, SetStateAction } from "react";
-import { AssignmentTypes } from "../../../../lib/db/assignments";
+import { AssignmentTypes } from "../../../../../lib/db/assignments";
 
 const GetAssignmentSettings: NextPage<{
 	settings: JSON;

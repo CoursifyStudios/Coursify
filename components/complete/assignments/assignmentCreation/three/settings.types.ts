@@ -1,4 +1,4 @@
-import { AssignmentTypes } from "../../../../lib/db/assignments";
+import { AssignmentTypes } from "../../../../../lib/db/assignments";
 
 export type AssignmentSettingsTypes =
 	| {
