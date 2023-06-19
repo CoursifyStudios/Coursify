@@ -69,8 +69,7 @@ export type AssignmentSettingsTypes =
 	| AssignmentDiscussionPost
 	| AssignmentGoogle
 	| AssignmentText
-	| AssignmentAll
-	| undefined;
+	| AssignmentAll;
 
 export enum DiscussionPermissions {
 	NEVER = 0,

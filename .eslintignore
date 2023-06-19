@@ -43,6 +43,7 @@ next-env.d.ts
 
 # shit linting
 package.json
+tsconfig.json
 styles/globals.css
 yarn.lock
 supabase/config.toml

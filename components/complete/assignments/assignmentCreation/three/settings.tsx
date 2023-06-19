@@ -5,8 +5,8 @@ import Link from "./components/link";
 import { AssignmentSettingsTypes } from "./settings.types";
 
 const GetAssignmentSettings: NextPage<{
-	settings: AssignmentSettingsTypes;
-	setSettings: Dispatch<SetStateAction<AssignmentSettingsTypes>>;
+	settings: AssignmentSettingsTypes | undefined;
+	setSettings: Dispatch<SetStateAction<AssignmentSettingsTypes | undefined>>;
 	assignmentType: AssignmentTypes;
 }> = ({ assignmentType, settings, setSettings }) => {
 	const imports = { settings, setSettings };

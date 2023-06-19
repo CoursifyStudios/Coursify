@@ -82,6 +82,8 @@ const AssignmentCreation: NextPage<{
 			return;
 		}
 		setSubmitting(true);
+		const { assignmentType: _, ...assignmentSettings } =
+			assignmentData.settings;
 		const data: Database["public"]["Tables"]["assignments"]["Insert"] = {
 			class_id: classid,
 			content: assignmentData.content as unknown as Json,
@@ -90,6 +92,7 @@ const AssignmentCreation: NextPage<{
 			submission_instructions: assignmentData.submissionInstructions,
 			type: assignmentData.type,
 			hidden: assignmentData.hidden,
+			settings: assignmentSettings as unknown as Json,
 		};
 		if (due) {
 			data.due_date = assignmentData.dueDate?.toISOString();

@@ -52,12 +52,11 @@ const Link = ({
 			</label>
 			<label htmlFor="maxUrls" className="flex grow flex-col">
 				<div className="flex text-sm font-medium">
-					Link Allow List
+					Site Allow List
 					<Info className="ml-2">
-						Specify certain TLDs (the first part of a URL, like like google.com
-						or https://www.loc.gov) that students can submit like google.com or
-						https://www.loc.gov. By default, students can submit links from any
-						TLD.
+						Specify certain sites (the first part of a URL, like like google.com
+						or https://www.loc.gov) that students can submit. By default,
+						students can submit links from any sites.
 					</Info>
 				</div>
 				<div>
@@ -82,8 +81,8 @@ const Link = ({
 							className: "noinputcss react-tagsinput-input",
 							placeholder:
 								settings.urls?.length == 0
-									? "Add a link to start a whitelist"
-									: "Add another link",
+									? "Add a site to start a whitelist"
+									: "Add another site",
 						}}
 						renderTag={(props) => {
 							const {
@@ -111,23 +110,27 @@ const Link = ({
 						}}
 					/>
 				</div>
-				<p className="mt-0.5 text-xs">
+				<p className="mt-0.5 text-xs text-gray-600 dark:text-gray-400">
 					{settings.urls?.length == 0
 						? "Students can add links from anywhere to this assignment"
-						: "Students can only add links based on the links above"}
+						: "Students can only add links based on the sites above"}
 				</p>
 			</label>
-
-			<ToggleSection
-				name="Enforce https"
-				description="Require all links to use a secure protocol (https)"
-				enabled={settings.enforceHttps}
-				setEnabled={(value) =>
-					setSettings((settings) => {
-						return { ...settings, enforceHttps: value };
-					})
-				}
-			/>
+			<details>
+				<summary className="cursor-pointer text-sm font-medium">
+					Advanced
+				</summary>
+				<ToggleSection
+					name="Enforce https"
+					description="Require all links to use a secure protocol (https)"
+					enabled={settings.enforceHttps}
+					setEnabled={(value) =>
+						setSettings((settings) => {
+							return { ...settings, enforceHttps: value };
+						})
+					}
+				/>
+			</details>
 		</>
 	);
 };
