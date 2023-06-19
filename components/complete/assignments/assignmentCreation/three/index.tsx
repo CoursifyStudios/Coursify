@@ -44,7 +44,6 @@ const AssignmentSettings: NextPage<{
 					>
 						<Button>Prev</Button>
 					</span>
-
 					<span
 						onClick={() => {
 							setAssignmentData({ settings } as NewAssignmentData);
