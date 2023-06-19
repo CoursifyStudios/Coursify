@@ -385,6 +385,7 @@ const Class: NextPage = () => {
 																(possibleComment) =>
 																	possibleComment?.type ==
 																		AnnouncementType.COMMENT &&
+																	//@ts-expect-error
 																	getDataOutArray(possibleComment.parent)?.id ==
 																		announcement.id
 															) as unknown as TypeOfAnnouncements[]
