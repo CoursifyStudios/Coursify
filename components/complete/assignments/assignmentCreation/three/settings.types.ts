@@ -4,6 +4,7 @@ export interface AssignmentLink {
 	urls: undefined | string[];
 	maxUrls: number;
 	assignmentType: AssignmentTypes.LINK;
+	enforceHttps: boolean;
 }
 
 export interface AssignmentMedia {

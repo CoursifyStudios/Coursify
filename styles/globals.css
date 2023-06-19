@@ -58,8 +58,9 @@
 }
 
 input[type="text"],
-input[type="number"] {
-	@apply rounded-md border-gray-300 bg-backdrop/50 focus:ring-1;
+input[type="number"],
+textarea {
+	@apply rounded-md border-gray-300 bg-backdrop/50 focus:ring-1 dark:placeholder:text-gray-400;
 }
 
 /*Editor CSS*/
