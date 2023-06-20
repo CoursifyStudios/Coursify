@@ -125,7 +125,7 @@ const Group: NextPage = () => {
 												announcements={
 													getDataInArray(
 														groupData.data.announcements
-													) as TypeOfAnnouncements[]
+													) as unknown as TypeOfAnnouncements[]
 												}
 												communityid={groupid}
 											></AnnouncementsComponent>

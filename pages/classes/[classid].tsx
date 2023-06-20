@@ -331,7 +331,7 @@ const Class: NextPage = () => {
 											announcements={extraAnnouncements.concat(
 												getDataInArray(
 													data.data.announcements
-												) as TypeOfAnnouncements[]
+												) as unknown as TypeOfAnnouncements[]
 											)}
 											communityid={classid}
 										></AnnouncementsComponent>
