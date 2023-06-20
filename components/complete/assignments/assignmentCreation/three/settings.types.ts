@@ -25,7 +25,12 @@ export interface AssignmentFileUpload {
 
 export interface AssignmentCheckoff {
 	assignmentType: AssignmentTypes.CHECKOFF;
-	checkboxes: { name: string; description: string } | undefined;
+	checkboxes: {
+		name: string;
+		description: string;
+		step: number;
+		teacher: boolean;
+	}[];
 }
 
 export interface AssignmentDiscussionPost {

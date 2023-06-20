@@ -251,14 +251,15 @@ const AssignmentCreation: NextPage<{
 			</section>
 		</>
 	);
-	async function onDateChange(event: ChangeEvent<HTMLInputElement>) {
+
+	function onDateChange(event: ChangeEvent<HTMLInputElement>) {
 		setAssignmentData({
 			dueType: DueType.DATE,
 			dueDate: new Date(event.target.value),
 		} as NewAssignmentData);
 	}
 
-	async function onDateChangePublish(event: ChangeEvent<HTMLInputElement>) {
+	function onDateChangePublish(event: ChangeEvent<HTMLInputElement>) {
 		setAssignmentData({
 			publishType: DueType.DATE,
 			publishDate: new Date(event.target.value),

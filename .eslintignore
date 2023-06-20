@@ -43,6 +43,7 @@ next-env.d.ts
 
 # shit linting
 package.json
+deno.jsonc
 tsconfig.json
 styles/globals.css
 yarn.lock

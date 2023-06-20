@@ -5,6 +5,7 @@ import { Fragment } from "react";
 
 const Dropdown: NextPage<{
 	selectedValue: Partial<{ name: string }>;
+	// deno-lint-ignore no-explicit-any
 	onChange: (value: any) => void;
 	values: Partial<{ name: string }>[];
 	className?: string;

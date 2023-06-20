@@ -1,0 +1,6 @@
+{
+	"lint": {
+		"include": ["./pages", "./components", "./lib"],
+		"exclude": ["./lib/editor"]
+	}
+}

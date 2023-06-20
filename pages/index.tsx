@@ -20,9 +20,9 @@ export default function Home() {
 
 	//because Lukas left this a mess, until i get around to fixing it
 	const dateToday = new Date();
-	let dateTomorrow = new Date();
+	const dateTomorrow = new Date();
 	dateTomorrow.setDate(dateToday.getDate() + 1);
-	let dayAfter = new Date();
+	const dayAfter = new Date();
 	dayAfter.setDate(dateToday.getDate() + 2);
 
 	useEffect(() => {

@@ -59,7 +59,13 @@ export default function AssignmentDetails({
 								<span className="text-sm font-medium">
 									Assignment Name <span className="text-red-600">*</span>
 								</span>
-								<Field className="mt-1" type="text" name="name" autoFocus />
+								<Field
+									className="mt-1"
+									type="text"
+									name="name"
+									autoFocus
+									autocomplete="off"
+								/>
 								<div className="text-sm text-red-600">
 									<ErrorMessage name="name" />
 								</div>
@@ -84,7 +90,12 @@ export default function AssignmentDetails({
 							<span className="text-sm font-medium">
 								Short Description <span className="text-red-600">*</span>
 							</span>
-							<Field className="mt-1" type="text" name="description" />
+							<Field
+								className="mt-1"
+								type="text"
+								name="description"
+								autocomplete="off"
+							/>
 							<div className="text-sm text-red-600">
 								<ErrorMessage name="description" />
 							</div>
@@ -97,6 +108,7 @@ export default function AssignmentDetails({
 								className="mt-1"
 								type="text"
 								name="submissionInstructions"
+								autocomplete="off"
 							/>
 							<div className="text-sm text-red-600">
 								<ErrorMessage name="submissionInstructions" />
