@@ -18,8 +18,8 @@ const assignmentValidation = (object: AssignmentSettingsTypes) => {
 			return assignmentGoogleValidation.validateSync(object);
 		case AssignmentTypes.TEXT:
 			return assignmentTextValidation.validateSync(object);
-		default:
-			throw new Error(`Unknown assignment type: ${object.assignmentType}`);
+		case AssignmentTypes.ALL:
+			return assignmentAllValidation.validateSync(object);
 	}
 };
 
@@ -33,14 +33,14 @@ export const assignmentLinkValidation = Yup.object({
 
 export const assignmentMediaValidation = Yup.object({
 	fileTypes: Yup.array().of(Yup.string().required()).required(),
-	maxSize: Yup.number().min(1).required(),
+	maxSize: Yup.number().min(1).max(20).required(),
 	minFiles: Yup.number().min(1).required(),
 	maxFiles: Yup.number(),
 });
 
 export const assignmentFileUploadValidation = Yup.object({
 	fileTypes: Yup.array().of(Yup.string().required()),
-	maxSize: Yup.number().min(1).required(),
+	maxSize: Yup.number().min(1).max(100).required(),
 	minFiles: Yup.number().min(1).required(),
 	maxFiles: Yup.number(),
 });
@@ -78,5 +78,5 @@ export const assignmentTextValidation = Yup.object({
 });
 
 export const assignmentAllValidation = Yup.object({
-	allowedTypes: Yup.array().of(Yup.number().required()).required(),
+	allowedTypes: Yup.array().of(Yup.number().required()).min(1).required(),
 });

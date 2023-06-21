@@ -1,6 +1,7 @@
 import { NextPage } from "next";
 import { Dispatch, SetStateAction } from "react";
 import { AssignmentTypes } from "../../../../../lib/db/assignments";
+import All from "./components/all";
 import CheckBox from "./components/checkbox";
 import Discussion from "./components/discussion";
 import File from "./components/file";
@@ -34,8 +35,10 @@ const GetAssignmentSettings: NextPage<{
 		case AssignmentTypes.FILE_UPLOAD:
 			//@ts-expect-error
 			return <File imports={imports} />;
-		case AssignmentTypes.GOOGLE:
 		case AssignmentTypes.ALL:
+			//@ts-expect-error
+			return <All imports={imports} />;
+		case AssignmentTypes.GOOGLE:
 	}
 };
 

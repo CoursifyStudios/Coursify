@@ -55,8 +55,8 @@ export interface AssignmentAll {
 				| AssignmentTypes.MEDIA
 				| AssignmentTypes.TEXT
 				| AssignmentTypes.MEDIA
-		  )[]
-		| undefined;
+				| AssignmentTypes.FILE_UPLOAD
+		  )[];
 }
 
 export type AssignmentSettingsTypes =

@@ -33,16 +33,6 @@ const Text = ({
 	return (
 		<>
 			<ToggleSection
-				name="Rich text"
-				description="Turn rich text on or off"
-				enabled={settings.rich}
-				setEnabled={(value) =>
-					setSettings((settings) => {
-						return { ...settings, rich: value };
-					})
-				}
-			/>
-			<ToggleSection
 				name={`Limiting ${settings.trueWhenChars ? "Characters" : "Words"}`}
 				description="Toggle between setting a character or a word limit"
 				enabled={settings.trueWhenChars}
@@ -92,6 +82,21 @@ const Text = ({
 					/>
 				</label>
 			</div>
+			<details>
+				<summary className="cursor-pointer text-sm font-medium">
+					Advanced Settings
+				</summary>
+				<ToggleSection
+					name="Rich text"
+					description="Aloow students to submit rich text; i.e. bolded or underlined text"
+					enabled={settings.rich}
+					setEnabled={(value) =>
+						setSettings((settings) => {
+							return { ...settings, rich: value };
+						})
+					}
+				/>
+			</details>
 		</>
 	);
 };

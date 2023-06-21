@@ -122,7 +122,7 @@ const Link = ({
 			</label>
 			<details>
 				<summary className="cursor-pointer text-sm font-medium">
-					Advanced
+					Advanced Settings
 				</summary>
 				<ToggleSection
 					name="Enforce https"
