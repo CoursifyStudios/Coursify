@@ -227,7 +227,7 @@ const AssignmentCreation: NextPage<{
 				</div>
 				<div className="flex space-x-4">
 					<span onClick={() => setStage((stage) => stage - 1)}>
-						<Button>Prev</Button>
+						<Button>Back</Button>
 					</span>
 
 					<span onClick={createAssignment}>

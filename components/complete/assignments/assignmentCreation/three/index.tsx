@@ -51,7 +51,7 @@ const AssignmentSettings: NextPage<{
 							setStage((stage) => stage - 1);
 						}}
 					>
-						<Button>Prev</Button>
+						<Button>Back</Button>
 					</span>
 					<span
 						onClick={() => {

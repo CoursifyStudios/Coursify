@@ -126,7 +126,7 @@ export default function AssignmentDetails({
 						/>
 						<div className="ml-auto flex space-x-4">
 							<span onClick={() => setStage((stage) => stage - 1)}>
-								<Button>Prev</Button>
+								<Button>Back</Button>
 							</span>
 
 							<span
