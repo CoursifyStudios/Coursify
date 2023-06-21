@@ -1,58 +1,49 @@
+import * as Yup from "yup";
 import { AssignmentTypes } from "../../../../../lib/db/assignments";
+import {
+	assignmentCheckoffValidation,
+	assignmentDiscussionPostValidation,
+	assignmentFileUploadValidation,
+	assignmentGoogleValidation,
+	assignmentLinkValidation,
+	assignmentMediaValidation,
+	assignmentTextValidation,
+} from "./settingsValidation";
 
-export interface AssignmentLink {
-	urls: undefined | string[];
-	maxUrls: number;
+export interface AssignmentLink
+	extends Yup.InferType<typeof assignmentLinkValidation> {
 	assignmentType: AssignmentTypes.LINK;
-	enforceHttps: boolean;
 }
 
-export interface AssignmentMedia {
+export interface AssignmentMedia
+	extends Yup.InferType<typeof assignmentMediaValidation> {
 	assignmentType: AssignmentTypes.MEDIA;
-	fileTypes: string[];
-	maxSize: number;
-	minFiles: number;
-	maxFiles: number | undefined;
 }
 
-export interface AssignmentFileUpload {
+export interface AssignmentFileUpload
+	extends Yup.InferType<typeof assignmentFileUploadValidation> {
 	assignmentType: AssignmentTypes.FILE_UPLOAD;
-	fileTypes: string[] | undefined;
-	maxSize: number;
-	minFiles: number;
-	maxFiles: number | undefined;
 }
 
-export interface AssignmentCheckoff {
+export interface AssignmentCheckoff
+	extends Yup.InferType<typeof assignmentCheckoffValidation> {
 	assignmentType: AssignmentTypes.CHECKOFF;
-	checkboxes: {
-		name: string;
-		description: string;
-		step: number;
-		teacher: boolean;
-	}[];
 }
 
-export interface AssignmentDiscussionPost {
+export interface AssignmentDiscussionPost
+	extends Yup.InferType<typeof assignmentDiscussionPostValidation> {
 	assignmentType: AssignmentTypes.DISCUSSION_POST;
-	trueWhenChars: boolean;
-	minChars: number | undefined;
-	maxChars: number | undefined;
 	permissions: DiscussionPermissions;
-	mediaOnly: boolean;
 }
 
-export interface AssignmentGoogle {
+export interface AssignmentGoogle
+	extends Yup.InferType<typeof assignmentGoogleValidation> {
 	assignmentType: AssignmentTypes.GOOGLE;
-	services: string[];
 }
 
-export interface AssignmentText {
+export interface AssignmentText
+	extends Yup.InferType<typeof assignmentTextValidation> {
 	assignmentType: AssignmentTypes.TEXT;
-	trueWhenChars: boolean;
-	rich: boolean;
-	minChars: number | undefined;
-	maxChars: number | undefined;
 }
 
 export interface AssignmentAll {

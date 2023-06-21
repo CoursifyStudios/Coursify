@@ -1,11 +1,12 @@
 import { NextPage } from "next";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAssignmentStore } from "..";
 import { NewAssignmentData } from "../../../../../lib/db/assignments";
 import { Button } from "../../../../misc/button";
 import { submissionType } from "../submissionType";
 import GetAssignmentSettings from "./settings";
 import { AssignmentSettingsTypes } from "./settings.types";
+import assignmentValidation from "./settingsValidation";
 
 const AssignmentSettings: NextPage<{
 	stage: number;
@@ -13,6 +14,11 @@ const AssignmentSettings: NextPage<{
 }> = ({ setStage, stage }) => {
 	const { data: assignmentData, set: setAssignmentData } = useAssignmentStore();
 	const [settings, setSettings] = useState<AssignmentSettingsTypes>();
+	const [error, setError] = useState("");
+
+	useEffect(() => {
+		setError("");
+	}, [assignmentData?.type]);
 
 	if (stage != 3) return null;
 	return (
@@ -33,6 +39,9 @@ const AssignmentSettings: NextPage<{
 						settings={settings}
 					/>
 				)}
+				<div className="font-medium text-red-500">
+					{error && `Error: ${error}`}
+				</div>
 			</div>
 			<div className="mt-10 flex flex-col space-y-3 ">
 				<div className="ml-auto flex space-x-4">
@@ -46,8 +55,15 @@ const AssignmentSettings: NextPage<{
 					</span>
 					<span
 						onClick={() => {
-							setAssignmentData({ settings } as NewAssignmentData);
-							setStage((stage) => stage + 1);
+							try {
+								assignmentValidation(settings!);
+								setError("");
+								setAssignmentData({ settings } as NewAssignmentData);
+								setStage((stage) => stage + 1);
+							} catch (e) {
+								if (typeof e == "object")
+									setError(e!.toString().match(/ValidationError: (.+)/)![1]);
+							}
 						}}
 					>
 						<Button color="bg-blue-500" className="text-white">
