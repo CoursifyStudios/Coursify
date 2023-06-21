@@ -16,7 +16,10 @@ const Link = ({
 	};
 }) => {
 	useLayoutEffect(() => {
-		if (settings == undefined)
+		if (
+			settings == undefined ||
+			settings.assignmentType != AssignmentTypes.LINK
+		)
 			setSettings({
 				// Defaults
 				assignmentType: AssignmentTypes.LINK,
@@ -27,7 +30,8 @@ const Link = ({
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
-	if (settings == undefined) return null;
+	if (settings == undefined || settings.assignmentType != AssignmentTypes.LINK)
+		return null;
 
 	return (
 		<>

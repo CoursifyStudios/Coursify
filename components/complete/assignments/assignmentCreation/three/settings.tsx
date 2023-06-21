@@ -3,7 +3,10 @@ import { Dispatch, SetStateAction } from "react";
 import { AssignmentTypes } from "../../../../../lib/db/assignments";
 import CheckBox from "./components/checkbox";
 import Discussion from "./components/discussion";
+import File from "./components/file";
 import Link from "./components/link";
+import Media from "./components/media";
+import Text from "./components/text";
 import { AssignmentSettingsTypes } from "./settings.types";
 
 const GetAssignmentSettings: NextPage<{
@@ -22,6 +25,17 @@ const GetAssignmentSettings: NextPage<{
 		case AssignmentTypes.CHECKOFF:
 			//@ts-expect-error
 			return <CheckBox imports={imports} />;
+		case AssignmentTypes.MEDIA:
+			//@ts-expect-error
+			return <Media imports={imports} />;
+		case AssignmentTypes.TEXT:
+			//@ts-expect-error
+			return <Text imports={imports} />;
+		case AssignmentTypes.FILE_UPLOAD:
+			//@ts-expect-error
+			return <File imports={imports} />;
+		case AssignmentTypes.GOOGLE:
+		case AssignmentTypes.ALL:
 	}
 };
 

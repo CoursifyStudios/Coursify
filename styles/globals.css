@@ -10,6 +10,17 @@
 	@apply text-[1.35rem] font-bold compact:text-lg;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	/* display: none; <- Crashes Chrome on hover */
+	-webkit-appearance: none;
+	margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type="number"] {
+	-moz-appearance: textfield; /* Firefox */
+}
+
 .graydient {
 	@apply dark:invert;
 	background: rgb(209, 213, 219);

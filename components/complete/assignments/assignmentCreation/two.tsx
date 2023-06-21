@@ -37,7 +37,7 @@ export default function AssignmentDetails({
 					name: Yup.string().min(3).max(40).required(),
 					description: Yup.string().min(3).max(60).required(),
 					submissionType: Yup.string().min(3).max(100),
-					maxGrade: Yup.number(),
+					maxGrade: Yup.number().min(0, "Cannot be negitive"),
 				})}
 				initialValues={{
 					name: assignmentData?.name || "",
@@ -70,7 +70,7 @@ export default function AssignmentDetails({
 									<ErrorMessage name="name" />
 								</div>
 							</label>
-							<label htmlFor="maxGrade" className="flex w-[5.5rem] flex-col">
+							<label htmlFor="maxGrade" className="flex w-[7.5rem] flex-col">
 								<div className="flex w-full items-center justify-between">
 									<span className="text-sm font-medium">Max Points</span>
 									<Info size="large">

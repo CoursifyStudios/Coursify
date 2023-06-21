@@ -25,7 +25,7 @@ const AssignmentSettings: NextPage<{
 				}{" "}
 				- Submission Settings
 			</h2>
-			<div className="mt-10 flex flex-col space-y-3 ">
+			<div className="mt-10 flex flex-col space-y-4 @container">
 				{assignmentData && (
 					<GetAssignmentSettings
 						assignmentType={assignmentData.type}

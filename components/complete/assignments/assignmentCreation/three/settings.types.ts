@@ -35,6 +35,7 @@ export interface AssignmentCheckoff {
 
 export interface AssignmentDiscussionPost {
 	assignmentType: AssignmentTypes.DISCUSSION_POST;
+	trueWhenChars: boolean;
 	minChars: number | undefined;
 	maxChars: number | undefined;
 	permissions: DiscussionPermissions;
@@ -48,6 +49,7 @@ export interface AssignmentGoogle {
 
 export interface AssignmentText {
 	assignmentType: AssignmentTypes.TEXT;
+	trueWhenChars: boolean;
 	rich: boolean;
 	minChars: number | undefined;
 	maxChars: number | undefined;

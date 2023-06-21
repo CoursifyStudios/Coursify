@@ -1,60 +1,44 @@
-import {
-	DropdownSection,
-	ToggleSection,
-} from "@/components/settings/components/sections";
+import { ToggleSection } from "@/components/settings/components/sections";
+import { Info } from "@/components/tooltips/info";
+import { AssignmentTypes } from "@/lib/db/assignments";
 import { Dispatch, SetStateAction, useLayoutEffect } from "react";
-import { AssignmentTypes } from "../../../../../../lib/db/assignments";
-import { Info } from "../../../../../tooltips/info";
-import {
-	AssignmentDiscussionPost,
-	DiscussionPermissions,
-} from "../settings.types";
+import { AssignmentText } from "../settings.types";
 
-const Discussion = ({
+const Text = ({
 	imports: { settings, setSettings },
 }: {
 	imports: {
-		settings: AssignmentDiscussionPost;
-		setSettings: Dispatch<SetStateAction<AssignmentDiscussionPost>>;
+		settings: AssignmentText;
+		setSettings: Dispatch<SetStateAction<AssignmentText>>;
 	};
 }) => {
 	useLayoutEffect(() => {
 		if (
 			settings == undefined ||
-			settings.assignmentType != AssignmentTypes.DISCUSSION_POST
+			settings.assignmentType != AssignmentTypes.TEXT
 		)
 			setSettings({
 				// Defaults
-				assignmentType: AssignmentTypes.DISCUSSION_POST,
+				assignmentType: AssignmentTypes.TEXT,
+				rich: true,
 				trueWhenChars: true, //(and false when words are being counted)
 				maxChars: undefined,
 				minChars: undefined,
-				mediaOnly: false,
-				permissions: DiscussionPermissions.AFTER_POSTING,
 			});
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
-	if (
-		settings == undefined ||
-		settings.assignmentType != AssignmentTypes.DISCUSSION_POST
-	)
+	if (settings == undefined || settings.assignmentType != AssignmentTypes.TEXT)
 		return null;
 
 	return (
 		<>
-			<DropdownSection
-				name="Viewing Permissions"
-				description="Choose when students can view other students' posts"
-				values={[
-					{ name: "After posting", id: DiscussionPermissions.AFTER_POSTING },
-					{ name: "Always", id: DiscussionPermissions.ALWAYS },
-					{ name: "Never", id: DiscussionPermissions.NEVER },
-				]}
-				currentValue={settings.permissions}
-				type={1}
-				onChange={(value) =>
+			<ToggleSection
+				name="Rich text"
+				description="Turn rich text on or off"
+				enabled={settings.rich}
+				setEnabled={(value) =>
 					setSettings((settings) => {
-						return { ...settings, permissions: value.id };
+						return { ...settings, rich: value };
 					})
 				}
 			/>
@@ -92,7 +76,7 @@ const Discussion = ({
 					<span className="flex text-sm font-medium">
 						Maximum {settings.trueWhenChars ? "Characters" : "Words"}
 						<Info className="ml-2">
-							The maximum number of characters allowed in a student
+							The maximum number of characters a student allowed in a student
 							{"'"}s response
 						</Info>
 					</span>
@@ -108,23 +92,8 @@ const Discussion = ({
 					/>
 				</label>
 			</div>
-			<details>
-				<summary className="cursor-pointer text-sm font-medium">
-					Advanced Settings
-				</summary>
-				<ToggleSection
-					name="Media Only"
-					description="Only permit media submissions"
-					enabled={settings.mediaOnly}
-					setEnabled={(value) =>
-						setSettings((settings) => {
-							return { ...settings, mediaOnly: value };
-						})
-					}
-				/>
-			</details>
 		</>
 	);
 };
 
-export default Discussion;
+export default Text;

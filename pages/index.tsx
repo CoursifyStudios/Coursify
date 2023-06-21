@@ -45,9 +45,6 @@ export default function Home() {
 				 * been the fact that I looked at it as I was getting off a plane at 3am, but y'know)
 				 *      ...sounds like a skill issue -Bill
 				 */
-				//PLEASE NOTE I MAY HAVE RUINED THAT FEATURE THAT LUKAS MENTIONED ABOVE
-				//PLEASE DIRECT ANY AND ALL COMPLAINTS TO @Seagullz#0212 ON DISCORD
-				//IF THIS IS ACTUALLY A PROBLEM LET ME KNOW -BILL
 				const temp = schedules;
 				temp[index] = parsedSchedule.schedule;
 				setSchedules(temp);
