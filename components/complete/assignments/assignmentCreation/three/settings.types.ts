@@ -39,6 +39,7 @@ export interface AssignmentDiscussionPost
 export interface AssignmentGoogle
 	extends Yup.InferType<typeof assignmentGoogleValidation> {
 	assignmentType: AssignmentTypes.GOOGLE;
+	service: GoogleSubmissionTypes;
 }
 
 export interface AssignmentText
@@ -73,4 +74,13 @@ export enum DiscussionPermissions {
 	NEVER = 0,
 	AFTER_POSTING = 1,
 	ALWAYS = 2,
+}
+
+export enum GoogleSubmissionTypes {
+	DOCS = 0,
+	SLIDES = 1,
+	SHEETS = 2,
+	FORMS = 3,
+	DRIVE = 4,
+	PHOTOS = 5,
 }

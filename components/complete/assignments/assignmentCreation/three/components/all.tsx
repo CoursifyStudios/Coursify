@@ -1,4 +1,7 @@
-import { ExclamationCircleIcon } from "@heroicons/react/24/outline";
+import {
+	CheckCircleIcon,
+	ExclamationCircleIcon,
+} from "@heroicons/react/24/outline";
 import { Dispatch, SetStateAction, useLayoutEffect } from "react";
 import { AssignmentTypes } from "../../../../../../lib/db/assignments";
 import { Info } from "../../../../../tooltips/info";
@@ -70,8 +73,8 @@ const All = ({
 								className={`brightness-hover h-full cursor-pointer rounded-md p-4 ${
 									//@ts-expect-error
 									settings.allowedTypes!.includes(type.type)
-										? "bg-white shadow-md dark:bg-gray-200"
-										: "bg-gray-200 dark:border dark:bg-black"
+										? "brightness-focus"
+										: "bg-backdrop-200"
 								} `}
 								onClick={() =>
 									//@ts-expect-error
@@ -100,6 +103,10 @@ const All = ({
 									<div className="ml-3">
 										<h1 className="font-semibold">{type.name}</h1>
 									</div>
+									{/* @ts-expect-error */}
+									{settings.allowedTypes!.includes(type.type) && (
+										<CheckCircleIcon className="ml-auto h-6 w-6 text-gray-700" />
+									)}
 								</div>
 							</div>
 						))}

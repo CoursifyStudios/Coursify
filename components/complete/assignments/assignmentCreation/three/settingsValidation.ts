@@ -67,8 +67,31 @@ export const assignmentDiscussionPostValidation = Yup.object({
 });
 
 export const assignmentGoogleValidation = Yup.object({
-	services: Yup.array().of(Yup.string().required()).required(),
+	// copyFrom: Yup.string().required().test(
+	// 	(value, ctx) => {
+	// 		googleTypes.find((v) => Yup.id == value)?.regex!
+	// 		return true
+	// 	}
+	// ),
+	service: Yup.number().required(),
 });
+
+export const googleTypes = [
+	{ name: "Docs", id: 0, regex: /^https?:\/\/docs\.google\.com\/.+$/ },
+	{
+		name: "Slides",
+		id: 1,
+		regex: /^https?:\/\/docs\.google\.com\/presentation\/.+$/,
+	},
+	{
+		name: "Sheets",
+		id: 2,
+		regex: /^https?:\/\/docs\.google\.com\/spreadsheets\/.+$/,
+	},
+	{ name: "Forms", id: 3, regex: /^https?:\/\/docs\.google\.com\/forms\/.+$/ },
+	{ name: "Drive", id: 4, regex: /^https?:\/\/drive\.google\.com\/.+$/ },
+	{ name: "Photos", id: 5, regex: /^https?:\/\/photos\.google\.com\/.+$/ },
+];
 
 export const assignmentTextValidation = Yup.object({
 	trueWhenChars: Yup.boolean().required(),

@@ -124,11 +124,7 @@ export const CreateAssignment: NextPage<{
 					{submissionType.map((submission, i) => (
 						<div key={i}>
 							<div
-								className={`brightness-hover h-full cursor-pointer rounded-md p-4 ${
-									submission.type == assignmentData?.type
-										? "bg-white shadow-md dark:bg-gray-200"
-										: "bg-gray-200 dark:border dark:bg-black"
-								} `}
+								className={`brightness-hover h-full cursor-pointer rounded-md bg-gray-200 p-4 dark:border dark:bg-black `}
 								onClick={() => {
 									setAssignmentData({
 										type: submission.type,
