@@ -443,7 +443,7 @@ const Class: NextPage = () => {
 											className="brightness-hover group grid cursor-pointer place-items-center rounded-lg bg-backdrop-200 px-1.5"
 										>
 											<EnvelopeIcon className="h-5 w-5 group-hover:hidden" />
-											<EnvelopeOpenIcon className="hidden h-5 w-5 group-hover:block" />
+											<EnvelopeOpenIcon className="-mt-1 hidden h-5 w-5 group-hover:block" />
 										</a>
 									</div>
 								)}
