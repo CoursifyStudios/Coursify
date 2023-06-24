@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 
-const Notifications: NextPage<{}> = () => {
+const Notifications: NextPage = () => {
 	return <></>;
 };
 

@@ -50,5 +50,6 @@
 		"upsert",
 		"userid",
 		"zustand"
-	]
+	],
+	"deno.enable": false
 }
