@@ -52,7 +52,8 @@ body:
   - type: dropdown
     id: browsers
     attributes:
-      label: What browser(s) are you seeing the problem on?
+      label: "Browser"
+      description: What browser(s) are you seeing the problem on?
       multiple: true
       options:
         - "Brave"
