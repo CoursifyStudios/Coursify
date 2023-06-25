@@ -6,6 +6,7 @@
 		"dev": "next dev",
 		"build": "next build",
 		"start": "next start",
+		"turbo": "next dev --turbo --show-all",
 		"lint": "eslint .",
 		"next-lint": "next lint",
 		"prepare": "husky install",
