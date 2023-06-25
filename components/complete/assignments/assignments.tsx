@@ -71,7 +71,7 @@ export function AssignmentPreview({
 						</div>
 					</div>
 				</div>
-				<div tabIndex={-1} className="mt-0.5 flex h-[4.5rem] justify-between">
+				<div tabIndex={-1} className="mt-1 flex h-[4.5rem] justify-between">
 					<div>
 						<p className="line-clamp-3">
 							<a className="font-medium">{assignment.name}</a>
@@ -85,7 +85,7 @@ export function AssignmentPreview({
 				<CheckIcon className="h-6 w-6 shrink-0" />
 			</div>
 			<div
-				className="absolute left-2 top-2"
+				className="absolute left-2 top-3"
 				tabIndex={0}
 				onClick={() => {
 					setStarred((starred) => {
