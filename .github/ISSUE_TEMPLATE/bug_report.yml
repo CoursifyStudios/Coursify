@@ -71,6 +71,6 @@ body:
         - label: "Reproducable on Production"
           required: false
         - label: "Reproducable on Dev"
-          required: false
+          required: true
         - label: "Reproducable on Demo User"
           required: true
