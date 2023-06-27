@@ -71,7 +71,8 @@ export const Comment = ({
 						<Menu.Button className="ml-auto">
 							<EllipsisVerticalIcon className="w-5"></EllipsisVerticalIcon>
 						</Menu.Button>
-						<div className="absolute z-50 mt-14">
+						{/* I know that the below styling sucks but idk how to fix the margin thing. Pls fix*/}
+						<div className="absolute z-50 ml-72 mt-14">
 							<Menu.Items
 								as="div"
 								className="relative flex w-48 flex-col rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-xl"
@@ -79,7 +80,7 @@ export const Comment = ({
 								<Menu.Item
 									as="div"
 									className="p-1 font-medium"
-									onClick={() => setShowReplying(true)}
+									onClick={() => setEditing(true)}
 								>
 									Edit
 								</Menu.Item>
@@ -97,7 +98,7 @@ export const Comment = ({
 			{editing ? (
 				<Formik
 					initialValues={{
-						content: "",
+						content: text,
 					}}
 					onSubmit={async (formData) => {
 						const test = await editAnnouncement(
@@ -111,14 +112,14 @@ export const Comment = ({
 					}}
 				>
 					{({ values }) => (
-						<Form className="bg-red-400 p-4 focus:outline-none">
+						<Form className="focus:outline-none">
 							<label htmlFor="content">
 								<Field
 									component="textarea"
 									name="content"
 									type="text"
-									className="mt-2 min-h-[2.5rem] w-full resize-y rounded-3xl border-none bg-gray-300 px-4 py-2 !ring-0 dark:placeholder:text-gray-400"
-									placeholder="Add a comment..."
+									className="min-h-[2.5rem] w-full resize-y border-none bg-gray-300 px-4 py-2.5 !ring-0 dark:placeholder:text-gray-400"
+									placeholder="Enter your revised comment here"
 									autoFocus
 								></Field>
 							</label>
@@ -155,31 +156,30 @@ export const Comment = ({
 				}}
 			>
 				{showReplying ? (
-					"Replying to " + users.full_name
+					<p className="font-bold">{"Replying to " + users.full_name}</p>
 				) : (
-					<p className="text-">Reply</p>
+					<p className="font-bold">Reply</p>
 				)}
 			</button>
 			{showReplying && (
-				<Commenting communityid={communityid} parentID={id!}></Commenting>
+				<Commenting
+					communityid={communityid}
+					parentID={id!}
+					showMe={setShowReplying}
+				></Commenting>
 			)}
 		</div>
 	);
 };
 
-export const Replying = ({
-	parentComment,
-	showMe,
-}: {
-	parentComment: string;
-	showMe: (value: boolean) => void;
-}) => {};
 export const Commenting = ({
 	communityid,
 	parentID,
+	showMe,
 }: {
 	communityid: string;
 	parentID: string;
+	showMe?: (value: boolean) => void;
 }) => {
 	const supabase = useSupabaseClient();
 	const user = useUser();
@@ -249,7 +249,10 @@ export const Commenting = ({
 								<div className="m-1 flex justify-end gap-2">
 									<Button
 										className="brightness-hover transition hover:bg-red-300"
-										onClick={() => setShowCommenting(false)}
+										onClick={() => {
+											setShowCommenting(false);
+											if (showMe) showMe(false);
+										}}
 									>
 										Cancel
 									</Button>
