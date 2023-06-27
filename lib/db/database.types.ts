@@ -109,11 +109,13 @@ export interface Database {
 					group_id: string | null;
 					hidden: boolean;
 					id: string;
+					max_grade: number | null;
 					name: string;
 					publish_date: string | null;
 					publish_type: number | null;
+					settings: Json | null;
 					submission_instructions: string | null;
-					submission_type: string | null;
+					type: number;
 				};
 				Insert: {
 					class_id: string;
@@ -125,11 +127,13 @@ export interface Database {
 					group_id?: string | null;
 					hidden?: boolean;
 					id?: string;
+					max_grade?: number | null;
 					name: string;
 					publish_date?: string | null;
 					publish_type?: number | null;
+					settings?: Json | null;
 					submission_instructions?: string | null;
-					submission_type?: string | null;
+					type?: number;
 				};
 				Update: {
 					class_id?: string;
@@ -141,11 +145,13 @@ export interface Database {
 					group_id?: string | null;
 					hidden?: boolean;
 					id?: string;
+					max_grade?: number | null;
 					name?: string;
 					publish_date?: string | null;
 					publish_type?: number | null;
+					settings?: Json | null;
 					submission_instructions?: string | null;
-					submission_type?: string | null;
+					type?: number;
 				};
 				Relationships: [
 					{

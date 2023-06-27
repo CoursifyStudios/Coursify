@@ -21,6 +21,7 @@ import { Info } from "../../components/tooltips/info";
 import {
 	AllAssignmentResponse,
 	AssignmentResponse,
+	AssignmentTypes,
 	getAllAssignments,
 	getAssignment,
 } from "../../lib/db/assignments";
@@ -328,7 +329,7 @@ const Post: NextPage = () => {
 						</section>
 						<section
 							className={`scrollbar-fancy relative mt-5 flex flex-1  overflow-y-auto overflow-x-hidden whitespace-pre-line md:pr-2 ${
-								assignment.data.submission_type == "post"
+								assignment.data.type == AssignmentTypes.DISCUSSION_POST
 									? "flex-col"
 									: "flex-col-reverse xl:flex-row"
 							}`}
@@ -352,7 +353,7 @@ const Post: NextPage = () => {
 									</>
 								)}
 							</div>
-							{assignment.data.submission_type != "post" ? (
+							{assignment.data.type != AssignmentTypes.DISCUSSION_POST ? (
 								<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:mb-0 xl:ml-4 xl:w-72">
 									<h2 className="text-xl font-semibold">Submission</h2>
 									<div className="mt-2 rounded-xl bg-gray-200 p-6">
@@ -370,7 +371,7 @@ const Post: NextPage = () => {
 												Submit assignment
 											</h2>
 										)}
-										{assignment.data.submission_type == "check" ? (
+										{assignment.data.type == AssignmentTypes.CHECKOFF ? (
 											<Button color="bg-blue-500" className="mt-6 text-white">
 												Mark as complete
 											</Button>

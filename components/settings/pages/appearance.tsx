@@ -5,7 +5,7 @@ import { Settings, useSettings } from "../../../lib/stores/settings";
 import { Header } from "../components/header";
 import { DropdownSection, ToggleSection } from "../components/sections";
 
-const Theming: NextPage<{}> = () => {
+const Theming: NextPage = () => {
 	const user = useUser();
 	const supabase = useSupabaseClient<Database>();
 	const { data: settings, set } = useSettings();

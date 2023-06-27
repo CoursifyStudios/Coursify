@@ -26,20 +26,33 @@ export const ToggleSection: NextPage<{
 	);
 };
 
-export const DropdownSection: NextPage<{
+function Test<T>() {}
+
+export function DropdownSection<T = string | number>({
+	name,
+	description,
+	currentValue,
+	onChange,
+	beta = false,
+	values,
+}: {
 	description: string;
 	name: string;
-	currentValue: {
-		name: string;
-		id: string;
-	};
+	currentValue:
+		| {
+				name: string;
+				id: string;
+		  }
+		| string
+		| number;
+	type?: T;
 	values: {
 		name: string;
-		id: string;
+		id: string | number;
 	}[];
-	onChange: (value: { name: string; id: string }) => void;
+	onChange: (value: { name: string; id: T }) => void;
 	beta?: boolean;
-}> = ({ name, description, currentValue, onChange, beta = false, values }) => {
+}) {
 	return (
 		<div className="mt-4 flex grow  justify-between">
 			<div>
@@ -53,10 +66,14 @@ export const DropdownSection: NextPage<{
 			</div>
 			<Dropdown
 				onChange={onChange}
-				selectedValue={currentValue}
+				selectedValue={
+					typeof currentValue == "string" || typeof currentValue == "number"
+						? values.find((v) => v.id == currentValue)!
+						: currentValue
+				}
 				values={values}
 				className="w-40"
 			/>
 		</div>
 	);
-};
+}
