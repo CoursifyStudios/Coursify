@@ -12,7 +12,7 @@ export const howLongAgo = (date: string) => {
 		new Date().getTimezoneOffset() * 60 -
 		3600;
 
-	let interval = seconds / 31536000;
+	var interval = seconds / 31536000;
 
 	if (interval > 2) {
 		return Math.floor(interval) + " years ago";

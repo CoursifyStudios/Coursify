@@ -8,7 +8,6 @@ import {
 	useMemo,
 	useState,
 } from "react";
-
 import { useAssignmentStore } from ".";
 import { NewAssignmentData } from "../../../../lib/db/assignments";
 import { getClassTimesForXDays } from "../../../../lib/db/classes";
@@ -21,7 +20,6 @@ import { Toggle } from "../../../misc/toggle";
 import { Info } from "../../../tooltips/info";
 import { DueType } from "../assignments";
 import AssignmentCalender from "./assignmentCalender";
-import { submissionType } from "./submissionType";
 
 const AssignmentCreation: NextPage<{
 	setStage: Dispatch<SetStateAction<number>>;
@@ -40,7 +38,10 @@ const AssignmentCreation: NextPage<{
 	const [submitting, setSubmitting] = useState<boolean>();
 	const [error, setError] = useState("");
 
-	const { data: assignmentData, set: setAssignmentData } = useAssignmentStore();
+	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
+		setAssignmentData: state.set,
+		assignmentData: state.data,
+	}));
 
 	const setType = (type: { type: DueType; name: string }, due: boolean) => {
 		if (due) {
@@ -82,17 +83,14 @@ const AssignmentCreation: NextPage<{
 			return;
 		}
 		setSubmitting(true);
-		const { assignmentType: _, ...assignmentSettings } =
-			assignmentData.settings;
 		const data: Database["public"]["Tables"]["assignments"]["Insert"] = {
 			class_id: classid,
 			content: assignmentData.content as unknown as Json,
 			description: assignmentData.description,
 			name: assignmentData.name,
 			submission_instructions: assignmentData.submissionInstructions,
-			type: assignmentData.type,
+			submission_type: assignmentData.submissionType,
 			hidden: assignmentData.hidden,
-			settings: assignmentSettings as unknown as Json,
 		};
 		if (due) {
 			data.due_date = assignmentData.dueDate?.toISOString();
@@ -123,28 +121,18 @@ const AssignmentCreation: NextPage<{
 				{assignmentData && (
 					<>
 						<h2 className="text-xl font-bold">{assignmentData.name}</h2>
-						<p className="text-xs text-gray-700">
-							{
-								submissionType.find(
-									(submission) => submission.type == assignmentData?.type
-								)?.name
-							}{" "}
-							Submission{" "}
-							{assignmentData.maxGrade &&
-								`- ${assignmentData.maxGrade} Points Maximum`}
-						</p>
 						<p className="mt-2 text-gray-700">
 							<span className="font-medium text-gray-800">
 								Short description:{" "}
 							</span>
 							{assignmentData.description}
 						</p>
-						{assignmentData.submissionInstructions && (
+						{assignmentData.submissionType && (
 							<p className="mt-3 text-gray-700">
 								<span className="font-medium text-gray-800">
 									Submission Instructions:{" "}
 								</span>
-								{assignmentData.submissionInstructions}
+								{assignmentData.submissionType}
 							</p>
 						)}
 					</>
@@ -193,10 +181,9 @@ const AssignmentCreation: NextPage<{
 						<WhenDue type="due" />
 					) : (
 						<div className="text-sm text-gray-700">
-							This assignment does not have a due date. It will be available to
-							students, and they{"'"}ll be able to submit assignments like
-							normal. Coursify recommends adding a due date so we can better
-							prioritize student work.
+							This assignment does not have a due date. It will be avalible to
+							students, and they{"'"}ll be able to submit assignments. Coursify
+							reccomends adding a due date.
 						</div>
 					)}
 				</div>
@@ -212,9 +199,9 @@ const AssignmentCreation: NextPage<{
 				<div className="flex items-center font-medium">
 					<span className="mr-2 text-gray-800">Hidden</span>
 					<Info className=" mr-4">
-						Hide this assignment from students. We recommend setting a publish
-						date rather than enabling this option, since you can automagically
-						make it available to students at a time of your choice.
+						Hide this assignment from students. We reccomend setting a publish
+						date rather than enabling this option, since you can automagiclly
+						make it avalible to students at a time of your choice.
 					</Info>
 					{assignmentData && (
 						<Toggle
@@ -227,7 +214,7 @@ const AssignmentCreation: NextPage<{
 				</div>
 				<div className="flex space-x-4">
 					<span onClick={() => setStage((stage) => stage - 1)}>
-						<Button>Back</Button>
+						<Button>Prev</Button>
 					</span>
 
 					<span onClick={createAssignment}>
@@ -251,27 +238,14 @@ const AssignmentCreation: NextPage<{
 			</section>
 		</>
 	);
-
-	function onDateChange(event: ChangeEvent<HTMLInputElement>) {
+	async function onDateChange(event: ChangeEvent<HTMLInputElement>) {
 		setAssignmentData({
 			dueType: DueType.DATE,
 			dueDate: new Date(event.target.value),
 		} as NewAssignmentData);
 	}
 
-	function onDateChangePublish(event: ChangeEvent<HTMLInputElement>) {
-		setAssignmentData({
-			publishType: DueType.DATE,
-			publishDate: new Date(event.target.value),
-		} as NewAssignmentData);
-	}
-
 	function WhenDue({ type }: { type: "due" | "publish" }) {
-		const dateForDateTimeInputValue = (date: Date) =>
-			new Date(date.getTime() + new Date().getTimezoneOffset() * -60 * 1000)
-				.toISOString()
-				.slice(0, 19);
-
 		return (
 			<>
 				<Dropdown
@@ -284,13 +258,8 @@ const AssignmentCreation: NextPage<{
 					(selectedDueType.type == DueType.DATE ? (
 						<input
 							type="datetime-local"
-							className="mt-4 rounded-md border-gray-300  bg-white/50 focus:ring-1 dark:bg-backdrop"
+							className="mt-4 rounded-md border-gray-300  bg-white/50 focus:ring-1"
 							onChange={onDateChange}
-							value={
-								assignmentData?.dueDate != undefined
-									? dateForDateTimeInputValue(assignmentData.dueDate)
-									: undefined
-							}
 						/>
 					) : (
 						<AssignmentCalender type="due" daysData={daysData} />
@@ -300,13 +269,7 @@ const AssignmentCreation: NextPage<{
 					(selectedPublishType.type == DueType.DATE ? (
 						<input
 							type="datetime-local"
-							className="mt-4 rounded-md border-gray-300 bg-white/50 focus:ring-1 dark:bg-backdrop"
-							onChange={onDateChangePublish}
-							value={
-								assignmentData?.publishDate != undefined
-									? dateForDateTimeInputValue(assignmentData.publishDate)
-									: undefined
-							}
+							className="mt-4 rounded-md border-gray-300  bg-white/50 focus:ring-1"
 						/>
 					) : (
 						<AssignmentCalender type="publish" daysData={daysData} />

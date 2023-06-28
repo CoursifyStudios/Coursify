@@ -1,6 +1,5 @@
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { SerializedEditorState } from "lexical";
-import { AssignmentSettingsTypes } from "../../components/complete/assignments/assignmentCreation/three/settings.types";
 import { DueType } from "../../components/complete/assignments/assignments";
 import { Database } from "./database.types";
 
@@ -76,23 +75,19 @@ export interface AssignmentData {
 	error?: PostgrestError;
 }
 
-export enum AssignmentTypes {
-	LINK = 0,
-	MEDIA = 1,
-	FILE_UPLOAD = 2,
-	//ASSESSMENT = 2,
-	CHECKOFF = 3,
-	DISCUSSION_POST = 4,
-	GOOGLE = 5,
-	TEXT = 6,
-	ALL = 7,
-}
+export type AssignmentTypes =
+	| "link"
+	| "media"
+	| "test"
+	| "check"
+	| "post"
+	| "google";
 
 export type NewAssignmentData = {
 	name: string;
 	description: string;
 	content: SerializedEditorState;
-	type: AssignmentTypes;
+	submissionType: string;
 	submissionInstructions?: string;
 	dueType?: DueType;
 	dueDate?: Date;
@@ -101,6 +96,4 @@ export type NewAssignmentData = {
 	publishDate?: Date;
 	publishDay?: number;
 	hidden: boolean;
-	maxGrade?: number;
-	settings: AssignmentSettingsTypes;
 };

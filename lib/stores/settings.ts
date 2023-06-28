@@ -29,7 +29,6 @@ export const useSettings = create<SettingsStore>()(
 	persist(
 		(set) => ({
 			data: defaultSettings,
-			// deno-lint-ignore require-await
 			set: async (data) => {
 				set((state) => ({
 					data: data

@@ -36,7 +36,7 @@ const editorConfig = {
 	// The editor theme
 	theme: richTheme,
 	// Handling of errors during update
-	onError(error: unknown) {
+	onError(error: any) {
 		throw error;
 	},
 	nodes: [

@@ -1,6 +1,6 @@
 import { NextPage } from "next";
 
-const Connections: NextPage = () => {
+const Connections: NextPage<{}> = () => {
 	return (
 		<div>
 			Where users can manage connections like google, discord maybe if we ever

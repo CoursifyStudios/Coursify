@@ -9,7 +9,7 @@ import { average, median, middle50, round } from "../../lib/misc/math";
 import { useSettings } from "../../lib/stores/settings";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import exampleImage from "../../public/example-img.jpg";
-import { submissionType } from "../complete/assignments/assignmentCreation/submissionType";
+import { submissionType } from "../complete/assignments/assignmentCreation";
 import LineCounter from "../counters/line";
 import Dropdown from "../misc/dropdown";
 import { ColoredPill } from "../misc/pill";
@@ -144,8 +144,9 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 						>
 							<div className="mr-3 grid h-9 w-9 min-w-[2.25rem] place-items-center rounded-full bg-gray-300 dark:bg-gray-200">
 								{
-									submissionType.find((type) => type.type == assignment.type)
-										?.icon
+									submissionType.find(
+										(type) => type.type == assignment.submission_type
+									)?.icon
 								}
 							</div>
 							<div className="flex flex-col ">

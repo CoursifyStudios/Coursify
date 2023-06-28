@@ -1,9 +1,0 @@
-{
-	"lint": {
-		"include": ["./pages", "./components", "./lib"],
-		"exclude": ["./lib/editor"],
-		"rules": {
-			"exclude": ["ban-ts-comment", "require-await"]
-		}
-	}
-}

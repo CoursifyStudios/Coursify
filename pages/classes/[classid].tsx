@@ -1,7 +1,6 @@
 import { Tab } from "@headlessui/react";
 import {
-	EnvelopeIcon,
-	EnvelopeOpenIcon,
+	ArrowTopRightOnSquareIcon,
 	MagnifyingGlassIcon,
 	PlusIcon,
 } from "@heroicons/react/24/outline";
@@ -51,8 +50,6 @@ const Class: NextPage = () => {
 		TypeOfAnnouncements[]
 	>([]);
 	const [fetchedClassId, setFetchedClassId] = useState("");
-	const [searchOpen, setSearchOpen] = useState(false);
-
 	const {
 		data: { compact },
 	} = useSettings();
@@ -344,16 +341,10 @@ const Class: NextPage = () => {
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}>
 							<div className="mb-4 flex justify-between">
-								<div
-									className={`${
-										searchOpen ? "max-w-[24rem]" : "max-w-[14rem]"
-									} relative flex grow items-center pr-2 transition-all`}
-								>
+								<div className="relative flex items-center">
 									<input
 										type="text"
-										className="grow !rounded-xl py-0.5 placeholder:dark:text-gray-400"
-										onClick={() => setSearchOpen(true)}
-										onBlur={() => setSearchOpen(false)}
+										className="w-44 !rounded-xl py-0.5 transition-all focus:w-96 placeholder:dark:text-gray-400"
 										placeholder="Search users..."
 									/>
 									<MagnifyingGlassIcon className="absolute right-3 h-4 w-4" />
@@ -370,10 +361,11 @@ const Class: NextPage = () => {
 											}
 										>
 											<ColoredPill
+												color="gray"
 												className="brightness-hover grid h-full cursor-pointer place-items-center !rounded-lg !bg-backdrop-200"
 												hoverState
 											>
-												Copy All Emails
+												Copy Emails
 											</ColoredPill>
 										</span>
 										<a
@@ -382,10 +374,9 @@ const Class: NextPage = () => {
 												.join(",")}`}
 											rel="noopener norefferer"
 											target="_blank"
-											className="brightness-hover group grid cursor-pointer place-items-center rounded-lg bg-backdrop-200 px-1.5"
+											className="brightness-hover grid cursor-pointer place-items-center rounded-lg bg-backdrop-200 px-1.5"
 										>
-											<EnvelopeIcon className="h-5 w-5 group-hover:hidden" />
-											<EnvelopeOpenIcon className="-mt-1 hidden h-5 w-5 group-hover:block" />
+											<ArrowTopRightOnSquareIcon className="h-5 w-5" />
 										</a>
 									</div>
 								)}

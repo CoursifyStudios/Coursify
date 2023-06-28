@@ -74,7 +74,6 @@ const variants = plugin(({ addVariant, matchVariant }) => {
 export const plugins = [
 	require("@tailwindcss/typography"),
 	require("@tailwindcss/forms"),
-	require("@tailwindcss/container-queries"),
 	themeSwapper(themes),
 	variants,
 ];

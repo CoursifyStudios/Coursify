@@ -38,7 +38,7 @@ export const InfoPills: NextPage<{
 		});
 	};
 
-	const deletePill = (pill: InfoPill) => {
+	const deletePill = async (pill: InfoPill) => {
 		const toRemove = pills.findIndex((currentPill) => currentPill == pill);
 		const newPills = pills.filter((_, i) => i !== toRemove);
 		setPills(newPills);

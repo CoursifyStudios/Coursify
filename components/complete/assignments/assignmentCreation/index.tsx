@@ -1,14 +1,25 @@
+import {
+	ChatBubbleBottomCenterTextIcon,
+	ClipboardDocumentListIcon,
+	DocumentCheckIcon,
+	DocumentTextIcon,
+	LinkIcon,
+	XMarkIcon,
+} from "@heroicons/react/24/outline";
 import { NextPage } from "next";
-import { Dispatch, SetStateAction, useState } from "react";
-import { create } from "zustand";
+import { Dispatch, ReactNode, SetStateAction, useState } from "react";
 
-import { NewAssignmentData } from "../../../../lib/db/assignments";
+import Image from "next/image";
+import {
+	AssignmentTypes,
+	NewAssignmentData,
+} from "../../../../lib/db/assignments";
+
+import { create } from "zustand";
 import { useSettings } from "../../../../lib/stores/settings";
 import { Popup } from "../../../misc/popup";
 import { DueType } from "../assignments";
-import AssignmentCreation from "./four";
-import { submissionType } from "./submissionType";
-import AssignmentSettings from "./three";
+import AssignmentCreation from "./three";
 import AssignmentDetails from "./two";
 
 interface AssignmmentState {
@@ -35,7 +46,10 @@ export const CreateAssignment: NextPage<{
 }> = ({ open, setOpen, block, scheduleType, classid }) => {
 	const { data: settings } = useSettings();
 	const [stage, setStage] = useState(1);
-	const { data: assignmentData, set: setAssignmentData } = useAssignmentStore();
+	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
+		setAssignmentData: state.set,
+		assignmentData: state.data,
+	}));
 
 	const closeMenu = () => {
 		setOpen(false);
@@ -45,7 +59,7 @@ export const CreateAssignment: NextPage<{
 	};
 
 	return (
-		<Popup open={open} closeMenu={() => closeMenu()}>
+		<Popup open={open} closeMenu={() => setOpen(false)}>
 			{" "}
 			<div className="flex items-center">
 				<div className="z-10 grid h-8 w-8 place-items-center rounded-full bg-blue-500  font-semibold text-white">
@@ -70,40 +84,24 @@ export const CreateAssignment: NextPage<{
 					2
 				</div>
 				<div
-					className={`-ml-2 h-2 w-36 ${stage >= 3 && "bg-blue-500"} ${
+					className={`-ml-2 h-2 w-36 ${stage == 3 && "bg-blue-500"} ${
 						stage == 2 && "bg-gradient-to-r from-blue-500 to-transparent"
 					}`}
 				></div>
 
 				<div
-					className={`${
-						stage < 3
-							? "bg-backdrop dark:text-white"
-							: " bg-blue-500 text-white"
-					}  z-10 -ml-2 grid h-8 w-8 place-items-center rounded-full  font-semibold `}
-				>
-					3
-				</div>
-				<div
-					className={`-ml-2 h-2 w-36 ${stage == 4 && "bg-blue-500"} ${
-						stage == 3 && "bg-gradient-to-r from-blue-500 to-transparent"
-					}`}
-				></div>
-
-				<div
 					className={`z-10 grid h-8 w-8 ${
-						stage == 4
+						stage == 3
 							? " bg-blue-500 text-white"
 							: "bg-backdrop dark:text-white"
 					} -ml-2 place-items-center rounded-full  font-semibold`}
 				>
-					4
+					3
 				</div>
 			</div>
 			<AssignmentType />
 			<AssignmentDetails stage={stage} setStage={setStage} />
-			<AssignmentSettings stage={stage} setStage={setStage} />
-			{stage == 4 && (
+			{stage == 3 && (
 				<AssignmentCreation
 					block={block}
 					scheduleType={scheduleType}
@@ -112,6 +110,12 @@ export const CreateAssignment: NextPage<{
 					classid={classid}
 				/>
 			)}
+			<button
+				onClick={closeMenu}
+				className="absolute right-4 top-4 rounded p-0.5 text-gray-700 transition hover:bg-gray-300 hover:text-gray-900 focus:outline-none dark:text-gray-100"
+			>
+				<XMarkIcon className="h-5 w-5" />
+			</button>
 		</Popup>
 	);
 	function AssignmentType() {
@@ -124,10 +128,14 @@ export const CreateAssignment: NextPage<{
 					{submissionType.map((submission, i) => (
 						<div key={i}>
 							<div
-								className={`brightness-hover h-full cursor-pointer rounded-md bg-gray-200 p-4 dark:border dark:bg-black `}
+								className={`brightness-hover h-full cursor-pointer rounded-md p-4 ${
+									submission.type == assignmentData?.submissionType
+										? "bg-white shadow-md dark:bg-gray-200"
+										: "bg-gray-200 dark:border dark:bg-black"
+								} `}
 								onClick={() => {
 									setAssignmentData({
-										type: submission.type,
+										submissionType: submission.type,
 										dueType: DueType.START_OF_CLASS,
 										publishType: DueType.START_OF_CLASS,
 										hidden: false,
@@ -154,3 +162,59 @@ export const CreateAssignment: NextPage<{
 		);
 	}
 };
+
+const className = "h-5 w-5 min-w-[1.25rem] dark:brightness-90";
+
+export const submissionType: {
+	icon: ReactNode;
+	name: string;
+	description: string;
+	type: AssignmentTypes;
+}[] = [
+	{
+		icon: <LinkIcon className={className} />,
+		name: "Link",
+		description: "Submission for links",
+		type: "link",
+	},
+	{
+		icon: <DocumentTextIcon className={className} />,
+		name: "Rich Media",
+		description: "Submission for images, videos, etc.",
+		type: "media",
+	},
+	{
+		icon: <DocumentCheckIcon className={className} />,
+		name: "Checkbox",
+		description: "Checkoff, i.e. complete an assignment in a packet",
+		type: "check",
+	},
+	{
+		icon: <ChatBubbleBottomCenterTextIcon className={className} />,
+		name: "Discussion Post",
+		description: "Students can post discusstions and reply to others",
+		type: "post",
+	},
+	{
+		icon: <ClipboardDocumentListIcon className={className} />,
+		name: "Assesment",
+		description:
+			"Combine free responses and/or multiple choice questions for a test",
+		type: "test",
+	},
+	{
+		icon: (
+			<Image
+				src="/brand-logos/googledrive.svg"
+				alt="Google Logo"
+				width={24}
+				height={24}
+				className={className + " invert"}
+			/>
+		),
+		name: "Google Media",
+		description:
+			"Submission box for Google products like docs, slides, sheets, etc.",
+		type: "google",
+	},
+];

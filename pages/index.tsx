@@ -20,9 +20,9 @@ export default function Home() {
 
 	//because Lukas left this a mess, until i get around to fixing it
 	const dateToday = new Date();
-	const dateTomorrow = new Date();
+	let dateTomorrow = new Date();
 	dateTomorrow.setDate(dateToday.getDate() + 1);
-	const dayAfter = new Date();
+	let dayAfter = new Date();
 	dayAfter.setDate(dateToday.getDate() + 2);
 
 	useEffect(() => {
@@ -45,7 +45,10 @@ export default function Home() {
 				 * been the fact that I looked at it as I was getting off a plane at 3am, but y'know)
 				 *      ...sounds like a skill issue -Bill
 				 */
-				const temp = schedules;
+				//PLEASE NOTE I MAY HAVE RUINED THAT FEATURE THAT LUKAS MENTIONED ABOVE
+				//PLEASE DIRECT ANY AND ALL COMPLAINTS TO @Seagullz#0212 ON DISCORD
+				//IF THIS IS ACTUALLY A PROBLEM LET ME KNOW -BILL
+				let temp = schedules;
 				temp[index] = parsedSchedule.schedule;
 				setSchedules(temp);
 			});
