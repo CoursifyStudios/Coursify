@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { AllClassesResponse, IndividialClass } from "../../lib/db/classes";
+import { AllClassesResponse, IndividualClass } from "../../lib/db/classes";
 import { ScheduleInterface } from "../../lib/db/schedule";
 import { NonNullableArray } from "../../lib/misc/misc.types";
 import { useTabs } from "../../lib/tabs/handleTabs";
@@ -84,5 +84,5 @@ export interface TeacherClassType extends StudentClassType {
 }
 
 export type ClassData =
-	| IndividialClass["data"]
+	| IndividualClass["data"]
 	| NonNullableArray<AllClassesResponse["data"]>;
