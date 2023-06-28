@@ -155,11 +155,7 @@ export const Comment = ({
 					setShowReplying(true);
 				}}
 			>
-				{showReplying ? (
-					<p className="font-bold">{"Replying to " + users.full_name}</p>
-				) : (
-					<p className="font-bold">Reply</p>
-				)}
+				<p>{showReplying ? "Replying to " + users.full_name : "Reply"}</p>
 			</button>
 			{showReplying && (
 				<Commenting
@@ -297,3 +293,4 @@ export const Commenting = ({
 		</>
 	);
 };
+

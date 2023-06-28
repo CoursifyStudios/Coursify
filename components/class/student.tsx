@@ -134,11 +134,7 @@ const StudentClass: NextPage<StudentClassType> = ({
 							)
 						) : Array.isArray(classData.users) ? (
 							<p>An unknown error occured</p>
-                            //this errors because classData.users is ALWAYS an array. so uh. some types are broken probably
-                            //Not sure what whoever wrote this wants to do about it --Bill
-                            //@ts-ignore
 						) : classData.class_users?.teacher ? (
-                            //@ts-ignore
 							<p>{classData.users?.full_name}</p>
 						) : (
 							<p className="text-sm italic text-gray-700">No teacher</p>
