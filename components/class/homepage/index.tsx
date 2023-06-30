@@ -48,12 +48,14 @@ const HomepageClassesUI: NextPage<{
 				return "teacher";
 			}
 			if (teacher == 0) {
+				setTab(1);
 				return "student";
 			}
 			if (teacher >= student) {
 				return "tabbed";
 			}
 			if (student > teacher) {
+				setTab(1);
 				return "tabbedStudent";
 			}
 			return "tabbed";
