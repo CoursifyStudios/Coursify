@@ -179,7 +179,7 @@ const ScheduleEditor = () => {
 														>
 															X
 														</p>
-														{/* Look at me doing this wihtout importing a whole package for an svg X */}
+														{/* Look at me doing this without importing a whole package for an svg X */}
 													</div>
 												</div>
 											)
@@ -226,7 +226,7 @@ const ScheduleEditor = () => {
 														>
 															X
 														</p>
-														{/* Look at me doing this wihtout importing a whole package for an svg X */}
+														{/* Look at me doing this without importing a whole package for an svg X */}
 													</div>
 												</div>
 											)

@@ -1,4 +1,4 @@
-import { createBrowserSupabaseClient } from "@supabase/auth-helpers-nextjs";
+import { createPagesBrowserClient } from "@supabase/auth-helpers-nextjs";
 import { Session, SessionContextProvider } from "@supabase/auth-helpers-react";
 import { Analytics } from "@vercel/analytics/react";
 import { ThemeProvider } from "next-themes";
@@ -14,7 +14,7 @@ function MyApp({
 }: AppProps<{
 	initialSession: Session;
 }>) {
-	const [supabaseClient] = useState(() => createBrowserSupabaseClient());
+	const [supabaseClient] = useState(() => createPagesBrowserClient());
 
 	return (
 		<>

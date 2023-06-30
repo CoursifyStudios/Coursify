@@ -165,6 +165,7 @@ const BlockFormatDropdown = () => {
 		setSelectedBlock(
 			blocks.find((block) => blockType == block.id) || blocks[1]
 		);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [blockType]);
 
 	return (

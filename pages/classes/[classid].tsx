@@ -1,5 +1,10 @@
 import { Tab } from "@headlessui/react";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import {
+	EnvelopeIcon,
+	EnvelopeOpenIcon,
+	MagnifyingGlassIcon,
+	PlusIcon,
+} from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { EditorState } from "lexical";
 import { NextPage } from "next";
@@ -12,9 +17,9 @@ import { AnnouncementPostingUI } from "../../components/complete/announcements/a
 import { CreateAssignment } from "../../components/complete/assignments/assignmentCreation";
 import { AssignmentPreview } from "../../components/complete/assignments/assignments";
 import { Member } from "../../components/complete/members";
+import CircleCounter from "../../components/counters/circle";
 import Editor from "../../components/editors/richeditor";
 import { Button } from "../../components/misc/button";
-import CircleCounter from "../../components/misc/circleCounter";
 import { InfoPill, InfoPills } from "../../components/misc/infopills";
 import { ColoredPill } from "../../components/misc/pill";
 import {
@@ -49,6 +54,8 @@ const Class: NextPage = () => {
 		TypeOfAnnouncements[]
 	>([]);
 	const [fetchedClassId, setFetchedClassId] = useState("");
+	const [searchOpen, setSearchOpen] = useState(false);
+
 	const {
 		data: { compact },
 	} = useSettings();
@@ -337,7 +344,7 @@ const Class: NextPage = () => {
 													getDataInArray(data.data.announcements).filter(
 														(possibleComment) =>
 															possibleComment?.type == AnnouncementType.COMMENT
-													) as TypeOfAnnouncements[]
+													) as unknown as TypeOfAnnouncements[]
 												}
 												announcements={extraAnnouncements}
 												setAnnouncements={setExtraAnnouncements}
@@ -363,7 +370,7 @@ const Class: NextPage = () => {
 										})
 										.map(
 											(announcement) =>
-												(announcement.type == AnnouncementType.ANNOUNCMENT ||
+												(announcement.type == AnnouncementType.ANNOUNCEMENT ||
 													announcement.type == AnnouncementType.CROSSPOST) &&
 												announcement.users &&
 												typeof getDataOutArray(announcement.users).avatar_url ==
@@ -372,16 +379,19 @@ const Class: NextPage = () => {
 													"string" && (
 													<Announcement
 														key={announcement.id}
-														announcement={announcement as TypeOfAnnouncements}
+														announcement={
+															announcement as unknown as TypeOfAnnouncements
+														}
 														classID={classid}
 														comments={
 															getDataInArray(data.data.announcements).filter(
 																(possibleComment) =>
 																	possibleComment?.type ==
 																		AnnouncementType.COMMENT &&
+																	//@ts-expect-error
 																	getDataOutArray(possibleComment.parent)?.id ==
 																		announcement.id
-															) as TypeOfAnnouncements[]
+															) as unknown as TypeOfAnnouncements[]
 														}
 														announcements={extraAnnouncements}
 														setAnnouncements={setExtraAnnouncements}
@@ -391,6 +401,54 @@ const Class: NextPage = () => {
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}>
+							<div className="mb-4 flex justify-between">
+								<div
+									className={`${
+										searchOpen ? "max-w-[24rem]" : "max-w-[14rem]"
+									} relative flex grow items-center pr-2 transition-all`}
+								>
+									<input
+										type="text"
+										className="grow !rounded-xl py-0.5 placeholder:dark:text-gray-400"
+										onClick={() => setSearchOpen(true)}
+										onBlur={() => setSearchOpen(false)}
+										placeholder="Search users..."
+									/>
+									<MagnifyingGlassIcon className="absolute right-3 h-4 w-4" />
+								</div>
+								{isTeacher && data.data.users && (
+									<div className="flex gap-2">
+										<span
+											onClick={() =>
+												navigator.clipboard.writeText(
+													getDataInArray(data.data.users)
+														.map((v) => v.email)
+														.join(",")
+												)
+											}
+										>
+											<ColoredPill
+												className="brightness-hover grid h-full cursor-pointer place-items-center !rounded-lg !bg-backdrop-200"
+												hoverState
+											>
+												Copy All Emails
+											</ColoredPill>
+										</span>
+										<a
+											href={`mailto:${getDataInArray(data.data.users)
+												.map((v) => v.email)
+												.join(",")}`}
+											rel="noopener norefferer"
+											target="_blank"
+											className="brightness-hover group grid cursor-pointer place-items-center rounded-lg bg-backdrop-200 px-1.5"
+										>
+											<EnvelopeIcon className="h-5 w-5 group-hover:hidden" />
+											<EnvelopeOpenIcon className="-mt-1 hidden h-5 w-5 group-hover:block" />
+										</a>
+									</div>
+								)}
+							</div>
+
 							<div className="grid gap-4 max-sm:mx-auto max-sm:w-[20.5rem] lg:grid-cols-2 xl:grid-cols-3">
 								{data.data.users ? (
 									getDataInArray(data.data.users).map((user) => (
@@ -409,7 +467,7 @@ const Class: NextPage = () => {
 									))
 								) : (
 									<div className="rounded-xl bg-gray-200 p-4">
-										An error occured
+										An error occurred
 									</div>
 								)}
 							</div>
@@ -441,23 +499,20 @@ const Class: NextPage = () => {
 						{data.data?.assignments &&
 							user &&
 							getDataInArray(data.data?.assignments).map((assignment) => (
-								<div
+								<AssignmentPreview
 									key={assignment.id}
-									className=" brightness-hover flex rounded-xl bg-backdrop-200 p-3"
-								>
-									<AssignmentPreview
-										supabase={supabase}
-										assignment={
-											Array.isArray(assignment) ? assignment[0] : assignment
-										}
-										showClassPill={false}
-										starredAsParam={false}
-										schedule={schedule!}
-										scheduleT={scheduleT!}
-										userId={user.id}
-										classes={data.data}
-									/>
-								</div>
+									className="brightness-hover"
+									supabase={supabase}
+									assignment={
+										Array.isArray(assignment) ? assignment[0] : assignment
+									}
+									showClassPill={false}
+									starredAsParam={false}
+									schedule={schedule!}
+									scheduleT={scheduleT!}
+									userId={user.id}
+									classes={data.data}
+								/>
 							))}
 					</div>
 				</section>

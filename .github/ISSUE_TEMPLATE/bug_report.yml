@@ -1,0 +1,77 @@
+name: Bug Report
+description: Report broken UI or unintentded features
+labels: []
+
+body:
+  - type: input
+    attributes:
+      label: "Consise description"
+      description: "Explain what's the issue"
+      placeholder: "This box is 1 pixel off!111!!!"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: "Images & Links"
+      description: "Showcase this issue via specific page links or images"
+      placeholder: "[image]"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Explain the issue and possible remedies
+      description: "Elaborate what specifically is broken so it can be fixed"
+      placeholder: "Add a margin of 1 pixel"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Additional Comments
+      description: "Is there anything else that should be known?"
+      placeholder: "This is triggering my OCD"
+    validations:
+      required: false
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Operating system
+      description: What system(s) are you seeing this on?
+      multiple: true
+      options:
+        - "Linux"
+        - "Macos"
+        - "Windows"
+        - "Chromebook"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: "Browser"
+      description: What browser(s) are you seeing the problem on?
+      multiple: true
+      options:
+        - "Brave"
+        - "Firefox"
+        - "Chrome"
+        - "Safari"
+        - "Microsoft Edge"
+    validations:
+      required: true
+
+  - type: checkboxes
+    attributes:
+      label: Checklist
+      description: Make sure that your issue is reproducable
+      options:
+        - label: "Reproducable on Production"
+          required: false
+        - label: "Reproducable on Dev"
+          required: true
+        - label: "Reproducable on Demo User"
+          required: true

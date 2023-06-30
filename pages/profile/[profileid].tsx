@@ -4,14 +4,15 @@ import type { PostgrestResponse } from "@supabase/supabase-js";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { Class } from "../../components/class";
 import { Achievement } from "../../components/complete/achievement";
-import { Class } from "../../components/complete/class";
 import { GroupSmall } from "../../components/complete/group";
 import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import { CommunityType } from "../../lib/db/classes";
 import { Database } from "../../lib/db/database.types";
 import { ProfilesResponse, getProfile } from "../../lib/db/profiles";
 import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
+import { useSettings } from "../../lib/stores/settings";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
@@ -23,6 +24,7 @@ export default function Profile() {
 	const supabase = useSupabaseClient<Database>();
 	const router = useRouter();
 	const { profileid } = router.query;
+	const { data: settings } = useSettings();
 
 	useEffect(() => {
 		(async () => {
@@ -47,7 +49,7 @@ export default function Profile() {
 							src={profile.data.avatar_url}
 							alt="Profile Picture"
 							//referrerPolicy="no-referrer"
-							className="!ml-2 h-36 w-36 rounded-full shadow-md shadow-black/25"
+							className="!ml-2 h-36 w-36 rounded-full object-cover shadow-md shadow-black/25"
 							width={144}
 							height={144}
 						/>
@@ -95,7 +97,7 @@ export default function Profile() {
 										(achievement) => (
 											<Achievement
 												data={getDataOutArray(achievement.achievements)!}
-												key={achievement.achivement_id}
+												key={achievement.achievement_id}
 												earned={new Date(achievement.date_earned)}
 											/>
 										)
@@ -113,7 +115,7 @@ export default function Profile() {
 					</div>
 				)}
 			</div>
-			{/* Centerpeice, list of classes */}
+			{/* Centerpiece, list of classes */}
 			<div className=" mx-auto mt-8 shrink-0 flex-col rounded-xl lg:mt-0 lg:h-[calc(100vh-8rem)] xl:flex">
 				<h2 className="title mb-4">Classes</h2>
 				<div

@@ -1,12 +1,14 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import HomepageClassesUI from "../components/class/homepage";
+import { sortClasses } from "../components/class/sorting";
 import { AssignmentPreview } from "../components/complete/assignments/assignments";
-import { Class, LoadingClass, sortClasses } from "../components/complete/class";
 import ScheduleComponent from "../components/complete/schedule";
 import { AllClassesResponse, getAllClasses } from "../lib/db/classes";
 import { Database } from "../lib/db/database.types";
 import { ScheduleInterface, getSchedulesForXDays } from "../lib/db/schedule";
+import { useSettings } from "../lib/stores/settings";
 
 export default function Home() {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -14,12 +16,13 @@ export default function Home() {
 	const [classes, setClasses] = useState<AllClassesResponse>();
 	const [loading, setLoading] = useState(true);
 	const [schedules, setSchedules] = useState<ScheduleInterface[][]>([]);
+	const { data: settings } = useSettings();
 
 	//because Lukas left this a mess, until i get around to fixing it
 	const dateToday = new Date();
-	let dateTomorrow = new Date();
+	const dateTomorrow = new Date();
 	dateTomorrow.setDate(dateToday.getDate() + 1);
-	let dayAfter = new Date();
+	const dayAfter = new Date();
 	dayAfter.setDate(dateToday.getDate() + 2);
 
 	useEffect(() => {
@@ -35,21 +38,19 @@ export default function Home() {
 				JSON.parse(schedule);
 			parsedSchedules.forEach((parsedSchedule, index) => {
 				/**
-				 * this sees if the schedule matches the current day. Theoreticlly, if you close
+				 * this sees if the schedule matches the current day. Theoretically, if you close
 				 * your computer that night and open it up the next day, it *should* have the updated schedule
 				 * on it. This is very much a qol edge case thing, but I wanted to add functionality that would make sure it
 				 * displayed the correct day as I've missed class due to an error like this in g calender (or it could've
 				 * been the fact that I looked at it as I was getting off a plane at 3am, but y'know)
 				 *      ...sounds like a skill issue -Bill
 				 */
-				//PLEASE NOTE I MAY HAVE RUINED THAT FEATURE THAT LUKAS MENTIONED ABOVE
-				//PLEASE DIRECT ANY AND ALL COMPLAINTS TO @Seagullz#0212 ON DISCORD
-				//IF THIS IS ACTUALLY A PROBLEM LET ME KNOW -BILL
-				let temp = schedules;
+				const temp = schedules;
 				temp[index] = parsedSchedule.schedule;
 				setSchedules(temp);
 			});
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	useEffect(() => {
@@ -106,41 +107,15 @@ export default function Home() {
 		<>
 			<div className="container mx-auto mb-10 flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words px-4 sm:mt-10 md:px-8 xl:px-0">
 				<div className="flex w-full flex-col">
-					<div className="flex flex-col sm:flex-col-reverse lg:flex-row  ">
+					<div className="mb-12 flex flex-col sm:flex-col-reverse lg:flex-row ">
 						{/* Classes UI */}
-						<section id="Classes" className="mb-12">
-							<div className="flex items-end md:mt-8 lg:mt-0">
-								<h2 className="title">Classes</h2>
-							</div>
-							<div className="mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 ">
-								{classes && classes.data && schedules
-									? classes.data
-											.slice(0, classes.data.length)
-											.sort((a, b) =>
-												sortClasses(a, b, schedules[0], schedules[1])
-											)
-											.map((classData) => (
-												<Class
-													classData={classData}
-													showLoading={loading}
-													key={classData.id}
-													className="h-full !w-full xl:!w-[18.5rem]"
-													isLink={true}
-													time={schedules[0]?.find(
-														(s) =>
-															s.specialEvent == undefined &&
-															classData.block == s.block &&
-															classData.schedule_type == s.type
-													)}
-												/>
-											))
-									: [...Array(6)].map((_, i) => (
-											<LoadingClass
-												key={i}
-												className="!w-full xl:!w-[18.5rem]"
-											/>
-									  ))}
-							</div>
+						<section id="Classes" className="">
+							<HomepageClassesUI
+								classes={classes}
+								loading={loading}
+								schedules={schedules}
+								userID={user.id}
+							/>
 						</section>
 						{/* Schedule UI */}
 						<section
@@ -199,33 +174,28 @@ export default function Home() {
 														{Array.isArray(aClass.assignments) &&
 															schedules &&
 															aClass.assignments.map((assignment) => (
-																<div
+																<AssignmentPreview
+																	className="brightness-hover"
 																	key={assignment.id}
-																	className={
-																		"brightness-hover rounded-lg bg-backdrop-200 p-2"
+																	supabase={supabaseClient}
+																	assignment={
+																		Array.isArray(assignment)
+																			? assignment[0]
+																			: assignment
 																	}
-																>
-																	<AssignmentPreview
-																		supabase={supabaseClient}
-																		assignment={
-																			Array.isArray(assignment)
-																				? assignment[0]
-																				: assignment
-																		}
-																		userId={user.id}
-																		starredAsParam={
-																			assignment.starred
-																				? Array.isArray(assignment.starred)
-																					? assignment.starred.length > 0
-																					: !!assignment.starred
-																				: false
-																		}
-																		showClassPill={false}
-																		schedule={schedules[0]!}
-																		scheduleT={schedules[1]!}
-																		classes={aClass}
-																	/>
-																</div>
+																	userId={user.id}
+																	starredAsParam={
+																		assignment.starred
+																			? Array.isArray(assignment.starred)
+																				? assignment.starred.length > 0
+																				: !!assignment.starred
+																			: false
+																	}
+																	showClassPill={false}
+																	schedule={schedules[0]!}
+																	scheduleT={schedules[1]!}
+																	classes={aClass}
+																/>
 															))}
 													</div>
 												</div>
@@ -249,31 +219,28 @@ export default function Home() {
 															? assignment.starred.length > 0
 															: !!assignment.starred
 														: false) && (
-														<div
+														<AssignmentPreview
 															key={assignment.id}
-															className={" rounded-lg bg-backdrop-200 p-2"}
-														>
-															<AssignmentPreview
-																supabase={supabaseClient}
-																assignment={
-																	Array.isArray(assignment)
-																		? assignment[0]
-																		: assignment
-																}
-																userId={user.id}
-																starredAsParam={
-																	assignment.starred
-																		? Array.isArray(assignment.starred)
-																			? assignment.starred.length > 0
-																			: !!assignment.starred
-																		: false
-																}
-																showClassPill={true}
-																schedule={schedules[0]!}
-																scheduleT={schedules[1]!}
-																classes={aClass}
-															/>
-														</div>
+															className="brightness-hover"
+															supabase={supabaseClient}
+															assignment={
+																Array.isArray(assignment)
+																	? assignment[0]
+																	: assignment
+															}
+															userId={user.id}
+															starredAsParam={
+																assignment.starred
+																	? Array.isArray(assignment.starred)
+																		? assignment.starred.length > 0
+																		: !!assignment.starred
+																	: false
+															}
+															showClassPill={true}
+															schedule={schedules[0]!}
+															scheduleT={schedules[1]!}
+															classes={aClass}
+														/>
 													)
 											)
 									)}

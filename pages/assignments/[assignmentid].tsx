@@ -22,6 +22,7 @@ import { Info } from "../../components/tooltips/info";
 import {
 	AllAssignmentResponse,
 	AssignmentResponse,
+	AssignmentTypes,
 	getAllAssignments,
 	getAssignment,
 } from "../../lib/db/assignments";
@@ -61,7 +62,7 @@ const Post: NextPage = () => {
 				const assignments = await getAllAssignments(supabase);
 				setAllAssignments(assignments);
 			}
-			// In theory, most people will have the schedule already cached. This is a bandaid solution and won't be used later on
+			// In theory, most people will have the schedule already cached. This is a band-aid solution and won't be used later on
 			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
 				JSON.parse(sessionStorage.getItem("schedule")!);
 			if (allSchedules && allSchedules.length != 0) {
@@ -147,33 +148,29 @@ const Post: NextPage = () => {
 					allAssignments.data.map(
 						(assignment) =>
 							assignment.classes && (
-								<div
-									className={`flex rounded-xl ${
+								<AssignmentPreview
+									key={assignment.id}
+									supabase={supabase}
+									assignment={assignment}
+									userId={user.id}
+									starredAsParam={
+										assignment.starred
+											? Array.isArray(assignment.starred)
+												? assignment.starred.length > 0
+												: !!assignment.starred
+											: false
+									}
+									//obviously we need a better solution
+									schedule={schedule!}
+									scheduleT={scheduleT!}
+									showClassPill={true}
+									classes={getDataOutArray(assignment.classes)}
+									className={`${
 										assignmentid == assignment.id
 											? "brightness-focus"
 											: "brightness-hover bg-backdrop-200"
-									} border border-transparent p-3`}
-									key={assignment.id}
-								>
-									{/* List of assignments */}
-									<AssignmentPreview
-										supabase={supabase}
-										assignment={assignment}
-										userId={user.id}
-										starredAsParam={
-											assignment.starred
-												? Array.isArray(assignment.starred)
-													? assignment.starred.length > 0
-													: !!assignment.starred
-												: false
-										}
-										//obviously we need a better solution
-										schedule={schedule!}
-										scheduleT={scheduleT!}
-										showClassPill={true}
-										classes={getDataOutArray(assignment.classes)}
-									/>
-								</div>
+									} border border-transparent `}
+								/>
 							)
 					)
 				) : (
@@ -234,7 +231,7 @@ const Post: NextPage = () => {
 						height={150}
 					/>
 					<h1 className=" mt-4 max-w-xs text-center font-semibold">
-						This assignment doesn{"'"}t exist (or you don{"'"}t have access to
+						This assignment {"doesn't"} exist (or you don{"'"}t have access to
 						it)
 					</h1>
 				</div>
@@ -312,7 +309,7 @@ const Post: NextPage = () => {
 						</section>
 						<section
 							className={`scrollbar-fancy relative mt-5 flex flex-1  overflow-y-auto overflow-x-hidden whitespace-pre-line md:pr-2 ${
-								assignment.data.submission_type == "post"
+								assignment.data.type == AssignmentTypes.DISCUSSION_POST
 									? "flex-col"
 									: "flex-col-reverse xl:flex-row"
 							}`}
@@ -336,7 +333,7 @@ const Post: NextPage = () => {
 									</>
 								)}
 							</div>
-							{assignment.data.submission_type != "post" ? (
+							{assignment.data.type != AssignmentTypes.DISCUSSION_POST ? (
 								<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:mb-0 xl:ml-4 xl:w-72">
 									<h2 className="text-xl font-semibold">Submission</h2>
 									<div className="mt-2 rounded-xl bg-gray-200 p-6">
@@ -354,7 +351,7 @@ const Post: NextPage = () => {
 												Submit assignment
 											</h2>
 										)}
-										{assignment.data.submission_type == "check" ? (
+										{assignment.data.type == AssignmentTypes.CHECKOFF ? (
 											<Button color="bg-blue-500" className="mt-6 text-white">
 												Mark as complete
 											</Button>
@@ -380,7 +377,7 @@ const Post: NextPage = () => {
 			);
 		}
 		// Typescript wanted me to do this. The user shouldn't ever encounter this state
-		return <div>An unknown error occured. Assignment id: {assignmentid}</div>;
+		return <div>An unknown error occurred. Assignment id: {assignmentid}</div>;
 	}
 };
 

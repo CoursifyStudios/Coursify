@@ -108,7 +108,7 @@ const Group: NextPage = () => {
 									groupData &&
 									groupData.data &&
 									groupData.data.users &&
-									// Checks that user is in group, only hten show posting UI
+									// Checks that user is in group, only then show posting UI
 									getDataInArray(groupData.data.users).some(
 										(userInGroup) => userInGroup.id == user.id
 									) && (
@@ -137,7 +137,7 @@ const Group: NextPage = () => {
 													getDataInArray(groupData?.data?.announcements).filter(
 														(possibleComment) =>
 															possibleComment?.type == AnnouncementType.COMMENT
-													) as TypeOfAnnouncements[]
+													) as unknown as TypeOfAnnouncements[]
 												}
 												announcements={extraAnnouncements}
 												setAnnouncements={setExtraAnnouncements}
@@ -165,11 +165,13 @@ const Group: NextPage = () => {
 										})
 										.map(
 											(announcement) =>
-												(announcement.type == AnnouncementType.ANNOUNCMENT ||
+												(announcement.type == AnnouncementType.ANNOUNCEMENT ||
 													announcement.type == AnnouncementType.CROSSPOST) && (
 													<Announcement
 														key={announcement.id}
-														announcement={announcement as TypeOfAnnouncements}
+														announcement={
+															announcement as unknown as TypeOfAnnouncements
+														}
 														comments={
 															getDataInArray(
 																groupData.data.announcements
@@ -177,7 +179,7 @@ const Group: NextPage = () => {
 																(possibleComment) =>
 																	possibleComment?.type ==
 																	AnnouncementType.COMMENT
-															) as TypeOfAnnouncements[]
+															) as unknown as TypeOfAnnouncements[]
 														}
 														classID={groupid}
 														announcements={extraAnnouncements}

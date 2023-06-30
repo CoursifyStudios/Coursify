@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { UserDataType, getUserData } from "../../../lib/db/settings";
 import { Button } from "../../misc/button";
 
-const Profile: NextPage<{}> = () => {
+const Profile: NextPage = () => {
 	const supabase = useSupabaseClient();
 	const user = useUser();
 	const [userData, setUserData] = useState<UserDataType>();
@@ -18,6 +18,7 @@ const Profile: NextPage<{}> = () => {
 				setUserData(profile);
 			}
 		})();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user]);
 
 	if (!userData) {
@@ -36,7 +37,7 @@ const Profile: NextPage<{}> = () => {
 						src={userData.data.avatar_url}
 						alt="Profile picture"
 						referrerPolicy="no-referrer"
-						className="w-40 rounded-full shadow-md shadow-black/25"
+						className="h-40 w-40 rounded-full object-cover shadow-md shadow-black/25"
 						height={90}
 						width={90}
 					/>
@@ -52,7 +53,7 @@ const Profile: NextPage<{}> = () => {
 			<div className="mt-3 flex space-x-8">
 				<div>
 					<h2 className="mb-1 text-xl font-medium">Email</h2>
-					<div className="select-none rounded-lg bg-gray-200 p-2 pr-10 font-semibold">
+					<div className="select-none rounded-md bg-gray-200 p-2 pr-10 font-semibold">
 						{userData.data.email}
 					</div>
 				</div>
@@ -67,7 +68,7 @@ const Profile: NextPage<{}> = () => {
 				>
 					<GrammarlyEditorPlugin clientId="client_HhHcuxVxKgaZMFYuD57U3V">
 						<textarea
-							className="flex w-full resize-none rounded-lg bg-gray-200 outline-none focus:outline-none"
+							className="flex w-full resize-none rounded-md border border-gray-300 bg-backdrop/50 bg-gray-200 pb-2 focus:ring-1"
 							name="bio"
 							rows={4}
 							maxLength={150}

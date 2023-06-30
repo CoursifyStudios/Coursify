@@ -1,4 +1,4 @@
-export const addPossesive: (toChange: string) => string = (toChange) => {
+export const addPossessive: (toChange: string) => string = (toChange) => {
 	if (toChange.endsWith("s")) {
 		return toChange + "'";
 	} else {

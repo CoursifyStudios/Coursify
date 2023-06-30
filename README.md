@@ -46,7 +46,7 @@ Coursify
 
 ## Setup
 
-### Web Interface
+### Web
 
 To clone and run this application, you'll need [Git](https://git-scm.com) and [Yarn](https://classic.yarnpkg.com/en/) installed on your computer. After cloning the repo locally in your IDE, from your command line:
 
@@ -64,6 +64,10 @@ Next, create a `.env.local` file and populate it with the following variables
 NEXT_PUBLIC_SUPABASE_URL=https://cdn.coursify.one
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocmVoZmZtZHJjanFvd3d2Z3FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Njc1MjEyNjgsImV4cCI6MTk4MzA5NzI2OH0.f2YZkZDHL_E81DbpgnwloXUHQ9n7aCW4DF_VNMDcuqM
 ```
+
+### Mobile (IOS/Android)
+
+In order to build and emulate this application locally on mobile platforms, you'll need the [Ionic Extension](https://git-scm.com), along with [Android Studio](https://developer.android.com/studio) and/or [Xcode](https://developer.apple.com/xcode/) depending on the architecture you would like to emulate.
 
 ### Supabase
 

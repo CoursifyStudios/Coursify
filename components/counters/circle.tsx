@@ -37,7 +37,7 @@ const CircleCounter: NextPage<{
 			{small ? (
 				<></>
 			) : (
-				<div className="grid h-full place-items-center font-medium leading-[0.7]">
+				<div className="grid h-full place-items-center text-sm font-medium leading-[0.7]">
 					{amount && amount.toFixed(0).slice(0, 3)}
 				</div>
 			)}
