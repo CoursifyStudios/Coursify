@@ -1,6 +1,6 @@
 import { Tab } from "@headlessui/react";
 import { NextPage } from "next";
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
 import { Class } from "..";
 import { AllClassesResponse, isTeacher } from "../../../lib/db/classes";
 import { ScheduleInterface } from "../../../lib/db/schedule";
@@ -16,18 +16,14 @@ const HomepageClassesUI: NextPage<{
 }> = ({ classes, loading, schedules, userID }) => {
 	const { data: settings } = useSettings();
 
-	const [tab, setTab] = useState(0);
-
 	const view: Settings["homepageView"] | "loading" | "tabbedStudent" =
 		useMemo(() => {
 			if (settings.homepageView != "auto") {
 				switch (settings.homepageView) {
 					case "student":
-						setTab(1);
 						break;
 					case "teacher":
 					case "tabbed":
-						setTab(0);
 						break;
 				}
 				return settings.homepageView;
@@ -48,18 +44,26 @@ const HomepageClassesUI: NextPage<{
 				return "teacher";
 			}
 			if (teacher == 0) {
-				setTab(1);
 				return "student";
 			}
 			if (teacher >= student) {
 				return "tabbed";
 			}
 			if (student > teacher) {
-				setTab(1);
 				return "tabbedStudent";
 			}
 			return "tabbed";
 		}, [classes, settings.homepageView, userID]);
+
+	const [tab, setTab] = useState(
+		view == "student" || view == "tabbedStudent" ? 1 : 0
+	);
+
+	useEffect(() => {
+		if ((view == "student" || view == "tabbedStudent") && tab !== 1) {
+			setTab(1);
+		}
+	}, [view]);
 
 	const Classes = ({ teaching }: { teaching: boolean }) => {
 		if (classes && classes.data && schedules)
@@ -140,7 +144,12 @@ const HomepageClassesUI: NextPage<{
 					as="div"
 					className="mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 "
 				>
-					<Classes teaching={true} />
+					{view == "student" ? (
+						// Temporary fix for student classes not showing if a student isn't a teacher of any classes
+						<Classes teaching={false} />
+					) : (
+						<Classes teaching={true} />
+					)}
 				</Tab.Panel>
 				<Tab.Panel
 					as="div"
