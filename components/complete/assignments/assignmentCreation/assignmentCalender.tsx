@@ -100,8 +100,7 @@ const AssignmentCalender: NextPage<{
 								${
 									(type == "due"
 										? assignmentData.dueDay
-										: assignmentData.publishDay) == i &&
-									"border border-gray-300 bg-white shadow"
+										: assignmentData.publishDay) == i && "brightness-focus"
 								}
 								`}
 								onClick={() => updateAssignmentData(date, i)}
