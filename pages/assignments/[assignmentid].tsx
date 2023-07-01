@@ -1,23 +1,16 @@
-import {
-	ArrowsPointingInIcon,
-	ArrowsPointingOutIcon,
-	ChevronLeftIcon,
-	LinkIcon,
-	PlusIcon,
-} from "@heroicons/react/24/outline";
+import AssignmentHeader from "@/components/complete/assignments/assignmentPane/header";
+import { PlusIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { SerializedEditorState } from "lexical";
 import { NextPage } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Loading } from "../../components/assignments/loading";
 import { AssignmentPreview } from "../../components/complete/assignments/assignments";
 import Editor from "../../components/editors/richeditor";
-import { Button, ButtonIcon } from "../../components/misc/button";
+import { Button } from "../../components/misc/button";
 import Dropdown from "../../components/misc/dropdown";
-import { ColoredPill, CopiedHover } from "../../components/misc/pill";
 import { Info } from "../../components/tooltips/info";
 import {
 	AllAssignmentResponse,
@@ -243,70 +236,11 @@ const Post: NextPage = () => {
 				<>
 					<div className="flex grow flex-col">
 						{/* Top part of main window */}
-						<section className="flex items-start justify-between">
-							<div className="mr-4 grow lg:max-w-lg xl:max-w-xl">
-								<Link
-									className=" md:hidden"
-									href="/assignments/0"
-									onClick={() => setFullscreen(false)}
-								>
-									<ButtonIcon
-										icon={<ChevronLeftIcon className="h-5 w-5" />}
-										className="mb-4"
-									/>
-								</Link>
-								<Link
-									href={
-										"/classes/" +
-										(Array.isArray(assignment.data.classes)
-											? assignment.data.classes[0].id
-											: assignment.data.classes?.id)
-									}
-								>
-									<ColoredPill
-										color={
-											assignment.data.classes
-												? Array.isArray(assignment.data.classes)
-													? assignment.data.classes[0].color
-													: assignment.data.classes?.color
-												: "blue"
-										}
-										hoverState
-									>
-										{assignment.data.classes
-											? Array.isArray(assignment.data.classes)
-												? assignment.data.classes[0].name
-												: assignment.data.classes.name
-											: "Error fetching class"}
-									</ColoredPill>
-								</Link>
-								<div className="mt-4 w-full rounded-xl bg-gray-200 p-4">
-									<h1 className="title mb-2 line-clamp-2">
-										{assignment.data.name}
-									</h1>
-									<p className="line-clamp-2 text-gray-700">
-										{assignment.data.description}
-									</p>
-								</div>
-							</div>
-							<div className="flex md:space-x-4">
-								<CopiedHover copy={window.location.href}>
-									<ButtonIcon icon={<LinkIcon className="h-5 w-5" />} />
-								</CopiedHover>
-								<div onClick={() => setFullscreen(!fullscreen)}>
-									<ButtonIcon
-										icon={
-											fullscreen ? (
-												<ArrowsPointingInIcon className="h-5 w-5" />
-											) : (
-												<ArrowsPointingOutIcon className="h-5 w-5" />
-											)
-										}
-										className="hidden items-center justify-center md:flex"
-									/>
-								</div>
-							</div>
-						</section>
+						<AssignmentHeader
+							assignment={assignment}
+							fullscreen={fullscreen}
+							setFullscreen={setFullscreen}
+						/>
 						<section
 							className={`scrollbar-fancy relative mt-5 flex flex-1  overflow-y-auto overflow-x-hidden whitespace-pre-line md:pr-2 ${
 								assignment.data.type == AssignmentTypes.DISCUSSION_POST
