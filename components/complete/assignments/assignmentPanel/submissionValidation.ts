@@ -48,7 +48,7 @@ export const submissionFileUploadValidation = Yup.object({
 });
 
 export const submissionCheckoffValidation = Yup.object({
-	boxes: Yup.array().of(Yup.number().required()),
+	checkboxes: Yup.array().of(Yup.number().required()),
 });
 
 export const submissionDiscussionPostValidation = Yup.mixed().oneOf([

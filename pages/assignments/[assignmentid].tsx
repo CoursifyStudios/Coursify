@@ -1,5 +1,5 @@
 import { Loading } from "@/components/assignments/loading";
-import AssignmentPanel from "@/components/complete/assignments/assignmentPanel";
+import { AssignmentSettingsTypes } from "@/components/complete/assignments/assignmentCreation/three/settings.types";
 import AssignmentHeader from "@/components/complete/assignments/assignmentPanel/header";
 import Editor from "@/components/editors/richeditor";
 import Dropdown from "@/components/misc/dropdown";
@@ -25,9 +25,26 @@ import { PlusIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { SerializedEditorState } from "lexical";
 import { NextPage } from "next";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+
+const Panel = dynamic(
+	() => import("@/components/complete/assignments/assignmentPanel"),
+	{
+		loading: () => (
+			<div className="animate-pulse">
+				<p className="w-max rounded-md bg-gray-300">
+					<span className="invisible">We should probably use fixed</span>
+				</p>
+				<p className="mt-2 w-max rounded-md bg-gray-300">
+					<span className="invisible">widths for these lol...</span>
+				</p>
+			</div>
+		),
+	}
+);
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
@@ -286,10 +303,16 @@ const Post: NextPage = () => {
 												Submit assignment
 											</h2>
 										)}
-										<AssignmentPanel
-											assignmentType={assignment.data.type}
-											revisions={revisions}
-										/>
+										<div className="mt-4 flex flex-col space-y-4">
+											<Panel
+												assignmentType={assignment.data.type}
+												revisions={revisions}
+												settings={
+													assignment.data
+														.settings as unknown as AssignmentSettingsTypes
+												}
+											/>
+										</div>
 									</div>
 								</div>
 							) : (

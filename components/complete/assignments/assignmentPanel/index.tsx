@@ -1,14 +1,21 @@
 import { AssignmentTypes } from "@/lib/db/assignments/assignments";
 import { NextPage } from "next";
-import CheckBox from "./checkbox";
+import { useState } from "react";
+import { AssignmentSettingsTypes } from "../assignmentCreation/three/settings.types";
+import CheckBox from "./components/checkbox";
+import { SubmissionSettingsTypes } from "./submission.types";
 
 const AssignmentPanel: NextPage<{
 	assignmentType: AssignmentTypes;
-	revisions: never[];
-}> = ({ assignmentType }) => {
+	settings: AssignmentSettingsTypes;
+	revisions: SubmissionSettingsTypes[];
+}> = ({ assignmentType, revisions, settings }) => {
+	const [submission, setSubmission] = useState<SubmissionSettingsTypes>();
+	const imports = { settings, revisions, submission, setSubmission };
 	switch (assignmentType) {
 		case AssignmentTypes.CHECKOFF:
-			return <CheckBox />;
+			// @ts-expect-error Type conversion
+			return <CheckBox imports={imports} />;
 	}
 };
 
