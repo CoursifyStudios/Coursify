@@ -1,9 +1,10 @@
+import { Button } from "@/components/misc/button";
 import { Info } from "@/components/tooltips/info";
 import { AssignmentTypes } from "@/lib/db/assignments/assignments";
 import { IdentificationIcon } from "@heroicons/react/20/solid";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useMemo } from "react";
 import { AssignmentCheckoff } from "../../assignmentCreation/three/settings.types";
 import { SubmissionCheckoff } from "../submission.types";
 
@@ -15,6 +16,14 @@ const CheckBox: NextPage<{
 		setSubmission: Dispatch<SetStateAction<SubmissionCheckoff>>;
 	};
 }> = ({ imports: { revisions, settings, setSubmission, submission } }) => {
+	const finished = useMemo(() => {
+		return (
+			submission &&
+			submission.checkboxes &&
+			settings.checkboxes.length == submission.checkboxes.length
+		);
+	}, [settings.checkboxes.length, submission]);
+
 	return (
 		<>
 			{settings.checkboxes.map((checkbox) => {
@@ -53,7 +62,7 @@ const CheckBox: NextPage<{
 					>
 						<div
 							className={`checkbox mr-3 h-5 min-w-[1.25rem] rounded border-2 border-gray-300 transition  ${
-								checked ? "bg-gray-300" : "dark:bg-neutral-950"
+								checked ? "bg-gray-300 " : "dark:bg-neutral-950"
 							}`}
 						>
 							{checked && <CheckIcon />}
@@ -77,6 +86,9 @@ const CheckBox: NextPage<{
 					</button>
 				);
 			})}
+			<Button className="text-white" color="bg-blue-500">
+				{finished ? "Submit" : "Save"}
+			</Button>
 		</>
 	);
 };

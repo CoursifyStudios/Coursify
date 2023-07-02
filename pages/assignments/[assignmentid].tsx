@@ -303,7 +303,7 @@ const Post: NextPage = () => {
 												Submit assignment
 											</h2>
 										)}
-										<div className="mt-4 flex flex-col space-y-4">
+										<div className="mt-4 flex flex-col items-start space-y-4">
 											<Panel
 												assignmentType={assignment.data.type}
 												revisions={revisions}
