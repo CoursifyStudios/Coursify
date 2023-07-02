@@ -1,4 +1,26 @@
-import AssignmentHeader from "@/components/complete/assignments/assignmentPane/header";
+import { Loading } from "@/components/assignments/loading";
+import Editor from "@/components/editors/richeditor";
+import { Button } from "@/components/misc/button";
+import Dropdown from "@/components/misc/dropdown";
+import { Info } from "@/components/tooltips/info";
+import {
+	AllAssignmentResponse,
+	AssignmentResponse,
+	AssignmentTypes,
+	getAllAssignments,
+	getAssignment,
+} from "@/lib/db/assignments/assignments";
+import { Database } from "@/lib/db/database.types";
+import {
+	ScheduleInterface,
+	getSchedule,
+	setThisSchedule,
+} from "@/lib/db/schedule";
+import { getDataOutArray } from "@/lib/misc/dataOutArray";
+import launch from "@/public/svgs/launch.svg";
+import noData from "@/public/svgs/no-data.svg";
+import AssignmentHeader from "@assignments/assignmentPane/header";
+import { AssignmentPreview } from "@assignments/assignments";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { SerializedEditorState } from "lexical";
@@ -6,28 +28,6 @@ import { NextPage } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { Loading } from "../../components/assignments/loading";
-import { AssignmentPreview } from "../../components/complete/assignments/assignments";
-import Editor from "../../components/editors/richeditor";
-import { Button } from "../../components/misc/button";
-import Dropdown from "../../components/misc/dropdown";
-import { Info } from "../../components/tooltips/info";
-import {
-	AllAssignmentResponse,
-	AssignmentResponse,
-	AssignmentTypes,
-	getAllAssignments,
-	getAssignment,
-} from "../../lib/db/assignments/assignments";
-import { Database } from "../../lib/db/database.types";
-import {
-	ScheduleInterface,
-	getSchedule,
-	setThisSchedule,
-} from "../../lib/db/schedule";
-import { getDataOutArray } from "../../lib/misc/dataOutArray";
-import launch from "../../public/svgs/launch.svg";
-import noData from "../../public/svgs/no-data.svg";
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
@@ -40,6 +40,7 @@ const Post: NextPage = () => {
 	const user = useUser();
 	const { assignmentid } = router.query;
 	const [fullscreen, setFullscreen] = useState(false);
+	const [submissions, setSubmissions] = useState();
 
 	const options = [
 		{ name: "Relevance" },
