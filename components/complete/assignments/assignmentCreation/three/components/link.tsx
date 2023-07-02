@@ -1,10 +1,10 @@
+import { ToggleSection } from "@/components/settings/components/sections";
+import { Info } from "@/components/tooltips/info";
+import { AssignmentTypes } from "@/lib/db/assignments/assignments";
+import { normalizeURLs } from "@/lib/misc/normalizeurls";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Dispatch, SetStateAction, useLayoutEffect } from "react";
 import TagsInput from "react-tagsinput";
-import { AssignmentTypes } from "../../../../../../lib/db/assignments";
-import { normalizeURLs } from "../../../../../../lib/misc/normalizeurls";
-import { ToggleSection } from "../../../../../settings/components/sections";
-import { Info } from "../../../../../tooltips/info";
 import { AssignmentLink } from "../settings.types";
 
 const Link = ({

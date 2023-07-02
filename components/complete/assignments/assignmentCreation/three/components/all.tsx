@@ -1,10 +1,10 @@
+import { Info } from "@/components/tooltips/info";
+import { AssignmentTypes } from "@/lib/db/assignments/assignments";
 import {
 	CheckCircleIcon,
 	ExclamationCircleIcon,
 } from "@heroicons/react/24/outline";
 import { Dispatch, SetStateAction, useLayoutEffect } from "react";
-import { AssignmentTypes } from "../../../../../../lib/db/assignments";
-import { Info } from "../../../../../tooltips/info";
 import { submissionType } from "../../submissionType";
 import { AssignmentAll } from "../settings.types";
 

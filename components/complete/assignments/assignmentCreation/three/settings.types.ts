@@ -1,5 +1,5 @@
+import { AssignmentTypes } from "@/lib/db/assignments/assignments";
 import * as Yup from "yup";
-import { AssignmentTypes } from "../../../../../lib/db/assignments";
 import {
 	assignmentCheckoffValidation,
 	assignmentDiscussionPostValidation,

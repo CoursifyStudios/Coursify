@@ -2,9 +2,9 @@ import { NextPage } from "next";
 import { Dispatch, SetStateAction, useState } from "react";
 import { create } from "zustand";
 
-import { NewAssignmentData } from "../../../../lib/db/assignments";
-import { useSettings } from "../../../../lib/stores/settings";
-import { Popup } from "../../../misc/popup";
+import { Popup } from "@/components/misc/popup";
+import { NewAssignmentData } from "@/lib/db/assignments/assignments";
+import { useSettings } from "@/lib/stores/settings";
 import { DueType } from "../assignments";
 import AssignmentCreation from "./four";
 import { submissionType } from "./submissionType";

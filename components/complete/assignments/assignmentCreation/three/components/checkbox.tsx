@@ -1,4 +1,5 @@
 import CMenu from "@/components/misc/menu";
+import { AssignmentTypes } from "@/lib/db/assignments/assignments";
 import {
 	ChevronDownIcon,
 	ChevronUpIcon,
@@ -6,7 +7,6 @@ import {
 	PlusIcon,
 } from "@heroicons/react/24/outline";
 import { Dispatch, SetStateAction, useLayoutEffect, useState } from "react";
-import { AssignmentTypes } from "../../../../../../lib/db/assignments";
 import { AssignmentCheckoff } from "../settings.types";
 
 const CheckBox = ({

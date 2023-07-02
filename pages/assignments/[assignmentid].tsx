@@ -18,7 +18,7 @@ import {
 	AssignmentTypes,
 	getAllAssignments,
 	getAssignment,
-} from "../../lib/db/assignments";
+} from "../../lib/db/assignments/assignments";
 import { Database } from "../../lib/db/database.types";
 import {
 	ScheduleInterface,

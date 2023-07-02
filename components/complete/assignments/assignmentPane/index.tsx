@@ -1,4 +1,4 @@
-import { AssignmentTypes } from "@/lib/db/assignments";
+import { AssignmentTypes } from "@/lib/db/assignments/assignments";
 import { NextPage } from "next";
 import CheckBox from "./checkbox";
 

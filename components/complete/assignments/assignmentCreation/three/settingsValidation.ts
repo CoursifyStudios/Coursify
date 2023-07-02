@@ -1,4 +1,4 @@
-import { AssignmentTypes } from "@/lib/db/assignments";
+import { AssignmentTypes } from "@/lib/db/assignments/assignments";
 import * as Yup from "yup";
 import { AssignmentSettingsTypes } from "./settings.types";
 

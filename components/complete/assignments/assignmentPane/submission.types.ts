@@ -1,4 +1,4 @@
-import { AssignmentTypes } from "@/lib/db/assignments";
+import { AssignmentTypes } from "@/lib/db/assignments/assignments";
 import { SerializedEditorState } from "lexical";
 import * as Yup from "yup";
 import { GoogleSubmissionTypes } from "../assignmentCreation/three/settings.types";

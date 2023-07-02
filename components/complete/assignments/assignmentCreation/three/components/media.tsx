@@ -1,8 +1,8 @@
+import { Info } from "@/components/tooltips/info";
+import { AssignmentTypes } from "@/lib/db/assignments/assignments";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { Dispatch, SetStateAction, useLayoutEffect } from "react";
 import TagsInput from "react-tagsinput";
-import { AssignmentTypes } from "../../../../../../lib/db/assignments";
-import { Info } from "../../../../../tooltips/info";
 import { AssignmentMedia } from "../settings.types";
 
 const Media = ({

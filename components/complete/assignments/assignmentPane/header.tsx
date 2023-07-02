@@ -1,6 +1,6 @@
 import { ButtonIcon } from "@/components/misc/button";
 import { ColoredPill, CopiedHover } from "@/components/misc/pill";
-import { AssignmentResponse } from "@/lib/db/assignments";
+import { AssignmentResponse } from "@/lib/db/assignments/assignments";
 import {
 	ArrowsPointingInIcon,
 	ArrowsPointingOutIcon,

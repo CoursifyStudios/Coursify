@@ -1,8 +1,8 @@
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { SerializedEditorState } from "lexical";
-import { AssignmentSettingsTypes } from "../../components/complete/assignments/assignmentCreation/three/settings.types";
-import { DueType } from "../../components/complete/assignments/assignments";
-import { Database } from "./database.types";
+import { AssignmentSettingsTypes } from "../../../components/complete/assignments/assignmentCreation/three/settings.types";
+import { DueType } from "../../../components/complete/assignments/assignments";
+import { Database } from "../database.types";
 
 export const getAllAssignments = async (
 	supabaseClient: SupabaseClient<Database>
