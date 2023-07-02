@@ -1,6 +1,7 @@
 import { Loading } from "@/components/assignments/loading";
+import AssignmentPanel from "@/components/complete/assignments/assignmentPanel";
+import AssignmentHeader from "@/components/complete/assignments/assignmentPanel/header";
 import Editor from "@/components/editors/richeditor";
-import { Button } from "@/components/misc/button";
 import Dropdown from "@/components/misc/dropdown";
 import { Info } from "@/components/tooltips/info";
 import {
@@ -19,7 +20,6 @@ import {
 import { getDataOutArray } from "@/lib/misc/dataOutArray";
 import launch from "@/public/svgs/launch.svg";
 import noData from "@/public/svgs/no-data.svg";
-import AssignmentHeader from "@assignments/assignmentPane/header";
 import { AssignmentPreview } from "@assignments/assignments";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
@@ -40,7 +40,7 @@ const Post: NextPage = () => {
 	const user = useUser();
 	const { assignmentid } = router.query;
 	const [fullscreen, setFullscreen] = useState(false);
-	const [submissions, setSubmissions] = useState();
+	const [revisions, setRevisions] = useState([]);
 
 	const options = [
 		{ name: "Relevance" },
@@ -286,19 +286,10 @@ const Post: NextPage = () => {
 												Submit assignment
 											</h2>
 										)}
-										{assignment.data.type == AssignmentTypes.CHECKOFF ? (
-											<Button color="bg-blue-500" className="mt-6 text-white">
-												Mark as complete
-											</Button>
-										) : (
-											<Button
-												className="mt-6 inline-flex cursor-pointer rounded-md px-4 py-1 font-semibold text-white"
-												color="bg-blue-500"
-												onClick={() => setIsOpen(true)}
-											>
-												Submit
-											</Button>
-										)}
+										<AssignmentPanel
+											assignmentType={assignment.data.type}
+											revisions={revisions}
+										/>
 									</div>
 								</div>
 							) : (

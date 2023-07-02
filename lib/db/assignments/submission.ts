@@ -1,4 +1,4 @@
-import { SubmissionSettingsTypes } from "@assignments/assignmentPane/submission.types";
+import { SubmissionSettingsTypes } from "@/components/complete/assignments/assignmentPanel/submission.types";
 
 export const submission = (
 	classID: string,
