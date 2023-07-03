@@ -11,9 +11,9 @@ const AssignmentPanel: NextPage<{
 	assignmentType: AssignmentTypes;
 	settings: AssignmentSettingsTypes;
 	setRevisions: Dispatch<SetStateAction<Submission[]>>;
-
+	revisions: Submission[];
 	assignmentID: string;
-}> = ({ assignmentType, setRevisions, settings, assignmentID }) => {
+}> = ({ assignmentType, setRevisions, revisions, settings, assignmentID }) => {
 	const [submission, setSubmission] = useState<SubmissionSettingsTypes>();
 	const supabase = useSupabaseClient<Database>();
 	const user = useUser();
@@ -25,6 +25,7 @@ const AssignmentPanel: NextPage<{
 		assignmentID,
 		supabase,
 		user,
+		revisions,
 	};
 
 	switch (assignmentType) {

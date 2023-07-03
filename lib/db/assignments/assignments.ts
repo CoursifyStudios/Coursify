@@ -66,6 +66,7 @@ export const getAssignment = async (
 		)
 		`
 		)
+		.order("created_at", { foreignTable: "submissions", ascending: false })
 		.eq("id", assignmentuuid)
 		.single();
 };

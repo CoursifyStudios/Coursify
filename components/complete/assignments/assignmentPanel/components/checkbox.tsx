@@ -1,4 +1,5 @@
 import { Button } from "@/components/misc/button";
+import Loading from "@/components/misc/loading";
 import { Info } from "@/components/tooltips/info";
 import { AssignmentTypes } from "@/lib/db/assignments/assignments";
 import { assignmentSubmission } from "@/lib/db/assignments/submission";
@@ -7,12 +8,19 @@ import { IdentificationIcon } from "@heroicons/react/20/solid";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import { SupabaseClient, User } from "@supabase/supabase-js";
 import { NextPage } from "next";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import {
+	Dispatch,
+	SetStateAction,
+	useLayoutEffect,
+	useMemo,
+	useState,
+} from "react";
 import { AssignmentCheckoff } from "../../assignmentCreation/three/settings.types";
 import { Submission, SubmissionCheckoff } from "../submission.types";
 
 const CheckBox: NextPage<{
 	imports: {
+		revisions: Submission[];
 		setRevisions: Dispatch<SetStateAction<Submission[]>>;
 		assignmentID: string;
 		settings: AssignmentCheckoff;
@@ -29,6 +37,7 @@ const CheckBox: NextPage<{
 		submission,
 		assignmentID,
 		supabase,
+		revisions,
 		user,
 	},
 }) => {
@@ -41,8 +50,23 @@ const CheckBox: NextPage<{
 	}, [settings.checkboxes.length, submission]);
 
 	const [error, setError] = useState("");
+	const [loading, setLoading] = useState(false);
+
+	const dbSubmission = useMemo(() => {
+		if (revisions.length > 0) {
+			return revisions[0];
+		}
+		return undefined;
+	}, [revisions]);
+
+	useLayoutEffect(() => {
+		if (dbSubmission) {
+			setSubmission(dbSubmission.content as SubmissionCheckoff);
+		}
+	}, [dbSubmission, setSubmission]);
 
 	const submit = async () => {
+		setLoading(true);
 		const now = new Date().toUTCString();
 		const error = await assignmentSubmission(
 			assignmentID,
@@ -56,9 +80,10 @@ const CheckBox: NextPage<{
 			return;
 		}
 		setRevisions((revisions) => [
-			...revisions,
 			{ content: submission, created_at: now, final: finished },
+			...revisions,
 		]);
+		setLoading(false);
 	};
 
 	return (
@@ -123,20 +148,36 @@ const CheckBox: NextPage<{
 					</button>
 				);
 			})}
-			<Button
-				className="text-white"
-				color="bg-blue-500"
-				disabled={
-					!(
-						submission &&
-						submission.checkboxes &&
-						submission.checkboxes.length != 0
-					)
-				}
-				onClick={submit}
-			>
-				{finished ? "Submit" : "Save"}
-			</Button>
+			<div className="flex items-center justify-between">
+				<Button
+					className="text-white"
+					color="bg-blue-500"
+					disabled={
+						!(
+							submission &&
+							submission.checkboxes &&
+							submission.checkboxes.length != 0
+						) ||
+						(finished && dbSubmission?.final) ||
+						loading ||
+						(dbSubmission != undefined &&
+							submission.checkboxes.length ==
+								(dbSubmission?.content as SubmissionCheckoff).checkboxes
+									?.length)
+					}
+					onClick={submit}
+				>
+					{finished
+						? dbSubmission?.final
+							? "Submitted!"
+							: "Submit"
+						: dbSubmission?.final
+						? "Resubmit"
+						: "Save"}
+				</Button>
+				{loading && <Loading className="bg-gray-300" />}
+			</div>
+			{error && `Error occured while saving: ${error}`}
 		</>
 	);
 };

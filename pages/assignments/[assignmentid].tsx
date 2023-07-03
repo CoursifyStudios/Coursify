@@ -22,7 +22,7 @@ import { getDataOutArray } from "@/lib/misc/dataOutArray";
 import launch from "@/public/svgs/launch.svg";
 import noData from "@/public/svgs/no-data.svg";
 import { AssignmentPreview } from "@assignments/assignments";
-import { PlusIcon } from "@heroicons/react/24/outline";
+import { BarsArrowDownIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { SerializedEditorState } from "lexical";
 import { NextPage } from "next";
@@ -209,7 +209,7 @@ const Post: NextPage = () => {
 	);
 
 	function AssignmentPane() {
-		const [isOpen, setIsOpen] = useState(false);
+		const [open, setOpen] = useState(false);
 		if (
 			!router.isReady ||
 			!allAssignments ||
@@ -277,51 +277,92 @@ const Post: NextPage = () => {
 									<Editor
 										editable={false}
 										initialState={assignment.data.content}
-										className=" scrollbar-fancy mb-5 mt-2 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
+										className=" scrollbar-fancy mb-5 mt-2 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-5"
 										focus={false}
 									/>
 								) : (
 									<>
-										<div className="mb-5 mt-2 grid grow place-items-center rounded-xl bg-gray-200 p-4 text-lg font-medium">
+										<div className="mb-5 mt-2 grid grow place-items-center rounded-xl bg-gray-200 p-5 text-lg font-medium">
 											No assignment details
 										</div>{" "}
 									</>
 								)}
 							</div>
 							{assignment.data.type != AssignmentTypes.DISCUSSION_POST ? (
-								<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:mb-0 xl:ml-4 xl:w-72">
+								<div
+									className={`sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:mb-0 xl:ml-4 xl:w-72 `}
+								>
 									<h2 className="text-xl font-semibold">Submission</h2>
-									<div className="mt-2 rounded-xl bg-gray-200 p-6">
-										{assignment.data.submission_instructions ? (
+									<div
+										className={`mt-2 rounded-xl bg-gray-200 ${
+											open ? "max-h-16 p-1" : "max-h-96 px-5 py-4"
+										}  overflow-hidden transition-all duration-300`}
+									>
+										{!open ? (
 											<>
-												<h2 className="text-lg font-semibold ">
-													Teacher{"'"}s Instructions:
-												</h2>
-												<p className="max-w-md text-sm text-gray-700">
-													{assignment.data.submission_instructions}
-												</p>
+												{assignment.data.submission_instructions ? (
+													<>
+														<h2 className="text-lg font-semibold ">
+															Teacher{"'"}s Instructions:
+														</h2>
+														<p className="max-w-md text-sm text-gray-700">
+															{assignment.data.submission_instructions}
+														</p>
+													</>
+												) : (
+													<h2 className="text-lg font-semibold ">
+														Submit assignment
+													</h2>
+												)}
+												<div className="mt-4 flex flex-col  space-y-4">
+													<Panel
+														assignmentType={assignment.data.type}
+														setRevisions={setRevisions}
+														revisions={revisions}
+														settings={
+															assignment.data
+																.settings as unknown as AssignmentSettingsTypes
+														}
+														assignmentID={
+															Array.isArray(assignmentid!)
+																? assignmentid[0]
+																: assignmentid!
+														}
+													/>
+												</div>
 											</>
 										) : (
-											<h2 className="text-lg font-semibold ">
-												Submit assignment
+											<h2
+												className="cursor-pointer px-4 py-3 text-lg font-semibold"
+												onClick={() => setOpen(false)}
+											>
+												Back to Submission...
 											</h2>
 										)}
-										<div className="mt-4 flex flex-col items-start space-y-4">
-											<Panel
-												assignmentType={assignment.data.type}
-												setRevisions={setRevisions}
-												settings={
-													assignment.data
-														.settings as unknown as AssignmentSettingsTypes
-												}
-												assignmentID={
-													Array.isArray(assignmentid!)
-														? assignmentid[0]
-														: assignmentid!
-												}
-											/>
-										</div>
 									</div>
+									{revisions.length > 0 && (
+										<div
+											className={`mt-4  flex flex-col rounded-xl bg-gray-200 `}
+										>
+											<button
+												className="flex items-center px-5 py-4"
+												onClick={() => setOpen((open) => !open)}
+											>
+												<h3 className="text-lg font-semibold">
+													Revision History
+												</h3>
+												<BarsArrowDownIcon className="ml-auto h-6 w-6" />
+											</button>
+
+											{open && (
+												<>
+													<div className="px-5 pb-4">
+														Revision history is coming soon
+													</div>
+												</>
+											)}
+										</div>
+									)}
 								</div>
 							) : (
 								<div>
