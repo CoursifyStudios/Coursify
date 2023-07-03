@@ -5,6 +5,8 @@ import Link from "next/link";
 import { addUserToGroup } from "../../lib/db/groups";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import { Button } from "../misc/button";
+import { InfoPills } from "../misc/infopills";
+import { ColoredPill } from "../misc/pill";
 
 export const GroupSmall: NextPage<{
 	photo: string | null | undefined;
@@ -26,7 +28,7 @@ export const GroupSmall: NextPage<{
 	return <Groups />;
 	function Groups() {
 		return (
-			<div className="brightness-hover	flex cursor-pointer select-none snap-start flex-col rounded-xl bg-backdrop-200 ">
+			<div className="brightness-hover flex cursor-pointer select-none snap-start flex-col rounded-xl bg-backdrop-200 ">
 				<div className="relative h-16">
 					{photo ? (
 						<Image
@@ -50,10 +52,9 @@ export const GroupLarge: NextPage<{
 	id: string;
 	photo: string | null | undefined;
 	name: string;
-	isMember: boolean;
-	membernum: number;
+	membernum: string;
 	isLink?: boolean;
-}> = ({ id, photo, name, isMember, membernum, isLink }) => {
+}> = ({ id, photo, name, membernum, isLink }) => {
 	const { newTab } = useTabs();
 	const user = useUser();
 	const supabase = useSupabaseClient();
@@ -72,7 +73,7 @@ export const GroupLarge: NextPage<{
 		return (
 			<div
 				className={
-					"flex w-[19rem] cursor-pointer snap-start flex-col rounded-xl bg-backdrop-200 transition duration-300 hover:shadow-lg hover:brightness-95 "
+					"flex w-[25rem] cursor-pointer snap-start flex-col rounded-xl bg-backdrop-200 transition duration-300 hover:shadow-lg hover:brightness-95 "
 				}
 			>
 				<div className="relative h-32 ">
@@ -94,20 +95,64 @@ export const GroupLarge: NextPage<{
 								{name}
 							</h3>
 						</div>
-						<p>{membernum} Members</p>
+						<p className="line-clamp-3 text-sm">{membernum}</p>
 					</div>
-					{user && (
-						<Button
-							className="isolate-auto brightness:hover rounded-lg px-2 py-1 font-medium text-white"
-							color="bg-blue-500"
-							onClick={async () => {
-								addUserToGroup(supabase, id, user.id);
-							}}
-							disabled={isMember}
-						>
-							Join{isMember && "ed"}
-						</Button>
+				</div>
+			</div>
+		);
+	}
+};
+
+export const GroupTest: NextPage<{
+	id: string;
+	photo: string | null | undefined;
+	name: string;
+	membernum: string;
+	isLink?: boolean;
+}> = ({ id, photo, name, membernum, isLink }) => {
+	const { newTab } = useTabs();
+	const user = useUser();
+	const supabase = useSupabaseClient();
+	if (isLink) {
+		return (
+			<Link
+				href={isLink && "/groups/" + id}
+				onClick={() => newTab("/groups/" + id, name)}
+			>
+				<Groups />
+			</Link>
+		);
+	}
+	return <Groups />;
+	function Groups() {
+		return (
+			<div
+				className={
+					"flex w-[19rem] cursor-pointer snap-start flex-col rounded-xl bg-backdrop-200 transition duration-300 hover:shadow-lg hover:brightness-95 "
+				}
+			>
+				<div className="relative h-20 ">
+					{photo ? (
+						<Image
+							src={photo}
+							alt={"Image for " + name}
+							className="rounded-t-xl object-cover object-center"
+							fill
+						/>
+					) : (
+						<div className="absolute inset-0 animate-pulse bg-gray-200" />
 					)}
+				</div>
+				<div className="flex items-center justify-between p-3">
+					<div>
+						<div className="flex items-center justify-between">
+							<h3 className="line-clamp-1 text-ellipsis overflow-hidden pr-2 break-words text-xl font-semibold">
+								{name}
+							</h3>
+							<ColoredPill color="green">Joined</ColoredPill>
+						</div>
+						<p className="line-clamp-2 text-sm">{membernum}</p>
+					</div>
 				</div>
 			</div>
 		);
