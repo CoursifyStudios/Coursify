@@ -7,6 +7,7 @@ const nextConfig = {
 			"lh3.googleusercontent.com",
 			"cdn.discordapp.com",
 			"media.discordapp.net",
+			"images.unsplash.com",
 		],
 	},
 	async redirects() {
