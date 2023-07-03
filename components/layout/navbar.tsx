@@ -5,7 +5,6 @@ import {
 	Cog6ToothIcon,
 	MagnifyingGlassIcon,
 	MegaphoneIcon,
-	UserGroupIcon,
 	UserIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";

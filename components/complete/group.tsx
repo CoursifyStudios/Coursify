@@ -2,10 +2,7 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { addUserToGroup } from "../../lib/db/groups";
 import { useTabs } from "../../lib/tabs/handleTabs";
-import { Button } from "../misc/button";
-import { InfoPills } from "../misc/infopills";
 import { ColoredPill } from "../misc/pill";
 
 export const GroupSmall: NextPage<{
@@ -146,7 +143,7 @@ export const GroupTest: NextPage<{
 				<div className="flex items-center justify-between p-3">
 					<div>
 						<div className="flex items-center justify-between">
-							<h3 className="line-clamp-1 text-ellipsis overflow-hidden pr-2 break-words text-xl font-semibold">
+							<h3 className="line-clamp-1 overflow-hidden text-ellipsis break-words pr-2 text-xl font-semibold">
 								{name}
 							</h3>
 							<ColoredPill color="green">Joined</ColoredPill>

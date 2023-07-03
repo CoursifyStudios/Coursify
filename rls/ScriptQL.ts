@@ -76,7 +76,11 @@ export const IN = (key: string, value: string) => {
  * For the filter use $ to refer to the table
  * Example: EQ("$.id", "auth.uid()")
  */
-export const SELECT = (table: string,  properties: string[], filter = "true") => {
+export const SELECT = (
+	table: string,
+	properties: string[],
+	filter = "true"
+) => {
 	count++;
 	const tableLetter = convertToLetter(count);
 	return `(SELECT ${properties
