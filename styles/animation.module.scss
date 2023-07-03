@@ -18,7 +18,8 @@
 		$spinLength: 2s;
 		$checkLength: 1s;
 
-		> div, > svg {
+		> div,
+		> svg {
 			position: absolute;
 			// copilot code
 			top: 50%;
@@ -63,7 +64,6 @@
 				height: calc($size - $thickness);
 			}
 
-
 			&.check {
 				@keyframes fill {
 					0% {
@@ -89,4 +89,3 @@
 		}
 	}
 }
-
