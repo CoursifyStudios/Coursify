@@ -1,17 +1,32 @@
 import { AssignmentTypes } from "@/lib/db/assignments/assignments";
+import { Database } from "@/lib/db/database.types";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { AssignmentSettingsTypes } from "../assignmentCreation/three/settings.types";
 import CheckBox from "./components/checkbox";
-import { SubmissionSettingsTypes } from "./submission.types";
+import { Submission, SubmissionSettingsTypes } from "./submission.types";
 
 const AssignmentPanel: NextPage<{
 	assignmentType: AssignmentTypes;
 	settings: AssignmentSettingsTypes;
-	revisions: SubmissionSettingsTypes[];
-}> = ({ assignmentType, revisions, settings }) => {
+	setRevisions: Dispatch<SetStateAction<Submission[]>>;
+
+	assignmentID: string;
+}> = ({ assignmentType, setRevisions, settings, assignmentID }) => {
 	const [submission, setSubmission] = useState<SubmissionSettingsTypes>();
-	const imports = { settings, revisions, submission, setSubmission };
+	const supabase = useSupabaseClient<Database>();
+	const user = useUser();
+	const imports = {
+		settings,
+		setRevisions,
+		submission,
+		setSubmission,
+		assignmentID,
+		supabase,
+		user,
+	};
+
 	switch (assignmentType) {
 		case AssignmentTypes.CHECKOFF:
 			// @ts-expect-error Type conversion

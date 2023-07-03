@@ -79,3 +79,9 @@ export type SubmissionSettingsTypes =
 	| SubmissionGoogle
 	| SubmissionText
 	| SubmissionAll;
+
+export interface Submission {
+	content: SubmissionSettingsTypes;
+	final: boolean;
+	created_at: string;
+}

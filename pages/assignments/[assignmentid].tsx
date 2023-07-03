@@ -1,6 +1,7 @@
 import { Loading } from "@/components/assignments/loading";
 import { AssignmentSettingsTypes } from "@/components/complete/assignments/assignmentCreation/three/settings.types";
 import AssignmentHeader from "@/components/complete/assignments/assignmentPanel/header";
+import { Submission } from "@/components/complete/assignments/assignmentPanel/submission.types";
 import Editor from "@/components/editors/richeditor";
 import Dropdown from "@/components/misc/dropdown";
 import { Info } from "@/components/tooltips/info";
@@ -57,7 +58,7 @@ const Post: NextPage = () => {
 	const user = useUser();
 	const { assignmentid } = router.query;
 	const [fullscreen, setFullscreen] = useState(false);
-	const [revisions, setRevisions] = useState([]);
+	const [revisions, setRevisions] = useState<Submission[]>([]);
 
 	const options = [
 		{ name: "Relevance" },
@@ -105,6 +106,8 @@ const Post: NextPage = () => {
 				setAssignment(undefined);
 				const assignment = await getAssignment(supabase, assignmentid);
 				setAssignment(assignment);
+				if (assignment.data)
+					setRevisions(assignment.data.submissions as Submission[]);
 			}
 		})();
 		// Mobile support makes it sorta like using gmail on mobile, optimized for assignments
@@ -306,10 +309,15 @@ const Post: NextPage = () => {
 										<div className="mt-4 flex flex-col items-start space-y-4">
 											<Panel
 												assignmentType={assignment.data.type}
-												revisions={revisions}
+												setRevisions={setRevisions}
 												settings={
 													assignment.data
 														.settings as unknown as AssignmentSettingsTypes
+												}
+												assignmentID={
+													Array.isArray(assignmentid!)
+														? assignmentid[0]
+														: assignmentid!
 												}
 											/>
 										</div>

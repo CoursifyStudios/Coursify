@@ -58,6 +58,11 @@ export const getAssignment = async (
 			`
 		*, classes (
 			name, id, color
+		),
+		submissions (
+			content,
+			final,
+			created_at
 		)
 		`
 		)

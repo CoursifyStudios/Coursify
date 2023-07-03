@@ -1,28 +1,65 @@
 import { Button } from "@/components/misc/button";
 import { Info } from "@/components/tooltips/info";
 import { AssignmentTypes } from "@/lib/db/assignments/assignments";
+import { assignmentSubmission } from "@/lib/db/assignments/submission";
+import { Database } from "@/lib/db/database.types";
 import { IdentificationIcon } from "@heroicons/react/20/solid";
 import { CheckIcon } from "@heroicons/react/24/outline";
+import { SupabaseClient, User } from "@supabase/supabase-js";
 import { NextPage } from "next";
-import { Dispatch, SetStateAction, useMemo } from "react";
+import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { AssignmentCheckoff } from "../../assignmentCreation/three/settings.types";
-import { SubmissionCheckoff } from "../submission.types";
+import { Submission, SubmissionCheckoff } from "../submission.types";
 
 const CheckBox: NextPage<{
 	imports: {
-		revisions: SubmissionCheckoff[];
+		setRevisions: Dispatch<SetStateAction<Submission[]>>;
+		assignmentID: string;
 		settings: AssignmentCheckoff;
 		submission: SubmissionCheckoff;
 		setSubmission: Dispatch<SetStateAction<SubmissionCheckoff>>;
+		supabase: SupabaseClient<Database>;
+		user: User;
 	};
-}> = ({ imports: { revisions, settings, setSubmission, submission } }) => {
+}> = ({
+	imports: {
+		setRevisions,
+		settings,
+		setSubmission,
+		submission,
+		assignmentID,
+		supabase,
+		user,
+	},
+}) => {
 	const finished = useMemo(() => {
-		return (
+		return Boolean(
 			submission &&
-			submission.checkboxes &&
-			settings.checkboxes.length == submission.checkboxes.length
+				submission.checkboxes &&
+				settings.checkboxes.length == submission.checkboxes.length
 		);
 	}, [settings.checkboxes.length, submission]);
+
+	const [error, setError] = useState("");
+
+	const submit = async () => {
+		const now = new Date().toUTCString();
+		const error = await assignmentSubmission(
+			assignmentID,
+			submission,
+			supabase,
+			user,
+			finished
+		);
+		if (error) {
+			setError(error.message);
+			return;
+		}
+		setRevisions((revisions) => [
+			...revisions,
+			{ content: submission, created_at: now, final: finished },
+		]);
+	};
 
 	return (
 		<>
@@ -86,7 +123,18 @@ const CheckBox: NextPage<{
 					</button>
 				);
 			})}
-			<Button className="text-white" color="bg-blue-500">
+			<Button
+				className="text-white"
+				color="bg-blue-500"
+				disabled={
+					!(
+						submission &&
+						submission.checkboxes &&
+						submission.checkboxes.length != 0
+					)
+				}
+				onClick={submit}
+			>
 				{finished ? "Submit" : "Save"}
 			</Button>
 		</>
