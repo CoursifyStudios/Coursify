@@ -9,10 +9,10 @@ import {
 	useState,
 } from "react";
 
+import { NewAssignmentData } from "@/lib/db/assignments/assignments";
+import { getClassTimesForXDays } from "@/lib/db/classes";
+import { Database, Json } from "@/lib/db/database.types";
 import { useAssignmentStore } from ".";
-import { NewAssignmentData } from "../../../../lib/db/assignments";
-import { getClassTimesForXDays } from "../../../../lib/db/classes";
-import { Database, Json } from "../../../../lib/db/database.types";
 import Editor from "../../../editors/richeditor";
 import { Button } from "../../../misc/button";
 import Dropdown from "../../../misc/dropdown";

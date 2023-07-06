@@ -3,7 +3,7 @@ export type Json =
 	| number
 	| boolean
 	| null
-	| { [key: string]: Json }
+	| { [key: string]: Json | undefined }
 	| Json[];
 
 export interface Database {
@@ -398,31 +398,31 @@ export interface Database {
 			};
 			submissions: {
 				Row: {
-					assignment_id: string | null;
-					content: string;
+					assignment_id: string;
+					content: Json | null;
 					created_at: string;
+					final: boolean;
+					grade: number | null;
 					id: string;
-					json_content: Json | null;
-					revision_number: number;
-					user_id: string | null;
+					user_id: string;
 				};
 				Insert: {
-					assignment_id?: string | null;
-					content: string;
+					assignment_id: string;
+					content?: Json | null;
 					created_at?: string;
-					id: string;
-					json_content?: Json | null;
-					revision_number: number;
-					user_id?: string | null;
+					final: boolean;
+					grade?: number | null;
+					id?: string;
+					user_id: string;
 				};
 				Update: {
-					assignment_id?: string | null;
-					content?: string;
+					assignment_id?: string;
+					content?: Json | null;
 					created_at?: string;
+					final?: boolean;
+					grade?: number | null;
 					id?: string;
-					json_content?: Json | null;
-					revision_number?: number;
-					user_id?: string | null;
+					user_id?: string;
 				};
 				Relationships: [
 					{

@@ -10,7 +10,7 @@ import {
 import Image from "next/image";
 import { ReactNode } from "react";
 
-import { AssignmentTypes } from "../../../../lib/db/assignments";
+import { AssignmentTypes } from "@/lib/db/assignments/assignments";
 import googleDrive from "/public/brand-logos/googledrive.svg";
 
 const className = "h-5 w-5 min-w-[1.25rem] dark:brightness-90";

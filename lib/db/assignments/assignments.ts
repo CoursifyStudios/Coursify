@@ -1,8 +1,8 @@
+import { AssignmentSettingsTypes } from "@assignments/assignmentCreation/three/settings.types";
+import { DueType } from "@assignments/assignments";
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { SerializedEditorState } from "lexical";
-import { AssignmentSettingsTypes } from "../../components/complete/assignments/assignmentCreation/three/settings.types";
-import { DueType } from "../../components/complete/assignments/assignments";
-import { Database } from "./database.types";
+import { Database } from "../database.types";
 
 export const getAllAssignments = async (
 	supabaseClient: SupabaseClient<Database>
@@ -58,9 +58,15 @@ export const getAssignment = async (
 			`
 		*, classes (
 			name, id, color
+		),
+		submissions (
+			content,
+			final,
+			created_at
 		)
 		`
 		)
+		.order("created_at", { foreignTable: "submissions", ascending: false })
 		.eq("id", assignmentuuid)
 		.single();
 };

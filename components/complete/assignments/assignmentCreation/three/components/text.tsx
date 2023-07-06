@@ -1,6 +1,6 @@
 import { ToggleSection } from "@/components/settings/components/sections";
 import { Info } from "@/components/tooltips/info";
-import { AssignmentTypes } from "@/lib/db/assignments";
+import { AssignmentTypes } from "@/lib/db/assignments/assignments";
 import { Dispatch, SetStateAction, useLayoutEffect } from "react";
 import { AssignmentText } from "../settings.types";
 

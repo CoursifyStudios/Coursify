@@ -4,10 +4,10 @@ import { Dispatch, SetStateAction, useState } from "react";
 import * as Yup from "yup";
 import { useAssignmentStore } from ".";
 
-import { NewAssignmentData } from "../../../../lib/db/assignments";
-import Editor from "../../../editors/richeditor";
-import { Button } from "../../../misc/button";
-import { Info } from "../../../tooltips/info";
+import Editor from "@/components/editors/richeditor";
+import { Button } from "@/components/misc/button";
+import { Info } from "@/components/tooltips/info";
+import { NewAssignmentData } from "@/lib/db/assignments/assignments";
 import { submissionType } from "./submissionType";
 
 export default function AssignmentDetails({
