@@ -1,6 +1,6 @@
+import { AssignmentTypes } from "@/lib/db/assignments/assignments";
 import { NextPage } from "next";
 import { Dispatch, SetStateAction } from "react";
-import { AssignmentTypes } from "../../../../../lib/db/assignments";
 import All from "./components/all";
 import CheckBox from "./components/checkbox";
 import Discussion from "./components/discussion";

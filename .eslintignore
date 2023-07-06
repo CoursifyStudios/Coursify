@@ -45,7 +45,7 @@ next-env.d.ts
 package.json
 deno.jsonc
 tsconfig.json
-styles/globals.css
+styles/*
 yarn.lock
 supabase/config.toml
 .eslintrc.json

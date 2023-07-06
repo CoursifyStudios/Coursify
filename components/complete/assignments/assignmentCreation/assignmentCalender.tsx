@@ -1,7 +1,7 @@
 import { NextPage } from "next";
 
+import { NewAssignmentData } from "@/lib/db/assignments/assignments";
 import { useAssignmentStore } from ".";
-import { NewAssignmentData } from "../../../../lib/db/assignments";
 import { DueType } from "../assignments";
 
 const AssignmentCalender: NextPage<{
@@ -100,8 +100,7 @@ const AssignmentCalender: NextPage<{
 								${
 									(type == "due"
 										? assignmentData.dueDay
-										: assignmentData.publishDay) == i &&
-									"border border-gray-300 bg-white shadow"
+										: assignmentData.publishDay) == i && "brightness-focus"
 								}
 								`}
 								onClick={() => updateAssignmentData(date, i)}

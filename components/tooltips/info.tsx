@@ -3,15 +3,18 @@ import { ReactNode } from "react";
 
 export const Info: NextPage<{
 	children: ReactNode;
+	icon?: ReactNode;
 	className?: string;
 	size?: "small" | "large";
-}> = ({ children, className, size = "large" }) => {
+}> = ({ children, className, size = "large", icon }) => {
 	return (
 		<div className="group relative cursor-pointer select-none ">
 			<div
-				className={`${className} grid h-4 w-4 place-items-center rounded-full bg-gray-200 text-xs font-medium`}
+				className={`${className} ${
+					!icon && "grid h-4 w-4 place-items-center rounded-full bg-gray-200"
+				} text-xs font-medium`}
 			>
-				?
+				{icon ?? "?"}
 			</div>
 			<div className="absolute left-0 right-0 z-30 mt-2 flex justify-center">
 				<div

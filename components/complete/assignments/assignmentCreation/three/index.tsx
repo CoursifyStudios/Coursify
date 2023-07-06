@@ -1,8 +1,8 @@
+import { Button } from "@/components/misc/button";
+import { NewAssignmentData } from "@/lib/db/assignments/assignments";
 import { NextPage } from "next";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAssignmentStore } from "..";
-import { NewAssignmentData } from "../../../../../lib/db/assignments";
-import { Button } from "../../../../misc/button";
 import { submissionType } from "../submissionType";
 import GetAssignmentSettings from "./settings";
 import { AssignmentSettingsTypes } from "./settings.types";

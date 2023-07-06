@@ -2,9 +2,9 @@ import {
 	DropdownSection,
 	ToggleSection,
 } from "@/components/settings/components/sections";
+import { Info } from "@/components/tooltips/info";
+import { AssignmentTypes } from "@/lib/db/assignments/assignments";
 import { Dispatch, SetStateAction, useLayoutEffect } from "react";
-import { AssignmentTypes } from "../../../../../../lib/db/assignments";
-import { Info } from "../../../../../tooltips/info";
 import {
 	AssignmentDiscussionPost,
 	DiscussionPermissions,

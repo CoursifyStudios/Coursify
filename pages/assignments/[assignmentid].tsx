@@ -1,39 +1,51 @@
-import {
-	ArrowsPointingInIcon,
-	ArrowsPointingOutIcon,
-	ChevronLeftIcon,
-	LinkIcon,
-	PlusIcon,
-} from "@heroicons/react/24/outline";
-import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { SerializedEditorState } from "lexical";
-import { NextPage } from "next";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { AssignmentPreview } from "../../components/complete/assignments/assignments";
-import Editor from "../../components/editors/richeditor";
-import { Button, ButtonIcon } from "../../components/misc/button";
-import Dropdown from "../../components/misc/dropdown";
-import { ColoredPill, CopiedHover } from "../../components/misc/pill";
-import { Info } from "../../components/tooltips/info";
+import { Loading } from "@/components/assignments/loading";
+import { AssignmentSettingsTypes } from "@/components/complete/assignments/assignmentCreation/three/settings.types";
+import AssignmentHeader from "@/components/complete/assignments/assignmentPanel/header";
+import { Submission } from "@/components/complete/assignments/assignmentPanel/submission.types";
+import Editor from "@/components/editors/richeditor";
+import Dropdown from "@/components/misc/dropdown";
+import { Info } from "@/components/tooltips/info";
 import {
 	AllAssignmentResponse,
 	AssignmentResponse,
 	AssignmentTypes,
 	getAllAssignments,
 	getAssignment,
-} from "../../lib/db/assignments";
-import { Database } from "../../lib/db/database.types";
+} from "@/lib/db/assignments/assignments";
+import { Database } from "@/lib/db/database.types";
 import {
 	ScheduleInterface,
 	getSchedule,
 	setThisSchedule,
-} from "../../lib/db/schedule";
-import { getDataOutArray } from "../../lib/misc/dataOutArray";
-import launch from "../../public/svgs/launch.svg";
-import noData from "../../public/svgs/no-data.svg";
+} from "@/lib/db/schedule";
+import { getDataOutArray } from "@/lib/misc/dataOutArray";
+import launch from "@/public/svgs/launch.svg";
+import noData from "@/public/svgs/no-data.svg";
+import { AssignmentPreview } from "@assignments/assignments";
+import { BarsArrowDownIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import { SerializedEditorState } from "lexical";
+import { NextPage } from "next";
+import dynamic from "next/dynamic";
+import Image from "next/image";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+
+const Panel = dynamic(
+	() => import("@/components/complete/assignments/assignmentPanel"),
+	{
+		loading: () => (
+			<div className="animate-pulse">
+				<p className="w-max rounded-md bg-gray-300">
+					<span className="invisible">We should probably use fixed</span>
+				</p>
+				<p className="mt-2 w-max rounded-md bg-gray-300">
+					<span className="invisible">widths for these lol...</span>
+				</p>
+			</div>
+		),
+	}
+);
 
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
@@ -46,6 +58,7 @@ const Post: NextPage = () => {
 	const user = useUser();
 	const { assignmentid } = router.query;
 	const [fullscreen, setFullscreen] = useState(false);
+	const [revisions, setRevisions] = useState<Submission[]>([]);
 
 	const options = [
 		{ name: "Relevance" },
@@ -93,6 +106,8 @@ const Post: NextPage = () => {
 				setAssignment(undefined);
 				const assignment = await getAssignment(supabase, assignmentid);
 				setAssignment(assignment);
+				if (assignment.data)
+					setRevisions(assignment.data.submissions as Submission[]);
 			}
 		})();
 		// Mobile support makes it sorta like using gmail on mobile, optimized for assignments
@@ -194,34 +209,13 @@ const Post: NextPage = () => {
 	);
 
 	function AssignmentPane() {
-		const [isOpen, setIsOpen] = useState(false);
+		const [open, setOpen] = useState(false);
 		if (
 			!router.isReady ||
 			!allAssignments ||
 			(!assignment && assignmentid != "0")
 		) {
-			return (
-				// Loading state
-				<div className=" flex grow flex-col">
-					<ColoredPill color="gray" className="mr-auto animate-pulse">
-						<span className="invisible">trojker</span>
-					</ColoredPill>
-					<div className="mt-4 w-full max-w-lg rounded-xl bg-gray-200 p-4 xl:max-w-xl">
-						<h1 className="title mb-2 line-clamp-2 w-max rounded-md bg-gray-300">
-							<span className="invisible">trojker anime ass - Bloxs</span>
-						</h1>
-						<p className="mt-4 line-clamp-2 w-max rounded-md bg-gray-300">
-							<span className="invisible">
-								trojker longer description would go here cool story mark
-							</span>
-						</p>
-					</div>
-					<div className="mt-6 flex grow">
-						<div className="mt-4 w-full max-w-lg rounded-xl bg-gray-200 p-4 xl:max-w-xl"></div>
-						<div className="ml-4 mt-4 max-h-48 grow rounded-xl bg-gray-200 p-4 xl:max-w-xl"></div>
-					</div>
-				</div>
-			);
+			return <Loading />;
 		}
 
 		if (assignmentid == "0") {
@@ -263,70 +257,11 @@ const Post: NextPage = () => {
 				<>
 					<div className="flex grow flex-col">
 						{/* Top part of main window */}
-						<section className="flex items-start justify-between">
-							<div className="mr-4 grow lg:max-w-lg xl:max-w-xl">
-								<Link
-									className=" md:hidden"
-									href="/assignments/0"
-									onClick={() => setFullscreen(false)}
-								>
-									<ButtonIcon
-										icon={<ChevronLeftIcon className="h-5 w-5" />}
-										className="mb-4"
-									/>
-								</Link>
-								<Link
-									href={
-										"/classes/" +
-										(Array.isArray(assignment.data.classes)
-											? assignment.data.classes[0].id
-											: assignment.data.classes?.id)
-									}
-								>
-									<ColoredPill
-										color={
-											assignment.data.classes
-												? Array.isArray(assignment.data.classes)
-													? assignment.data.classes[0].color
-													: assignment.data.classes?.color
-												: "blue"
-										}
-										hoverState
-									>
-										{assignment.data.classes
-											? Array.isArray(assignment.data.classes)
-												? assignment.data.classes[0].name
-												: assignment.data.classes.name
-											: "Error fetching class"}
-									</ColoredPill>
-								</Link>
-								<div className="mt-4 w-full rounded-xl bg-gray-200 p-4">
-									<h1 className="title mb-2 line-clamp-2">
-										{assignment.data.name}
-									</h1>
-									<p className="line-clamp-2 text-gray-700">
-										{assignment.data.description}
-									</p>
-								</div>
-							</div>
-							<div className="flex md:space-x-4">
-								<CopiedHover copy={window.location.href}>
-									<ButtonIcon icon={<LinkIcon className="h-5 w-5" />} />
-								</CopiedHover>
-								<div onClick={() => setFullscreen(!fullscreen)}>
-									<ButtonIcon
-										icon={
-											fullscreen ? (
-												<ArrowsPointingInIcon className="h-5 w-5" />
-											) : (
-												<ArrowsPointingOutIcon className="h-5 w-5" />
-											)
-										}
-										className="hidden items-center justify-center md:flex"
-									/>
-								</div>
-							</div>
-						</section>
+						<AssignmentHeader
+							assignment={assignment}
+							fullscreen={fullscreen}
+							setFullscreen={setFullscreen}
+						/>
 						<section
 							className={`scrollbar-fancy relative mt-5 flex flex-1  overflow-y-auto overflow-x-hidden whitespace-pre-line md:pr-2 ${
 								assignment.data.type == AssignmentTypes.DISCUSSION_POST
@@ -342,49 +277,92 @@ const Post: NextPage = () => {
 									<Editor
 										editable={false}
 										initialState={assignment.data.content}
-										className=" scrollbar-fancy mb-5 mt-2 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-4"
+										className=" scrollbar-fancy mb-5 mt-2 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-5"
 										focus={false}
 									/>
 								) : (
 									<>
-										<div className="mb-5 mt-2 grid grow place-items-center rounded-xl bg-gray-200 p-4 text-lg font-medium">
+										<div className="mb-5 mt-2 grid grow place-items-center rounded-xl bg-gray-200 p-5 text-lg font-medium">
 											No assignment details
 										</div>{" "}
 									</>
 								)}
 							</div>
 							{assignment.data.type != AssignmentTypes.DISCUSSION_POST ? (
-								<div className="sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:mb-0 xl:ml-4 xl:w-72">
+								<div
+									className={`sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:mb-0 xl:ml-4 xl:w-72 `}
+								>
 									<h2 className="text-xl font-semibold">Submission</h2>
-									<div className="mt-2 rounded-xl bg-gray-200 p-6">
-										{assignment.data.submission_instructions ? (
+									<div
+										className={`mt-2 rounded-xl bg-gray-200 ${
+											open ? "max-h-16 p-1" : "max-h-96 px-5 py-4"
+										}  overflow-hidden transition-all duration-300`}
+									>
+										{!open ? (
 											<>
-												<h2 className="text-lg font-semibold ">
-													Teacher{"'"}s Instructions:
-												</h2>
-												<p className="max-w-md text-sm text-gray-700">
-													{assignment.data.submission_instructions}
-												</p>
+												{assignment.data.submission_instructions ? (
+													<>
+														<h2 className="text-lg font-semibold ">
+															Teacher{"'"}s Instructions:
+														</h2>
+														<p className="max-w-md text-sm text-gray-700">
+															{assignment.data.submission_instructions}
+														</p>
+													</>
+												) : (
+													<h2 className="text-lg font-semibold ">
+														Submit assignment
+													</h2>
+												)}
+												<div className="mt-4 flex flex-col  space-y-4">
+													<Panel
+														assignmentType={assignment.data.type}
+														setRevisions={setRevisions}
+														revisions={revisions}
+														settings={
+															assignment.data
+																.settings as unknown as AssignmentSettingsTypes
+														}
+														assignmentID={
+															Array.isArray(assignmentid!)
+																? assignmentid[0]
+																: assignmentid!
+														}
+													/>
+												</div>
 											</>
 										) : (
-											<h2 className="text-lg font-semibold ">
-												Submit assignment
+											<h2
+												className="cursor-pointer px-4 py-3 text-lg font-semibold"
+												onClick={() => setOpen(false)}
+											>
+												Back to Submission...
 											</h2>
 										)}
-										{assignment.data.type == AssignmentTypes.CHECKOFF ? (
-											<Button color="bg-blue-500" className="mt-6 text-white">
-												Mark as complete
-											</Button>
-										) : (
-											<Button
-												className="mt-6 inline-flex cursor-pointer rounded-md px-4 py-1 font-semibold text-white"
-												color="bg-blue-500"
-												onClick={() => setIsOpen(true)}
-											>
-												Submit
-											</Button>
-										)}
 									</div>
+									{revisions.length > 0 && (
+										<div
+											className={`mt-4  flex flex-col rounded-xl bg-gray-200 `}
+										>
+											<button
+												className="flex items-center px-5 py-4"
+												onClick={() => setOpen((open) => !open)}
+											>
+												<h3 className="text-lg font-semibold">
+													Revision History
+												</h3>
+												<BarsArrowDownIcon className="ml-auto h-6 w-6" />
+											</button>
+
+											{open && (
+												<>
+													<div className="px-5 pb-4">
+														Revision history is coming soon
+													</div>
+												</>
+											)}
+										</div>
+									)}
 								</div>
 							) : (
 								<div>
