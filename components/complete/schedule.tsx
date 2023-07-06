@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { AllClassesResponse } from "../../lib/db/classes";
-import { ScheduleInterface, handleTimezone, to12hourTime } from "../../lib/db/schedule";
+import {
+	ScheduleInterface,
+	handleTimezone,
+	to12hourTime,
+} from "../../lib/db/schedule";
 import { ColoredPill } from "../misc/pill";
 
 export default function ScheduleComponent({
