@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { AllClassesResponse } from "../../lib/db/classes";
-import { ScheduleInterface, to12hourTime } from "../../lib/db/schedule";
+import { ScheduleInterface, handleTimezone, to12hourTime } from "../../lib/db/schedule";
 import { ColoredPill } from "../misc/pill";
 
 export default function ScheduleComponent({
@@ -51,8 +51,8 @@ export default function ScheduleComponent({
 												checkClassMatchesSchedule(item).color
 											}
 										>
-											{to12hourTime(item.timeStart)} -{" "}
-											{to12hourTime(item.timeEnd)}
+											{to12hourTime(handleTimezone(item.timeStart))} -{" "}
+											{to12hourTime(handleTimezone(item.timeEnd))}
 										</ColoredPill>
 									</Link>
 								)) ||
@@ -68,8 +68,8 @@ export default function ScheduleComponent({
 										<ColoredPill
 											color={item.customColor ? item.customColor : "green"}
 										>
-											{to12hourTime(item.timeStart)} -{" "}
-											{to12hourTime(item.timeEnd)}
+											{to12hourTime(handleTimezone(item.timeStart))} -{" "}
+											{to12hourTime(handleTimezone(item.timeEnd))}
 										</ColoredPill>
 									</div>
 								))
