@@ -153,17 +153,21 @@ const CheckBox: NextPage<{
 					className="text-white"
 					color="bg-blue-500"
 					disabled={
-						!(
-							submission &&
-							submission.checkboxes &&
-							submission.checkboxes.length != 0
-						) ||
+						// Disabled if no submission
+						!submission ||
+						!submission.checkboxes ||
+						// Disables if no checkboxes are selected and theres no privious submissions
+						(submission.checkboxes.length == 0 && dbSubmission == undefined) ||
+						// Disables if assignment is submitted and complete
 						(finished && dbSubmission?.final) ||
+						// Disables while assignment is submitting
 						loading ||
+						// Disables if checkboxes on most recent submission match checkboxes on client
 						(dbSubmission != undefined &&
-							submission.checkboxes.length ==
+							submission.checkboxes.sort().join(",") ===
 								(dbSubmission?.content as SubmissionCheckoff).checkboxes
-									?.length)
+									.sort()
+									.join(","))
 					}
 					onClick={submit}
 				>
