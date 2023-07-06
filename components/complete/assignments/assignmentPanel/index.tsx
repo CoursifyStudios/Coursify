@@ -5,6 +5,7 @@ import { NextPage } from "next";
 import { Dispatch, SetStateAction, useState } from "react";
 import { AssignmentSettingsTypes } from "../assignmentCreation/three/settings.types";
 import CheckBox from "./components/checkbox";
+import Text from "./components/text";
 import { Submission, SubmissionSettingsTypes } from "./submission.types";
 
 const AssignmentPanel: NextPage<{
@@ -32,6 +33,9 @@ const AssignmentPanel: NextPage<{
 		case AssignmentTypes.CHECKOFF:
 			// @ts-expect-error Type conversion
 			return <CheckBox imports={imports} />;
+		case AssignmentTypes.TEXT:
+			// @ts-expect-error Type conversion
+			return <Text imports={imports} />;
 	}
 };
 

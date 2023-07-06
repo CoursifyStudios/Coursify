@@ -164,8 +164,11 @@ const CheckBox: NextPage<{
 						loading ||
 						// Disables if checkboxes on most recent submission match checkboxes on client
 						(dbSubmission != undefined &&
+							(dbSubmission.content as SubmissionCheckoff).checkboxes !=
+								undefined &&
 							submission.checkboxes.sort().join(",") ===
-								(dbSubmission?.content as SubmissionCheckoff).checkboxes
+								//@ts-expect-error huh.mp4
+								(dbSubmission.content as SubmissionCheckoff).checkboxes
 									.sort()
 									.join(","))
 					}
@@ -176,8 +179,8 @@ const CheckBox: NextPage<{
 							? "Submitted!"
 							: "Submit"
 						: dbSubmission?.final
-						? "Resubmit"
-						: "Save"}
+						? "Resubmit Draft"
+						: "Save Draft"}
 				</Button>
 				{loading && <Loading className="bg-gray-300" />}
 			</div>
