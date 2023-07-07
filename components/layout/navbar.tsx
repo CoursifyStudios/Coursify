@@ -5,7 +5,6 @@ import {
 	Cog6ToothIcon,
 	MagnifyingGlassIcon,
 	MegaphoneIcon,
-	UserGroupIcon,
 	UserIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
@@ -131,18 +130,6 @@ const Navbar: NextComponentType = () => {
 										className="flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300"
 									>
 										Profile <UserIcon className="h-5 w-5" />
-									</Menu.Item>
-								</Link>
-								<Link
-									href={`/groups`}
-									className="mt-1"
-									onClick={() => newTab("/groups")}
-								>
-									<Menu.Item
-										as="div"
-										className="flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300"
-									>
-										Groups <UserGroupIcon className="h-5 w-5" />
 									</Menu.Item>
 								</Link>
 								<Link

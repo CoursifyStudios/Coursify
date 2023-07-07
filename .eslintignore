@@ -43,7 +43,9 @@ next-env.d.ts
 
 # shit linting
 package.json
-styles/globals.css
+deno.jsonc
+tsconfig.json
+styles/*
 yarn.lock
 supabase/config.toml
 .eslintrc.json

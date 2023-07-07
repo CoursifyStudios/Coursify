@@ -1,11 +1,11 @@
+import { ColoredPill } from "@/components/misc/pill";
+import { handleStarred } from "@/lib/db/assignments/assignments";
+import { Database } from "@/lib/db/database.types";
+import { ScheduleInterface, to12hourTime } from "@/lib/db/schedule";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useState } from "react";
-import { handleStarred } from "../../../lib/db/assignments";
-import { Database } from "../../../lib/db/database.types";
-import { ScheduleInterface, to12hourTime } from "../../../lib/db/schedule";
-import { ColoredPill } from "../../misc/pill";
 import Starred from "./starred";
 
 export function AssignmentPreview({

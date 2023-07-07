@@ -2,10 +2,13 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import { EditorState } from "lexical";
 import { Dispatch, SetStateAction, useState } from "react";
 import * as Yup from "yup";
-import { submissionType, useAssignmentStore } from ".";
-import { NewAssignmentData } from "../../../../lib/db/assignments";
-import Editor from "../../../editors/richeditor";
-import { Button } from "../../../misc/button";
+import { useAssignmentStore } from ".";
+
+import Editor from "@/components/editors/richeditor";
+import { Button } from "@/components/misc/button";
+import { Info } from "@/components/tooltips/info";
+import { NewAssignmentData } from "@/lib/db/assignments/assignments";
+import { submissionType } from "./submissionType";
 
 export default function AssignmentDetails({
 	stage,
@@ -15,11 +18,7 @@ export default function AssignmentDetails({
 	setStage: Dispatch<SetStateAction<number>>;
 }) {
 	const [editorState, setEditorState] = useState<EditorState>();
-	const [disabled, setDisabled] = useState(true);
-	const { setAssignmentData, assignmentData } = useAssignmentStore((state) => ({
-		setAssignmentData: state.set,
-		assignmentData: state.data,
-	}));
+	const { data: assignmentData, set: setAssignmentData } = useAssignmentStore();
 
 	if (stage != 2) return null;
 
@@ -29,7 +28,7 @@ export default function AssignmentDetails({
 				Create Assignment -{" "}
 				{
 					submissionType.find(
-						(submission) => submission.type == assignmentData?.submissionType
+						(submission) => submission.type == assignmentData?.type
 					)?.name
 				}
 			</h2>
@@ -38,11 +37,13 @@ export default function AssignmentDetails({
 					name: Yup.string().min(3).max(40).required(),
 					description: Yup.string().min(3).max(60).required(),
 					submissionType: Yup.string().min(3).max(100),
+					maxGrade: Yup.number().min(0, "Cannot be negitive"),
 				})}
 				initialValues={{
 					name: assignmentData?.name || "",
 					description: assignmentData?.description || "",
 					submissionInstructions: assignmentData?.submissionInstructions || "",
+					maxGrade: assignmentData?.maxGrade || undefined,
 				}}
 				onSubmit={(values) => {
 					setAssignmentData({
@@ -53,20 +54,48 @@ export default function AssignmentDetails({
 			>
 				{({ submitForm, values, errors }) => (
 					<Form className="mt-10 flex flex-col space-y-3 ">
-						<label htmlFor="name" className="flex flex-col">
-							<span className="text-sm font-medium">
-								Assignment Name <span className="text-red-600">*</span>
-							</span>
-							<Field className="mt-1" type="text" name="name" autoFocus />
-							<div className="text-sm text-red-600">
-								<ErrorMessage name="name" />
-							</div>
-						</label>
+						<div className="flex w-full gap-3">
+							<label htmlFor="name" className="flex grow flex-col">
+								<span className="text-sm font-medium">
+									Assignment Name <span className="text-red-600">*</span>
+								</span>
+								<Field
+									className="mt-1"
+									type="text"
+									name="name"
+									autoFocus
+									autocomplete="off"
+								/>
+								<div className="text-sm text-red-600">
+									<ErrorMessage name="name" />
+								</div>
+							</label>
+							<label htmlFor="maxGrade" className="flex w-[7.5rem] flex-col">
+								<div className="flex w-full items-center justify-between">
+									<span className="text-sm font-medium">Max Points</span>
+									<Info size="large">
+										The max amount of points that a student can earn on the
+										assignment. Going over the set value will be extra credit.
+									</Info>
+								</div>
+
+								<Field className="mt-1" type="number" name="maxGrade" />
+								<div className="text-sm text-red-600">
+									<ErrorMessage name="maxGrade" />
+								</div>
+							</label>
+						</div>
+
 						<label htmlFor="description" className="flex flex-col">
 							<span className="text-sm font-medium">
 								Short Description <span className="text-red-600">*</span>
 							</span>
-							<Field className="mt-1" type="text" name="description" />
+							<Field
+								className="mt-1"
+								type="text"
+								name="description"
+								autocomplete="off"
+							/>
 							<div className="text-sm text-red-600">
 								<ErrorMessage name="description" />
 							</div>
@@ -79,6 +108,7 @@ export default function AssignmentDetails({
 								className="mt-1"
 								type="text"
 								name="submissionInstructions"
+								autocomplete="off"
 							/>
 							<div className="text-sm text-red-600">
 								<ErrorMessage name="submissionInstructions" />
@@ -96,7 +126,7 @@ export default function AssignmentDetails({
 						/>
 						<div className="ml-auto flex space-x-4">
 							<span onClick={() => setStage((stage) => stage - 1)}>
-								<Button>Prev</Button>
+								<Button>Back</Button>
 							</span>
 
 							<span
