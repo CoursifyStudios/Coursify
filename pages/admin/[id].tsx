@@ -13,8 +13,9 @@ import { Fragment, useEffect, useState } from "react";
 import uploadImage from "@/public/svgs/add-files.svg";
 import { Popup } from "@/components/misc/popup";
 import { Database } from "@/lib/db/database.types";
-import { UsersResponse, getUsers } from "@/lib/db/admin";
+import { UsersResponse, getUsers, getUsersPages } from "@/lib/db/admin";
 import { useRouter } from "next/router";
+import noData from "@/public/svgs/no-data.svg";
 
 type ImportedUser = {
 	first_name: string;
@@ -29,22 +30,24 @@ const Admin: NextPage = () => {
 	const router = useRouter();
 	const { id } = router.query;
 	const user = useUser();
-	const [searchOpen, setSearchOpen] = useState(false);
+	const [query, setQuery] = useState("");
 	const [uploadOpen, setUploadOpen] = useState(false);
 	const [hovering, setHovering] = useState(false);
 	const supabase = useSupabaseClient<Database>();
+	const [pages, setPages] = useState(1);
 	const [users, setUsers] = useState<
-		{
-			id: string;
-			full_name: string;
-			email: string | null;
-			year: string | null;
-			bio: string | null;
-			phone_number: number | null;
-			enrolled: {
-				adminBool: boolean;
-			}[];
-		}[]
+		| {
+				id: string;
+				full_name: string;
+				email: string | null;
+				year: string | null;
+				bio: string | null;
+				phone_number: number | null;
+				enrolled: {
+					adminBool: boolean;
+				}[];
+		  }[]
+		| null
 	>();
 	const [uploadUsers, setUploadUsers] = useState<ImportedUser>([
 		{
@@ -70,18 +73,33 @@ const Admin: NextPage = () => {
 	useEffect(() => {
 		(async () => {
 			if (!user || !id || !supabase) return;
-			const { data } = await getUsers(
-				supabase,
-				1,
-				25,
-				typeof id == "string" ? id : ""
-			);
-			if (data) {
-				setUsers(data.users);
-				setName(data.name);
+			const [data, pages] = await Promise.all([
+				getUsers(supabase, 1, 50, typeof id == "string" ? id : ""),
+				getUsersPages(supabase, 50),
+			]);
+			if (data.data && pages) {
+				setUsers(data.data.users);
+				setName(data.data.name);
+				setPages(pages);
 			}
 		})();
 	}, [id, supabase, user]);
+
+	const search = async () => {
+		try {
+			const [data, pages] = await Promise.all([
+				getUsers(supabase, 1, 50, typeof id == "string" ? id : "", query),
+				getUsersPages(supabase, 50, query),
+			]);
+
+			if (data.data && pages) {
+				setUsers(data.data.users);
+				setPages(pages);
+			}
+		} catch {
+			setUsers(null);
+		}
+	};
 
 	const parseCSVDrop = async (ev: DragEvent) => {
 		ev.preventDefault();
@@ -145,7 +163,7 @@ const Admin: NextPage = () => {
 										: "border-transparent bg-gray-200"
 								} text-lg font-semibold`}
 							>
-								Members
+								Users
 							</div>
 						)}
 					</Tab>
@@ -255,20 +273,25 @@ const Admin: NextPage = () => {
 							<div className="bg-gray-200 rounded-2xl h-36 mt-2 flex items-center justify-center"></div>
 							<div className="bg-gray-200 rounded-2xl h-36 mt-2 flex items-center justify-center"></div>
 						</div>
-						<div className="flex my-2">
+						<form
+							className="flex my-2"
+							onSubmit={(e) => {
+								e.preventDefault();
+								search();
+							}}
+						>
 							<div
 								className={` relative flex grow items-center pr-2 max-w-[24rem]`}
 							>
 								<input
 									type="text"
 									className="!rounded-xl grow py-1.5 placeholder:dark:text-gray-400"
-									onClick={() => setSearchOpen(true)}
-									onBlur={() => setSearchOpen(false)}
+									onChange={(e) => setQuery(e.target.value)}
 									placeholder="Search users..."
 								/>
 								<MagnifyingGlassIcon className="absolute right-6 h-4 w-4" />
 							</div>
-						</div>
+						</form>
 						<div className=" overflow-hidden border rounded-xl divide-y">
 							<div className=" [&>p]:px-2.5 [&>p]:py-2 divide-x flex [&>p]:w-full font-medium border-b">
 								<div className="grid place-items-center min-w-[3rem] max-w-[3rem]">
@@ -313,6 +336,18 @@ const Admin: NextPage = () => {
 										<p>Coming Soon</p>
 									</div>
 								))
+							) : users == null ? (
+								<div className="h-48 flex items-center justify-center flex-col">
+									<Image
+										src={noData}
+										alt="Nothing present icon"
+										width={100}
+										height={100}
+									/>
+									<p className="font-medium mt-6">
+										No users found with that name or email
+									</p>
+								</div>
 							) : (
 								<div>loading</div>
 							)}

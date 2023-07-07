@@ -50,7 +50,7 @@ const getRanges = (page: number, size: number) => ({
 	to: page * size - 1,
 });
 
-export const getPages = async (
+export const getUsersPages = async (
 	supabaseClient: SupabaseClient<Database>,
 	pageSize: number,
 	search?: string
@@ -62,11 +62,11 @@ export const getPages = async (
 	if (search !== undefined && search.length > 0) {
 		supabaseRequest = supabaseRequest.or(
 			[
-				`name.ilike."%${search
+				`full_name.ilike."%${search
 					.replace(/"/g, '\\"')
 					.replace(/\*/g, "\\*")
 					.replace(/\%/g, "*")}%"`,
-				`description.ilike."%${search
+				`email.ilike."%${search
 					.replace(/"/g, '\\"')
 					.replace(/\*/g, "\\*")
 					.replace(/\%/g, "*")}%"`,
