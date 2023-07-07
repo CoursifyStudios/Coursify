@@ -22,7 +22,7 @@ type ImportedUser = {
 	email: string;
 	grad_year: number | null;
 	parent: boolean;
-	student_email: string | null;
+	student_id: string | null;
 }[];
 
 const Admin: NextPage = () => {
@@ -53,7 +53,7 @@ const Admin: NextPage = () => {
 			email: "steve@ex.com",
 			grad_year: 2092,
 			parent: false,
-			student_email: null,
+			student_id: "P26_0001",
 		},
 		{
 			first_name: "Christian",
@@ -61,7 +61,7 @@ const Admin: NextPage = () => {
 			email: "chris@ex.com",
 			grad_year: null,
 			parent: true,
-			student_email: "steve@ex.com",
+			student_id: "P26_0002",
 		},
 	]);
 	const [uploaded, setUploaded] = useState(false);
@@ -106,7 +106,7 @@ const Admin: NextPage = () => {
 							email,
 							grad_year,
 							parent,
-							student_email,
+							student_id,
 						] = user;
 
 						users.push({
@@ -115,12 +115,12 @@ const Admin: NextPage = () => {
 							email,
 							grad_year: parseInt(grad_year),
 							parent: parent == "true",
-							student_email:
-								student_email == "null" ||
-								student_email == "" ||
-								student_email == undefined
+							student_id:
+								student_id == "null" ||
+								student_id == "" ||
+								student_id == undefined
 									? null
-									: student_email,
+									: student_id,
 						});
 					}
 
@@ -213,7 +213,7 @@ const Admin: NextPage = () => {
 											<p>Email</p>
 											<p>Grad Year</p>
 											<p>Parent</p>
-											<p>Student email</p>
+											<p>Student ID</p>
 										</div>
 										{uploadUsers.map((u) => (
 											<>
@@ -226,7 +226,7 @@ const Admin: NextPage = () => {
 													<p>{u.email}</p>
 													<p>{u.grad_year ?? "NULL"}</p>
 													<p>{u.parent ? "Yes" : "No"}</p>
-													<p>{u.student_email ?? "NULL"}</p>
+													<p>{u.student_id ?? "NULL"}</p>
 												</div>
 											</>
 										))}
@@ -236,14 +236,16 @@ const Admin: NextPage = () => {
 									) : (
 										<>
 											<p className="text-sm italic mt-1">
-												All other columns will be ignored
+												All other columns in uploaded file will be ignored. Each
+												Student ID should be unqiue for each student, and is
+												used to match parents to students.
 											</p>
 											<div className="group  mt-8 flex h-24 grow flex-col cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white">
 												<h3 className="text-lg font-medium transition">
 													Upload File
 												</h3>
 												<p className="text-sm">
-													Drop a file or click anywhere to select
+													Drop a file anywhere or click here to select
 												</p>
 											</div>
 										</>
@@ -281,7 +283,7 @@ const Admin: NextPage = () => {
 								<p>Email</p>
 								<p>Graduation Year</p>
 								<p>Parent</p>
-								<p>Student email</p>
+								<p>Student ID</p>
 							</div>
 							{users ? (
 								users.map((user, id) => (
