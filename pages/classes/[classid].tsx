@@ -35,6 +35,8 @@ import { useSettings } from "../../lib/stores/settings";
 const Class: NextPage = () => {
 	const router = useRouter();
 	const { classid } = router.query;
+	const [currentTab, setCurrentTab] = useState(0);
+    const {tab} = router.query;
 	const user = useUser();
 	const supabase = useSupabaseClient<Database>();
 	const [data, setData] = useState<ClassResponse>();
@@ -64,6 +66,21 @@ const Class: NextPage = () => {
 			});
 		}
 	};
+
+	// useEffect(() => {
+	// 	localStorage.setItem("currentTab", JSON.stringify(currentTab));
+	// }, [currentTab]);
+
+	// useEffect(() => {
+	// 	const currentTab = JSON.parse(localStorage.getItem("currentTab")!);
+	// 	if (currentTab) {
+	// 		setCurrentTab(currentTab);
+	// 	}
+	// }, []);
+    useEffect(() => {
+
+        if (typeof tab == "string") {setCurrentTab(parseInt(tab))};
+    }, [tab])
 
 	useEffect(() => {
 		(async () => {
@@ -201,7 +218,10 @@ const Class: NextPage = () => {
 				</div>
 			)}
 			<div className="space-x sm:grid-cols-1 md:flex">
-				<Tab.Group as="div" className="flex grow flex-col">
+				<Tab.Group
+					as="div"
+					className="flex grow flex-col"
+				>
 					<Tab.List
 						as="div"
 						className="mx-auto mb-6 flex max-sm:space-x-2 sm:space-x-6"
@@ -312,28 +332,23 @@ const Class: NextPage = () => {
 						<Tab.Panel tabIndex={-1} id="Announcements">
 							<h2 className="title mb-3">Announcements</h2>
 							<div className="space-y-3">
-								{isTeacher && (
+								{/* {isTeacher && (
 									<AnnouncementPostingUI
 										announcements={extraAnnouncements}
 										setAnnouncements={setExtraAnnouncements}
 										communityid={classid as string}
 									/>
-								)}
+								)} */}
 								{classid && typeof classid == "string" && (
 									<div className="space-y-4">
-										{/* Newly created/edited annoucnements here */}
-										{/* <AnnouncementsComponent
-											announcements={extraAnnouncements}
-											communityid={classid}
-										></AnnouncementsComponent> */}
-										{/* Announcements on DB from first page load here */}
 										<AnnouncementsComponent
-											announcements={extraAnnouncements.concat(
+											fetchedAnnouncements={(
 												getDataInArray(
 													data.data.announcements
 												) as unknown as TypeOfAnnouncements[]
 											)}
 											communityid={classid}
+                                            showPostingUI={isTeacher? true : false}
 										></AnnouncementsComponent>
 									</div>
 								)}
@@ -455,3 +470,4 @@ const Class: NextPage = () => {
 };
 
 export default Class;
+

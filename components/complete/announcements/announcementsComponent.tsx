@@ -5,19 +5,29 @@ import {
 	TypeOfAnnouncements,
 } from "../../../lib/db/announcements";
 import { getDataOutArray } from "../../../lib/misc/dataOutArray";
+import { AnnouncementPostingUI } from "./announcementPosting";
 
 export const AnnouncementsComponent = ({
-	announcements,
+	fetchedAnnouncements,
 	communityid,
+	showPostingUI,
 }: {
-	announcements: TypeOfAnnouncements[];
+	fetchedAnnouncements: TypeOfAnnouncements[];
 	communityid: string;
+	showPostingUI: boolean;
 }) => {
 	const [tempAnnouncements, setTempAnnouncements] = useState<
 		TypeOfAnnouncements[]
-	>([]);
+	>([]); //recently edited comments, announcements and stuff
+	const [recentlyPostedAnnouncements, setRecentlyPostedAnnouncements] =
+		useState<TypeOfAnnouncements[]>([]);
 	return (
 		<div className="space-y-4">
+			<AnnouncementPostingUI
+				announcements={recentlyPostedAnnouncements}
+				setAnnouncements={setRecentlyPostedAnnouncements}
+				communityid={communityid}
+			/>
 			{/* rendering temporary announcements */}
 			{tempAnnouncements.reverse().map(
 				(announcement) =>
@@ -36,16 +46,18 @@ export const AnnouncementsComponent = ({
 							}}
 							classID={communityid}
 							comments={
-								announcements.filter(
-									(possibleComment) =>
-										(possibleComment &&
-											possibleComment?.type == AnnouncementType.COMMENT &&
-											getDataOutArray(possibleComment?.parent)?.id ==
-												announcement.id) ||
-										(possibleComment?.type == AnnouncementType.REPLY &&
-											getDataOutArray(possibleComment.parent)?.type ==
-												AnnouncementType.COMMENT)
-								) as TypeOfAnnouncements[]
+								recentlyPostedAnnouncements
+									.concat(fetchedAnnouncements)
+									.filter(
+										(possibleComment) =>
+											(possibleComment &&
+												possibleComment?.type == AnnouncementType.COMMENT &&
+												getDataOutArray(possibleComment?.parent)?.id ==
+													announcement.id) ||
+											(possibleComment?.type == AnnouncementType.REPLY &&
+												getDataOutArray(possibleComment.parent)?.type ==
+													AnnouncementType.COMMENT)
+									) as TypeOfAnnouncements[]
 							}
 							announcements={tempAnnouncements}
 							setAnnouncements={setTempAnnouncements}
@@ -53,7 +65,8 @@ export const AnnouncementsComponent = ({
 					)
 			)}
 			{/* render announcements that exist on the db, both pre-existing and new ones (i.e. newly posted, edited announcements)  */}
-			{announcements
+			{recentlyPostedAnnouncements
+				.concat(fetchedAnnouncements)
 				.sort((a, b) => {
 					if (new Date(a.time!).getTime() > new Date(b.time!).getTime())
 						return -1;
@@ -63,13 +76,14 @@ export const AnnouncementsComponent = ({
 				})
 				.map(
 					(announcement) =>
+                    announcement &&
 						(announcement.type == AnnouncementType.ANNOUNCMENT ||
 							announcement.type == AnnouncementType.CROSSPOST) && (
 							<Announcement
 								key={announcement.id + "other"}
 								announcement={announcement as TypeOfAnnouncements}
 								comments={
-									announcements.filter(
+									recentlyPostedAnnouncements.concat(fetchedAnnouncements).filter(
 										(possibleComment) =>
 											(possibleComment &&
 												possibleComment?.type == AnnouncementType.COMMENT &&
@@ -89,3 +103,4 @@ export const AnnouncementsComponent = ({
 		</div>
 	);
 };
+
