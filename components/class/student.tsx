@@ -134,7 +134,9 @@ const StudentClass: NextPage<StudentClassType> = ({
 							)
 						) : Array.isArray(classData.users) ? (
 							<p>An unknown error occured</p>
+                            //@ts-expect-error
 						) : classData.class_users?.teacher ? (
+                            //@ts-expect-error
 							<p>{classData.users?.full_name}</p>
 						) : (
 							<p className="text-sm italic text-gray-700">No teacher</p>

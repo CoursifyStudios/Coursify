@@ -1,5 +1,3 @@
-import { Announcement } from "@/components/complete/announcements";
-import { AnnouncementPostingUI } from "@/components/complete/announcements/announcementPosting";
 import { Member } from "@/components/complete/members";
 import CircleCounter from "@/components/counters/circle";
 import Editor from "@/components/editors/richeditor";
@@ -20,7 +18,8 @@ import { CreateAssignment } from "@assignments/assignmentCreation";
 import { AssignmentPreview } from "@assignments/assignments";
 import { Tab } from "@headlessui/react";
 import {
-	ArrowTopRightOnSquareIcon,
+	EnvelopeIcon,
+	EnvelopeOpenIcon,
 	MagnifyingGlassIcon,
 	PlusIcon,
 } from "@heroicons/react/24/outline";
@@ -31,26 +30,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
-import { AnnouncementPostingUI } from "../../components/complete/announcements/announcementPosting";
-import { AnnouncementsComponent } from "../../components/complete/announcements/announcementsComponent";
-import { CreateAssignment } from "../../components/complete/assignments/assignmentCreation";
-import { AssignmentPreview } from "../../components/complete/assignments/assignments";
-import { Member } from "../../components/complete/members";
-import CircleCounter from "../../components/counters/circle";
-import Editor from "../../components/editors/richeditor";
-import { Button } from "../../components/misc/button";
-import { InfoPill, InfoPills } from "../../components/misc/infopills";
-import { ColoredPill } from "../../components/misc/pill";
-import { TypeOfAnnouncements } from "../../lib/db/announcements";
-import { ClassResponse, getClass, updateClass } from "../../lib/db/classes";
-import { Database, Json } from "../../lib/db/database.types";
+
 import {
-	ScheduleInterface,
-	getSchedule,
-	setThisSchedule,
-} from "../../lib/db/schedule";
-import { getDataInArray } from "../../lib/misc/dataOutArray";
-import { useSettings } from "../../lib/stores/settings";
+	ArrowTopRightOnSquareIcon,
+} from "@heroicons/react/24/outline";
+import { AnnouncementsComponent } from "../../components/complete/announcements/announcementsComponent";
 
 const Class: NextPage = () => {
 	const router = useRouter();
