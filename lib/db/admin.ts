@@ -40,12 +40,15 @@ export const getUsers = async (
 		);
 	}
 
-	return await supabaseRequest.range(from, to).eq("id", id).single();
+	return await supabaseRequest
+		.range(from, to, { foreignTable: "users" })
+		.eq("id", id)
+		.single();
 };
 
 export type UsersResponse = Awaited<ReturnType<typeof getUsers>>;
 
-const getRanges = (page: number, size: number) => ({
+export const getRanges = (page: number, size: number) => ({
 	from: (page - 1) * size,
 	to: page * size - 1,
 });
@@ -53,11 +56,17 @@ const getRanges = (page: number, size: number) => ({
 export const getUsersPages = async (
 	supabaseClient: SupabaseClient<Database>,
 	pageSize: number,
+	school: string,
 	search?: string
 ) => {
 	let supabaseRequest = supabaseClient
-		.from("users")
-		.select("*", { count: "estimated" });
+		.from(`schools`)
+		.select(
+			`users (
+			count
+		)`
+		)
+		.eq("id", school);
 
 	if (search !== undefined && search.length > 0) {
 		supabaseRequest = supabaseRequest.or(
@@ -70,11 +79,14 @@ export const getUsersPages = async (
 					.replace(/"/g, '\\"')
 					.replace(/\*/g, "\\*")
 					.replace(/\%/g, "*")}%"`,
-			].join(",")
+			].join(","),
+			{ foreignTable: "users" }
 		);
 	}
 
-	const { data, error, count } = await supabaseRequest;
+	const { data, error } = await supabaseRequest;
+	// @ts-expect-error Supabase doesn't really support this method, but theres no official way to get the sount of foreign tables as far as I can tell
+	const count = data ? data[0].users[0].count : 0;
 
 	if (error || !count) {
 		throw error;

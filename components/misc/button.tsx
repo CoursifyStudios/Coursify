@@ -40,16 +40,20 @@ export const ButtonIcon: NextPage<{
 	icon: ReactNode;
 	to?: string;
 	className?: string;
-}> = ({ icon, to, className }) => {
+	disabled?: boolean;
+	onClick?: () => void;
+}> = ({ icon, to, className, disabled, onClick }) => {
 	const r = (
-		<div
+		<button
+			disabled={disabled}
+			onClick={onClick}
 			className={
-				"grid h-9 w-9 cursor-pointer place-items-center rounded-full bg-gray-300 text-gray-800 transition duration-300 hover:brightness-95  compact:h-8 compact:w-8 " +
+				"grid h-9 w-9 disabled:brightness-50 disabled:cursor-not-allowed cursor-pointer place-items-center rounded-full bg-gray-300 text-gray-800 transition duration-300 hover:brightness-95  compact:h-8 compact:w-8 " +
 				className
 			}
 		>
 			{icon}
-		</div>
+		</button>
 	);
 
 	// allows for wrapping it in a component

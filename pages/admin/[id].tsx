@@ -1,6 +1,8 @@
 import { Tab } from "@headlessui/react";
 import {
 	CheckIcon,
+	ChevronLeftIcon,
+	ChevronRightIcon,
 	MagnifyingGlassIcon,
 	ShieldCheckIcon,
 	UserIcon,
@@ -13,9 +15,15 @@ import { Fragment, useEffect, useState } from "react";
 import uploadImage from "@/public/svgs/add-files.svg";
 import { Popup } from "@/components/misc/popup";
 import { Database } from "@/lib/db/database.types";
-import { UsersResponse, getUsers, getUsersPages } from "@/lib/db/admin";
+import {
+	UsersResponse,
+	getRanges,
+	getUsers,
+	getUsersPages,
+} from "@/lib/db/admin";
 import { useRouter } from "next/router";
 import noData from "@/public/svgs/no-data.svg";
+import { ButtonIcon } from "@/components/misc/button";
 
 type ImportedUser = {
 	first_name: string;
@@ -34,6 +42,7 @@ const Admin: NextPage = () => {
 	const [uploadOpen, setUploadOpen] = useState(false);
 	const [hovering, setHovering] = useState(false);
 	const supabase = useSupabaseClient<Database>();
+	const [page, setPage] = useState(1);
 	const [pages, setPages] = useState(1);
 	const [users, setUsers] = useState<
 		| {
@@ -75,7 +84,7 @@ const Admin: NextPage = () => {
 			if (!user || !id || !supabase) return;
 			const [data, pages] = await Promise.all([
 				getUsers(supabase, 1, 50, typeof id == "string" ? id : ""),
-				getUsersPages(supabase, 50),
+				getUsersPages(supabase, 50, typeof id == "string" ? id : ""),
 			]);
 			if (data.data && pages) {
 				setUsers(data.data.users);
@@ -85,11 +94,20 @@ const Admin: NextPage = () => {
 		})();
 	}, [id, supabase, user]);
 
-	const search = async () => {
+	const search = async (goPage?: number) => {
+		if (goPage) {
+			setPage(goPage);
+		}
 		try {
 			const [data, pages] = await Promise.all([
-				getUsers(supabase, 1, 50, typeof id == "string" ? id : "", query),
-				getUsersPages(supabase, 50, query),
+				getUsers(
+					supabase,
+					goPage || page,
+					50,
+					typeof id == "string" ? id : "",
+					query
+				),
+				getUsersPages(supabase, 50, typeof id == "string" ? id : "", query),
 			]);
 
 			if (data.data && pages) {
@@ -314,29 +332,29 @@ const Admin: NextPage = () => {
 										className=" [&>p]:px-2.5 [&>p]:py-2 divide-x flex [&>p]:w-full [&>p]:items-center [&>p]:truncate [&>p]:whitespace-nowrap [&>p]:overflow-hidden "
 										key={user.id}
 									>
-										<p className="grid place-items-center min-w-[3rem] max-w-[3rem]">
+										<div className="grid place-items-center min-w-[3rem] max-w-[3rem]">
 											<div
 												className={`checkbox h-5 min-w-[1.25rem] rounded border-2 border-gray-300 transition  ${"dark:bg-neutral-950"}`}
 											>
 												{/* <CheckIcon /> */}
 											</div>
-										</p>
+										</div>
 										<p>{user.id}</p>
-										<p className="flex">
+										<div className="flex w-full items-center truncate whitespace-nowrap overflow-hidden py-2 px-2.5">
 											{user.enrolled[0].adminBool ? (
 												<ShieldCheckIcon className="min-w-[1.25rem] h-5 text-blue-500 mr-1.5" />
 											) : (
 												<UserIcon className="min-w-[1.25rem] h-5 mr-1.5 text-gray-300" />
 											)}{" "}
 											<p className="truncate">{user.full_name}</p>
-										</p>
+										</div>
 										<p>{user.email}</p>
 										<p>{user.year}</p>
 										<p>Coming Soon</p>
 										<p>Coming Soon</p>
 									</div>
 								))
-							) : users == null ? (
+							) : users === null ? (
 								<div className="h-48 flex items-center justify-center flex-col">
 									<Image
 										src={noData}
@@ -351,6 +369,23 @@ const Admin: NextPage = () => {
 							) : (
 								<div>loading</div>
 							)}
+						</div>
+						<div className="flex justify-center gap-4 my-4 items-center">
+							<ButtonIcon
+								disabled={page === 1}
+								icon={<ChevronLeftIcon className="w-6 h-6 -translate-x-0.5" />}
+								className={`scale-75`}
+								onClick={() => search(page - 1)}
+							/>
+							<div className="px-3 py-1.5 rounded-xl bg-gray-200 text-xl font-medium">
+								1
+							</div>
+							<ButtonIcon
+								disabled={page === pages}
+								icon={<ChevronRightIcon className="w-6 h-6 translate-x-0.5" />}
+								className={`scale-75`}
+								onClick={() => search(page + 1)}
+							/>
 						</div>
 					</Tab.Panel>
 					{/* <Tab.Panel>
