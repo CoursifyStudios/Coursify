@@ -1,5 +1,10 @@
 import { Tab } from "@headlessui/react";
-import { CheckIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import {
+	CheckIcon,
+	MagnifyingGlassIcon,
+	ShieldCheckIcon,
+	UserIcon,
+} from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
 import Image from "next/image";
@@ -36,6 +41,9 @@ const Admin: NextPage = () => {
 			year: string | null;
 			bio: string | null;
 			phone_number: number | null;
+			enrolled: {
+				adminBool: boolean;
+			}[];
 		}[]
 	>();
 	const [uploadUsers, setUploadUsers] = useState<ImportedUser>([
@@ -278,7 +286,7 @@ const Admin: NextPage = () => {
 							{users ? (
 								users.map((user, id) => (
 									<div
-										className=" [&>p]:px-2.5 [&>p]:py-2 divide-x flex [&>p]:w-full [&>p]:truncate [&>p]:whitespace-nowrap [&>p]:overflow-hidden "
+										className=" [&>p]:px-2.5 [&>p]:py-2 divide-x flex [&>p]:w-full [&>p]:items-center [&>p]:truncate [&>p]:whitespace-nowrap [&>p]:overflow-hidden "
 										key={user.id}
 									>
 										<p className="grid place-items-center min-w-[3rem] max-w-[3rem]">
@@ -289,7 +297,14 @@ const Admin: NextPage = () => {
 											</div>
 										</p>
 										<p>{user.id}</p>
-										<p>{user.full_name}</p>
+										<p className="flex">
+											{user.enrolled[0].adminBool ? (
+												<ShieldCheckIcon className="min-w-[1.25rem] h-5 text-blue-500 mr-1.5" />
+											) : (
+												<UserIcon className="min-w-[1.25rem] h-5 mr-1.5 text-gray-300" />
+											)}{" "}
+											<p className="truncate">{user.full_name}</p>
+										</p>
 										<p>{user.email}</p>
 										<p>{user.year}</p>
 										<p>Coming Soon</p>
