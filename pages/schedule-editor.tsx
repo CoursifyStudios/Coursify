@@ -292,7 +292,7 @@ const ScheduleEditor = () => {
 			<div className="mx-10 mt-5">
 				<h2>Schedule Templates:</h2>
 				{/* this will be made DRY-er later */}
-				{/* I */}
+				{/* I'd like to coin a new term "wringin" for this purpose */}
 				<div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
 					{scheduleTemplates &&
 						scheduleTemplates.data &&

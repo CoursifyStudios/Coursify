@@ -10,13 +10,6 @@ export interface ScheduleInterface {
 	specialEvent?: string;
 	customColor?: string; //may as well
 }
-//returns timezone offset in minutes from toTimeString() dates
-export function getGMToffset(time: string) {
-	//replace with regex when I grow the heck up
-	return (
-		parseInt(time.substring(13, 15)) * 60 + parseInt(time.substring(15, 17))
-	);
-}
 
 export async function getSchedule(
 	supabase: SupabaseClient<Database>,
@@ -58,21 +51,20 @@ export const createNewSchedule = async (
 ) => {
 	if (scheduleDataToUse) {
 		const time = new Date(day);
-		// const hours = Math.trunc(time.getTimezoneOffset() / 60);
-		// const minutes = time.getTimezoneOffset() % 60;
 		scheduleDataToUse.map((period) => {
-			time.setHours(parseInt(period.timeStart.substring(0, 2)));
-			time.setMinutes(parseInt(period.timeStart.substring(3, 5)));
-			time.setSeconds(0);
+			time.setHours(
+				parseInt(period.timeStart.substring(0, 2)),
+				parseInt(period.timeStart.substring(3, 5)),
+				0
+			);
 			period.timeStart = time.toTimeString();
 
-			time.setHours(parseInt(period.timeEnd.substring(0, 2)));
-			time.setMinutes(parseInt(period.timeEnd.substring(3, 5)));
-			time.setSeconds(0);
-
+			time.setHours(
+				parseInt(period.timeEnd.substring(0, 2)),
+				parseInt(period.timeEnd.substring(3, 5)),
+				0
+			);
 			period.timeEnd = time.toTimeString();
-			// const newStartMinutes = (parseInt(period.timeStart.substring(3,5)) + (time.getTimezoneOffset() % 60)).toString(10);
-			// const newStartHours = ((parseInt(period.timeStart.substring(0,2)) + Math.trunc(time.getTimezoneOffset() / 60))-7).toString(10);
 		});
 	}
 	return await supabase.from("days_schedule").upsert({
@@ -94,15 +86,18 @@ export const createNewTemplate = async (
 	//ik copy and paste but I just need this to work
 	const time = new Date();
 	scheduleDataToUse.map((period) => {
-		time.setHours(parseInt(period.timeStart.substring(0, 2)));
-		time.setMinutes(parseInt(period.timeStart.substring(3, 5)));
-		time.setSeconds(0);
+		time.setHours(
+			parseInt(period.timeStart.substring(0, 2)),
+			parseInt(period.timeStart.substring(3, 5)),
+			0
+		);
 		period.timeStart = time.toTimeString();
 
-		time.setHours(parseInt(period.timeEnd.substring(0, 2)));
-		time.setMinutes(parseInt(period.timeEnd.substring(3, 5)));
-		time.setSeconds(0);
-
+		time.setHours(
+			parseInt(period.timeEnd.substring(0, 2)),
+			parseInt(period.timeEnd.substring(3, 5)),
+			0
+		);
 		period.timeEnd = time.toTimeString();
 	});
 	return await supabase.from("schedule_templates").insert({
