@@ -7,7 +7,6 @@ import {
 } from "../../lib/db/schedule";
 import { ColoredPill } from "../misc/pill";
 
-
 export default function ScheduleComponent({
 	schedule,
 	classes,
