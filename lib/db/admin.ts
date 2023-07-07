@@ -15,7 +15,10 @@ export const getUsers = async (
 			name, 
 
 				users (
-					id, full_name, email, year, bio, phone_number
+					id, full_name, email, year, bio, phone_number,
+						enrolled (
+							adminBool
+						)
 				)
 			
 			

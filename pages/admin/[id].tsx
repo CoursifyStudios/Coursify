@@ -15,7 +15,7 @@ type ImportedUser = {
 	first_name: string;
 	last_name: string;
 	email: string;
-	grad_year: number;
+	grad_year: number | null;
 	parent: boolean;
 	student_email: string | null;
 }[];
@@ -51,7 +51,7 @@ const Admin: NextPage = () => {
 			first_name: "Christian",
 			last_name: "Selig",
 			email: "chris@ex.com",
-			grad_year: 2077,
+			grad_year: null,
 			parent: true,
 			student_email: "steve@ex.com",
 		},
@@ -207,16 +207,16 @@ const Admin: NextPage = () => {
 											<p>Parent</p>
 											<p>Student email</p>
 										</div>
-										{uploadUsers.map((u, id) => (
+										{uploadUsers.map((u) => (
 											<>
 												<div
-													key={id}
+													key={u.email}
 													className="[&>p]:px-2.5 [&>p]:py-2 [&>p]:overflow-hidden divide-x  grid grid-cols-6"
 												>
 													<p>{u.first_name}</p>
 													<p>{u.last_name}</p>
 													<p>{u.email}</p>
-													<p>{u.grad_year}</p>
+													<p>{u.grad_year ?? "NULL"}</p>
 													<p>{u.parent ? "Yes" : "No"}</p>
 													<p>{u.student_email ?? "NULL"}</p>
 												</div>
@@ -261,13 +261,13 @@ const Admin: NextPage = () => {
 						</div>
 						<div className=" overflow-hidden border rounded-xl divide-y">
 							<div className=" [&>p]:px-2.5 [&>p]:py-2 divide-x flex [&>p]:w-full font-medium border-b">
-								<p className="grid place-items-center min-w-[3rem] max-w-[3rem]">
+								<div className="grid place-items-center min-w-[3rem] max-w-[3rem]">
 									<div
 										className={`checkbox h-5 min-w-[1.25rem] rounded border-2 border-gray-300 transition ${"dark:bg-neutral-950"}`}
 									>
 										{/* <CheckIcon /> */}
 									</div>
-								</p>
+								</div>
 								<p>User ID</p>
 								<p>Full Name</p>
 								<p>Email</p>
@@ -276,9 +276,9 @@ const Admin: NextPage = () => {
 								<p>Student email</p>
 							</div>
 							{users ? (
-								users.map((user) => (
+								users.map((user, id) => (
 									<div
-										className=" [&>p]:px-2.5 [&>p]:py-2 divide-x flex [&>p]:w-full [&>p]:whitespace-nowrap [&>p]:overflow-hidden "
+										className=" [&>p]:px-2.5 [&>p]:py-2 divide-x flex [&>p]:w-full [&>p]:truncate [&>p]:whitespace-nowrap [&>p]:overflow-hidden "
 										key={user.id}
 									>
 										<p className="grid place-items-center min-w-[3rem] max-w-[3rem]">
