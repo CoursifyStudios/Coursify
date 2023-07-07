@@ -1,6 +1,6 @@
 {
 	"compilerOptions": {
-		"target": "es5",
+		"target": "es2015",
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"allowJs": false,
 		"skipLibCheck": true,
@@ -22,7 +22,8 @@
 		"paths": {
 			"@/*": ["./*"],
 			"@assignments/*": ["./components/complete/assignments/*"]
-		}
+		},
+		"allowImportingTsExtensions": true
 	},
 	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
 	"exclude": ["node_modules"]

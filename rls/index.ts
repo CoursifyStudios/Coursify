@@ -47,4 +47,27 @@ const assignmentManagement = new Policy({
 	),
 });
 
-savePolicies("./policies.sql", assignmentViewing, assignmentManagement);
+const assignmentSubmissionAdd = new Policy({
+	name: "Student assignment submission add",
+	author: "Bloxs",
+	query: AND(
+		OR(
+			EQ("user_id", "auth.uid()")
+			// Implement teacher can override - Lukas
+			// Fuck me - Bloxs
+		),
+		IN("assignment_id", SELECT("assignments", ["id"])),
+		AND(
+			IS("grade", "NULL"),
+			IS("hide", "NULL"),
+			OR(EQ("created_at", "now()"), IS("created_at", "NULL"))
+		)
+	),
+});
+
+savePolicies(
+	"./policies.sql",
+	assignmentViewing,
+	assignmentManagement,
+	assignmentSubmissionAdd
+);

@@ -23,18 +23,18 @@ export default function Footer() {
 					</h3>
 					<p className="mt-4 flex flex-col items-center compact:mt-0 compact:text-xs md:mt-1 md:flex-row">
 						<span>© 2023 Coursify Studios.&nbsp;</span>
-						<span>Made with ❤️ in San Francisco (mostly)</span>
+						<span>Made with ❤️ in the United States</span>
 					</p>
 				</div>
 				<div className="mt-4 space-x-4 md:mt-0">
+					<Link href="/admin">
+						<ColoredPill color="gray" hoverState>
+							Admin Dashboard
+						</ColoredPill>
+					</Link>
 					<Link href="/privacy">
 						<ColoredPill color="gray" hoverState>
 							Privacy Policy
-						</ColoredPill>
-					</Link>
-					<Link href="/schedule-editor">
-						<ColoredPill color="gray" hoverState>
-							Schedule Editor
 						</ColoredPill>
 					</Link>
 				</div>
