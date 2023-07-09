@@ -13,7 +13,6 @@ import {
 
 const assignmentViewing = new Policy({
 	name: "Student assignment viewing",
-	author: "Bloxs",
 	query: IN(
 		"auth.uid()",
 		SELECT(
@@ -36,7 +35,6 @@ const assignmentViewing = new Policy({
 
 const assignmentManagement = new Policy({
 	name: "Teacher assignment management",
-	author: "Bloxs",
 	query: IN(
 		"auth.uid()",
 		SELECT(
@@ -49,7 +47,6 @@ const assignmentManagement = new Policy({
 
 const assignmentSubmissionAdd = new Policy({
 	name: "Student assignment submission add",
-	author: "Bloxs",
 	query: AND(
 		OR(
 			EQ("user_id", "auth.uid()")

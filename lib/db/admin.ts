@@ -12,16 +12,18 @@ export const getUsers = async (
 
 	let supabaseRequest = supabaseClient.from(`schools`).select(
 		`
-			name, 
-
+			name, id,
 				users (
-					id, full_name, email, year, bio, phone_number,
+					id, full_name, email, year, bio, phone_number, student_id,
+					relationships (
+						parent_id, student_id
+					),
 						enrolled (
 							adminBool
 						)
+						
+						
 				)
-			
-			
 		`
 	);
 	if (search !== undefined && search.length > 0) {
@@ -43,6 +45,7 @@ export const getUsers = async (
 	return await supabaseRequest
 		.range(from, to, { foreignTable: "users" })
 		.eq("id", id)
+		.limit(1)
 		.single();
 };
 
@@ -62,7 +65,7 @@ export const getUsersPages = async (
 	let supabaseRequest = supabaseClient
 		.from(`schools`)
 		.select(
-			`users (
+			`id, users (
 			count
 		)`
 		)

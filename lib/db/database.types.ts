@@ -310,6 +310,31 @@ export interface Database {
 					},
 				];
 			};
+			relationships: {
+				Row: {
+					parent_id: string[] | null;
+					student_id: string[] | null;
+					user_id: string;
+				};
+				Insert: {
+					parent_id?: string[] | null;
+					student_id?: string[] | null;
+					user_id: string;
+				};
+				Update: {
+					parent_id?: string[] | null;
+					student_id?: string[] | null;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: "relationships_user_id_fkey";
+						columns: ["user_id"];
+						referencedRelation: "users";
+						referencedColumns: ["id"];
+					},
+				];
+			};
 			schedule_templates: {
 				Row: {
 					id: number;
@@ -486,6 +511,7 @@ export interface Database {
 					id: string;
 					phone_number: number | null;
 					preferred_name: string | null;
+					student_id: string | null;
 					year: string | null;
 				};
 				Insert: {
@@ -497,6 +523,7 @@ export interface Database {
 					id: string;
 					phone_number?: number | null;
 					preferred_name?: string | null;
+					student_id?: string | null;
 					year?: string | null;
 				};
 				Update: {
@@ -508,6 +535,7 @@ export interface Database {
 					id?: string;
 					phone_number?: number | null;
 					preferred_name?: string | null;
+					student_id?: string | null;
 					year?: string | null;
 				};
 				Relationships: [

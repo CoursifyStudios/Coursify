@@ -5,7 +5,9 @@ import {
 	ChevronRightIcon,
 	MagnifyingGlassIcon,
 	ShieldCheckIcon,
+	UserCircleIcon,
 	UserIcon,
+	UsersIcon,
 } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
@@ -52,9 +54,14 @@ const Admin: NextPage = () => {
 				year: string | null;
 				bio: string | null;
 				phone_number: number | null;
+				student_id: string | null;
 				enrolled: {
 					adminBool: boolean;
 				}[];
+				relationships: {
+					parent_id: string[] | null;
+					student_id: string[] | null;
+				};
 		  }[]
 		| null
 	>();
@@ -81,17 +88,19 @@ const Admin: NextPage = () => {
 
 	useEffect(() => {
 		(async () => {
-			if (!user || !id || !supabase) return;
+			if (!user || !id || !supabase || users) return;
 			const [data, pages] = await Promise.all([
 				getUsers(supabase, 1, 50, typeof id == "string" ? id : ""),
 				getUsersPages(supabase, 50, typeof id == "string" ? id : ""),
 			]);
 			if (data.data && pages) {
+				// @ts-expect-error relationships will never be an array
 				setUsers(data.data.users);
 				setName(data.data.name);
 				setPages(pages);
 			}
 		})();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [id, supabase, user]);
 
 	const search = async (goPage?: number) => {
@@ -111,6 +120,7 @@ const Admin: NextPage = () => {
 			]);
 
 			if (data.data && pages) {
+				// @ts-expect-error relationships will never be an array
 				setUsers(data.data.users);
 				setPages(pages);
 			}
@@ -252,19 +262,17 @@ const Admin: NextPage = () => {
 											<p>Student ID</p>
 										</div>
 										{uploadUsers.map((u) => (
-											<>
-												<div
-													key={u.email}
-													className="[&>p]:px-2.5 [&>p]:py-2 [&>p]:overflow-hidden divide-x  grid grid-cols-6"
-												>
-													<p>{u.first_name}</p>
-													<p>{u.last_name}</p>
-													<p>{u.email}</p>
-													<p>{u.grad_year ?? "NULL"}</p>
-													<p>{u.parent ? "Yes" : "No"}</p>
-													<p>{u.student_id ?? "NULL"}</p>
-												</div>
-											</>
+											<div
+												key={u.email}
+												className="[&>p]:px-2.5 [&>p]:py-2 [&>p]:overflow-hidden divide-x grid grid-cols-6"
+											>
+												<p>{u.first_name}</p>
+												<p>{u.last_name}</p>
+												<p>{u.email}</p>
+												<p>{u.grad_year ?? "NULL"}</p>
+												<p>{u.parent ? "Yes" : "No"}</p>
+												<p>{u.student_id ?? "NULL"}</p>
+											</div>
 										))}
 									</div>
 									{uploaded ? (
@@ -310,11 +318,11 @@ const Admin: NextPage = () => {
 								<MagnifyingGlassIcon className="absolute right-6 h-4 w-4" />
 							</div>
 						</form>
-						<div className=" overflow-hidden border rounded-xl divide-y">
-							<div className=" [&>p]:px-2.5 [&>p]:py-2 divide-x flex [&>p]:w-full font-medium border-b">
+						<div className=" overflow-hidden border border-gray-300 rounded-xl divide-y">
+							<div className=" [&>p]:px-2.5 [&>p]:py-2 divide-x flex [&>p]:w-full font-medium border-b border-gray-300">
 								<div className="grid place-items-center min-w-[3rem] max-w-[3rem]">
 									<div
-										className={`checkbox h-5 min-w-[1.25rem] rounded border-2 border-gray-300 transition ${"dark:bg-neutral-950"}`}
+										className={`checkbox h-5 min-w-[1.25rem]  rounded border-2 border-gray-300 transition ${"dark:bg-neutral-950"}`}
 									>
 										{/* <CheckIcon /> */}
 									</div>
@@ -323,37 +331,68 @@ const Admin: NextPage = () => {
 								<p>Full Name</p>
 								<p>Email</p>
 								<p>Graduation Year</p>
-								<p>Parent</p>
+								<p>Relations</p>
 								<p>Student ID</p>
 							</div>
 							{users ? (
-								users.map((user, id) => (
-									<div
-										className=" [&>p]:px-2.5 [&>p]:py-2 divide-x flex [&>p]:w-full [&>p]:items-center [&>p]:truncate [&>p]:whitespace-nowrap [&>p]:overflow-hidden "
-										key={user.id}
-									>
-										<div className="grid place-items-center min-w-[3rem] max-w-[3rem]">
-											<div
-												className={`checkbox h-5 min-w-[1.25rem] rounded border-2 border-gray-300 transition  ${"dark:bg-neutral-950"}`}
-											>
-												{/* <CheckIcon /> */}
+								users.map((mappedUser, id) => {
+									const svgClassname = "min-w-[1.25rem] h-5 mr-1.5";
+									const parents =
+										mappedUser.relationships &&
+										mappedUser.relationships.parent_id;
+									const students =
+										mappedUser.relationships &&
+										mappedUser.relationships.student_id;
+
+									return (
+										<div
+											className=" [&>p]:px-2.5 [&>p]:py-2 divide-x flex [&>p]:w-full [&>p]:items-center [&>p]:truncate [&>p]:whitespace-nowrap [&>p]:overflow-hidden "
+											key={mappedUser.id}
+										>
+											<div className="grid place-items-center min-w-[3rem] max-w-[3rem]">
+												<div
+													className={`checkbox h-5 min-w-[1.25rem] rounded border-2 border-gray-300 transition  ${"dark:bg-neutral-950"}`}
+												>
+													{/* <CheckIcon /> */}
+												</div>
 											</div>
+											<p>{mappedUser.id}</p>
+											<div className="flex w-full items-center truncate whitespace-nowrap overflow-hidden py-2 px-2.5">
+												{mappedUser.enrolled[0].adminBool ? (
+													<ShieldCheckIcon
+														className={`${svgClassname} text-blue-500`}
+													/>
+												) : (
+													<UserIcon
+														className={`${svgClassname} text-gray-300`}
+													/>
+												)}{" "}
+												<p className="truncate">{mappedUser.full_name}</p>
+											</div>
+											<p>{mappedUser.email}</p>
+											<p>{mappedUser.year}</p>
+											<div className="flex w-full items-center truncate whitespace-nowrap overflow-hidden py-2 px-2.5">
+												{parents && (
+													<>
+														<UsersIcon
+															className={`${svgClassname} text-blue-500`}
+														/>
+														<p className="truncate">{parents.join(", ")}</p>
+													</>
+												)}
+												{students && (
+													<>
+														<UserCircleIcon
+															className={`${svgClassname} text-gray-300`}
+														/>
+														<p className="truncate">{students.join(", ")}</p>
+													</>
+												)}
+											</div>
+											<p>{mappedUser.student_id}</p>
 										</div>
-										<p>{user.id}</p>
-										<div className="flex w-full items-center truncate whitespace-nowrap overflow-hidden py-2 px-2.5">
-											{user.enrolled[0].adminBool ? (
-												<ShieldCheckIcon className="min-w-[1.25rem] h-5 text-blue-500 mr-1.5" />
-											) : (
-												<UserIcon className="min-w-[1.25rem] h-5 mr-1.5 text-gray-300" />
-											)}{" "}
-											<p className="truncate">{user.full_name}</p>
-										</div>
-										<p>{user.email}</p>
-										<p>{user.year}</p>
-										<p>Coming Soon</p>
-										<p>Coming Soon</p>
-									</div>
-								))
+									);
+								})
 							) : users === null ? (
 								<div className="h-48 flex items-center justify-center flex-col">
 									<Image
@@ -466,6 +505,10 @@ const Admin: NextPage = () => {
 					</Tab.Panel> */}
 				</Tab.Panels>
 			</Tab.Group>
+
+			<div className="flex gap-4 p-4 mt-6">
+				<div></div>
+			</div>
 		</div>
 	);
 };
