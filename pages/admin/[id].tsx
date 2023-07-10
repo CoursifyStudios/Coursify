@@ -25,7 +25,8 @@ import {
 } from "@/lib/db/admin";
 import { useRouter } from "next/router";
 import noData from "@/public/svgs/no-data.svg";
-import { ButtonIcon } from "@/components/misc/button";
+import { Button, ButtonIcon } from "@/components/misc/button";
+import Dropdown from "@/components/misc/dropdown";
 
 type ImportedUser = {
 	first_name: string;
@@ -35,6 +36,14 @@ type ImportedUser = {
 	parent: boolean;
 	student_id: string | null;
 }[];
+
+enum CSVParser {
+	COURSIFY = "Coursify",
+	POWERSCHOOL = "Powerschool",
+	SCHOOLOGY = "Schoology",
+	INFINITECAMPUS = "Infinite Campus",
+	SKYWARD = "Skyward",
+}
 
 const Admin: NextPage = () => {
 	const router = useRouter();
@@ -85,6 +94,9 @@ const Admin: NextPage = () => {
 	]);
 	const [uploaded, setUploaded] = useState(false);
 	const [name, setName] = useState<string>();
+	const [selectedSquare, setSelectedSquare] = useState<number>();
+	const [selectedRow, setSelectedRow] = useState<string[]>([]);
+	const [csvParser, setCSVParser] = useState<CSVParser>(CSVParser.COURSIFY);
 
 	useEffect(() => {
 		(async () => {
@@ -135,7 +147,10 @@ const Admin: NextPage = () => {
 			? [...ev.dataTransfer!.items].map((f) => f.getAsFile()!)
 			: [...ev.dataTransfer!.files];
 
+		const users: ImportedUser = [];
+
 		for (const file of files) {
+			if (file == undefined) return;
 			if (file.type == "text/csv") {
 				if (file instanceof File) {
 					const text = await file.text();
@@ -143,17 +158,9 @@ const Admin: NextPage = () => {
 						.split("\n")
 						.filter((l) => l.trim() != "")
 						.map((l) => l.split(","));
-					const users: ImportedUser = [];
 
 					for (const user of userData) {
-						const [
-							first_name,
-							last_name,
-							email,
-							grad_year,
-							parent,
-							student_id,
-						] = user;
+						const [student_id, first_name, last_name, email, grad_year] = user;
 
 						users.push({
 							first_name,
@@ -169,11 +176,11 @@ const Admin: NextPage = () => {
 									: student_id,
 						});
 					}
-
-					setUploadUsers(users);
-					setUploaded(true);
 				}
 			}
+
+			setUploadUsers(users);
+			setUploaded(true);
 		}
 	};
 
@@ -284,6 +291,15 @@ const Admin: NextPage = () => {
 												Student ID should be unqiue for each student, and is
 												used to match parents to students.
 											</p>
+											<Dropdown
+												selectedValue={{ name: csvParser }}
+												values={[
+													{
+														name: CSVParser.COURSIFY,
+													},
+												]}
+												onChange={(v) => setCSVParser(v.name)}
+											/>
 											<div className="group  mt-8 flex h-24 grow flex-col cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white">
 												<h3 className="text-lg font-medium transition">
 													Upload File
@@ -299,25 +315,39 @@ const Admin: NextPage = () => {
 							<div className="bg-gray-200 rounded-2xl h-36 mt-2 flex items-center justify-center"></div>
 							<div className="bg-gray-200 rounded-2xl h-36 mt-2 flex items-center justify-center"></div>
 						</div>
-						<form
-							className="flex my-2"
-							onSubmit={(e) => {
-								e.preventDefault();
-								search();
-							}}
-						>
-							<div
-								className={` relative flex grow items-center pr-2 max-w-[24rem]`}
+						<div className="flex mb-2 mt-4 justify-between">
+							<form
+								className="flex grow"
+								onSubmit={(e) => {
+									e.preventDefault();
+									search();
+								}}
 							>
-								<input
-									type="text"
-									className="!rounded-xl grow py-1.5 placeholder:dark:text-gray-400"
-									onChange={(e) => setQuery(e.target.value)}
-									placeholder="Search users..."
-								/>
-								<MagnifyingGlassIcon className="absolute right-6 h-4 w-4" />
+								<div
+									className={` relative flex grow items-center pr-2 max-w-[24rem]`}
+								>
+									<input
+										type="text"
+										className="!rounded-xl grow py-1.5 placeholder:dark:text-gray-400"
+										onChange={(e) => setQuery(e.target.value)}
+										placeholder="Search users..."
+									/>
+									<MagnifyingGlassIcon className="absolute right-6 h-4 w-4" />
+								</div>
+							</form>
+							<div className="flex space-x-2">
+								{selectedRow.length > 0 && (
+									<Button
+										onClick={() => {
+											setSelectedRow([]);
+											setSelectedSquare(undefined);
+										}}
+									>
+										Clear Selection
+									</Button>
+								)}
 							</div>
-						</form>
+						</div>
 						<div className=" overflow-hidden border border-gray-300 rounded-xl divide-y">
 							<div className=" [&>p]:px-2.5 [&>p]:py-2 divide-x flex [&>p]:w-full font-medium border-b border-gray-300">
 								<div className="grid place-items-center min-w-[3rem] max-w-[3rem]">
@@ -343,20 +373,54 @@ const Admin: NextPage = () => {
 									const students =
 										mappedUser.relationships &&
 										mappedUser.relationships.student_id;
-
+									const selected = selectedRow.includes(mappedUser.id);
 									return (
 										<div
-											className=" [&>p]:px-2.5 [&>p]:py-2 divide-x flex [&>p]:w-full [&>p]:items-center [&>p]:truncate [&>p]:whitespace-nowrap [&>p]:overflow-hidden "
+											className={` [&>p]:px-2.5 [&>p]:py-2 divide-x ${
+												selected &&
+												selectedSquare == undefined &&
+												"bg-blue-500/10"
+											} transition flex [&>p]:w-full [&>p]:items-center [&>p]:truncate [&>p]:whitespace-nowrap [&>p]:overflow-hidden `}
 											key={mappedUser.id}
 										>
-											<div className="grid place-items-center min-w-[3rem] max-w-[3rem]">
+											<div
+												className="grid place-items-center min-w-[3rem] max-w-[3rem]"
+												onClick={() => {
+													setSelectedSquare(undefined);
+													setSelectedRow((rows) =>
+														selected && selectedSquare == undefined
+															? rows.filter((row) => row != mappedUser.id)
+															: selectedSquare != undefined
+															? [mappedUser.id]
+															: rows.concat([mappedUser.id])
+													);
+												}}
+											>
 												<div
-													className={`checkbox h-5 min-w-[1.25rem] rounded border-2 border-gray-300 transition  ${"dark:bg-neutral-950"}`}
+													className={`checkbox h-5 min-w-[1.25rem] rounded border-2 border-gray-300 transition cursor-pointer ${
+														selected && selectedSquare == undefined
+															? "bg-gray-300"
+															: "dark:bg-neutral-950"
+													}`}
 												>
-													{/* <CheckIcon /> */}
+													{selected && selectedSquare == undefined && (
+														<CheckIcon strokeWidth={2} />
+													)}
 												</div>
 											</div>
-											<p>{mappedUser.id}</p>
+											<p
+												onClick={() => {
+													setSelectedSquare(0);
+													setSelectedRow([mappedUser.id]);
+												}}
+												className={`${
+													selectedSquare == 0 && selected
+														? " border-blue-500 bg-blue-500/10"
+														: "border-y-transparent border-r-transparent"
+												} cursor-pointer !border `}
+											>
+												{mappedUser.id}
+											</p>
 											<div className="flex w-full items-center truncate whitespace-nowrap overflow-hidden py-2 px-2.5">
 												{mappedUser.enrolled[0].adminBool ? (
 													<ShieldCheckIcon
