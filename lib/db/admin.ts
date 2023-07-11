@@ -37,6 +37,12 @@ export const getUsers = async (
 					.replace(/"/g, '\\"')
 					.replace(/\*/g, "\\*")
 					.replace(/\%/g, "*")}%"`,
+
+				// breaks search completly for some reason
+				// `id.ilike."%${search
+				// 	.replace(/"/g, '\\"')
+				// 	.replace(/\*/g, "\\*")
+				// 	.replace(/\%/g, "*")}%"`,
 			].join(","),
 			{ foreignTable: "users" }
 		);
@@ -82,6 +88,11 @@ export const getUsersPages = async (
 					.replace(/"/g, '\\"')
 					.replace(/\*/g, "\\*")
 					.replace(/\%/g, "*")}%"`,
+				// breaks search completly for some reason
+				// `id.ilike."%${search
+				// 	.replace(/"/g, '\\"')
+				// 	.replace(/\*/g, "\\*")
+				// 	.replace(/\%/g, "*")}%"`,
 			].join(","),
 			{ foreignTable: "users" }
 		);

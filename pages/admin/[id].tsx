@@ -120,6 +120,8 @@ const Admin: NextPage = () => {
 	}, [id, supabase, user]);
 
 	const search = async (goPage?: number) => {
+		setSelectedRow([]);
+		setSelectedSquare(undefined);
 		if (goPage) {
 			setPage(goPage);
 		}
