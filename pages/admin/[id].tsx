@@ -1,10 +1,14 @@
 import { Tab } from "@headlessui/react";
 import {
+	ArrowDownTrayIcon,
 	CheckIcon,
 	ChevronLeftIcon,
 	ChevronRightIcon,
+	ClipboardDocumentListIcon,
 	MagnifyingGlassIcon,
+	PencilSquareIcon,
 	ShieldCheckIcon,
+	TrashIcon,
 	UserCircleIcon,
 	UserIcon,
 	UsersIcon,
@@ -337,24 +341,84 @@ const Admin: NextPage = () => {
 							</form>
 							<div className="flex space-x-2">
 								{selectedRow.length > 0 && (
-									<Button
-										onClick={() => {
-											setSelectedRow([]);
-											setSelectedSquare(undefined);
-										}}
-									>
-										Clear Selection
-									</Button>
+									<>
+										<Button
+											onClick={() => {
+												navigator.clipboard.writeText("test	text\nmore	text");
+											}}
+											className="rounded-xl !px-2.5"
+										>
+											<ClipboardDocumentListIcon className="h-5 w-5" />
+										</Button>
+										{selectedSquare != undefined ? (
+											<Button onClick={() => {}} className="rounded-xl !px-2.5">
+												<PencilSquareIcon className="h-5 w-5" />
+											</Button>
+										) : (
+											<>
+												<Button
+													onClick={() => {}}
+													className="rounded-xl !px-2.5"
+												>
+													<ArrowDownTrayIcon className="h-5 w-5" />
+												</Button>
+												<Button
+													onClick={() => {}}
+													className="rounded-xl !px-2.5"
+													color="bg-red-600/20 hover:bg-red-600/50"
+												>
+													<TrashIcon className="h-5 w-5" />
+												</Button>
+											</>
+										)}
+										<Button
+											onClick={() => {
+												setSelectedRow([]);
+												setSelectedSquare(undefined);
+											}}
+											className="rounded-xl !ml-4"
+										>
+											Clear Selection
+										</Button>
+									</>
 								)}
 							</div>
 						</div>
-						<div className=" overflow-hidden border border-gray-300 rounded-xl divide-y">
-							<div className=" [&>p]:px-2.5 [&>p]:py-2 divide-x flex [&>p]:w-full font-medium border-b border-gray-300">
-								<div className="grid place-items-center min-w-[3rem] max-w-[3rem]">
+						{/* This code is an absolute mess */}
+						{/* also, tables are overrated */}
+						<div
+							className={`select-none overflow-hidden border ${
+								selectedRow.length == users?.length
+									? "border-blue-500"
+									: "border-gray-300"
+							} rounded-xl divide-y`}
+						>
+							<div
+								className={` [&>p]:px-2.5 [&>p]:py-2 divide-x flex [&>p]:w-full font-medium border-b border-gray-300 ${
+									selectedRow.length == users?.length && "bg-blue-500/10"
+								}`}
+							>
+								<div
+									className="grid place-items-center min-w-[3rem] max-w-[3rem]"
+									onClick={() => {
+										setSelectedSquare(undefined);
+										setSelectedRow((rows) =>
+											rows.length == users?.length
+												? []
+												: users?.map((user) => user.id) || []
+										);
+									}}
+								>
 									<div
-										className={`checkbox h-5 min-w-[1.25rem]  rounded border-2 border-gray-300 transition ${"dark:bg-neutral-950"}`}
+										className={`checkbox h-5 min-w-[1.25rem] rounded border-2 border-gray-300 transition cursor-pointer ${
+											selectedRow.length == users?.length
+												? "bg-gray-300"
+												: "dark:bg-neutral-950"
+										}`}
 									>
-										{/* <CheckIcon /> */}
+										{selectedRow.length == users?.length && (
+											<CheckIcon strokeWidth={2} />
+										)}
 									</div>
 								</div>
 								<p>User ID</p>
@@ -417,11 +481,21 @@ const Admin: NextPage = () => {
 													selectedSquare == 0 && selected
 														? " border-blue-500 bg-blue-500/10"
 														: "border-y-transparent border-r-transparent"
-												} cursor-pointer !border `}
+												} cursor-pointer !border`}
 											>
 												{mappedUser.id}
 											</p>
-											<div className="flex w-full items-center truncate whitespace-nowrap overflow-hidden py-2 px-2.5">
+											<div
+												onClick={() => {
+													setSelectedSquare(1);
+													setSelectedRow([mappedUser.id]);
+												}}
+												className={`${
+													selectedSquare == 1 && selected
+														? " border-blue-500 bg-blue-500/10"
+														: "border-y-transparent border-r-transparent"
+												} cursor-pointer !border flex w-full items-center truncate whitespace-nowrap overflow-hidden py-2 px-2.5`}
+											>
 												{mappedUser.enrolled[0].adminBool ? (
 													<ShieldCheckIcon
 														className={`${svgClassname} text-blue-500`}
@@ -433,9 +507,43 @@ const Admin: NextPage = () => {
 												)}{" "}
 												<p className="truncate">{mappedUser.full_name}</p>
 											</div>
-											<p>{mappedUser.email}</p>
-											<p>{mappedUser.year}</p>
-											<div className="flex w-full items-center truncate whitespace-nowrap overflow-hidden py-2 px-2.5">
+											<p
+												onClick={() => {
+													setSelectedSquare(2);
+													setSelectedRow([mappedUser.id]);
+												}}
+												className={`${
+													selectedSquare == 2 && selected
+														? " border-blue-500 bg-blue-500/10"
+														: "border-y-transparent border-r-transparent"
+												} cursor-pointer !border`}
+											>
+												{mappedUser.email}
+											</p>
+											<p
+												onClick={() => {
+													setSelectedSquare(3);
+													setSelectedRow([mappedUser.id]);
+												}}
+												className={`${
+													selectedSquare == 3 && selected
+														? " border-blue-500 bg-blue-500/10"
+														: "border-y-transparent border-r-transparent"
+												} cursor-pointer !border`}
+											>
+												{mappedUser.year}
+											</p>
+											<div
+												onClick={() => {
+													setSelectedSquare(4);
+													setSelectedRow([mappedUser.id]);
+												}}
+												className={`${
+													selectedSquare == 4 && selected
+														? " border-blue-500 bg-blue-500/10"
+														: "border-y-transparent border-r-transparent"
+												} cursor-pointer !border flex w-full items-center truncate whitespace-nowrap overflow-hidden py-2 px-2.5`}
+											>
 												{parents && (
 													<>
 														<UsersIcon
@@ -453,7 +561,19 @@ const Admin: NextPage = () => {
 													</>
 												)}
 											</div>
-											<p>{mappedUser.student_id}</p>
+											<p
+												onClick={() => {
+													setSelectedSquare(5);
+													setSelectedRow([mappedUser.id]);
+												}}
+												className={`${
+													selectedSquare == 5 && selected
+														? " border-blue-500 bg-blue-500/10"
+														: "border-y-transparent border-r-transparent"
+												} cursor-pointer !border`}
+											>
+												{mappedUser.student_id}
+											</p>
 										</div>
 									);
 								})
@@ -570,11 +690,26 @@ const Admin: NextPage = () => {
 				</Tab.Panels>
 			</Tab.Group>
 
-			<div className="flex gap-4 p-4 mt-6">
-				<div></div>
+			<div className="flex gap-8 p-4 [&>div]:flex [&>div]:gap-2 [&>div]:items-center text-gray-600 dark:text-gray-400 font-medium mx-auto">
+				<div>
+					<ShieldCheckIcon className="w-5 h-5 text-blue-500" />
+					<p>Admin Account</p>
+				</div>
+				<div>
+					<UserIcon className="w-5 h-5 text-gray-300" />
+					<p>Student Account</p>
+				</div>
+				<div>
+					<UsersIcon className="w-5 h-5 text-blue-500" /> <p>Parent</p>
+				</div>
+				<div>
+					<UserCircleIcon className="w-5 h-5 text-gray-300" /> <p>Student</p>
+				</div>
 			</div>
 		</div>
 	);
 };
 
 export default Admin;
+
+// How tf is this so long
