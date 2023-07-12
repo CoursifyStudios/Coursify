@@ -20,6 +20,8 @@ import {
 } from "react";
 import { AssignmentText } from "../../assignmentCreation/three/settings.types";
 import { Submission, SubmissionText } from "../submission.types";
+import Editor from "@/components/editors/richeditor";
+import { EditorState } from "lexical";
 
 const Text: NextPage<{
 	imports: {
@@ -45,12 +47,14 @@ const Text: NextPage<{
 	},
 }) => {
 	const [editorOpen, setEditorOpen] = useState(false);
+	const [rawSubmission, setRawSubmission] = useState("");
 	// Returns content and if it can be submitted, as well as the length of the text
 	const content = useMemo(() => {
 		if (!submission) return { content: "", finished: false, length: 0 };
-
 		const text =
-			typeof submission.content == "string" ? submission.content : "";
+			typeof submission.content == "string"
+				? submission.content
+				: rawSubmission;
 		// : editor
 		// 		.parseEditorState(submission.content)
 		//	.read(() => $getRoot().getTextContent());
@@ -90,7 +94,7 @@ const Text: NextPage<{
 				length: textWords,
 			};
 		}
-	}, [settings, submission]);
+	}, [rawSubmission, settings, submission]);
 
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
@@ -114,6 +118,15 @@ const Text: NextPage<{
 			setSubmission(dbSubmission.content as SubmissionText);
 		}
 	}, [dbSubmission, setSubmission]);
+
+	const handlePaste = async () => {
+		const text = await navigator.clipboard.readText();
+		setSubmission({
+			assignmentType: AssignmentTypes.TEXT,
+			content: text,
+		});
+		setTimeout(submit, 20);
+	};
 
 	const submit = async (draft?: boolean) => {
 		setLoading(true);
@@ -145,7 +158,8 @@ const Text: NextPage<{
 			<div className="flex items-center font-medium">
 				{stage == 0 ? (
 					<>
-						<XCircleIcon className="mr-2 h-5 w-5 text-red-500" /> No Submissions
+						<XCircleIcon className="mr-2 h-5 w-5 text-red-500" /> Nothing
+						submitted yet
 					</>
 				) : stage == 1 ? (
 					<>
@@ -158,7 +172,7 @@ const Text: NextPage<{
 							className="mr-2 h-5 w-5 text-blue-600"
 							strokeWidth={2}
 						/>
-						Submitted
+						Assignment Submitted
 					</>
 				)}
 			</div>
@@ -175,7 +189,7 @@ const Text: NextPage<{
 					className="text-white"
 					color="bg-gray-300"
 					disabled={false}
-					onClick={() => alert("need to do")}
+					onClick={handlePaste}
 				>
 					Paste Text
 				</Button>
@@ -183,23 +197,70 @@ const Text: NextPage<{
 			{error && `Error occured while saving: ${error}`}
 			<Popup open={editorOpen} closeMenu={() => setEditorOpen(false)}>
 				<h2 className="title-sm">Submission Editor</h2>
-				<textarea
-					className="mt-4 max-h-[80vh] min-h-[15rem]"
-					placeholder={"Start writing..."}
-					onChange={(e) =>
-						setSubmission({
-							assignmentType: AssignmentTypes.TEXT,
-							content: e.target.value,
-						})
-					}
-					defaultValue={
-						dbSubmission &&
-						typeof (dbSubmission?.content as SubmissionText).content == "string"
-							? //@ts-expect-error huh.mp4
-							  dbSubmission.content.content
-							: ""
-					}
-				/>
+				{settings.rich &&
+				submission &&
+				typeof submission.content != "string" ? (
+					<Editor
+						editable={true}
+						backdrop={false}
+						focus={true}
+						updateState={(state: EditorState) =>
+							setSubmission({
+								assignmentType: AssignmentTypes.TEXT,
+								content: state.toJSON(),
+							})
+						}
+						updateRaw={setRawSubmission}
+						className=" border-gray-300 mt-4 mb-2 rounded-xl p-4 shadow-lg dark:border"
+						initialState={
+							(submission &&
+								typeof submission.content != "string" &&
+								submission.content) ||
+							undefined
+						}
+					/>
+				) : (
+					<textarea
+						className="mt-4 max-h-[80vh] min-h-[15rem]"
+						placeholder={"Start writing..."}
+						onChange={(e) =>
+							setSubmission({
+								assignmentType: AssignmentTypes.TEXT,
+								content: e.target.value,
+							})
+						}
+						defaultValue={
+							dbSubmission &&
+							typeof (dbSubmission?.content as SubmissionText).content ==
+								"string"
+								? //@ts-expect-error huh.mp4
+								  dbSubmission.content.content
+								: ""
+						}
+					/>
+				)}
+				<div className="ml-auto flex text-sm text-gray-700">
+					{settings.minChars && content.length < settings.minChars && (
+						<p>
+							<span className="text-red-700">{content.length}</span> / {20} min{" "}
+							{settings.trueWhenChars ? "chars" : "words"}
+						</p>
+					)}{" "}
+					{settings.maxChars &&
+						(!settings.minChars || content.length >= settings.minChars) && (
+							<p>
+								<span
+									className={
+										(content.length > settings.maxChars && "text-red-700") || ""
+									}
+								>
+									{content.length}
+								</span>{" "}
+								/ {settings.maxChars} max{" "}
+								{settings.trueWhenChars ? "chars" : "words"}
+							</p>
+						)}
+				</div>
 				<div className="mt-4 flex items-center">
 					{loading && <Loading />}
 

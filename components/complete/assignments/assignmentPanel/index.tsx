@@ -7,6 +7,7 @@ import { AssignmentSettingsTypes } from "../assignmentCreation/three/settings.ty
 import CheckBox from "./components/checkbox";
 import Text from "./components/text";
 import { Submission, SubmissionSettingsTypes } from "./submission.types";
+import Link from "./components/link";
 
 const AssignmentPanel: NextPage<{
 	assignmentType: AssignmentTypes;
@@ -36,6 +37,9 @@ const AssignmentPanel: NextPage<{
 		case AssignmentTypes.TEXT:
 			// @ts-expect-error Type conversion
 			return <Text imports={imports} />;
+		case AssignmentTypes.LINK:
+			// @ts-expect-error Type conversion
+			return <Link imports={imports} />;
 	}
 };
 
