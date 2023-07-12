@@ -62,9 +62,24 @@ const assignmentSubmissionAdd = new Policy({
 	),
 });
 
+const assignmentSubmissionUpdate = new Policy({
+	name: "Teacher can edit assignments",
+	query: AND(
+		IN(
+			"auth.uid()",
+			SELECT(
+				"class_users",
+				["user_id"],
+				AND(EQ("$.class_id", SELECT("assignments", ["class_id"], EQ("$.id", "assignment_id"))), EQ("$.teacher", "TRUE"))
+			)
+		)
+	),
+});
+
 savePolicies(
 	"./policies.sql",
 	assignmentViewing,
 	assignmentManagement,
-	assignmentSubmissionAdd
+	assignmentSubmissionAdd,
+	assignmentSubmissionUpdate
 );
