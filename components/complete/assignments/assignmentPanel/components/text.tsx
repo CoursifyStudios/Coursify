@@ -263,23 +263,27 @@ const Text: NextPage<{
 				</div>
 				<div className="mt-4 flex items-center">
 					{loading && <Loading />}
-
-					<Button
-						className="text-white"
-						color="bg-gray-200 mr-4 ml-auto"
-						disabled={content.length === 0}
-						onClick={() => submit(true)}
-					>
-						Save Draft
-					</Button>
-					<Button
-						className="text-white"
-						color="bg-blue-500"
-						disabled={!content.finished}
-						onClick={() => submit()}
-					>
-						Submit
-					</Button>
+					<div className="flex items-center ml-auto">
+						{/* {settings.rich && submission && typeof submission.content == "string" && 
+					<p className="text-blue-500 hover:underline cursor-pointer" onClick={() => setSubmission(undefined)}>Reset to rich editor</p>
+					} */}
+						<Button
+							className="text-white"
+							color="bg-gray-200 mx-4 "
+							disabled={content.length === 0}
+							onClick={() => submit(true)}
+						>
+							Save Draft
+						</Button>
+						<Button
+							className="text-white"
+							color="bg-blue-500"
+							disabled={!content.finished}
+							onClick={() => submit()}
+						>
+							Submit
+						</Button>
+					</div>
 				</div>
 			</Popup>
 		</>
