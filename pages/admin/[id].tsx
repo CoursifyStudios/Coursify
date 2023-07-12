@@ -344,6 +344,7 @@ const Admin: NextPage = () => {
 							<div className="flex space-x-2">
 								{selectedRow.length > 0 && (
 									<>
+										<p>most r broken ---{">"}</p>
 										<Button
 											onClick={() => {
 												navigator.clipboard.writeText("test	text\nmore	text");
