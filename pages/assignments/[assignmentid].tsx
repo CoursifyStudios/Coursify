@@ -269,7 +269,13 @@ const Post: NextPage = () => {
 									: "flex-col-reverse xl:flex-row"
 							}`}
 						>
-							<div className="flex grow flex-col">
+							<div
+								className={`flex flex-col ${
+									assignment.data.type == AssignmentTypes.DISCUSSION_POST
+										? "h-max"
+										: "grow"
+								}`}
+							>
 								<h2 className="text-xl font-semibold">Details</h2>
 								{assignment.data.content &&
 								(assignment.data.content as unknown as SerializedEditorState) // @ts-expect-error lexical/shit-types
@@ -284,7 +290,7 @@ const Post: NextPage = () => {
 									<>
 										<div className="mb-5 mt-2 grid grow place-items-center rounded-xl bg-gray-200 p-5 text-lg font-medium">
 											No assignment details
-										</div>{" "}
+										</div>
 									</>
 								)}
 							</div>
@@ -365,8 +371,22 @@ const Post: NextPage = () => {
 									)}
 								</div>
 							) : (
-								<div>
+								<div className="flex flex-col ">
 									<h2 className="text-xl font-semibold">Discussion Posts</h2>
+									<Panel
+										assignmentType={assignment.data.type}
+										setRevisions={setRevisions}
+										revisions={revisions}
+										settings={
+											assignment.data
+												.settings as unknown as AssignmentSettingsTypes
+										}
+										assignmentID={
+											Array.isArray(assignmentid!)
+												? assignmentid[0]
+												: assignmentid!
+										}
+									/>
 								</div>
 							)}
 						</section>

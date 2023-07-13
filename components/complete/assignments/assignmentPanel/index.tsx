@@ -8,6 +8,7 @@ import CheckBox from "./components/checkbox";
 import Text from "./components/text";
 import { Submission, SubmissionSettingsTypes } from "./submission.types";
 import Link from "./components/link";
+import Discussion from "./components/discussion";
 
 const AssignmentPanel: NextPage<{
 	assignmentType: AssignmentTypes;
@@ -40,6 +41,9 @@ const AssignmentPanel: NextPage<{
 		case AssignmentTypes.LINK:
 			// @ts-expect-error Type conversion
 			return <Link imports={imports} />;
+		case AssignmentTypes.DISCUSSION_POST:
+			// @ts-expect-error Type conversion
+			return <Discussion imports={imports} />;
 	}
 };
 

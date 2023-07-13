@@ -23,7 +23,7 @@ import { Submission, SubmissionText } from "../submission.types";
 import Editor from "@/components/editors/richeditor";
 import { EditorState } from "lexical";
 
-const Text: NextPage<{
+const Discussion: NextPage<{
 	imports: {
 		revisions: Submission[];
 		setRevisions: Dispatch<SetStateAction<Submission[]>>;
@@ -48,7 +48,6 @@ const Text: NextPage<{
 }) => {
 	const [editorOpen, setEditorOpen] = useState(false);
 	const [rawSubmission, setRawSubmission] = useState("");
-	const [pasted, setPasted] = useState(false);
 	// Returns content and if it can be submitted, as well as the length of the text
 	const content = useMemo(() => {
 		if (!submission) return { content: "", finished: false, length: 0 };
@@ -121,24 +120,20 @@ const Text: NextPage<{
 	}, [dbSubmission, setSubmission]);
 
 	const handlePaste = async () => {
-		setPasted(true);
 		const text = await navigator.clipboard.readText();
 		setSubmission({
 			assignmentType: AssignmentTypes.TEXT,
 			content: text,
 		});
-		submit(undefined, {
-			assignmentType: AssignmentTypes.TEXT,
-			content: text,
-		});
+		setTimeout(submit, 20);
 	};
 
-	const submit = async (draft?: boolean, diffSubmission?: SubmissionText) => {
+	const submit = async (draft?: boolean) => {
 		setLoading(true);
 		const now = new Date().toUTCString();
 		const error = await assignmentSubmission(
 			assignmentID,
-			diffSubmission || submission,
+			submission,
 			supabase,
 			user,
 			draft ? false : content.finished
@@ -160,142 +155,77 @@ const Text: NextPage<{
 
 	return (
 		<>
-			<div className="flex items-center font-medium">
-				{stage == 0 ? (
-					<>
-						<XCircleIcon className="mr-2 h-5 w-5 text-red-500" /> Nothing
-						submitted yet
-					</>
-				) : stage == 1 ? (
-					<>
-						<MinusCircleIcon className="mr-2 h-5 w-5 text-neutral-500" /> Draft
-						Saved
-					</>
-				) : (
-					<>
-						<CheckCircleIcon
-							className="mr-2 h-5 w-5 text-blue-600"
-							strokeWidth={2}
-						/>
-						Assignment Submitted
-					</>
-				)}
-			</div>
-			<div className="flex items-center justify-between">
-				<Button
-					className="text-white"
-					color="bg-blue-500"
-					disabled={false}
-					onClick={() => setEditorOpen(true)}
-				>
-					Open Editor
-				</Button>
-				<Button
-					className="text-white"
-					color="bg-gray-300"
-					disabled={false}
-					onClick={handlePaste}
-				>
-					Paste Text
-				</Button>
-			</div>
-			{error && `Error occured while saving: ${error}`}
-			<Popup open={editorOpen} closeMenu={() => setEditorOpen(false)}>
-				<h2 className="title-sm">Submission Editor</h2>
-				{settings.rich &&
-				(submission ? typeof submission.content != "string" : true) &&
-				!pasted ? (
-					<Editor
-						editable={true}
-						backdrop={false}
-						focus={true}
-						updateState={(state: EditorState) =>
-							setSubmission({
-								assignmentType: AssignmentTypes.TEXT,
-								content: state.toJSON(),
-							})
-						}
-						updateRaw={setRawSubmission}
-						className=" border-gray-300 mt-4 mb-2 rounded-xl p-4 shadow-lg dark:border"
-						initialState={
-							(revisions &&
-								revisions.length > 0 &&
-								typeof revisions[0].content != "string" &&
-								//@ts-expect-error
-								revisions[0].content.content) ||
-							undefined
-						}
-					/>
-				) : (
-					<textarea
-						className="mt-4 max-h-[80vh] min-h-[15rem]"
-						placeholder={"Start writing..."}
-						onChange={(e) =>
-							setSubmission({
-								assignmentType: AssignmentTypes.TEXT,
-								content: e.target.value,
-							})
-						}
-						defaultValue={
-							dbSubmission &&
-							typeof (dbSubmission?.content as SubmissionText).content ==
-								"string"
-								? //@ts-expect-error huh.mp4
-								  dbSubmission.content.content
-								: ""
-						}
-					/>
-				)}
-				<div className="ml-auto flex text-sm text-gray-700">
-					{settings.minChars && content.length < settings.minChars && (
+			<Editor
+				editable={true}
+				backdrop={true}
+				focus={true}
+				updateState={(state: EditorState) =>
+					setSubmission({
+						assignmentType: AssignmentTypes.TEXT,
+						content: state.toJSON(),
+					})
+				}
+				updateRaw={setRawSubmission}
+				className=" border-gray-300 mt-4 mb-2 rounded-xl p-4 shadow-lg dark:border"
+				initialState={
+					(revisions &&
+						revisions.length > 0 &&
+						typeof revisions[0].content != "string" &&
+						//@ts-expect-error
+						revisions[0].content.content) ||
+					undefined
+				}
+			/>
+
+			<div className="ml-auto flex text-sm text-gray-700">
+				{settings.minChars && content.length < settings.minChars && (
+					<p>
+						<span className="text-red-700">{content.length}</span> /{" "}
+						{settings.minChars} min {settings.trueWhenChars ? "chars" : "words"}
+					</p>
+				)}{" "}
+				{settings.maxChars &&
+					(!settings.minChars || content.length >= settings.minChars) && (
 						<p>
-							<span className="text-red-700">{content.length}</span> /{" "}
-							{settings.minChars} min{" "}
+							<span
+								className={
+									(content.length > settings.maxChars && "text-red-700") || ""
+								}
+							>
+								{content.length}
+							</span>{" "}
+							/ {settings.maxChars} max{" "}
 							{settings.trueWhenChars ? "chars" : "words"}
 						</p>
-					)}{" "}
-					{settings.maxChars &&
-						(!settings.minChars || content.length >= settings.minChars) && (
-							<p>
-								<span
-									className={
-										(content.length > settings.maxChars && "text-red-700") || ""
-									}
-								>
-									{content.length}
-								</span>{" "}
-								/ {settings.maxChars} max{" "}
-								{settings.trueWhenChars ? "chars" : "words"}
-							</p>
-						)}
-				</div>
-				<div className="mt-4 flex items-center">
-					{loading && <Loading />}
-					<div className="flex items-center ml-auto">
-						{/* {settings.rich && submission && typeof submission.content == "string" && 
+					)}
+			</div>
+			<div className="mt-4 flex items-center">
+				{loading && <Loading />}
+				<div className="flex items-center ml-auto">
+					{/* {settings.rich && submission && typeof submission.content == "string" && 
 					<p className="text-blue-500 hover:underline cursor-pointer" onClick={() => setSubmission(undefined)}>Reset to rich editor</p>
 					} */}
-						<Button
-							className="text-white"
-							color="bg-gray-200 mx-4 "
-							disabled={content.length === 0}
-							onClick={() => submit(true)}
-						>
-							Save Draft
-						</Button>
-						<Button
-							className="text-white"
-							color="bg-blue-500"
-							disabled={!content.finished}
-							onClick={() => submit()}
-						>
-							Submit
-						</Button>
-					</div>
+					<Button
+						className="text-white"
+						color="bg-gray-200 mx-4 "
+						disabled={content.length === 0}
+						onClick={() => submit(true)}
+					>
+						Save Draft
+					</Button>
+					<Button
+						className="text-white"
+						color="bg-blue-500"
+						disabled={!content.finished}
+						onClick={() => submit()}
+					>
+						Post
+					</Button>
 				</div>
-			</Popup>
+			</div>
+			{error && `Error occured while saving: ${error}`}
 		</>
 	);
 };
 
-export default Text;
+export default Discussion;
