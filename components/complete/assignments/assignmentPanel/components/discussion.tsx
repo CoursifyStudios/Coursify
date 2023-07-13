@@ -59,7 +59,7 @@ const Discussion: NextPage<{
 		// 		.parseEditorState(submission.content)
 		//	.read(() => $getRoot().getTextContent());
 		const textLength = text.length;
-		const textWords = text.split(" ").length;
+		const textWords = text.split(" ").length - 1;
 
 		if (!settings.minChars && !settings.maxChars) {
 			return {
