@@ -22,6 +22,7 @@ import { AssignmentText } from "../../assignmentCreation/three/settings.types";
 import { Submission, SubmissionText } from "../submission.types";
 import Editor from "@/components/editors/richeditor";
 import { EditorState } from "lexical";
+import { formatDate } from "@/lib/misc/dates";
 
 const Discussion: NextPage<{
 	imports: {
@@ -224,6 +225,27 @@ const Discussion: NextPage<{
 				</div>
 			</div>
 			{error && `Error occured while saving: ${error}`}
+			<div className="flex flex-col gap-4 mt-8">
+				{revisions.map((v) => (
+					<div className="bg-gray-200 px-4 py-5 rounded-xl" key={v.created_at}>
+						<div className="flex items-center">
+							<div className="bg-blue-500 h-8 w-8 rounded-full"></div>
+							<div className="ml-3">
+								<h3>Username</h3>
+								<p className="text-xs text-gray-700">
+									{formatDate(new Date())}
+								</p>
+							</div>
+						</div>
+						<Editor
+							editable={false}
+							className=" "
+							//@ts-expect-error I promise it does exist ts
+							initialState={v.content.content}
+						/>
+					</div>
+				))}
+			</div>
 		</>
 	);
 };
