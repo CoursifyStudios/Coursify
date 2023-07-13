@@ -60,7 +60,7 @@ const Text: NextPage<{
 		// 		.parseEditorState(submission.content)
 		//	.read(() => $getRoot().getTextContent());
 		const textLength = text.length;
-		const textWords = text.split(" ").length - 1;
+		const textWords = (text.match(/\S+/g) || []).length;
 
 		if (!settings.minChars && !settings.maxChars) {
 			return {
