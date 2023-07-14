@@ -45,13 +45,91 @@ const assignmentManagement = new Policy({
 	),
 });
 
+// TODO: FIX THIS ASAP!!!
+// Infinite recursion error
+const assignmentSubmissionView = new Policy({
+	name: "Student assignment submission viewing",
+	query: AND(
+		IN(
+			"auth.uid()",
+			SELECT(
+				"class_users",
+				["user_id"],
+				AND(
+					EQ(
+						"$.class_id",
+						SELECT("assignments", ["class_id"], EQ("$.id", "assignment_id"))
+					)
+				)
+			)
+		),
+		OR(
+			EQ("user_id", "auth.uid()"),
+			AND(
+				EQ(SELECT("assignments", ["type"], EQ("$.id", "assignment_id")), "4"),
+				OR(
+					IN(
+						"assignment_id",
+						SELECT("assignments", ["id"], EQ("$.settings->>'permissions'", "'2'"))
+					),
+					AND(
+						IN(
+							"assignment_id",
+							SELECT(
+								"assignments",
+								["id"],
+								EQ("$.settings->>'permissions'", "'1'")
+							)
+						),
+						IN(
+							"auth.uid()",
+							SELECT(
+								"submissions",
+								["user_id"],
+								AND(EQ("$.user_id", "auth.uid()"), EQ("$.final", "TRUE"))
+							)
+						)
+					)
+				)
+			)
+		)
+	),
+});
+
 const assignmentSubmissionAdd = new Policy({
 	name: "Student assignment submission add",
 	query: AND(
 		OR(
-			EQ("user_id", "auth.uid()")
-			// Implement teacher can override - Lukas
-			// Fuck me - Bloxs
+			AND(
+				EQ("user_id", "auth.uid()"),
+				IN(
+					"auth.uid()",
+					SELECT(
+						"class_users",
+						["user_id"],
+						AND(
+							EQ(
+								"$.class_id",
+								SELECT("assignments", ["class_id"], EQ("$.id", "assignment_id"))
+							)
+						)
+					)
+				)
+			),
+			IN(
+				"auth.uid()",
+				SELECT(
+					"class_users",
+					["user_id"],
+					AND(
+						EQ(
+							"$.class_id",
+							SELECT("assignments", ["class_id"], EQ("$.id", "assignment_id"))
+						),
+						EQ("$.teacher", "TRUE")
+					)
+				)
+			)
 		),
 		IN("assignment_id", SELECT("assignments", ["id"])),
 		AND(
@@ -63,14 +141,20 @@ const assignmentSubmissionAdd = new Policy({
 });
 
 const assignmentSubmissionUpdate = new Policy({
-	name: "Teacher can edit assignments",
+	name: "Teacher can edit assignment submissions",
 	query: AND(
 		IN(
 			"auth.uid()",
 			SELECT(
 				"class_users",
 				["user_id"],
-				AND(EQ("$.class_id", SELECT("assignments", ["class_id"], EQ("$.id", "assignment_id"))), EQ("$.teacher", "TRUE"))
+				AND(
+					EQ(
+						"$.class_id",
+						SELECT("assignments", ["class_id"], EQ("$.id", "assignment_id"))
+					),
+					EQ("$.teacher", "TRUE")
+				)
 			)
 		)
 	),
@@ -80,6 +164,7 @@ savePolicies(
 	"./policies.sql",
 	assignmentViewing,
 	assignmentManagement,
+	assignmentSubmissionView,
 	assignmentSubmissionAdd,
 	assignmentSubmissionUpdate
 );
