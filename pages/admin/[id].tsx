@@ -32,13 +32,16 @@ import noData from "@/public/svgs/no-data.svg";
 import { Button, ButtonIcon } from "@/components/misc/button";
 import Dropdown from "@/components/misc/dropdown";
 
-type ImportedUser = {
+type ImportedUsers = {
 	first_name: string;
 	last_name: string;
 	email: string;
 	grad_year: number | null;
-	parent: boolean;
+	//parent: boolean;
 	student_id: string | null;
+	preferred_name?: string;
+	phone_number?: string;
+	bio?: string;
 }[];
 
 enum CSVParser {
@@ -78,13 +81,13 @@ const Admin: NextPage = () => {
 		  }[]
 		| null
 	>();
-	const [uploadUsers, setUploadUsers] = useState<ImportedUser>([
+	const [uploadUsers, setUploadUsers] = useState<ImportedUsers>([
 		{
 			first_name: "Steve",
 			last_name: "Huffman",
 			email: "steve@ex.com",
 			grad_year: 2092,
-			parent: false,
+			//parent: false,
 			student_id: "P26_0001",
 		},
 		{
@@ -92,7 +95,7 @@ const Admin: NextPage = () => {
 			last_name: "Selig",
 			email: "chris@ex.com",
 			grad_year: null,
-			parent: true,
+			//parent: true,
 			student_id: "P26_0002",
 		},
 	]);
@@ -153,7 +156,7 @@ const Admin: NextPage = () => {
 			? [...ev.dataTransfer!.items].map((f) => f.getAsFile()!)
 			: [...ev.dataTransfer!.files];
 
-		const users: ImportedUser = [];
+		const users: ImportedUsers = [];
 
 		for (const file of files) {
 			if (file == undefined) return;
@@ -166,21 +169,97 @@ const Admin: NextPage = () => {
 						.map((l) => l.split(","));
 
 					for (const user of userData) {
-						const [student_id, first_name, last_name, email, grad_year] = user;
+						switch (csvParser) {
+							case CSVParser.COURSIFY: {
+								const [student_id, first_name, last_name, email, grad_year] =
+									user;
 
-						users.push({
-							first_name,
-							last_name,
-							email,
-							grad_year: parseInt(grad_year),
-							parent: parent == "true",
-							student_id:
-								student_id == "null" ||
-								student_id == "" ||
-								student_id == undefined
-									? null
-									: student_id,
-						});
+								users.push({
+									first_name,
+									last_name,
+									email,
+									grad_year: parseInt(grad_year),
+									// parent: parent == "true",
+									student_id:
+										student_id == "null" ||
+										student_id == "" ||
+										student_id == undefined
+											? null
+											: student_id,
+								});
+								break;
+							}
+							case CSVParser.POWERSCHOOL:
+							case CSVParser.SCHOOLOGY: {
+								/*
+Name	Description
+Schoology User ID	The unique user ID assigned by Schoology x
+Unique User ID	The Unique ID field in Schoology, which is often a student ID assigned in the SIS x
+SIS User ID	The SIS user ID may be used for organizations that have imported PowerSchool Learning content only. x
+School NID	The unique school ID assigned by Schoology x
+School Title	The name of the main school the user is affiliated with x
+Additional Schools	The NIDs of additional schools the user is affiliated with x
+Name Prefix	The user's honorific or prefix (ex. Mr., Mrs., Dr.) x
+First Name	The user's first name x
+First Name (preferred)	The user's preferred first name x
+Last Name	The user's last name x
+Role	The user's role within Schoology (ex. Student, Parent, Teacher) x
+Username	The username assigned by the district x
+Email	The user's email address x
+Position/Job Title	The user's position, as displayed on their profile
+Graduation Year	The user's graduation date x
+Birthday	The user's birthday
+Gender	The user's gender
+Bio	The user's bio information, as displayed on their profile
+Subjects Taught	The subject(s) the user teaches
+Levels Taught	The level(s) the user teaches
+Phone Number	The user's phone number
+Website	The user's website
+Interests	The user's interests, as displayed on their profile
+Activities	The user's activities, as displayed on their profile
+								*/
+								const [
+									_,
+									student_id,
+									__,
+									___,
+									____,
+									_____,
+									______,
+									first_name,
+									preferred_name,
+									last_name,
+									_______,
+									________,
+									email,
+									_________,
+									grad_year,
+									__________,
+									___________,
+									bio,
+									____________,
+									_____________,
+									phone_number,
+								] = user;
+
+								users.push({
+									first_name,
+									last_name,
+									email,
+									grad_year: parseInt(grad_year),
+									// parent: parent == "true",
+									student_id:
+										student_id == "null" ||
+										student_id == "" ||
+										student_id == undefined
+											? null
+											: student_id,
+									phone_number,
+									bio,
+									preferred_name,
+								});
+							}
+						}
 					}
 				}
 			}
@@ -189,6 +268,23 @@ const Admin: NextPage = () => {
 			setUploaded(true);
 		}
 	};
+
+	const addNewUsers = async (users: ImportedUsers) => {
+		await supabase.from("users").insert(
+			users.map((u) => ({
+				full_name: `${u.first_name} ${u.last_name}`,
+				// Temp UUID to be replaced when the user logs in
+				id: "00000000-0000-0000-0000-000000000000",
+				avatar_url: "https://cdn.coursify.one/storage/v1/object/public/cdn/assets/Coursify/default-picture.png",
+				bio: u.bio,
+				email: u.email,
+				phone_number: u.phone_number,
+				year: u.grad_year?.toString(),
+				student_id: u.student_id,
+				preferred_name: u.preferred_name,
+			}))
+		)
+	}
 
 	return (
 		<div className="mx-auto my-10 flex w-full max-w-screen-xl flex-col px-4">
@@ -283,7 +379,8 @@ const Admin: NextPage = () => {
 												<p>{u.last_name}</p>
 												<p>{u.email}</p>
 												<p>{u.grad_year ?? "NULL"}</p>
-												<p>{u.parent ? "Yes" : "No"}</p>
+												<p>Unknown</p>
+												{/* <p>{u.parent ? "Yes" : "No"}</p> */}
 												<p>{u.student_id ?? "NULL"}</p>
 											</div>
 										))}
