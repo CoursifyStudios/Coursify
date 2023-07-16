@@ -77,7 +77,7 @@ export const AnnouncementsComponent = ({
 				.map(
 					(announcement) =>
 						announcement &&
-						(announcement.type == AnnouncementType.ANNOUNCMENT ||
+						(announcement.type == AnnouncementType.ANNOUNCEMENT ||
 							announcement.type == AnnouncementType.CROSSPOST) && (
 							<Announcement
 								key={announcement.id + "other"}

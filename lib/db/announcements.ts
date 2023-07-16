@@ -205,7 +205,7 @@ export const postCommentOrReply = async (
 export type CommentType = Awaited<ReturnType<typeof postCommentOrReply>>;
 
 export enum AnnouncementType {
-	ANNOUNCMENT = 0,
+	ANNOUNCEMENT = 0,
 	COMMENT = 1,
 	CROSSPOST = 2,
 	REPLY = 3,
