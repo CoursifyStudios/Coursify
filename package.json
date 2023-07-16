@@ -55,8 +55,6 @@
 		"react-dom": "^18.2.0",
 		"react-tagsinput": "^3.20.3",
 		"sass": "^1.62.1",
-		"sharp": "^0.32.2",
-		"sass": "^1.62.1",
 		"sharp": "^0.32.1",
 		"tailwindcss-theme-swapper": "^0.6.5",
 		"typescript": "^5.0.4",
