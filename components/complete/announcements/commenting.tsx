@@ -38,7 +38,7 @@ export const Comment = ({
 	const user = useUser();
 	const { newTab } = useTabs();
 	const [text, setText] = useState(content);
-	const [showReplying, setShowReplying] = useState(false);
+	// const [showReplying, setShowReplying] = useState(false); not prod ready
 	const [editing, setEditing] = useState(false);
 	return (
 		<div className="ml-4">
@@ -66,12 +66,12 @@ export const Comment = ({
 					</p>
 				</Link>
 				<p className="pl-1.5 text-gray-600 dark:text-gray-400">{time}</p>
-				{user && user.id == author && (
+                {/* This is not functional yet, so goodbye */}
+				{/* {user && user.id == author && (
 					<Menu>
 						<Menu.Button className="ml-auto">
 							<EllipsisVerticalIcon className="w-5"></EllipsisVerticalIcon>
 						</Menu.Button>
-						{/* I know that the below styling sucks but idk how to fix the margin thing. Pls fix*/}
 						<div className="absolute z-50 ml-72 mt-14">
 							<Menu.Items
 								as="div"
@@ -93,7 +93,7 @@ export const Comment = ({
 							</Menu.Items>
 						</div>
 					</Menu>
-				)}
+				)} */}
 			</div>
 			{editing ? (
 				<Formik
@@ -148,7 +148,8 @@ export const Comment = ({
 			) : (
 				<p>{text}</p>
 			)}
-
+            {/* Replying UI is below. Replying is coming later! so uh. Yeah */}
+{/* 
 			<button
 				className="ml-2"
 				onClick={() => {
@@ -163,7 +164,7 @@ export const Comment = ({
 					parentID={id!}
 					showMe={setShowReplying}
 				></Commenting>
-			)}
+			)} */}
 		</div>
 	);
 };
