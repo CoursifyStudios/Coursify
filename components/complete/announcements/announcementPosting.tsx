@@ -4,8 +4,8 @@ import { EditorState } from "lexical";
 import { useEffect, useState } from "react";
 import {
 	TypeOfAnnouncements,
-	crossPostAnnouncements,
 	editAnnouncement,
+	postAnnouncements,
 	shareAnnouncement,
 } from "../../../lib/db/announcements";
 import { getClassesForUserBasic } from "../../../lib/db/classes";
@@ -23,6 +23,7 @@ export const AnnouncementPostingUI = ({
 	setAnnouncements,
 	sharingInfo,
 	editingInfo,
+	setNewInfo,
 }: {
 	communityid: string;
 	announcements: TypeOfAnnouncements[];
@@ -49,14 +50,17 @@ export const AnnouncementPostingUI = ({
 		setSharing: (value: boolean) => void;
 	} | null;
 	editingInfo?: {
+		id: string;
 		title: string;
 		content: Json;
-		time: string;
+		clone_id: string | null;
 		setEditing?: (value: boolean) => void;
 	};
+	setNewInfo?: (value: { title: string; content: Json }) => void;
+	setEditing?: (value: boolean) => void;
 }) => {
 	const supabase = useSupabaseClient<Database>();
-	const [showPost, setShowPost] = useState(
+	const [showPosting, setShowPosting] = useState(
 		editingInfo || sharingInfo ? true : false
 	);
 	const [title, setTitle] = useState("");
@@ -121,7 +125,7 @@ export const AnnouncementPostingUI = ({
 
 	return (
 		<div>
-			{showPost ? (
+			{showPosting ? (
 				<div className="flex flex-col rounded-xl border-2 border-gray-300 bg-gray-50 p-4 dark:bg-zinc-950">
 					{!editingInfo && !sharingInfo && (
 						<h3 className="mb-4 font-semibold">New Announcement</h3>
@@ -216,10 +220,10 @@ export const AnnouncementPostingUI = ({
 									// the original announcement, not the "New Announcement" UI
 									sharingInfo?.setSharing
 										? sharingInfo.setSharing(false)
-										: setShowPost(false);
+										: setShowPosting(false);
 									editingInfo?.setEditing
 										? editingInfo.setEditing(false)
-										: setShowPost(false);
+										: setShowPosting(false);
 								}}
 							>
 								Cancel
@@ -243,7 +247,7 @@ export const AnnouncementPostingUI = ({
 													title: title,
 												})
 											);
-										setShowPost(false); //This hides the announcement posting UI.
+										setShowPosting(false); //This hides the announcement posting UI.
 
 										// If the announcement is being shared, perform the following behaviors:
 										if (sharingInfo && chosenCommunities.length >= 1) {
@@ -275,36 +279,35 @@ export const AnnouncementPostingUI = ({
 											const newAnnouncement = await editAnnouncement(
 												supabase,
 												{
+													id: editingInfo.id,
 													author: user.id,
 													title: editingInfo.title,
-													time: editingInfo.time,
+													clone_id: editingInfo.clone_id,
 												},
 												{
 													title: title,
 													content: editorState?.toJSON() as unknown as Json,
 												}
 											);
-											// ...And on its return removes teh fake announcement..
+											// ...And on its return removes the fake announcement..
 											setFakeAnnouncements(
 												fakeAnnouncements.filter(
 													(announcement) =>
 														announcement.title != editingInfo.title
 												)
 											);
-											// and adds a real one
-											if (newAnnouncement && newAnnouncement.data) {
-												setAnnouncements(
-													announcements.concat(
-														newAnnouncement.data.find(
-															(announcement) =>
-																announcement.class_id == communityid
-														) as unknown as TypeOfAnnouncements
-													)
-												);
-											}
+											//and sets the real one
+											setNewInfo &&
+												setNewInfo({
+													title: title,
+													content: editorState?.toJSON() as unknown as Json,
+												});
+											editingInfo.setEditing(false);
 										} else {
+											// This is for when you are neither sharing nor editing (just posting normally)
+											// it just checks that both the title and contnet of the announcement are populated
 											if (!isEditorEmpty(editorState) && !(title.length == 0)) {
-												const dBReturn = await crossPostAnnouncements(
+												const dBReturn = await postAnnouncements(
 													supabase,
 													user?.id!,
 													title,
@@ -317,20 +320,18 @@ export const AnnouncementPostingUI = ({
 															announcement.title != dBReturn.data![0].title
 													)
 												);
-												setAnnouncements(
-													announcements.concat([
-														{
-															author: dBReturn.data![0].author,
-															content: dBReturn.data![0].content,
-															id: dBReturn.data![0].id,
-															parent: null,
-															time: dBReturn.data![0].time,
-															title: dBReturn.data![0].title,
-															type: dBReturn.data![0].type,
-															users: dBReturn.data![0].users,
-														},
-													])
-												);
+												if (dBReturn && dBReturn.data) {
+													setAnnouncements(
+														announcements.concat(
+															dBReturn.data.find(
+																(announcement) =>
+																	announcement.class_id == communityid
+															) as unknown as TypeOfAnnouncements
+														)
+													);
+												}
+
+												//reset which communities to share to
 												!sharingInfo &&
 													setChosenCommunities([
 														{
@@ -396,7 +397,7 @@ export const AnnouncementPostingUI = ({
 		return (
 			<div
 				className="cursor-pointer rounded-xl border-2 border-dashed border-gray-300 p-4 transition hover:border-solid hover:bg-gray-50 dark:hover:bg-zinc-950"
-				onClick={() => setShowPost(true)}
+				onClick={() => setShowPosting(true)}
 			>
 				<h3 className="mb-4 font-semibold">New Announcement</h3>
 
@@ -410,3 +411,4 @@ export const AnnouncementPostingUI = ({
 		);
 	}
 };
+//manually adding a change please work

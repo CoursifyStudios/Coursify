@@ -1,9 +1,15 @@
+import { Menu } from "@headlessui/react";
+import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { postComment } from "../../../lib/db/announcements";
+import {
+	AnnouncementType,
+	editAnnouncement,
+	postCommentOrReply,
+} from "../../../lib/db/announcements";
 import { howLongAgo } from "../../../lib/misc/dates";
 import { useTabs } from "../../../lib/tabs/handleTabs";
 import { Button } from "../../misc/button";
@@ -14,6 +20,8 @@ export const Comment = ({
 	time,
 	content,
 	users,
+	communityid,
+	type,
 }: {
 	author: string;
 	time: string;
@@ -22,9 +30,16 @@ export const Comment = ({
 		full_name: string;
 		avatar_url: string;
 	};
-	id?: string;
+	communityid: string;
+	id: string;
+	type: AnnouncementType;
 }) => {
+	const supabase = useSupabaseClient();
+	const user = useUser();
 	const { newTab } = useTabs();
+	const [text, setText] = useState(content);
+	const [showReplying, setShowReplying] = useState(false);
+	const [editing, setEditing] = useState(false);
 	return (
 		<div className="ml-4">
 			<div className="flex items-center pt-1 ">
@@ -41,7 +56,7 @@ export const Comment = ({
 					<Image
 						src={users.avatar_url}
 						alt="User image"
-						className="h-5 w-5 rounded-full object-cover"
+						className="h-5 w-5 rounded-full"
 						referrerPolicy="no-referrer"
 						width={20}
 						height={20}
@@ -51,25 +66,123 @@ export const Comment = ({
 					</p>
 				</Link>
 				<p className="pl-1.5 text-gray-600 dark:text-gray-400">{time}</p>
+				{user && user.id == author && (
+					<Menu>
+						<Menu.Button className="ml-auto">
+							<EllipsisVerticalIcon className="w-5"></EllipsisVerticalIcon>
+						</Menu.Button>
+						{/* I know that the below styling sucks but idk how to fix the margin thing. Pls fix*/}
+						<div className="absolute z-50 ml-72 mt-14">
+							<Menu.Items
+								as="div"
+								className="relative flex w-48 flex-col rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-xl"
+							>
+								<Menu.Item
+									as="div"
+									className="p-1 font-medium"
+									onClick={() => setEditing(true)}
+								>
+									Edit
+								</Menu.Item>
+								<Menu.Item as="div" className="p-1 font-medium">
+									Share
+								</Menu.Item>
+								<Menu.Item as="div" className="p-1 font-medium">
+									Delete
+								</Menu.Item>
+							</Menu.Items>
+						</div>
+					</Menu>
+				)}
 			</div>
-			<p>{content}</p>
+			{editing ? (
+				<Formik
+					initialValues={{
+						content: text,
+					}}
+					onSubmit={async (formData) => {
+						const test = await editAnnouncement(
+							supabase,
+							//kind of confusing but a comment's content uses the title field
+							{ id: id, author: user!.id, title: content, clone_id: null },
+							{ title: formData.content, content: null }
+						);
+						setEditing(false);
+						setText(formData.content);
+					}}
+				>
+					{({ values }) => (
+						<Form className="focus:outline-none">
+							<label htmlFor="content">
+								<Field
+									component="textarea"
+									name="content"
+									type="text"
+									className="min-h-[2.5rem] w-full resize-y border-none bg-gray-300 px-4 py-2.5 !ring-0 dark:placeholder:text-gray-400"
+									placeholder="Enter your revised comment here"
+									autoFocus
+								></Field>
+							</label>
+							<ErrorMessage name="content" />
+							<div className="m-1 flex justify-end gap-2">
+								<Button
+									className="brightness-hover transition hover:bg-red-300"
+									onClick={() => setEditing(false)}
+								>
+									Cancel
+								</Button>
+								<button
+									className={`rounded-md bg-blue-500 px-4 py-1 font-semibold text-white ${
+										values.content.length < 1
+											? "cursor-not-allowed brightness-75"
+											: "brightness-hover"
+									}`}
+									type="submit"
+								>
+									Post
+								</button>
+							</div>
+						</Form>
+					)}
+				</Formik>
+			) : (
+				<p>{text}</p>
+			)}
+
+			<button
+				className="ml-2"
+				onClick={() => {
+					setShowReplying(true);
+				}}
+			>
+				<p>{showReplying ? "Replying to " + users.full_name : "Reply"}</p>
+			</button>
+			{showReplying && (
+				<Commenting
+					communityid={communityid}
+					parentID={id!}
+					showMe={setShowReplying}
+				></Commenting>
+			)}
 		</div>
 	);
 };
 
 export const Commenting = ({
 	communityid,
-	announcementid,
+	parentID,
+	showMe,
 }: {
 	communityid: string;
-	announcementid: string;
+	parentID: string;
+	showMe?: (value: boolean) => void;
 }) => {
 	const supabase = useSupabaseClient();
 	const user = useUser();
 	const [showCommenting, setShowCommenting] = useState(false);
 	const [tempComments, setTempComments] = useState<
 		{
-			id?: string;
+			id: string;
 			author: string;
 			time: string;
 			content: string;
@@ -91,16 +204,18 @@ export const Commenting = ({
 						}}
 						onSubmit={async (formData) => {
 							setShowCommenting(false);
-							const test = await postComment(
+							const test = await postCommentOrReply(
 								supabase,
 								user.id,
 								communityid,
-								announcementid,
-								formData.content
+								parentID,
+								formData.content,
+								AnnouncementType.COMMENT
 							);
 							setTempComments(
 								tempComments.concat({
-									id: test.data?.id,
+									//possibly a sumb idea
+									id: test.data!.id,
 									author: user.id,
 									time: test.data?.time
 										? howLongAgo(test.data.time)
@@ -130,7 +245,10 @@ export const Commenting = ({
 								<div className="m-1 flex justify-end gap-2">
 									<Button
 										className="brightness-hover transition hover:bg-red-300"
-										onClick={() => setShowCommenting(false)}
+										onClick={() => {
+											setShowCommenting(false);
+											if (showMe) showMe(false);
+										}}
 									>
 										Cancel
 									</Button>
@@ -168,6 +286,8 @@ export const Commenting = ({
 					time={comment.time}
 					content={comment.content}
 					users={comment.users}
+					communityid={communityid}
+					type={AnnouncementType.COMMENT}
 				></Comment>
 			))}
 		</>
