@@ -1,5 +1,3 @@
-import { Menu } from "@headlessui/react";
-import { EllipsisVerticalIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import Image from "next/image";
@@ -66,7 +64,7 @@ export const Comment = ({
 					</p>
 				</Link>
 				<p className="pl-1.5 text-gray-600 dark:text-gray-400">{time}</p>
-                {/* This is not functional yet, so goodbye */}
+				{/* This is not functional yet, so goodbye */}
 				{/* {user && user.id == author && (
 					<Menu>
 						<Menu.Button className="ml-auto">
@@ -148,8 +146,8 @@ export const Comment = ({
 			) : (
 				<p>{text}</p>
 			)}
-            {/* Replying UI is below. Replying is coming later! so uh. Yeah */}
-{/* 
+			{/* Replying UI is below. Replying is coming later! so uh. Yeah */}
+			{/* 
 			<button
 				className="ml-2"
 				onClick={() => {
