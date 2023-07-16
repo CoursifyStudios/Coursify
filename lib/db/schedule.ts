@@ -57,7 +57,7 @@ export const createNewSchedule = async (
 				parseInt(period.timeStart.substring(3, 5)),
 				0
 			);
-			
+
 			period.timeStart = time.toTimeString();
 
 			time.setHours(
@@ -65,7 +65,7 @@ export const createNewSchedule = async (
 				parseInt(period.timeEnd.substring(3, 5)),
 				0
 			);
-			
+
 			period.timeEnd = time.toTimeString();
 		});
 	}
