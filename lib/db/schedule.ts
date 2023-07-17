@@ -147,10 +147,9 @@ export function handleTimezone(time: string) {
 	const local = new Date();
 	local.setHours(
 		parseInt(time.substring(0, 2)),
-		parseInt(time.substring(3, 5)) -
-			(local.getTimezoneOffset() -
-				(parseInt(time.substring(13, 15)) * 60 +
-					parseInt(time.substring(15, 17)))),
+		parseInt(time.substring(3, 5)) - local.getTimezoneOffset() + 420,
+		//TODO: That constant (420) is PST offset. We ned to adjust that
+		//for when any schedule are created with non-PST offsets
 		0
 	);
 	return local.toTimeString();
