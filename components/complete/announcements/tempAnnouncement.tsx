@@ -62,6 +62,9 @@ export const TempAnnouncement = ({
 						}
 						alt="Profile picture"
 						className="h-5 w-5 rounded-full"
+						referrerPolicy="no-referrer"
+						width={20}
+						height={20}
 					/>
 					<p className="ml-1.5 mr-1 font-semibold text-neutral-700">
 						{announcement.users

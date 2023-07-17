@@ -23,11 +23,14 @@ export const AnnouncementsComponent = ({
 		useState<TypeOfAnnouncements[]>([]);
 	return (
 		<div className="space-y-4">
-			<AnnouncementPostingUI
-				announcements={recentlyPostedAnnouncements}
-				setAnnouncements={setRecentlyPostedAnnouncements}
-				communityid={communityid}
-			/>
+			{showPostingUI && (
+				<AnnouncementPostingUI
+					announcements={recentlyPostedAnnouncements}
+					setAnnouncements={setRecentlyPostedAnnouncements}
+					communityid={communityid}
+				/>
+			)}
+
 			{/* rendering temporary announcements */}
 			{tempAnnouncements.reverse().map(
 				(announcement) =>
