@@ -49,7 +49,7 @@ export const postAnnouncements = async (
 };
 
 export type postingReturn = Awaited<ReturnType<typeof postAnnouncements>>;
-// Removes the announcement(s) that match the author, title and content.
+// Removes the announcement(s) that match the author and title.
 // This is what happens when no merge table. To remove the announcement
 // from just one group or class, use removeAnnouncementFromCommunity(),
 // which is defined below
@@ -109,6 +109,7 @@ export const editAnnouncement = async (
                 time,
                 class_id,
                 type,
+                clone_id,
                 users (
                     full_name, avatar_url
                 )

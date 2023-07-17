@@ -19,6 +19,8 @@ export const Delete: NextPage<{
 	announcement: TypeOfAnnouncements;
 	classID: string;
 }> = ({ setOpen, supabase, open, setDeleted, announcement, classID }) => {
+	//TODO:
+	//console.log(announcement)
 	const [deleting, setDeleting] = useState<string>();
 	const [error, setError] = useState<string>();
 
@@ -71,10 +73,10 @@ export const Delete: NextPage<{
 				<div className="flex">
 					<Button
 						className=" focus:outline-1 focus:outline-black" //Make this UI better later
-						onClick={deleteSingle}
-						disabled={deleting != undefined}
+						onClick={deleteMultiple}
+						disabled={deleting != undefined || announcement.clone_id == null}
 					>
-						{deleting == "single" ? (
+						{deleting == "multiple" ? (
 							<>
 								Deleting <LoadingSmall className="ml-2" />
 							</>
@@ -83,7 +85,7 @@ export const Delete: NextPage<{
 						)}{" "}
 					</Button>
 					<Button
-						onClick={deleteMultiple}
+						onClick={deleteSingle}
 						disabled={deleting != undefined}
 						className="ml-4 focus:outline-1 focus:outline-black" //Make this UI better later
 						color="bg-red-700 text-white"
