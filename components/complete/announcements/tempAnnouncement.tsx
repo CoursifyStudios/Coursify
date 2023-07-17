@@ -6,6 +6,7 @@ import { getDataOutArray } from "../../../lib/misc/dataOutArray";
 import { howLongAgo } from "../../../lib/misc/dates";
 import { useTabs } from "../../../lib/tabs/handleTabs";
 import Editor from "../../editors/richeditor";
+import Image from "next/image";
 
 export const TempAnnouncement = ({
 	announcement,
@@ -53,7 +54,7 @@ export const TempAnnouncement = ({
 						)
 					}
 				>
-					<img
+					<Image
 						src={
 							announcement.users
 								? getDataOutArray(announcement.users!).avatar_url
