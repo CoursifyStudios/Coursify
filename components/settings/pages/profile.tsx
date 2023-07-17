@@ -79,7 +79,7 @@ const Profile: NextPage = () => {
 					validationSchema={Yup.object({
 						bio: Yup.string().max(55),
 					})}
-					onSubmit={(values) => alert(JSON.stringify(values))}
+					onSubmit={submitForm}
 				>
 					{({ values, errors }) => (
 						<Form>
@@ -99,7 +99,7 @@ const Profile: NextPage = () => {
 									<p className="ml-auto text-sm">0/55</p>
 								)}
 							</label>
-							<div className="justify-between items-center">
+							<div className="justify-between items-center flex">
 								<Button
 									type="submit"
 									className="mt-4 text-white"
