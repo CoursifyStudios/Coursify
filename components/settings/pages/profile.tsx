@@ -1,4 +1,3 @@
-import { GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { Formik } from "formik";
 import { NextPage } from "next";
@@ -66,14 +65,12 @@ const Profile: NextPage = () => {
 					}}
 					onSubmit={(values) => alert(JSON.stringify(values))}
 				>
-					<GrammarlyEditorPlugin clientId="client_HhHcuxVxKgaZMFYuD57U3V">
-						<textarea
-							className="flex w-full resize-none rounded-md border border-gray-300 bg-backdrop/50 bg-gray-200 pb-2 focus:ring-1"
-							name="bio"
-							rows={4}
-							maxLength={150}
-						/>
-					</GrammarlyEditorPlugin>
+					<textarea
+						className="flex w-full resize-none rounded-md border border-gray-300 bg-backdrop/50 bg-gray-200 pb-2 focus:ring-1"
+						name="bio"
+						rows={4}
+						maxLength={150}
+					/>
 				</Formik>
 			</div>
 		</div>
