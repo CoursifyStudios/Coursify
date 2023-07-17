@@ -22,7 +22,7 @@ const HomepageClassesUI: NextPage<{
 				switch (settings.homepageView) {
 					case "student":
 						break;
-					case "teacher"://wtf just do something
+					case "teacher": //wtf just do something
 					case "tabbed":
 						break;
 				}
@@ -70,7 +70,7 @@ const HomepageClassesUI: NextPage<{
 			return (
 				<>
 					{classes.data
-						.slice(0, classes.data.length)//ah yes the classic use-slice-because-hooks-are-hard trick. A favorite of mine -Bill
+						.slice(0, classes.data.length) //ah yes the classic use-slice-because-hooks-are-hard trick. A favorite of mine -Bill
 						.sort((a, b) => sortClasses(a, b, schedules[0], schedules[1]))
 						.map((singleClass) => {
 							const teacher = isTeacher(singleClass, userID);

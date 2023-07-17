@@ -165,8 +165,8 @@ export default function Home() {
 													!(
 														(Array.isArray(element.assignments) &&
 															element.assignments.length == 0) ||
-                                                            //or if you are the teacher of that class
-                                                            //tbh seems like a relatively large amount of effort for a pretty small edge case but whatever
+														//or if you are the teacher of that class
+														//tbh seems like a relatively large amount of effort for a pretty small edge case but whatever
 														element.class_users.some(
 															(classUserRelationship) =>
 																classUserRelationship.teacher

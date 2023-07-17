@@ -34,7 +34,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 		},
 		{
 			id: 2,
-			name: "Avg. Middle 50%",//this makes exactly zero sense. The average grade of the middle 50% of your class? why would you care? -Bill
+			name: "Avg. Middle 50%", //this makes exactly zero sense. The average grade of the middle 50% of your class? why would you care? -Bill
 		},
 	];
 	const [selectedSort, setSelectedSort] = useState(sortTypes[0]);
@@ -57,7 +57,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 	const allGrades = useMemo(() => {
 		const overall = round(getGrade(grades, selectedSort.id));
 		// TODO: add categories of grades as defined by teacher (thats what the zeros are temporarily)
-        //Too much dev time was spent on this... -Bill
+		//Too much dev time was spent on this... -Bill
 		return [overall, 75, 50];
 	}, [grades, selectedSort.id]);
 
@@ -127,7 +127,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 						optionsClassName="w-36 "
 					/>
 				</div>
-                {/* SUGGESTION: (AND TAKE HEED) replace this with more teacher-relevant information 
+				{/* SUGGESTION: (AND TAKE HEED) replace this with more teacher-relevant information 
                 (that is conviently less damaging to be leaked on a projection showing the scores of 
                 different blocks and allowing comparison between them). For example, missing, ungraded
                 and late assignment numbers. Or if you are really so hel-bent on this, at least a pie
@@ -141,7 +141,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 					<GradesSection name="Formative (20%)" grade={allGrades[2]} />
 				</div>
 			</section>
-            {/* Assignments */}
+			{/* Assignments */}
 			{classData.assignments &&
 				getDataInArray(classData.assignments).map((assignment, i) => {
 					const dueDate = assignment.due_date
@@ -162,7 +162,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 								<h4 className="max-w-[10.5rem] truncate text-sm font-medium">
 									{assignment.name}
 								</h4>
-                                {/* BELOW IS PLACEHOLDER TEXT */}
+								{/* BELOW IS PLACEHOLDER TEXT */}
 								<p className="text-xs">12/24 students submitted</p>
 							</div>
 							<div
