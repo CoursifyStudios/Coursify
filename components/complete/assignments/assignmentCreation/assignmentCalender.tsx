@@ -1,6 +1,7 @@
 import { NextPage } from "next";
+
+import { NewAssignmentData } from "@/lib/db/assignments/assignments";
 import { useAssignmentStore } from ".";
-import { NewAssignmentData } from "../../../../lib/db/assignments";
 import { DueType } from "../assignments";
 
 const AssignmentCalender: NextPage<{
@@ -25,30 +26,44 @@ const AssignmentCalender: NextPage<{
 
 		if (type == "due") {
 			switch (assignmentData?.dueType) {
-				case DueType.START_OF_CLASS:
+				case DueType.START_OF_CLASS: {
 					setAssignmentData({
 						dueDate: data.startTime,
 						dueDay: day,
 					} as NewAssignmentData);
-				case DueType.END_OF_CLASS:
+
+					break;
+				}
+
+				case DueType.END_OF_CLASS: {
 					setAssignmentData({
 						dueDate: data.endTime,
 						dueDay: day,
 					} as NewAssignmentData);
+
+					break;
+				}
 			}
 		}
 		if (type == "publish") {
 			switch (assignmentData?.dueType) {
-				case DueType.START_OF_CLASS:
+				case DueType.START_OF_CLASS: {
 					setAssignmentData({
 						publishDate: data.startTime,
 						publishDay: day,
 					} as NewAssignmentData);
-				case DueType.END_OF_CLASS:
+
+					break;
+				}
+
+				case DueType.END_OF_CLASS: {
 					setAssignmentData({
 						publishDate: data.endTime,
 						publishDay: day,
 					} as NewAssignmentData);
+
+					break;
+				}
 			}
 		}
 	};
@@ -85,8 +100,7 @@ const AssignmentCalender: NextPage<{
 								${
 									(type == "due"
 										? assignmentData.dueDay
-										: assignmentData.publishDay) == i &&
-									"border border-gray-300 bg-white shadow"
+										: assignmentData.publishDay) == i && "brightness-focus"
 								}
 								`}
 								onClick={() => updateAssignmentData(date, i)}

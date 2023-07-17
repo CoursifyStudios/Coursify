@@ -3,7 +3,7 @@ import { useSettings } from "../../../lib/stores/settings";
 import { Header } from "../components/header";
 import { ToggleSection } from "../components/sections";
 
-const Securityandprivacy: NextPage<{}> = () => {
+const Securityandprivacy: NextPage = () => {
 	const { data, set } = useSettings();
 
 	return (

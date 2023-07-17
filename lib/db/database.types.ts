@@ -3,7 +3,7 @@ export type Json =
 	| number
 	| boolean
 	| null
-	| { [key: string]: Json }
+	| { [key: string]: Json | undefined }
 	| Json[];
 
 export interface Database {
@@ -34,15 +34,23 @@ export interface Database {
 					name?: string;
 					school?: string;
 				};
+				Relationships: [
+					{
+						foreignKeyName: "achievements_school_fkey";
+						columns: ["school"];
+						referencedRelation: "schools";
+						referencedColumns: ["id"];
+					},
+				];
 			};
 			announcements: {
 				Row: {
 					author: string;
 					class_id: string | null;
+					clone_id: string | null;
 					content: Json | null;
 					id: string;
 					parent: string | null;
-					sharing_id: string | null;
 					time: string | null;
 					title: string | null;
 					type: number;
@@ -50,10 +58,10 @@ export interface Database {
 				Insert: {
 					author: string;
 					class_id?: string | null;
+					clone_id?: string | null;
 					content?: Json | null;
 					id?: string;
 					parent?: string | null;
-					sharing_id?: string | null;
 					time?: string | null;
 					title?: string | null;
 					type?: number;
@@ -61,14 +69,34 @@ export interface Database {
 				Update: {
 					author?: string;
 					class_id?: string | null;
+					clone_id?: string | null;
 					content?: Json | null;
 					id?: string;
 					parent?: string | null;
-					sharing_id?: string | null;
 					time?: string | null;
 					title?: string | null;
 					type?: number;
 				};
+				Relationships: [
+					{
+						foreignKeyName: "announcements_author_fkey";
+						columns: ["author"];
+						referencedRelation: "users";
+						referencedColumns: ["id"];
+					},
+					{
+						foreignKeyName: "announcements_class_id_fkey";
+						columns: ["class_id"];
+						referencedRelation: "classes";
+						referencedColumns: ["id"];
+					},
+					{
+						foreignKeyName: "announcements_parent_fkey";
+						columns: ["parent"];
+						referencedRelation: "announcements";
+						referencedColumns: ["id"];
+					},
+				];
 			};
 			assignments: {
 				Row: {
@@ -81,11 +109,13 @@ export interface Database {
 					group_id: string | null;
 					hidden: boolean;
 					id: string;
+					max_grade: number | null;
 					name: string;
 					publish_date: string | null;
 					publish_type: number | null;
+					settings: Json | null;
 					submission_instructions: string | null;
-					submission_type: string | null;
+					type: number;
 				};
 				Insert: {
 					class_id: string;
@@ -97,11 +127,13 @@ export interface Database {
 					group_id?: string | null;
 					hidden?: boolean;
 					id?: string;
+					max_grade?: number | null;
 					name: string;
 					publish_date?: string | null;
 					publish_type?: number | null;
+					settings?: Json | null;
 					submission_instructions?: string | null;
-					submission_type?: string | null;
+					type?: number;
 				};
 				Update: {
 					class_id?: string;
@@ -113,12 +145,22 @@ export interface Database {
 					group_id?: string | null;
 					hidden?: boolean;
 					id?: string;
+					max_grade?: number | null;
 					name?: string;
 					publish_date?: string | null;
 					publish_type?: number | null;
+					settings?: Json | null;
 					submission_instructions?: string | null;
-					submission_type?: string | null;
+					type?: number;
 				};
+				Relationships: [
+					{
+						foreignKeyName: "assignments_class_id_fkey";
+						columns: ["class_id"];
+						referencedRelation: "classes";
+						referencedColumns: ["id"];
+					},
+				];
 			};
 			class_users: {
 				Row: {
@@ -139,6 +181,20 @@ export interface Database {
 					teacher?: boolean;
 					user_id?: string;
 				};
+				Relationships: [
+					{
+						foreignKeyName: "class_users_class_id_fkey";
+						columns: ["class_id"];
+						referencedRelation: "classes";
+						referencedColumns: ["id"];
+					},
+					{
+						foreignKeyName: "class_users_user_id_fkey";
+						columns: ["user_id"];
+						referencedRelation: "users";
+						referencedColumns: ["id"];
+					},
+				];
 			};
 			classes: {
 				Row: {
@@ -189,6 +245,14 @@ export interface Database {
 					tags?: string[] | null;
 					type?: number;
 				};
+				Relationships: [
+					{
+						foreignKeyName: "classes_school_fkey";
+						columns: ["school"];
+						referencedRelation: "schools";
+						referencedColumns: ["id"];
+					},
+				];
 			};
 			days_schedule: {
 				Row: {
@@ -206,20 +270,70 @@ export interface Database {
 					schedule_items?: Json | null;
 					template?: number | null;
 				};
+				Relationships: [
+					{
+						foreignKeyName: "days_schedule_template_fkey";
+						columns: ["template"];
+						referencedRelation: "schedule_templates";
+						referencedColumns: ["id"];
+					},
+				];
 			};
 			enrolled: {
 				Row: {
+					adminBool: boolean;
 					school_id: string;
 					user_id: string;
 				};
 				Insert: {
+					adminBool?: boolean;
 					school_id: string;
 					user_id: string;
 				};
 				Update: {
+					adminBool?: boolean;
 					school_id?: string;
 					user_id?: string;
 				};
+				Relationships: [
+					{
+						foreignKeyName: "enrolled_school_id_fkey";
+						columns: ["school_id"];
+						referencedRelation: "schools";
+						referencedColumns: ["id"];
+					},
+					{
+						foreignKeyName: "enrolled_user_id_fkey";
+						columns: ["user_id"];
+						referencedRelation: "users";
+						referencedColumns: ["id"];
+					},
+				];
+			};
+			relationships: {
+				Row: {
+					parent_id: string[] | null;
+					student_id: string[] | null;
+					user_id: string;
+				};
+				Insert: {
+					parent_id?: string[] | null;
+					student_id?: string[] | null;
+					user_id: string;
+				};
+				Update: {
+					parent_id?: string[] | null;
+					student_id?: string[] | null;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: "relationships_user_id_fkey";
+						columns: ["user_id"];
+						referencedRelation: "users";
+						referencedColumns: ["id"];
+					},
+				];
 			};
 			schedule_templates: {
 				Row: {
@@ -237,6 +351,7 @@ export interface Database {
 					name?: string | null;
 					schedule_items?: Json | null;
 				};
+				Relationships: [];
 			};
 			schools: {
 				Row: {
@@ -257,6 +372,7 @@ export interface Database {
 					name?: string;
 					schedule?: Json[] | null;
 				};
+				Relationships: [];
 			};
 			settings: {
 				Row: {
@@ -271,6 +387,14 @@ export interface Database {
 					settings?: Json;
 					user_id?: string;
 				};
+				Relationships: [
+					{
+						foreignKeyName: "settings_user_id_fkey";
+						columns: ["user_id"];
+						referencedRelation: "users";
+						referencedColumns: ["id"];
+					},
+				];
 			};
 			starred: {
 				Row: {
@@ -285,35 +409,66 @@ export interface Database {
 					assignment_id?: string;
 					user_id?: string;
 				};
+				Relationships: [
+					{
+						foreignKeyName: "starred_assignment_id_fkey";
+						columns: ["assignment_id"];
+						referencedRelation: "assignments";
+						referencedColumns: ["id"];
+					},
+					{
+						foreignKeyName: "starred_user_id_fkey";
+						columns: ["user_id"];
+						referencedRelation: "users";
+						referencedColumns: ["id"];
+					},
+				];
 			};
 			submissions: {
 				Row: {
-					assignment_id: string | null;
-					content: string;
+					assignment_id: string;
+					content: Json | null;
 					created_at: string;
+					final: boolean;
+					grade: number | null;
+					hide: boolean | null;
 					id: string;
-					json_content: Json | null;
-					revision_number: number;
-					user_id: string | null;
+					user_id: string;
 				};
 				Insert: {
-					assignment_id?: string | null;
-					content: string;
+					assignment_id: string;
+					content?: Json | null;
 					created_at?: string;
-					id: string;
-					json_content?: Json | null;
-					revision_number: number;
-					user_id?: string | null;
+					final: boolean;
+					grade?: number | null;
+					hide?: boolean | null;
+					id?: string;
+					user_id: string;
 				};
 				Update: {
-					assignment_id?: string | null;
-					content?: string;
+					assignment_id?: string;
+					content?: Json | null;
 					created_at?: string;
+					final?: boolean;
+					grade?: number | null;
+					hide?: boolean | null;
 					id?: string;
-					json_content?: Json | null;
-					revision_number?: number;
-					user_id?: string | null;
+					user_id?: string;
 				};
+				Relationships: [
+					{
+						foreignKeyName: "submissions_assignment_id_fkey";
+						columns: ["assignment_id"];
+						referencedRelation: "assignments";
+						referencedColumns: ["id"];
+					},
+					{
+						foreignKeyName: "submissions_user_id_fkey";
+						columns: ["user_id"];
+						referencedRelation: "users";
+						referencedColumns: ["id"];
+					},
+				];
 			};
 			user_achievements: {
 				Row: {
@@ -331,6 +486,20 @@ export interface Database {
 					date_earned?: string;
 					user_id?: string;
 				};
+				Relationships: [
+					{
+						foreignKeyName: "user_achievements_achievement_id_fkey";
+						columns: ["achievement_id"];
+						referencedRelation: "achievements";
+						referencedColumns: ["id"];
+					},
+					{
+						foreignKeyName: "user_achievements_user_id_fkey";
+						columns: ["user_id"];
+						referencedRelation: "users";
+						referencedColumns: ["id"];
+					},
+				];
 			};
 			users: {
 				Row: {
@@ -342,6 +511,7 @@ export interface Database {
 					id: string;
 					phone_number: number | null;
 					preferred_name: string | null;
+					student_id: string | null;
 					year: string | null;
 				};
 				Insert: {
@@ -353,6 +523,7 @@ export interface Database {
 					id: string;
 					phone_number?: number | null;
 					preferred_name?: string | null;
+					student_id?: string | null;
 					year?: string | null;
 				};
 				Update: {
@@ -364,8 +535,17 @@ export interface Database {
 					id?: string;
 					phone_number?: number | null;
 					preferred_name?: string | null;
+					student_id?: string | null;
 					year?: string | null;
 				};
+				Relationships: [
+					{
+						foreignKeyName: "users_id_fkey";
+						columns: ["id"];
+						referencedRelation: "users";
+						referencedColumns: ["id"];
+					},
+				];
 			};
 		};
 		Views: {

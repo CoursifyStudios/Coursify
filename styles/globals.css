@@ -10,6 +10,17 @@
 	@apply text-[1.35rem] font-bold compact:text-lg;
 }
 
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+	/* display: none; <- Crashes Chrome on hover */
+	-webkit-appearance: none;
+	margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type="number"] {
+	-moz-appearance: textfield; /* Firefox */
+}
+
 .graydient {
 	@apply dark:invert;
 	background: rgb(209, 213, 219);
@@ -57,8 +68,25 @@
 	@apply bg-gray-50 shadow-lg dark:border-gray-300 dark:bg-[#020204];
 }
 
-input[type="text"] {
-	@apply rounded-md border-gray-300 bg-backdrop/50 focus:ring-1;
+input[type="text"]:not(.noinputcss),
+input[type="number"]:not(.noinputcss),
+textarea:not(.noinputcss),
+.inputcss {
+	@apply rounded-md border-gray-300 bg-backdrop/50 focus:ring-1 dark:placeholder:text-gray-400;
+}
+
+/*Tags Css*/
+
+.react-tagsinput-tag {
+	@apply flex cursor-default items-center rounded-full bg-gray-200 py-0.5 pl-2.5 pr-0.5 text-gray-700;
+}
+
+.react-tagsinput-input {
+	@apply w-56 !border-transparent !p-0 !ring-transparent;
+	background: transparent;
+	border: 0;
+	font-weight: 400;
+	outline: none;
 }
 
 /*Editor CSS*/

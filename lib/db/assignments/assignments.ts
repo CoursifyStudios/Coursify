@@ -1,7 +1,8 @@
+import { AssignmentSettingsTypes } from "@assignments/assignmentCreation/three/settings.types";
+import { DueType } from "@assignments/assignments";
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { SerializedEditorState } from "lexical";
-import { DueType } from "../../components/complete/assignments/assignments";
-import { Database } from "./database.types";
+import { Database } from "../database.types";
 
 export const getAllAssignments = async (
 	supabaseClient: SupabaseClient<Database>
@@ -57,9 +58,15 @@ export const getAssignment = async (
 			`
 		*, classes (
 			name, id, color
+		),
+		submissions (
+			content,
+			final,
+			created_at
 		)
 		`
 		)
+		.order("created_at", { foreignTable: "submissions", ascending: false })
 		.eq("id", assignmentuuid)
 		.single();
 };
@@ -75,19 +82,23 @@ export interface AssignmentData {
 	error?: PostgrestError;
 }
 
-export type AssignmentTypes =
-	| "link"
-	| "media"
-	| "test"
-	| "check"
-	| "post"
-	| "google";
+export enum AssignmentTypes {
+	LINK = 0,
+	MEDIA = 1,
+	FILE_UPLOAD = 2,
+	//ASSESSMENT = 2,
+	CHECKOFF = 3,
+	DISCUSSION_POST = 4,
+	GOOGLE = 5,
+	TEXT = 6,
+	ALL = 7,
+}
 
 export type NewAssignmentData = {
 	name: string;
 	description: string;
 	content: SerializedEditorState;
-	submissionType: string;
+	type: AssignmentTypes;
 	submissionInstructions?: string;
 	dueType?: DueType;
 	dueDate?: Date;
@@ -96,4 +107,6 @@ export type NewAssignmentData = {
 	publishDate?: Date;
 	publishDay?: number;
 	hidden: boolean;
+	maxGrade?: number;
+	settings: AssignmentSettingsTypes;
 };

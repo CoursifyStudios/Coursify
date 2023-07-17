@@ -36,7 +36,7 @@ const editorConfig = {
 	// The editor theme
 	theme: richTheme,
 	// Handling of errors during update
-	onError(error: any) {
+	onError(error: unknown) {
 		throw error;
 	},
 	nodes: [
@@ -189,6 +189,7 @@ function EditorContextProvider({
 						)
 				);
 		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [editable, initialState, updatedState, initialStateEditor]);
 
 	return (

@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { UserDataType, getUserData } from "../../../lib/db/settings";
 import { Button } from "../../misc/button";
 
-const Profile: NextPage<{}> = () => {
+const Profile: NextPage = () => {
 	const supabase = useSupabaseClient();
 	const user = useUser();
 	const [userData, setUserData] = useState<UserDataType>();
@@ -18,6 +18,7 @@ const Profile: NextPage<{}> = () => {
 				setUserData(profile);
 			}
 		})();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user]);
 
 	if (!userData) {
