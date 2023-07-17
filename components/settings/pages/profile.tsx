@@ -1,4 +1,3 @@
-import { GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { NextPage } from "next";

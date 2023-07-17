@@ -111,18 +111,6 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.44.0.tgz#961a5903c74139390478bdc808bcde3fc45ab7af"
   integrity sha512-Ag+9YM4ocKQx9AarydN0KY2j0ErMHNIocPDrVo8zAE44xLTjEtz81OdR68/cydGtk6m6jDb5Za3r2useMzYmSw==
 
-"@grammarly/editor-sdk-react@^2.5.1":
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/@grammarly/editor-sdk-react/-/editor-sdk-react-2.5.1.tgz#398ec1b4f2d6a0535375048da5ac5e3d8a3571e4"
-  integrity sha512-fvogoW91Pj6E2No/LPmbahuI6Yjn57/VMCohIezQlVXdIGCETjDmkr2aPOxSqMmVWLgz+kvStecw+7I/OSCenQ==
-  dependencies:
-    "@grammarly/editor-sdk" "2.5.1"
-
-"@grammarly/editor-sdk@2.5.1":
-  version "2.5.1"
-  resolved "https://registry.yarnpkg.com/@grammarly/editor-sdk/-/editor-sdk-2.5.1.tgz#e3254940b7a64f3bab3f84dbd283aa90c4c1d99c"
-  integrity sha512-boEmygktXYTkE0rApJLBQa7/6b3+/c4i3UPySF5kGbKT0KqwpKN9sBLLT8AeTrOAY3kKsnYEQ/69VQL59+1nUA==
-
 "@headlessui/react@^1.7.15":
   version "1.7.15"
   resolved "https://registry.yarnpkg.com/@headlessui/react/-/react-1.7.15.tgz#53ef6ae132af81b8f188414767b6e79ebf8dc73f"
