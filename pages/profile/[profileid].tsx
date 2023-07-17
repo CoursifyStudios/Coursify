@@ -24,7 +24,6 @@ export default function Profile() {
 	const supabase = useSupabaseClient<Database>();
 	const router = useRouter();
 	const { profileid } = router.query;
-	const { data: settings } = useSettings();
 
 	useEffect(() => {
 		(async () => {
@@ -83,7 +82,9 @@ export default function Profile() {
 							</div>
 						</ColoredPill>
 					</CopiedHover>
-					<p className="mt-3 text-center text-sm">{profile?.data?.bio}</p>
+					<p className="mt-3 text-center text-sm break-words max-w-[15rem] line-clamp-3">
+						{profile?.data?.bio}
+					</p>
 				</div>
 				{!(
 					profile?.data &&
@@ -152,8 +153,6 @@ export default function Profile() {
 					{communities && communities.data
 						? communities.data.map(
 								(group) =>
-									//Could have used greater than or equal to, but let's not shoot our future selves in the foot - Bill
-									//well at this point
 									group.type >= CommunityType.SCHOOLWIDE_GROUP && (
 										<GroupSmall
 											key={group.id}
