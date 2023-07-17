@@ -59,7 +59,10 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 		// TODO: add categories of grades as defined by teacher (thats what the zeros are temporarily)
 		return [overall, 75, 50];
 	}, [grades, selectedSort.id]);
-
+	const showAMPM: boolean = useMemo(
+		() => (settings.showAMPM ? true : false),
+		[settings.showAMPM]
+	);
 	const Header = () => (
 		<div className="brightness-hover group relative h-16  overflow-hidden rounded-xl">
 			{!settings.compact && (
@@ -164,7 +167,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 											{dueDate.getMonth() + 1}/{dueDate.getDate()}
 										</div>
 										<ColoredPill color={classData.color} className="text-xs">
-											{`${to12hourTime(dueDate)}`}
+											{`${to12hourTime(dueDate, showAMPM)}`}
 										</ColoredPill>
 									</>
 								)}

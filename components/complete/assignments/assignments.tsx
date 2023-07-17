@@ -5,8 +5,9 @@ import { ScheduleInterface, to12hourTime } from "@/lib/db/schedule";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import Link from "next/link";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import Starred from "./starred";
+import { useSettings } from "@/lib/stores/settings";
 
 export function AssignmentPreview({
 	supabase,
@@ -38,6 +39,11 @@ export function AssignmentPreview({
 	const date = assignment.due_date ? new Date(assignment.due_date) : null;
 	const [starred, setStarred] = useState(starredAsParam);
 
+	const { data: settings } = useSettings();
+	const showAMPM: boolean = useMemo(
+		() => (settings.showAMPM ? true : false),
+		[settings.showAMPM]
+	);
 	return (
 		<div className="relative">
 			<Link
@@ -62,7 +68,7 @@ export function AssignmentPreview({
 										{date.getMonth()}/{date.getDate()}
 									</div>
 									<ColoredPill color={classes.color}>
-										{`${to12hourTime(date)}`}
+										{`${to12hourTime(date, showAMPM)}`}
 									</ColoredPill>
 								</>
 							) : (
