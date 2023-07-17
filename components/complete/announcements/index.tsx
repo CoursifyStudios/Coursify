@@ -21,9 +21,9 @@ import { Delete } from "./delete";
 import { TempAnnouncement } from "./tempAnnouncement";
 
 /**
- * editing announcements
- *  editing state for annoucnement posting
- * Need the ui to update on announcement deletion & for posting
+ * --editing announcements--
+ *  editing state for announcement posting
+ * Need the UI to update on announcement for deletion & posting
  */
 export const Announcement = ({
 	announcement,

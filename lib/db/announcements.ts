@@ -6,7 +6,7 @@ export const postAnnouncements = async (
 	announcementAuthor: string,
 	announcementTitle: string,
 	announcementContent: Json,
-	// this is now goign to be designed with the idea that
+	// this is now designed with the idea that
 	// everything (group, class, sports group, etc.) is a
 	// class on the classes table. That means no more
 	// ClassOrGroupObjects

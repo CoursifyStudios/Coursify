@@ -49,15 +49,14 @@ export interface AssignmentText
 
 export interface AssignmentAll {
 	assignmentType: AssignmentTypes.ALL;
-	allowedTypes:
-		| (
-				| AssignmentTypes.LINK
-				| AssignmentTypes.GOOGLE
-				| AssignmentTypes.MEDIA
-				| AssignmentTypes.TEXT
-				| AssignmentTypes.MEDIA
-				| AssignmentTypes.FILE_UPLOAD
-		  )[];
+	allowedTypes: (
+		| AssignmentTypes.LINK
+		| AssignmentTypes.GOOGLE
+		| AssignmentTypes.MEDIA
+		| AssignmentTypes.TEXT
+		| AssignmentTypes.MEDIA
+		| AssignmentTypes.FILE_UPLOAD
+	)[];
 }
 
 export type AssignmentSettingsTypes =
