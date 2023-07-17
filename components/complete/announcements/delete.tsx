@@ -19,8 +19,6 @@ export const Delete: NextPage<{
 	announcement: TypeOfAnnouncements;
 	classID: string;
 }> = ({ setOpen, supabase, open, setDeleted, announcement, classID }) => {
-	//TODO:
-	//console.log(announcement)
 	const [deleting, setDeleting] = useState<string>();
 	const [error, setError] = useState<string>();
 

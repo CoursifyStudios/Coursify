@@ -64,6 +64,7 @@ export const AnnouncementsComponent = ({
 							}
 							announcements={tempAnnouncements}
 							setAnnouncements={setTempAnnouncements}
+							isTeacher={showPostingUI}
 						></Announcement>
 					)
 			)}
@@ -102,6 +103,7 @@ export const AnnouncementsComponent = ({
 								classID={communityid}
 								announcements={tempAnnouncements}
 								setAnnouncements={setTempAnnouncements}
+								isTeacher={showPostingUI}
 							></Announcement>
 						)
 				)}

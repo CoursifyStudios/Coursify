@@ -65,8 +65,8 @@ export const deleteAnnouncement = async (
 	return await supabase
 		.from("announcements")
 		.delete()
-		.eq("author", announcement.author)
-		.eq("title", announcement.title)
+		// .eq("author", announcement.author)
+		// .eq("title", announcement.title)
 		.eq(
 			announcement.clone_id ? "clone_id" : "id",
 			announcement.clone_id ? announcement.clone_id : announcement.id
@@ -91,8 +91,11 @@ export const editAnnouncement = async (
 			title: newAnnouncement.title,
 			content: newAnnouncement.content,
 		})
-		.eq("author", oldAnnouncement.author)
-		.eq("title", oldAnnouncement.title)
+		// Because teachers can now edit & delete other people's posts,
+		// these checks no longer are helpful. This does mean though that
+		// clone_id has to work!
+		// .eq("author", oldAnnouncement.author)
+		// .eq("title", oldAnnouncement.title)
 		.eq(
 			oldAnnouncement.clone_id ? "clone_id" : "id",
 			oldAnnouncement.clone_id ? oldAnnouncement.clone_id : oldAnnouncement.id

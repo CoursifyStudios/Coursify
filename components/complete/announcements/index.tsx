@@ -31,17 +31,18 @@ export const Announcement = ({
 	comments,
 	announcements,
 	setAnnouncements,
+	isTeacher,
 }: {
 	announcement: TypeOfAnnouncements;
 	classID: string;
 	comments: TypeOfAnnouncements[];
 	announcements: TypeOfAnnouncements[];
 	setAnnouncements: (value: TypeOfAnnouncements[]) => void;
+	isTeacher?: boolean;
 }) => {
 	const supabase = useSupabaseClient<Database>();
 	const user = useUser();
 	const { newTab } = useTabs();
-	//add icons to these somehow...
 	const optionsClasses = "w-4 h-4 ml-1";
 	const options = [
 		{ option: "Share", icon: <ShareIcon className={optionsClasses} /> },
@@ -126,6 +127,7 @@ export const Announcement = ({
 											(options, optionID) =>
 												user &&
 												(user.id == announcement.author ||
+													isTeacher ||
 													options.option == "Share") && (
 													<Listbox.Option
 														key={optionID}
