@@ -120,7 +120,16 @@ export class Policy {
 }
 
 export const savePolicies = async (file: string, ...policies: Policy[]) => {
-	await Deno.writeTextFile(
+	const deno = ((globalThis as { [key: string]: unknown }).Deno as {
+		writeTextFile: (file: string, content: string) => Promise<void>;
+	}) ?? {
+		writeTextFile: async (file: string, content: string) => {
+			// eslint-disable-next-line no-console
+			console.log("Why are you running this in node?");
+		},
+	};
+
+	await deno.writeTextFile(
 		file,
 		[
 			"-- Built with ScriptQL",
