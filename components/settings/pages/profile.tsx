@@ -31,10 +31,16 @@ const Profile: NextPage = () => {
 			return;
 		}
 		setLoading(true);
+
 		const { error } = await updateBio(supabase, user.id, values.bio);
+		if (error) setError(error.message);
+		setUserData((data) => {
+			if (data && data.data)
+				return { ...data, data: { ...data.data, bio: values.bio } };
+			else return undefined;
+		});
 
 		setLoading(false);
-		if (error) setError(error.message);
 	};
 
 	if (!userData) {
