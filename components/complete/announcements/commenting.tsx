@@ -176,7 +176,7 @@ export const Commenting = ({
 						}}
 						onSubmit={async (formData) => {
 							setShowCommenting(false);
-							const test = await postCommentOrReply(
+							const dBResponse = await postCommentOrReply(
 								supabase,
 								user.id,
 								communityid,
@@ -186,11 +186,11 @@ export const Commenting = ({
 							);
 							setTempComments(
 								tempComments.concat({
-									//possibly a sumb idea
-									id: test.data!.id,
+									//possibly a dumb idea
+									id: dBResponse.data!.id,
 									author: user.id,
-									time: test.data?.time
-										? howLongAgo(test.data.time)
+									time: dBResponse.data?.time
+										? howLongAgo(dBResponse.data.time)
 										: "Posted just now",
 									content: formData.content,
 									users: {
