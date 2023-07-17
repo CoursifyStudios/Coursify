@@ -54,7 +54,7 @@ export const Comment = ({
 					<Image
 						src={users.avatar_url}
 						alt="User image"
-						className="h-5 w-5 rounded-full"
+						className="h-5 w-5 rounded-full object-cover"
 						referrerPolicy="no-referrer"
 						width={20}
 						height={20}
