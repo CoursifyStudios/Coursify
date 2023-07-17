@@ -34,7 +34,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 		},
 		{
 			id: 2,
-			name: "Avg. Middle 50%",
+			name: "Avg. Middle 50%",//this makes exactly zero sense. The average grade of the middle 50% of your class? why would you care? -Bill
 		},
 	];
 	const [selectedSort, setSelectedSort] = useState(sortTypes[0]);
@@ -57,6 +57,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 	const allGrades = useMemo(() => {
 		const overall = round(getGrade(grades, selectedSort.id));
 		// TODO: add categories of grades as defined by teacher (thats what the zeros are temporarily)
+        //Too much dev time was spent on this... -Bill
 		return [overall, 75, 50];
 	}, [grades, selectedSort.id]);
 
@@ -126,12 +127,21 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 						optionsClassName="w-36 "
 					/>
 				</div>
+                {/* SUGGESTION: (AND TAKE HEED) replace this with more teacher-relevant information 
+                (that is conviently less damaging to be leaked on a projection showing the scores of 
+                different blocks and allowing comparison between them). For example, missing, ungraded
+                and late assignment numbers. Or if you are really so hel-bent on this, at least a pie
+                chart of A, B, C, D, F recipients in your class. This average grade thing is not helpful.
+                Teachers should not focus on tracking a grade, they need to know which students need the
+                most assistance. We can't have software that is negligent in not doing everything we can
+                to ensure that no student is left behind. People matter, not numbers. -Bill */}
 				<div className="mt-3 flex flex-col gap-2 text-sm font-medium leading-3">
 					<GradesSection name="Overall" grade={allGrades[0]} />
 					<GradesSection name="Summative (80%)" grade={allGrades[1]} />
 					<GradesSection name="Formative (20%)" grade={allGrades[2]} />
 				</div>
 			</section>
+            {/* Assignments */}
 			{classData.assignments &&
 				getDataInArray(classData.assignments).map((assignment, i) => {
 					const dueDate = assignment.due_date
@@ -152,6 +162,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 								<h4 className="max-w-[10.5rem] truncate text-sm font-medium">
 									{assignment.name}
 								</h4>
+                                {/* BELOW IS PLACEHOLDER TEXT */}
 								<p className="text-xs">12/24 students submitted</p>
 							</div>
 							<div
