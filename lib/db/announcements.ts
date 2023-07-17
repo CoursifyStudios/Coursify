@@ -55,23 +55,22 @@ export type postingReturn = Awaited<ReturnType<typeof postAnnouncements>>;
 // which is defined below
 export const deleteAnnouncement = async (
 	supabase: SupabaseClient<Database>,
-	announcement: { author: string; title: string; time: string }
+	announcement: {
+		id: string;
+		author: string;
+		title: string;
+		clone_id: string | null;
+	}
 ) => {
-	// I think that +/- 2 seconds is appropriate for now, but please (honestly)
-	// tell me if you think it should be longer or shorter
-	const earlyDate: Date = new Date(
-		new Date(announcement.time).getTime() - 2000
-	);
-	const laterDate: Date = new Date(
-		new Date(announcement.time).getTime() + 2000
-	);
 	return await supabase
 		.from("announcements")
 		.delete()
 		.eq("author", announcement.author)
 		.eq("title", announcement.title)
-		.gte("time", earlyDate.toISOString())
-		.lte("time", laterDate.toISOString());
+		.eq(
+			announcement.clone_id ? "clone_id" : "id",
+			announcement.clone_id ? announcement.clone_id : announcement.id
+		);
 };
 
 ///Now using clone_id that was generated client side

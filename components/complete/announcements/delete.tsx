@@ -38,9 +38,10 @@ export const Delete: NextPage<{
 	const deleteMultiple = async () => {
 		setDeleting("multiple");
 		const data = await deleteAnnouncement(supabase, {
+			id: announcement.id,
 			author: announcement.author,
 			title: announcement.title!,
-			time: announcement.time!,
+			clone_id: announcement.clone_id,
 		});
 		if (data.error) {
 			setError(data.error.message);
