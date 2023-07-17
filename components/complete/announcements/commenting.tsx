@@ -54,7 +54,7 @@ export const Comment = ({
 					<Image
 						src={users.avatar_url}
 						alt="User image"
-						className="h-5 w-5 rounded-full"
+						className="h-5 w-5 rounded-full object-cover"
 						referrerPolicy="no-referrer"
 						width={20}
 						height={20}
@@ -64,34 +64,7 @@ export const Comment = ({
 					</p>
 				</Link>
 				<p className="pl-1.5 text-gray-600 dark:text-gray-400">{time}</p>
-				{/* This is not functional yet, so goodbye */}
-				{/* {user && user.id == author && (
-					<Menu>
-						<Menu.Button className="ml-auto">
-							<EllipsisVerticalIcon className="w-5"></EllipsisVerticalIcon>
-						</Menu.Button>
-						<div className="absolute z-50 ml-72 mt-14">
-							<Menu.Items
-								as="div"
-								className="relative flex w-48 flex-col rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-xl"
-							>
-								<Menu.Item
-									as="div"
-									className="p-1 font-medium"
-									onClick={() => setEditing(true)}
-								>
-									Edit
-								</Menu.Item>
-								<Menu.Item as="div" className="p-1 font-medium">
-									Share
-								</Menu.Item>
-								<Menu.Item as="div" className="p-1 font-medium">
-									Delete
-								</Menu.Item>
-							</Menu.Items>
-						</div>
-					</Menu>
-				)} */}
+				{/* TODO: add an edit. share, and delete button here*/}
 			</div>
 			{editing ? (
 				<Formik
