@@ -40,7 +40,7 @@ export interface Database {
 						columns: ["school"];
 						referencedRelation: "schools";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			announcements: {
@@ -95,7 +95,7 @@ export interface Database {
 						columns: ["parent"];
 						referencedRelation: "announcements";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			assignments: {
@@ -159,7 +159,7 @@ export interface Database {
 						columns: ["class_id"];
 						referencedRelation: "classes";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			class_users: {
@@ -193,7 +193,7 @@ export interface Database {
 						columns: ["user_id"];
 						referencedRelation: "users";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			classes: {
@@ -251,7 +251,7 @@ export interface Database {
 						columns: ["school"];
 						referencedRelation: "schools";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			days_schedule: {
@@ -276,7 +276,7 @@ export interface Database {
 						columns: ["template"];
 						referencedRelation: "schedule_templates";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			enrolled: {
@@ -307,7 +307,7 @@ export interface Database {
 						columns: ["user_id"];
 						referencedRelation: "users";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			relationships: {
@@ -332,7 +332,7 @@ export interface Database {
 						columns: ["user_id"];
 						referencedRelation: "users";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			schedule_templates: {
@@ -393,7 +393,7 @@ export interface Database {
 						columns: ["user_id"];
 						referencedRelation: "users";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			starred: {
@@ -421,7 +421,7 @@ export interface Database {
 						columns: ["user_id"];
 						referencedRelation: "users";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			submissions: {
@@ -467,7 +467,7 @@ export interface Database {
 						columns: ["user_id"];
 						referencedRelation: "users";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			user_achievements: {
@@ -498,7 +498,7 @@ export interface Database {
 						columns: ["user_id"];
 						referencedRelation: "users";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			users: {
@@ -544,7 +544,7 @@ export interface Database {
 						columns: ["id"];
 						referencedRelation: "users";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 		};
