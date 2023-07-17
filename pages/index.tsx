@@ -161,9 +161,16 @@ export default function Home() {
 											)
 											.filter(
 												(element) =>
+													//ensuring that a class does not show up if it has 0 assignments
 													!(
-														Array.isArray(element.assignments) &&
-														element.assignments.length == 0
+														(Array.isArray(element.assignments) &&
+															element.assignments.length == 0) ||
+                                                            //or if you are the teacher of that class
+                                                            //tbh seems like a relatively large amount of effort for a pretty small edge case but whatever
+														element.class_users.some(
+															(classUserRelationship) =>
+																classUserRelationship.teacher
+														)
 													)
 											)
 											//temporary measure
