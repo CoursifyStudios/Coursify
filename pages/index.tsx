@@ -70,8 +70,9 @@ export default function Home() {
 				if (scheduleDB.data) {
 					scheduleDB.data?.forEach((scheduleDay) => {
 						if (
+							scheduleDay.schedule_templates &&
 							!Array.isArray(scheduleDay.schedule_templates) &&
-							scheduleDay.schedule_templates!.schedule_items
+							scheduleDay.schedule_templates.schedule_items
 						) {
 							fullSchedule.push({
 								date: new Date(scheduleDay.date),
