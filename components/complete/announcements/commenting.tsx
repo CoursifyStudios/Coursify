@@ -66,20 +66,28 @@ export const Comment = ({
 				<p className="pl-1.5 text-gray-600 dark:text-gray-400">{time}</p>
 				{/* TODO: add an edit. share, and delete button here*/}
 			</div>
+			{/* editing is disabled atm */}
 			{editing ? (
 				<Formik
 					initialValues={{
 						content: text,
 					}}
 					onSubmit={async (formData) => {
-						const test = await editAnnouncement(
+						const newEditedAnnouncement = await editAnnouncement(
 							supabase,
 							//kind of confusing but a comment's content uses the title field
 							{ id: id, author: user!.id, title: content, clone_id: null },
 							{ title: formData.content, content: null }
 						);
 						setEditing(false);
-						setText(formData.content);
+						if (newEditedAnnouncement.error) {
+							//TODO: better error handling
+							alert(
+								"Something went wrong, and your comment could not be edited"
+							);
+						} else {
+							setText(formData.content);
+						}
 					}}
 				>
 					{({ values }) => (
@@ -184,21 +192,26 @@ export const Commenting = ({
 								formData.content,
 								AnnouncementType.COMMENT
 							);
-							setTempComments(
-								tempComments.concat({
-									//possibly a dumb idea
-									id: dBResponse.data!.id,
-									author: user.id,
-									time: dBResponse.data?.time
-										? howLongAgo(dBResponse.data.time)
-										: "Posted just now",
-									content: formData.content,
-									users: {
-										full_name: user.user_metadata.name,
-										avatar_url: user.user_metadata.picture,
-									},
-								})
-							);
+							if (dBResponse.error) {
+								//TODO: better error handling
+								alert("Error: failed to post comment");
+							} else {
+								setTempComments(
+									tempComments.concat({
+										//possibly a dumb idea
+										id: dBResponse.data!.id,
+										author: user.id,
+										time: dBResponse.data?.time
+											? howLongAgo(dBResponse.data.time)
+											: "Posted just now",
+										content: formData.content,
+										users: {
+											full_name: user.user_metadata.name,
+											avatar_url: user.user_metadata.picture,
+										},
+									})
+								);
+							}
 						}}
 					>
 						{({ values }) => (

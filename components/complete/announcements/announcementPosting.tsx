@@ -104,6 +104,7 @@ export const AnnouncementPostingUI = ({
 
 	async function getCommunities() {
 		if (user && communities.length == 0) {
+			//TODO: error handling for this
 			const dbResponse = await getClassesForUserBasic(supabase, user.id);
 			const classes: { id: string; name: string }[] = [];
 			if (dbResponse.data) {
@@ -144,7 +145,7 @@ export const AnnouncementPostingUI = ({
 								<Field
 									name="title"
 									type="text"
-									className="h-10   py-1.5 pl-3 text-lg font-normal placeholder:text-gray-600 focus:ring-1 dark:placeholder:text-neutral-500"
+									className="h-10 py-1.5 pl-3 text-lg font-normal placeholder:text-gray-600 focus:ring-1 dark:placeholder:text-neutral-500"
 									autoFocus
 									placeholder="Enter a title..."
 								></Field>
@@ -238,6 +239,9 @@ export const AnnouncementPostingUI = ({
 										// This is a temporary measure until the data from the operation gets back.
 										// All ways of modifying announcements share this behavior (with the exception of commenting),
 										// so this behavior of adding a temporary announcement and hiding the posting UI is shared.
+
+										// This does happen before we know if the request failed or not, so when it fails it will
+										// be weird but it will succeed super quickly!
 										!sharingInfo &&
 											setFakeAnnouncements(
 												fakeAnnouncements.concat({
@@ -263,6 +267,9 @@ export const AnnouncementPostingUI = ({
 												},
 												chosenCommunities.map(({ id }) => id)
 											);
+											if (sharedAnnouncement.error) {
+												alert("Error: failed to share announcement");
+											}
 											setShowSharing(false);
 											sharingInfo.setSharing(false);
 
@@ -297,11 +304,15 @@ export const AnnouncementPostingUI = ({
 												)
 											);
 											//and sets the real one
-											setNewInfo &&
-												setNewInfo({
-													title: title,
-													content: editorState?.toJSON() as unknown as Json,
-												});
+											if (newAnnouncement.error) {
+												alert("Error: editing announcement failed");
+											} else {
+												setNewInfo &&
+													setNewInfo({
+														title: title,
+														content: editorState?.toJSON() as unknown as Json,
+													});
+											}
 											editingInfo.setEditing(false);
 										} else {
 											// This is for when you are neither sharing nor editing (just posting normally)
@@ -329,6 +340,8 @@ export const AnnouncementPostingUI = ({
 															) as unknown as TypeOfAnnouncements
 														)
 													);
+												} else {
+													alert("Error: failed to post announcement");
 												}
 
 												//reset which communities to share to
