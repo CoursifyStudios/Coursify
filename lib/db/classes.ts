@@ -230,7 +230,7 @@ function classHappensThisDay(
 	type: number,
 	schedule: ScheduleInterface[]
 ) {
-	return schedule.find(
+	return getDataInArray(schedule).find(
 		(period) => period.block == block && period.type == type
 	);
 }
