@@ -1,9 +1,9 @@
 import { EnvelopeIcon } from "@heroicons/react/24/outline";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import type { PostgrestResponse } from "@supabase/supabase-js";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Class } from "../../components/class";
 import { Achievement } from "../../components/complete/achievement";
 import { GroupSmall } from "../../components/complete/group";
@@ -13,6 +13,8 @@ import { Database } from "../../lib/db/database.types";
 import { ProfilesResponse, getProfile } from "../../lib/db/profiles";
 import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
 import { useSettings } from "../../lib/stores/settings";
+import { Button } from "@/components/misc/button";
+import Link from "next/link";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
@@ -23,7 +25,13 @@ export default function Profile() {
 	//const [profileGroups, setProfileGroups] = useState<AllGroupsResponse>();
 	const supabase = useSupabaseClient<Database>();
 	const router = useRouter();
+	const user = useUser();
 	const { profileid } = router.query;
+	const profileIsUser = useMemo(() => {
+		if (!user || !profile || !profile.data) return false;
+		if (profile.data.id == user.id) return true;
+		return false;
+	}, [user, profile]);
 
 	useEffect(() => {
 		(async () => {
@@ -114,6 +122,11 @@ export default function Profile() {
 								  ))}
 						</div>
 					</div>
+				)}
+				{profileIsUser && (
+					<Link href="/settings">
+						<Button className="mt-2">Edit Profile</Button>
+					</Link>
 				)}
 			</div>
 			{/* Centerpiece, list of classes */}
