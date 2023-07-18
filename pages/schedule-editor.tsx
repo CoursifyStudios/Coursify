@@ -1,6 +1,6 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ColoredPill } from "../components/misc/pill";
 import { Database } from "../lib/db/database.types";
 import {
@@ -13,6 +13,7 @@ import {
 	to12hourTime,
 } from "../lib/db/schedule";
 import { useTabs } from "../lib/tabs/handleTabs";
+import { useSettings } from "@/lib/stores/settings";
 
 const ScheduleEditor = () => {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -23,6 +24,8 @@ const ScheduleEditor = () => {
 		useState<ScheduleTemplatesDB>();
 	const [templateName, setTemplateName] = useState<string>();
 	const [template, setTemplate] = useState<number | null>(null);
+
+	const { data: settings } = useSettings();
 	useEffect(() => {
 		(async () => {
 			const scheduleTemplates = await getScheduleTemplates(supabaseClient);
@@ -166,8 +169,15 @@ const ScheduleEditor = () => {
 																	: scheduleItem.customColor
 															}
 														>
-															{to12hourTime(scheduleItem.timeStart)} -{" "}
-															{to12hourTime(scheduleItem.timeEnd)}{" "}
+															{to12hourTime(
+																scheduleItem.timeStart,
+																settings.showAMPM
+															)}{" "}
+															-{" "}
+															{to12hourTime(
+																scheduleItem.timeEnd,
+																settings.showAMPM
+															)}{" "}
 														</ColoredPill>
 														<p
 															className="ml-3 text-red-600"
@@ -213,8 +223,15 @@ const ScheduleEditor = () => {
 																	: scheduleItem.customColor
 															}
 														>
-															{to12hourTime(scheduleItem.timeStart)} -{" "}
-															{to12hourTime(scheduleItem.timeEnd)}{" "}
+															{to12hourTime(
+																scheduleItem.timeStart,
+																settings.showAMPM
+															)}{" "}
+															-{" "}
+															{to12hourTime(
+																scheduleItem.timeEnd,
+																settings.showAMPM
+															)}{" "}
 														</ColoredPill>
 														<p
 															className="ml-3 text-red-600"
