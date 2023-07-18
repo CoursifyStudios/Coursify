@@ -22,7 +22,7 @@ const HomepageClassesUI: NextPage<{
 				switch (settings.homepageView) {
 					case "student":
 						break;
-					case "teacher": //wtf just do something
+					case "teacher":
 					case "tabbed":
 						break;
 				}
@@ -63,14 +63,14 @@ const HomepageClassesUI: NextPage<{
 		if ((view == "student" || view == "tabbedStudent") && tab !== 1) {
 			setTab(1);
 		}
-	}, [view]);
+	}, [view, tab]);
 
 	const Classes = ({ teaching }: { teaching: boolean }) => {
 		if (classes && classes.data && schedules)
 			return (
 				<>
 					{classes.data
-						.slice(0, classes.data.length) //ah yes the classic use-slice-because-hooks-are-hard trick. A favorite of mine -Bill
+						.slice(0, classes.data.length)
 						.sort((a, b) => sortClasses(a, b, schedules[0], schedules[1]))
 						.map((singleClass) => {
 							const teacher = isTeacher(singleClass, userID);

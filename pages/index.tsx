@@ -144,8 +144,8 @@ export default function Home() {
 					</div>
 					{classes &&
 						classes.data &&
-						!classes.data.every((classButIcantCallItThat) =>
-							classButIcantCallItThat.class_users.some(
+						!classes.data.every((individualClass) =>
+							individualClass.class_users.some(
 								(classUserRelationship) => classUserRelationship.teacher
 							)
 						) && (

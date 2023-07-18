@@ -34,7 +34,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 		},
 		{
 			id: 2,
-			name: "Avg. Middle 50%", //this makes exactly zero sense. The average grade of the middle 50% of your class? why would you care? -Bill
+			name: "Avg. Middle 50%",
 		},
 	];
 	const [selectedSort, setSelectedSort] = useState(sortTypes[0]);
@@ -57,7 +57,6 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 	const allGrades = useMemo(() => {
 		const overall = round(getGrade(grades, selectedSort.id));
 		// TODO: add categories of grades as defined by teacher (thats what the zeros are temporarily)
-		//Too much dev time was spent on this... -Bill
 		return [overall, 75, 50];
 	}, [grades, selectedSort.id]);
 
@@ -152,7 +151,8 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 							? new Date(assignment.due_date)
 							: null;
 						return (
-							<section
+							<Link
+								href={"/assignments/" + assignment.id}
 								className={`group flex cursor-pointer items-center rounded-xl bg-backdrop-200 px-3 py-2 hover:z-20 compact:p-2`}
 								key={i}
 							>
@@ -184,7 +184,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 										</>
 									)}
 								</div>
-							</section>
+							</Link>
 						);
 					})}
 		</div>
