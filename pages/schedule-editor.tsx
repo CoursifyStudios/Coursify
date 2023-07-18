@@ -1,6 +1,6 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { ColoredPill } from "../components/misc/pill";
 import { Database } from "../lib/db/database.types";
 import {

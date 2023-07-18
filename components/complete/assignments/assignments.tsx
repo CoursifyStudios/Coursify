@@ -5,7 +5,7 @@ import { ScheduleInterface, to12hourTime } from "@/lib/db/schedule";
 import { CheckIcon } from "@heroicons/react/24/outline";
 import type { SupabaseClient } from "@supabase/supabase-js";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import Starred from "./starred";
 import { useSettings } from "@/lib/stores/settings";
 

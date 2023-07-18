@@ -2,7 +2,6 @@ import Link from "next/link";
 import { AllClassesResponse } from "../../lib/db/classes";
 import { ScheduleInterface, to12hourTime } from "../../lib/db/schedule";
 import { ColoredPill } from "../misc/pill";
-import { useMemo } from "react";
 import { useSettings } from "@/lib/stores/settings";
 
 export default function ScheduleComponent({
