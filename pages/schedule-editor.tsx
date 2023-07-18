@@ -26,11 +26,6 @@ const ScheduleEditor = () => {
 	const [template, setTemplate] = useState<number | null>(null);
 
 	const { data: settings } = useSettings();
-	//no idea what useMemo does but we'll see if this works
-	const showAMPM: boolean = useMemo(
-		() => (settings.showAMPM ? true : false),
-		[settings.showAMPM]
-	);
 	useEffect(() => {
 		(async () => {
 			const scheduleTemplates = await getScheduleTemplates(supabaseClient);
@@ -174,8 +169,15 @@ const ScheduleEditor = () => {
 																	: scheduleItem.customColor
 															}
 														>
-															{to12hourTime(scheduleItem.timeStart, showAMPM)} -{" "}
-															{to12hourTime(scheduleItem.timeEnd, showAMPM)}{" "}
+															{to12hourTime(
+																scheduleItem.timeStart,
+																settings.showAMPM
+															)}{" "}
+															-{" "}
+															{to12hourTime(
+																scheduleItem.timeEnd,
+																settings.showAMPM
+															)}{" "}
 														</ColoredPill>
 														<p
 															className="ml-3 text-red-600"
@@ -221,8 +223,15 @@ const ScheduleEditor = () => {
 																	: scheduleItem.customColor
 															}
 														>
-															{to12hourTime(scheduleItem.timeStart, showAMPM)} -{" "}
-															{to12hourTime(scheduleItem.timeEnd, showAMPM)}{" "}
+															{to12hourTime(
+																scheduleItem.timeStart,
+																settings.showAMPM
+															)}{" "}
+															-{" "}
+															{to12hourTime(
+																scheduleItem.timeEnd,
+																settings.showAMPM
+															)}{" "}
 														</ColoredPill>
 														<p
 															className="ml-3 text-red-600"

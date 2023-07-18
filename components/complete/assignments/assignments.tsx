@@ -40,10 +40,7 @@ export function AssignmentPreview({
 	const [starred, setStarred] = useState(starredAsParam);
 
 	const { data: settings } = useSettings();
-	const showAMPM: boolean = useMemo(
-		() => (settings.showAMPM ? true : false),
-		[settings.showAMPM]
-	);
+
 	return (
 		<div className="relative">
 			<Link
@@ -68,7 +65,7 @@ export function AssignmentPreview({
 										{date.getMonth()}/{date.getDate()}
 									</div>
 									<ColoredPill color={classes.color}>
-										{`${to12hourTime(date, showAMPM)}`}
+										{`${to12hourTime(date, settings.showAMPM)}`}
 									</ColoredPill>
 								</>
 							) : (

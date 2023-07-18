@@ -13,10 +13,7 @@ export default function ScheduleComponent({
 	classes: AllClassesResponse | undefined;
 }) {
 	const { data: settings } = useSettings();
-	const showAMPM: boolean = useMemo(
-		() => (settings.showAMPM ? true : false),
-		[settings.showAMPM]
-	);
+
 	if (!(schedule && classes))
 		return (
 			<div className="my-5 flex h-36 animate-pulse flex-col justify-between rounded-xl bg-backdrop-200 p-4">
@@ -58,8 +55,8 @@ export default function ScheduleComponent({
 												checkClassMatchesSchedule(item).color
 											}
 										>
-											{to12hourTime(item.timeStart, showAMPM)} -{" "}
-											{to12hourTime(item.timeEnd, showAMPM)}
+											{to12hourTime(item.timeStart, settings.showAMPM)} -{" "}
+											{to12hourTime(item.timeEnd, settings.showAMPM)}
 										</ColoredPill>
 									</Link>
 								)) ||
@@ -75,8 +72,8 @@ export default function ScheduleComponent({
 										<ColoredPill
 											color={item.customColor ? item.customColor : "green"}
 										>
-											{to12hourTime(item.timeStart, showAMPM)} -{" "}
-											{to12hourTime(item.timeEnd, showAMPM)}
+											{to12hourTime(item.timeStart, settings.showAMPM)} -{" "}
+											{to12hourTime(item.timeEnd, settings.showAMPM)}
 										</ColoredPill>
 									</div>
 								))
