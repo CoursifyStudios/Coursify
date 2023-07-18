@@ -9,6 +9,7 @@ export interface Settings {
 	sortBySchedule: boolean;
 	homepageAssignments: "all" | "student" | "none";
 	homepageView: "auto" | "tabbed" | "student" | "teacher";
+	showAMPM: boolean;
 }
 
 interface SettingsStore {
@@ -23,6 +24,7 @@ const defaultSettings: Settings = {
 	sortBySchedule: true,
 	homepageAssignments: "student",
 	homepageView: "auto",
+	showAMPM: false,
 };
 
 export const useSettings = create<SettingsStore>()(

@@ -110,8 +110,8 @@ export const createNewTemplate = async (
 
 export type NewTemplate = Awaited<ReturnType<typeof createNewTemplate>>;
 
-export function to12hourTime(date: string): string;
-export function to12hourTime(date: Date): string;
+export function to12hourTime(date: string, includeAMPM?: boolean): string;
+export function to12hourTime(date: Date, includeAMPM?: boolean): string;
 
 export function to12hourTime(date: unknown, includeAMPM?: boolean) {
 	if (typeof date == "string") {
