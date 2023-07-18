@@ -58,8 +58,15 @@ export default function ScheduleComponent({
 												checkClassMatchesSchedule(item).color
 											}
 										>
-											{to12hourTime(handleTimezone(item.timeStart), settings.showAMPM)} -{" "}
-											{to12hourTime(handleTimezone(item.timeEnd), settings.showAMPM)}
+											{to12hourTime(
+												handleTimezone(item.timeStart),
+												settings.showAMPM
+											)}{" "}
+											-{" "}
+											{to12hourTime(
+												handleTimezone(item.timeEnd),
+												settings.showAMPM
+											)}
 										</ColoredPill>
 									</Link>
 								)) ||
@@ -74,8 +81,16 @@ export default function ScheduleComponent({
 										{item.specialEvent}
 										<ColoredPill
 											color={item.customColor ? item.customColor : "green"}
-										>{to12hourTime(handleTimezone(item.timeStart), settings.showAMPM)} -{" "}
-											{to12hourTime(handleTimezone(item.timeEnd), settings.showAMPM)}
+										>
+											{to12hourTime(
+												handleTimezone(item.timeStart),
+												settings.showAMPM
+											)}{" "}
+											-{" "}
+											{to12hourTime(
+												handleTimezone(item.timeEnd),
+												settings.showAMPM
+											)}
 										</ColoredPill>
 									</div>
 								))
