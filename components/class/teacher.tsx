@@ -175,7 +175,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 											{dueDate.getMonth() + 1}/{dueDate.getDate()}
 										</div>
 										<ColoredPill color={classData.color} className="text-xs">
-											{`${to12hourTime(dueDate)}`}
+											{`${to12hourTime(dueDate, settings.showAMPM)}`}
 										</ColoredPill>
 									</>
 								)}
