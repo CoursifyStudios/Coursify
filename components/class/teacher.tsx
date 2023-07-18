@@ -130,11 +130,13 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 				{/* SUGGESTION: (AND TAKE HEED) replace this with more teacher-relevant information 
                 (that is conviently less damaging to be leaked on a projection showing the scores of 
                 different blocks and allowing comparison between them). For example, missing, ungraded
-                and late assignment numbers. Or if you are really so hel-bent on this, at least a pie
+                and late assignment numbers. Or if you are really so hell-bent on this dystopian practice, perhaps show a pie
                 chart of A, B, C, D, F recipients in your class. This average grade thing is not helpful.
-                Teachers should not focus on tracking a grade, they need to know which students need the
+                Teachers should not focus on tracking an average grade, they need to know which students need the
                 most assistance. We can't have software that is negligent in not doing everything we can
-                to ensure that no student is left behind. People matter, not numbers. -Bill */}
+                to ensure that no student is left behind and every student is judged equally. People matter, not numbers. 
+                That being said, perhaps comparisons to other teachers of the same classes could be helpful. 
+                Though all of this info, should we wish to display, is probably best displayed on a seperate page. -Bill */}
 				<div className="mt-3 flex flex-col gap-2 text-sm font-medium leading-3">
 					<GradesSection name="Overall" grade={allGrades[0]} />
 					<GradesSection name="Summative (80%)" grade={allGrades[1]} />
@@ -143,46 +145,48 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 			</section>
 			{/* Assignments */}
 			{classData.assignments &&
-				getDataInArray(classData.assignments).map((assignment, i) => {
-					const dueDate = assignment.due_date
-						? new Date(assignment.due_date)
-						: null;
-					return (
-						<section
-							className={`group flex cursor-pointer items-center rounded-xl bg-backdrop-200 px-3 py-2 hover:z-20 compact:p-2`}
-							key={i}
-						>
-							<div className="mr-3 grid h-9 w-9 min-w-[2.25rem] place-items-center rounded-full bg-gray-300 dark:bg-gray-200">
-								{
-									submissionType.find((type) => type.type == assignment.type)
-										?.icon
-								}
-							</div>
-							<div className="flex flex-col ">
-								<h4 className="max-w-[10.5rem] truncate text-sm font-medium">
-									{assignment.name}
-								</h4>
-								{/* BELOW IS PLACEHOLDER TEXT */}
-								<p className="text-xs">12/24 students submitted</p>
-							</div>
-							<div
-								tabIndex={-1}
-								className="ml-auto flex flex-col items-center text-xs"
+				getDataInArray(classData.assignments)
+					.slice(0, 3)
+					.map((assignment, i) => {
+						const dueDate = assignment.due_date
+							? new Date(assignment.due_date)
+							: null;
+						return (
+							<section
+								className={`group flex cursor-pointer items-center rounded-xl bg-backdrop-200 px-3 py-2 hover:z-20 compact:p-2`}
+								key={i}
 							>
-								{dueDate && (
-									<>
-										<div className="mb-0.5 font-medium text-gray-700">
-											{dueDate.getMonth() + 1}/{dueDate.getDate()}
-										</div>
-										<ColoredPill color={classData.color} className="text-xs">
-											{`${to12hourTime(dueDate, settings.showAMPM)}`}
-										</ColoredPill>
-									</>
-								)}
-							</div>
-						</section>
-					);
-				})}
+								<div className="mr-3 grid h-9 w-9 min-w-[2.25rem] place-items-center rounded-full bg-gray-300 dark:bg-gray-200">
+									{
+										submissionType.find((type) => type.type == assignment.type)
+											?.icon
+									}
+								</div>
+								<div className="flex flex-col ">
+									<h4 className="max-w-[10.5rem] truncate text-sm font-medium">
+										{assignment.name}
+									</h4>
+									{/* BELOW IS PLACEHOLDER TEXT */}
+									<p className="text-xs">12/24 students submitted</p>
+								</div>
+								<div
+									tabIndex={-1}
+									className="ml-auto flex flex-col items-center text-xs"
+								>
+									{dueDate && (
+										<>
+											<div className="mb-0.5 font-medium text-gray-700">
+												{dueDate.getMonth() + 1}/{dueDate.getDate()}
+											</div>
+											<ColoredPill color={classData.color} className="text-xs">
+												{`${to12hourTime(dueDate, settings.showAMPM)}`}
+											</ColoredPill>
+										</>
+									)}
+								</div>
+							</section>
+						);
+					})}
 		</div>
 	);
 };
