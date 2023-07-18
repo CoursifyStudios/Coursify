@@ -15,7 +15,6 @@ import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import richTheme from "../../lib/editor/richtheme";
 
-import { GrammarlyEditorPlugin } from "@grammarly/editor-sdk-react";
 import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
@@ -108,49 +107,45 @@ export default function Editor({
 	backdrop?: boolean;
 }) {
 	return (
-		<GrammarlyEditorPlugin clientId="client_HhHcuxVxKgaZMFYuD57U3V">
-			<LexicalComposer initialConfig={editorConfig}>
-				<EditorContextProvider
-					editable={editable}
-					initialState={initialState}
-					updatedState={updatedState}
-					initialStateEditor={initialStateEditor}
+		<LexicalComposer initialConfig={editorConfig}>
+			<EditorContextProvider
+				editable={editable}
+				initialState={initialState}
+				updatedState={updatedState}
+				initialStateEditor={initialStateEditor}
+			>
+				<div
+					className={`relative ${
+						className ? className : "mb-2 rounded-xl p-4 shadow-lg dark:border"
+					}`}
 				>
-					<div
-						className={`relative ${
-							className
-								? className
-								: "mb-2 rounded-xl p-4 shadow-lg dark:border"
-						}`}
-					>
-						{editable && <ToolbarPlugin backdrop={backdrop} />}
-						<div className="relative">
-							<RichTextPlugin
-								contentEditable={
-									<ContentEditable className="prose h-full !max-w-full p-1 dark:prose-invert focus:outline-none dark:!text-neutral-200 [&>h1:first-child]:mt-0" />
-								}
-								placeholder={editable ? <Placeholder /> : <></>}
-								ErrorBoundary={LexicalErrorBoundary}
+					{editable && <ToolbarPlugin backdrop={backdrop} />}
+					<div className="relative">
+						<RichTextPlugin
+							contentEditable={
+								<ContentEditable className="prose h-full !max-w-full p-1 dark:prose-invert focus:outline-none dark:!text-neutral-200 [&>h1:first-child]:mt-0" />
+							}
+							placeholder={editable ? <Placeholder /> : <></>}
+							ErrorBoundary={LexicalErrorBoundary}
+						/>
+						<HistoryPlugin />
+						{focus && <AutoFocusPlugin />}
+						<CodeHighlightPlugin />
+						<ListPlugin />
+						<LinkPlugin />
+						{updateState && (
+							<OnChangePlugin
+								onChange={updateState}
+								ignoreSelectionChange={true}
 							/>
-							<HistoryPlugin />
-							{focus && <AutoFocusPlugin />}
-							<CodeHighlightPlugin />
-							<ListPlugin />
-							<LinkPlugin />
-							{updateState && (
-								<OnChangePlugin
-									onChange={updateState}
-									ignoreSelectionChange={true}
-								/>
-							)}
-							<AutoLinkPlugin matchers={MATCHERS} />
-							<MarkdownShortcutPlugin transformers={TRANSFORMERS} />
-						</div>
+						)}
+						<AutoLinkPlugin matchers={MATCHERS} />
+						<MarkdownShortcutPlugin transformers={TRANSFORMERS} />
 					</div>
-					{/* <TreeViewPlugin /> */}
-				</EditorContextProvider>
-			</LexicalComposer>
-		</GrammarlyEditorPlugin>
+				</div>
+				{/* <TreeViewPlugin /> */}
+			</EditorContextProvider>
+		</LexicalComposer>
 	);
 }
 

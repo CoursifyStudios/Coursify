@@ -13,6 +13,7 @@ import {
 	to12hourTime,
 } from "../lib/db/schedule";
 import { useTabs } from "../lib/tabs/handleTabs";
+import { useSettings } from "@/lib/stores/settings";
 
 const ScheduleEditor = () => {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -23,6 +24,9 @@ const ScheduleEditor = () => {
 		useState<ScheduleTemplatesDB>();
 	const [templateName, setTemplateName] = useState<string>();
 	const [template, setTemplate] = useState<number | null>(null);
+	const [error, setError] = useState<string>();
+
+	const { data: settings } = useSettings();
 	useEffect(() => {
 		(async () => {
 			const scheduleTemplates = await getScheduleTemplates(supabaseClient);
@@ -166,8 +170,15 @@ const ScheduleEditor = () => {
 																	: scheduleItem.customColor
 															}
 														>
-															{to12hourTime(scheduleItem.timeStart)} -{" "}
-															{to12hourTime(scheduleItem.timeEnd)}{" "}
+															{to12hourTime(
+																scheduleItem.timeStart,
+																settings.showAMPM
+															)}{" "}
+															-{" "}
+															{to12hourTime(
+																scheduleItem.timeEnd,
+																settings.showAMPM
+															)}{" "}
 														</ColoredPill>
 														<p
 															className="ml-3 text-red-600"
@@ -213,8 +224,15 @@ const ScheduleEditor = () => {
 																	: scheduleItem.customColor
 															}
 														>
-															{to12hourTime(scheduleItem.timeStart)} -{" "}
-															{to12hourTime(scheduleItem.timeEnd)}{" "}
+															{to12hourTime(
+																scheduleItem.timeStart,
+																settings.showAMPM
+															)}{" "}
+															-{" "}
+															{to12hourTime(
+																scheduleItem.timeEnd,
+																settings.showAMPM
+															)}{" "}
 														</ColoredPill>
 														<p
 															className="ml-3 text-red-600"
@@ -244,7 +262,7 @@ const ScheduleEditor = () => {
 							createNewSchedule(supabaseClient, v.day, template, null);
 						} else if (tempSchedule) {
 							createNewSchedule(supabaseClient, v.day, template, tempSchedule);
-						} else alert("Please add one or more schedule items first");
+						} else setError("Please add one or more schedule items first");
 					}}
 				>
 					<Form className="grid grid-cols-1">
@@ -265,11 +283,11 @@ const ScheduleEditor = () => {
 						initialValues={{ name: "" }}
 						onSubmit={(v) => {
 							if (template) {
-								alert("Please alter the template");
+								setError("Please alter the template");
 							} else if (tempSchedule) {
 								createNewTemplate(supabaseClient, v.name, tempSchedule);
 							} else
-								alert(
+								setError(
 									"Please add one or more schedule items first and name your "
 								);
 						}}
@@ -291,6 +309,8 @@ const ScheduleEditor = () => {
 			</div>
 			<div className="mx-10 mt-5">
 				<h2>Schedule Templates:</h2>
+				{/* this will be made DRY-er later */}
+				{/* I'd like to coin a new term "wringin" for this purpose */}
 				<div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
 					{scheduleTemplates &&
 						scheduleTemplates.data &&
@@ -314,9 +334,9 @@ const ScheduleEditor = () => {
 												(period, iterator) =>
 													period.type == 1 && (
 														<div className="whitespace-nowrap" key={iterator}>
-															{period.timeStart}
+															{period.timeStart.substring(0, 5)}
 															{" - "}
-															{period.timeEnd}
+															{period.timeEnd.substring(0, 5)}
 														</div>
 													)
 											)}
@@ -326,9 +346,9 @@ const ScheduleEditor = () => {
 												(period, iterator) =>
 													period.type == 2 && (
 														<div className="whitespace-nowrap" key={iterator}>
-															{period.timeStart}
+															{period.timeStart.substring(0, 5)}
 															{" - "}
-															{period.timeEnd}
+															{period.timeEnd.substring(0, 5)}
 														</div>
 													)
 											)}
@@ -339,8 +359,8 @@ const ScheduleEditor = () => {
 						)}
 				</div>
 			</div>
+			{error && <p className="text-red-500">Error: {error}</p>}
 		</div>
 	);
 };
-
 export default ScheduleEditor;

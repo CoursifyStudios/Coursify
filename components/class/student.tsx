@@ -70,9 +70,9 @@ const StudentClass: NextPage<StudentClassType> = ({
 						}
 					>
 						{time?.timeStart != undefined && !showTimeLoading
-							? to12hourTime(time?.timeStart) +
+							? to12hourTime(time?.timeStart, settings.showAMPM) +
 							  " - " +
-							  to12hourTime(time?.timeEnd)
+							  to12hourTime(time?.timeEnd, settings.showAMPM)
 							: ""}
 					</ColoredPill>
 				</div>

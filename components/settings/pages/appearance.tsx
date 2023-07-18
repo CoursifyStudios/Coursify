@@ -84,7 +84,7 @@ const Theming: NextPage = () => {
 			<ToggleSection
 				name="Compact Mode"
 				beta={true}
-				description="Compacts down element in order to have more room on the screen. Recommended for power users."
+				description="Slims down elements so as to have more room on the screen." //not reccomended for anyone
 				enabled={settings.compact}
 				setEnabled={() =>
 					set({
@@ -97,7 +97,7 @@ const Theming: NextPage = () => {
 			</Header>
 			<ToggleSection
 				name="Sort Classes by Schedule"
-				description="Sort classes based on your schedule and day. If off, it sorts by block number."
+				description="Sort classes based on your schedule. When off, classes will be sorted by block number." //rearrangable classes hopefully coming soon TM
 				enabled={settings.sortBySchedule}
 				setEnabled={() =>
 					set({
@@ -149,6 +149,19 @@ const Theming: NextPage = () => {
 					})
 				}
 			/>
+			<Header name="time" page={1}>
+				Time
+			</Header>
+			<ToggleSection
+				name="Show AM/PM markers"
+				description="Displays AM and PM markings next to times"
+				enabled={settings.showAMPM}
+				setEnabled={() =>
+					set({
+						showAMPM: !settings.showAMPM,
+					})
+				}
+			></ToggleSection>
 		</>
 	);
 };
