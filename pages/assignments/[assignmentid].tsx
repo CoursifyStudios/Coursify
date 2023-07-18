@@ -22,7 +22,7 @@ import { getDataOutArray } from "@/lib/misc/dataOutArray";
 import launch from "@/public/svgs/launch.svg";
 import noData from "@/public/svgs/no-data.svg";
 import { AssignmentPreview } from "@assignments/assignments";
-import { BarsArrowDownIcon, PlusIcon } from "@heroicons/react/24/outline";
+import { BarsArrowDownIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { SerializedEditorState } from "lexical";
 import { NextPage } from "next";
@@ -50,6 +50,8 @@ const Panel = dynamic(
 const Post: NextPage = () => {
 	const supabase = useSupabaseClient<Database>();
 	const [allAssignments, setAllAssignments] = useState<AllAssignmentResponse>();
+	const [page, setPage] = useState(0);
+	const [maxPages, setMaxPages] = useState(0);
 	const [assignment, setAssignment] = useState<AssignmentResponse>();
 	//obviously we need a better solution
 	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
@@ -60,6 +62,7 @@ const Post: NextPage = () => {
 	const [fullscreen, setFullscreen] = useState(false);
 	const [revisions, setRevisions] = useState<Submission[]>([]);
 
+	// Read the comment in onSortChange
 	const options = [
 		{ name: "Relevance" },
 		{ name: "Due Latest" },
@@ -67,12 +70,33 @@ const Post: NextPage = () => {
 	];
 
 	const [selected, setSelected] = useState(options[0]);
+
+	const onSortChange = async (value: { name: string }) => {
+		setSelected(value);
+		if (user) {
+			// This code will break if someone edits the options array but I'll leave them to deal with it :trojker: - Bloxs
+			const assignments = await getAllAssignments(supabase, 0, options.indexOf(value));
+			setAllAssignments(assignments);
+			setPage(0);
+			setMaxPages(Math.ceil((assignments.count ?? 1) / 10))
+		}
+	}
+
+	const refetchAssignments = async () => {
+		if (user) {
+			const assignments = await getAllAssignments(supabase, page, options.indexOf(selected));
+			setAllAssignments(assignments);
+		}
+	}
+
 	// Gets the data from the db
 	useEffect(() => {
 		(async () => {
 			if (user && !allAssignments) {
-				const assignments = await getAllAssignments(supabase);
+				const assignments = await getAllAssignments(supabase, 0, 0);
 				setAllAssignments(assignments);
+				setPage(0);
+				setMaxPages(Math.ceil((assignments.count ?? 1) / 10))
 			}
 			// In theory, most people will have the schedule already cached. This is a band-aid solution and won't be used later on
 			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
@@ -148,8 +172,27 @@ const Post: NextPage = () => {
 								Sort by different attributes of assignments
 							</Info>
 						</div>
+
+						<div className="flex">
+							{/* ~~Graphic Design~~ CSS is my passion - Bloxs */}
+							{/* https://i.kym-cdn.com/photos/images/newsfeed/001/018/866/e44.png */}
+							<ChevronLeftIcon className={`h-6 w-6 ${page == 0 ? "text-gray-600" : ""}`} onClick={() => {
+								if (page > 0) {
+									setPage(page - 1);
+									refetchAssignments();
+								}
+							}}/>
+							{page + 1} / {maxPages + 1}
+							<ChevronRightIcon className={`h-6 w-6 ${page >= maxPages ? "text-gray-600" : ""}`} onClick={() => {
+								if (page < maxPages) {
+									setPage(page + 1);
+									refetchAssignments();
+								}
+							}}/>
+						</div>
+
 						<Dropdown
-							onChange={setSelected}
+							onChange={onSortChange}
 							selectedValue={selected}
 							values={options}
 						/>

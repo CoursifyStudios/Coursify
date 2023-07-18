@@ -5,20 +5,46 @@ import { SerializedEditorState } from "lexical";
 import { Database } from "../database.types";
 
 export const getAllAssignments = async (
-	supabaseClient: SupabaseClient<Database>
+	supabaseClient: SupabaseClient<Database>,
+	page: number,
+	filter?: number
 ) => {
-	return await supabaseClient.from("assignments").select(
+	let query = supabaseClient.from("assignments").select(
 		`
 		*,
-		
 		classes (
 			name, id, color, block, schedule_type
 		),
 		starred (
 			assignment_id
 		)
-		`
-	);
+		`, {
+			count: "exact",
+		}
+	).range(page * 10, (page + 1) * 10 - 1);
+
+	if (filter != undefined) {
+		switch (filter) {
+			case 0: {
+				// Not done, Waiting on Lukas to reply
+				// I'm guessing it sorts by starred first then due date?
+				// How the fuck do I sort where it checks if the assignment is starred or not
+				break;
+			}
+			case 1: {
+				// Due by closest
+				query = query.order("due_date", { ascending: true })
+				break;
+			}
+			case 2: {
+				// Due by farthest
+				query = query.order("due_date", { ascending: false })
+				break;
+			}
+		}
+	}
+
+	return await query;
 };
 
 export type AllAssignmentResponse = Awaited<
