@@ -24,6 +24,7 @@ const ScheduleEditor = () => {
 		useState<ScheduleTemplatesDB>();
 	const [templateName, setTemplateName] = useState<string>();
 	const [template, setTemplate] = useState<number | null>(null);
+	const [error, setError] = useState<string>();
 
 	const { data: settings } = useSettings();
 	useEffect(() => {
@@ -261,7 +262,7 @@ const ScheduleEditor = () => {
 							createNewSchedule(supabaseClient, v.day, template, null);
 						} else if (tempSchedule) {
 							createNewSchedule(supabaseClient, v.day, template, tempSchedule);
-						} else alert("Please add one or more schedule items first");
+						} else setError("Please add one or more schedule items first");
 					}}
 				>
 					<Form className="grid grid-cols-1">
@@ -282,11 +283,11 @@ const ScheduleEditor = () => {
 						initialValues={{ name: "" }}
 						onSubmit={(v) => {
 							if (template) {
-								alert("Please alter the template");
+								setError("Please alter the template");
 							} else if (tempSchedule) {
 								createNewTemplate(supabaseClient, v.name, tempSchedule);
 							} else
-								alert(
+								setError(
 									"Please add one or more schedule items first and name your "
 								);
 						}}
@@ -356,6 +357,7 @@ const ScheduleEditor = () => {
 						)}
 				</div>
 			</div>
+			{error && <p className="text-red-500">Error: {error}</p>}
 		</div>
 	);
 };
