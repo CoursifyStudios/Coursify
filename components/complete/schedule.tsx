@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { AllClassesResponse } from "../../lib/db/classes";
-import { ScheduleInterface, to12hourTime } from "../../lib/db/schedule";
+import {
+	ScheduleInterface,
+	handleTimezone,
+	to12hourTime,
+} from "../../lib/db/schedule";
 import { ColoredPill } from "../misc/pill";
 import { useSettings } from "@/lib/stores/settings";
 
@@ -54,8 +58,15 @@ export default function ScheduleComponent({
 												checkClassMatchesSchedule(item).color
 											}
 										>
-											{to12hourTime(item.timeStart, settings.showAMPM)} -{" "}
-											{to12hourTime(item.timeEnd, settings.showAMPM)}
+											{to12hourTime(
+												handleTimezone(item.timeStart),
+												settings.showAMPM
+											)}{" "}
+											-{" "}
+											{to12hourTime(
+												handleTimezone(item.timeEnd),
+												settings.showAMPM
+											)}
 										</ColoredPill>
 									</Link>
 								)) ||
@@ -71,8 +82,15 @@ export default function ScheduleComponent({
 										<ColoredPill
 											color={item.customColor ? item.customColor : "green"}
 										>
-											{to12hourTime(item.timeStart, settings.showAMPM)} -{" "}
-											{to12hourTime(item.timeEnd, settings.showAMPM)}
+											{to12hourTime(
+												handleTimezone(item.timeStart),
+												settings.showAMPM
+											)}{" "}
+											-{" "}
+											{to12hourTime(
+												handleTimezone(item.timeEnd),
+												settings.showAMPM
+											)}
 										</ColoredPill>
 									</div>
 								))

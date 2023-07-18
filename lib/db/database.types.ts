@@ -509,7 +509,7 @@ export interface Database {
 					email: string | null;
 					full_name: string;
 					id: string;
-					phone_number: number | null;
+					phone_number: string | null;
 					preferred_name: string | null;
 					student_id: string | null;
 					year: string | null;
@@ -521,7 +521,7 @@ export interface Database {
 					email?: string | null;
 					full_name: string;
 					id: string;
-					phone_number?: number | null;
+					phone_number?: string | null;
 					preferred_name?: string | null;
 					student_id?: string | null;
 					year?: string | null;
@@ -533,7 +533,7 @@ export interface Database {
 					email?: string | null;
 					full_name?: string;
 					id?: string;
-					phone_number?: number | null;
+					phone_number?: string | null;
 					preferred_name?: string | null;
 					student_id?: string | null;
 					year?: string | null;
