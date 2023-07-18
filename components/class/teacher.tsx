@@ -126,16 +126,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 						optionsClassName="w-36 "
 					/>
 				</div>
-				{/* SUGGESTION: (AND TAKE HEED) replace this with more teacher-relevant information 
-                (that is conviently less damaging to be leaked on a projection showing the scores of 
-                different blocks and allowing comparison between them). For example, missing, ungraded
-                and late assignment numbers. Or if you are really so hell-bent on this dystopian practice, perhaps show a pie
-                chart of A, B, C, D, F recipients in your class. This average grade thing is not helpful.
-                Teachers should not focus on tracking an average grade, they need to know which students need the
-                most assistance. We can't have software that is negligent in not doing everything we can
-                to ensure that no student is left behind and every student is judged equally. People matter, not numbers. 
-                That being said, perhaps comparisons to other teachers of the same classes could be helpful. 
-                Though all of this info, should we wish to display, is probably best displayed on a seperate page. -Bill */}
+				
 				<div className="mt-3 flex flex-col gap-2 text-sm font-medium leading-3">
 					<GradesSection name="Overall" grade={allGrades[0]} />
 					<GradesSection name="Summative (80%)" grade={allGrades[1]} />
