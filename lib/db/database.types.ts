@@ -431,6 +431,7 @@ export interface Database {
 					created_at: string;
 					final: boolean;
 					grade: number | null;
+					graded_on: string | null;
 					hide: boolean | null;
 					id: string;
 					user_id: string;
@@ -441,6 +442,7 @@ export interface Database {
 					created_at?: string;
 					final: boolean;
 					grade?: number | null;
+					graded_on?: string | null;
 					hide?: boolean | null;
 					id?: string;
 					user_id: string;
@@ -451,6 +453,7 @@ export interface Database {
 					created_at?: string;
 					final?: boolean;
 					grade?: number | null;
+					graded_on?: string | null;
 					hide?: boolean | null;
 					id?: string;
 					user_id?: string;
