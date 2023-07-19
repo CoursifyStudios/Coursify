@@ -81,17 +81,8 @@ export const AnnouncementPostingUI = ({
 			  ]
 	);
 	const [showCrossPosting, setShowCrossPosting] = useState(false);
-	const [fakeAnnouncements, setFakeAnnouncements] = useState<
-		{
-			author: string;
-			class_id: string;
-			content: Json;
-			title: string;
-		}[]
-	>([]);
-	const [showSharing, setShowSharing] = useState(false); //TODO: deprecate
 	const [sending, setSending] = useState(false); // controls like a loading state thing
-	const [errorText, setErrorText] = useState("TEST");
+	const [errorText, setErrorText] = useState("");
 	const user = useUser();
 
 	const FormObserver: React.FC = () => {
@@ -238,25 +229,10 @@ export const AnnouncementPostingUI = ({
 								color="bg-blue-500"
 								onClick={async () => {
 									if (user) {
-										// !sharingInfo &&
-										// 	setFakeAnnouncements(
-										// 		fakeAnnouncements.concat({
-										// 			author: user.id,
-										// 			class_id: communityid,
-										// 			content: editorState?.toJSON() as unknown as Json,
-										// 			title: title,
-										// 		})
-										// 	);
-										// setShowPosting(false); //This hides the announcement posting UI.
-
-										//TODO: LOADING HERE
 										setSending(true);
 
 										// If the announcement is being shared, then perform the following behaviors:
 										if (sharingInfo && chosenCommunities.length >= 1) {
-											//TODO: remove this line
-											//setShowSharing(true);
-
 											// post it to the DB
 											const sharedAnnouncement = await shareAnnouncement(
 												supabase,
@@ -299,7 +275,7 @@ export const AnnouncementPostingUI = ({
 													content: editorState?.toJSON() as unknown as Json,
 												}
 											);
-											//and sets the real one
+											//and sets the announcement with its new data
 											if (newAnnouncement.error) {
 												setErrorText("Error: Editing Announcement Failed");
 											} else {
@@ -311,7 +287,7 @@ export const AnnouncementPostingUI = ({
 
 												editingInfo.setEditing(false);
 											}
-                                            setSending(false);
+											setSending(false);
 											// This is for when you are neither sharing nor editing (just posting normally)
 											// it just checks that both the title and contnet of the announcement are populated
 										} else {
@@ -385,26 +361,6 @@ export const AnnouncementPostingUI = ({
 			) : (
 				!editingInfo && !sharingInfo && <TempUI />
 			)}
-
-			<div className="mt-2 space-y-2">
-				{/* TODO:  remove*/}
-				{fakeAnnouncements.reverse() &&
-					fakeAnnouncements.map((fakeAnnouncement, i) => (
-						<TempAnnouncement
-							key={i}
-							announcement={fakeAnnouncement}
-						></TempAnnouncement>
-					))}
-				{/* TODO: remove */}
-				{/* {showSharing && (
-					//Lukas clean this up!
-					<div className="flex h-32 content-center rounded-xl bg-gray-200 p-4">
-						<div className="grid grid-cols-2">
-							<LoadingSmall></LoadingSmall>Sharing...
-						</div>
-					</div>
-				)} */}
-			</div>
 		</div>
 	);
 
