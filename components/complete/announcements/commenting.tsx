@@ -38,6 +38,7 @@ export const Comment = ({
 	const [text, setText] = useState(content);
 	// const [showReplying, setShowReplying] = useState(false); not prod ready
 	const [editing, setEditing] = useState(false);
+	const [errorText, setErrorText] = useState("");
 	return (
 		<div className="ml-4">
 			<div className="flex items-center pt-1 ">
@@ -66,26 +67,28 @@ export const Comment = ({
 				<p className="pl-1.5 text-gray-600 dark:text-gray-400">{time}</p>
 				{/* TODO: add an edit. share, and delete button here*/}
 			</div>
-			{/* editing is disabled atm */}
+			{/* editing is unavailable atm because the dropdown is gone */}
 			{editing ? (
 				<Formik
 					initialValues={{
 						content: text,
 					}}
 					onSubmit={async (formData) => {
+						setErrorText("");
 						const newEditedAnnouncement = await editAnnouncement(
 							supabase,
 							//kind of confusing but a comment's content uses the title field
 							{ id: id, author: user!.id, title: content, clone_id: null },
 							{ title: formData.content, content: null }
 						);
-						setEditing(false);
 						if (newEditedAnnouncement.error) {
 							//TODO: better error handling
-							alert(
+							setErrorText(
 								"Something went wrong, and your comment could not be edited"
 							);
 						} else {
+							setErrorText("");
+							setEditing(false);
 							setText(formData.content);
 						}
 					}}
@@ -172,6 +175,7 @@ export const Commenting = ({
 			};
 		}[]
 	>([]);
+	const [errorText, setErrorText] = useState("");
 
 	return (
 		<>
@@ -183,7 +187,7 @@ export const Commenting = ({
 							content: "",
 						}}
 						onSubmit={async (formData) => {
-							setShowCommenting(false);
+							setErrorText("");
 							const dBResponse = await postCommentOrReply(
 								supabase,
 								user.id,
@@ -193,9 +197,11 @@ export const Commenting = ({
 								AnnouncementType.COMMENT
 							);
 							if (dBResponse.error) {
-								//TODO: better error handling
-								alert("Error: failed to post comment");
+								setErrorText("Error: failed to post comment");
 							} else {
+								setErrorText("");
+								setShowCommenting(false);
+
 								setTempComments(
 									tempComments.concat({
 										//possibly a dumb idea
@@ -227,26 +233,29 @@ export const Commenting = ({
 									></Field>
 								</label>
 								<ErrorMessage name="content" />
-								<div className="m-1 flex justify-end gap-2">
-									<Button
-										className="brightness-hover transition hover:bg-red-300"
-										onClick={() => {
-											setShowCommenting(false);
-											if (showMe) showMe(false);
-										}}
-									>
-										Cancel
-									</Button>
-									<button
-										className={`rounded-md bg-blue-500 px-4 py-1 font-semibold text-white ${
-											values.content.length < 1
-												? "cursor-not-allowed brightness-75"
-												: "brightness-hover"
-										}`}
-										type="submit"
-									>
-										Post
-									</button>
+								<div className="m-1 flex gap-2">
+									<p className="text-red-500">{errorText}</p>
+									<div className="flex ml-auto">
+										<Button
+											className="brightness-hover transition hover:bg-red-300"
+											onClick={() => {
+												setShowCommenting(false);
+												if (showMe) showMe(false);
+											}}
+										>
+											Cancel
+										</Button>
+										<button
+											className={`rounded-md bg-blue-500 px-4 py-1 font-semibold text-white ${
+												values.content.length < 1
+													? "cursor-not-allowed brightness-75"
+													: "brightness-hover"
+											}`}
+											type="submit"
+										>
+											Post
+										</button>
+									</div>
 								</div>
 							</Form>
 						)}
