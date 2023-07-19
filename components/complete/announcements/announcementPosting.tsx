@@ -89,7 +89,9 @@ export const AnnouncementPostingUI = ({
 			title: string;
 		}[]
 	>([]);
-	const [showSharing, setShowSharing] = useState(false);
+	const [showSharing, setShowSharing] = useState(false); //TODO: deprecate
+	const [sending, setSending] = useState(false); // controls like a loading state thing
+	const [errorText, setErrorText] = useState("TEST");
 	const user = useUser();
 
 	const FormObserver: React.FC = () => {
@@ -102,27 +104,29 @@ export const AnnouncementPostingUI = ({
 		return null;
 	};
 
-	async function getCommunities() {
-		if (user && communities.length == 0) {
-			//TODO: error handling for this
-			const dbResponse = await getClassesForUserBasic(supabase, user.id);
-			const classes: { id: string; name: string }[] = [];
-			if (dbResponse.data) {
-				dbResponse.data.map((basicClassInfo) => {
-					if (
-						(basicClassInfo.classes && basicClassInfo.teacher) ||
-						getDataOutArray(basicClassInfo.classes)?.type == 1
-					) {
-						classes.push({
-							id: getDataOutArray(basicClassInfo.classes)!.id,
-							name: getDataOutArray(basicClassInfo.classes)!.name,
-						});
-					}
-				});
-				setCommunities(classes);
-			}
+	useEffect(() => {
+		if (user && communities.length == 0 && showPosting) {
+			(async () => {
+				// error handling is handled where the <CommunityPicker> component is
+				const dbResponse = await getClassesForUserBasic(supabase, user.id);
+				const classes: { id: string; name: string }[] = [];
+				if (dbResponse.data) {
+					dbResponse.data.map((basicClassInfo) => {
+						if (
+							(basicClassInfo.classes && basicClassInfo.teacher) ||
+							getDataOutArray(basicClassInfo.classes)?.type == 1
+						) {
+							classes.push({
+								id: getDataOutArray(basicClassInfo.classes)!.id,
+								name: getDataOutArray(basicClassInfo.classes)!.name,
+							});
+						}
+					});
+					setCommunities(classes);
+				}
+			})();
 		}
-	}
+	}, [user, showPosting, communities.length, supabase]);
 
 	return (
 		<div>
@@ -174,9 +178,10 @@ export const AnnouncementPostingUI = ({
 						></TempAnnouncement>
 					)}
 
+					{/* Displays which communities are being posted or shared to */}
 					<div className="my-3 flex flex-wrap gap-4">
 						{chosenCommunities &&
-							chosenCommunities.length > 1 &&
+							chosenCommunities.length > 0 &&
 							chosenCommunities.map(
 								(chosenCommunity) =>
 									chosenCommunity &&
@@ -188,25 +193,23 @@ export const AnnouncementPostingUI = ({
 							)}
 					</div>
 
-					<div
-						className={
-							editingInfo
-								? "flex justify-end"
-								: "flex justify-between space-x-4"
-						}
-					>
-						{!editingInfo && (
-							<Button
-								className="mr-auto"
-								onClick={async () => {
-									getCommunities();
-									setShowCrossPosting(true);
-								}}
-							>
-								{sharingInfo ? "Share to..." : "Post to other groups..."}
-							</Button>
-						)}
+					<div className={"flex justify-between space-x-4"}>
+						<div className="flex items-center space-x-4">
+							{!editingInfo && (
+								<Button
+									className="mr-auto"
+									onClick={async () => {
+										setShowCrossPosting(true);
+									}}
+								>
+									{sharingInfo ? "Share to..." : "Post to other groups..."}
+								</Button>
+							)}
+							<p className="text-red-500 mr-auto">{errorText}</p>
+						</div>
+
 						<div className="flex space-x-4">
+							{/* Cancel Button */}
 							<Button
 								className="brightness-hover transition hover:bg-red-300 dark:hover:bg-red-900"
 								onClick={() => {
@@ -229,33 +232,31 @@ export const AnnouncementPostingUI = ({
 							>
 								Cancel
 							</Button>
+							{/* Save (editing) / Posting button */}
 							<Button
 								className="text-white"
 								color="bg-blue-500"
 								onClick={async () => {
 									if (user) {
-										// If the user is there,
-										// add a "fake announcement", filled with the new data.
-										// This is a temporary measure until the data from the operation gets back.
-										// All ways of modifying announcements share this behavior (with the exception of commenting),
-										// so this behavior of adding a temporary announcement and hiding the posting UI is shared.
+										// !sharingInfo &&
+										// 	setFakeAnnouncements(
+										// 		fakeAnnouncements.concat({
+										// 			author: user.id,
+										// 			class_id: communityid,
+										// 			content: editorState?.toJSON() as unknown as Json,
+										// 			title: title,
+										// 		})
+										// 	);
+										// setShowPosting(false); //This hides the announcement posting UI.
 
-										// This does happen before we know if the request failed or not, so when it fails it will
-										// be weird but it will succeed super quickly!
-										!sharingInfo &&
-											setFakeAnnouncements(
-												fakeAnnouncements.concat({
-													author: user.id,
-													class_id: communityid,
-													content: editorState?.toJSON() as unknown as Json,
-													title: title,
-												})
-											);
-										setShowPosting(false); //This hides the announcement posting UI.
+										//TODO: LOADING HERE
+										setSending(true);
 
-										// If the announcement is being shared, perform the following behaviors:
+										// If the announcement is being shared, then perform the following behaviors:
 										if (sharingInfo && chosenCommunities.length >= 1) {
-											setShowSharing(true);
+											//TODO: remove this line
+											//setShowSharing(true);
+
 											// post it to the DB
 											const sharedAnnouncement = await shareAnnouncement(
 												supabase,
@@ -267,13 +268,15 @@ export const AnnouncementPostingUI = ({
 												},
 												chosenCommunities.map(({ id }) => id)
 											);
-											if (sharedAnnouncement.error) {
-												alert("Error: failed to share announcement");
+											if (sharedAnnouncement.data) {
+												setErrorText("");
+												setSending(false);
+												sharingInfo.setSharing(false);
+											} else {
+												setErrorText("Error: Sharing announcement failed.");
 											}
-											setShowSharing(false);
-											sharingInfo.setSharing(false);
 
-											// here we check if we are editing the announcement, and either the title or content
+											// here we check if we are editing the announcement, and that either the title or content
 											// of the edited announcement actually differs from the original one.
 										} else if (
 											editingInfo &&
@@ -296,27 +299,22 @@ export const AnnouncementPostingUI = ({
 													content: editorState?.toJSON() as unknown as Json,
 												}
 											);
-											// ...And on its return removes the fake announcement..
-											setFakeAnnouncements(
-												fakeAnnouncements.filter(
-													(announcement) =>
-														announcement.title != editingInfo.title
-												)
-											);
 											//and sets the real one
 											if (newAnnouncement.error) {
-												alert("Error: editing announcement failed");
+												setErrorText("Error: Editing Announcement Failed");
 											} else {
 												setNewInfo &&
 													setNewInfo({
 														title: title,
 														content: editorState?.toJSON() as unknown as Json,
 													});
+
+												editingInfo.setEditing(false);
 											}
-											editingInfo.setEditing(false);
-										} else {
+                                            setSending(false);
 											// This is for when you are neither sharing nor editing (just posting normally)
 											// it just checks that both the title and contnet of the announcement are populated
+										} else {
 											if (!isEditorEmpty(editorState) && !(title.length == 0)) {
 												const dBReturn = await postAnnouncements(
 													supabase,
@@ -325,13 +323,9 @@ export const AnnouncementPostingUI = ({
 													editorState?.toJSON() as unknown as Json,
 													chosenCommunities.map(({ id }) => id)
 												);
-												setFakeAnnouncements(
-													fakeAnnouncements.filter(
-														(announcement) =>
-															announcement.title != dBReturn.data![0].title
-													)
-												);
+
 												if (dBReturn && dBReturn.data) {
+													setErrorText("");
 													setAnnouncements(
 														announcements.concat(
 															dBReturn.data.find(
@@ -340,9 +334,11 @@ export const AnnouncementPostingUI = ({
 															) as unknown as TypeOfAnnouncements
 														)
 													);
+													setShowPosting(false);
 												} else {
-													alert("Error: failed to post announcement");
+													setErrorText("Error: Failed to post announcement");
 												}
+												setSending(false);
 
 												//reset which communities to share to
 												!sharingInfo &&
@@ -359,14 +355,19 @@ export const AnnouncementPostingUI = ({
 								disabled={
 									(isEditorEmpty(editorState) && !sharingInfo) ||
 									(sharingInfo && chosenCommunities.length == 0) ||
-									title.length == 0
+									title.length == 0 ||
+									sending //don't let people manipulate the button after having sent a request to the db until that request gets back
 								}
 							>
 								{editingInfo ? "Save" : "Post"}
+								{/* mess but only way I could get my dumb brain to get this to work */}
+								<div className={sending ? "ml-2" : ""}>
+									{sending && <LoadingSmall></LoadingSmall>}
+								</div>
 							</Button>
 						</div>
 					</div>
-					{communities && (
+					{communities ? (
 						<CommunityPicker
 							chosenCommunities={chosenCommunities}
 							communities={communities}
@@ -375,6 +376,10 @@ export const AnnouncementPostingUI = ({
 							showCrossPosting={showCrossPosting}
 							communityid={communityid}
 						/>
+					) : (
+						<p className="text-red-500">
+							Error: Failed to fetch communities from server
+						</p>
 					)}
 				</div>
 			) : (
@@ -382,6 +387,7 @@ export const AnnouncementPostingUI = ({
 			)}
 
 			<div className="mt-2 space-y-2">
+				{/* TODO:  remove*/}
 				{fakeAnnouncements.reverse() &&
 					fakeAnnouncements.map((fakeAnnouncement, i) => (
 						<TempAnnouncement
@@ -389,14 +395,15 @@ export const AnnouncementPostingUI = ({
 							announcement={fakeAnnouncement}
 						></TempAnnouncement>
 					))}
-				{showSharing && (
+				{/* TODO: remove */}
+				{/* {showSharing && (
 					//Lukas clean this up!
 					<div className="flex h-32 content-center rounded-xl bg-gray-200 p-4">
 						<div className="grid grid-cols-2">
 							<LoadingSmall></LoadingSmall>Sharing...
 						</div>
 					</div>
-				)}
+				)} */}
 			</div>
 		</div>
 	);
@@ -424,4 +431,3 @@ export const AnnouncementPostingUI = ({
 		);
 	}
 };
-//manually adding a change please work
