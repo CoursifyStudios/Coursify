@@ -68,6 +68,7 @@ export const getClass = async (
             time,
             class_id,
             type,
+            clone_id,
             users (
                 full_name, avatar_url
             ),

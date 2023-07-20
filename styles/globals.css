@@ -70,6 +70,7 @@ input[type="number"] {
 
 input[type="text"]:not(.noinputcss),
 input[type="number"]:not(.noinputcss),
+input[type="time"]:not(.noinputcss),
 textarea:not(.noinputcss),
 .inputcss {
 	@apply rounded-md border-gray-300 bg-backdrop/50 focus:ring-1 dark:placeholder:text-gray-400;
