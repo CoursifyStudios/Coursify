@@ -1,12 +1,11 @@
-import { Announcement } from "@/components/complete/announcements";
-import { AnnouncementPostingUI } from "@/components/complete/announcements/announcementPosting";
+import { AnnouncementsComponent } from "@/components/complete/announcements/announcementsComponent";
 import { Member } from "@/components/complete/members";
 import CircleCounter from "@/components/counters/circle";
 import Editor from "@/components/editors/richeditor";
 import { Button } from "@/components/misc/button";
 import { InfoPill, InfoPills } from "@/components/misc/infopills";
 import { ColoredPill } from "@/components/misc/pill";
-import { AnnouncementType, TypeOfAnnouncements } from "@/lib/db/announcements";
+import { TypeOfAnnouncements } from "@/lib/db/announcements";
 import { ClassResponse, getClass, updateClass } from "@/lib/db/classes";
 import { Database, Json } from "@/lib/db/database.types";
 import {
@@ -14,7 +13,7 @@ import {
 	getSchedule,
 	setThisSchedule,
 } from "@/lib/db/schedule";
-import { getDataInArray, getDataOutArray } from "@/lib/misc/dataOutArray";
+import { getDataInArray } from "@/lib/misc/dataOutArray";
 import { useSettings } from "@/lib/stores/settings";
 import { CreateAssignment } from "@assignments/assignmentCreation";
 import { AssignmentPreview } from "@assignments/assignments";
@@ -315,86 +314,19 @@ const Class: NextPage = () => {
 						<Tab.Panel tabIndex={-1} id="Announcements">
 							<h2 className="title mb-3">Announcements</h2>
 							<div className="space-y-3">
-								{isTeacher && (
-									<AnnouncementPostingUI
-										announcements={extraAnnouncements}
-										setAnnouncements={setExtraAnnouncements}
-										communityid={classid as string}
-									/>
+								{classid && typeof classid == "string" && (
+									<div className="space-y-4">
+										<AnnouncementsComponent
+											fetchedAnnouncements={
+												getDataInArray(
+													data.data.announcements
+												) as unknown as TypeOfAnnouncements[]
+											}
+											communityid={classid}
+											showPostingUI={isTeacher ? true : false}
+										></AnnouncementsComponent>
+									</div>
 								)}
-								{extraAnnouncements.reverse().map(
-									(announcement) =>
-										announcement && (
-											<Announcement
-												key={announcement.id}
-												announcement={{
-													id: announcement.id,
-													author: announcement.author,
-													title: announcement.title,
-													content: announcement.content,
-													time: announcement.time,
-													type: announcement.type,
-													users: announcement.users,
-												}}
-												classID={classid as string}
-												comments={
-													getDataInArray(data.data.announcements).filter(
-														(possibleComment) =>
-															possibleComment?.type == AnnouncementType.COMMENT
-													) as unknown as TypeOfAnnouncements[]
-												}
-												announcements={extraAnnouncements}
-												setAnnouncements={setExtraAnnouncements}
-											></Announcement>
-										)
-								)}
-								{typeof classid == "string" &&
-									data.data &&
-									data.data.announcements && //change below when I get actual types
-									getDataInArray(data.data.announcements)
-										.sort((a, b) => {
-											if (
-												new Date(a.time!).getTime() >
-												new Date(b.time!).getTime()
-											)
-												return -1;
-											if (
-												new Date(a.time!).getTime() <
-												new Date(b.time!).getTime()
-											)
-												return 1;
-											return 0;
-										})
-										.map(
-											(announcement) =>
-												(announcement.type == AnnouncementType.ANNOUNCEMENT ||
-													announcement.type == AnnouncementType.CROSSPOST) &&
-												announcement.users &&
-												typeof getDataOutArray(announcement.users).avatar_url ==
-													"string" &&
-												typeof getDataOutArray(announcement.users).full_name ==
-													"string" && (
-													<Announcement
-														key={announcement.id}
-														announcement={
-															announcement as unknown as TypeOfAnnouncements
-														}
-														classID={classid}
-														comments={
-															getDataInArray(data.data.announcements).filter(
-																(possibleComment) =>
-																	possibleComment?.type ==
-																		AnnouncementType.COMMENT &&
-																	//@ts-expect-error
-																	getDataOutArray(possibleComment.parent)?.id ==
-																		announcement.id
-															) as unknown as TypeOfAnnouncements[]
-														}
-														announcements={extraAnnouncements}
-														setAnnouncements={setExtraAnnouncements}
-													></Announcement>
-												)
-										)}
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}>

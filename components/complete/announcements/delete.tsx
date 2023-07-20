@@ -38,9 +38,10 @@ export const Delete: NextPage<{
 	const deleteMultiple = async () => {
 		setDeleting("multiple");
 		const data = await deleteAnnouncement(supabase, {
+			id: announcement.id,
 			author: announcement.author,
 			title: announcement.title!,
-			time: announcement.time!,
+			clone_id: announcement.clone_id,
 		});
 		if (data.error) {
 			setError(data.error.message);
@@ -61,10 +62,19 @@ export const Delete: NextPage<{
 				</div>
 			)}
 			<div className="mt-2 flex justify-between">
-				<Button>Cancel</Button>
+				<Button
+					onClick={() => setOpen(false)}
+					className=" focus:outline-1 focus:outline-black" //Make this UI better later
+				>
+					Cancel
+				</Button>
 				<div className="flex">
-					<Button onClick={deleteSingle} disabled={deleting != undefined}>
-						{deleting == "single" ? (
+					<Button
+						className=" focus:outline-1 focus:outline-black" //Make this UI better later
+						onClick={deleteMultiple}
+						disabled={deleting != undefined || announcement.clone_id == null}
+					>
+						{deleting == "multiple" ? (
 							<>
 								Deleting <LoadingSmall className="ml-2" />
 							</>
@@ -73,9 +83,9 @@ export const Delete: NextPage<{
 						)}{" "}
 					</Button>
 					<Button
-						onClick={deleteMultiple}
+						onClick={deleteSingle}
 						disabled={deleting != undefined}
-						className="ml-4"
+						className="ml-4 focus:outline-1 focus:outline-black" //Make this UI better later
 						color="bg-red-700 text-white"
 					>
 						{deleting == "single" ? (
