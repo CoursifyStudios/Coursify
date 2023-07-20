@@ -35,8 +35,11 @@ const ScheduleEditor = () => {
 	}, [supabaseClient]);
 	return (
 		<div>
-
-        <h4 className="bg-red-600 p-3 px-10">Warning: The schedule editor is currently still in development. For the time being, remember that it is only to be used when the local timezone is Pacific Standard Time, 7 hours behind GMT.</h4>
+			<h4 className="bg-red-600 p-3 px-10">
+				Warning: The schedule editor is currently still in development. For the
+				time being, remember that it is only to be used when the local timezone
+				is Pacific Standard Time, 7 hours behind GMT.
+			</h4>
 			<div className="grid grid-cols-2">
 				<section className="my-6 ml-5 px-5">
 					<h2 className="mb-4 text-lg font-semibold">
@@ -93,53 +96,53 @@ const ScheduleEditor = () => {
 						}}
 					>
 						<Form className="flex flex-col [&>label]:flex [&>label]:flex-col gap-4 font-medium">
-							<label htmlFor="itemStartTime">Start time
-							<Field name="itemStartTime" type="time" step="min" />
-							<ErrorMessage name="itemStartTime" />
+							<label htmlFor="itemStartTime">
+								Start time
+								<Field name="itemStartTime" type="time" step="min" />
+								<ErrorMessage name="itemStartTime" />
 							</label>
 
-							<label htmlFor="itemEndTime">End Time
-							<Field name="itemEndTime" type="time" step="min" />
-							<ErrorMessage name="itemEndTime" />
+							<label htmlFor="itemEndTime">
+								End Time
+								<Field name="itemEndTime" type="time" step="min" />
+								<ErrorMessage name="itemEndTime" />
 							</label>
 
 							<label htmlFor="itemBlockNumber">
 								Block #, if special event decides which block to match schedule
 								with
-							
-							<Field
-								name="itemBlockNumber"
-								type="number"
-								min="1"
-								step="1"
-							></Field>
-							<ErrorMessage name="itemBlockNumber" />
+								<Field
+									name="itemBlockNumber"
+									type="number"
+									min="1"
+									step="1"
+								></Field>
+								<ErrorMessage name="itemBlockNumber" />
 							</label>
 
-							<label htmlFor="itemScheduleType">Schedule type #
-							<Field
-								name="itemScheduleType"
-								type="number"
-								min="1"
-								max="2"
-								step="1"
-							></Field>
-							{/* Only two schedule types supported for now */}
-							<ErrorMessage name="itemScheduleType" />
+							<label htmlFor="itemScheduleType">
+								Schedule type #
+								<Field
+									name="itemScheduleType"
+									type="number"
+									min="1"
+									max="2"
+									step="1"
+								></Field>
+								{/* Only two schedule types supported for now */}
+								<ErrorMessage name="itemScheduleType" />
 							</label>
 
 							<label htmlFor="itemSpecialType">
 								Special event (optional. Use for lunch, etc.)
-							
-							<Field name="itemSpecialType" type="text"></Field>
-							<ErrorMessage name="itemSpecialType" />
+								<Field name="itemSpecialType" type="text"></Field>
+								<ErrorMessage name="itemSpecialType" />
 							</label>
 
 							<label htmlFor="itemCustomColor">
 								Special event color (optional)
-							
-							<Field name="itemCustomColor" type="text"></Field>
-							<ErrorMessage name="itemCustomColor" />
+								<Field name="itemCustomColor" type="text"></Field>
+								<ErrorMessage name="itemCustomColor" />
 							</label>
 
 							<button
@@ -275,7 +278,11 @@ const ScheduleEditor = () => {
 				>
 					<Form className="grid grid-cols-1">
 						<label htmlFor="day">Day</label>
-						<Field name="day" type="date" className="rounded-md border-gray-300 bg-backdrop/50 focus:ring-1 dark:placeholder:text-gray-400"></Field>
+						<Field
+							name="day"
+							type="date"
+							className="rounded-md border-gray-300 bg-backdrop/50 focus:ring-1 dark:placeholder:text-gray-400"
+						></Field>
 						<ErrorMessage name="day" />
 
 						<button
