@@ -1,10 +1,8 @@
 {
 	"compilerOptions": {
-		"allowImportingTsExtensions": true,
 		"target": "es2015",
 		"lib": ["dom", "dom.iterable", "esnext"],
 		"allowJs": false,
-		"allowImportingTsExtensions": true,
 		"skipLibCheck": true,
 		"strict": true,
 		"forceConsistentCasingInFileNames": true,
