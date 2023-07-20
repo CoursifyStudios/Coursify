@@ -35,6 +35,8 @@ const ScheduleEditor = () => {
 	}, [supabaseClient]);
 	return (
 		<div>
+
+        <h4 className="bg-red-600 p-3 px-10">Warning: The schedule editor is currently still in development. For the time being, remember that it is only to be used when the local timezone is Pacific Standard Time, 7 hours behind GMT.</h4>
 			<div className="grid grid-cols-2">
 				<section className="my-6 ml-5 px-5">
 					<h2 className="mb-4 text-lg font-semibold">
@@ -90,19 +92,21 @@ const ScheduleEditor = () => {
 							}
 						}}
 					>
-						<Form className="flex flex-col">
-							<label htmlFor="itemStartTime">Start time</label>
+						<Form className="flex flex-col [&>label]:flex [&>label]:flex-col gap-4 font-medium">
+							<label htmlFor="itemStartTime">Start time
 							<Field name="itemStartTime" type="time" step="min" />
 							<ErrorMessage name="itemStartTime" />
+							</label>
 
-							<label htmlFor="itemEndTime">End Time</label>
+							<label htmlFor="itemEndTime">End Time
 							<Field name="itemEndTime" type="time" step="min" />
 							<ErrorMessage name="itemEndTime" />
+							</label>
 
 							<label htmlFor="itemBlockNumber">
 								Block #, if special event decides which block to match schedule
 								with
-							</label>
+							
 							<Field
 								name="itemBlockNumber"
 								type="number"
@@ -110,8 +114,9 @@ const ScheduleEditor = () => {
 								step="1"
 							></Field>
 							<ErrorMessage name="itemBlockNumber" />
+							</label>
 
-							<label htmlFor="itemScheduleType">Schedule type #</label>
+							<label htmlFor="itemScheduleType">Schedule type #
 							<Field
 								name="itemScheduleType"
 								type="number"
@@ -121,22 +126,25 @@ const ScheduleEditor = () => {
 							></Field>
 							{/* Only two schedule types supported for now */}
 							<ErrorMessage name="itemScheduleType" />
+							</label>
 
 							<label htmlFor="itemSpecialType">
 								Special event (optional. Use for lunch, etc.)
-							</label>
+							
 							<Field name="itemSpecialType" type="text"></Field>
 							<ErrorMessage name="itemSpecialType" />
+							</label>
 
 							<label htmlFor="itemCustomColor">
 								Special event color (optional)
-							</label>
+							
 							<Field name="itemCustomColor" type="text"></Field>
 							<ErrorMessage name="itemCustomColor" />
+							</label>
 
 							<button
 								type="submit"
-								className="mr-auto mt-4 rounded-lg bg-blue-200 px-4 py-2 text-blue-600"
+								className="mr-auto mt-4 rounded-lg bg-blue-200 px-4 py-2 text-blue-600 dark:bg-blue-900/10"
 							>
 								Add schedule item
 							</button>
@@ -267,12 +275,12 @@ const ScheduleEditor = () => {
 				>
 					<Form className="grid grid-cols-1">
 						<label htmlFor="day">Day</label>
-						<Field name="day" type="date"></Field>
+						<Field name="day" type="date" className="rounded-md border-gray-300 bg-backdrop/50 focus:ring-1 dark:placeholder:text-gray-400"></Field>
 						<ErrorMessage name="day" />
 
 						<button
 							type="submit"
-							className="mr-auto mt-4 rounded-lg bg-blue-200 px-4 py-2 text-blue-600"
+							className="mr-auto mt-4 rounded-lg bg-blue-200 dark:bg-blue-900/10 px-4 py-2 text-blue-600"
 						>
 							Add as a Schedule (send to server)
 						</button>
@@ -299,7 +307,7 @@ const ScheduleEditor = () => {
 
 							<button
 								type="submit"
-								className="mr-auto mt-4 rounded-lg bg-blue-200 px-4 py-2 text-blue-600"
+								className="mr-auto mt-4 rounded-lg bg-blue-200 dark:bg-blue-900/10 px-4 py-2 text-blue-600"
 							>
 								Add a New Template
 							</button>
