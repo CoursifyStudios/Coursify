@@ -32,12 +32,12 @@ Coursify
 - Integrated Tabs - Stay in your tab and streamline your workflow
   - Pages within Coursify automatically open up within our internal tab system.
 - Accurate Schedule
-  - Schedules automatically take into account the school schedule and class type to show your personal schedule and reduce confusion.
-  - Teachers can make assignments due at the begininning & end of a class or school day, which can be dynamically updated if the schedule changes.
+  - Schedule takes into account the school schedule and class type to show you a personal schedule, reducing confusion. No longer do students and faculty have to memorize period numbers and special schedule days, all is taken into account.
+  - Teachers can assign materials to be due at the begininning & end of a class or school day, which will dynamically update if the schedule changes.
 - Rich Assignment Types
   - Support for multiple different assignment types including link submissions, checkboxes, and google media.
 - Centralized Assignment Page
-  - Never lose track of your tasks - find and sort your assignments in one place.
+  - Never lose track of your tasks - find, filter and sort your assignments in one place.
 - Sleek and simple design
 - Advanced Search
 - [Rich Text Editor](https://github.com/CoursifyStudios/Dawn)
@@ -90,7 +90,7 @@ While there aren't currently any style or brand guidelines, we do have a few rul
 - For styling buttons there are two options:
   - For regular buttons use the [Button](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/button.tsx#L5-L13) component.
   - For icons use the [Button Icon](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/button.tsx#L23-L45) component.
-  - In the event that a fake button is required, to add accessibility by screen readers and keyboard navigation, add `tabIndex={0}`.
+  - In the event that a "fake" button is required, to add accessibility by screen readers and keyboard navigation, add `tabIndex={0}`.
 - For tooltips the user can copy, use the [Copied Hover](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/pill.tsx#L34-L72) component.
 
 ### Examples
@@ -107,7 +107,7 @@ While there aren't currently any style or brand guidelines, we do have a few rul
 
 ### Features
 
-We use [github projects](https://github.com/orgs/CoursifyStudios/projects/5/views/2) for overall feature tracking. This means that if you are working something or have a feature idea, it should be there.
+We use [github projects](https://github.com/orgs/CoursifyStudios/projects/5/views/2) for overall feature tracking. This means that if you are working something or have a feature idea, **it should be there**. There is an option (labeled "Projects") on the right hand side of the Pull Request page on GitHub. Add your Pull Request to the feature tracking project, and fill in the fields to let others know of your progress and timeline. When adding a new setting, it might be helpful to add that PR to the settings project. Remember to add labels to help classify your pull request.
 
 Certain pages in development may have feature specific tracking which can be found [here](https://github.com/orgs/CoursifyStudios/projects).
 
@@ -122,7 +122,7 @@ Certain important things are written on our [Clickup wiki](https://app.clickup.c
 If you're creating a new page, please try to adhere to these rules:
 
 - Use the default font. Don't write it in some weird serif font.
-- Articles should be simple and to the point. Roundabout explanations using the MLA format waste peoples time.
+- Articles should be simple and to the point. Roundabout explanations using the MLA format waste people's time.
 - Explain with code. Rather than trying to describe the way something works in a long paragraph, try to lean on code examples as much as possible, while using writing to add context and reasoning.
 
 ## Credits
