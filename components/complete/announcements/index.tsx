@@ -21,9 +21,9 @@ import { Delete } from "./delete";
 import { TempAnnouncement } from "./tempAnnouncement";
 
 /**
- * editing announcements
+ * --editing announcements--
  *  editing state for announcement posting
- * Need the ui to update on announcement deletion & for posting
+ * Need the UI to update on announcement for deletion & posting
  */
 export const Announcement = ({
 	announcement,
@@ -31,23 +31,29 @@ export const Announcement = ({
 	comments,
 	announcements,
 	setAnnouncements,
+	isTeacher,
 }: {
 	announcement: TypeOfAnnouncements;
 	classID: string;
 	comments: TypeOfAnnouncements[];
 	announcements: TypeOfAnnouncements[];
 	setAnnouncements: (value: TypeOfAnnouncements[]) => void;
+	isTeacher?: boolean;
 }) => {
 	const supabase = useSupabaseClient<Database>();
 	const user = useUser();
 	const { newTab } = useTabs();
-	//add icons to these somehow...
 	const optionsClasses = "w-4 h-4 ml-1";
 	const options = [
 		{ option: "Share", icon: <ShareIcon className={optionsClasses} /> },
 		{ option: "Edit", icon: <PencilIcon className={optionsClasses} /> },
 		{ option: "Delete", icon: <TrashIcon className={optionsClasses} /> },
 	];
+	//so that it can be changed when edited
+	const [info, setInfo] = useState({
+		title: announcement.title,
+		content: announcement.content,
+	});
 	const [selected, setSelected] = useState(options[0]);
 	const [showEditing, setShowEditing] = useState(false);
 	const [showSharing, setShowSharing] = useState(false);
@@ -60,11 +66,13 @@ export const Announcement = ({
 					communityid={classID}
 					sharingInfo={null}
 					editingInfo={{
-						title: announcement.title!,
-						content: announcement.content,
-						time: announcement.time!,
+						id: announcement.id, //does not change
+						title: info.title!, //can be edited
+						content: info.content, //editable too
+						clone_id: announcement.clone_id,
 						setEditing: setShowEditing,
 					}}
+					setNewInfo={setInfo}
 					announcements={announcements}
 					setAnnouncements={setAnnouncements}
 				></AnnouncementPostingUI>
@@ -92,9 +100,9 @@ export const Announcement = ({
 					announcement={announcement}
 					classID={classID}
 				/>
-				<div className="rounded-xl bg-backdrop-200 p-4">
+				<div className="rounded-xl bg-backdrop-200 p-4 pb-3">
 					<div className="flex items-center justify-between">
-						<h2 className="text-xl font-semibold">{announcement.title}</h2>
+						<h2 className="text-xl font-semibold">{info.title}</h2>
 						<Listbox
 							value={selected}
 							onChange={setSelected}
@@ -119,6 +127,7 @@ export const Announcement = ({
 											(options, optionID) =>
 												user &&
 												(user.id == announcement.author ||
+													isTeacher ||
 													options.option == "Share") && (
 													<Listbox.Option
 														key={optionID}
@@ -190,7 +199,7 @@ export const Announcement = ({
 					</div>
 					<Editor
 						editable={false}
-						initialState={announcement.content}
+						initialState={info.content}
 						className="mt-0.5"
 					/>
 					{announcement.parent && (
@@ -202,10 +211,7 @@ export const Announcement = ({
 						</div>
 					)}
 					<div className="space-y-4">
-						<Commenting
-							communityid={classID}
-							announcementid={announcement.id}
-						/>
+						<Commenting communityid={classID} parentID={announcement.id} />
 
 						{comments &&
 							comments.map((comment) => (
@@ -217,6 +223,8 @@ export const Announcement = ({
 									// THIS IS INTENTIONAL, COMMENTS ARE PLAIN TEXT AND THUS USE THE TITLE FIELD FOR CONTENT
 									content={comment.title!}
 									users={getDataOutArray(comment.users)!}
+									communityid={classID}
+									type={comment.type}
 								></Comment>
 							))}
 					</div>

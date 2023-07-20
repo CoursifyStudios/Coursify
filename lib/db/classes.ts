@@ -68,6 +68,7 @@ export const getClass = async (
             time,
             class_id,
             type,
+            clone_id,
             users (
                 full_name, avatar_url
             ),
@@ -230,7 +231,7 @@ function classHappensThisDay(
 	type: number,
 	schedule: ScheduleInterface[]
 ) {
-	return schedule.find(
+	return getDataInArray(schedule).find(
 		(period) => period.block == block && period.type == type
 	);
 }

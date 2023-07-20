@@ -45,12 +45,32 @@ export type ScheduleTemplatesDB = Awaited<
 
 export const createNewSchedule = async (
 	supabase: SupabaseClient<Database>,
-	day: unknown,
+	day: Date,
 	template: number | null,
 	scheduleDataToUse: ScheduleInterface[] | null
 ) => {
-	return await supabase.from("days_schedule").insert({
-		date: day as string,
+	if (scheduleDataToUse) {
+		const time = new Date(day);
+		scheduleDataToUse.map((period) => {
+			time.setHours(
+				parseInt(period.timeStart.substring(0, 2)),
+				parseInt(period.timeStart.substring(3, 5)),
+				0
+			);
+
+			period.timeStart = time.toTimeString();
+
+			time.setHours(
+				parseInt(period.timeEnd.substring(0, 2)),
+				parseInt(period.timeEnd.substring(3, 5)),
+				0
+			);
+
+			period.timeEnd = time.toTimeString();
+		});
+	}
+	return await supabase.from("days_schedule").upsert({
+		date: day as unknown as string, //uh not sure which format but this worked before
 		template: template,
 		schedule_items: scheduleDataToUse
 			? (JSON.parse(JSON.stringify(scheduleDataToUse)) as Json)
@@ -65,6 +85,23 @@ export const createNewTemplate = async (
 	nameToUse: string,
 	scheduleDataToUse: ScheduleInterface[]
 ) => {
+	//ik copy and paste but I just need this to work
+	const time = new Date();
+	scheduleDataToUse.map((period) => {
+		time.setHours(
+			parseInt(period.timeStart.substring(0, 2)),
+			parseInt(period.timeStart.substring(3, 5)),
+			0
+		);
+		period.timeStart = time.toTimeString();
+
+		time.setHours(
+			parseInt(period.timeEnd.substring(0, 2)),
+			parseInt(period.timeEnd.substring(3, 5)),
+			0
+		);
+		period.timeEnd = time.toTimeString();
+	});
 	return await supabase.from("schedule_templates").insert({
 		schedule_items: JSON.parse(JSON.stringify(scheduleDataToUse)) as Json,
 		name: nameToUse,
@@ -73,24 +110,24 @@ export const createNewTemplate = async (
 
 export type NewTemplate = Awaited<ReturnType<typeof createNewTemplate>>;
 
-export function to12hourTime(date: string): string;
-export function to12hourTime(date: Date): string;
+export function to12hourTime(date: string, includeAMPM?: boolean): string;
+export function to12hourTime(date: Date, includeAMPM?: boolean): string;
 
 export function to12hourTime(date: unknown, includeAMPM?: boolean) {
 	if (typeof date == "string") {
 		if (parseInt(date.substring(0, 2)) == 12) {
-			return date + (includeAMPM ? " PM" : "");
+			return date.substring(0, 5) + (includeAMPM ? " PM" : "");
 		} else if (parseInt(date.substring(0, 2)) <= 12) {
 			return (
 				parseInt(date.substring(0, 2)) +
-				date.substring(2) +
+				date.substring(2, 5) +
 				(includeAMPM ? " AM" : "")
 			);
 		} else {
 			return (
 				parseInt(date.substring(0, 2)) -
 				12 +
-				date.substring(2) +
+				date.substring(2, 5) +
 				(includeAMPM ? " PM" : "")
 			);
 		}
@@ -102,6 +139,20 @@ export function to12hourTime(date: unknown, includeAMPM?: boolean) {
 
 		return `${hour}:${minute}${includeAMPM ? ` ${AMPM}` : ""}`;
 	}
+}
+
+export function handleTimezone(time: string) {
+	//potential bug creator w/ no safety checks woohoo
+	//add regex check or smth here for time validation
+	const local = new Date();
+	local.setHours(
+		parseInt(time.substring(0, 2)),
+		parseInt(time.substring(3, 5)) - local.getTimezoneOffset() + 420,
+		//TODO: That constant (420) is PST offset. We ned to adjust that
+		//for when any schedule are created with non-PST offsets
+		0
+	);
+	return local.toTimeString();
 }
 
 export function dayPlus(day: Date, add: number) {
