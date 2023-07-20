@@ -126,7 +126,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 						optionsClassName="w-36 "
 					/>
 				</div>
-				
+
 				<div className="mt-3 flex flex-col gap-2 text-sm font-medium leading-3">
 					<GradesSection name="Overall" grade={allGrades[0]} />
 					<GradesSection name="Summative (80%)" grade={allGrades[1]} />
