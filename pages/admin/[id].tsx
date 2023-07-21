@@ -1,4 +1,4 @@
-import { Tab } from "@headlessui/react";
+import { Tab, Transition } from "@headlessui/react";
 import {
 	ArrowDownTrayIcon,
 	CheckIcon,
@@ -31,6 +31,7 @@ import { useRouter } from "next/router";
 import noData from "@/public/svgs/no-data.svg";
 import { Button, ButtonIcon } from "@/components/misc/button";
 import Dropdown from "@/components/misc/dropdown";
+import Betatag from "@/components/misc/betatag";
 
 type ImportedUsers = {
 	first_name: string;
@@ -104,6 +105,9 @@ const Admin: NextPage = () => {
 	const [selectedSquare, setSelectedSquare] = useState<number>();
 	const [selectedRow, setSelectedRow] = useState<string[]>([]);
 	const [csvParser, setCSVParser] = useState<CSVParser>(CSVParser.COURSIFY);
+	const [notifications, setNotifications] = useState<
+		{ name: string; expireAt: number }[]
+	>([]);
 
 	useEffect(() => {
 		(async () => {
@@ -121,6 +125,26 @@ const Admin: NextPage = () => {
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [id, supabase, user]);
+
+	useEffect(() => {
+		const intervals: NodeJS.Timeout[] = [];
+
+		for (const notification of notifications) {
+			intervals.push(
+				setTimeout(() => {
+					setNotifications(
+						notifications.filter((v) => v.expireAt != notification.expireAt)
+					);
+				}, notification.expireAt - Date.now())
+			);
+		}
+
+		return () => {
+			for (const interval of intervals) {
+				clearTimeout(interval);
+			}
+		};
+	}, [notifications]);
 
 	const search = async (goPage?: number) => {
 		setSelectedRow([]);
@@ -275,7 +299,8 @@ Activities	The user's activities, as displayed on their profile
 				full_name: `${u.first_name} ${u.last_name}`,
 				// Temp UUID to be replaced when the user logs in
 				id: "00000000-0000-0000-0000-000000000000",
-				avatar_url: "https://cdn.coursify.one/storage/v1/object/public/cdn/assets/Coursify/default-picture.png",
+				avatar_url:
+					"https://cdn.coursify.one/storage/v1/object/public/cdn/assets/Coursify/default-picture.png",
 				bio: u.bio,
 				email: u.email,
 				phone_number: u.phone_number,
@@ -283,12 +308,56 @@ Activities	The user's activities, as displayed on their profile
 				student_id: u.student_id,
 				preferred_name: u.preferred_name,
 			}))
-		)
-	}
+		);
+	};
+
+	const newNotification = (name: string) => {
+		setNotifications((v) => v.concat([{ name, expireAt: Date.now() + 750 }]));
+	};
+
+	const copyID = async () => {
+		navigator.clipboard.writeText(selectedRow.join(", "));
+		newNotification("Copied selected row id(s)");
+	};
+
+	const copyRows = async () => {
+		navigator.clipboard.writeText(
+			(!users
+				? []
+				: users
+						.filter((user) => selectedRow.includes(user.id))
+						.map((user) =>
+							[
+								user.full_name,
+								user.email,
+								user.phone_number,
+								user.year,
+								[
+									user.relationships.parent_id?.join(", "),
+									user.relationships.student_id?.join(", "),
+								].join(", "),
+								user.student_id,
+							].join("\t")
+						)
+			).join("\n")
+		);
+		newNotification("Copied selected row(s)");
+	};
 
 	return (
 		<div className="mx-auto my-10 flex w-full max-w-screen-xl flex-col px-4">
 			<h1 className="title">Admin Dashboard - {name}</h1>
+			<div className="fixed bottom-4 right-4">
+				{notifications.map((v) => (
+					<p
+						className="px-4 py-2 bg-blue-500 mt-2 rounded-xl font-medium transition-opacity"
+						key={v.expireAt}
+					>
+						{v.name}
+					</p>
+				))}
+			</div>
+
 			<Tab.Group as="div" className="flex grow flex-col">
 				<Tab.List as="div" className="mt-6 flex max-sm:space-x-2 sm:space-x-6">
 					<Tab as={Fragment}>
@@ -441,21 +510,34 @@ Activities	The user's activities, as displayed on their profile
 							<div className="flex space-x-2">
 								{selectedRow.length > 0 && (
 									<>
-										<p>most r broken ---{">"}</p>
-										<Button
-											onClick={() => {
-												navigator.clipboard.writeText("test	text\nmore	text");
-											}}
-											className="rounded-xl !px-2.5"
-										>
-											<ClipboardDocumentListIcon className="h-5 w-5" />
-										</Button>
 										{selectedSquare != undefined ? (
-											<Button onClick={() => {}} className="rounded-xl !px-2.5">
-												<PencilSquareIcon className="h-5 w-5" />
-											</Button>
+											<>
+												<Button
+													onClick={() => {
+														navigator.clipboard.writeText("test	text\nmore	text");
+													}}
+													className="rounded-xl !px-2.5"
+												>
+													<ClipboardDocumentListIcon className="h-5 w-5" />
+												</Button>
+												<Button
+													onClick={() => {}}
+													className="rounded-xl !px-2.5"
+												>
+													<PencilSquareIcon className="h-5 w-5" />
+												</Button>
+											</>
 										) : (
 											<>
+												<Button
+													onClick={copyRows}
+													className="rounded-xl !px-2.5"
+												>
+													<ClipboardDocumentListIcon className="h-5 w-5" />
+												</Button>
+												<Button onClick={copyID} className="rounded-xl !px-2.5">
+													<p className="font-medium text-lg">ID</p>
+												</Button>
 												<Button
 													onClick={() => {}}
 													className="rounded-xl !px-2.5"
@@ -521,9 +603,10 @@ Activities	The user's activities, as displayed on their profile
 										)}
 									</div>
 								</div>
-								<p>User ID</p>
+
 								<p>Full Name</p>
 								<p>Email</p>
+								<p>Phone</p>
 								<p>Graduation Year</p>
 								<p>Relations</p>
 								<p>Student ID</p>
@@ -572,26 +655,14 @@ Activities	The user's activities, as displayed on their profile
 													)}
 												</div>
 											</div>
-											<p
+
+											<div
 												onClick={() => {
 													setSelectedSquare(0);
 													setSelectedRow([mappedUser.id]);
 												}}
 												className={`${
 													selectedSquare == 0 && selected
-														? " border-blue-500 bg-blue-500/10"
-														: "border-y-transparent border-r-transparent"
-												} cursor-pointer !border`}
-											>
-												{mappedUser.id}
-											</p>
-											<div
-												onClick={() => {
-													setSelectedSquare(1);
-													setSelectedRow([mappedUser.id]);
-												}}
-												className={`${
-													selectedSquare == 1 && selected
 														? " border-blue-500 bg-blue-500/10"
 														: "border-y-transparent border-r-transparent"
 												} cursor-pointer !border flex w-full items-center truncate whitespace-nowrap overflow-hidden py-2 px-2.5`}
@@ -609,6 +680,19 @@ Activities	The user's activities, as displayed on their profile
 											</div>
 											<p
 												onClick={() => {
+													setSelectedSquare(1);
+													setSelectedRow([mappedUser.id]);
+												}}
+												className={`${
+													selectedSquare == 1 && selected
+														? " border-blue-500 bg-blue-500/10"
+														: "border-y-transparent border-r-transparent"
+												} cursor-pointer !border`}
+											>
+												{mappedUser.email}
+											</p>
+											<p
+												onClick={() => {
 													setSelectedSquare(2);
 													setSelectedRow([mappedUser.id]);
 												}}
@@ -618,7 +702,7 @@ Activities	The user's activities, as displayed on their profile
 														: "border-y-transparent border-r-transparent"
 												} cursor-pointer !border`}
 											>
-												{mappedUser.email}
+												{mappedUser.phone_number}
 											</p>
 											<p
 												onClick={() => {
@@ -805,6 +889,10 @@ Activities	The user's activities, as displayed on their profile
 				<div>
 					<UserCircleIcon className="w-5 h-5 text-gray-300" /> <p>Student</p>
 				</div>
+			</div>
+			<div className="flex items-center mx-auto text-sm text-gray-500">
+				<p className="mr-2">Coursify Admin Dashboard</p>
+				<Betatag />
 			</div>
 		</div>
 	);

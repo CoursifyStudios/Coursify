@@ -166,18 +166,21 @@ export interface Database {
 				Row: {
 					class_id: string;
 					grade: number | null;
+					grades: Json[] | null;
 					teacher: boolean;
 					user_id: string;
 				};
 				Insert: {
 					class_id: string;
 					grade?: number | null;
+					grades?: Json[] | null;
 					teacher?: boolean;
 					user_id: string;
 				};
 				Update: {
 					class_id?: string;
 					grade?: number | null;
+					grades?: Json[] | null;
 					teacher?: boolean;
 					user_id?: string;
 				};
@@ -431,6 +434,7 @@ export interface Database {
 					created_at: string;
 					final: boolean;
 					grade: number | null;
+					graded_on: string | null;
 					hide: boolean | null;
 					id: string;
 					user_id: string;
@@ -441,6 +445,7 @@ export interface Database {
 					created_at?: string;
 					final: boolean;
 					grade?: number | null;
+					graded_on?: string | null;
 					hide?: boolean | null;
 					id?: string;
 					user_id: string;
@@ -451,6 +456,7 @@ export interface Database {
 					created_at?: string;
 					final?: boolean;
 					grade?: number | null;
+					graded_on?: string | null;
 					hide?: boolean | null;
 					id?: string;
 					user_id?: string;
@@ -467,6 +473,46 @@ export interface Database {
 						columns: ["user_id"];
 						referencedRelation: "users";
 						referencedColumns: ["id"];
+					},
+				];
+			};
+			test1: {
+				Row: {
+					id: number;
+					test: string;
+				};
+				Insert: {
+					id?: number;
+					test?: string;
+				};
+				Update: {
+					id?: number;
+					test?: string;
+				};
+				Relationships: [];
+			};
+			test2: {
+				Row: {
+					created_at: string | null;
+					id: number;
+					property: string;
+				};
+				Insert: {
+					created_at?: string | null;
+					id?: number;
+					property: string;
+				};
+				Update: {
+					created_at?: string | null;
+					id?: number;
+					property?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: "test2_property_fkey";
+						columns: ["property"];
+						referencedRelation: "test1";
+						referencedColumns: ["test"];
 					},
 				];
 			};

@@ -1,3 +1,4 @@
+import Betatag from "@/components/misc/betatag";
 import { Database } from "@/lib/db/database.types";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
@@ -33,12 +34,18 @@ const Admin: NextPage = () => {
 						name: school.schools!.name,
 					}))
 			);
+
+			// setSchools(new Array(20).fill({
+			// 	id: "Baller",
+			// 	name: "Welcome to team fortress 2, after 9 years in development, hopefully it will have been worth the wait. Thanks and have fun"
+			// }))
 		})();
 	}, [user, supabase]);
 
 	return (
-		<div>
-			pick school
+		<div className="mx-auto my-10 flex w-full max-w-screen-xl flex-col px-4">
+			<h1>Admin</h1>
+			<h2>Please choose a school</h2>
 			<div className="grid md:grid-cols-2 xl:grid-cols-3">
 				{schools.map((school, id) => (
 					<>
@@ -47,6 +54,10 @@ const Admin: NextPage = () => {
 						</a>
 					</>
 				))}
+			</div>
+			<div className="flex items-center mx-auto text-sm text-gray-500 mt-10">
+				<p className="mr-2">Coursify Admin Dashboard</p>
+				<Betatag />
 			</div>
 		</div>
 	);
