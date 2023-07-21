@@ -32,6 +32,7 @@ import noData from "@/public/svgs/no-data.svg";
 import { Button, ButtonIcon } from "@/components/misc/button";
 import Dropdown from "@/components/misc/dropdown";
 import Betatag from "@/components/misc/betatag";
+import { ExportToCsv } from "export-to-csv";
 
 type ImportedUsers = {
 	first_name: string;
@@ -344,6 +345,39 @@ Activities	The user's activities, as displayed on their profile
 		newNotification("Copied selected row(s)");
 	};
 
+	const downloadRows = async () => {
+		const data = !users
+			? []
+			: users
+					.filter((user) => selectedRow.includes(user.id))
+					.map((user) => {
+						return {
+							full_name: user.full_name,
+							email: user.email,
+							phone: user.phone_number,
+							graduationYear: user.year,
+
+							relations: [
+								"Parents: ",
+								user.relationships && user.relationships.parent_id
+									? user.relationships.parent_id?.join(", ")
+									: "",
+								", Students: ",
+								user.relationships && user.relationships.student_id
+									? user.relationships.student_id?.join(", ")
+									: "",
+							].join(""),
+							studentID: user.student_id,
+						};
+					});
+		const options = {
+			title: "Coursify User Data",
+			useKeysAsHeaders: true,
+		};
+		new ExportToCsv(options).generateCsv(data);
+		newNotification("Downloaded selected row(s)");
+	};
+
 	return (
 		<div className="mx-auto my-10 flex w-full max-w-screen-xl flex-col px-4">
 			<h1 className="title">Admin Dashboard - {name}</h1>
@@ -539,7 +573,7 @@ Activities	The user's activities, as displayed on their profile
 													<p className="font-medium text-lg">ID</p>
 												</Button>
 												<Button
-													onClick={() => {}}
+													onClick={downloadRows}
 													className="rounded-xl !px-2.5"
 												>
 													<ArrowDownTrayIcon className="h-5 w-5" />
