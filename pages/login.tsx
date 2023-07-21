@@ -22,12 +22,14 @@ export default function Login() {
 	}, [user, router]);
 
 	return (
-		<div className="flex h-screen 	bg-gradient-to-br from-yellow-100 to-pink-300">
-			<div className="mx-10 my-auto flex flex-grow flex-col items-center justify-center rounded-lg bg-backdrop py-20 md:mx-0 md:my-0 md:max-w-xl md:basis-1/3 md:rounded-none md:py-0">
-				<h1 className="mb-14 text-3xl font-bold">Welcome Back</h1>
-				<div className="flex flex-col">
+		<div className="flex h-screen bg-gradient-to-br from-yellow-100 to-pink-300 justify-center">
+			<div className="my-auto flex flex-grow flex-col items-center justify-center rounded-lg py-20">
+				<div className="flex items-center flex-col">
+					<h1 className="mb-14 text-3xl font-bold dark: text-black">
+						Welcome Back
+					</h1>
 					<button
-						className="mb-8 flex rounded-md bg-gray-200 px-4 py-3 text-[1.05rem] font-medium hover:bg-gray-300"
+						className="mb-8 flex rounded-md  px-4 py-3 text-[1.05rem] bg-white font-medium hover:bg-gray-300"
 						onClick={() =>
 							supabaseClient.auth.signInWithOAuth({
 								provider: "google",
@@ -60,30 +62,33 @@ export default function Login() {
 						/>{" "}
 						Continue with Microsoft{" "}
 					</button>
-					<button
-						className="mt-8 flex content-center rounded-md bg-gray-200 px-4 py-3 text-[1.05rem] font-medium hover:bg-gray-300"
-						onClick={() =>
-							supabaseClient.auth.signInWithPassword({
-								email: "demo@coursify.one",
-								password: "demo",
-							})
-						}
-					>
-						<Image
-							src="/brand-logos/coursify.svg"
-							alt="Microsoft Logo"
-							width={25}
-							height={25}
-							className="mr-4"
-						/>
-						Demo Coursify LMS
-					</button>
 					<p className="mx-auto w-44 pt-4 text-center text-xs text-gray-600">
 						By logging in, you agree to our{" "}
 						<a className="text-blue-500">terms and conditions</a>
 					</p>
+					<h3 className="mx-auto w-44 text-center bg-gradient-to-r from-pink-400 to-orange-300 bg-clip-text text-3xl font-extrabold text-transparent md:ml-0">
+						Coursify
+					</h3>
 				</div>
 			</div>
 		</div>
 	);
 }
+/*<button
+	className="mt-8 flex content-center rounded-md bg-gray-200 px-4 py-3 text-[1.05rem] font-medium hover:bg-gray-300"
+	onClick={() =>
+		supabaseClient.auth.signInWithPassword({
+			email: "demo@coursify.one",
+			password: "demo",
+		})
+	}
+	>
+	<Image
+		src="/brand-logos/coursify.svg"
+		alt="Microsoft Logo"
+		width={25}
+		height={25}
+		className="mr-4"
+	/>
+	Demo Coursify LMS
+</button>*/
