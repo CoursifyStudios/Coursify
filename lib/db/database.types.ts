@@ -115,6 +115,7 @@ export interface Database {
 					publish_type: number | null;
 					settings: Json | null;
 					submission_instructions: string | null;
+					term: string | null;
 					type: number;
 				};
 				Insert: {
@@ -133,6 +134,7 @@ export interface Database {
 					publish_type?: number | null;
 					settings?: Json | null;
 					submission_instructions?: string | null;
+					term?: string | null;
 					type?: number;
 				};
 				Update: {
@@ -151,6 +153,7 @@ export interface Database {
 					publish_type?: number | null;
 					settings?: Json | null;
 					submission_instructions?: string | null;
+					term?: string | null;
 					type?: number;
 				};
 				Relationships: [
@@ -284,17 +287,17 @@ export interface Database {
 			};
 			enrolled: {
 				Row: {
-					adminBool: boolean;
+					admin_bool: boolean;
 					school_id: string;
 					user_id: string;
 				};
 				Insert: {
-					adminBool?: boolean;
+					admin_bool?: boolean;
 					school_id: string;
 					user_id: string;
 				};
 				Update: {
-					adminBool?: boolean;
+					admin_bool?: boolean;
 					school_id?: string;
 					user_id?: string;
 				};
@@ -592,6 +595,24 @@ export interface Database {
 						referencedColumns: ["id"];
 					},
 				];
+			};
+			weights: {
+				Row: {
+					id: string;
+					name: string;
+					weight: number | null;
+				};
+				Insert: {
+					id?: string;
+					name: string;
+					weight?: number | null;
+				};
+				Update: {
+					id?: string;
+					name?: string;
+					weight?: number | null;
+				};
+				Relationships: [];
 			};
 		};
 		Views: {

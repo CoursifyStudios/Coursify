@@ -22,7 +22,7 @@ const Admin: NextPage = () => {
 				.from("enrolled")
 				.select("schools ( name, id )")
 				.eq("user_id", user?.id)
-				.eq("adminBool", true);
+				.eq("admin_bool", true);
 
 			if (data == null) return;
 

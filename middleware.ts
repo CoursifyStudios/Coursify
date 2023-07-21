@@ -19,9 +19,9 @@ export async function middleware(req: NextRequest) {
 		) {
 			const { data } = await supabase
 				.from("enrolled")
-				.select(`adminBool, school_id`)
+				.select(`admin_bool, school_id`)
 				.eq("user_id", session.user.id)
-				.eq("adminBool", true);
+				.eq("admin_bool", true);
 			if (data && data.length > 0) {
 				if (req.nextUrl.pathname != "/admin") {
 					return res;

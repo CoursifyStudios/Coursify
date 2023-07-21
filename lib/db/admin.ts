@@ -2,7 +2,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "./database.types";
 
 export const getUsers = async (
-	supabaseClient: SupabaseClient<Database>,
+	supabase: SupabaseClient<Database>,
 	page: number,
 	pageSize: number,
 	id: string,
@@ -10,7 +10,7 @@ export const getUsers = async (
 ) => {
 	const { from, to } = getRanges(page, pageSize);
 
-	let supabaseRequest = supabaseClient.from(`schools`).select(
+	let supabaseRequest = supabase.from(`schools`).select(
 		`
 			name, id,
 				users (
@@ -19,7 +19,7 @@ export const getUsers = async (
 						parent_id, student_id
 					),
 						enrolled (
-							adminBool
+							admin_bool
 						)
 						
 						
@@ -51,8 +51,29 @@ export const getUsers = async (
 	return await supabaseRequest
 		.range(from, to, { foreignTable: "users" })
 		.eq("id", id)
+		.eq("users.enrolled.school_id", id)
 		.limit(1)
 		.single();
+};
+
+// export const deleteUser = async (
+// 	supabaseClient: SupabaseClient<Database>,
+// 	id: string
+// ) => {
+// 	return await supabaseClient.from("users").delete().eq("id", id);
+// };
+
+export const setAdmin = async (
+	supabase: SupabaseClient<Database>,
+	ids: string[],
+	admin_bool: boolean,
+	schoolID: string
+) => {
+	return await supabase.from("enrolled").upsert(
+		ids.map((id) => {
+			return { user_id: id, admin_bool, school_id: schoolID };
+		})
+	);
 };
 
 export type UsersResponse = Awaited<ReturnType<typeof getUsers>>;
@@ -63,12 +84,12 @@ export const getRanges = (page: number, size: number) => ({
 });
 
 export const getUsersPages = async (
-	supabaseClient: SupabaseClient<Database>,
+	supabase: SupabaseClient<Database>,
 	pageSize: number,
 	school: string,
 	search?: string
 ) => {
-	let supabaseRequest = supabaseClient
+	let supabaseRequest = supabase
 		.from(`schools`)
 		.select(
 			`id, users (

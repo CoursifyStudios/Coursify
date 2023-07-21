@@ -26,6 +26,7 @@ import {
 	getRanges,
 	getUsers,
 	getUsersPages,
+	setAdmin,
 } from "@/lib/db/admin";
 import { useRouter } from "next/router";
 import noData from "@/public/svgs/no-data.svg";
@@ -71,10 +72,10 @@ const Admin: NextPage = () => {
 				email: string | null;
 				year: string | null;
 				bio: string | null;
-				phone_number: number | null;
+				phone_number: string | null;
 				student_id: string | null;
 				enrolled: {
-					adminBool: boolean;
+					admin_bool: boolean;
 				}[];
 				relationships: {
 					parent_id: string[] | null;
@@ -313,7 +314,7 @@ Activities	The user's activities, as displayed on their profile
 	};
 
 	const newNotification = (name: string) => {
-		setNotifications((v) => v.concat([{ name, expireAt: Date.now() + 750 }]));
+		setNotifications((v) => v.concat([{ name, expireAt: Date.now() + 1000 }]));
 	};
 
 	const copyID = async () => {
@@ -334,15 +335,60 @@ Activities	The user's activities, as displayed on their profile
 								user.phone_number,
 								user.year,
 								[
-									user.relationships.parent_id?.join(", "),
-									user.relationships.student_id?.join(", "),
-								].join(", "),
+									"Parents: ",
+									user.relationships && user.relationships.parent_id
+										? user.relationships.parent_id?.join(", ")
+										: "",
+									", Students: ",
+									user.relationships && user.relationships.student_id
+										? user.relationships.student_id?.join(", ")
+										: "",
+								].join(""),
 								user.student_id,
 							].join("\t")
 						)
 			).join("\n")
 		);
 		newNotification("Copied selected row(s)");
+	};
+
+	const copyCell = async () => {
+		const user = users?.find((user) => user.id == selectedRow[0]);
+		if (!user) return;
+		let text: string | null = "";
+		switch (selectedSquare) {
+			case 0:
+				text = user.full_name;
+				break;
+			case 1:
+				text = user.email;
+				break;
+			case 2:
+				text = user.phone_number;
+				break;
+			case 3:
+				text = user.year;
+				break;
+			case 4:
+				text = [
+					"Parents: ",
+					user.relationships && user.relationships.parent_id
+						? user.relationships.parent_id?.join(", ")
+						: "",
+					", Students: ",
+					user.relationships && user.relationships.student_id
+						? user.relationships.student_id?.join(", ")
+						: "",
+				].join("");
+				break;
+			case 5:
+				text = user.student_id;
+				break;
+		}
+		//blunder
+		navigator.clipboard.writeText(text ?? "");
+
+		newNotification("Copied cell content!");
 	};
 
 	const downloadRows = async () => {
@@ -377,6 +423,15 @@ Activities	The user's activities, as displayed on their profile
 		};
 		new ExportToCsv(options).generateCsv(data);
 		newNotification("Downloaded selected row(s)");
+	};
+
+	const updateAdmin = async (admin: boolean) => {
+		const { error } = await setAdmin(
+			supabase,
+			selectedRow,
+			admin,
+			id as string
+		);
 	};
 
 	return (
@@ -507,7 +562,7 @@ Activities	The user's activities, as displayed on their profile
 												]}
 												onChange={(v) => setCSVParser(v.name)}
 											/>
-											<div className="group  mt-8 flex h-24 grow flex-col cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white">
+											<div className="group mt-8 flex h-24 grow flex-col cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white">
 												<h3 className="text-lg font-medium transition">
 													Upload File
 												</h3>
@@ -548,9 +603,7 @@ Activities	The user's activities, as displayed on their profile
 										{selectedSquare != undefined ? (
 											<>
 												<Button
-													onClick={() => {
-														navigator.clipboard.writeText("test	text\nmore	text");
-													}}
+													onClick={copyCell}
 													className="rounded-xl !px-2.5"
 												>
 													<ClipboardDocumentListIcon className="h-5 w-5" />
@@ -579,6 +632,26 @@ Activities	The user's activities, as displayed on their profile
 												>
 													<ArrowDownTrayIcon className="h-5 w-5" />
 												</Button>
+												{users &&
+												users.filter(
+													(user) =>
+														selectedRow.includes(user.id) &&
+														user.enrolled[0].admin_bool
+												).length > 0 ? (
+													<Button
+														className="rounded-xl !px-2.5"
+														onClick={() => updateAdmin(false)}
+													>
+														<UserIcon className="h-5 w-5 " />
+													</Button>
+												) : (
+													<Button
+														className="rounded-xl !px-2.5"
+														onClick={() => updateAdmin(true)}
+													>
+														<ShieldCheckIcon className="h-5 w-5 text-blue-500" />
+													</Button>
+												)}
 												<Button
 													onClick={() => {}}
 													className="rounded-xl !px-2.5"
@@ -622,7 +695,8 @@ Activities	The user's activities, as displayed on their profile
 										setSelectedRow((rows) =>
 											rows.length == users?.length
 												? []
-												: users?.map((user) => user.id) || []
+												: // brilliant
+												  users?.map((user) => user.id) || []
 										);
 									}}
 								>
@@ -702,7 +776,7 @@ Activities	The user's activities, as displayed on their profile
 														: "border-y-transparent border-r-transparent"
 												} cursor-pointer !border flex w-full items-center truncate whitespace-nowrap overflow-hidden py-2 px-2.5`}
 											>
-												{mappedUser.enrolled[0].adminBool ? (
+												{mappedUser.enrolled[0].admin_bool ? (
 													<ShieldCheckIcon
 														className={`${svgClassname} text-blue-500`}
 													/>
