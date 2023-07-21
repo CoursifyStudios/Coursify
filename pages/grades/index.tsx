@@ -2,11 +2,7 @@ import GPA, {
 	GradeSummaryComponent,
 	RecentlyGraded,
 } from "@/components/grades/gradespage";
-import {
-	FetchedGradesType,
-	fetchClassGrades,
-	fetchGrades,
-} from "@/lib/db/grades";
+import { FetchedGradesType, fetchGrades } from "@/lib/db/grades";
 import { ArrowTrendingDownIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
@@ -15,19 +11,22 @@ import { useEffect, useState } from "react";
 const GradesOverview: NextPage = () => {
 	const user = useUser();
 	const supabase = useSupabaseClient();
-	const [recentlyGraded, setRecentlyGraded] = useState();
+	const [classgrades, setClassGrades] =
+		useState<FetchedGradesType[1]["data"]>();
+	const [recentlyGraded, setRecentlyGraded] =
+		useState<FetchedGradesType[0]["data"]>();
 	useEffect(() => {
 		(async () => {
 			if (user) {
 				const gradeData = await fetchGrades(supabase, user.id);
 
-				//console.log(gradeData);
-				if (gradeData && gradeData[0] && gradeData[1]) {
-					//setRecentlyGraded(gradeData[0].data)
+				if (gradeData && gradeData[0].data && gradeData[1].data) {
+					setRecentlyGraded(gradeData[0].data);
+					setClassGrades(gradeData[1].data);
 				}
 			}
 		})();
-	});
+	}, [supabase, user]);
 	return (
 		<div className="mx-auto flex w-full max-w-screen-xl flex-col px-4 py-2">
 			<h1 className="title pt-4">Grades</h1>
@@ -51,56 +50,55 @@ const GradesOverview: NextPage = () => {
 					<div className="w-1/2 shrink-0">
 						<h1 className="font-semibold text-lg mt-4">All Grades</h1>
 						<div className="grid gap-6 grid-cols-2 mt-2">
-							<GradeSummaryComponent
-								ClassName="World History 1,2"
-								LetterGrade="A"
-								Percentage="93"
-							/>
-							<GradeSummaryComponent
-								ClassName="Mindfulness"
-								LetterGrade="C"
-								Percentage="75"
-							/>
-							<GradeSummaryComponent
-								ClassName="Japanese"
-								LetterGrade="B"
-								Percentage="89"
-							/>
+							{classgrades &&
+								classgrades.map(
+									(classObject) =>
+										classObject.classes && (
+											<GradeSummaryComponent
+												key={classObject.classes.id}
+												ClassName={classObject.classes.name}
+												LetterGrade={"A"} //TODO: fix
+												Percentage={"93"} //TODO: fix
+											></GradeSummaryComponent>
+										)
+								)}
 						</div>
 					</div>
 					<div className="flex w-full ml-6 flex-col">
 						<h1 className="font-semibold text-lg mt-4">Recently Graded</h1>
 						<div className="flex flex-col space-y-3 mt-2">
-							<RecentlyGraded
-								AssignmentName="Write an essay about the Ming Empire"
-								ClassName="World History"
-								Points="20/20"
-								ClassColor="yellow"
-							/>
-							<RecentlyGraded
-								AssignmentName="Write 50 Kanji"
-								ClassName="Japanese"
-								Points="32/50"
-								ClassColor="red"
-							/>
-							<RecentlyGraded
-								AssignmentName="Prove that gravity exists"
-								ClassName="Physics"
-								Points="15/17"
-								ClassColor="purple"
-							/>
-							<RecentlyGraded
-								AssignmentName="Spell Mindfulness correctly"
-								ClassName="Mindfulness"
-								Points="60/100"
-								ClassColor="orange"
-							/>
+							{recentlyGraded &&
+								recentlyGraded.map(
+									(gradedAssignment) =>
+										gradedAssignment.assignments &&
+										gradedAssignment.assignments.classes && (
+											<RecentlyGraded
+												key={gradedAssignment.assignments?.id}
+												AssignmentName={gradedAssignment.assignments?.name}
+												ClassName={gradedAssignment.assignments.classes?.name}
+												Points={
+													gradedAssignment.grade +
+													"/" +
+													gradedAssignment.assignments.max_grade
+												}
+												ClassColor={gradedAssignment.assignments.classes?.color}
+											></RecentlyGraded>
+										)
+								)}
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	);
+	//TODO: adjustable letter grade ranges
+	function getLetterGrade(percentGrade: number) {
+		if (percentGrade >= 90) return "A";
+		if (percentGrade >= 80) return "B";
+		if (percentGrade >= 70) return "C";
+		if (percentGrade >= 60) return "D";
+		return "F";
+	}
 };
 
 export default GradesOverview;

@@ -18,11 +18,11 @@ export const fetchGrades = async (
         final, 
         grade, 
         hide, 
-        assignment_id (
+        assignments (
             id,
             name,
             max_grade,
-            class_id (
+            classes (
                 id,
                 name,
                 color
@@ -40,7 +40,7 @@ export const fetchGrades = async (
 			.select(
 				`
             user_id,
-            class_id (
+            classes (
                 id,
                 name,
                 color,
@@ -49,7 +49,7 @@ export const fetchGrades = async (
             grades
             `
 			)
-			.eq("class_id.type", CommunityType.CLASS)
+			.eq("classes.type", CommunityType.CLASS)
 			.eq("user_id", userID),
 	]);
 };
