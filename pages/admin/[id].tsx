@@ -373,6 +373,7 @@ Activities	The user's activities, as displayed on their profile
 		const options = {
 			title: "Coursify User Data",
 			useKeysAsHeaders: true,
+			filenmame: "exported_coursify_user_data",
 		};
 		new ExportToCsv(options).generateCsv(data);
 		newNotification("Downloaded selected row(s)");
