@@ -82,7 +82,8 @@ const Class: NextPage = () => {
 				if (data.data && Array.isArray(data.data.class_users)) {
 					//grades are temporarily done like this until we figure out assignment submissions
 					setGrade(
-						data.data.class_users.find((v) => v.user_id == user.id)?.grade
+						//data.data.class_users.find((v) => v.user_id == user.id)?.grade
+						100 //TODO: fix
 					);
 					setIsTeacher(
 						data.data.class_users.find((v) => v.user_id == user.id)?.teacher

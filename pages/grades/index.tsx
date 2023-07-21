@@ -2,10 +2,32 @@ import GPA, {
 	GradeSummaryComponent,
 	RecentlyGraded,
 } from "@/components/grades/gradespage";
+import {
+	FetchedGradesType,
+	fetchClassGrades,
+	fetchGrades,
+} from "@/lib/db/grades";
 import { ArrowTrendingDownIcon } from "@heroicons/react/24/outline";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
+import { useEffect, useState } from "react";
 
 const GradesOverview: NextPage = () => {
+	const user = useUser();
+	const supabase = useSupabaseClient();
+	const [recentlyGraded, setRecentlyGraded] = useState();
+	useEffect(() => {
+		(async () => {
+			if (user) {
+				const gradeData = await fetchGrades(supabase, user.id);
+
+				//console.log(gradeData);
+				if (gradeData && gradeData[0] && gradeData[1]) {
+					//setRecentlyGraded(gradeData[0].data)
+				}
+			}
+		})();
+	});
 	return (
 		<div className="mx-auto flex w-full max-w-screen-xl flex-col px-4 py-2">
 			<h1 className="title pt-4">Grades</h1>
