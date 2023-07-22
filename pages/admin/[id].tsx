@@ -618,11 +618,10 @@ Activities	The user's activities, as displayed on their profile
 							<form className="flex flex-col p-2">
 								<h2 className="title-sm mb-4">Edit Field</h2>
 								<label className="flex flex-col ">
-									<span className="text-sm font-medium">User email</span>
+									<span className="text-sm font-medium">User field</span>
 									<input
 										type="text"
 										onChange={(v) => setEditedField(v.target.value)}
-										init
 										autoFocus
 									/>
 								</label>
