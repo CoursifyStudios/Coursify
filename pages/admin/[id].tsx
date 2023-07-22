@@ -68,7 +68,7 @@ const Admin: NextPage = () => {
 	const [loading, setLoading] = useState(false);
 	const [pages, setPages] = useState(1);
 	const [editOpen, setEditOpen] = useState(false);
-	const [editedField, setEditedFiled] = useState("");
+	const [editedField, setEditedField] = useState("");
 	const [users, setUsers] = useState<
 		| {
 				id: string;
@@ -566,7 +566,7 @@ Activities	The user's activities, as displayed on their profile
 												<p>{u.last_name}</p>
 												<p>{u.email}</p>
 												<p>{u.grad_year ?? "NULL"}</p>
-												<p>Unknown</p>
+												<p></p>
 												{/* <p>{u.parent ? "Yes" : "No"}</p> */}
 												<p>{u.student_id ?? "NULL"}</p>
 											</div>
@@ -608,6 +608,33 @@ Activities	The user's activities, as displayed on their profile
 							<div className="bg-gray-200 rounded-2xl h-36 mt-2 flex items-center justify-center"></div>
 							<div className="bg-gray-200 rounded-2xl h-36 mt-2 flex items-center justify-center"></div>
 						</div>
+						<Popup
+							open={editOpen}
+							closeMenu={() => {
+								setEditOpen(false);
+								setEditedField("");
+							}}
+						>
+							<form className="flex flex-col p-2">
+								<h2 className="title-sm mb-4">Edit Field</h2>
+								<label className="flex flex-col ">
+									<span className="text-sm font-medium">User email</span>
+									<input
+										type="text"
+										onChange={(v) => setEditedField(v.target.value)}
+										init
+										autoFocus
+									/>
+								</label>
+								<Button
+									className="ml-auto mt-4 text-white"
+									type="submit"
+									color="bg-blue-500"
+								>
+									Save
+								</Button>
+							</form>
+						</Popup>
 						<div className="flex mb-2 mt-4 justify-between">
 							<form
 								className="flex grow"
@@ -642,7 +669,7 @@ Activities	The user's activities, as displayed on their profile
 												</Button>
 												{selectedSquare != 4 && (
 													<Button
-														onClick={() => {}}
+														onClick={() => setEditOpen(true)}
 														className="rounded-xl !px-2.5"
 													>
 														<PencilSquareIcon className="h-5 w-5" />

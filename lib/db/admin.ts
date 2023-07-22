@@ -18,11 +18,9 @@ export const getUsers = async (
 					relationships (
 						parent_id, student_id
 					),
-						enrolled (
-							admin_bool
-						)
-						
-						
+					enrolled (
+						admin_bool
+					)	
 				)
 		`
 	);
@@ -53,6 +51,13 @@ export const getUsers = async (
 		.eq("id", id)
 		.eq("users.enrolled.school_id", id)
 		.order("full_name", { foreignTable: "users", ascending: true })
+		// Ordering on foreign tables doesn't affect the ordering of the parent table. -supabase
+		// why???
+		// .order("admin_bool", {
+		// 	foreignTable: "users.enrolled",
+		// 	ascending: false,
+		// 	nullsFirst: false,
+		// })
 		.limit(1)
 		.single();
 };
