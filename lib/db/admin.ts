@@ -52,6 +52,7 @@ export const getUsers = async (
 		.range(from, to, { foreignTable: "users" })
 		.eq("id", id)
 		.eq("users.enrolled.school_id", id)
+		.order("full_name", { foreignTable: "users", ascending: true })
 		.limit(1)
 		.single();
 };

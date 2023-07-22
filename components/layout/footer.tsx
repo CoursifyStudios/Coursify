@@ -7,6 +7,7 @@ export default function Footer() {
 	//const [path, setPath] = useState("")
 	const router = useRouter();
 	const [hydrated, setHydrated] = useState(false);
+	const isAdminPage = router.asPath.startsWith("/admin");
 
 	useEffect(() => setHydrated(true), []);
 
@@ -18,8 +19,9 @@ export default function Footer() {
 		<footer className="mt-10 flex justify-center bg-gray-200">
 			<div className="my-4 flex  w-full max-w-screen-xl flex-col items-center justify-between px-4 text-sm font-medium compact:my-1 md:flex-row md:px-8 xl:px-0">
 				<div className="flex flex-col">
-					<h3 className="mx-auto bg-gradient-to-r	from-pink-400 to-orange-300 bg-clip-text text-xl font-extrabold text-transparent md:ml-0">
+					<h3 className="mx-auto bg-clip-text text-xl font-extrabold text-transparent md:ml-0 bg-gradient-to-r from-pink-400 to-orange-300">
 						Coursify
+						{isAdminPage ? " Admin" : ""}
 					</h3>
 					<p className="mt-4 flex flex-col items-center compact:mt-0 compact:text-xs md:mt-1 md:flex-row">
 						<span>© 2023 Coursify Studios.&nbsp;</span>

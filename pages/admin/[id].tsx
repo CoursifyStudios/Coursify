@@ -1,5 +1,6 @@
 import { Tab, Transition } from "@headlessui/react";
 import {
+	AcademicCapIcon,
 	ArrowDownTrayIcon,
 	CheckIcon,
 	ChevronLeftIcon,
@@ -9,7 +10,6 @@ import {
 	PencilSquareIcon,
 	ShieldCheckIcon,
 	TrashIcon,
-	UserCircleIcon,
 	UserIcon,
 	UsersIcon,
 } from "@heroicons/react/24/outline";
@@ -34,6 +34,7 @@ import { Button, ButtonIcon } from "@/components/misc/button";
 import Dropdown from "@/components/misc/dropdown";
 import Betatag from "@/components/misc/betatag";
 import { ExportToCsv } from "export-to-csv";
+import Loading from "@/components/misc/loading";
 
 type ImportedUsers = {
 	first_name: string;
@@ -64,7 +65,10 @@ const Admin: NextPage = () => {
 	const [hovering, setHovering] = useState(false);
 	const supabase = useSupabaseClient<Database>();
 	const [page, setPage] = useState(1);
+	const [loading, setLoading] = useState(false);
 	const [pages, setPages] = useState(1);
+	const [editOpen, setEditOpen] = useState(false);
+	const [editedField, setEditedFiled] = useState("");
 	const [users, setUsers] = useState<
 		| {
 				id: string;
@@ -84,6 +88,7 @@ const Admin: NextPage = () => {
 		  }[]
 		| null
 	>();
+
 	const [uploadUsers, setUploadUsers] = useState<ImportedUsers>([
 		{
 			first_name: "Steve",
@@ -151,6 +156,7 @@ const Admin: NextPage = () => {
 	const search = async (goPage?: number) => {
 		setSelectedRow([]);
 		setSelectedSquare(undefined);
+		setLoading(true);
 		if (goPage) {
 			setPage(goPage);
 		}
@@ -174,6 +180,7 @@ const Admin: NextPage = () => {
 		} catch {
 			setUsers(null);
 		}
+		setLoading(false);
 	};
 
 	const parseCSVDrop = async (ev: DragEvent) => {
@@ -215,7 +222,6 @@ const Admin: NextPage = () => {
 								});
 								break;
 							}
-							case CSVParser.POWERSCHOOL:
 							case CSVParser.SCHOOLOGY: {
 								/*
 Name	Description
@@ -419,19 +425,41 @@ Activities	The user's activities, as displayed on their profile
 		const options = {
 			title: "Coursify User Data",
 			useKeysAsHeaders: true,
-			filenmame: "exported_coursify_user_data",
+			filename: "exported_coursify_user_data",
 		};
 		new ExportToCsv(options).generateCsv(data);
 		newNotification("Downloaded selected row(s)");
 	};
 
 	const updateAdmin = async (admin: boolean) => {
+		setLoading(true);
 		const { error } = await setAdmin(
 			supabase,
 			selectedRow,
 			admin,
 			id as string
 		);
+		if (error) {
+			newNotification(`Error: ${error.message}`);
+			return;
+		}
+		setUsers((users) => [
+			...users!.filter((u) => !selectedRow.includes(u.id)),
+			...users!
+				.filter((u) => selectedRow.includes(u.id))
+				.map((u) => ({
+					...u,
+					enrolled: [
+						{
+							...u.enrolled[0],
+							admin_bool: admin,
+						},
+					],
+				})),
+		]);
+
+		newNotification(`Set user(s) to ${admin ? "admin" : "standard account"}`);
+		setLoading(false);
 	};
 
 	return (
@@ -559,6 +587,9 @@ Activities	The user's activities, as displayed on their profile
 													{
 														name: CSVParser.COURSIFY,
 													},
+													{
+														name: CSVParser.SCHOOLOGY,
+													},
 												]}
 												onChange={(v) => setCSVParser(v.name)}
 											/>
@@ -598,6 +629,7 @@ Activities	The user's activities, as displayed on their profile
 								</div>
 							</form>
 							<div className="flex space-x-2">
+								{loading && <Loading className="my-auto" />}
 								{selectedRow.length > 0 && (
 									<>
 										{selectedSquare != undefined ? (
@@ -608,12 +640,14 @@ Activities	The user's activities, as displayed on their profile
 												>
 													<ClipboardDocumentListIcon className="h-5 w-5" />
 												</Button>
-												<Button
-													onClick={() => {}}
-													className="rounded-xl !px-2.5"
-												>
-													<PencilSquareIcon className="h-5 w-5" />
-												</Button>
+												{selectedSquare != 4 && (
+													<Button
+														onClick={() => {}}
+														className="rounded-xl !px-2.5"
+													>
+														<PencilSquareIcon className="h-5 w-5" />
+													</Button>
+												)}
 											</>
 										) : (
 											<>
@@ -847,7 +881,7 @@ Activities	The user's activities, as displayed on their profile
 												)}
 												{students && (
 													<>
-														<UserCircleIcon
+														<AcademicCapIcon
 															className={`${svgClassname} text-gray-300`}
 														/>
 														<p className="truncate">{students.join(", ")}</p>
@@ -990,13 +1024,13 @@ Activities	The user's activities, as displayed on their profile
 				</div>
 				<div>
 					<UserIcon className="w-5 h-5 text-gray-300" />
-					<p>Student Account</p>
+					<p>Standard Account</p>
 				</div>
 				<div>
 					<UsersIcon className="w-5 h-5 text-blue-500" /> <p>Parent</p>
 				</div>
 				<div>
-					<UserCircleIcon className="w-5 h-5 text-gray-300" /> <p>Student</p>
+					<AcademicCapIcon className="w-5 h-5 text-gray-300" /> <p>Student</p>
 				</div>
 			</div>
 			<div className="flex items-center mx-auto text-sm text-gray-500">
