@@ -17,17 +17,18 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { Fragment, useEffect, useState } from "react";
+import {
+	Dispatch,
+	Fragment,
+	SetStateAction,
+	useEffect,
+	useMemo,
+	useState,
+} from "react";
 import uploadImage from "@/public/svgs/add-files.svg";
 import { Popup } from "@/components/misc/popup";
 import { Database } from "@/lib/db/database.types";
-import {
-	UsersResponse,
-	getRanges,
-	getUsers,
-	getUsersPages,
-	setAdmin,
-} from "@/lib/db/admin";
+import { getUsers, getUsersPages, setAdmin } from "@/lib/db/admin";
 import { useRouter } from "next/router";
 import noData from "@/public/svgs/no-data.svg";
 import { Button, ButtonIcon } from "@/components/misc/button";
@@ -35,6 +36,14 @@ import Dropdown from "@/components/misc/dropdown";
 import Betatag from "@/components/misc/betatag";
 import { ExportToCsv } from "export-to-csv";
 import Loading from "@/components/misc/loading";
+
+/**
+ * This file is not intended for long term use.
+ * It's a quickly made stopgap measure that probably shouldn't exist.
+ * We don't have time to develop a real admin dashboard and spend the
+ * time mocking up designs, testing it, learning new app dir stuff, etc.
+ * If any of this code is still used second semester something went horribly wrong
+ */
 
 type ImportedUsers = {
 	first_name: string;
@@ -115,6 +124,59 @@ const Admin: NextPage = () => {
 	const [notifications, setNotifications] = useState<
 		{ name: string; expireAt: number }[]
 	>([]);
+
+	const selectedUser = useMemo(
+		() => users?.find((user) => user.id == selectedRow[0]),
+		[selectedRow, users]
+	);
+
+	const [cell, setCell] = useState<{
+		name: string;
+		content: string;
+		modified: "full_name" | "email" | "phone_number" | "year" | "student_id";
+	}>({ name: "", content: "", modified: "full_name" });
+
+	useEffect(() => {
+		switch (selectedSquare) {
+			case 0:
+				setCell({
+					name: "Full Name",
+					content: selectedUser!.full_name || "",
+					modified: "full_name",
+				});
+				break;
+			case 1:
+				setCell({
+					name: "Email",
+					content: selectedUser!.email || "",
+					modified: "email",
+				});
+				break;
+			case 2:
+				setCell({
+					name: "Phone number",
+					content: selectedUser!.phone_number || "",
+					modified: "phone_number",
+				});
+				break;
+			case 3:
+				setCell({
+					name: "Graduation Year",
+					content: selectedUser!.year || "",
+					modified: "year",
+				});
+				break;
+			case 4:
+				break;
+			case 5:
+				setCell({
+					name: "Student ID",
+					content: selectedUser!.student_id || "",
+					modified: "student_id",
+				});
+				break;
+		}
+	}, [selectedSquare, selectedUser]);
 
 	useEffect(() => {
 		(async () => {
@@ -462,6 +524,8 @@ Activities	The user's activities, as displayed on their profile
 		setLoading(false);
 	};
 
+	const editCell = async () => {};
+
 	return (
 		<div className="mx-auto my-10 flex w-full max-w-screen-xl flex-col px-4">
 			<h1 className="title">Admin Dashboard - {name}</h1>
@@ -608,32 +672,12 @@ Activities	The user's activities, as displayed on their profile
 							<div className="bg-gray-200 rounded-2xl h-36 mt-2 flex items-center justify-center"></div>
 							<div className="bg-gray-200 rounded-2xl h-36 mt-2 flex items-center justify-center"></div>
 						</div>
-						<Popup
+						<EditCellUI
+							cell={cell}
+							editCell={editCell}
 							open={editOpen}
-							closeMenu={() => {
-								setEditOpen(false);
-								setEditedField("");
-							}}
-						>
-							<form className="flex flex-col p-2">
-								<h2 className="title-sm mb-4">Edit Field</h2>
-								<label className="flex flex-col ">
-									<span className="text-sm font-medium">User field</span>
-									<input
-										type="text"
-										onChange={(v) => setEditedField(v.target.value)}
-										autoFocus
-									/>
-								</label>
-								<Button
-									className="ml-auto mt-4 text-white"
-									type="submit"
-									color="bg-blue-500"
-								>
-									Save
-								</Button>
-							</form>
-						</Popup>
+							setOpen={setEditOpen}
+						/>
 						<div className="flex mb-2 mt-4 justify-between">
 							<form
 								className="flex grow"
@@ -1066,6 +1110,69 @@ Activities	The user's activities, as displayed on their profile
 		</div>
 	);
 };
+
+function EditCellUI({
+	editCell,
+	open,
+	setOpen,
+	cell,
+}: {
+	// This is a complete mess
+	open: boolean;
+	setOpen: Dispatch<SetStateAction<boolean>>;
+	editCell: (value: string) => void;
+	cell: {
+		name: string;
+		content: string;
+		modified: "full_name" | "email" | "phone_number" | "year" | "student_id";
+	};
+}) {
+	const [content, setContent] = useState<string>();
+
+	useEffect(() => {
+		if (content == undefined && cell.content && open) {
+			setContent(cell.content);
+		}
+	}, [cell.content, content, open]);
+
+	return (
+		<Popup
+			open={open}
+			closeMenu={() => {
+				setOpen(false);
+				setContent(undefined);
+			}}
+		>
+			<form
+				className="flex flex-col p-2"
+				onSubmit={(e) => {
+					e.preventDefault();
+					editCell(content || "");
+				}}
+			>
+				<h2 className="title-sm mb-4">Edit Field</h2>
+				<label className="flex flex-col ">
+					<span className="text-sm font-medium mb-0.5">{cell.name}</span>
+
+					<input
+						type="text"
+						onChange={(v) => setContent(v.target.value)}
+						value={content}
+						autoFocus
+						placeholder={cell.content}
+					/>
+				</label>
+				<Button
+					className="ml-auto mt-4 text-white"
+					type="submit"
+					color="bg-blue-500"
+				>
+					Save
+				</Button>
+			</form>
+		</Popup>
+	);
+}
 
 export default Admin;
 
