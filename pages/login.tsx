@@ -37,13 +37,13 @@ export default function Login() {
 				<Image src={orangeCircle} alt="A Orange Circle" draggable="false" />
 			</div>
 			<div className="flex items-center h-screen flex-col justify-between py-10">
-				<div className="flex flex-col space-y-3 items-center">
-					<h1 className=" text-4xl mb-48 font-bold">Welcome</h1>
-					<h2 className="text-2xl font-medium text-center mb-4">
+				<div className="flex flex-col space-y-3 items-center px-9">
+					<h1 className=" text-4xl mb-48 font-bold z-50">Welcome</h1>
+					<h2 className="text-2xl font-medium z-50 text-center mb-4">
 						Log into Coursify
 					</h2>
 					<button
-						className="flex z-50 rounded-3xl w-full px-28 text-lg py-7 text-[1.05rem] bg-white dark:bg-black font-medium brightness-hover"
+						className="flex z-50 rounded-3xl w-full md:px-28 text-lg md:py-7 px-5 py-4 items-center justify-center py-text-[1.05rem] bg-white dark:bg-black font-medium brightness-hover"
 						onClick={() =>
 							supabaseClient.auth.signInWithOAuth({
 								provider: "google",
@@ -66,7 +66,7 @@ export default function Login() {
 						/>{" "}
 						Continue with Google
 					</button>
-					<button className="flex rounded-3xl cursor-not-allowed bg-gray-200 px-28 text-lg py-7 text-[1.05rem] font-medium grayscale">
+					<button className="flex z-50 rounded-3xl md:px-28 text-lg md:py-7 px-5 py-4 items-center justify-center cursor-not-allowed bg-gray-200 text-[1.05rem] font-medium grayscale">
 						<Image
 							src="/brand-logos/microsoft.svg"
 							alt="Microsoft Logo"
@@ -77,7 +77,7 @@ export default function Login() {
 						Continue with Microsoft{" "}
 					</button>
 				</div>
-				<h3 className="text-center bg-gradient-to-r from-pink-400 to-orange-300 bg-clip-text text-3xl font-extrabold text-transparent md:ml-0">
+				<h3 className="text-center z-50 bg-gradient-to-r from-pink-400 to-orange-300 bg-clip-text text-3xl font-extrabold text-transparent md:ml-0">
 					Coursify
 				</h3>
 			</div>
