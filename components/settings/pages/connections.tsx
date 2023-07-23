@@ -3,8 +3,8 @@ import { NextPage } from "next";
 const Connections: NextPage = () => {
 	return (
 		<div>
-			Where users can manage connections like google, discord maybe if we ever
-			have like a bot, slack, zoom, spotify, etc.
+			In the future, users will be able to connect other services to our
+			platform here. Slack, Zoom, Discord and others have all been suggested.
 		</div>
 	);
 };

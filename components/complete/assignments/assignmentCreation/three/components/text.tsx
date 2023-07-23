@@ -34,7 +34,7 @@ const Text = ({
 		<>
 			<ToggleSection
 				name={`Limiting ${settings.trueWhenChars ? "Characters" : "Words"}`}
-				description="Toggle between setting a character or a word limit"
+				description="Toggle between setting a character or a word limit. Leave the below fields blank for no word/character limit"
 				enabled={settings.trueWhenChars}
 				setEnabled={(value) =>
 					setSettings((settings) => {
@@ -88,7 +88,7 @@ const Text = ({
 				</summary>
 				<ToggleSection
 					name="Rich text"
-					description="Aloow students to submit rich text; i.e. bolded or underlined text"
+					description="Aloow students to submit rich text; e.g. bold, italicized or underlined text"
 					enabled={settings.rich}
 					setEnabled={(value) =>
 						setSettings((settings) => {

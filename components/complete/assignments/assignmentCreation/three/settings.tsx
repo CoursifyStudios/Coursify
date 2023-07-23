@@ -39,7 +39,7 @@ const GetAssignmentSettings: NextPage<{
 			//@ts-expect-error
 			return <All imports={imports} />;
 		case AssignmentTypes.GOOGLE:
-			return <div>google not ready</div>;
+			return <div>Google submissions are not supported at this time.</div>;
 	}
 };
 
