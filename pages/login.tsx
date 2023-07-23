@@ -3,6 +3,10 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Database } from "../lib/db/database.types";
+import pinkEllipse from "@/public/svgs/pinkEllipse.svg";
+import blueCircle from "@/public/svgs/blueCircle.svg";
+import orangeCircle from "@/public/svgs/orangeCircle.svg";
+import Link from "next/link";
 
 export default function Login() {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -22,14 +26,24 @@ export default function Login() {
 	}, [user, router]);
 
 	return (
-		<div className="flex h-screen bg-gradient-to-br from-yellow-100 to-pink-300 justify-center">
-			<div className="my-auto flex flex-grow flex-col items-center justify-center rounded-lg py-20">
-				<div className="flex items-center flex-col">
-					<h1 className="mb-14 text-3xl font-bold dark: text-black">
-						Welcome Back
-					</h1>
+		<div className="flex bg-gradient-to-br from-yellow-100 to-pink-300 dark:from-transparent dark:to-transparent dark:bg-blue-950 justify-center relative">
+			<div className="dark:visible invisible select-none absolute top-0 left-0">
+				<Image src={pinkEllipse} alt="A Pink Ellipse" draggable="false" />
+			</div>
+			<div className="dark:visible invisible absolute top-0 right-0">
+				<Image src={blueCircle} alt="A Blue Circle" draggable="false" />
+			</div>
+			<div className="dark:visible invisible absolute bottom-0 right-0">
+				<Image src={orangeCircle} alt="A Orange Circle" draggable="false" />
+			</div>
+			<div className="flex items-center h-screen flex-col justify-between py-10">
+				<div className="flex flex-col space-y-3 items-center">
+					<h1 className=" text-4xl mb-48 font-bold">Welcome</h1>
+					<h2 className="text-2xl font-medium text-center mb-4">
+						Log into Coursify
+					</h2>
 					<button
-						className="mb-8 flex rounded-md  px-4 py-3 text-[1.05rem] bg-white font-medium hover:bg-gray-300"
+						className="flex z-50 rounded-3xl w-full px-28 text-lg py-7 text-[1.05rem] bg-white dark:bg-black font-medium brightness-hover"
 						onClick={() =>
 							supabaseClient.auth.signInWithOAuth({
 								provider: "google",
@@ -52,7 +66,7 @@ export default function Login() {
 						/>{" "}
 						Continue with Google
 					</button>
-					<button className="flex rounded-md bg-gray-200 px-4 py-3 text-[1.05rem] font-medium grayscale">
+					<button className="flex rounded-3xl cursor-not-allowed bg-gray-200 px-28 text-lg py-7 text-[1.05rem] font-medium grayscale">
 						<Image
 							src="/brand-logos/microsoft.svg"
 							alt="Microsoft Logo"
@@ -62,14 +76,10 @@ export default function Login() {
 						/>{" "}
 						Continue with Microsoft{" "}
 					</button>
-					<p className="mx-auto w-44 pt-4 text-center text-xs text-gray-600">
-						By logging in, you agree to our{" "}
-						<a className="text-blue-500">terms and conditions</a>
-					</p>
-					<h3 className="mx-auto w-44 text-center bg-gradient-to-r from-pink-400 to-orange-300 bg-clip-text text-3xl font-extrabold text-transparent md:ml-0">
-						Coursify
-					</h3>
 				</div>
+				<h3 className="text-center bg-gradient-to-r from-pink-400 to-orange-300 bg-clip-text text-3xl font-extrabold text-transparent md:ml-0">
+					Coursify
+				</h3>
 			</div>
 		</div>
 	);
