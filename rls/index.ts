@@ -167,11 +167,11 @@ const assignmentSubmissionUpdate = new Policy({
 const adminModifyEnrolled = new Policy({
 	name: "Admin can modify enrolled users",
 	query: IN(
-		"auth.uid()",
+		"school_id",
 		SELECT(
 			"enrolled",
 			["user_id"],
-			AND(EQ("$.admin_bool", "TRUE"), EQ("$.school_id", "school_id"))
+			AND(EQ("$.admin_bool", "TRUE"), EQ("$.user_id", "auth.uid()"))
 		)
 	),
 });
@@ -179,16 +179,13 @@ const adminModifyEnrolled = new Policy({
 const adminModifyEnrolledUserData = new Policy({
 	name: "Admin can modify student data of enrolled users",
 	query: IN(
-		"auth.uid()",
+		"school_id",
 		SELECT(
 			"enrolled",
 			["user_id"],
 			AND(
 				EQ("$.admin_bool", "TRUE"),
-				IN(
-					"id",
-					SELECT("enrolled", ["user_id"], EQ("$.school_id", "school_id"))
-				)
+				IN("id", SELECT("enrolled", ["user_id"], EQ("$.user_id", "auth.uid()")))
 			)
 		)
 	),
@@ -201,5 +198,6 @@ savePolicies(
 	assignmentSubmissionView,
 	assignmentSubmissionAdd,
 	assignmentSubmissionUpdate,
-	adminModifyEnrolled
+	adminModifyEnrolled,
+	adminModifyEnrolledUserData
 );

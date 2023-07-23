@@ -29,7 +29,7 @@ const Navbar: NextComponentType = () => {
 		? {
 				name: "Coursify Demo User",
 				picture:
-					"https://hhrehffmdrcjqowwvgqg.supabase.co/storage/v1/object/public/cdn/assets/demo-images/user",
+					"https://cdn.coursify.one/storage/v1/object/public/cdn/assets/demo-images/user",
 				email: "demo@coursify.one",
 				full_name: "Coursify Demo User",
 		  }

@@ -30,7 +30,14 @@ import addUserImage from "@/public/svgs/add-user.svg";
 import serverImage from "@/public/svgs/server.svg";
 import { Popup } from "@/components/misc/popup";
 import { Database } from "@/lib/db/database.types";
-import { getUsers, getUsersPages, setAdmin, updateUser } from "@/lib/db/admin";
+import {
+	getClasses,
+	getClassesPages,
+	getUsers,
+	getUsersPages,
+	setAdmin,
+	updateUser,
+} from "@/lib/db/admin";
 import { useRouter } from "next/router";
 import noData from "@/public/svgs/no-data.svg";
 import { Button, ButtonIcon } from "@/components/misc/button";
@@ -38,7 +45,8 @@ import Dropdown from "@/components/misc/dropdown";
 import Betatag from "@/components/misc/betatag";
 import { ExportToCsv } from "export-to-csv";
 import Loading from "@/components/misc/loading";
-import { Form, Formik } from "formik";
+import { Field, Form, Formik } from "formik";
+import * as Yup from "yup";
 
 /**
  * This file is not intended for long term use.
@@ -186,9 +194,13 @@ const Admin: NextPage = () => {
 	useEffect(() => {
 		(async () => {
 			if (!user || !id || !supabase || users) return;
-			const [data, pages] = await Promise.all([
-				getUsers(supabase, 1, 50, typeof id == "string" ? id : ""),
-				getUsersPages(supabase, 50, typeof id == "string" ? id : ""),
+			const sid = typeof id == "string" ? id : "";
+
+			const [data, pages, classesData, classesPages] = await Promise.all([
+				getUsers(supabase, 1, 50, sid),
+				getUsersPages(supabase, 50, sid),
+				getClasses(supabase, 1, 50, sid),
+				getClassesPages(supabase, 50, sid),
 			]);
 			if (data.data && pages) {
 				// @ts-expect-error relationships will never be an array
@@ -369,19 +381,38 @@ Activities	The user's activities, as displayed on their profile
 	};
 
 	const addNewUsers = async (users: ImportedUsers) => {
-		await supabase.from("users").insert(
-			users.map((u) => ({
-				full_name: `${u.first_name} ${u.last_name}`,
-				// Temp UUID to be replaced when the user logs in
-				id: "00000000-0000-0000-0000-000000000000",
-				avatar_url:
-					"https://cdn.coursify.one/storage/v1/object/public/cdn/assets/Coursify/default-picture.png",
-				bio: u.bio,
-				email: u.email,
-				phone_number: u.phone_number,
-				year: u.grad_year?.toString(),
-				student_id: u.student_id,
-				preferred_name: u.preferred_name,
+		const userIds = users.map((u) => crypto.randomUUID());
+
+		const savedUsers = await supabase
+			.from("users")
+			.upsert(
+				users.map((u, i) => ({
+					full_name: `${u.first_name} ${u.last_name}`,
+					// Temp UUID to be replaced when the user logs in
+					id: userIds[i],
+					avatar_url:
+						"https://cdn.coursify.one/storage/v1/object/public/cdn/assets/Coursify/default-picture.png",
+					bio: u.bio,
+					email: u.email,
+					phone_number: u.phone_number,
+					year: u.grad_year?.toString(),
+					student_id: u.student_id,
+					preferred_name: u.preferred_name,
+					onboarded: false,
+				})),
+				{
+					ignoreDuplicates: true,
+				}
+			)
+			.select("id");
+
+		// Show error
+		if (!savedUsers?.data) return;
+
+		await supabase.from("enrolled").insert(
+			savedUsers.data.map((user) => ({
+				user_id: user.id,
+				school_id: id as unknown as string,
 			}))
 		);
 	};
@@ -569,7 +600,11 @@ Activities	The user's activities, as displayed on their profile
 			await supabase
 				.from("enrolled")
 				.delete()
-				.or(selectedRows.map((id) => `${id}.eq.user_id`).join(",")),
+				.or(
+					selectedRows
+						.map((uid) => `and(${uid}.eq.user_id,${id}.eq.school_id)`)
+						.join(",")
+				),
 			// uhhhhhh how the FUCK do I do this
 			// Delete from submissions, assignment comments (Waiting on ), starred for assignments in school
 		]);
@@ -741,8 +776,78 @@ Activities	The user's activities, as displayed on their profile
 							<Popup
 								closeMenu={() => setCreateUserOpen(false)}
 								open={createUserOpen}
-							></Popup>
-							<div className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center">
+							>
+								<h2 className="title mb-4">Create User</h2>
+								<Formik
+									initialValues={{
+										full_name: "",
+										email: "",
+										phone_number: "",
+										student_id: "",
+										year: 2000,
+									}}
+									onSubmit={(v) => {} /*alert(JSON.stringify(v))*/}
+									validationSchema={Yup.object({
+										full_name: Yup.string().required(),
+										email: Yup.string().email().required(),
+										phone_number: Yup.string().min(10),
+										student_id: Yup.string(),
+										year: Yup.number().min(2000),
+									})}
+								>
+									<Form className="flex flex-col gap-4">
+										<label className="flex flex-col grow">
+											<span className="mb-0 5 font-medium text-sm">
+												Full Name<span className="ml-1 text-red-500">*</span>
+											</span>
+											<Field type="text" name="full_name" autoFocus />
+										</label>
+
+										<label className="flex flex-col grow">
+											<span className="mb-0 5 font-medium text-sm">
+												Email<span className="ml-1 text-red-500">*</span>
+											</span>
+											<Field type="text" name="email" />
+										</label>
+										<div className="flex gap-4">
+											<label className="flex flex-col grow">
+												<span className="mb-0 5 font-medium text-sm">
+													Phone Number
+												</span>
+												<Field type="text" name="phone_number" />
+											</label>
+											<label className="flex flex-col">
+												<span className="mb-0 5 font-medium text-sm">
+													Student ID
+												</span>
+												<Field type="text" name="student_id" />
+											</label>
+
+											<label className="flex flex-col ">
+												<span className="mb-0 5 font-medium text-sm">
+													Graduation year
+												</span>
+												<Field type="number" name="year" />
+											</label>
+										</div>
+										<p className="italic text-sm">
+											Leave the Student ID and Graduation year fields blank for
+											a non-student account
+										</p>
+										<Button
+											className="text-white ml-auto"
+											color="bg-blue-500"
+											type="submit"
+										>
+											Create
+										</Button>
+									</Form>
+								</Formik>
+							</Popup>
+							<div
+								className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center"
+								onClick={() => setDBActionsOpen(true)}
+							>
 								<Image
 									src={serverImage}
 									className="h-20 w-20"
@@ -756,7 +861,11 @@ Activities	The user's activities, as displayed on their profile
 							<Popup
 								closeMenu={() => setDBActionsOpen(false)}
 								open={dbActionsOpen}
-							></Popup>
+							>
+								<h2 className="title text-center my-10">
+									Database actions are coming soon
+								</h2>
+							</Popup>
 						</div>
 						<EditCellUI
 							cell={cell}
@@ -1176,6 +1285,205 @@ Activities	The user's activities, as displayed on their profile
 							</div>
 						</div>
 					</Tab.Panel> */}
+					<Tab.Panel>
+						<div className="grid grid-cols-4 gap-4">
+							<div
+								className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center col-span-2"
+								onClick={() => setUploadOpen(true)}
+							>
+								<Image
+									src={uploadImage}
+									className="h-20 w-20"
+									alt="Upload Files"
+								/>
+								<p className="font-medium">
+									Upload Class List in{" "}
+									<span className="rounded bg-gray-300 px-1">.csv</span> Format
+								</p>
+							</div>
+							<Popup closeMenu={() => setUploadOpen(false)} open={uploadOpen}>
+								<div
+									onDragOver={(ev) => {
+										ev.preventDefault();
+										ev.stopPropagation();
+										setHovering(true);
+									}}
+									onDragLeave={(ev) => {
+										ev.preventDefault();
+										ev.stopPropagation();
+										setHovering(false);
+									}}
+									onDrop={(ev) => {
+										ev.preventDefault();
+										ev.stopPropagation();
+										parseCSVDrop(ev as unknown as DragEvent);
+									}}
+								>
+									<h3 className="title-sm">Upload .csv Files</h3>
+									<h4 className="font-medium mt-4 mb-2">File format</h4>
+									<div className=" overflow-hidden border rounded-md divide-y">
+										<div className=" [&>p]:px-2.5 [&>p]:py-2 divide-x grid grid-cols-6 font-medium">
+											<p>First Name</p>
+											<p>Last Name</p>
+											<p>Email</p>
+											<p>Grad Year</p>
+											<p>Parent</p>
+											<p>Student ID</p>
+										</div>
+										{uploadUsers.map((u) => (
+											<div
+												key={u.email}
+												className="[&>p]:px-2.5 [&>p]:py-2 [&>p]:overflow-hidden divide-x grid grid-cols-6"
+											>
+												<p>{u.first_name}</p>
+												<p>{u.last_name}</p>
+												<p>{u.email}</p>
+												<p>{u.grad_year ?? "NULL"}</p>
+												<p></p>
+												{/* <p>{u.parent ? "Yes" : "No"}</p> */}
+												<p>{u.student_id ?? "NULL"}</p>
+											</div>
+										))}
+									</div>
+									{uploaded ? (
+										<>Insert confirm and cancel and stuff button here</>
+									) : (
+										<>
+											<p className="text-sm italic mt-1">
+												All other columns in uploaded file will be ignored. Each
+												Student ID should be unqiue for each student, and is
+												used to match parents to students.
+											</p>
+											<Dropdown
+												selectedValue={{ name: csvParser }}
+												values={[
+													{
+														name: CSVParser.COURSIFY,
+													},
+													{
+														name: CSVParser.SCHOOLOGY,
+													},
+												]}
+												onChange={(v) => setCSVParser(v.name)}
+											/>
+											<div className="group mt-8 flex h-24 grow flex-col cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white">
+												<h3 className="text-lg font-medium transition">
+													Upload File
+												</h3>
+												<p className="text-sm">
+													Drop a file anywhere or click here to select
+												</p>
+											</div>
+										</>
+									)}
+								</div>
+							</Popup>
+							<div
+								className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center"
+								onClick={() => setCreateUserOpen(true)}
+							>
+								<Image
+									src={addUserImage}
+									className="h-20 w-20"
+									alt="Upload Files"
+								/>
+								<p className="font-medium">Create Class</p>
+							</div>
+							<Popup
+								closeMenu={() => setCreateUserOpen(false)}
+								open={createUserOpen}
+							>
+								<h2 className="title mb-4">Create Classes</h2>
+								<Formik
+									initialValues={{
+										full_name: "",
+										email: "",
+										phone_number: "",
+										student_id: "",
+										year: 2000,
+									}}
+									onSubmit={(v) => {} /*alert(JSON.stringify(v))*/}
+									validationSchema={Yup.object({
+										full_name: Yup.string().required(),
+										email: Yup.string().email().required(),
+										phone_number: Yup.string().min(10),
+										student_id: Yup.string(),
+										year: Yup.number().min(2000),
+									})}
+								>
+									<Form className="flex flex-col gap-4">
+										<label className="flex flex-col grow">
+											<span className="mb-0 5 font-medium text-sm">
+												Full Name<span className="ml-1 text-red-500">*</span>
+											</span>
+											<Field type="text" name="full_name" autoFocus />
+										</label>
+
+										<label className="flex flex-col grow">
+											<span className="mb-0 5 font-medium text-sm">
+												Email<span className="ml-1 text-red-500">*</span>
+											</span>
+											<Field type="text" name="email" />
+										</label>
+										<div className="flex gap-4">
+											<label className="flex flex-col grow">
+												<span className="mb-0 5 font-medium text-sm">
+													Phone Number
+												</span>
+												<Field type="text" name="phone_number" />
+											</label>
+											<label className="flex flex-col">
+												<span className="mb-0 5 font-medium text-sm">
+													Student ID
+												</span>
+												<Field type="text" name="student_id" />
+											</label>
+
+											<label className="flex flex-col ">
+												<span className="mb-0 5 font-medium text-sm">
+													Graduation year
+												</span>
+												<Field type="number" name="year" />
+											</label>
+										</div>
+										<p className="italic text-sm">
+											Leave the Student ID and Graduation year fields blank for
+											a non-student account
+										</p>
+										<Button
+											className="text-white ml-auto"
+											color="bg-blue-500"
+											type="submit"
+										>
+											Create
+										</Button>
+									</Form>
+								</Formik>
+							</Popup>
+							<div
+								className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center"
+								onClick={() => setDBActionsOpen(true)}
+							>
+								<Image
+									src={serverImage}
+									className="h-20 w-20"
+									alt="Upload Files"
+								/>
+								{/* In case i forget what this does: allows admins to make 
+								global changes to the db, i.e. download all/specified users, delete all/specified users, etc.
+								probably other stuff too */}
+								<p className="font-medium">Database Actions</p>
+							</div>
+							<Popup
+								closeMenu={() => setDBActionsOpen(false)}
+								open={dbActionsOpen}
+							>
+								<h2 className="title text-center my-10">
+									Database actions are coming soon
+								</h2>
+							</Popup>
+						</div>
+					</Tab.Panel>
 				</Tab.Panels>
 			</Tab.Group>
 
@@ -1304,7 +1612,8 @@ function DeleteUI({
 					<input
 						type="text"
 						onChange={(v) =>
-							v.target.value.toLowerCase() == "this action is irreversible"
+							v.target.value.toLowerCase().trim() ==
+							"this action is irreversible"
 								? setConfirmed(true)
 								: setConfirmed(false)
 						}

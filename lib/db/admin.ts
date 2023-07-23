@@ -116,6 +116,7 @@ export const getUsersPages = async (
 					.replace(/\*/g, "\\*")
 					.replace(/\%/g, "*")}%"`,
 				// breaks search completly for some reason
+				// I'm an idiot, of cose this breaks, probably needs classes.id lol
 				// `id.ilike."%${search
 				// 	.replace(/"/g, '\\"')
 				// 	.replace(/\*/g, "\\*")
@@ -146,4 +147,81 @@ export const updateUser = async (
 		.from("users")
 		.update({ [modify]: content })
 		.eq("id", id);
+};
+
+export const getClasses = async (
+	supabase: SupabaseClient<Database>,
+	page: number,
+	pageSize: number,
+	id: string,
+	search?: string
+) => {
+	const { from, to } = getRanges(page, pageSize);
+
+	let supabaseRequest = supabase.from(`schools`).select(
+		`
+			id,
+				classes (
+					id, name, description, block, schedule_type, color, name_full, room,
+					class_users (
+						id, full_name, email
+					)
+				)
+		`
+	);
+	if (search !== undefined && search.length > 0) {
+		supabaseRequest = supabaseRequest.or(
+			[
+				`classes.name.ilike."%${search
+					.replace(/"/g, '\\"')
+					.replace(/\*/g, "\\*")
+					.replace(/\%/g, "*")}%"`,
+				`classes.id.ilike."%${search
+					.replace(/"/g, '\\"')
+					.replace(/\*/g, "\\*")
+					.replace(/\%/g, "*")}%"`,
+			].join(","),
+			{ foreignTable: "users" }
+		);
+	}
+
+	return await supabaseRequest
+		.range(from, to, { foreignTable: "classes" })
+		.eq("id", id)
+		.eq("classes.school", id)
+		.order("name", { foreignTable: "users", ascending: true })
+		.limit(1)
+		.single();
+};
+
+export const getClassesPages = async (
+	supabase: SupabaseClient<Database>,
+	pageSize: number,
+	school: string,
+	search?: string
+) => {
+	let supabaseRequest = supabase
+		.from(`schools`)
+		.select(
+			`id, classes (
+			count
+		)`
+		)
+		.eq("id", school);
+
+	if (search !== undefined && search.length > 0) {
+		supabaseRequest = supabaseRequest.or(
+			[
+				`classes.name.ilike."%${search
+					.replace(/"/g, '\\"')
+					.replace(/\*/g, "\\*")
+					.replace(/\%/g, "*")}%"`,
+				`classes.id.ilike."%${search
+					.replace(/"/g, '\\"')
+					.replace(/\*/g, "\\*")
+					.replace(/\%/g, "*")}%"`,
+			].join(","),
+			{ foreignTable: "users" }
+		);
+	}
 };
