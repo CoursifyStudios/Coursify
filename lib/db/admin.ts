@@ -135,3 +135,15 @@ export const getUsersPages = async (
 
 	return Math.ceil(count / pageSize);
 };
+
+export const updateUser = async (
+	supabase: SupabaseClient<Database>,
+	id: string,
+	modify: "full_name" | "email" | "phone_number" | "year" | "student_id",
+	content: string
+) => {
+	return await supabase
+		.from("users")
+		.update({ [modify]: content })
+		.eq("id", id);
+};

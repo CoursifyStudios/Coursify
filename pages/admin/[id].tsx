@@ -28,7 +28,7 @@ import {
 import uploadImage from "@/public/svgs/add-files.svg";
 import { Popup } from "@/components/misc/popup";
 import { Database } from "@/lib/db/database.types";
-import { getUsers, getUsersPages, setAdmin } from "@/lib/db/admin";
+import { getUsers, getUsersPages, setAdmin, updateUser } from "@/lib/db/admin";
 import { useRouter } from "next/router";
 import noData from "@/public/svgs/no-data.svg";
 import { Button, ButtonIcon } from "@/components/misc/button";
@@ -382,7 +382,7 @@ Activities	The user's activities, as displayed on their profile
 	};
 
 	const newNotification = (name: string) => {
-		setNotifications((v) => v.concat([{ name, expireAt: Date.now() + 1000 }]));
+		setNotifications((v) => v.concat([{ name, expireAt: Date.now() + 2000 }]));
 	};
 
 	const copyID = async () => {
@@ -503,6 +503,7 @@ Activities	The user's activities, as displayed on their profile
 		);
 		if (error) {
 			newNotification(`Error: ${error.message}`);
+			setLoading(false);
 			return;
 		}
 		setUsers((users) => [
@@ -524,7 +525,36 @@ Activities	The user's activities, as displayed on their profile
 		setLoading(false);
 	};
 
-	const editCell = async () => {};
+	const editCell = async (value: string) => {
+		setLoading(true);
+
+		const user = users?.find((user) => user.id == selectedRow[0]);
+		const { error } = await updateUser(
+			supabase,
+			user!.id,
+			cell.modified,
+			value
+		);
+
+		if (error) {
+			newNotification(`Error: ${error.message}`);
+		} else {
+			newNotification(`Updated ${cell.modified} for ${user!.full_name}`);
+			setUsers(
+				(users) =>
+					users?.map((mappedUser) => {
+						if (mappedUser.id == user!.id) {
+							return {
+								...mappedUser,
+								[cell.modified]: value,
+							};
+						}
+						return mappedUser;
+					})
+			);
+		}
+		setLoading(false);
+	};
 
 	return (
 		<div className="mx-auto my-10 flex w-full max-w-screen-xl flex-col px-4">
@@ -974,7 +1004,8 @@ Activities	The user's activities, as displayed on their profile
 										</div>
 									);
 								})
-							) : users === null ? (
+							) : // bad way to implement searching, congrats to myself
+							users === null ? (
 								<div className="h-48 flex items-center justify-center flex-col">
 									<Image
 										src={noData}
@@ -1147,7 +1178,9 @@ function EditCellUI({
 				className="flex flex-col p-2"
 				onSubmit={(e) => {
 					e.preventDefault();
+					setOpen(false);
 					editCell(content || "");
+					setContent(undefined);
 				}}
 			>
 				<h2 className="title-sm mb-4">Edit Field</h2>
