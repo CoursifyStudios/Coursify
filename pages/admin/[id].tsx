@@ -753,6 +753,10 @@ Activities	The user's activities, as displayed on their profile
 								probably other stuff too */}
 								<p className="font-medium">Database Actions</p>
 							</div>
+							<Popup
+								closeMenu={() => setDBActionsOpen(false)}
+								open={dbActionsOpen}
+							></Popup>
 						</div>
 						<EditCellUI
 							cell={cell}
