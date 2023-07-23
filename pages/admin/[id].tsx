@@ -1,4 +1,4 @@
-import { Tab, Transition } from "@headlessui/react";
+import { Tab } from "@headlessui/react";
 import {
 	AcademicCapIcon,
 	ArrowDownTrayIcon,
@@ -26,6 +26,8 @@ import {
 	useState,
 } from "react";
 import uploadImage from "@/public/svgs/add-files.svg";
+import addUserImage from "@/public/svgs/add-user.svg";
+import serverImage from "@/public/svgs/server.svg";
 import { Popup } from "@/components/misc/popup";
 import { Database } from "@/lib/db/database.types";
 import { getUsers, getUsersPages, setAdmin, updateUser } from "@/lib/db/admin";
@@ -620,7 +622,10 @@ Activities	The user's activities, as displayed on their profile
 									className="h-20 w-20"
 									alt="Upload Files"
 								/>
-								<p className="font-medium">Upload .csv file</p>
+								<p className="font-medium">
+									Upload User List in{" "}
+									<span className="rounded bg-gray-300 px-1">.csv</span> Format
+								</p>
 							</div>
 							<Popup closeMenu={() => setUploadOpen(false)} open={uploadOpen}>
 								<div
@@ -699,8 +704,25 @@ Activities	The user's activities, as displayed on their profile
 									)}
 								</div>
 							</Popup>
-							<div className="bg-gray-200 rounded-2xl h-36 mt-2 flex items-center justify-center"></div>
-							<div className="bg-gray-200 rounded-2xl h-36 mt-2 flex items-center justify-center"></div>
+							<div className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center">
+								<Image
+									src={addUserImage}
+									className="h-20 w-20"
+									alt="Upload Files"
+								/>
+								<p className="font-medium">Create User</p>
+							</div>
+							<div className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center">
+								<Image
+									src={serverImage}
+									className="h-20 w-20"
+									alt="Upload Files"
+								/>
+								{/* In case i forget what this does: allows admins to make 
+								global changes to the db, i.e. download all users, 
+								probably other stuff too */}
+								<p className="font-medium">Database Actions</p>
+							</div>
 						</div>
 						<EditCellUI
 							cell={cell}
