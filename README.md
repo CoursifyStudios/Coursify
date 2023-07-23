@@ -22,6 +22,7 @@ Coursify
   <a href="#styling">Styling</a> •
   <a href="#tracking">Tracking</a> •
   <a href="#wiki">Wiki</a> •
+  <a href="#standards">Standards</a> •
   <a href="#credits">Credits</a>
 </p>
 
@@ -135,6 +136,16 @@ If you're creating a new page, please try to adhere to these rules:
 - Use the default font. Don't write it in some weird serif font.
 - Articles should be simple and to the point. Roundabout explanations using the MLA format waste people's time.
 - Explain with code. Rather than trying to describe the way something works in a long paragraph, try to lean on code examples as much as possible, while using writing to add context and reasoning.
+
+## Standards
+
+Most of this is pretty basic, but when working with coursify remember to use SI units for data, see [this chart][https://en.wikipedia.org/wiki/Byte#Multiple-byte_units]. A shortened version is below:
+
+Value	Metric
+1000	kB	kilobyte (note the lower case k)
+1000^2	MB	megabyte
+1000^3	GB	gigabyte
+1000^4	TB	terabyte
 
 ## Credits
 
