@@ -71,7 +71,7 @@ const Media = ({
 				</label>
 				<label htmlFor="minFiles" className="flex grow flex-col">
 					<span className="flex text-sm font-medium">
-						# Files Required<span className="text-red-600">*</span>
+						Minimum Files Required<span className="text-red-600">*</span>
 					</span>
 					<input
 						type="number"
@@ -86,7 +86,9 @@ const Media = ({
 					/>
 				</label>
 				<label htmlFor="maxFiles" className="flex grow flex-col">
-					<span className="flex text-sm font-medium">Max. Files Allowed</span>
+					<span className="flex text-sm font-medium">
+						Maximum Files Allowed
+					</span>
 					<input
 						type="number"
 						defaultValue={settings.maxFiles}

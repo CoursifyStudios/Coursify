@@ -37,7 +37,7 @@ const Link = ({
 		<>
 			<label htmlFor="maxUrls" className="flex grow flex-col">
 				<span className="flex text-sm font-medium">
-					Max Links Allowed<span className="text-red-600">*</span>
+					Maximum Links Allowed<span className="text-red-600">*</span>
 					<Info className="ml-2">
 						Set a limit on the number of links a student is allowed to submit
 						for this assigment

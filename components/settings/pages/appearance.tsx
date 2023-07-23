@@ -107,7 +107,7 @@ const Theming: NextPage = () => {
 			/>
 			<DropdownSection
 				name="Homepage Classes View"
-				description="Change the way classes are displayed on the homepage. By default, we sample your classes to determine which one fits best for you." //could be clarified
+				description="Change the way classes are displayed on the homepage. By default, we sample your classes to determine which one fits best for you." //should be clarified
 				currentValue={
 					homepageViewTypes.find((view) => view.id == settings.homepageView)!
 				}
@@ -123,7 +123,7 @@ const Theming: NextPage = () => {
 			</Header>
 			<DropdownSection
 				name="Homepage Assignments View"
-				description="Change the way assignments are displayed on the homepage. By default, we sample your classes to determine which one fits best for you." //this was copypasted from classes view idk what the deal is
+				description="Change the way assignments are displayed on the homepage. By default, we sample your classes to determine which one fits best for you."
 				currentValue={
 					homepageAssignmentTypes.find(
 						(view) => view.id == settings.homepageAssignments

@@ -61,11 +61,11 @@ const File = ({
 							})
 						}
 					/>
-					<p className="absolute bottom-2 right-3 z-10 font-medium">mb</p>
+					<p className="absolute bottom-2 right-3 z-10 font-medium">MB</p>
 				</label>
 				<label htmlFor="minFiles" className="flex grow flex-col">
 					<span className="flex text-sm font-medium">
-						Min. Files Required<span className="text-red-600">*</span>
+						Minimum Files Required<span className="text-red-600">*</span>
 					</span>
 					<input
 						type="number"
@@ -80,7 +80,9 @@ const File = ({
 					/>
 				</label>
 				<label htmlFor="maxFiles" className="flex grow flex-col">
-					<span className="flex text-sm font-medium">Max. Files Allowed</span>
+					<span className="flex text-sm font-medium">
+						Maximum Files Allowed
+					</span>
 					<input
 						type="number"
 						defaultValue={settings.maxFiles}
@@ -98,8 +100,8 @@ const File = ({
 				<div className="flex text-sm font-medium">
 					Allowed file formats
 					<Info className="ml-2">
-						Specify which file extensions (the last part of a file part of a
-						file, such as .jpg, .pdf, .mp4 or .gif) that students can submit.
+						Specify which file extensions (the last part of a file name, such as
+						.jpg, .pdf, .mp4 or .gif) that students can submit.
 					</Info>
 				</div>
 				<div>
@@ -122,8 +124,8 @@ const File = ({
 							className: "noinputcss react-tagsinput-input",
 							placeholder:
 								settings.fileTypes?.length == 0
-									? "Add a site to start a whitelist"
-									: "Add another extension",
+									? "Enter a file extension..."
+									: "Add another format",
 						}}
 						renderTag={(props) => {
 							const {
@@ -152,7 +154,8 @@ const File = ({
 					/>
 				</div>
 				<p className="mt-0.5 text-xs text-gray-600 dark:text-gray-400">
-					Students can only add media content based on the file extentions above
+					Students can only add media content in the formats listed above. Leave
+					the field blank to allow all file formats.
 				</p>
 			</label>
 		</>
