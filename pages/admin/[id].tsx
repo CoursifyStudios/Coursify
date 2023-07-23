@@ -508,20 +508,22 @@ Activities	The user's activities, as displayed on their profile
 			setLoading(false);
 			return;
 		}
-		setUsers((users) => [
-			...users!.filter((u) => !selectedRow.includes(u.id)),
-			...users!
-				.filter((u) => selectedRow.includes(u.id))
-				.map((u) => ({
-					...u,
-					enrolled: [
-						{
-							...u.enrolled[0],
-							admin_bool: admin,
-						},
-					],
-				})),
-		]);
+		setUsers(
+			(users) =>
+				users?.map((mappedUser) => {
+					if (selectedRow.includes(mappedUser.id)) {
+						return {
+							...mappedUser,
+							enrolled: [
+								{
+									admin_bool: admin,
+								},
+							],
+						};
+					}
+					return mappedUser;
+				})
+		);
 
 		newNotification(`Set user(s) to ${admin ? "admin" : "standard account"}`);
 		setLoading(false);
