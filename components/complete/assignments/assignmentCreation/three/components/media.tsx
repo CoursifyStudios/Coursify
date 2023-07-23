@@ -67,7 +67,7 @@ const Media = ({
 							})
 						}
 					/>
-					<p className="absolute bottom-2 right-3 z-10 font-medium">mb</p>
+					<p className="absolute bottom-2 right-3 z-10 font-medium">MB</p>
 				</label>
 				<label htmlFor="minFiles" className="flex grow flex-col">
 					<span className="flex text-sm font-medium">
@@ -106,8 +106,8 @@ const Media = ({
 				<div className="flex text-sm font-medium">
 					Allowed file formats
 					<Info className="ml-2">
-						Specify which file extensions (the last part of a file part of a
-						file, such as .jpg, .pdf, .mp4 or .gif) that students can submit.
+						Specify which file extensions (the last part of a file name, such as
+						.jpg, .pdf, .mp4 or .gif) that students can submit.
 					</Info>
 				</div>
 				<div>
@@ -163,8 +163,8 @@ const Media = ({
 				</div>
 				<p className="mt-0.5 text-xs text-gray-600 dark:text-gray-400">
 					{settings.fileTypes?.length == 0
-						? "Students can add files with any extension to this assignment"
-						: "Students can only add files based on the file extensions above"}
+						? "Students can add files with any extension to this assignment" //This is impossible, as this page only allows 1 or more file formats, not 0
+						: "Students can only add media content in the formats listed above."}
 				</p>
 			</label>
 		</>

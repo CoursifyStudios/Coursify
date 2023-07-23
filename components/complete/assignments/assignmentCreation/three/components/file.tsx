@@ -125,7 +125,7 @@ const File = ({
 							placeholder:
 								settings.fileTypes?.length == 0
 									? "Enter a file extension..."
-									: "Add another format",
+									: "Add another extension",
 						}}
 						renderTag={(props) => {
 							const {
