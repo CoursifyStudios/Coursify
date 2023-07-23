@@ -38,6 +38,7 @@ import Dropdown from "@/components/misc/dropdown";
 import Betatag from "@/components/misc/betatag";
 import { ExportToCsv } from "export-to-csv";
 import Loading from "@/components/misc/loading";
+import { Form, Formik } from "formik";
 
 /**
  * This file is not intended for long term use.
@@ -79,7 +80,9 @@ const Admin: NextPage = () => {
 	const [loading, setLoading] = useState(false);
 	const [pages, setPages] = useState(1);
 	const [editOpen, setEditOpen] = useState(false);
-	const [editedField, setEditedField] = useState("");
+	const [deleteOpen, setDeleteOpen] = useState(false);
+	const [createUserOpen, setCreateUserOpen] = useState(false);
+	const [dbActionsOpen, setDBActionsOpen] = useState(false);
 	const [users, setUsers] = useState<
 		| {
 				id: string;
@@ -121,15 +124,15 @@ const Admin: NextPage = () => {
 	const [uploaded, setUploaded] = useState(false);
 	const [name, setName] = useState<string>();
 	const [selectedSquare, setSelectedSquare] = useState<number>();
-	const [selectedRow, setSelectedRow] = useState<string[]>([]);
+	const [selectedRows, setSelectedRows] = useState<string[]>([]);
 	const [csvParser, setCSVParser] = useState<CSVParser>(CSVParser.COURSIFY);
 	const [notifications, setNotifications] = useState<
 		{ name: string; expireAt: number }[]
 	>([]);
 
 	const selectedUser = useMemo(
-		() => users?.find((user) => user.id == selectedRow[0]),
-		[selectedRow, users]
+		() => users?.find((user) => user.id == selectedRows[0]),
+		[selectedRows, users]
 	);
 
 	const [cell, setCell] = useState<{
@@ -218,7 +221,7 @@ const Admin: NextPage = () => {
 	}, [notifications]);
 
 	const search = async (goPage?: number) => {
-		setSelectedRow([]);
+		setSelectedRows([]);
 		setSelectedSquare(undefined);
 		setLoading(true);
 		if (goPage) {
@@ -388,7 +391,7 @@ Activities	The user's activities, as displayed on their profile
 	};
 
 	const copyID = async () => {
-		navigator.clipboard.writeText(selectedRow.join(", "));
+		navigator.clipboard.writeText(selectedRows.join(", "));
 		newNotification("Copied selected row id(s)");
 	};
 
@@ -397,7 +400,7 @@ Activities	The user's activities, as displayed on their profile
 			(!users
 				? []
 				: users
-						.filter((user) => selectedRow.includes(user.id))
+						.filter((user) => selectedRows.includes(user.id))
 						.map((user) =>
 							[
 								user.full_name,
@@ -423,7 +426,7 @@ Activities	The user's activities, as displayed on their profile
 	};
 
 	const copyCell = async () => {
-		const user = users?.find((user) => user.id == selectedRow[0]);
+		const user = users?.find((user) => user.id == selectedRows[0]);
 		if (!user) return;
 		let text: string | null = "";
 		switch (selectedSquare) {
@@ -465,13 +468,13 @@ Activities	The user's activities, as displayed on their profile
 		const data = !users
 			? []
 			: users
-					.filter((user) => selectedRow.includes(user.id))
+					.filter((user) => selectedRows.includes(user.id))
 					.map((user) => {
 						return {
 							full_name: user.full_name,
 							email: user.email,
 							phone: user.phone_number,
-							graduationYear: user.year,
+							year: user.year,
 
 							relations: [
 								"Parents: ",
@@ -499,7 +502,7 @@ Activities	The user's activities, as displayed on their profile
 		setLoading(true);
 		const { error } = await setAdmin(
 			supabase,
-			selectedRow,
+			selectedRows,
 			admin,
 			id as string
 		);
@@ -511,7 +514,7 @@ Activities	The user's activities, as displayed on their profile
 		setUsers(
 			(users) =>
 				users?.map((mappedUser) => {
-					if (selectedRow.includes(mappedUser.id)) {
+					if (selectedRows.includes(mappedUser.id)) {
 						return {
 							...mappedUser,
 							enrolled: [
@@ -532,7 +535,7 @@ Activities	The user's activities, as displayed on their profile
 	const editCell = async (value: string) => {
 		setLoading(true);
 
-		const user = users?.find((user) => user.id == selectedRow[0]);
+		const user = users?.find((user) => user.id == selectedRows[0]);
 		const { error } = await updateUser(
 			supabase,
 			user!.id,
@@ -558,6 +561,24 @@ Activities	The user's activities, as displayed on their profile
 			);
 		}
 		setLoading(false);
+	};
+
+	const deleteUsers = async () => {
+		setLoading(true);
+		const errors = await Promise.all([
+			await supabase
+				.from("enrolled")
+				.delete()
+				.or(selectedRows.map((id) => `${id}.eq.user_id`).join(",")),
+			// uhhhhhh how the FUCK do I do this
+			// Delete from submissions, assignment comments (Waiting on ), starred for assignments in school
+		]);
+		setLoading(false);
+		if (errors.map((error) => error.error !== null).includes(true)) {
+			newNotification("Something went wrong, please try again");
+		} else {
+			newNotification("Deleted selected user(s)");
+		}
 	};
 
 	return (
@@ -706,7 +727,10 @@ Activities	The user's activities, as displayed on their profile
 									)}
 								</div>
 							</Popup>
-							<div className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center">
+							<div
+								className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center"
+								onClick={() => setCreateUserOpen(true)}
+							>
 								<Image
 									src={addUserImage}
 									className="h-20 w-20"
@@ -714,6 +738,10 @@ Activities	The user's activities, as displayed on their profile
 								/>
 								<p className="font-medium">Create User</p>
 							</div>
+							<Popup
+								closeMenu={() => setCreateUserOpen(false)}
+								open={createUserOpen}
+							></Popup>
 							<div className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center">
 								<Image
 									src={serverImage}
@@ -721,7 +749,7 @@ Activities	The user's activities, as displayed on their profile
 									alt="Upload Files"
 								/>
 								{/* In case i forget what this does: allows admins to make 
-								global changes to the db, i.e. download all users, 
+								global changes to the db, i.e. download all/specified users, delete all/specified users, etc.
 								probably other stuff too */}
 								<p className="font-medium">Database Actions</p>
 							</div>
@@ -731,6 +759,11 @@ Activities	The user's activities, as displayed on their profile
 							editCell={editCell}
 							open={editOpen}
 							setOpen={setEditOpen}
+						/>
+						<DeleteUI
+							open={deleteOpen}
+							setOpen={setDeleteOpen}
+							deleteUsers={deleteUsers}
 						/>
 						<div className="flex mb-2 mt-4 justify-between">
 							<form
@@ -754,7 +787,7 @@ Activities	The user's activities, as displayed on their profile
 							</form>
 							<div className="flex space-x-2">
 								{loading && <Loading className="my-auto" />}
-								{selectedRow.length > 0 && (
+								{selectedRows.length > 0 && (
 									<>
 										{selectedSquare != undefined ? (
 											<>
@@ -793,7 +826,7 @@ Activities	The user's activities, as displayed on their profile
 												{users &&
 												users.filter(
 													(user) =>
-														selectedRow.includes(user.id) &&
+														selectedRows.includes(user.id) &&
 														user.enrolled[0].admin_bool
 												).length > 0 ? (
 													<Button
@@ -811,7 +844,7 @@ Activities	The user's activities, as displayed on their profile
 													</Button>
 												)}
 												<Button
-													onClick={() => {}}
+													onClick={() => setDeleteOpen(true)}
 													className="rounded-xl !px-2.5"
 													color="bg-red-600/20 hover:bg-red-600/50"
 												>
@@ -821,7 +854,7 @@ Activities	The user's activities, as displayed on their profile
 										)}
 										<Button
 											onClick={() => {
-												setSelectedRow([]);
+												setSelectedRows([]);
 												setSelectedSquare(undefined);
 											}}
 											className="rounded-xl !ml-4"
@@ -836,21 +869,21 @@ Activities	The user's activities, as displayed on their profile
 						{/* also, tables are overrated */}
 						<div
 							className={`select-none overflow-hidden border ${
-								selectedRow.length == users?.length
+								selectedRows.length == users?.length
 									? "border-blue-500"
 									: "border-gray-300"
 							} rounded-xl divide-y`}
 						>
 							<div
 								className={` [&>p]:px-2.5 [&>p]:py-2 divide-x flex [&>p]:w-full font-medium border-b border-gray-300 ${
-									selectedRow.length == users?.length && "bg-blue-500/10"
+									selectedRows.length == users?.length && "bg-blue-500/10"
 								}`}
 							>
 								<div
 									className="grid place-items-center min-w-[3rem] max-w-[3rem]"
 									onClick={() => {
 										setSelectedSquare(undefined);
-										setSelectedRow((rows) =>
+										setSelectedRows((rows) =>
 											rows.length == users?.length
 												? []
 												: // brilliant
@@ -860,12 +893,12 @@ Activities	The user's activities, as displayed on their profile
 								>
 									<div
 										className={`checkbox h-5 min-w-[1.25rem] rounded border-2 border-gray-300 transition cursor-pointer ${
-											selectedRow.length == users?.length
+											selectedRows.length == users?.length
 												? "bg-gray-300"
 												: "dark:bg-neutral-950"
 										}`}
 									>
-										{selectedRow.length == users?.length && (
+										{selectedRows.length == users?.length && (
 											<CheckIcon strokeWidth={2} />
 										)}
 									</div>
@@ -887,7 +920,7 @@ Activities	The user's activities, as displayed on their profile
 									const students =
 										mappedUser.relationships &&
 										mappedUser.relationships.student_id;
-									const selected = selectedRow.includes(mappedUser.id);
+									const selected = selectedRows.includes(mappedUser.id);
 									return (
 										<div
 											className={` [&>p]:px-2.5 [&>p]:py-2 divide-x ${
@@ -901,7 +934,7 @@ Activities	The user's activities, as displayed on their profile
 												className="grid place-items-center min-w-[3rem] max-w-[3rem]"
 												onClick={() => {
 													setSelectedSquare(undefined);
-													setSelectedRow((rows) =>
+													setSelectedRows((rows) =>
 														selected && selectedSquare == undefined
 															? rows.filter((row) => row != mappedUser.id)
 															: selectedSquare != undefined
@@ -926,7 +959,7 @@ Activities	The user's activities, as displayed on their profile
 											<div
 												onClick={() => {
 													setSelectedSquare(0);
-													setSelectedRow([mappedUser.id]);
+													setSelectedRows([mappedUser.id]);
 												}}
 												className={`${
 													selectedSquare == 0 && selected
@@ -948,7 +981,7 @@ Activities	The user's activities, as displayed on their profile
 											<p
 												onClick={() => {
 													setSelectedSquare(1);
-													setSelectedRow([mappedUser.id]);
+													setSelectedRows([mappedUser.id]);
 												}}
 												className={`${
 													selectedSquare == 1 && selected
@@ -961,7 +994,7 @@ Activities	The user's activities, as displayed on their profile
 											<p
 												onClick={() => {
 													setSelectedSquare(2);
-													setSelectedRow([mappedUser.id]);
+													setSelectedRows([mappedUser.id]);
 												}}
 												className={`${
 													selectedSquare == 2 && selected
@@ -974,7 +1007,7 @@ Activities	The user's activities, as displayed on their profile
 											<p
 												onClick={() => {
 													setSelectedSquare(3);
-													setSelectedRow([mappedUser.id]);
+													setSelectedRows([mappedUser.id]);
 												}}
 												className={`${
 													selectedSquare == 3 && selected
@@ -987,7 +1020,7 @@ Activities	The user's activities, as displayed on their profile
 											<div
 												onClick={() => {
 													setSelectedSquare(4);
-													setSelectedRow([mappedUser.id]);
+													setSelectedRows([mappedUser.id]);
 												}}
 												className={`${
 													selectedSquare == 4 && selected
@@ -1015,7 +1048,7 @@ Activities	The user's activities, as displayed on their profile
 											<p
 												onClick={() => {
 													setSelectedSquare(5);
-													setSelectedRow([mappedUser.id]);
+													setSelectedRows([mappedUser.id]);
 												}}
 												className={`${
 													selectedSquare == 5 && selected
@@ -1225,6 +1258,64 @@ function EditCellUI({
 					color="bg-blue-500"
 				>
 					Save
+				</Button>
+			</form>
+		</Popup>
+	);
+}
+
+function DeleteUI({
+	open,
+	setOpen,
+	deleteUsers,
+}: {
+	open: boolean;
+	setOpen: Dispatch<SetStateAction<boolean>>;
+	deleteUsers: () => void;
+}) {
+	const [confirmed, setConfirmed] = useState(false);
+
+	return (
+		<Popup
+			open={open}
+			closeMenu={() => {
+				setOpen(false);
+				setConfirmed(false);
+			}}
+		>
+			<form
+				className="flex flex-col p-2"
+				onSubmit={(e) => {
+					e.preventDefault();
+					setOpen(false);
+				}}
+			>
+				<h2 className="title-sm mb-4">Delete User(s)</h2>
+				<label className="flex flex-col ">
+					<span className="text-sm font-medium mb-0.5">
+						Type {`"`}This action is irreversible{`"`} to confirm you wish to
+						delete the selected user(s).
+					</span>
+
+					<input
+						type="text"
+						onChange={(v) =>
+							v.target.value.toLowerCase() == "this action is irreversible"
+								? setConfirmed(true)
+								: setConfirmed(false)
+						}
+						autoFocus
+						placeholder={"This action is irreversible"}
+					/>
+				</label>
+				<Button
+					className="ml-auto mt-4 text-white"
+					type="submit"
+					color="bg-red-500"
+					disabled={!confirmed}
+					onClick={deleteUsers}
+				>
+					Delete
 				</Button>
 			</form>
 		</Popup>
