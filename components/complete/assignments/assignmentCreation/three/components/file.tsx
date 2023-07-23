@@ -40,9 +40,13 @@ const File = ({
 			<div className="flex gap-4">
 				<label htmlFor="maxSize" className="relative flex grow flex-col">
 					<span className="flex text-sm font-medium">
-						Max File Size<span className="text-red-600">*</span>
+						Maximum File Size<span className="text-red-600">*</span>
 						<Info className="ml-2">
-							The maximum file size, per file, in megabytes.
+							Set a maximum file size, per file, in megabytes, up to 5000. For
+							reference: a 4K image RAW is just over 24 megabytes, and 10
+							minutes of 1080p 60fps video can be several gigabytes in size.
+							Note that many file formats severely compress these files,
+							reducing their size.
 						</Info>
 					</span>
 
@@ -61,7 +65,7 @@ const File = ({
 				</label>
 				<label htmlFor="minFiles" className="flex grow flex-col">
 					<span className="flex text-sm font-medium">
-						Min Files Required<span className="text-red-600">*</span>
+						Min. Files Required<span className="text-red-600">*</span>
 					</span>
 					<input
 						type="number"
@@ -76,7 +80,7 @@ const File = ({
 					/>
 				</label>
 				<label htmlFor="maxFiles" className="flex grow flex-col">
-					<span className="flex text-sm font-medium">Max Files Allowed</span>
+					<span className="flex text-sm font-medium">Max. Files Allowed</span>
 					<input
 						type="number"
 						defaultValue={settings.maxFiles}
@@ -92,10 +96,10 @@ const File = ({
 			</div>
 			<label htmlFor="fileTypes" className="flex grow flex-col">
 				<div className="flex text-sm font-medium">
-					File Extention Allow List
+					Allowed file formats
 					<Info className="ml-2">
-						Specify certain file extentions (the last part of a file part of a
-						file, like like .jpg or .gif) that students can submit.
+						Specify which file extensions (the last part of a file part of a
+						file, such as .jpg, .pdf, .mp4 or .gif) that students can submit.
 					</Info>
 				</div>
 				<div>

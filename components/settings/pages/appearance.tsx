@@ -13,7 +13,7 @@ const Theming: NextPage = () => {
 	const colorTypes: { id: string; name: string }[] = [
 		{
 			id: "system",
-			name: "System Default",
+			name: "Same as System",
 		},
 		{
 			id: "light",
@@ -46,7 +46,7 @@ const Theming: NextPage = () => {
 	const homepageViewTypes: { id: Settings["homepageView"]; name: string }[] = [
 		{
 			id: "auto",
-			name: "Automagically",
+			name: "Automatic",
 		},
 		{
 			id: "tabbed",
@@ -84,7 +84,7 @@ const Theming: NextPage = () => {
 			<ToggleSection
 				name="Compact Mode"
 				beta={true}
-				description="Slims down elements so as to have more room on the screen." //not reccomended for anyone
+				description="Slims down the user interface so as to fit more content on the screen." //not reccomended for anyone
 				enabled={settings.compact}
 				setEnabled={() =>
 					set({
@@ -97,7 +97,7 @@ const Theming: NextPage = () => {
 			</Header>
 			<ToggleSection
 				name="Sort Classes by Schedule"
-				description="Sort classes based on your schedule. When off, classes will be sorted by block number." //rearrangable classes hopefully coming soon TM
+				description="Sort classes based on your schedule. When disabled, classes will be sorted by block number." //rearrangable classes hopefully coming soon TM
 				enabled={settings.sortBySchedule}
 				setEnabled={() =>
 					set({
@@ -106,8 +106,8 @@ const Theming: NextPage = () => {
 				}
 			/>
 			<DropdownSection
-				name="Classes on Homepage View"
-				description="Change the way you view classes on the homepage. By default, we sample your classes to determine which one fits best for you."
+				name="Homepage Classes View"
+				description="Change the way classes are displayed on the homepage. By default, we sample your classes to determine which one fits best for you." //could be clarified
 				currentValue={
 					homepageViewTypes.find((view) => view.id == settings.homepageView)!
 				}
@@ -122,8 +122,8 @@ const Theming: NextPage = () => {
 				Assignments
 			</Header>
 			<DropdownSection
-				name="Assignments on Homepage View"
-				description="Change the way you view classes on the homepage. By default, we sample your classes to determine which one fits best for you."
+				name="Homepage Assignments View"
+				description="Change the way assignments are displayed on the homepage. By default, we sample your classes to determine which one fits best for you." //this was copypasted from classes view idk what the deal is
 				currentValue={
 					homepageAssignmentTypes.find(
 						(view) => view.id == settings.homepageAssignments

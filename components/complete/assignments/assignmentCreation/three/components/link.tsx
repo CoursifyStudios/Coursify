@@ -39,7 +39,8 @@ const Link = ({
 				<span className="flex text-sm font-medium">
 					Max Links Allowed<span className="text-red-600">*</span>
 					<Info className="ml-2">
-						The maximum number of links a student is allowed to submit
+						Set a limit on the number of links a student is allowed to submit
+						for this assigment
 					</Info>
 				</span>
 				<input
@@ -56,11 +57,11 @@ const Link = ({
 			</label>
 			<label htmlFor="maxUrls" className="flex grow flex-col">
 				<div className="flex text-sm font-medium">
-					Site Allow List
+					Domain Whitelist
 					<Info className="ml-2">
-						Specify certain sites (the first part of a URL, like like google.com
+						Specify sites (using the first part of a URL, like like google.com
 						or https://www.loc.gov) that students can submit. By default,
-						students can submit links from any sites.
+						students can submit links to any website.
 					</Info>
 				</div>
 				<div>
