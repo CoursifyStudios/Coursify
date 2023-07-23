@@ -63,7 +63,7 @@ const HomepageClassesUI: NextPage<{
 		if ((view == "student" || view == "tabbedStudent") && tab !== 1) {
 			setTab(1);
 		}
-	}, [view]);
+	}, [view, tab]);
 
 	const Classes = ({ teaching }: { teaching: boolean }) => {
 		if (classes && classes.data && schedules)
@@ -74,7 +74,7 @@ const HomepageClassesUI: NextPage<{
 						.sort((a, b) => sortClasses(a, b, schedules[0], schedules[1]))
 						.map((singleClass) => {
 							const teacher = isTeacher(singleClass, userID);
-							if ((teaching && !teacher) || (!teaching && teacher)) return null;
+							if ((teaching && !teacher) || (!teaching && teacher)) return null; //wtf
 
 							return (
 								<Class

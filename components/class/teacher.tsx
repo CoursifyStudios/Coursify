@@ -126,52 +126,58 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 						optionsClassName="w-36 "
 					/>
 				</div>
+
 				<div className="mt-3 flex flex-col gap-2 text-sm font-medium leading-3">
 					<GradesSection name="Overall" grade={allGrades[0]} />
 					<GradesSection name="Summative (80%)" grade={allGrades[1]} />
 					<GradesSection name="Formative (20%)" grade={allGrades[2]} />
 				</div>
 			</section>
+			{/* Assignments */}
 			{classData.assignments &&
-				getDataInArray(classData.assignments).map((assignment, i) => {
-					const dueDate = assignment.due_date
-						? new Date(assignment.due_date)
-						: null;
-					return (
-						<section
-							className={`group flex cursor-pointer items-center rounded-xl bg-backdrop-200 px-3 py-2 hover:z-20 compact:p-2`}
-							key={i}
-						>
-							<div className="mr-3 grid h-9 w-9 min-w-[2.25rem] place-items-center rounded-full bg-gray-300 dark:bg-gray-200">
-								{
-									submissionType.find((type) => type.type == assignment.type)
-										?.icon
-								}
-							</div>
-							<div className="flex flex-col ">
-								<h4 className="max-w-[10.5rem] truncate text-sm font-medium">
-									{assignment.name}
-								</h4>
-								<p className="text-xs">12/24 students submitted</p>
-							</div>
-							<div
-								tabIndex={-1}
-								className="ml-auto flex flex-col items-center text-xs"
+				getDataInArray(classData.assignments)
+					.slice(0, 3)
+					.map((assignment, i) => {
+						const dueDate = assignment.due_date
+							? new Date(assignment.due_date)
+							: null;
+						return (
+							<Link
+								href={"/assignments/" + assignment.id}
+								className={`group flex cursor-pointer items-center rounded-xl bg-backdrop-200 px-3 py-2 hover:z-20 compact:p-2`}
+								key={i}
 							>
-								{dueDate && (
-									<>
-										<div className="mb-0.5 font-medium text-gray-700">
-											{dueDate.getMonth() + 1}/{dueDate.getDate()}
-										</div>
-										<ColoredPill color={classData.color} className="text-xs">
-											{`${to12hourTime(dueDate, settings.showAMPM)}`}
-										</ColoredPill>
-									</>
-								)}
-							</div>
-						</section>
-					);
-				})}
+								<div className="mr-3 grid h-9 w-9 min-w-[2.25rem] place-items-center rounded-full bg-gray-300 dark:bg-gray-200">
+									{
+										submissionType.find((type) => type.type == assignment.type)
+											?.icon
+									}
+								</div>
+								<div className="flex flex-col ">
+									<h4 className="max-w-[10.5rem] truncate text-sm font-medium">
+										{assignment.name}
+									</h4>
+									{/* BELOW IS PLACEHOLDER TEXT */}
+									<p className="text-xs">12/24 students submitted</p>
+								</div>
+								<div
+									tabIndex={-1}
+									className="ml-auto flex flex-col items-center text-xs"
+								>
+									{dueDate && (
+										<>
+											<div className="mb-0.5 font-medium text-gray-700">
+												{dueDate.getMonth() + 1}/{dueDate.getDate()}
+											</div>
+											<ColoredPill color={classData.color} className="text-xs">
+												{`${to12hourTime(dueDate, settings.showAMPM)}`}
+											</ColoredPill>
+										</>
+									)}
+								</div>
+							</Link>
+						);
+					})}
 		</div>
 	);
 };

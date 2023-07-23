@@ -142,112 +142,123 @@ export default function Home() {
 							</div>
 						</section>
 					</div>
-					<div className="flex flex-col xl:flex-row ">
-						{/* Assignments UI */}
-						<section id="Assignments">
-							<h2 className="title mb-4">Assignments</h2>
-							<div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:w-[58.5rem] ">
-								{classes &&
-									classes.data &&
-									classes.data
-										.slice(0, classes.data.length)
-										.sort((a, b) =>
-											sortClasses(a, b, schedules[0], schedules[1])
-										)
-										.filter(
-											(element) =>
-												!(
-													Array.isArray(element.assignments) &&
-													element.assignments.length == 0
-												)
-										)
-										//temporary measure
-										.slice(0, 3)
-										.map((aClass) => (
-											<div key={aClass.id}>
-												<div>
-													<Link href={"/classes/" + aClass.id}>
-														<h2 className="mb-2 text-xl font-semibold">
-															{aClass.name}
-														</h2>
-													</Link>
-													<div className="mb-5 flex-col space-y-4 first-letter:space-y-4">
-														{Array.isArray(aClass.assignments) &&
-															schedules &&
-															aClass.assignments.map((assignment) => (
-																<AssignmentPreview
-																	className="brightness-hover"
-																	key={assignment.id}
-																	supabase={supabaseClient}
-																	assignment={
-																		Array.isArray(assignment)
-																			? assignment[0]
-																			: assignment
-																	}
-																	userId={user.id}
-																	starredAsParam={
-																		assignment.starred
-																			? Array.isArray(assignment.starred)
-																				? assignment.starred.length > 0
-																				: !!assignment.starred
-																			: false
-																	}
-																	showClassPill={false}
-																	schedule={schedules[0]!}
-																	scheduleT={schedules[1]!}
-																	classes={aClass}
-																/>
-															))}
-													</div>
-												</div>
-											</div>
-										))}
-							</div>
-						</section>
-						<section className=" grow xl:ml-10" id="Starred">
-							<h2 className="title mb-4 mr-2">Starred</h2>
-							<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
-								{classes &&
-									classes.data &&
-									classes.data.map(
-										(aClass) =>
-											Array.isArray(aClass.assignments) &&
-											schedules &&
-											aClass.assignments.map(
-												(assignment) =>
-													(assignment.starred
-														? Array.isArray(assignment.starred)
-															? assignment.starred.length > 0
-															: !!assignment.starred
-														: false) && (
-														<AssignmentPreview
-															key={assignment.id}
-															className="brightness-hover"
-															supabase={supabaseClient}
-															assignment={
-																Array.isArray(assignment)
-																	? assignment[0]
-																	: assignment
-															}
-															userId={user.id}
-															starredAsParam={
-																assignment.starred
-																	? Array.isArray(assignment.starred)
-																		? assignment.starred.length > 0
-																		: !!assignment.starred
-																	: false
-															}
-															showClassPill={true}
-															schedule={schedules[0]!}
-															scheduleT={schedules[1]!}
-															classes={aClass}
-														/>
+					{classes &&
+						classes.data &&
+						!classes.data.every((individualClass) =>
+							individualClass.class_users.some(
+								(classUserRelationship) => classUserRelationship.teacher
+							)
+						) && (
+							<div className="flex flex-col xl:flex-row ">
+								{/* Assignments UI */}
+								<section id="Assignments">
+									<h2 className="title mb-4">Assignments</h2>
+									<div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:w-[58.5rem] ">
+										{classes.data
+											.slice(0, classes.data.length)
+											.sort((a, b) =>
+												sortClasses(a, b, schedules[0], schedules[1])
+											)
+											.filter(
+												(element) =>
+													//ensuring that a class does not show up if it has 0 assignments
+													!(
+														(Array.isArray(element.assignments) &&
+															element.assignments.length == 0) ||
+														//or if you are the teacher of that class TODO: this is a disaster
+														//tbh seems like a relatively large amount of effort for a pretty small edge case but whatever
+														element.class_users.some(
+															(classUserRelationship) =>
+																classUserRelationship.teacher
+														)
 													)
 											)
-									)}
+											//temporary measure
+											.slice(0, 3)
+											.map((aClass) => (
+												<div key={aClass.id}>
+													<div>
+														<Link href={"/classes/" + aClass.id}>
+															<h2 className="mb-2 text-xl font-semibold">
+																{aClass.name}
+															</h2>
+														</Link>
+														<div className="mb-5 flex-col space-y-4 first-letter:space-y-4">
+															{Array.isArray(aClass.assignments) &&
+																schedules &&
+																aClass.assignments.map((assignment) => (
+																	<AssignmentPreview
+																		className="brightness-hover"
+																		key={assignment.id}
+																		supabase={supabaseClient}
+																		assignment={
+																			Array.isArray(assignment)
+																				? assignment[0]
+																				: assignment
+																		}
+																		userId={user.id}
+																		starredAsParam={
+																			assignment.starred
+																				? Array.isArray(assignment.starred)
+																					? assignment.starred.length > 0
+																					: !!assignment.starred
+																				: false
+																		}
+																		showClassPill={false}
+																		schedule={schedules[0]!}
+																		scheduleT={schedules[1]!}
+																		classes={aClass}
+																	/>
+																))}
+														</div>
+													</div>
+												</div>
+											))}
+									</div>
+								</section>
+								<section className=" grow xl:ml-10" id="Starred">
+									<h2 className="title mb-4 mr-2">Starred</h2>
+									<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
+										{classes.data.map(
+											(aClass) =>
+												Array.isArray(aClass.assignments) &&
+												schedules &&
+												aClass.assignments.map(
+													(assignment) =>
+														(assignment.starred
+															? Array.isArray(assignment.starred)
+																? assignment.starred.length > 0
+																: !!assignment.starred
+															: false) && (
+															<AssignmentPreview
+																key={assignment.id}
+																className="brightness-hover"
+																supabase={supabaseClient}
+																assignment={
+																	Array.isArray(assignment)
+																		? assignment[0]
+																		: assignment
+																}
+																userId={user.id}
+																starredAsParam={
+																	assignment.starred
+																		? Array.isArray(assignment.starred)
+																			? assignment.starred.length > 0
+																			: !!assignment.starred
+																		: false
+																}
+																showClassPill={true}
+																schedule={schedules[0]!}
+																scheduleT={schedules[1]!}
+																classes={aClass}
+															/>
+														)
+												)
+										)}
+									</div>
+								</section>
 							</div>
-						</section>
-					</div>
+						)}
 				</div>
 			</div>
 		</>

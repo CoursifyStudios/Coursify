@@ -103,6 +103,17 @@ While there aren't currently any style or brand guidelines, we do have a few rul
 </CopiedHover>
 ```
 
+## Code Conventions
+
+### Updating Data
+
+When updating data, this is how the user flow should look like:
+
+1. The user updates something on the website, which is then sent to the database
+2. Next, the user sees a loading spinner and has to wait. Data is _not_ updated optimistically
+3. If there's an error, the user gets an obvious error message (ideally red). The user can act upon that error by editing their input
+4. If there's no error, then update the data visually. Do not call the server for the data again unless necessary; under no circumstances are you allowed to reload the entire page. It is jarring, ruins the user experience, and causes unneeded database/web """"server"""" egress.
+
 ## Tracking
 
 ### Features
