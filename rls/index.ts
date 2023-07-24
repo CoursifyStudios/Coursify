@@ -11,6 +11,24 @@ import {
 	savePolicies,
 } from "./ScriptQL.ts";
 
+// (auth.uid() IN ( SELECT cu.user_id
+// FROM class_users cu
+// WHERE ((cu.class_id = classes.id) OR (cu.admin_bool = TRUE))))
+
+const classViewing = new Policy({
+	name: "Class viewing",
+	query: OR(
+		IN(
+			"auth.uid()",
+			SELECT("class_users", ["user_id"], EQ("$.class_id", "id"))
+		),
+		IN(
+			"auth.uid()",
+			SELECT("enrolled", ["user_id"], EQ("$.school_id", "school"))
+		)
+	),
+});
+
 const assignmentViewing = new Policy({
 	name: "Student assignment viewing",
 	query: IN(
@@ -199,5 +217,6 @@ savePolicies(
 	assignmentSubmissionAdd,
 	assignmentSubmissionUpdate,
 	adminModifyEnrolled,
-	adminModifyEnrolledUserData
+	adminModifyEnrolledUserData,
+	classViewing
 );

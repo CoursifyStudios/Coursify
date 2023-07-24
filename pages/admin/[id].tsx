@@ -87,6 +87,7 @@ const Admin: NextPage = () => {
 	const [page, setPage] = useState(1);
 	const [loading, setLoading] = useState(false);
 	const [pages, setPages] = useState(1);
+	const [classesPages, setClassesPages] = useState(1);
 	const [editOpen, setEditOpen] = useState(false);
 	const [deleteOpen, setDeleteOpen] = useState(false);
 	const [createUserOpen, setCreateUserOpen] = useState(false);
@@ -107,6 +108,24 @@ const Admin: NextPage = () => {
 					parent_id: string[] | null;
 					student_id: string[] | null;
 				};
+		  }[]
+		| null
+	>();
+	const [classes, setClasses] = useState<
+		| {
+				id: string;
+				name: string;
+				description: string;
+				block: number;
+				schedule_type: number;
+				color: string;
+				name_full: string | null;
+				room: string | null;
+				users: {
+					id: string;
+					full_name: string;
+					email: string;
+				}[];
 		  }[]
 		| null
 	>();
@@ -202,11 +221,13 @@ const Admin: NextPage = () => {
 				getClasses(supabase, 1, 50, sid),
 				getClassesPages(supabase, 50, sid),
 			]);
-			if (data.data && pages) {
+			if (data.data && pages && classesData.data) {
 				// @ts-expect-error relationships will never be an array
 				setUsers(data.data.users);
 				setName(data.data.name);
 				setPages(pages);
+				setClasses(classesData.data.classes);
+				setClassesPages(classesPages);
 			}
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -232,7 +253,7 @@ const Admin: NextPage = () => {
 		};
 	}, [notifications]);
 
-	const search = async (goPage?: number) => {
+	const search = async (classes: boolean, goPage?: number) => {
 		setSelectedRows([]);
 		setSelectedSquare(undefined);
 		setLoading(true);
@@ -240,24 +261,40 @@ const Admin: NextPage = () => {
 			setPage(goPage);
 		}
 		try {
-			const [data, pages] = await Promise.all([
-				getUsers(
-					supabase,
-					goPage || page,
-					50,
-					typeof id == "string" ? id : "",
-					query
-				),
-				getUsersPages(supabase, 50, typeof id == "string" ? id : "", query),
-			]);
+			const [data, pages] = classes
+				? await Promise.all([
+						getClasses(
+							supabase,
+							goPage || page,
+							50,
+							typeof id == "string" ? id : "",
+							query
+						),
+						getClassesPages(
+							supabase,
+							50,
+							typeof id == "string" ? id : "",
+							query
+						),
+				  ])
+				: await Promise.all([
+						getUsers(
+							supabase,
+							goPage || page,
+							50,
+							typeof id == "string" ? id : "",
+							query
+						),
+						getUsersPages(supabase, 50, typeof id == "string" ? id : "", query),
+				  ]);
 
 			if (data.data && pages) {
 				// @ts-expect-error relationships will never be an array
-				setUsers(data.data.users);
-				setPages(pages);
+				classes ? setClasses(data.data.classes) : setUsers(data.data.users);
+				classes ? setClassesPages(pages) : setPages(pages);
 			}
 		} catch {
-			setUsers(null);
+			classes ? setClasses(null) : setUsers(null);
 		}
 		setLoading(false);
 	};
@@ -381,40 +418,21 @@ Activities	The user's activities, as displayed on their profile
 	};
 
 	const addNewUsers = async (users: ImportedUsers) => {
-		const userIds = users.map((u) => crypto.randomUUID());
+		setLoading(true);
+		const func = await supabase.functions.invoke("add-user", {
+			body: {
+				schoolId: id,
+				studentsToEnroll: users,
+			},
+		});
 
-		const savedUsers = await supabase
-			.from("users")
-			.upsert(
-				users.map((u, i) => ({
-					full_name: `${u.first_name} ${u.last_name}`,
-					// Temp UUID to be replaced when the user logs in
-					id: userIds[i],
-					avatar_url:
-						"https://cdn.coursify.one/storage/v1/object/public/cdn/assets/Coursify/default-picture.png",
-					bio: u.bio,
-					email: u.email,
-					phone_number: u.phone_number,
-					year: u.grad_year?.toString(),
-					student_id: u.student_id,
-					preferred_name: u.preferred_name,
-					onboarded: false,
-				})),
-				{
-					ignoreDuplicates: true,
-				}
-			)
-			.select("id");
+		if (func.error) {
+			newNotification(`Error: ${func.error.message}`);
+		} else {
+			newNotification(`Added ${users.length} user(s)`);
+		}
 
-		// Show error
-		if (!savedUsers?.data) return;
-
-		await supabase.from("enrolled").insert(
-			savedUsers.data.map((user) => ({
-				user_id: user.id,
-				school_id: id as unknown as string,
-			}))
-		);
+		setLoading(false);
 	};
 
 	const newNotification = (name: string) => {
@@ -786,7 +804,17 @@ Activities	The user's activities, as displayed on their profile
 										student_id: "",
 										year: 2000,
 									}}
-									onSubmit={(v) => {} /*alert(JSON.stringify(v))*/}
+									onSubmit={(v) => {
+										addNewUsers([
+											{
+												email: v.email,
+												first_name: v.full_name.split(" ").shift()!,
+												last_name: v.full_name.split(" ").pop()!,
+												grad_year: v.year ?? null,
+												student_id: v.student_id ?? null,
+											},
+										]);
+									}}
 									validationSchema={Yup.object({
 										full_name: Yup.string().required(),
 										email: Yup.string().email().required(),
@@ -883,7 +911,7 @@ Activities	The user's activities, as displayed on their profile
 								className="flex grow"
 								onSubmit={(e) => {
 									e.preventDefault();
-									search();
+									search(false);
 								}}
 							>
 								<div
@@ -1196,7 +1224,7 @@ Activities	The user's activities, as displayed on their profile
 								disabled={page === 1}
 								icon={<ChevronLeftIcon className="w-6 h-6 -translate-x-0.5" />}
 								className={`scale-75`}
-								onClick={() => search(page - 1)}
+								onClick={() => search(false, page - 1)}
 							/>
 							<div className="px-3 py-1.5 rounded-xl bg-gray-200 text-xl font-medium">
 								1
@@ -1205,7 +1233,7 @@ Activities	The user's activities, as displayed on their profile
 								disabled={page === pages}
 								icon={<ChevronRightIcon className="w-6 h-6 translate-x-0.5" />}
 								className={`scale-75`}
-								onClick={() => search(page + 1)}
+								onClick={() => search(false, page + 1)}
 							/>
 						</div>
 					</Tab.Panel>
@@ -1302,81 +1330,7 @@ Activities	The user's activities, as displayed on their profile
 								</p>
 							</div>
 							<Popup closeMenu={() => setUploadOpen(false)} open={uploadOpen}>
-								<div
-									onDragOver={(ev) => {
-										ev.preventDefault();
-										ev.stopPropagation();
-										setHovering(true);
-									}}
-									onDragLeave={(ev) => {
-										ev.preventDefault();
-										ev.stopPropagation();
-										setHovering(false);
-									}}
-									onDrop={(ev) => {
-										ev.preventDefault();
-										ev.stopPropagation();
-										parseCSVDrop(ev as unknown as DragEvent);
-									}}
-								>
-									<h3 className="title-sm">Upload .csv Files</h3>
-									<h4 className="font-medium mt-4 mb-2">File format</h4>
-									<div className=" overflow-hidden border rounded-md divide-y">
-										<div className=" [&>p]:px-2.5 [&>p]:py-2 divide-x grid grid-cols-6 font-medium">
-											<p>First Name</p>
-											<p>Last Name</p>
-											<p>Email</p>
-											<p>Grad Year</p>
-											<p>Parent</p>
-											<p>Student ID</p>
-										</div>
-										{uploadUsers.map((u) => (
-											<div
-												key={u.email}
-												className="[&>p]:px-2.5 [&>p]:py-2 [&>p]:overflow-hidden divide-x grid grid-cols-6"
-											>
-												<p>{u.first_name}</p>
-												<p>{u.last_name}</p>
-												<p>{u.email}</p>
-												<p>{u.grad_year ?? "NULL"}</p>
-												<p></p>
-												{/* <p>{u.parent ? "Yes" : "No"}</p> */}
-												<p>{u.student_id ?? "NULL"}</p>
-											</div>
-										))}
-									</div>
-									{uploaded ? (
-										<>Insert confirm and cancel and stuff button here</>
-									) : (
-										<>
-											<p className="text-sm italic mt-1">
-												All other columns in uploaded file will be ignored. Each
-												Student ID should be unqiue for each student, and is
-												used to match parents to students.
-											</p>
-											<Dropdown
-												selectedValue={{ name: csvParser }}
-												values={[
-													{
-														name: CSVParser.COURSIFY,
-													},
-													{
-														name: CSVParser.SCHOOLOGY,
-													},
-												]}
-												onChange={(v) => setCSVParser(v.name)}
-											/>
-											<div className="group mt-8 flex h-24 grow flex-col cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white">
-												<h3 className="text-lg font-medium transition">
-													Upload File
-												</h3>
-												<p className="text-sm">
-													Drop a file anywhere or click here to select
-												</p>
-											</div>
-										</>
-									)}
-								</div>
+								<div></div>
 							</Popup>
 							<div
 								className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center"
@@ -1393,7 +1347,7 @@ Activities	The user's activities, as displayed on their profile
 								closeMenu={() => setCreateUserOpen(false)}
 								open={createUserOpen}
 							>
-								<h2 className="title mb-4">Create Classes</h2>
+								<h2 className="title mb-4">Create Class</h2>
 								<Formik
 									initialValues={{
 										full_name: "",
@@ -1482,6 +1436,309 @@ Activities	The user's activities, as displayed on their profile
 									Database actions are coming soon
 								</h2>
 							</Popup>
+						</div>
+						<div className="flex mb-2 mt-4 justify-between">
+							<form
+								className="flex grow"
+								onSubmit={(e) => {
+									e.preventDefault();
+									search(true);
+								}}
+							>
+								<div
+									className={` relative flex grow items-center pr-2 max-w-[24rem]`}
+								>
+									<input
+										type="text"
+										className="!rounded-xl grow py-1.5 placeholder:dark:text-gray-400"
+										onChange={(e) => setQuery(e.target.value)}
+										placeholder="Search classes..."
+									/>
+									<MagnifyingGlassIcon className="absolute right-6 h-4 w-4" />
+								</div>
+							</form>
+							<div className="flex space-x-2">
+								{loading && <Loading className="my-auto" />}
+								{selectedRows.length > 0 && (
+									<>
+										{selectedSquare != undefined ? (
+											<>
+												<Button
+													onClick={copyCell}
+													className="rounded-xl !px-2.5"
+												>
+													<ClipboardDocumentListIcon className="h-5 w-5" />
+												</Button>
+												{selectedSquare != 4 && (
+													<Button
+														onClick={() => setEditOpen(true)}
+														className="rounded-xl !px-2.5"
+													>
+														<PencilSquareIcon className="h-5 w-5" />
+													</Button>
+												)}
+											</>
+										) : (
+											<>
+												<Button
+													onClick={copyRows}
+													className="rounded-xl !px-2.5"
+												>
+													<ClipboardDocumentListIcon className="h-5 w-5" />
+												</Button>
+												<Button onClick={copyID} className="rounded-xl !px-2.5">
+													<p className="font-medium text-lg">ID</p>
+												</Button>
+												<Button
+													onClick={downloadRows}
+													className="rounded-xl !px-2.5"
+												>
+													<ArrowDownTrayIcon className="h-5 w-5" />
+												</Button>
+												{users &&
+												users.filter(
+													(user) =>
+														selectedRows.includes(user.id) &&
+														user.enrolled[0].admin_bool
+												).length > 0 ? (
+													<Button
+														className="rounded-xl !px-2.5"
+														onClick={() => updateAdmin(false)}
+													>
+														<UserIcon className="h-5 w-5 " />
+													</Button>
+												) : (
+													<Button
+														className="rounded-xl !px-2.5"
+														onClick={() => updateAdmin(true)}
+													>
+														<ShieldCheckIcon className="h-5 w-5 text-blue-500" />
+													</Button>
+												)}
+												<Button
+													onClick={() => setDeleteOpen(true)}
+													className="rounded-xl !px-2.5"
+													color="bg-red-600/20 hover:bg-red-600/50"
+												>
+													<TrashIcon className="h-5 w-5" />
+												</Button>
+											</>
+										)}
+										<Button
+											onClick={() => {
+												setSelectedRows([]);
+												setSelectedSquare(undefined);
+											}}
+											className="rounded-xl !ml-4"
+										>
+											Clear Selection
+										</Button>
+									</>
+								)}
+							</div>
+						</div>
+
+						{/* This code is an absolute mess */}
+						{/* also, tables are overrated */}
+						<div
+							className={`select-none overflow-hidden border ${
+								selectedRows.length == users?.length
+									? "border-blue-500"
+									: "border-gray-300"
+							} rounded-xl divide-y`}
+						>
+							<div
+								className={` [&>p]:px-2.5 [&>p]:py-2 divide-x flex [&>p]:w-full font-medium border-b border-gray-300 ${
+									selectedRows.length == users?.length && "bg-blue-500/10"
+								}`}
+							>
+								<div
+									className="grid place-items-center min-w-[3rem] max-w-[3rem]"
+									onClick={() => {
+										setSelectedSquare(undefined);
+										setSelectedRows((rows) =>
+											rows.length == users?.length
+												? []
+												: users?.map((user) => user.id) || []
+										);
+									}}
+								>
+									<div
+										className={`checkbox h-5 min-w-[1.25rem] rounded border-2 border-gray-300 transition cursor-pointer ${
+											selectedRows.length == users?.length
+												? "bg-gray-300"
+												: "dark:bg-neutral-950"
+										}`}
+									>
+										{selectedRows.length == users?.length && (
+											<CheckIcon strokeWidth={2} />
+										)}
+									</div>
+								</div>
+
+								<p>Name</p>
+								<p>Full Name</p>
+								<p>Description</p>
+								<p>Block</p>
+								<p>Schedule Type</p>
+								<p>Room</p>
+							</div>
+							{classes ? (
+								classes.map((mappedClass, id) => {
+									const svgClassname = "min-w-[1.25rem] h-5 mr-1.5";
+									const selected = selectedRows.includes(mappedClass.id);
+									return (
+										<div
+											className={` [&>p]:px-2.5 [&>p]:py-2 divide-x ${
+												selected &&
+												selectedSquare == undefined &&
+												"bg-blue-500/10"
+											} transition flex [&>p]:w-full [&>p]:items-center [&>p]:truncate [&>p]:whitespace-nowrap [&>p]:overflow-hidden `}
+											key={mappedClass.id}
+										>
+											<div
+												className="grid place-items-center min-w-[3rem] max-w-[3rem]"
+												onClick={() => {
+													setSelectedSquare(undefined);
+													setSelectedRows((rows) =>
+														selected && selectedSquare == undefined
+															? rows.filter((row) => row != mappedClass.id)
+															: selectedSquare != undefined
+															? [mappedClass.id]
+															: rows.concat([mappedClass.id])
+													);
+												}}
+											>
+												<div
+													className={`checkbox h-5 min-w-[1.25rem] rounded border-2 border-gray-300 transition cursor-pointer ${
+														selected && selectedSquare == undefined
+															? "bg-gray-300"
+															: "dark:bg-neutral-950"
+													}`}
+												>
+													{selected && selectedSquare == undefined && (
+														<CheckIcon strokeWidth={2} />
+													)}
+												</div>
+											</div>
+
+											<div
+												onClick={() => {
+													setSelectedSquare(0);
+													setSelectedRows([mappedClass.id]);
+												}}
+												className={`${
+													selectedSquare == 0 && selected
+														? " border-blue-500 bg-blue-500/10"
+														: "border-y-transparent border-r-transparent"
+												} cursor-pointer !border flex w-full items-center truncate whitespace-nowrap overflow-hidden py-2 px-2.5`}
+											>
+												<div
+													className={`h-4 w-4 rounded-full mr-2 brightness-50 saturate-[3] bg-${mappedClass.color}-200`}
+												></div>
+												<p className="truncate">{mappedClass.name}</p>
+											</div>
+											<p
+												onClick={() => {
+													setSelectedSquare(1);
+													setSelectedRows([mappedClass.id]);
+												}}
+												className={`${
+													selectedSquare == 1 && selected
+														? " border-blue-500 bg-blue-500/10"
+														: "border-y-transparent border-r-transparent"
+												} cursor-pointer !border`}
+											>
+												{mappedClass.name_full}
+											</p>
+											<p
+												onClick={() => {
+													setSelectedSquare(1);
+													setSelectedRows([mappedClass.id]);
+												}}
+												className={`${
+													selectedSquare == 1 && selected
+														? " border-blue-500 bg-blue-500/10"
+														: "border-y-transparent border-r-transparent"
+												} cursor-pointer !border`}
+											>
+												{mappedClass.description}
+											</p>
+											<p
+												onClick={() => {
+													setSelectedSquare(1);
+													setSelectedRows([mappedClass.id]);
+												}}
+												className={`${
+													selectedSquare == 1 && selected
+														? " border-blue-500 bg-blue-500/10"
+														: "border-y-transparent border-r-transparent"
+												} cursor-pointer !border`}
+											>
+												{mappedClass.block}
+											</p>
+											<p
+												onClick={() => {
+													setSelectedSquare(1);
+													setSelectedRows([mappedClass.id]);
+												}}
+												className={`${
+													selectedSquare == 1 && selected
+														? " border-blue-500 bg-blue-500/10"
+														: "border-y-transparent border-r-transparent"
+												} cursor-pointer !border`}
+											>
+												{mappedClass.schedule_type}
+											</p>
+											<p
+												onClick={() => {
+													setSelectedSquare(1);
+													setSelectedRows([mappedClass.id]);
+												}}
+												className={`${
+													selectedSquare == 1 && selected
+														? " border-blue-500 bg-blue-500/10"
+														: "border-y-transparent border-r-transparent"
+												} cursor-pointer !border`}
+											>
+												{mappedClass.room}
+											</p>
+										</div>
+									);
+								})
+							) : // bad way to implement searching, congrats to myself
+							classes === null ? (
+								<div className="h-48 flex items-center justify-center flex-col">
+									<Image
+										src={noData}
+										alt="Nothing present icon"
+										width={100}
+										height={100}
+									/>
+									<p className="font-medium mt-6">
+										No users found with that name or email
+									</p>
+								</div>
+							) : (
+								<div>loading</div>
+							)}
+						</div>
+						<div className="flex justify-center gap-4 my-4 items-center">
+							<ButtonIcon
+								disabled={page === 1}
+								icon={<ChevronLeftIcon className="w-6 h-6 -translate-x-0.5" />}
+								className={`scale-75`}
+								onClick={() => search(true, page - 1)}
+							/>
+							<div className="px-3 py-1.5 rounded-xl bg-gray-200 text-xl font-medium">
+								1
+							</div>
+							<ButtonIcon
+								disabled={page === pages}
+								icon={<ChevronRightIcon className="w-6 h-6 translate-x-0.5" />}
+								className={`scale-75`}
+								onClick={() => search(true, page + 1)}
+							/>
 						</div>
 					</Tab.Panel>
 				</Tab.Panels>

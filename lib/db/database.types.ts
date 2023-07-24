@@ -212,7 +212,7 @@ export interface Database {
 					id: string;
 					image: string | null;
 					name: string;
-					name_full: string;
+					name_full: string | null;
 					room: string | null;
 					schedule_type: number;
 					school: string;
@@ -228,7 +228,7 @@ export interface Database {
 					id?: string;
 					image?: string | null;
 					name: string;
-					name_full?: string;
+					name_full?: string | null;
 					room?: string | null;
 					schedule_type?: number;
 					school: string;
@@ -244,7 +244,7 @@ export interface Database {
 					id?: string;
 					image?: string | null;
 					name?: string;
-					name_full?: string;
+					name_full?: string | null;
 					room?: string | null;
 					schedule_type?: number;
 					school?: string;
@@ -479,46 +479,6 @@ export interface Database {
 					},
 				];
 			};
-			test1: {
-				Row: {
-					id: number;
-					test: string;
-				};
-				Insert: {
-					id?: number;
-					test?: string;
-				};
-				Update: {
-					id?: number;
-					test?: string;
-				};
-				Relationships: [];
-			};
-			test2: {
-				Row: {
-					created_at: string | null;
-					id: number;
-					property: string;
-				};
-				Insert: {
-					created_at?: string | null;
-					id?: number;
-					property: string;
-				};
-				Update: {
-					created_at?: string | null;
-					id?: number;
-					property?: string;
-				};
-				Relationships: [
-					{
-						foreignKeyName: "test2_property_fkey";
-						columns: ["property"];
-						referencedRelation: "test1";
-						referencedColumns: ["test"];
-					},
-				];
-			};
 			user_achievements: {
 				Row: {
 					achievement_id: string;
@@ -554,10 +514,11 @@ export interface Database {
 				Row: {
 					avatar_url: string;
 					bio: string | null;
-					created: string | null;
-					email: string | null;
+					created: string;
+					email: string;
 					full_name: string;
 					id: string;
+					onboarded: boolean;
 					phone_number: string | null;
 					preferred_name: string | null;
 					student_id: string | null;
@@ -566,10 +527,11 @@ export interface Database {
 				Insert: {
 					avatar_url: string;
 					bio?: string | null;
-					created?: string | null;
-					email?: string | null;
+					created?: string;
+					email: string;
 					full_name: string;
 					id: string;
+					onboarded?: boolean;
 					phone_number?: string | null;
 					preferred_name?: string | null;
 					student_id?: string | null;
@@ -578,10 +540,11 @@ export interface Database {
 				Update: {
 					avatar_url?: string;
 					bio?: string | null;
-					created?: string | null;
-					email?: string | null;
+					created?: string;
+					email?: string;
 					full_name?: string;
 					id?: string;
+					onboarded?: boolean;
 					phone_number?: string | null;
 					preferred_name?: string | null;
 					student_id?: string | null;
@@ -640,7 +603,7 @@ export interface Database {
 					id: string;
 					image: string | null;
 					name: string;
-					name_full: string;
+					name_full: string | null;
 					room: string | null;
 					schedule_type: number;
 					school: string;

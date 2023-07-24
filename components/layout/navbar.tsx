@@ -103,7 +103,7 @@ const Navbar: NextComponentType = () => {
 									href={`/profile/${user?.id}`}
 									onClick={() =>
 										newTab(
-											"/profile/1e5024f5-d493-4e32-9822-87f080ad5516",
+											`/profile/${user?.id}`,
 											`${userMetadata.name}'s Profile`
 										)
 									}

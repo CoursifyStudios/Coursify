@@ -162,8 +162,8 @@ export const getClasses = async (
 		`
 			id,
 				classes (
-					id, name, description, block, schedule_type, color, name_full, room,
-					class_users (
+					id, name, description, block, schedule_type, name_full, room, color,
+					users (
 						id, full_name, email
 					)
 				)
@@ -181,7 +181,7 @@ export const getClasses = async (
 					.replace(/\*/g, "\\*")
 					.replace(/\%/g, "*")}%"`,
 			].join(","),
-			{ foreignTable: "users" }
+			{ foreignTable: "classes" }
 		);
 	}
 
@@ -189,7 +189,9 @@ export const getClasses = async (
 		.range(from, to, { foreignTable: "classes" })
 		.eq("id", id)
 		.eq("classes.school", id)
-		.order("name", { foreignTable: "users", ascending: true })
+		// Only fetches classes since we store groups in the same table
+		.eq("classes.type", 0)
+		.order("name", { foreignTable: "classes", ascending: true })
 		.limit(1)
 		.single();
 };
@@ -221,7 +223,16 @@ export const getClassesPages = async (
 					.replace(/\*/g, "\\*")
 					.replace(/\%/g, "*")}%"`,
 			].join(","),
-			{ foreignTable: "users" }
+			{ foreignTable: "classes" }
 		);
 	}
+	const { data, error } = await supabaseRequest;
+	// @ts-expect-error Supabase doesn't really support this method, but theres no official way to get the sount of foreign tables as far as I can tell
+	const count = data ? data[0].classes[0].count : 0;
+
+	if (error || !count) {
+		throw error;
+	}
+
+	return Math.ceil(count / pageSize);
 };
