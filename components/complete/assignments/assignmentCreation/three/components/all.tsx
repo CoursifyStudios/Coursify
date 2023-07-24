@@ -51,8 +51,8 @@ const All = ({
 					<ExclamationCircleIcon className="h-6 w-6 text-yellow-500" />
 				</div>
 				<p className="text-sm">
-					Coursify recommends choosing a different assignment type rather than
-					free form so assignments can be better prioritized for your stuents
+					Coursify recommends choosing a different assignment type so that
+					assignments can be better prioritized for your stuents
 				</p>
 			</div>
 			<label htmlFor="minFiles" className="flex grow flex-col">
