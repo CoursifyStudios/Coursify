@@ -26,7 +26,7 @@ export default function Login() {
 	}, [user, router]);
 
 	return (
-		<div className="flex bg-gradient-to-br from-yellow-100 to-pink-300 dark:from-transparent dark:to-transparent dark:bg-blue-950 justify-center relative">
+		<div className="flex bg-gradient-to-br from-yellow-100 overflow-hidden to-pink-300 dark:from-transparent dark:to-transparent dark:bg-blue-950 justify-center relative">
 			<div className="dark:visible invisible select-none absolute top-0 left-0">
 				<Image src={pinkEllipse} alt="A Pink Ellipse" draggable="false" />
 			</div>
@@ -38,7 +38,7 @@ export default function Login() {
 			</div>
 			<div className="flex items-center h-screen flex-col justify-between py-10">
 				<div className="flex flex-col space-y-3 items-center px-9">
-					<h1 className=" text-4xl mb-48 font-bold z-50">Welcome</h1>
+					<h1 className=" text-4xl md:mb-48 mb-32 font-bold z-50">Welcome</h1>
 					<h2 className="text-2xl font-medium z-50 text-center mb-4">
 						Log into Coursify
 					</h2>
