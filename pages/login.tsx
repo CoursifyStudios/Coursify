@@ -3,10 +3,6 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Database } from "../lib/db/database.types";
-import pinkEllipse from "@/public/svgs/pinkEllipse.svg";
-import blueCircle from "@/public/svgs/blueCircle.svg";
-import orangeCircle from "@/public/svgs/orangeCircle.svg";
-import Link from "next/link";
 
 export default function Login() {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -26,24 +22,21 @@ export default function Login() {
 	}, [user, router]);
 
 	return (
-		<div className="flex bg-gradient-to-br from-yellow-100 overflow-hidden to-pink-300 dark:from-transparent dark:to-transparent dark:bg-blue-950 justify-center relative">
-			<div className="dark:visible invisible select-none absolute top-0 left-0">
-				<Image src={pinkEllipse} alt="A Pink Ellipse" draggable="false" />
+		<div className="flex h-screen bg-teal-500 [background-image:url('/svgs/falling-triangles.svg')] dark:bg-red-300">
+			<div className=" flex items-center justify-center dark:backdrop-invert md:grow">
+				{/* <div className="relative rounded-xl bg-white p-4 shadow-md z-0 max-w-md">
+					<p className="font-mono text-[12rem] text-gray-400 absolute -z-10 -top-14 -left-1">"</p>
+					<div className="flex flex-col z-10">
+						<p className="text-3xl ml-3 mt-3 font-bold ">A war is one is the something something, rest of the quote will go here ok?</p>
+						<ColoredPill className="ml-auto mt-6" color="gray">Sun Tzu, The Art Of War</ColoredPill> 
+					</div>
+				</div> */}
 			</div>
-			<div className="dark:visible invisible absolute top-0 right-0">
-				<Image src={blueCircle} alt="A Blue Circle" draggable="false" />
-			</div>
-			<div className="dark:visible invisible absolute bottom-0 right-0">
-				<Image src={orangeCircle} alt="A Orange Circle" draggable="false" />
-			</div>
-			<div className="flex items-center h-screen flex-col justify-between py-10">
-				<div className="flex flex-col space-y-3 items-center px-9">
-					<h1 className=" text-4xl md:mb-48 mb-32 font-bold z-50">Welcome</h1>
-					<h2 className="text-2xl font-medium z-50 text-center mb-4">
-						Log into Coursify
-					</h2>
+			<div className="mx-10 my-auto flex flex-grow flex-col items-center justify-center rounded-lg bg-backdrop py-20 md:mx-0 md:my-0 md:max-w-xl md:basis-1/3 md:rounded-none md:py-0">
+				<h1 className="mb-14 text-3xl font-bold">Welcome Back</h1>
+				<div className="flex flex-col">
 					<button
-						className="flex z-50 rounded-3xl w-full md:px-28 text-lg md:py-7 px-5 py-4 items-center justify-center py-text-[1.05rem] bg-white dark:bg-black font-medium brightness-hover"
+						className="mb-8 flex rounded-md bg-gray-200 px-4 py-3 text-[1.05rem] font-medium hover:bg-gray-300"
 						onClick={() =>
 							supabaseClient.auth.signInWithOAuth({
 								provider: "google",
@@ -66,7 +59,7 @@ export default function Login() {
 						/>{" "}
 						Continue with Google
 					</button>
-					<button className="flex z-50 rounded-3xl md:px-28 text-lg md:py-7 px-5 py-4 items-center justify-center cursor-not-allowed bg-gray-200 text-[1.05rem] font-medium grayscale">
+					<button className="flex rounded-md bg-gray-200 px-4 py-3 text-[1.05rem] font-medium grayscale">
 						<Image
 							src="/brand-logos/microsoft.svg"
 							alt="Microsoft Logo"
@@ -76,29 +69,30 @@ export default function Login() {
 						/>{" "}
 						Continue with Microsoft{" "}
 					</button>
+					<button
+						className="mt-8 flex content-center rounded-md bg-gray-200 px-4 py-3 text-[1.05rem] font-medium hover:bg-gray-300"
+						onClick={() =>
+							supabaseClient.auth.signInWithPassword({
+								email: "demo@coursify.one",
+								password: "demo",
+							})
+						}
+					>
+						<Image
+							src="/brand-logos/coursify.svg"
+							alt="Microsoft Logo"
+							width={25}
+							height={25}
+							className="mr-4"
+						/>
+						Demo Coursify LMS
+					</button>
+					<p className="mx-auto w-44 pt-4 text-center text-xs text-gray-600">
+						By logging in, you agree to our{" "}
+						<a className="text-blue-500">terms and conditions</a>
+					</p>
 				</div>
-				<h3 className="text-center z-50 bg-gradient-to-r from-pink-400 to-orange-300 bg-clip-text text-3xl font-extrabold text-transparent md:ml-0">
-					Coursify
-				</h3>
 			</div>
 		</div>
 	);
 }
-/*<button
-	className="mt-8 flex content-center rounded-md bg-gray-200 px-4 py-3 text-[1.05rem] font-medium hover:bg-gray-300"
-	onClick={() =>
-		supabaseClient.auth.signInWithPassword({
-			email: "demo@coursify.one",
-			password: "demo",
-		})
-	}
-	>
-	<Image
-		src="/brand-logos/coursify.svg"
-		alt="Microsoft Logo"
-		width={25}
-		height={25}
-		className="mr-4"
-	/>
-	Demo Coursify LMS
-</button>*/
