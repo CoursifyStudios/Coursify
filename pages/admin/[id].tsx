@@ -1617,7 +1617,16 @@ Activities	The user's activities, as displayed on their profile
 												>
 													<ArrowDownTrayIcon className="h-5 w-5" />
 												</Button>
-
+												{selectedRows.length == 1 && selectedClass && (
+													<Button
+														className="rounded-xl !px-2.5"
+														onClick={() => {}}
+													>
+														<div
+															className={`h-4 w-4 mx-0.5 rounded-full brightness-50 saturate-[5] bg-${selectedClass.color}-200`}
+														></div>
+													</Button>
+												)}
 												<Button
 													onClick={() => setDeleteOpen(true)}
 													className="rounded-xl !px-2.5"
