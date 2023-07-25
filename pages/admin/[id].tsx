@@ -257,7 +257,7 @@ const Admin: NextPage = () => {
 				case 4:
 					setCell({
 						name: "Schedule Type",
-						content: selectedClass!.room || "",
+						content: selectedClass!.schedule_type.toString() || "",
 						cmodified: "schedule_type",
 					});
 					break;
@@ -584,7 +584,7 @@ Activities	The user's activities, as displayed on their profile
 					text = selectedClass.block.toString();
 					break;
 				case 4:
-					selectedClass.schedule_type;
+					text = selectedClass.schedule_type.toString();
 					break;
 				case 5:
 					text = selectedClass.room;
@@ -1617,26 +1617,7 @@ Activities	The user's activities, as displayed on their profile
 												>
 													<ArrowDownTrayIcon className="h-5 w-5" />
 												</Button>
-												{users &&
-												users.filter(
-													(user) =>
-														selectedRows.includes(user.id) &&
-														user.enrolled[0].admin_bool
-												).length > 0 ? (
-													<Button
-														className="rounded-xl !px-2.5"
-														onClick={() => updateAdmin(false)}
-													>
-														<UserIcon className="h-5 w-5 " />
-													</Button>
-												) : (
-													<Button
-														className="rounded-xl !px-2.5"
-														onClick={() => updateAdmin(true)}
-													>
-														<ShieldCheckIcon className="h-5 w-5 text-blue-500" />
-													</Button>
-												)}
+
 												<Button
 													onClick={() => setDeleteOpen(true)}
 													className="rounded-xl !px-2.5"

@@ -163,7 +163,12 @@ export const updateClass = async (
 ) => {
 	return await supabase
 		.from("classes")
-		.update({ [modify]: modify == "room" ? parseInt(content) : content })
+		.update({
+			[modify]:
+				modify == "block" || modify == "schedule_type"
+					? parseInt(content)
+					: content,
+		})
 		.eq("id", id);
 };
 
