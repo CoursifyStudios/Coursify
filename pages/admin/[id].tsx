@@ -36,6 +36,7 @@ import {
 	getUsers,
 	getUsersPages,
 	setAdmin,
+	updateClass,
 	updateUser,
 } from "@/lib/db/admin";
 import { useRouter } from "next/router";
@@ -47,6 +48,7 @@ import { ExportToCsv } from "export-to-csv";
 import Loading from "@/components/misc/loading";
 import { Field, Form, Formik } from "formik";
 import * as Yup from "yup";
+import { PostgrestError } from "@supabase/supabase-js";
 
 /**
  * This file is not intended for long term use.
@@ -84,7 +86,7 @@ const Admin: NextPage = () => {
 	const [uploadOpen, setUploadOpen] = useState(false);
 	const [hovering, setHovering] = useState(false);
 	const supabase = useSupabaseClient<Database>();
-	const [page, setPage] = useState(1);
+	const [tab, setTab] = useState(0);
 	const [loading, setLoading] = useState(false);
 	const [pages, setPages] = useState(1);
 	const [classesPages, setClassesPages] = useState(1);
@@ -92,6 +94,7 @@ const Admin: NextPage = () => {
 	const [deleteOpen, setDeleteOpen] = useState(false);
 	const [createUserOpen, setCreateUserOpen] = useState(false);
 	const [dbActionsOpen, setDBActionsOpen] = useState(false);
+	const [page, setPage] = useState(0);
 	const [users, setUsers] = useState<
 		| {
 				id: string;
@@ -162,53 +165,112 @@ const Admin: NextPage = () => {
 		[selectedRows, users]
 	);
 
+	const selectedClass = useMemo(
+		() => classes?.find((mappedClass) => mappedClass.id == selectedRows[0]),
+		[selectedRows, classes]
+	);
+
 	const [cell, setCell] = useState<{
 		name: string;
 		content: string;
-		modified: "full_name" | "email" | "phone_number" | "year" | "student_id";
-	}>({ name: "", content: "", modified: "full_name" });
+		modified?: "full_name" | "email" | "phone_number" | "year" | "student_id";
+		cmodified?:
+			| "name"
+			| "name_full"
+			| "description"
+			| "block"
+			| "schedule_type"
+			| "room";
+	}>({ name: "", content: "", modified: "full_name", cmodified: "name" });
 
 	useEffect(() => {
-		switch (selectedSquare) {
-			case 0:
-				setCell({
-					name: "Full Name",
-					content: selectedUser!.full_name || "",
-					modified: "full_name",
-				});
-				break;
-			case 1:
-				setCell({
-					name: "Email",
-					content: selectedUser!.email || "",
-					modified: "email",
-				});
-				break;
-			case 2:
-				setCell({
-					name: "Phone number",
-					content: selectedUser!.phone_number || "",
-					modified: "phone_number",
-				});
-				break;
-			case 3:
-				setCell({
-					name: "Graduation Year",
-					content: selectedUser!.year || "",
-					modified: "year",
-				});
-				break;
-			case 4:
-				break;
-			case 5:
-				setCell({
-					name: "Student ID",
-					content: selectedUser!.student_id || "",
-					modified: "student_id",
-				});
-				break;
+		if (tab == 0) {
+			switch (selectedSquare) {
+				case 0:
+					setCell({
+						name: "Full Name",
+						content: selectedUser!.full_name || "",
+						modified: "full_name",
+					});
+					break;
+				case 1:
+					setCell({
+						name: "Email",
+						content: selectedUser!.email || "",
+						modified: "email",
+					});
+					break;
+				case 2:
+					setCell({
+						name: "Phone Number",
+						content: selectedUser!.phone_number || "",
+						modified: "phone_number",
+					});
+					break;
+				case 3:
+					setCell({
+						name: "Graduation Year",
+						content: selectedUser!.year || "",
+						modified: "year",
+					});
+					break;
+				case 4:
+					break;
+				case 5:
+					setCell({
+						name: "Student ID",
+						content: selectedUser!.student_id || "",
+						modified: "student_id",
+					});
+					break;
+			}
+		} else if (tab == 1) {
+			switch (selectedSquare) {
+				case 0:
+					setCell({
+						name: "Name",
+						content: selectedClass!.name || "",
+						cmodified: "name",
+					});
+					break;
+				case 1:
+					setCell({
+						name: "Full Name",
+						content: selectedClass!.name_full || "",
+						cmodified: "name_full",
+					});
+					break;
+				case 2:
+					setCell({
+						name: "Description",
+						content: selectedClass!.description || "",
+						cmodified: "description",
+					});
+					break;
+				case 3:
+					setCell({
+						name: "Block",
+						content: selectedClass!.block.toString() || "",
+						cmodified: "block",
+					});
+					break;
+				case 4:
+					setCell({
+						name: "Schedule Type",
+						content: selectedClass!.room || "",
+						cmodified: "schedule_type",
+					});
+					break;
+				case 5:
+					setCell({
+						name: "Room",
+						content: selectedClass!.room || "",
+						cmodified: "room",
+					});
+					break;
+			}
 		}
-	}, [selectedSquare, selectedUser]);
+	}, [selectedSquare, selectedUser, tab, selectedClass]);
 
 	useEffect(() => {
 		(async () => {
@@ -475,40 +537,62 @@ Activities	The user's activities, as displayed on their profile
 	};
 
 	const copyCell = async () => {
-		const user = users?.find((user) => user.id == selectedRows[0]);
-		if (!user) return;
+		if (!selectedUser && !selectedClass) return;
 		let text: string | null = "";
-		switch (selectedSquare) {
-			case 0:
-				text = user.full_name;
-				break;
-			case 1:
-				text = user.email;
-				break;
-			case 2:
-				text = user.phone_number;
-				break;
-			case 3:
-				text = user.year;
-				break;
-			case 4:
-				text = [
-					"Parents: ",
-					user.relationships && user.relationships.parent_id
-						? user.relationships.parent_id?.join(", ")
-						: "",
-					", Students: ",
-					user.relationships && user.relationships.student_id
-						? user.relationships.student_id?.join(", ")
-						: "",
-				].join("");
-				break;
-			case 5:
-				text = user.student_id;
-				break;
+		if (selectedUser) {
+			switch (selectedSquare) {
+				case 0:
+					text = selectedUser.full_name;
+					break;
+				case 1:
+					text = selectedUser.email;
+					break;
+				case 2:
+					text = selectedUser.phone_number;
+					break;
+				case 3:
+					text = selectedUser.year;
+					break;
+				case 4:
+					text = [
+						"Parents: ",
+						selectedUser.relationships && selectedUser.relationships.parent_id
+							? selectedUser.relationships.parent_id?.join(", ")
+							: "",
+						", Students: ",
+						selectedUser.relationships && selectedUser.relationships.student_id
+							? selectedUser.relationships.student_id?.join(", ")
+							: "",
+					].join("");
+					break;
+				case 5:
+					text = selectedUser.student_id;
+					break;
+			}
+		} else if (selectedClass) {
+			switch (selectedSquare) {
+				case 0:
+					text = selectedClass.name;
+					break;
+				case 1:
+					text = selectedClass.name_full;
+					break;
+				case 2:
+					text = selectedClass.description;
+					break;
+				case 3:
+					text = selectedClass.block.toString();
+					break;
+				case 4:
+					selectedClass.schedule_type;
+					break;
+				case 5:
+					text = selectedClass.room;
+					break;
+			}
 		}
 		//blunder
-		navigator.clipboard.writeText(text ?? "");
+		await navigator.clipboard.writeText(text ?? "");
 
 		newNotification("Copied cell content!");
 	};
@@ -584,30 +668,61 @@ Activities	The user's activities, as displayed on their profile
 	const editCell = async (value: string) => {
 		setLoading(true);
 
-		const user = users?.find((user) => user.id == selectedRows[0]);
-		const { error } = await updateUser(
-			supabase,
-			user!.id,
-			cell.modified,
-			value
-		);
+		let error: PostgrestError | null = null;
+
+		if (selectedUser) {
+			const { error: e } = await updateUser(
+				supabase,
+				selectedUser.id,
+				cell.modified!,
+				value
+			);
+			error = e;
+		} else if (selectedClass) {
+			const { error: e } = await updateClass(
+				supabase,
+				selectedClass.id,
+				cell.cmodified!,
+				value
+			);
+			error = e;
+		}
 
 		if (error) {
 			newNotification(`Error: ${error.message}`);
 		} else {
-			newNotification(`Updated ${cell.modified} for ${user!.full_name}`);
-			setUsers(
-				(users) =>
-					users?.map((mappedUser) => {
-						if (mappedUser.id == user!.id) {
-							return {
-								...mappedUser,
-								[cell.modified]: value,
-							};
-						}
-						return mappedUser;
-					})
+			newNotification(
+				`Updated ${cell.modified || cell.cmodified}${
+					(selectedUser && ` for ${selectedUser.full_name}`) || ""
+				}`
 			);
+			if (selectedUser) {
+				setUsers(
+					(users) =>
+						users?.map((mappedUser) => {
+							if (mappedUser.id == selectedUser!.id) {
+								return {
+									...mappedUser,
+									[cell.modified!]: value,
+								};
+							}
+							return mappedUser;
+						})
+				);
+			} else if (selectedClass) {
+				setClasses(
+					(classes) =>
+						classes?.map((mappedClass) => {
+							if (mappedClass.id == selectedClass!.id) {
+								return {
+									...mappedClass,
+									[cell.cmodified!]: value,
+								};
+							}
+							return mappedClass;
+						})
+				);
+			}
 		}
 		setLoading(false);
 	};
@@ -647,8 +762,27 @@ Activities	The user's activities, as displayed on their profile
 					</p>
 				))}
 			</div>
-
-			<Tab.Group as="div" className="flex grow flex-col">
+			<EditCellUI
+				cell={cell}
+				editCell={editCell}
+				open={editOpen}
+				setOpen={setEditOpen}
+			/>
+			<DeleteUI
+				open={deleteOpen}
+				setOpen={setDeleteOpen}
+				deleteUsers={deleteUsers}
+			/>
+			<Tab.Group
+				as="div"
+				className="flex grow flex-col"
+				selectedIndex={tab}
+				onChange={(tab) => {
+					setSelectedRows([]);
+					setSelectedSquare(undefined);
+					setTab(tab);
+				}}
+			>
 				<Tab.List as="div" className="mt-6 flex max-sm:space-x-2 sm:space-x-6">
 					<Tab as={Fragment}>
 						{({ selected }) => (
@@ -895,17 +1029,7 @@ Activities	The user's activities, as displayed on their profile
 								</h2>
 							</Popup>
 						</div>
-						<EditCellUI
-							cell={cell}
-							editCell={editCell}
-							open={editOpen}
-							setOpen={setEditOpen}
-						/>
-						<DeleteUI
-							open={deleteOpen}
-							setOpen={setDeleteOpen}
-							deleteUsers={deleteUsers}
-						/>
+
 						<div className="flex mb-2 mt-4 justify-between">
 							<form
 								className="flex grow"
@@ -1469,14 +1593,12 @@ Activities	The user's activities, as displayed on their profile
 												>
 													<ClipboardDocumentListIcon className="h-5 w-5" />
 												</Button>
-												{selectedSquare != 4 && (
-													<Button
-														onClick={() => setEditOpen(true)}
-														className="rounded-xl !px-2.5"
-													>
-														<PencilSquareIcon className="h-5 w-5" />
-													</Button>
-												)}
+												<Button
+													onClick={() => setEditOpen(true)}
+													className="rounded-xl !px-2.5"
+												>
+													<PencilSquareIcon className="h-5 w-5" />
+												</Button>
 											</>
 										) : (
 											<>
@@ -1653,11 +1775,11 @@ Activities	The user's activities, as displayed on their profile
 											</p>
 											<p
 												onClick={() => {
-													setSelectedSquare(1);
+													setSelectedSquare(2);
 													setSelectedRows([mappedClass.id]);
 												}}
 												className={`${
-													selectedSquare == 1 && selected
+													selectedSquare == 2 && selected
 														? " border-blue-500 bg-blue-500/10"
 														: "border-y-transparent border-r-transparent"
 												} cursor-pointer !border`}
@@ -1666,11 +1788,11 @@ Activities	The user's activities, as displayed on their profile
 											</p>
 											<p
 												onClick={() => {
-													setSelectedSquare(1);
+													setSelectedSquare(3);
 													setSelectedRows([mappedClass.id]);
 												}}
 												className={`${
-													selectedSquare == 1 && selected
+													selectedSquare == 3 && selected
 														? " border-blue-500 bg-blue-500/10"
 														: "border-y-transparent border-r-transparent"
 												} cursor-pointer !border`}
@@ -1679,11 +1801,11 @@ Activities	The user's activities, as displayed on their profile
 											</p>
 											<p
 												onClick={() => {
-													setSelectedSquare(1);
+													setSelectedSquare(4);
 													setSelectedRows([mappedClass.id]);
 												}}
 												className={`${
-													selectedSquare == 1 && selected
+													selectedSquare == 4 && selected
 														? " border-blue-500 bg-blue-500/10"
 														: "border-y-transparent border-r-transparent"
 												} cursor-pointer !border`}
@@ -1692,11 +1814,11 @@ Activities	The user's activities, as displayed on their profile
 											</p>
 											<p
 												onClick={() => {
-													setSelectedSquare(1);
+													setSelectedSquare(5);
 													setSelectedRows([mappedClass.id]);
 												}}
 												className={`${
-													selectedSquare == 1 && selected
+													selectedSquare == 5 && selected
 														? " border-blue-500 bg-blue-500/10"
 														: "border-y-transparent border-r-transparent"
 												} cursor-pointer !border`}
@@ -1781,7 +1903,21 @@ function EditCellUI({
 	cell: {
 		name: string;
 		content: string;
-		modified: "full_name" | "email" | "phone_number" | "year" | "student_id";
+		modified?:
+			| "full_name"
+			| "email"
+			| "phone_number"
+			| "year"
+			| "student_id"
+			| undefined;
+		cmodified?:
+			| "name"
+			| "name_full"
+			| "description"
+			| "block"
+			| "schedule_type"
+			| "room"
+			| undefined;
 	};
 }) {
 	const [content, setContent] = useState<string>();

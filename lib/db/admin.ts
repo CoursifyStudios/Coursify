@@ -149,6 +149,24 @@ export const updateUser = async (
 		.eq("id", id);
 };
 
+export const updateClass = async (
+	supabase: SupabaseClient<Database>,
+	id: string,
+	modify:
+		| "name"
+		| "name_full"
+		| "description"
+		| "block"
+		| "schedule_type"
+		| "room",
+	content: string
+) => {
+	return await supabase
+		.from("classes")
+		.update({ [modify]: modify == "room" ? parseInt(content) : content })
+		.eq("id", id);
+};
+
 export const getClasses = async (
 	supabase: SupabaseClient<Database>,
 	page: number,
