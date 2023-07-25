@@ -507,32 +507,52 @@ Activities	The user's activities, as displayed on their profile
 	};
 
 	const copyRows = async () => {
-		navigator.clipboard.writeText(
-			(!users
-				? []
-				: users
-						.filter((user) => selectedRows.includes(user.id))
-						.map((user) =>
-							[
-								user.full_name,
-								user.email,
-								user.phone_number,
-								user.year,
+		if (tab == 0) {
+			navigator.clipboard.writeText(
+				(!users
+					? []
+					: users
+							.filter((user) => selectedRows.includes(user.id))
+							.map((user) =>
 								[
-									"Parents: ",
-									user.relationships && user.relationships.parent_id
-										? user.relationships.parent_id?.join(", ")
-										: "",
-									", Students: ",
-									user.relationships && user.relationships.student_id
-										? user.relationships.student_id?.join(", ")
-										: "",
-								].join(""),
-								user.student_id,
-							].join("\t")
-						)
-			).join("\n")
-		);
+									user.full_name,
+									user.email,
+									user.phone_number,
+									user.year,
+									[
+										"Parents: ",
+										user.relationships && user.relationships.parent_id
+											? user.relationships.parent_id?.join(", ")
+											: "",
+										", Students: ",
+										user.relationships && user.relationships.student_id
+											? user.relationships.student_id?.join(", ")
+											: "",
+									].join(""),
+									user.student_id,
+								].join("\t")
+							)
+				).join("\n")
+			);
+		} else if (tab == 1) {
+			navigator.clipboard.writeText(
+				(!classes
+					? []
+					: classes
+							.filter((mappedClass) => selectedRows.includes(mappedClass.id))
+							.map((mappedClass) =>
+								[
+									mappedClass.name,
+									mappedClass.name_full,
+									mappedClass.description,
+									mappedClass.block,
+									mappedClass.schedule_type,
+									mappedClass.room,
+								].join("\t")
+							)
+				).join("\n")
+			);
+		}
 		newNotification("Copied selected row(s)");
 	};
 
