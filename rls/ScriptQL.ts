@@ -1,10 +1,5 @@
 let count = -1;
 
-// Nodejs Polyfill
-interface Deno {
-	writeTextFile: (file: string, content: string) => Promise<void>;
-}
-
 // Made with chatgpt
 function convertToLetter(number: number): string {
 	let letter = "";
@@ -18,58 +13,80 @@ function convertToLetter(number: number): string {
 }
 
 /** And */
-export const AND = (...params: string[]) => {
-	return `(${params.join(") AND (")})`;
+export const AND = (...params: (string | boolean)[]) => {
+	return `(${params
+		.map((p) => (typeof p == "boolean" ? (p ? "TRUE" : "FALSE") : p))
+		.join(") AND (")})`;
 };
 
 /** Or */
-export const OR = (...params: string[]) => {
-	return `(${params.join(") OR (")})`;
+export const OR = (...params: (string | boolean)[]) => {
+	return `(${params
+		.map((p) => (typeof p == "boolean" ? (p ? "TRUE" : "FALSE") : p))
+		.join(") OR (")})`;
 };
 
 /** Equal */
-export const EQ = (key: string, value: string) => {
-	return `(${key} = ${value})`;
+export const EQ = (key: string | boolean, value: string | boolean) => {
+	return `(${typeof key == "boolean" ? (key ? "TRUE" : "FALSE") : key} = ${
+		typeof value == "boolean" ? (value ? "TRUE" : "FALSE") : value
+	})`;
 };
 
 /** Is */
-export const IS = (key: string, value: string) => {
-	return `(${key} IS ${value})`;
+export const IS = (key: string | boolean, value: string | boolean) => {
+	return `(${typeof key == "boolean" ? (key ? "TRUE" : "FALSE") : key} IS ${
+		typeof value == "boolean" ? (value ? "TRUE" : "FALSE") : value
+	})`;
 };
 
 /** Not equal */
-export const NEQ = (key: string, value: string) => {
-	return `(${key} != ${value})`;
+export const NEQ = (key: string | boolean, value: string | boolean) => {
+	return `(${typeof key == "boolean" ? (key ? "TRUE" : "FALSE") : key} != ${
+		typeof value == "boolean" ? (value ? "TRUE" : "FALSE") : value
+	})`;
 };
 
 /** Is not */
-export const NIS = (key: string, value: string) => {
-	return `(${key} IS NOT ${value})`;
+export const NIS = (key: string | boolean, value: string | boolean) => {
+	return `(${typeof key == "boolean" ? (key ? "TRUE" : "FALSE") : key} IS NOT ${
+		typeof value == "boolean" ? (value ? "TRUE" : "FALSE") : value
+	})`;
 };
 
 /** Greater than */
-export const GT = (key: string, value: string) => {
-	return `(${key} > ${value})`;
+export const GT = (key: string | boolean, value: string | boolean) => {
+	return `(${typeof key == "boolean" ? (key ? "TRUE" : "FALSE") : key} > ${
+		typeof value == "boolean" ? (value ? "TRUE" : "FALSE") : value
+	})`;
 };
 
 /** Greater than or equal */
-export const GTE = (key: string, value: string) => {
-	return `(${key} >= ${value})`;
+export const GTE = (key: string | boolean, value: string | boolean) => {
+	return `(${typeof key == "boolean" ? (key ? "TRUE" : "FALSE") : key} >= ${
+		typeof value == "boolean" ? (value ? "TRUE" : "FALSE") : value
+	})`;
 };
 
 /** Less than */
-export const LT = (key: string, value: string) => {
-	return `(${key} < ${value})`;
+export const LT = (key: string | boolean, value: string | boolean) => {
+	return `(${typeof key == "boolean" ? (key ? "TRUE" : "FALSE") : key} < ${
+		typeof value == "boolean" ? (value ? "TRUE" : "FALSE") : value
+	})`;
 };
 
 /** Less than or equal */
-export const LTE = (key: string, value: string) => {
-	return `(${key} <= ${value})`;
+export const LTE = (key: string | boolean, value: string | boolean) => {
+	return `(${typeof key == "boolean" ? (key ? "TRUE" : "FALSE") : key} <= ${
+		typeof value == "boolean" ? (value ? "TRUE" : "FALSE") : value
+	})`;
 };
 
 /** In */
-export const IN = (key: string, value: string) => {
-	return `(${key} IN ${value})`;
+export const IN = (key: string | boolean, value: string | boolean) => {
+	return `(${typeof key == "boolean" ? (key ? "TRUE" : "FALSE") : key} IN ${
+		typeof value == "boolean" ? (value ? "TRUE" : "FALSE") : value
+	})`;
 };
 
 /** Select
@@ -79,7 +96,7 @@ export const IN = (key: string, value: string) => {
 export const SELECT = (
 	table: string,
 	properties: string[],
-	filter = "true"
+	filter = "TRUE"
 ) => {
 	count++;
 	const tableLetter = convertToLetter(count);
@@ -120,12 +137,14 @@ export class Policy {
 }
 
 export const savePolicies = async (file: string, ...policies: Policy[]) => {
+	// NodeJS polyfill
 	const deno = ((globalThis as { [key: string]: unknown }).Deno as {
 		writeTextFile: (file: string, content: string) => Promise<void>;
 	}) ?? {
 		writeTextFile: async (file: string, content: string) => {
 			// eslint-disable-next-line no-console
 			console.log("Why are you running this in node?");
+			throw new Error("Run this with `Deno task export`")
 		},
 	};
 

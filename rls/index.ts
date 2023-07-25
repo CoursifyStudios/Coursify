@@ -1,213 +1,19 @@
 // Export with `deno task export`
+import { savePolicies } from "./ScriptQL.ts";
 import {
-	AND,
-	EQ,
-	IN,
-	IS,
-	LTE,
-	OR,
-	Policy,
-	SELECT,
-	savePolicies,
-} from "./ScriptQL.ts";
-
-// (auth.uid() IN ( SELECT cu.user_id
-// FROM class_users cu
-// WHERE ((cu.class_id = classes.id) OR (cu.admin_bool = TRUE))))
-
-const classViewing = new Policy({
-	name: "Class viewing",
-	query: OR(
-		IN(
-			"auth.uid()",
-			SELECT("class_users", ["user_id"], EQ("$.class_id", "id"))
-		),
-		IN(
-			"auth.uid()",
-			SELECT("enrolled", ["user_id"], EQ("$.school_id", "school"))
-		)
-	),
-});
-
-const assignmentViewing = new Policy({
-	name: "Student assignment viewing",
-	query: IN(
-		"auth.uid()",
-		SELECT(
-			"class_users",
-			["user_id"],
-			AND(
-				EQ("$.class_id", "class_id"),
-				OR(
-					EQ("$.teacher", "TRUE"),
-					AND(
-						EQ("hidden", "FALSE"),
-						// Thanks Seagullz for giving ideas on what's the issue
-						OR(IS("publish_date", "NULL"), LTE("publish_date", "now()"))
-					)
-				)
-			)
-		)
-	),
-});
-
-const assignmentManagement = new Policy({
-	name: "Teacher assignment management",
-	query: IN(
-		"auth.uid()",
-		SELECT(
-			"class_users",
-			["user_id"],
-			AND(EQ("$.class_id", "class_id"), EQ("$.teacher", "TRUE"))
-		)
-	),
-});
-
-// TODO: FIX THIS ASAP!!!
-// Infinite recursion error
-const assignmentSubmissionView = new Policy({
-	name: "Student assignment submission viewing",
-	query: AND(
-		IN(
-			"auth.uid()",
-			SELECT(
-				"class_users",
-				["user_id"],
-				AND(
-					EQ(
-						"$.class_id",
-						SELECT("assignments", ["class_id"], EQ("$.id", "assignment_id"))
-					)
-				)
-			)
-		),
-		OR(
-			EQ("user_id", "auth.uid()"),
-			AND(
-				EQ(SELECT("assignments", ["type"], EQ("$.id", "assignment_id")), "4"),
-				OR(
-					IN(
-						"assignment_id",
-						SELECT(
-							"assignments",
-							["id"],
-							EQ("$.settings->>'permissions'", "'2'")
-						)
-					),
-					AND(
-						IN(
-							"assignment_id",
-							SELECT(
-								"assignments",
-								["id"],
-								EQ("$.settings->>'permissions'", "'1'")
-							)
-						),
-						IN(
-							"auth.uid()",
-							SELECT(
-								"submissions",
-								["user_id"],
-								AND(EQ("$.user_id", "auth.uid()"), EQ("$.final", "TRUE"))
-							)
-						)
-					)
-				)
-			)
-		)
-	),
-});
-
-const assignmentSubmissionAdd = new Policy({
-	name: "Student assignment submission add",
-	query: AND(
-		OR(
-			AND(
-				EQ("user_id", "auth.uid()"),
-				IN(
-					"auth.uid()",
-					SELECT(
-						"class_users",
-						["user_id"],
-						AND(
-							EQ(
-								"$.class_id",
-								SELECT("assignments", ["class_id"], EQ("$.id", "assignment_id"))
-							)
-						)
-					)
-				)
-			),
-			IN(
-				"auth.uid()",
-				SELECT(
-					"class_users",
-					["user_id"],
-					AND(
-						EQ(
-							"$.class_id",
-							SELECT("assignments", ["class_id"], EQ("$.id", "assignment_id"))
-						),
-						EQ("$.teacher", "TRUE")
-					)
-				)
-			)
-		),
-		IN("assignment_id", SELECT("assignments", ["id"])),
-		AND(
-			IS("grade", "NULL"),
-			IS("hide", "NULL"),
-			OR(EQ("created_at", "now()"), IS("created_at", "NULL"))
-		)
-	),
-});
-
-const assignmentSubmissionUpdate = new Policy({
-	name: "Teacher can edit assignment submissions",
-	query: AND(
-		IN(
-			"auth.uid()",
-			SELECT(
-				"class_users",
-				["user_id"],
-				AND(
-					EQ(
-						"$.class_id",
-						SELECT("assignments", ["class_id"], EQ("$.id", "assignment_id"))
-					),
-					EQ("$.teacher", "TRUE")
-				)
-			)
-		)
-	),
-});
-
-const adminModifyEnrolled = new Policy({
-	name: "Admin can modify enrolled users",
-	query: IN(
-		"school_id",
-		SELECT(
-			"enrolled",
-			["user_id"],
-			AND(EQ("$.admin_bool", "TRUE"), EQ("$.user_id", "auth.uid()"))
-		)
-	),
-});
-
-const adminModifyEnrolledUserData = new Policy({
-	name: "Admin can modify student data of enrolled users",
-	query: IN(
-		"school_id",
-		SELECT(
-			"enrolled",
-			["user_id"],
-			AND(
-				EQ("$.admin_bool", "TRUE"),
-				IN("id", SELECT("enrolled", ["user_id"], EQ("$.user_id", "auth.uid()")))
-			)
-		)
-	),
-});
+	assignmentManagement,
+	assignmentViewing,
+} from "./tables/assignments.ts";
+import { classViewing, classUpdating } from "./tables/classes.ts";
+import {
+	adminModifyEnrolled,
+	adminModifyEnrolledUserData,
+} from "./tables/enrolled.ts";
+import {
+	assignmentSubmissionAdd,
+	assignmentSubmissionUpdate,
+	assignmentSubmissionView,
+} from "./tables/submissions.ts";
 
 savePolicies(
 	"./policies.sql",
@@ -218,5 +24,6 @@ savePolicies(
 	assignmentSubmissionUpdate,
 	adminModifyEnrolled,
 	adminModifyEnrolledUserData,
-	classViewing
+	classViewing,
+	classUpdating
 );
