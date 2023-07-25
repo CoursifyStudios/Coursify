@@ -185,7 +185,7 @@ export const getClasses = async (
 		`
 			id,
 				classes (
-					id, name, description, block, schedule_type, name_full, room, color,
+					id, name, description, block, schedule_type, name_full, room, color, full_description, classpills, image,
 					users (
 						id, full_name, email
 					)

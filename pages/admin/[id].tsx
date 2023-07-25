@@ -29,7 +29,7 @@ import uploadImage from "@/public/svgs/add-files.svg";
 import addUserImage from "@/public/svgs/add-user.svg";
 import serverImage from "@/public/svgs/server.svg";
 import { Popup } from "@/components/misc/popup";
-import { Database } from "@/lib/db/database.types";
+import { Database, Json } from "@/lib/db/database.types";
 import {
 	getClasses,
 	getClassesPages,
@@ -121,9 +121,12 @@ const Admin: NextPage = () => {
 				description: string;
 				block: number;
 				schedule_type: number;
-				color: string;
 				name_full: string | null;
 				room: string | null;
+				color: string;
+				full_description: Json;
+				classpills: Json[];
+				image: string | null;
 				users: {
 					id: string;
 					full_name: string;
@@ -618,36 +621,63 @@ Activities	The user's activities, as displayed on their profile
 	};
 
 	const downloadRows = async () => {
-		const data = !users
-			? []
-			: users
-					.filter((user) => selectedRows.includes(user.id))
-					.map((user) => {
-						return {
-							full_name: user.full_name,
-							email: user.email,
-							phone: user.phone_number,
-							year: user.year,
+		//brilliant
+		if (tab == 0!! && users) {
+			const data = users
+				.filter((user) => selectedRows.includes(user.id))
+				.map((user) => {
+					return {
+						full_name: user.full_name,
+						email: user.email,
+						phone: user.phone_number,
+						year: user.year,
 
-							relations: [
-								"Parents: ",
-								user.relationships && user.relationships.parent_id
-									? user.relationships.parent_id?.join(", ")
-									: "",
-								", Students: ",
-								user.relationships && user.relationships.student_id
-									? user.relationships.student_id?.join(", ")
-									: "",
-							].join(""),
-							studentID: user.student_id,
-						};
-					});
-		const options = {
-			title: "Coursify User Data",
-			useKeysAsHeaders: true,
-			filename: "exported_coursify_user_data",
-		};
-		new ExportToCsv(options).generateCsv(data);
+						relations: [
+							"Parents: ",
+							user.relationships && user.relationships.parent_id
+								? user.relationships.parent_id?.join(", ")
+								: "",
+							", Students: ",
+							user.relationships && user.relationships.student_id
+								? user.relationships.student_id?.join(", ")
+								: "",
+						].join(""),
+						studentID: user.student_id,
+						admin: user.enrolled[0].admin_bool,
+					};
+				});
+			const options = {
+				title: "Coursify User Data",
+				useKeysAsHeaders: true,
+				filename: "exported_coursify_user_data",
+			};
+			new ExportToCsv(options).generateCsv(data);
+			//blunder
+		} else if ((classes ?? false) && classes && tab == 1) {
+			const data = classes
+				.filter((mappedClass) => selectedRows.includes(mappedClass.id))
+				.map((mappedClass) => {
+					return {
+						name: mappedClass.name,
+						name_full: mappedClass.name_full,
+						description: mappedClass.description,
+						block: mappedClass.block,
+						schedule_type: mappedClass.schedule_type,
+						room: mappedClass.room,
+						color: mappedClass.color,
+						full_description: JSON.stringify(mappedClass.full_description),
+						classpills: JSON.stringify(mappedClass.classpills),
+						image: mappedClass.image,
+						users: JSON.stringify(mappedClass.users),
+					};
+				});
+			const options = {
+				title: "Coursify Class Data",
+				useKeysAsHeaders: true,
+				filename: "exported_coursify_class_data",
+			};
+			new ExportToCsv(options).generateCsv(data);
+		}
 		newNotification("Downloaded selected row(s)");
 	};
 
