@@ -55,7 +55,7 @@ export default function Login() {
 			<div className="flex items-center h-screen flex-col justify-between py-10">
 				<div className="flex flex-col space-y-3 items-center px-9">
 					<h1 className=" text-4xl md:mb-48 mb-32 font-bold z-50">Welcome</h1>
-					<h2 className="text-2xl font-medium z-50 text-center mb-4">
+					<h2 className="text-2xl font-medium z-50 text-center pb-4">
 						Log into Coursify
 					</h2>
 					<button
@@ -78,7 +78,7 @@ export default function Login() {
 							alt="Google Logo"
 							width={25}
 							height={25}
-							className="mr-6"
+							className="mr-4"
 						/>{" "}
 						Continue with Google
 					</button>
