@@ -141,11 +141,11 @@ If you're creating a new page, please try to adhere to these rules:
 
 Most of this is pretty basic, but when working with coursify remember to use SI units for data, see [this chart][https://en.wikipedia.org/wiki/Byte#Multiple-byte_units]. A shortened version is below:
 
-Value	Metric
-1000	kB	kilobyte (note the lower case k)
-1000^2	MB	megabyte
-1000^3	GB	gigabyte
-1000^4	TB	terabyte
+Value Metric
+1000 kB kilobyte (note the lower case k)
+1000^2 MB megabyte
+1000^3 GB gigabyte
+1000^4 TB terabyte
 
 ## Credits
 
