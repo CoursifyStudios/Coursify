@@ -152,13 +152,7 @@ export const updateUser = async (
 export const updateClass = async (
 	supabase: SupabaseClient<Database>,
 	id: string,
-	modify:
-		| "name"
-		| "name_full"
-		| "description"
-		| "block"
-		| "schedule_type"
-		| "room",
+	modify: "name" | "name_full" | "image" | "block" | "schedule_type" | "room",
 	content: string
 ) => {
 	return await supabase
