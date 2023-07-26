@@ -4,17 +4,23 @@ import { Analytics } from "@vercel/analytics/react";
 import { ThemeProvider } from "next-themes";
 import { AppProps } from "next/app";
 import Head from "next/head";
-import { useState } from "react";
+import { ReactElement, ReactNode, useState } from "react";
 import Layout from "../components/layout/layout";
 import "../styles/globals.css";
+import { NextPage } from "next";
 
-function MyApp({
-	Component,
-	pageProps,
-}: AppProps<{
+export type NextPageWithLayout<P = Record<string | number | symbol, never>, IP = P> = NextPage<P, IP> & {
+	getLayout?: (page: ReactElement) => ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+	Component: NextPageWithLayout;
 	initialSession: Session;
-}>) {
+};
+
+function MyApp({ Component, pageProps }: AppPropsWithLayout) {
 	const [supabaseClient] = useState(() => createPagesBrowserClient());
+	const getLayout = Component.getLayout ?? ((page) => page);
 
 	return (
 		<>
@@ -26,9 +32,7 @@ function MyApp({
 				initialSession={pageProps.initialSession}
 			>
 				<ThemeProvider attribute="class" disableTransitionOnChange>
-					<Layout>
-						<Component />
-					</Layout>
+					{getLayout(<Component />)}
 				</ThemeProvider>
 			</SessionContextProvider>
 			<Analytics />
