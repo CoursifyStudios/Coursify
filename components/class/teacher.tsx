@@ -38,9 +38,9 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 		},
 	];
 	const [selectedSort, setSelectedSort] = useState(sortTypes[0]);
-
+	//TODO: fix this. currently broked b/c of types
 	const grades: number[] = getDataInArray(classData.class_users!).map(
-		(user) => user.grade || 0
+		(user) => 12 || 0 //where '12' is now, used to be user.grades
 	);
 	const getGrade = (grades: number[], type: number): number => {
 		switch (type) {

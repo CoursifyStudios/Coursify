@@ -2,6 +2,7 @@ import { Menu, Transition } from "@headlessui/react";
 import {
 	ArrowLeftOnRectangleIcon,
 	CalendarDaysIcon,
+	ChartBarIcon,
 	Cog6ToothIcon,
 	MagnifyingGlassIcon,
 	MegaphoneIcon,
@@ -134,9 +135,21 @@ const Navbar: NextComponentType = () => {
 									</Menu.Item>
 								</Link>
 								<Link
+									href={`/grades`}
+									className="mt-1"
+									onClick={() => newTab("/grades")}
+								>
+									<Menu.Item
+										as="div"
+										className="flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300"
+									>
+										Grades <ChartBarIcon className="h-5 w-5" />
+									</Menu.Item>
+								</Link>
+								<Link
 									href={`/settings`}
 									className="mt-1"
-									onClick={() => newTab("/settings")}
+									onClick={() => newTab("/grades")}
 								>
 									<Menu.Item
 										as="div"

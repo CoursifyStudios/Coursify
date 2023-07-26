@@ -136,6 +136,19 @@ const Theming: NextPage = () => {
 					});
 				}}
 			/>
+			<Header name="grades" page={1}>
+				Grades
+			</Header>
+			<ToggleSection
+				name="Hide Grade Information"
+				description="Chose whether to hide grade information by default."
+				enabled={settings.sortBySchedule}
+				setEnabled={() =>
+					set({
+						sortBySchedule: !settings.sortBySchedule,
+					})
+				}
+			/>
 			<Header name="time" page={1}>
 				Time
 			</Header>

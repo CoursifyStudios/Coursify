@@ -29,7 +29,6 @@ export const settingsPages: {
 		icon: <SwatchIcon className={iconClasses} />,
 		content: <Appearance />,
 	},
-
 	{
 		name: "Notifications",
 		icon: <BellIcon className={iconClasses} />,
