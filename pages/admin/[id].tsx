@@ -830,6 +830,7 @@ Activities	The user's activities, as displayed on their profile
 				onChange={(tab) => {
 					setSelectedRows([]);
 					setSelectedSquare(undefined);
+					setPage(1);
 					setTab(tab);
 				}}
 			>
@@ -1401,7 +1402,7 @@ Activities	The user's activities, as displayed on their profile
 								onClick={() => search(false, page - 1)}
 							/>
 							<div className="px-3 py-1.5 rounded-xl bg-gray-200 text-xl font-medium">
-								1
+								{page}
 							</div>
 							<ButtonIcon
 								disabled={page === pages}
@@ -1893,7 +1894,7 @@ Activities	The user's activities, as displayed on their profile
 								onClick={() => search(true, page - 1)}
 							/>
 							<div className="px-3 py-1.5 rounded-xl bg-gray-200 text-xl font-medium">
-								1
+								{page}
 							</div>
 							<ButtonIcon
 								disabled={page === pages}
