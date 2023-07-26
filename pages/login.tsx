@@ -28,14 +28,30 @@ export default function Login() {
 	return (
 		<div className="flex bg-gradient-to-br from-yellow-100 overflow-hidden to-pink-300 dark:from-transparent dark:to-transparent dark:bg-blue-950 justify-center relative">
 			<div className="dark:visible invisible select-none absolute top-0 left-0">
-				<Image src={pinkEllipse} alt="A Pink Ellipse" draggable="false" />
+				<Image
+					src={pinkEllipse}
+					alt="A Pink Ellipse"
+					priority
+					draggable="false"
+				/>
 			</div>
 			<div className="dark:visible invisible absolute top-0 right-0">
-				<Image src={blueCircle} alt="A Blue Circle" draggable="false" />
+				<Image
+					src={blueCircle}
+					alt="A Blue Circle"
+					priority
+					draggable="false"
+				/>
 			</div>
 			<div className="dark:visible invisible absolute bottom-0 right-0">
-				<Image src={orangeCircle} alt="A Orange Circle" draggable="false" />
+				<Image
+					src={orangeCircle}
+					alt="A Orange Circle"
+					priority
+					draggable="false"
+				/>
 			</div>
+			<div className="inset-0 absolute bg-black/10 backdrop-blur-3xl"></div>
 			<div className="flex items-center h-screen flex-col justify-between py-10">
 				<div className="flex flex-col space-y-3 items-center px-9">
 					<h1 className=" text-4xl md:mb-48 mb-32 font-bold z-50">Welcome</h1>
@@ -62,7 +78,7 @@ export default function Login() {
 							alt="Google Logo"
 							width={25}
 							height={25}
-							className="mr-4"
+							className="mr-6"
 						/>{" "}
 						Continue with Google
 					</button>
