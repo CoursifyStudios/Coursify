@@ -29,10 +29,5 @@ const EditorPage: NextPageWithLayout = () => {
 export default EditorPage;
 
 EditorPage.getLayout = function getLayout(page: ReactElement) {
-	return(
-		<Layout>
-			{page}
-		</Layout>
-
-	)
-}
+	return <Layout>{page}</Layout>;
+};

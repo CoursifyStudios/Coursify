@@ -455,10 +455,5 @@ const Class: NextPageWithLayout = () => {
 export default Class;
 
 Class.getLayout = function getLayout(page: ReactElement) {
-	return(
-		<Layout>
-			{page}
-		</Layout>
-
-	)
-}
+	return <Layout>{page}</Layout>;
+};

@@ -382,12 +382,6 @@ const ScheduleEditor: NextPageWithLayout = () => {
 };
 export default ScheduleEditor;
 
-
 ScheduleEditor.getLayout = function getLayout(page: ReactElement) {
-	return(
-		<Layout>
-			{page}
-		</Layout>
-
-	)
-}
+	return <Layout>{page}</Layout>;
+};

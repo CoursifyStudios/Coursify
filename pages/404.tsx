@@ -23,15 +23,10 @@ const Custom404: NextPageWithLayout = () => {
 			</div>
 		</div>
 	);
-}
+};
 
-export default Custom404
+export default Custom404;
 
 Custom404.getLayout = function getLayout(page: ReactElement) {
-	return(
-		<Layout>
-			{page}
-		</Layout>
-
-	)
-}
+	return <Layout>{page}</Layout>;
+};

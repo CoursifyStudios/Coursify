@@ -3,7 +3,7 @@ import { AssignmentSettingsTypes } from "@/components/complete/assignments/assig
 import AssignmentHeader from "@/components/complete/assignments/assignmentPanel/header";
 import { Submission } from "@/components/complete/assignments/assignmentPanel/submission.types";
 import Editor from "@/components/editors/richeditor";
-import { NextPageWithLayout } from "@/pages/_app"
+import { NextPageWithLayout } from "@/pages/_app";
 import Layout from "@/components/layout/layout";
 import Dropdown from "@/components/misc/dropdown";
 import { Info } from "@/components/tooltips/info";
@@ -385,10 +385,5 @@ const Post: NextPageWithLayout = () => {
 export default Post;
 
 Post.getLayout = function getLayout(page: ReactElement) {
-	return(
-		<Layout>
-			{page}
-		</Layout>
-
-	)
-}
+	return <Layout>{page}</Layout>;
+};
