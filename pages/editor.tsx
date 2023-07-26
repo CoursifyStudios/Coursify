@@ -1,9 +1,11 @@
 import { EditorState } from "lexical/LexicalEditorState";
 import { NextPage } from "next";
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import Editor from "../components/editors/richeditor";
+import Layout from "@/components/layout/layout";
+import { NextPageWithLayout } from "./_app";
 
-const EditorPage: NextPage = () => {
+const EditorPage: NextPageWithLayout = () => {
 	const [editorState, setEditorState] = useState<EditorState>();
 
 	return (
@@ -25,3 +27,12 @@ const EditorPage: NextPage = () => {
 };
 
 export default EditorPage;
+
+EditorPage.getLayout = function getLayout(page: ReactElement) {
+	return(
+		<Layout>
+			{page}
+		</Layout>
+
+	)
+}

@@ -1,6 +1,9 @@
+import Layout from "@/components/layout/layout";
 import { useRouter } from "next/router";
+import { ReactElement } from "react";
+import { NextPageWithLayout } from "./_app";
 
-export default function Custom404() {
+const Custom404: NextPageWithLayout = () => {
 	const router = useRouter();
 
 	return (
@@ -20,4 +23,15 @@ export default function Custom404() {
 			</div>
 		</div>
 	);
+}
+
+export default Custom404
+
+Custom404.getLayout = function getLayout(page: ReactElement) {
+	return(
+		<Layout>
+			{page}
+		</Layout>
+
+	)
 }

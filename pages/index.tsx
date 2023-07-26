@@ -1,6 +1,6 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import HomepageClassesUI from "../components/class/homepage";
 import { sortClasses } from "../components/class/sorting";
 import { AssignmentPreview } from "../components/complete/assignments/assignments";
@@ -9,8 +9,9 @@ import { AllClassesResponse, getAllClasses } from "../lib/db/classes";
 import { Database } from "../lib/db/database.types";
 import { ScheduleInterface, getSchedulesForXDays } from "../lib/db/schedule";
 import { useSettings } from "../lib/stores/settings";
+import Layout from "@/components/layout/layout";
 
-export default function Home() {
+const Home = () => {
 	const supabaseClient = useSupabaseClient<Database>();
 	const user = useUser();
 	const [classes, setClasses] = useState<AllClassesResponse>();
@@ -252,4 +253,16 @@ export default function Home() {
 			</div>
 		</>
 	);
+}
+
+
+export default Home;
+
+Home.getLayout = function getLayout(page: ReactElement) {
+	return(
+		<Layout>
+			{page}
+		</Layout>
+
+	)
 }
