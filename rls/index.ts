@@ -18,6 +18,7 @@ import {
 	assignmentSubmissionUpdate,
 	assignmentSubmissionView,
 } from "./tables/submissions.ts";
+import { adminModifyClassUsers } from "./tables/classUsers.ts";
 
 savePolicies(
 	"./policies.sql",
@@ -30,5 +31,6 @@ savePolicies(
 	adminModifyEnrolledUserData,
 	classViewing,
 	classUpdating,
-	classManagement
+	classManagement,
+	adminModifyClassUsers
 );

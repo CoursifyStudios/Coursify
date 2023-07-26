@@ -18,7 +18,7 @@ export const adminModifyEnrolledUserData = new Policy({
 		"school_id",
 		SELECT(
 			"enrolled",
-			["user_id"],
+			["school_id"],
 			AND(
 				EQ("$.admin_bool", true),
 				IN("id", SELECT("enrolled", ["user_id"], EQ("$.user_id", "auth.uid()")))

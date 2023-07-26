@@ -833,12 +833,15 @@ Activities	The user's activities, as displayed on their profile
 				schedule_type,
 			})
 			// Copy pasted from getClasses
-			.select(`
+			.select(
+				`
 			id, name, description, block, schedule_type, name_full, room, color, full_description, classpills, image,
 			users (
 				id, full_name, email
 			)
-			`).single();
+			`
+			)
+			.single();
 
 		if (error != undefined) {
 			newNotification("Something went wrong, please try again");
@@ -847,8 +850,8 @@ Activities	The user's activities, as displayed on their profile
 			setClasses((classes) => [
 				...(classes ?? []),
 				// This doesn't work since the type expects more than just the class itself
-				data
-			])
+				data,
+			]);
 		}
 
 		setLoading(false);
@@ -857,7 +860,10 @@ Activities	The user's activities, as displayed on their profile
 
 	const deleteClasses = async () => {
 		setLoading(true);
-		const deleteRelations = await supabase.from("class_users").delete().or(`${selectedRows.map((cid) => `class_id.eq.${cid}`).join(",")}`);
+		const deleteRelations = await supabase
+			.from("class_users")
+			.delete()
+			.or(`${selectedRows.map((cid) => `class_id.eq.${cid}`).join(",")}`);
 
 		if (deleteRelations.error != undefined) {
 			newNotification("Something went wrong, please try again");
@@ -865,17 +871,22 @@ Activities	The user's activities, as displayed on their profile
 			return;
 		}
 
-		const deleteClasses = await supabase.from("classes").delete().or(`${selectedRows.map((cid) => `id.eq.${cid}`).join(",")}`);
+		const deleteClasses = await supabase
+			.from("classes")
+			.delete()
+			.or(`${selectedRows.map((cid) => `id.eq.${cid}`).join(",")}`);
 
 		if (deleteClasses.error != undefined) {
 			newNotification("Something went wrong, please try again");
 		} else {
 			newNotification("Deleted selected class(es)");
-			setClasses((classes) => (classes ?? []).filter((c) => !selectedRows.includes(c.id)));
+			setClasses((classes) =>
+				(classes ?? []).filter((c) => !selectedRows.includes(c.id))
+			);
 		}
 
 		setLoading(false);
-	}
+	};
 
 	return (
 		<div className="mx-auto my-10 flex w-full max-w-screen-xl flex-col px-4">

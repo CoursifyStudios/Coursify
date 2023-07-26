@@ -75,11 +75,14 @@ export const setAdmin = async (
 	admin_bool: boolean,
 	schoolID: string
 ) => {
-	return await supabase.from("enrolled").upsert(
-		ids.map((id) => {
-			return { user_id: id, admin_bool, school_id: schoolID };
-		})
-	);
+	return await supabase
+		.from("enrolled")
+		.upsert(
+			ids.map((id) => {
+				return { user_id: id, admin_bool, school_id: schoolID };
+			})
+		)
+		.eq("school_id", schoolID);
 };
 
 export type UsersResponse = Awaited<ReturnType<typeof getUsers>>;
