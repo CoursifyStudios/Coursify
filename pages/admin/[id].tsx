@@ -2,6 +2,8 @@ import { Tab } from "@headlessui/react";
 import {
 	AcademicCapIcon,
 	ArrowDownTrayIcon,
+	ArrowTopRightOnSquareIcon,
+	ArrowUpRightIcon,
 	CheckIcon,
 	ChevronLeftIcon,
 	ChevronRightIcon,
@@ -180,7 +182,7 @@ const Admin: NextPage = () => {
 		cmodified?:
 			| "name"
 			| "name_full"
-			| "description"
+			| "image"
 			| "block"
 			| "schedule_type"
 			| "room";
@@ -245,9 +247,9 @@ const Admin: NextPage = () => {
 					break;
 				case 2:
 					setCell({
-						name: "Description",
-						content: selectedClass!.description || "",
-						cmodified: "description",
+						name: "Image",
+						content: selectedClass!.image || "",
+						cmodified: "image",
 					});
 					break;
 				case 3:
@@ -547,7 +549,7 @@ Activities	The user's activities, as displayed on their profile
 								[
 									mappedClass.name,
 									mappedClass.name_full,
-									mappedClass.description,
+									mappedClass.image,
 									mappedClass.block,
 									mappedClass.schedule_type,
 									mappedClass.room,
@@ -601,7 +603,7 @@ Activities	The user's activities, as displayed on their profile
 					text = selectedClass.name_full;
 					break;
 				case 2:
-					text = selectedClass.description;
+					text = selectedClass.image;
 					break;
 				case 3:
 					text = selectedClass.block.toString();
@@ -1638,6 +1640,13 @@ Activities	The user's activities, as displayed on their profile
 									<>
 										{selectedSquare != undefined ? (
 											<>
+												{selectedSquare == 2 && (
+													<a href={selectedClass?.image || ""} target="_blank">
+														<Button className="rounded-xl !px-2.5 h-full">
+															<ArrowTopRightOnSquareIcon className="h-5 w-5" />
+														</Button>
+													</a>
+												)}
 												<Button
 													onClick={copyCell}
 													className="rounded-xl !px-2.5"
@@ -1741,7 +1750,7 @@ Activities	The user's activities, as displayed on their profile
 
 								<p>Name</p>
 								<p>Full Name</p>
-								<p>Description</p>
+								<p>Image</p>
 								<p>Block</p>
 								<p>Schedule Type</p>
 								<p>Room</p>
@@ -1825,7 +1834,7 @@ Activities	The user's activities, as displayed on their profile
 														: "border-y-transparent border-r-transparent"
 												} cursor-pointer !border`}
 											>
-												{mappedClass.description}
+												{mappedClass.image}
 											</p>
 											<p
 												onClick={() => {
@@ -1954,7 +1963,7 @@ function EditCellUI({
 		cmodified?:
 			| "name"
 			| "name_full"
-			| "description"
+			| "image"
 			| "block"
 			| "schedule_type"
 			| "room"
