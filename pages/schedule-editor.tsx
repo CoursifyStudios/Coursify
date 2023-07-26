@@ -1,6 +1,6 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { ColoredPill } from "../components/misc/pill";
 import { Database } from "../lib/db/database.types";
 import {
@@ -14,8 +14,10 @@ import {
 } from "../lib/db/schedule";
 import { useTabs } from "../lib/tabs/handleTabs";
 import { useSettings } from "@/lib/stores/settings";
+import Layout from "@/components/layout/layout";
+import { NextPageWithLayout } from "./_app";
 
-const ScheduleEditor = () => {
+const ScheduleEditor: NextPageWithLayout = () => {
 	const supabaseClient = useSupabaseClient<Database>();
 	const tabs = useTabs((state) => state.tabs);
 	const [tempSchedule, setTempSchedule] = useState<ScheduleInterface[]>();
@@ -379,3 +381,7 @@ const ScheduleEditor = () => {
 	);
 };
 export default ScheduleEditor;
+
+ScheduleEditor.getLayout = function getLayout(page: ReactElement) {
+	return <Layout>{page}</Layout>;
+};

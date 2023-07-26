@@ -2,6 +2,8 @@ import { AnnouncementsComponent } from "@/components/complete/announcements/anno
 import { Member } from "@/components/complete/members";
 import CircleCounter from "@/components/counters/circle";
 import Editor from "@/components/editors/richeditor";
+import Layout from "@/components/layout/layout";
+import { NextPageWithLayout } from "@/pages/_app";
 import { Button } from "@/components/misc/button";
 import { InfoPill, InfoPills } from "@/components/misc/infopills";
 import { ColoredPill } from "@/components/misc/pill";
@@ -30,9 +32,9 @@ import { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, ReactElement, useEffect, useState } from "react";
 
-const Class: NextPage = () => {
+const Class: NextPageWithLayout = () => {
 	const router = useRouter();
 	const { classid } = router.query;
 	const user = useUser();
@@ -451,3 +453,7 @@ const Class: NextPage = () => {
 };
 
 export default Class;
+
+Class.getLayout = function getLayout(page: ReactElement) {
+	return <Layout>{page}</Layout>;
+};

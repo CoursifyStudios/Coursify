@@ -3,7 +3,7 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import type { PostgrestResponse } from "@supabase/supabase-js";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useMemo, useState } from "react";
+import { ReactElement, useEffect, useMemo, useState } from "react";
 import { Class } from "../../components/class";
 import { Achievement } from "../../components/complete/achievement";
 import { GroupSmall } from "../../components/complete/group";
@@ -15,6 +15,7 @@ import { getDataInArray, getDataOutArray } from "../../lib/misc/dataOutArray";
 import { useSettings } from "../../lib/stores/settings";
 import { Button } from "@/components/misc/button";
 import Link from "next/link";
+import Layout from "@/components/layout/layout";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
@@ -187,3 +188,7 @@ export default function Profile() {
 		</div>
 	);
 }
+
+Profile.getLayout = function getLayout(page: ReactElement) {
+	return <Layout>{page}</Layout>;
+};
