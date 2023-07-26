@@ -48,9 +48,10 @@ import Dropdown from "@/components/misc/dropdown";
 import Betatag from "@/components/misc/betatag";
 import { ExportToCsv } from "export-to-csv";
 import Loading from "@/components/misc/loading";
-import { Field, Form, Formik } from "formik";
+import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { PostgrestError } from "@supabase/supabase-js";
+import ImagePicker from "@/components/pickers/imagePicker";
 
 /**
  * This file is not intended for long term use.
@@ -1527,68 +1528,113 @@ Activities	The user's activities, as displayed on their profile
 								<h2 className="title mb-4">Create Class</h2>
 								<Formik
 									initialValues={{
-										full_name: "",
-										email: "",
-										phone_number: "",
-										student_id: "",
-										year: 2000,
+										name: "",
+										name_full: "",
+										room: "",
+										block: 1,
+										schedule_type: 1,
+										image: "",
 									}}
 									onSubmit={(v) => {} /*alert(JSON.stringify(v))*/}
 									validationSchema={Yup.object({
-										full_name: Yup.string().required(),
-										email: Yup.string().email().required(),
-										phone_number: Yup.string().min(10),
-										student_id: Yup.string(),
-										year: Yup.number().min(2000),
+										name: Yup.string().required().max(50),
+										name_full: Yup.string().required().max(150),
+										room: Yup.string(),
+										block: Yup.number().required(),
+										schedule_type: Yup.number().required(),
+										image: Yup.string().required("Choose an image!"),
 									})}
 								>
-									<Form className="flex flex-col gap-4">
-										<label className="flex flex-col grow">
-											<span className="mb-0 5 font-medium text-sm">
-												Full Name<span className="ml-1 text-red-500">*</span>
-											</span>
-											<Field type="text" name="full_name" autoFocus />
-										</label>
+									{({ setValues, errors, values }) => (
+										<Form className="flex flex-col gap-4">
+											<div className="flex gap-4">
+												<label className="flex flex-col grow">
+													<span className="mb-0 5 font-medium text-sm">
+														Name<span className="ml-1 text-red-500">*</span>
+													</span>
+													<Field type="text" name="name" />
+													<span className=" text-red-500">
+														<ErrorMessage name="name" />
+													</span>
+												</label>
 
-										<label className="flex flex-col grow">
-											<span className="mb-0 5 font-medium text-sm">
-												Email<span className="ml-1 text-red-500">*</span>
-											</span>
-											<Field type="text" name="email" />
-										</label>
-										<div className="flex gap-4">
+												<label className="flex flex-col ">
+													<span className="mb-0 5 font-medium text-sm">
+														Room Number
+													</span>
+													<Field type="text" name="room" />
+													<span className=" text-red-500">
+														<ErrorMessage name="room" />
+													</span>
+												</label>
+											</div>
 											<label className="flex flex-col grow">
 												<span className="mb-0 5 font-medium text-sm">
-													Phone Number
+													Full Name<span className="ml-1 text-red-500">*</span>
 												</span>
-												<Field type="text" name="phone_number" />
-											</label>
-											<label className="flex flex-col">
-												<span className="mb-0 5 font-medium text-sm">
-													Student ID
+												<Field type="text" name="name_full" autoFocus />
+												<span className=" text-red-500">
+													<ErrorMessage name="name_full" />
 												</span>
-												<Field type="text" name="student_id" />
 											</label>
 
-											<label className="flex flex-col ">
-												<span className="mb-0 5 font-medium text-sm">
-													Graduation year
-												</span>
-												<Field type="number" name="year" />
-											</label>
-										</div>
-										<p className="italic text-sm">
+											<div className="flex gap-4">
+												<label className="flex flex-col grow">
+													<span className="mb-0 5 font-medium text-sm">
+														Block<span className="ml-1 text-red-500">*</span>
+													</span>
+													<Field type="number" name="block" />
+													<span className=" text-red-500">
+														<ErrorMessage name="block" />
+													</span>
+												</label>
+
+												<label className="flex flex-col grow">
+													<span className="mb-0 5 font-medium text-sm">
+														Schedule Type
+														<span className="ml-1 text-red-500">*</span>
+													</span>
+													<Field type="number" name="schedule_type" />
+													<span className=" text-red-500">
+														<ErrorMessage name="schedule_type" />
+													</span>
+												</label>
+											</div>
+											<span className="mb-0 5 font-medium text-sm">
+												Image Picker<span className="ml-1 text-red-500">*</span>
+											</span>
+											<ImagePicker
+												setPicked={(v) =>
+													setValues((values) => {
+														return { ...values, image: v };
+													})
+												}
+											/>
+											<span className=" text-red-500">
+												<ErrorMessage name="image" />
+											</span>
+											{/* <p className="italic text-sm">
 											Leave the Student ID and Graduation year fields blank for
 											a non-student account
-										</p>
-										<Button
-											className="text-white ml-auto"
-											color="bg-blue-500"
-											type="submit"
-										>
-											Create
-										</Button>
-									</Form>
+										</p> */}
+											<Button
+												className="text-white ml-auto"
+												color="bg-blue-500"
+												type="submit"
+												disabled={Boolean(
+													errors.block ||
+														errors.name ||
+														errors.name_full ||
+														errors.room ||
+														errors.schedule_type ||
+														!values.name ||
+														!values.name_full
+												)}
+											>
+												Create
+											</Button>
+										</Form>
+									)}
 								</Formik>
 							</Popup>
 							<div
