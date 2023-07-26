@@ -24,7 +24,7 @@ export async function getAllClasses(supabase: SupabaseClient<Database>) {
 				avatar_url, id, full_name
 			),
 			class_users (
-				user_id, teacher, grades
+				user_id, teacher, grades, grade
 			),
 			assignments (
 					*,

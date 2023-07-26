@@ -40,7 +40,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 	const [selectedSort, setSelectedSort] = useState(sortTypes[0]);
 
 	const grades: number[] = getDataInArray(classData.class_users!).map(
-		(user) => user.grade || 0
+		(user) => user.grade ?? 0
 	);
 	const getGrade = (grades: number[], type: number): number => {
 		switch (type) {
