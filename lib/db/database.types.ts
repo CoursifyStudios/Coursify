@@ -40,7 +40,7 @@ export interface Database {
 						columns: ["school"];
 						referencedRelation: "schools";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			announcements: {
@@ -95,7 +95,7 @@ export interface Database {
 						columns: ["parent"];
 						referencedRelation: "announcements";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			assignments: {
@@ -159,7 +159,7 @@ export interface Database {
 						columns: ["class_id"];
 						referencedRelation: "classes";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			class_users: {
@@ -193,7 +193,7 @@ export interface Database {
 						columns: ["user_id"];
 						referencedRelation: "users";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			classes: {
@@ -251,7 +251,7 @@ export interface Database {
 						columns: ["school"];
 						referencedRelation: "schools";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			days_schedule: {
@@ -276,19 +276,22 @@ export interface Database {
 						columns: ["template"];
 						referencedRelation: "schedule_templates";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			enrolled: {
 				Row: {
+					adminBool: boolean;
 					school_id: string;
 					user_id: string;
 				};
 				Insert: {
+					adminBool?: boolean;
 					school_id: string;
 					user_id: string;
 				};
 				Update: {
+					adminBool?: boolean;
 					school_id?: string;
 					user_id?: string;
 				};
@@ -304,7 +307,32 @@ export interface Database {
 						columns: ["user_id"];
 						referencedRelation: "users";
 						referencedColumns: ["id"];
-					}
+					},
+				];
+			};
+			relationships: {
+				Row: {
+					parent_id: string[] | null;
+					student_id: string[] | null;
+					user_id: string;
+				};
+				Insert: {
+					parent_id?: string[] | null;
+					student_id?: string[] | null;
+					user_id: string;
+				};
+				Update: {
+					parent_id?: string[] | null;
+					student_id?: string[] | null;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: "relationships_user_id_fkey";
+						columns: ["user_id"];
+						referencedRelation: "users";
+						referencedColumns: ["id"];
+					},
 				];
 			};
 			schedule_templates: {
@@ -365,7 +393,7 @@ export interface Database {
 						columns: ["user_id"];
 						referencedRelation: "users";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			starred: {
@@ -393,7 +421,7 @@ export interface Database {
 						columns: ["user_id"];
 						referencedRelation: "users";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			submissions: {
@@ -403,6 +431,7 @@ export interface Database {
 					created_at: string;
 					final: boolean;
 					grade: number | null;
+					hide: boolean | null;
 					id: string;
 					user_id: string;
 				};
@@ -412,6 +441,7 @@ export interface Database {
 					created_at?: string;
 					final: boolean;
 					grade?: number | null;
+					hide?: boolean | null;
 					id?: string;
 					user_id: string;
 				};
@@ -421,6 +451,7 @@ export interface Database {
 					created_at?: string;
 					final?: boolean;
 					grade?: number | null;
+					hide?: boolean | null;
 					id?: string;
 					user_id?: string;
 				};
@@ -436,7 +467,7 @@ export interface Database {
 						columns: ["user_id"];
 						referencedRelation: "users";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			user_achievements: {
@@ -467,7 +498,7 @@ export interface Database {
 						columns: ["user_id"];
 						referencedRelation: "users";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 			users: {
@@ -478,8 +509,9 @@ export interface Database {
 					email: string | null;
 					full_name: string;
 					id: string;
-					phone_number: number | null;
+					phone_number: string | null;
 					preferred_name: string | null;
+					student_id: string | null;
 					year: string | null;
 				};
 				Insert: {
@@ -489,8 +521,9 @@ export interface Database {
 					email?: string | null;
 					full_name: string;
 					id: string;
-					phone_number?: number | null;
+					phone_number?: string | null;
 					preferred_name?: string | null;
+					student_id?: string | null;
 					year?: string | null;
 				};
 				Update: {
@@ -500,8 +533,9 @@ export interface Database {
 					email?: string | null;
 					full_name?: string;
 					id?: string;
-					phone_number?: number | null;
+					phone_number?: string | null;
 					preferred_name?: string | null;
+					student_id?: string | null;
 					year?: string | null;
 				};
 				Relationships: [
@@ -510,7 +544,7 @@ export interface Database {
 						columns: ["id"];
 						referencedRelation: "users";
 						referencedColumns: ["id"];
-					}
+					},
 				];
 			};
 		};

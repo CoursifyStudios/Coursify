@@ -60,7 +60,7 @@ const Discussion = ({
 			/>
 			<ToggleSection
 				name={`Limiting ${settings.trueWhenChars ? "Characters" : "Words"}`}
-				description="Toggle between setting a character or a word limit"
+				description="Toggle between setting a character or a word limit. Leave the below fields blank for no word/character limit"
 				enabled={settings.trueWhenChars}
 				setEnabled={(value) =>
 					setSettings((settings) => {
@@ -114,7 +114,7 @@ const Discussion = ({
 				</summary>
 				<ToggleSection
 					name="Media Only"
-					description="Only permit media submissions"
+					description="Only allow media submissions"
 					enabled={settings.mediaOnly}
 					setEnabled={(value) =>
 						setSettings((settings) => {

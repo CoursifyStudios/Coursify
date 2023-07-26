@@ -17,7 +17,7 @@ const Securityandprivacy: NextPage = () => {
 			<ToggleSection
 				name="Send anonymous data to teachers"
 				beta={true}
-				description="Allow teachers to account your workload when scheduling assignments and assessments using the Plates Tool."
+				description="Allow teachers to account for your workload when scheduling assignments and assessments using the Plates Tool."
 				enabled={true}
 				setEnabled={() =>
 					set({

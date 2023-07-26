@@ -41,7 +41,7 @@ export const Achievement = ({
 				<p className="mt-4 text-sm">{data.desc_full}</p>
 				{earned && (
 					<div className="mt-3 flex text-xs text-gray-700">
-						<h3 className="mr-1.5 font-medium">Earned:</h3>
+						<h3 className="mr-1.5 font-medium">Awarded:</h3>
 						{formatDate(earned)}
 					</div>
 				)}

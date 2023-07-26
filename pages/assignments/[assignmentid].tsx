@@ -61,9 +61,10 @@ const Post: NextPage = () => {
 	const [revisions, setRevisions] = useState<Submission[]>([]);
 
 	const options = [
-		{ name: "Relevance" },
-		{ name: "Due Latest" },
-		{ name: "Due Oldest" },
+		{ name: "Relevance" }, //still no idea what this is supposed to do
+		{ name: "Due Date" }, //we'll add an ascending/ descending button later. like pcpartpicker.com
+		//{ name: "Assign Date" },
+		//{ name: "Class Order"},
 	];
 
 	const [selected, setSelected] = useState(options[0]);
