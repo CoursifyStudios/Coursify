@@ -1,14 +1,16 @@
 import { Tab } from "@headlessui/react";
 import { NextPage } from "next";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { settingsPages } from "../components/settings";
+import { NextPageWithLayout } from "./_app";
+import Layout from "@/components/layout/layout";
 
 /**
  * Edit settings on /components/settings
  */
 
-const Settings: NextPage = () => {
+const Settings: NextPageWithLayout = () => {
 	const [currentTab, setCurrentTab] = useState(0);
 	const router = useRouter();
 	const { page, category } = router.query;
@@ -87,3 +89,7 @@ const Settings: NextPage = () => {
 };
 
 export default Settings;
+
+Settings.getLayout = function getLayout(page: ReactElement) {
+	return <Layout>{page}</Layout>;
+};

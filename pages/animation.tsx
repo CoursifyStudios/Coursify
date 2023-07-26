@@ -1,6 +1,9 @@
+import Layout from "@/components/layout/layout";
 import styles from "../styles/animation.module.scss";
+import { NextPageWithLayout } from "./_app";
+import { ReactElement } from "react";
 
-export default function Animation() {
+const Animation: NextPageWithLayout = () => {
 	// This is just proof of concept, lukas will make it look good later
 	return (
 		<>
@@ -28,4 +31,10 @@ export default function Animation() {
 			</div>
 		</>
 	);
-}
+};
+
+export default Animation;
+
+Animation.getLayout = function getLayout(page: ReactElement) {
+	return <Layout>{page}</Layout>;
+};

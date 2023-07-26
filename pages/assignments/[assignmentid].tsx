@@ -3,6 +3,8 @@ import { AssignmentSettingsTypes } from "@/components/complete/assignments/assig
 import AssignmentHeader from "@/components/complete/assignments/assignmentPanel/header";
 import { Submission } from "@/components/complete/assignments/assignmentPanel/submission.types";
 import Editor from "@/components/editors/richeditor";
+import { NextPageWithLayout } from "@/pages/_app";
+import Layout from "@/components/layout/layout";
 import Dropdown from "@/components/misc/dropdown";
 import { Info } from "@/components/tooltips/info";
 import {
@@ -29,7 +31,7 @@ import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 
 const Panel = dynamic(
 	() => import("@/components/complete/assignments/assignmentPanel"),
@@ -47,7 +49,7 @@ const Panel = dynamic(
 	}
 );
 
-const Post: NextPage = () => {
+const Post: NextPageWithLayout = () => {
 	const supabase = useSupabaseClient<Database>();
 	const [allAssignments, setAllAssignments] = useState<AllAssignmentResponse>();
 	const [assignment, setAssignment] = useState<AssignmentResponse>();
@@ -61,9 +63,10 @@ const Post: NextPage = () => {
 	const [revisions, setRevisions] = useState<Submission[]>([]);
 
 	const options = [
-		{ name: "Relevance" },
-		{ name: "Due Latest" },
-		{ name: "Due Oldest" },
+		{ name: "Relevance" }, //still no idea what this is supposed to do
+		{ name: "Due Date" }, //we'll add an ascending/ descending button later. like pcpartpicker.com
+		//{ name: "Assign Date" },
+		//{ name: "Class Order"},
 	];
 
 	const [selected, setSelected] = useState(options[0]);
@@ -380,3 +383,7 @@ const Post: NextPage = () => {
 };
 
 export default Post;
+
+Post.getLayout = function getLayout(page: ReactElement) {
+	return <Layout>{page}</Layout>;
+};

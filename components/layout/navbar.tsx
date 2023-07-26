@@ -38,6 +38,7 @@ const Navbar: NextComponentType = () => {
 
 	useEffect(() => setHydrated(true), []);
 
+	//This was fixed, but I'm too lazy to remove it
 	if (router.isReady && hydrated && router.asPath.startsWith("/login")) {
 		return <></>;
 	}
