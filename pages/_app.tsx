@@ -9,7 +9,7 @@ import Layout from "../components/layout/layout";
 import "../styles/globals.css";
 import { NextPage } from "next";
 
-export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
+export type NextPageWithLayout<P = Record<string | number | symbol, never>, IP = P> = NextPage<P, IP> & {
 	getLayout?: (page: ReactElement) => ReactNode;
 };
 
