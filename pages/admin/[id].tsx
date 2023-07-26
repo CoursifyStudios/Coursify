@@ -94,7 +94,7 @@ const Admin: NextPage = () => {
 	const [deleteOpen, setDeleteOpen] = useState(false);
 	const [createUserOpen, setCreateUserOpen] = useState(false);
 	const [dbActionsOpen, setDBActionsOpen] = useState(false);
-	const [page, setPage] = useState(0);
+	const [page, setPage] = useState(1);
 	const [users, setUsers] = useState<
 		| {
 				id: string;
