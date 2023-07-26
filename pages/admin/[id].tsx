@@ -820,6 +820,7 @@ Activities	The user's activities, as displayed on their profile
 				editCell={editCell}
 				open={editOpen}
 				setOpen={setEditOpen}
+				editingImage={tab == 1 && selectedSquare == 2}
 			/>
 			<DeleteUI
 				open={deleteOpen}
@@ -1991,6 +1992,7 @@ function EditCellUI({
 	open,
 	setOpen,
 	cell,
+	editingImage,
 }: {
 	// This is a complete mess
 	open: boolean;
@@ -2015,6 +2017,7 @@ function EditCellUI({
 			| "room"
 			| undefined;
 	};
+	editingImage: boolean;
 }) {
 	const [content, setContent] = useState<string>();
 
@@ -2041,18 +2044,27 @@ function EditCellUI({
 					setContent(undefined);
 				}}
 			>
-				<h2 className="title-sm mb-4">Edit Field</h2>
-				<label className="flex flex-col ">
-					<span className="text-sm font-medium mb-0.5">{cell.name}</span>
+				{editingImage ? (
+					<>
+						<h2 className="title-sm mb-4">Choose Image</h2>
+						<ImagePicker setPicked={setContent} />
+					</>
+				) : (
+					<>
+						<h2 className="title-sm mb-4">Edit Field</h2>
+						<label className="flex flex-col ">
+							<span className="text-sm font-medium mb-0.5">{cell.name}</span>
 
-					<input
-						type="text"
-						onChange={(v) => setContent(v.target.value)}
-						value={content}
-						autoFocus
-						placeholder={cell.content}
-					/>
-				</label>
+							<input
+								type="text"
+								onChange={(v) => setContent(v.target.value)}
+								value={content}
+								autoFocus
+								placeholder={cell.content}
+							/>
+						</label>
+					</>
+				)}
 				<Button
 					className="ml-auto mt-4 text-white"
 					type="submit"
