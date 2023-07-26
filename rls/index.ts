@@ -4,7 +4,11 @@ import {
 	assignmentManagement,
 	assignmentViewing,
 } from "./tables/assignments.ts";
-import { classViewing, classUpdating } from "./tables/classes.ts";
+import {
+	classManagement,
+	classUpdating,
+	classViewing,
+} from "./tables/classes.ts";
 import {
 	adminModifyEnrolled,
 	adminModifyEnrolledUserData,
@@ -25,5 +29,6 @@ savePolicies(
 	adminModifyEnrolled,
 	adminModifyEnrolledUserData,
 	classViewing,
-	classUpdating
+	classUpdating,
+	classManagement
 );

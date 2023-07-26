@@ -1,4 +1,4 @@
-import { Policy, IN, SELECT, AND, EQ, OR, IS, LTE, } from "../ScriptQL.ts";
+import { Policy, IN, SELECT, AND, EQ, OR, IS, LTE } from "../ScriptQL.ts";
 
 export const assignmentViewing = new Policy({
 	name: "Student assignment viewing",

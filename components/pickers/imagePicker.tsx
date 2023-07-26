@@ -54,6 +54,7 @@ const ImagePicker: NextPage<{
 							setSelected(img);
 							setPicked(img);
 						}}
+						loading="lazy"
 					/>
 				))}
 			</div>

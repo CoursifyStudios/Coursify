@@ -3,7 +3,6 @@ import {
 	AcademicCapIcon,
 	ArrowDownTrayIcon,
 	ArrowTopRightOnSquareIcon,
-	ArrowUpRightIcon,
 	CheckIcon,
 	ChevronLeftIcon,
 	ChevronRightIcon,
@@ -59,6 +58,9 @@ import ImagePicker from "@/components/pickers/imagePicker";
  * We don't have time to develop a real admin dashboard and spend the
  * time mocking up designs, testing it, learning new app dir stuff, etc.
  * If any of this code is still used second semester something went horribly wrong
+ *
+ * By the way we're using Deno Fresh rather than Next.js app dir - Lukas
+ * Epic - Bloxs
  */
 
 type ImportedUsers = {
@@ -802,6 +804,79 @@ Activities	The user's activities, as displayed on their profile
 		}
 	};
 
+	const createClass = async ({
+		name,
+		name_full,
+		room,
+		block,
+		schedule_type,
+		image,
+	}: {
+		name: string;
+		name_full: string;
+		room: string;
+		block: number;
+		schedule_type: number;
+		image: string;
+	}) => {
+		setLoading(true);
+		const { data, error } = await supabase
+			.from("classes")
+			.insert({
+				name,
+				school: id as string,
+				type: 0,
+				block,
+				name_full,
+				room,
+				image,
+				schedule_type,
+			})
+			// Copy pasted from getClasses
+			.select(`
+			id, name, description, block, schedule_type, name_full, room, color, full_description, classpills, image,
+			users (
+				id, full_name, email
+			)
+			`).single();
+
+		if (error != undefined) {
+			newNotification("Something went wrong, please try again");
+		} else {
+			newNotification("Created class");
+			setClasses((classes) => [
+				...(classes ?? []),
+				// This doesn't work since the type expects more than just the class itself
+				data
+			])
+		}
+
+		setLoading(false);
+		setCreateUserOpen(false);
+	};
+
+	const deleteClasses = async () => {
+		setLoading(true);
+		const deleteRelations = await supabase.from("class_users").delete().or(`${selectedRows.map((cid) => `class_id.eq.${cid}`).join(",")}`);
+
+		if (deleteRelations.error != undefined) {
+			newNotification("Something went wrong, please try again");
+			setLoading(false);
+			return;
+		}
+
+		const deleteClasses = await supabase.from("classes").delete().or(`${selectedRows.map((cid) => `id.eq.${cid}`).join(",")}`);
+
+		if (deleteClasses.error != undefined) {
+			newNotification("Something went wrong, please try again");
+		} else {
+			newNotification("Deleted selected class(es)");
+			setClasses((classes) => (classes ?? []).filter((c) => !selectedRows.includes(c.id)));
+		}
+
+		setLoading(false);
+	}
+
 	return (
 		<div className="mx-auto my-10 flex w-full max-w-screen-xl flex-col px-4">
 			<h1 className="title">Admin Dashboard - {name}</h1>
@@ -825,7 +900,7 @@ Activities	The user's activities, as displayed on their profile
 			<DeleteUI
 				open={deleteOpen}
 				setOpen={setDeleteOpen}
-				deleteUsers={deleteUsers}
+				deleteUsers={tab == 0 ? deleteUsers : deleteClasses}
 			/>
 			<Tab.Group
 				as="div"
@@ -1536,7 +1611,9 @@ Activities	The user's activities, as displayed on their profile
 										schedule_type: 1,
 										image: "",
 									}}
-									onSubmit={(v) => {} /*alert(JSON.stringify(v))*/}
+									onSubmit={(v) => {
+										createClass(v);
+									}}
 									validationSchema={Yup.object({
 										name: Yup.string().required().max(50),
 										name_full: Yup.string().required().max(150),
@@ -2107,7 +2184,7 @@ function DeleteUI({
 				<label className="flex flex-col ">
 					<span className="text-sm font-medium mb-0.5">
 						Type {`"`}This action is irreversible{`"`} to confirm you wish to
-						delete the selected user(s).
+						delete the selected entries.
 					</span>
 
 					<input
@@ -2138,4 +2215,5 @@ function DeleteUI({
 
 export default Admin;
 
-// How tf is this so long
+// How tf is this so long - Lukas
+// Because it's not made in fresh :trojker: - Bloxs

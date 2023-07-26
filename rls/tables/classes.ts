@@ -14,10 +14,6 @@ export const classViewing = new Policy({
 	),
 });
 
-// (auth.uid() IN ( SELECT uc.user_id
-// 	FROM class_users uc
-//    WHERE ((uc.class_id = classes.id) AND (uc.teacher = true))))
-
 export const classUpdating = new Policy({
 	name: "Teachers and admins can update class info",
 	query: IN(
@@ -36,6 +32,18 @@ export const classUpdating = new Policy({
 					)
 				)
 			)
+		)
+	),
+});
+
+export const classManagement = new Policy({
+	name: "Admins can create and delete classes",
+	query: IN(
+		"auth.uid()",
+		SELECT(
+			"enrolled",
+			["user_id"],
+			AND(EQ("$.admin_bool", true), EQ("$.school_id", "school"))
 		)
 	),
 });

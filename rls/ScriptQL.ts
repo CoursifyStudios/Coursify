@@ -144,7 +144,7 @@ export const savePolicies = async (file: string, ...policies: Policy[]) => {
 		writeTextFile: async (file: string, content: string) => {
 			// eslint-disable-next-line no-console
 			console.log("Why are you running this in node?");
-			throw new Error("Run this with `Deno task export`")
+			throw new Error("Run this with `Deno task export`");
 		},
 	};
 
