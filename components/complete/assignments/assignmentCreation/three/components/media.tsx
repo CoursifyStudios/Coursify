@@ -46,9 +46,13 @@ const Media = ({
 			<div className="flex gap-4">
 				<label htmlFor="maxSize" className="relative flex grow flex-col">
 					<span className="flex text-sm font-medium">
-						Max File Size<span className="text-red-600">*</span>
+						Maximum File Size<span className="text-red-600">*</span>
 						<Info className="ml-2">
-							The maximum file size, per file, in megabytes.
+							Set a maximum file size, per file, in megabytes, up to 5000. For
+							reference: a 4K image RAW is just over 24 megabytes, and 10
+							minutes of 1080p 60fps video can be several gigabytes in size.
+							Note that many file formats severely compress these files,
+							reducing their size.
 						</Info>
 					</span>
 
@@ -63,11 +67,11 @@ const Media = ({
 							})
 						}
 					/>
-					<p className="absolute bottom-2 right-3 z-10 font-medium">mb</p>
+					<p className="absolute bottom-2 right-3 z-10 font-medium">MB</p>
 				</label>
 				<label htmlFor="minFiles" className="flex grow flex-col">
 					<span className="flex text-sm font-medium">
-						Min Files Required<span className="text-red-600">*</span>
+						Minimum Files Required<span className="text-red-600">*</span>
 					</span>
 					<input
 						type="number"
@@ -82,7 +86,9 @@ const Media = ({
 					/>
 				</label>
 				<label htmlFor="maxFiles" className="flex grow flex-col">
-					<span className="flex text-sm font-medium">Max Files Allowed</span>
+					<span className="flex text-sm font-medium">
+						Maximum Files Allowed
+					</span>
 					<input
 						type="number"
 						defaultValue={settings.maxFiles}
@@ -98,10 +104,10 @@ const Media = ({
 			</div>
 			<label htmlFor="fileTypes" className="flex grow flex-col">
 				<div className="flex text-sm font-medium">
-					File Extensions Allow List
+					Allowed file formats
 					<Info className="ml-2">
-						Specify certain file extensions (the last part of a file part of a
-						file, like like .jpg or .gif) that students can submit.
+						Specify which file extensions (the last part of a file name, such as
+						.jpg, .pdf, .mp4 or .gif) that students can submit.
 					</Info>
 				</div>
 				<div>
@@ -157,8 +163,8 @@ const Media = ({
 				</div>
 				<p className="mt-0.5 text-xs text-gray-600 dark:text-gray-400">
 					{settings.fileTypes?.length == 0
-						? "Students can add files with any extension to this assignment"
-						: "Students can only add files based on the file extensions above"}
+						? "Students can add files with any extension to this assignment" //This is impossible, as this page only allows 1 or more file formats, not 0
+						: "Students can only add media content in the formats listed above."}
 				</p>
 			</label>
 		</>
