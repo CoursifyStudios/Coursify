@@ -20,5 +20,6 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-	matcher: "/((?!api|_next/static|favicon.ico|login|txt|svg|privacypolicy.txt|termsandconditions.txt|brand-logos).*)",
+	matcher:
+		"/((?!api|_next/static|favicon.ico|login|txt|svg|privacypolicy.txt|termsandconditions.txt|brand-logos).*)",
 };
