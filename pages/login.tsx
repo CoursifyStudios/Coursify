@@ -3,10 +3,6 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { Database } from "../lib/db/database.types";
-import pinkEllipse from "@/public/svgs/pinkEllipse.svg";
-import blueCircle from "@/public/svgs/blueCircle.svg";
-import orangeCircle from "@/public/svgs/orangeCircle.svg";
-import Link from "next/link";
 
 export default function Login() {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -26,6 +22,7 @@ export default function Login() {
 	}, [user, router]);
 
 	return (
+
 		<div className="flex bg-gradient-to-br from-yellow-100 overflow-hidden to-pink-300 dark:from-transparent dark:to-transparent dark:bg-blue-950 justify-center relative">
 			<div className="dark:visible invisible select-none absolute top-0 left-0">
 				<Image
@@ -59,7 +56,7 @@ export default function Login() {
 						Log into Coursify
 					</h2>
 					<button
-						className="flex z-50 rounded-3xl w-full md:px-28 text-lg md:py-7 px-5 py-4 items-center justify-center py-text-[1.05rem] bg-white dark:bg-black font-medium brightness-hover"
+						className="mb-8 flex rounded-md bg-gray-200 px-4 py-3 text-[1.05rem] font-medium hover:bg-gray-300"
 						onClick={() =>
 							supabaseClient.auth.signInWithOAuth({
 								provider: "google",
@@ -82,7 +79,7 @@ export default function Login() {
 						/>{" "}
 						Continue with Google
 					</button>
-					<button className="flex z-50 rounded-3xl md:px-28 text-lg md:py-7 px-5 py-4 items-center justify-center cursor-not-allowed bg-gray-200 text-[1.05rem] font-medium grayscale">
+					<button className="flex rounded-md bg-gray-200 px-4 py-3 text-[1.05rem] font-medium grayscale">
 						<Image
 							src="/brand-logos/microsoft.svg"
 							alt="Microsoft Logo"
@@ -92,29 +89,30 @@ export default function Login() {
 						/>{" "}
 						Continue with Microsoft{" "}
 					</button>
+					<button
+						className="mt-8 flex content-center rounded-md bg-gray-200 px-4 py-3 text-[1.05rem] font-medium hover:bg-gray-300"
+						onClick={() =>
+							supabaseClient.auth.signInWithPassword({
+								email: "demo@coursify.one",
+								password: "demo",
+							})
+						}
+					>
+						<Image
+							src="/brand-logos/coursify.svg"
+							alt="Microsoft Logo"
+							width={25}
+							height={25}
+							className="mr-4"
+						/>
+						Demo Coursify LMS
+					</button>
+					<p className="mx-auto w-44 pt-4 text-center text-xs text-gray-600">
+						By logging in, you agree to our{" "}
+						<a className="text-blue-500">terms and conditions</a>
+					</p>
 				</div>
-				<h3 className="text-center z-50 bg-gradient-to-r from-pink-400 to-orange-300 bg-clip-text text-3xl font-extrabold text-transparent md:ml-0">
-					Coursify
-				</h3>
 			</div>
 		</div>
 	);
 }
-/*<button
-	className="mt-8 flex content-center rounded-md bg-gray-200 px-4 py-3 text-[1.05rem] font-medium hover:bg-gray-300"
-	onClick={() =>
-		supabaseClient.auth.signInWithPassword({
-			email: "demo@coursify.one",
-			password: "demo",
-		})
-	}
-	>
-	<Image
-		src="/brand-logos/coursify.svg"
-		alt="Microsoft Logo"
-		width={25}
-		height={25}
-		className="mr-4"
-	/>
-	Demo Coursify LMS
-</button>*/
