@@ -86,6 +86,9 @@ type ImportedUsers = {
 	bio?: string;
 }[];
 
+// We should prob be using this rather than the type above but /shrug - Bloxs
+//type ImportedUsers = Omit<Database["public"]["Tables"]["users"]["Insert"], "avatar_url">[];
+
 enum CSVParser {
 	COURSIFY = "Coursify",
 	POWERSCHOOL = "Powerschool",
@@ -508,17 +511,41 @@ Activities	The user's activities, as displayed on their profile
 
 	const addNewUsers = async (users: ImportedUsers) => {
 		setLoading(true);
-		const func = await supabase.functions.invoke("add-user", {
-			body: {
-				schoolId: id,
-				studentsToEnroll: users,
-			},
+		setCreateUserOpen(false);
+
+		const dataToSend: {
+			schoolId: string;
+			studentsToEnroll: Omit<
+				Omit<Database["public"]["Tables"]["users"]["Insert"], "avatar_url">,
+				"id"
+			>[];
+		} = {
+			schoolId: id as string,
+			studentsToEnroll: users.map((u) => ({
+				full_name: u.full_name,
+				email: u.email,
+				bio: u.bio,
+				phone_number: u.phone_number,
+				preferred_name: u.preferred_name,
+				student_id: u.student_id,
+				year: u.grad_year,
+			})),
+		};
+
+		const func = await supabase.functions.invoke<
+			{ error?: string, message?: string }
+		>("add-user", {
+			body: dataToSend,
 		});
 
 		if (func.error) {
-			newNotification(`Error: ${func.error.message}`);
+			newNotification(`An unknown error occurred`);
 		} else {
-			newNotification(`Added ${users.length} user(s)`);
+			if (func.data?.error) {
+				newNotification(`Error: ${func.data.error}`);
+			} else {
+				newNotification(`Added ${users.length} user(s)`);
+			}
 		}
 
 		setLoading(false);

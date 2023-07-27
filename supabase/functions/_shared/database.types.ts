@@ -43,6 +43,37 @@ export interface Database {
           }
         ]
       }
+      agendas: {
+        Row: {
+          assignments: string[] | null
+          class_id: string
+          date: string | null
+          description: string | null
+          id: string
+        }
+        Insert: {
+          assignments?: string[] | null
+          class_id: string
+          date?: string | null
+          description?: string | null
+          id?: string
+        }
+        Update: {
+          assignments?: string[] | null
+          class_id?: string
+          date?: string | null
+          description?: string | null
+          id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "agendas_class_id_fkey"
+            columns: ["class_id"]
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       announcements: {
         Row: {
           author: string
@@ -525,7 +556,7 @@ export interface Database {
           phone_number: string | null
           preferred_name: string | null
           student_id: string | null
-          year: string | null
+          year: number | null
         }
         Insert: {
           avatar_url: string
@@ -538,7 +569,7 @@ export interface Database {
           phone_number?: string | null
           preferred_name?: string | null
           student_id?: string | null
-          year?: string | null
+          year?: number | null
         }
         Update: {
           avatar_url?: string
@@ -551,7 +582,7 @@ export interface Database {
           phone_number?: string | null
           preferred_name?: string | null
           student_id?: string | null
-          year?: string | null
+          year?: number | null
         }
         Relationships: [
           {
