@@ -7,16 +7,16 @@ import { Button } from "../misc/button";
 import { EditorState } from "lexical";
 import Editor from "../editors/richeditor";
 import { Json } from "@/lib/db/database.types";
+import Link from "next/link";
+import { to12hourTime } from "@/lib/db/schedule";
+import { ColoredPill } from "../misc/pill";
+import { useSettings } from "@/lib/stores/settings";
 
 export const Agenda = ({
-	id,
-	date,
-	description,
+	agenda,
 	assignments,
 }: {
-	id: string;
-	date: Date;
-	description: string;
+	agenda: { id: string; date: string | null; description: Json };
 	assignments: {
 		name: string;
 		description: string;
@@ -27,14 +27,23 @@ export const Agenda = ({
 }) => {
 	return (
 		<div className="bg-gray-200 p-4">
-			<h2>Agenda for {date.toLocaleDateString()}</h2>
-			<p>{description}</p>
-			{assignments.map((assignment) => (
-				<CompactAssignmentUI
-					key={assignment.id}
-					assignment={assignment}
-				></CompactAssignmentUI>
-			))}
+			<h2>Agenda for {agenda.date}</h2>
+			<Editor
+				editable={false}
+				initialState={agenda.description}
+				className="mt-0.5"
+			/>
+			<div className="grid gap-2">
+				{assignments.map((assignment) => (
+					<Link
+						key={assignment.id}
+						href={"/assignments/" + assignment.id}
+						className="border-2 border-black grid rounded-md"
+					>
+						<CompactAssignmentUI assignment={assignment}></CompactAssignmentUI>
+					</Link>
+				))}
+			</div>
 		</div>
 	);
 };
@@ -58,6 +67,7 @@ export const CreateAgenda = ({
 }) => {
 	const supabase = useSupabaseClient();
 	const [editorState, setEditorState] = useState<EditorState>();
+	const [errorMessage, setErrorMessage] = useState("");
 	const [chosenAssignments, setChosenAssignments] = useState<string[]>([]);
 	return (
 		<Popup closeMenu={() => setOpen(false)} open={open} size="md">
@@ -67,25 +77,39 @@ export const CreateAgenda = ({
 				initialValues={{
 					date: "",
 				}}
-				onSubmit={(values) => {
-					console.log(
-						createAgenda(
+				onSubmit={async (values) => {
+					setErrorMessage("");
+					if (
+						values.date != "" &&
+						editorState &&
+						editorState.toJSON().root.direction !== null
+					) {
+						const DBreturn = await createAgenda(
 							supabase,
 							classID,
 							values.date,
 							editorState?.toJSON() as unknown as Json,
 							chosenAssignments
-						)
-					);
+						);
+						if (DBreturn.error) {
+							setErrorMessage("Something went wrong processing your request");
+						} else {
+							setOpen(false);
+						}
+					} else {
+						setErrorMessage("Make sure to include a date and a description!");
+					}
 				}}
 			>
 				<Form className="flex flex-col w-full gap-3">
 					<label htmlFor="date">
 						<Field name="date" type="date"></Field>
 					</label>
+					{/* Error handling yay */}
+					<p className="text-red-500">{errorMessage}</p>
 					<Editor
 						editable={true}
-						className="mt-4 rounded-md border border-gray-300 bg-backdrop/50 p-2 "
+						className="rounded-md border border-gray-300 bg-backdrop/50 p-2 "
 						backdrop={false}
 						updateState={setEditorState}
 						initialState={""}
@@ -130,11 +154,24 @@ const CompactAssignmentUI = ({
 		due_date: string | null;
 	};
 }) => {
+	const date = assignment.due_date ? new Date(assignment.due_date) : null;
+	const { data: settings } = useSettings();
 	return (
 		<div key={assignment.id} className="flex justify-between bg-gray-200 p-2">
 			<p className="font-semibold">{assignment.name}</p>
 			{/* TODO: parse that */}
-			<p>Due: {assignment.due_date}</p>
+			{date ? (
+				<div className="grid grid-cols-2">
+					<div className="mr-2 font-medium">
+						{date.getMonth()}/{date.getDate()}
+					</div>
+					<ColoredPill color={"gray"}>
+						{`${to12hourTime(date, settings.showAMPM)}`}
+					</ColoredPill>
+				</div>
+			) : (
+				<span className="text-sm italic">No due date</span>
+			)}
 		</div>
 	);
 };

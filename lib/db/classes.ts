@@ -88,6 +88,9 @@ export const getClass = async (
 		assignments (
 			name, description, id, due_type, due_date
 		),
+        agendas (
+            *
+        ),
 		class_users (
 			user_id, grade, teacher
 		),

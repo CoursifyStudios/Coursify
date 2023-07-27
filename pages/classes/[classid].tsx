@@ -15,7 +15,7 @@ import {
 	getSchedule,
 	setThisSchedule,
 } from "@/lib/db/schedule";
-import { getDataInArray } from "@/lib/misc/dataOutArray";
+import { getDataInArray, getDataOutArray } from "@/lib/misc/dataOutArray";
 import { useSettings } from "@/lib/stores/settings";
 import { CreateAssignment } from "@assignments/assignmentCreation";
 import { AssignmentPreview } from "@assignments/assignments";
@@ -33,7 +33,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment, ReactElement, useEffect, useState } from "react";
-import { CreateAgenda } from "@/components/class/agenda";
+import { Agenda, CreateAgenda } from "@/components/class/agenda";
 
 const Class: NextPageWithLayout = () => {
 	const router = useRouter();
@@ -158,6 +158,7 @@ const Class: NextPageWithLayout = () => {
 
 	return (
 		<div className="mx-auto my-10 flex w-full max-w-screen-xl flex-col px-4">
+			{/* Why can't we just have one of these!!! */}
 			{data.data && typeof classid == "string" && (
 				<CreateAssignment
 					block={data.data.block}
@@ -320,13 +321,30 @@ const Class: NextPageWithLayout = () => {
 									</div>
 								)
 							)}
-							{/* TODO: */}
 							<div
 								onClick={() => setAgendaCreationOpen(true)}
 								className="my-4 group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white"
 							>
 								<PlusIcon className="-ml-4 mr-4 h-8 w-8 transition group-hover:scale-125" />{" "}
 								<h3 className="text-lg font-medium transition">New Agenda</h3>
+							</div>
+							<div className="gap-3 grid">
+								{data.data.agendas
+									.slice()
+									.sort(
+										(a, b) =>
+											new Date(b.date!).getTime() - new Date(a.date!).getTime()
+									)
+									.map((agenda) => (
+										<Agenda
+											key={agenda.id}
+											agenda={agenda}
+											assignments={data.data.assignments.filter(
+												(assignment) =>
+													agenda.assignments?.includes(assignment.id)
+											)}
+										></Agenda>
+									))}
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1} id="Announcements">
