@@ -43,6 +43,37 @@ export interface Database {
 					},
 				];
 			};
+			agendas: {
+				Row: {
+					assignments: string[] | null;
+					class_id: string;
+					date: string | null;
+					description: string | null;
+					id: string;
+				};
+				Insert: {
+					assignments?: string[] | null;
+					class_id: string;
+					date?: string | null;
+					description?: string | null;
+					id?: string;
+				};
+				Update: {
+					assignments?: string[] | null;
+					class_id?: string;
+					date?: string | null;
+					description?: string | null;
+					id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: "agendas_class_id_fkey";
+						columns: ["class_id"];
+						referencedRelation: "classes";
+						referencedColumns: ["id"];
+					},
+				];
+			};
 			announcements: {
 				Row: {
 					author: string;
@@ -115,6 +146,7 @@ export interface Database {
 					publish_type: number | null;
 					settings: Json | null;
 					submission_instructions: string | null;
+					term: string | null;
 					type: number;
 				};
 				Insert: {
@@ -133,6 +165,7 @@ export interface Database {
 					publish_type?: number | null;
 					settings?: Json | null;
 					submission_instructions?: string | null;
+					term?: string | null;
 					type?: number;
 				};
 				Update: {
@@ -151,6 +184,7 @@ export interface Database {
 					publish_type?: number | null;
 					settings?: Json | null;
 					submission_instructions?: string | null;
+					term?: string | null;
 					type?: number;
 				};
 				Relationships: [
@@ -166,18 +200,24 @@ export interface Database {
 				Row: {
 					class_id: string;
 					grade: number | null;
+					grades: Json[] | null;
+					main_teacher: boolean | null;
 					teacher: boolean;
 					user_id: string;
 				};
 				Insert: {
 					class_id: string;
 					grade?: number | null;
+					grades?: Json[] | null;
+					main_teacher?: boolean | null;
 					teacher?: boolean;
 					user_id: string;
 				};
 				Update: {
 					class_id?: string;
 					grade?: number | null;
+					grades?: Json[] | null;
+					main_teacher?: boolean | null;
 					teacher?: boolean;
 					user_id?: string;
 				};
@@ -206,7 +246,7 @@ export interface Database {
 					id: string;
 					image: string | null;
 					name: string;
-					name_full: string;
+					name_full: string | null;
 					room: string | null;
 					schedule_type: number;
 					school: string;
@@ -222,7 +262,7 @@ export interface Database {
 					id?: string;
 					image?: string | null;
 					name: string;
-					name_full?: string;
+					name_full?: string | null;
 					room?: string | null;
 					schedule_type?: number;
 					school: string;
@@ -238,7 +278,7 @@ export interface Database {
 					id?: string;
 					image?: string | null;
 					name?: string;
-					name_full?: string;
+					name_full?: string | null;
 					room?: string | null;
 					schedule_type?: number;
 					school?: string;
@@ -281,17 +321,17 @@ export interface Database {
 			};
 			enrolled: {
 				Row: {
-					adminBool: boolean;
+					admin_bool: boolean;
 					school_id: string;
 					user_id: string;
 				};
 				Insert: {
-					adminBool?: boolean;
+					admin_bool?: boolean;
 					school_id: string;
 					user_id: string;
 				};
 				Update: {
-					adminBool?: boolean;
+					admin_bool?: boolean;
 					school_id?: string;
 					user_id?: string;
 				};
@@ -431,6 +471,7 @@ export interface Database {
 					created_at: string;
 					final: boolean;
 					grade: number | null;
+					graded_on: string | null;
 					hide: boolean | null;
 					id: string;
 					user_id: string;
@@ -441,6 +482,7 @@ export interface Database {
 					created_at?: string;
 					final: boolean;
 					grade?: number | null;
+					graded_on?: string | null;
 					hide?: boolean | null;
 					id?: string;
 					user_id: string;
@@ -451,6 +493,7 @@ export interface Database {
 					created_at?: string;
 					final?: boolean;
 					grade?: number | null;
+					graded_on?: string | null;
 					hide?: boolean | null;
 					id?: string;
 					user_id?: string;
@@ -505,10 +548,11 @@ export interface Database {
 				Row: {
 					avatar_url: string;
 					bio: string | null;
-					created: string | null;
-					email: string | null;
+					created: string;
+					email: string;
 					full_name: string;
 					id: string;
+					onboarded: boolean;
 					phone_number: string | null;
 					preferred_name: string | null;
 					student_id: string | null;
@@ -517,10 +561,11 @@ export interface Database {
 				Insert: {
 					avatar_url: string;
 					bio?: string | null;
-					created?: string | null;
-					email?: string | null;
+					created?: string;
+					email: string;
 					full_name: string;
 					id: string;
+					onboarded?: boolean;
 					phone_number?: string | null;
 					preferred_name?: string | null;
 					student_id?: string | null;
@@ -529,10 +574,11 @@ export interface Database {
 				Update: {
 					avatar_url?: string;
 					bio?: string | null;
-					created?: string | null;
-					email?: string | null;
+					created?: string;
+					email?: string;
 					full_name?: string;
 					id?: string;
+					onboarded?: boolean;
 					phone_number?: string | null;
 					preferred_name?: string | null;
 					student_id?: string | null;
@@ -546,6 +592,24 @@ export interface Database {
 						referencedColumns: ["id"];
 					},
 				];
+			};
+			weights: {
+				Row: {
+					id: string;
+					name: string;
+					weight: number | null;
+				};
+				Insert: {
+					id?: string;
+					name: string;
+					weight?: number | null;
+				};
+				Update: {
+					id?: string;
+					name?: string;
+					weight?: number | null;
+				};
+				Relationships: [];
 			};
 		};
 		Views: {
@@ -573,7 +637,7 @@ export interface Database {
 					id: string;
 					image: string | null;
 					name: string;
-					name_full: string;
+					name_full: string | null;
 					room: string | null;
 					schedule_type: number;
 					school: string;

@@ -257,6 +257,20 @@ export type BasicClassInfoDB = Awaited<
 	ReturnType<typeof getClassesForUserBasic>
 >;
 
+export const createAgenda = async (
+	supabase: SupabaseClient<Database>,
+	class_id: string,
+	date: string,
+	description: string,
+	assignments: string[]
+) => {
+	return await supabase.from("agendas").insert({
+		class_id,
+		description,
+		date,
+		assignments,
+	});
+};
 export const isTeacher = (
 	classData: NonNullableArray<AllClassesResponse["data"]>,
 	userID: string

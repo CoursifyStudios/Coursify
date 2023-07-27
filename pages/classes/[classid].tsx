@@ -33,6 +33,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment, ReactElement, useEffect, useState } from "react";
+import { CreateAgenda } from "@/components/class/agenda";
 
 const Class: NextPageWithLayout = () => {
 	const router = useRouter();
@@ -48,9 +49,7 @@ const Class: NextPageWithLayout = () => {
 	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
 	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
 	const [assignmentCreationOpen, setAssignmentCreationOpen] = useState(false);
-	const [extraAnnouncements, setExtraAnnouncements] = useState<
-		TypeOfAnnouncements[]
-	>([]);
+	const [agendaCreationOpen, setAgendaCreationOpen] = useState(false);
 	const [fetchedClassId, setFetchedClassId] = useState("");
 	const [searchOpen, setSearchOpen] = useState(false);
 
@@ -168,6 +167,14 @@ const Class: NextPageWithLayout = () => {
 					classid={classid}
 				/>
 			)}
+			{data.data && typeof classid == "string" && (
+				<CreateAgenda
+					classID={classid}
+					open={agendaCreationOpen}
+					setOpen={setAgendaCreationOpen as (v: boolean) => void}
+					assignments={data.data.assignments}
+				></CreateAgenda>
+			)}
 			{!compact ? (
 				<div className="relative mb-6 h-48 w-full">
 					<Image
@@ -251,6 +258,7 @@ const Class: NextPageWithLayout = () => {
 						</Tab>
 					</Tab.List>
 					<Tab.Panels>
+						{/* HOME Tab */}
 						<Tab.Panel tabIndex={-1}>
 							<div className="mb-3 flex flex-wrap gap-2">
 								{data.data?.classpills && isTeacher != undefined && classid && (
@@ -312,6 +320,14 @@ const Class: NextPageWithLayout = () => {
 									</div>
 								)
 							)}
+							{/* TODO: */}
+							<div
+								onClick={() => setAgendaCreationOpen(true)}
+								className="my-4 group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white"
+							>
+								<PlusIcon className="-ml-4 mr-4 h-8 w-8 transition group-hover:scale-125" />{" "}
+								<h3 className="text-lg font-medium transition">New Agenda</h3>
+							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1} id="Announcements">
 							<h2 className="title mb-3">Announcements</h2>
