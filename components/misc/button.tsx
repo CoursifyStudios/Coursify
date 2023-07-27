@@ -13,7 +13,7 @@ export const Button: NextPage<{
 	return (
 		<button
 			disabled={disabled}
-			className={`flex  items-center rounded-md px-4 py-1 font-semibold focus:outline-none ${className} ${
+			className={`flex items-center rounded-md px-4 py-1 font-semibold focus:outline-none ${className} ${
 				color ? color : "bg-gray-200"
 			} ${
 				disabled

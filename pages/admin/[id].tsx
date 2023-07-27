@@ -48,7 +48,7 @@ import { Button, ButtonIcon } from "@/components/misc/button";
 import Dropdown from "@/components/misc/dropdown";
 import Betatag from "@/components/misc/betatag";
 import { ExportToCsv } from "export-to-csv";
-import Loading from "@/components/misc/loading";
+import Loading, { LoadingSmall } from "@/components/misc/loading";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
 import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
@@ -56,6 +56,7 @@ import ImagePicker from "@/components/pickers/imagePicker";
 import Layout from "@/components/layout/layout";
 import { NextPageWithLayout } from "../_app";
 import { getUserData } from "@/lib/db/settings";
+import { Toggle } from "@/components/misc/toggle";
 
 /**
  * This file is not intended for long term use.
@@ -2255,19 +2256,41 @@ function UserSelector({
 	const [students, setStudents] = useState<User[]>([]);
 	const [teachers, setTeachers] = useState<User[]>([]);
 	const [loading, setLoading] = useState(false);
+	const [open, setOpen] = useState(false);
+	const [userText, setUserText] = useState("");
+	const [teacher, setTeacher] = useState(false);
+	const [error, setError] = useState<string>();
 
-	const addUser = async (teacher: boolean, user: string) => {
+	const addUser = async () => {
+		if (
+			teachers.find(
+				(teacher) => teacher.id == userText || teacher.email == userText
+			) ||
+			students.find(
+				(student) => student.id == userText || student.email == userText
+			)
+		) {
+			setError("This user is already in this class");
+			return;
+		}
+
 		setLoading(true);
-		const userData: User = (await getUserData(
-			supabase,
-			user,
-			user.includes("@")
-		)) as unknown as User;
+		setError(undefined);
 
-		if (teacher) {
-			setTeachers((teachers) => teachers.concat([userData]));
-		} else {
-			setStudents((students) => students.concat([userData]));
+		const userData = await getUserData(
+			supabase,
+			userText,
+			userText.includes("@")
+		);
+		if (userData.data) {
+			if (teacher) {
+				setTeachers((teachers) => teachers.concat([userData.data]));
+			} else {
+				setStudents((students) => students.concat([userData.data]));
+			}
+			setUserText("");
+		} else if (userData.error) {
+			setError(userData.error.message);
 		}
 
 		setLoading(false);
@@ -2276,6 +2299,85 @@ function UserSelector({
 	return (
 		<div>
 			<h3 className="text-sm font-medium">Users</h3>
+			<Button
+				type="button"
+				className="mt-2"
+				color={
+					students.length == 0 && teachers.length == 0
+						? "bg-blue-500"
+						: undefined
+				}
+				onClick={() => setOpen(true)}
+			>
+				{students.length == 0 && teachers.length == 0
+					? "Add Users"
+					: "Edit Users"}
+			</Button>
+			<Popup
+				closeMenu={() => {
+					setOpen(false);
+				}}
+				open={open}
+				size="xs"
+			>
+				<h2 className="title-sm">Users</h2>
+				<span className="text-sm font-medium mt-4">Teachers</span>
+				<div className="grid grid-cols-2">
+					{teachers.length == 0 ? (
+						<span className="italic text-sm">No Teachers Found</span>
+					) : (
+						teachers.map((teacher) => (
+							<div key={teacher.id} className="flex items-center p-2 ">
+								<Image
+									src={teacher.avatar_url}
+									width={25}
+									height={25}
+									alt={`${teacher.full_name}'s profile picture`}
+									className="rounded-full mr-4 ring"
+								/>
+								<div className="flex flex-col">
+									<p className="font-medium ">{teacher.full_name}</p>
+									<span className="text-xs">Main teacher</span>
+								</div>
+							</div>
+						))
+					)}
+				</div>
+				<span className="text-sm font-medium mt-4">Students</span>
+				{students.length == 0 ? (
+					<span className="italic text-sm">No Students Found</span>
+				) : (
+					students.map((student) => <div key={student.id}></div>)
+				)}
+				<div className="mt-4 flex items-center">
+					<input
+						type="text"
+						className="grow mr-4"
+						color="bg-blue-500"
+						onChange={(v) => setUserText(v.target.value)}
+						disabled={loading}
+						value={userText}
+					/>
+					<div className="flex flex-col items-center text-xs">
+						<p className="mb-1">Teacher</p>
+						<Toggle
+							enabled={teacher}
+							setEnabled={() => setTeacher((teacher) => !teacher)}
+						/>
+					</div>
+					<Button
+						type="button"
+						className="ml-4"
+						color="bg-blue-500"
+						disabled={userText.length == 0 || loading}
+						onClick={addUser}
+					>
+						Add User
+						{loading && <LoadingSmall className={`ml-2 `} />}
+					</Button>
+				</div>
+				<span className="text-red-500">{error}</span>
+			</Popup>
 		</div>
 	);
 }
@@ -2291,6 +2393,7 @@ export default Admin;
 
 // How tf is this so long - Lukas
 // Because it's not made in fresh :trojker: - Bloxs
+// :doubt: - Lukas
 
 Admin.getLayout = function getLayout(page: ReactElement) {
 	return <Layout>{page}</Layout>;

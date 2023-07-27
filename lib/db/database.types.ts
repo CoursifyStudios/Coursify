@@ -170,6 +170,7 @@ export interface Database {
 					class_id: string;
 					grade: number | null;
 					grades: Json[] | null;
+					main_teacher: boolean | null;
 					teacher: boolean;
 					user_id: string;
 				};
@@ -177,6 +178,7 @@ export interface Database {
 					class_id: string;
 					grade?: number | null;
 					grades?: Json[] | null;
+					main_teacher?: boolean | null;
 					teacher?: boolean;
 					user_id: string;
 				};
@@ -184,6 +186,7 @@ export interface Database {
 					class_id?: string;
 					grade?: number | null;
 					grades?: Json[] | null;
+					main_teacher?: boolean | null;
 					teacher?: boolean;
 					user_id?: string;
 				};
