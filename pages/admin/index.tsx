@@ -1,11 +1,13 @@
+import Layout from "@/components/layout/layout";
 import Betatag from "@/components/misc/betatag";
 import { Database } from "@/lib/db/database.types";
 import { BuildingOffice2Icon } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect, Fragment, ReactElement } from "react";
+import { NextPageWithLayout } from "../_app";
 
-const Admin: NextPage = () => {
+const Admin: NextPageWithLayout = () => {
 	const user = useUser();
 	const supabase = useSupabaseClient<Database>();
 	const [schools, setSchools] = useState<
@@ -97,3 +99,7 @@ const Admin: NextPage = () => {
 };
 
 export default Admin;
+
+Admin.getLayout = function getLayout(page: ReactElement) {
+	return <Layout>{page}</Layout>;
+};

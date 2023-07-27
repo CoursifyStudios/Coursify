@@ -15,7 +15,7 @@ serve(async (req: Request) => {
   try {
     const clientSideSupabaseClient = createClient<Database>(
       Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
       {
         global: {
           headers: { Authorization: req.headers.get("Authorization")! },
@@ -24,7 +24,7 @@ serve(async (req: Request) => {
     );
     const serversideSupabaseClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_KEY") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
     );
     const { schoolId, studentsToEnroll }: {
       schoolId: string;

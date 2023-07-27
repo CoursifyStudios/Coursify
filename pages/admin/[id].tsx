@@ -1,4 +1,4 @@
-import { Tab } from "@headlessui/react";
+import { Listbox, Tab } from "@headlessui/react";
 import {
 	AcademicCapIcon,
 	ArrowDownTrayIcon,
@@ -6,6 +6,7 @@ import {
 	CheckIcon,
 	ChevronLeftIcon,
 	ChevronRightIcon,
+	ChevronUpDownIcon,
 	ClipboardDocumentListIcon,
 	MagnifyingGlassIcon,
 	PencilSquareIcon,
@@ -21,6 +22,7 @@ import Link from "next/link";
 import {
 	Dispatch,
 	Fragment,
+	ReactElement,
 	SetStateAction,
 	useEffect,
 	useMemo,
@@ -49,8 +51,11 @@ import { ExportToCsv } from "export-to-csv";
 import Loading from "@/components/misc/loading";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
-import { PostgrestError } from "@supabase/supabase-js";
+import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import ImagePicker from "@/components/pickers/imagePicker";
+import Layout from "@/components/layout/layout";
+import { NextPageWithLayout } from "../_app";
+import { getUserData } from "@/lib/db/settings";
 
 /**
  * This file is not intended for long term use.
@@ -61,11 +66,16 @@ import ImagePicker from "@/components/pickers/imagePicker";
  *
  * By the way we're using Deno Fresh rather than Next.js app dir - Lukas
  * Epic - Bloxs
+ *
+ * SLANDER - Actually Lukas
+ * NUH UH - Bloxs
+ *
+ * https://media.discordapp.net/attachments/1125697548401782867/1133178315453255791/5A664F27-A31B-4A1F-AB66-AD888508A09E.gif - Lukas
+ * https://cdn.discordapp.com/attachments/722942034549407775/1133916386574467122/dox.mp4 - Bloxs
  */
 
 type ImportedUsers = {
-	first_name: string;
-	last_name: string;
+	full_name: string;
 	email: string;
 	grad_year: number | null;
 	//parent: boolean;
@@ -83,7 +93,17 @@ enum CSVParser {
 	SKYWARD = "Skyward",
 }
 
-const Admin: NextPage = () => {
+const colors = [
+	{ id: 1, name: "blue" },
+	{ id: 2, name: "green" },
+	{ id: 3, name: "purple" },
+	{ id: 4, name: "red" },
+	{ id: 5, name: "yellow" },
+	{ id: 6, name: "orange" },
+	{ id: 7, name: "gray" },
+];
+
+const Admin: NextPageWithLayout = () => {
 	const router = useRouter();
 	const { id } = router.query;
 	const user = useUser();
@@ -136,6 +156,7 @@ const Admin: NextPage = () => {
 					id: string;
 					full_name: string;
 					email: string;
+					avatar_url: string;
 				}[];
 		  }[]
 		| null
@@ -143,16 +164,14 @@ const Admin: NextPage = () => {
 
 	const [uploadUsers, setUploadUsers] = useState<ImportedUsers>([
 		{
-			first_name: "Steve",
-			last_name: "Huffman",
+			full_name: "Steve Huffman",
 			email: "steve@ex.com",
 			grad_year: 2092,
 			//parent: false,
 			student_id: "P26_0001",
 		},
 		{
-			first_name: "Christian",
-			last_name: "Selig",
+			full_name: "Christian Selig",
 			email: "chris@ex.com",
 			grad_year: null,
 			//parent: true,
@@ -167,6 +186,7 @@ const Admin: NextPage = () => {
 	const [notifications, setNotifications] = useState<
 		{ name: string; expireAt: number }[]
 	>([]);
+	const [selectedColor, setSelectedColor] = useState(colors[0]);
 
 	const selectedUser = useMemo(
 		() => users?.find((user) => user.id == selectedRows[0]),
@@ -394,8 +414,7 @@ const Admin: NextPage = () => {
 									user;
 
 								users.push({
-									first_name,
-									last_name,
+									full_name: `${first_name} ${last_name}`,
 									email,
 									grad_year: parseInt(grad_year),
 									// parent: parent == "true",
@@ -461,8 +480,7 @@ Activities	The user's activities, as displayed on their profile
 								] = user;
 
 								users.push({
-									first_name,
-									last_name,
+									full_name: `${first_name} ${last_name}`,
 									email,
 									grad_year: parseInt(grad_year),
 									// parent: parent == "true",
@@ -837,7 +855,7 @@ Activities	The user's activities, as displayed on their profile
 				`
 			id, name, description, block, schedule_type, name_full, room, color, full_description, classpills, image,
 			users (
-				id, full_name, email
+				id, full_name, email, avatar_url
 			)
 			`
 			)
@@ -1012,8 +1030,8 @@ Activities	The user's activities, as displayed on their profile
 												key={u.email}
 												className="[&>p]:px-2.5 [&>p]:py-2 [&>p]:overflow-hidden divide-x grid grid-cols-6"
 											>
-												<p>{u.first_name}</p>
-												<p>{u.last_name}</p>
+												<p>{u.full_name.split(" ").shift()}</p>
+												<p>{u.full_name.split(" ").pop()}</p>
 												<p>{u.email}</p>
 												<p>{u.grad_year ?? "NULL"}</p>
 												<p></p>
@@ -1083,8 +1101,7 @@ Activities	The user's activities, as displayed on their profile
 										addNewUsers([
 											{
 												email: v.email,
-												first_name: v.full_name.split(" ").shift()!,
-												last_name: v.full_name.split(" ").pop()!,
+												full_name: v.full_name,
 												grad_year: v.year ?? null,
 												student_id: v.student_id ?? null,
 											},
@@ -1689,19 +1706,23 @@ Activities	The user's activities, as displayed on their profile
 													</span>
 												</label>
 											</div>
-											<span className="mb-0 5 font-medium text-sm">
-												Image Picker<span className="ml-1 text-red-500">*</span>
-											</span>
-											<ImagePicker
-												setPicked={(v) =>
-													setValues((values) => {
-														return { ...values, image: v };
-													})
-												}
-											/>
-											<span className=" text-red-500">
-												<ErrorMessage name="image" />
-											</span>
+											<label htmlFor="" className="flex flex-col">
+												<span className="mb-0 5 font-medium text-sm">
+													Image Picker
+													<span className="ml-1 text-red-500">*</span>
+												</span>
+												<ImagePicker
+													setPicked={(v) =>
+														setValues((values) => {
+															return { ...values, image: v };
+														})
+													}
+												/>
+												<span className=" text-red-500">
+													<ErrorMessage name="image" />
+												</span>
+											</label>
+											<UserSelector initialUsers={[]} supabase={supabase} />
 											{/* <p className="italic text-sm">
 											Leave the Student ID and Graduation year fields blank for
 											a non-student account
@@ -2224,7 +2245,53 @@ function DeleteUI({
 	);
 }
 
+function UserSelector({
+	supabase,
+	initialUsers,
+}: {
+	supabase: SupabaseClient<Database>;
+	initialUsers: User[];
+}) {
+	const [students, setStudents] = useState<User[]>([]);
+	const [teachers, setTeachers] = useState<User[]>([]);
+	const [loading, setLoading] = useState(false);
+
+	const addUser = async (teacher: boolean, user: string) => {
+		setLoading(true);
+		const userData: User = (await getUserData(
+			supabase,
+			user,
+			user.includes("@")
+		)) as unknown as User;
+
+		if (teacher) {
+			setTeachers((teachers) => teachers.concat([userData]));
+		} else {
+			setStudents((students) => students.concat([userData]));
+		}
+
+		setLoading(false);
+	};
+
+	return (
+		<div>
+			<h3 className="text-sm font-medium">Users</h3>
+		</div>
+	);
+}
+
+interface User {
+	id: string;
+	full_name: string;
+	email: string;
+	avatar_url: string;
+}
+
 export default Admin;
 
 // How tf is this so long - Lukas
 // Because it's not made in fresh :trojker: - Bloxs
+
+Admin.getLayout = function getLayout(page: ReactElement) {
+	return <Layout>{page}</Layout>;
+};

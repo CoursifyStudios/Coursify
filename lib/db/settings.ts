@@ -3,12 +3,13 @@ import { Database } from "./database.types";
 
 export const getUserData = async (
 	supabase: SupabaseClient<Database>,
-	profileid: string
+	profileid: string,
+	isEmail?: boolean
 ) => {
 	return await supabase
 		.from("users")
 		.select(`id, full_name, email, bio, year, avatar_url`)
-		.eq("id", profileid)
+		.eq(isEmail ? "email" : "id", profileid)
 		.single();
 };
 

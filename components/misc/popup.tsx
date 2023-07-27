@@ -27,7 +27,7 @@ export const Popup: NextPage<{
 					as={Fragment}
 				>
 					<div
-						className={`fixed inset-0  z-50 flex items-center justify-center bg-black/20 p-4 ${
+						className={`fixed inset-0 z-50 flex items-center justify-center bg-black/20 p-4 ${
 							theme == "system"
 								? "[@media(prefers-color-scheme:dark)]:dark [@media(prefers-color-scheme:dark)]:bg-black/40"
 								: theme == "dark" && "dark bg-black/40"
@@ -51,7 +51,7 @@ export const Popup: NextPage<{
 										: size == "lg"
 										? "max-w-screen-lg"
 										: "max-w-xl"
-								} flex-col rounded-xl bg-white/75 p-4 shadow-md backdrop-blur-xl dark:bg-neutral-950/75 dark:text-gray-100`}
+								} flex-col rounded-xl bg-white/75 p-4 shadow-md max-h-[95vh] scrollbar-fancy overflow-y-auto backdrop-blur-xl dark:bg-neutral-950/75 dark:text-gray-100`}
 							>
 								{children}
 								<button

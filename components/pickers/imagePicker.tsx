@@ -39,10 +39,10 @@ const ImagePicker: NextPage<{
 
 	return (
 		<>
-			<div className="grid grid-cols-3 gap-4 h-[34vh] overflow-y-auto scrollbar-fancy">
+			<div className="grid grid-cols-3 gap-4 h-[30vh] overflow-y-auto scrollbar-fancy">
 				{images?.map((img) => (
 					<Image
-						className={`h-36 w-full object-cover rounded-2xl brightness-hover cursor-pointer ${
+						className={`h-32 w-full object-cover rounded-2xl brightness-hover cursor-pointer ${
 							selected == img ? "brightness-focus" : "brightness-50"
 						}  `}
 						src={img}
