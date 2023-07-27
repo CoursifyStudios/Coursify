@@ -532,9 +532,10 @@ Activities	The user's activities, as displayed on their profile
 			})),
 		};
 
-		const func = await supabase.functions.invoke<
-			{ error?: string, message?: string }
-		>("add-user", {
+		const func = await supabase.functions.invoke<{
+			error?: string;
+			message?: string;
+		}>("add-user", {
 			body: dataToSend,
 		});
 
