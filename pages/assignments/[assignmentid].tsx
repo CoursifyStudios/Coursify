@@ -1,7 +1,7 @@
 import { Loading } from "@/components/assignments/loading";
-import { AssignmentSettingsTypes } from "@/components/complete/assignments/assignmentCreation/three/settings.types";
-import AssignmentHeader from "@/components/complete/assignments/assignmentPanel/header";
-import { Submission } from "@/components/complete/assignments/assignmentPanel/submission.types";
+import { AssignmentSettingsTypes } from "@/components/assignments/assignmentCreation/three/settings.types";
+import AssignmentHeader from "@/components/assignments/assignmentPanel/header";
+import { Submission } from "@/components/assignments/assignmentPanel/submission.types";
 import Editor from "@/components/editors/richeditor";
 import Dropdown from "@/components/misc/dropdown";
 import { Info } from "@/components/tooltips/info";
@@ -32,7 +32,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 
 const Panel = dynamic(
-	() => import("@/components/complete/assignments/assignmentPanel"),
+	() => import("@/components/assignments/assignmentPanel"),
 	{
 		loading: () => (
 			<div className="animate-pulse">

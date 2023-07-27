@@ -3,7 +3,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import HomepageClassesUI from "../components/class/homepage";
 import { sortClasses } from "../components/class/sorting";
-import { AssignmentPreview } from "../components/complete/assignments/assignments";
+import { AssignmentPreview } from "../components/assignments/assignments";
 import ScheduleComponent from "../components/complete/schedule";
 import { AllClassesResponse, getAllClasses } from "../lib/db/classes";
 import { Database } from "../lib/db/database.types";

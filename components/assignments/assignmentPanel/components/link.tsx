@@ -45,7 +45,7 @@ const Link: NextPage<{
 	},
 }) => {
 	const [editorOpen, setEditorOpen] = useState(false);
-	const finished = useMemo(() => {}, [settings, submission]);
+	const finished = useMemo(() => {}, []);
 
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
@@ -65,7 +65,7 @@ const Link: NextPage<{
 					className="text-white"
 					color="bg-gray-300"
 					disabled={false}
-					onClick={() => alert("need to do")}
+					onClick={() => {}}
 				>
 					Paste Text
 				</Button>

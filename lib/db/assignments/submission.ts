@@ -1,4 +1,4 @@
-import { SubmissionSettingsTypes } from "@/components/complete/assignments/assignmentPanel/submission.types";
+import { SubmissionSettingsTypes } from "@/components/assignments/assignmentPanel/submission.types";
 import { SupabaseClient, User } from "@supabase/auth-helpers-react";
 import { Database, Json } from "../database.types";
 
