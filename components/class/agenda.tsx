@@ -83,38 +83,40 @@ export const CreateAgenda = ({
 					<label htmlFor="date">
 						<Field name="date" type="date"></Field>
 					</label>
-                    <Editor
-				editable={true}
-				className="mt-4 rounded-md border border-gray-300 bg-backdrop/50 p-2 "
-				backdrop={false}
-				updateState={setEditorState}
-				initialState={""}
-				focus={false}
-			/>
-			{/* regular button for speedy dev.t */}
-			<p>Select assignments to include in this agenda:</p>
-			{assignments.length > 1
-				? assignments.map((assignment) => (
-						<Button
-							className="flex justify-between"
-							key={assignment.id}
-							type={"button"}
-							onClick={() =>
-								setChosenAssignments(chosenAssignments.concat(assignment.id))
-							}
-						>
-							<CompactAssignmentUI
-								assignment={assignment}
-							></CompactAssignmentUI>
-							<p>x</p>
-						</Button>
-				  ))
-				: "Make some assignments to include them in your agenda!"}
-		
+					<Editor
+						editable={true}
+						className="mt-4 rounded-md border border-gray-300 bg-backdrop/50 p-2 "
+						backdrop={false}
+						updateState={setEditorState}
+						initialState={""}
+						focus={false}
+					/>
+					{/* regular button for speedy dev.t */}
+					<p>Select assignments to include in this agenda:</p>
+					{assignments.length > 1
+						? assignments.map((assignment) => (
+								<Button
+									className="flex justify-between"
+									key={assignment.id}
+									type={"button"}
+									onClick={() =>
+										setChosenAssignments(
+											chosenAssignments.concat(assignment.id)
+										)
+									}
+								>
+									<CompactAssignmentUI
+										assignment={assignment}
+									></CompactAssignmentUI>
+									<p>x</p>
+								</Button>
+						  ))
+						: "Make some assignments to include them in your agenda!"}
+
 					<button type="submit">Create</button>
 				</Form>
 			</Formik>
-			</Popup>
+		</Popup>
 	);
 };
 
