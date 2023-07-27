@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getDataInArray, getDataOutArray } from "../misc/dataOutArray";
 import { NonNullableArray } from "../misc/misc.types";
-import type { Database } from "./database.types";
+import type { Database, Json } from "./database.types";
 import { ScheduleInterface, getSchedulesForXDays } from "./schedule";
 export async function getAllClasses(supabase: SupabaseClient<Database>) {
 	const { data, error } = await supabase
@@ -261,7 +261,7 @@ export const createAgenda = async (
 	supabase: SupabaseClient<Database>,
 	class_id: string,
 	date: string,
-	description: string,
+	description: Json,
 	assignments: string[]
 ) => {
 	return await supabase.from("agendas").insert({
