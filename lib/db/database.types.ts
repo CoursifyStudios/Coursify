@@ -584,14 +584,7 @@ export interface Database {
           student_id?: string | null
           year?: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "users_id_fkey"
-            columns: ["id"]
-            referencedRelation: "users"
-            referencedColumns: ["id"]
-          }
-        ]
+        Relationships: []
       }
       weights: {
         Row: {
