@@ -281,6 +281,18 @@ export const deleteAgenda = async (
 ) => {
 	return await supabase.from("agendas").delete().eq("id", id).select();
 };
+
+export const editAgenda = async (
+	supabase: SupabaseClient<Database>,
+	id: string,
+	newData: {
+		date: string;
+		description: Json;
+		assignments: string[];
+	}
+) => {
+	return await supabase.from("agendas").update(newData).eq("id", id).select();
+};
 export const isTeacher = (
 	classData: NonNullableArray<AllClassesResponse["data"]>,
 	userID: string

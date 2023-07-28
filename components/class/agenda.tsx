@@ -1,6 +1,6 @@
 import { Field, Form, Formik } from "formik";
 import { Popup } from "../misc/popup";
-import { createAgenda } from "@/lib/db/classes";
+import { createAgenda, editAgenda } from "@/lib/db/classes";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useState } from "react";
 import { Button } from "../misc/button";
@@ -11,16 +11,29 @@ import Link from "next/link";
 import { to12hourTime } from "@/lib/db/schedule";
 import { ColoredPill } from "../misc/pill";
 import { useSettings } from "@/lib/stores/settings";
-import { EllipsisVerticalIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+	EllipsisVerticalIcon,
+	PencilIcon,
+	TrashIcon,
+} from "@heroicons/react/24/outline";
 import { DeleteAgenda } from "./deleteAgenda";
+import { LoadingSmall } from "../misc/loading";
 
 export const Agenda = ({
+	classID,
 	agenda,
-	assignments,
+	allAssignments,
 	isTeacher,
 }: {
-	agenda: { id: string; date: string | null; description: Json };
-	assignments: {
+	classID: string;
+	agenda: {
+		id: string;
+		date: string | null;
+		description: Json;
+		assignments: string[] | null;
+	};
+	// Needed for editing
+	allAssignments: {
 		name: string;
 		description: string;
 		id: string;
@@ -30,30 +43,56 @@ export const Agenda = ({
 	isTeacher: boolean;
 }) => {
 	const [deleting, setDeleting] = useState(false);
+	const [editing, setEditing] = useState(false);
 	return (
 		<>
+			{/* For Deleting Agendas */}
 			<DeleteAgenda
 				agendaID={agenda.id}
 				open={deleting}
 				setOpen={setDeleting}
 			></DeleteAgenda>
+			{/* For Editing Agendas */}
+			<CreateAgenda
+				classID={classID}
+				open={editing}
+				setOpen={setEditing}
+				assignments={allAssignments}
+				editingInfo={{
+					id: agenda.id,
+					date: agenda.date ? agenda.date : "No date",
+					description: agenda.description,
+					assignments: allAssignments.filter((assignment) =>
+						agenda.assignments!.includes(assignment.id)
+					),
+				}}
+			></CreateAgenda>
+
 			<div className="bg-gray-200 p-4 rounded-lg">
 				<div className="flex justify-between">
 					<h2>Agenda for {agenda.date}</h2>
-					{/* For the moment, I'm commenting this out because:
-                a: only supporting deleting rn, editing UI later
-                b: can't remember which drop down menu Lukas wants me using */}
+					{/* For the moment, I'm commenting this out because I can't remember which dropdown menu Lukas wants me using */}
 					{/* <EllipsisVerticalIcon className="h-6 w-6" tabIndex={0}/> */}
-					{/* AlSO LUKAS WHY CANT I OVERIDE THE BADDING ON THE <Button> ELEMENT */}
+					{/* AlSO LUKAS WHY CANT I OVERIDE THE PADDING ON THE <Button> ELEMENT */}
 					{isTeacher && (
-						<button
-							className="hover:text-red-600"
-							onClick={() => {
-								setDeleting(true);
-							}}
-						>
-							<TrashIcon className="w-6 h-6" />
-						</button>
+						<div className="gap-2 grid grid-cols-2">
+							<button
+								className="hover:text-green-500"
+								onClick={() => {
+									setEditing(true);
+								}}
+							>
+								<PencilIcon className="w-6 h-6" />
+							</button>
+							<button
+								className="hover:text-red-600"
+								onClick={() => {
+									setDeleting(true);
+								}}
+							>
+								<TrashIcon className="w-6 h-6" />
+							</button>
+						</div>
 					)}
 				</div>
 				<Editor
@@ -62,17 +101,19 @@ export const Agenda = ({
 					className="mt-0.5"
 				/>
 				<div className="grid gap-2">
-					{assignments.map((assignment) => (
-						<Link
-							key={assignment.id}
-							href={"/assignments/" + assignment.id}
-							className="border border-black grid rounded-md"
-						>
-							<CompactAssignmentUI
-								assignment={assignment}
-							></CompactAssignmentUI>
-						</Link>
-					))}
+					{allAssignments
+						.filter((assignment) => agenda.assignments!.includes(assignment.id))
+						.map((assignment) => (
+							<Link
+								key={assignment.id}
+								href={"/assignments/" + assignment.id}
+								className="border border-black grid rounded-md"
+							>
+								<CompactAssignmentUI
+									assignment={assignment}
+								></CompactAssignmentUI>
+							</Link>
+						))}
 				</div>
 			</div>
 		</>
@@ -84,6 +125,7 @@ export const CreateAgenda = ({
 	open,
 	setOpen,
 	assignments,
+	editingInfo,
 }: {
 	classID: string;
 	open: boolean;
@@ -95,18 +137,36 @@ export const CreateAgenda = ({
 		due_type: number | null;
 		due_date: string | null;
 	}[];
+	editingInfo?: {
+		id: string;
+		date: string;
+		description: Json;
+		assignments: {
+			name: string;
+			description: string;
+			id: string;
+			due_type: number | null;
+			due_date: string | null;
+		}[];
+	};
 }) => {
 	const supabase = useSupabaseClient();
 	const [editorState, setEditorState] = useState<EditorState>();
 	const [errorMessage, setErrorMessage] = useState("");
-	const [chosenAssignments, setChosenAssignments] = useState<string[]>([]);
+	const [chosenAssignments, setChosenAssignments] = useState<string[]>(
+		editingInfo
+			? editingInfo.assignments.map((assignment) => assignment.id)
+			: []
+	);
+    const [loading, setLoading] = useState(false);
+
 	return (
 		<Popup closeMenu={() => setOpen(false)} open={open} size="md">
 			<h2 className="font-semibold mb-2">Create a new Agenda</h2>
 			{/* custom datepicker later probably */}
 			<Formik
 				initialValues={{
-					date: "",
+					date: editingInfo ? editingInfo.date : "",
 				}}
 				onSubmit={async (values) => {
 					setErrorMessage("");
@@ -115,16 +175,25 @@ export const CreateAgenda = ({
 						editorState &&
 						editorState.toJSON().root.direction !== null
 					) {
-						const DBreturn = await createAgenda(
-							supabase,
-							classID,
-							values.date,
-							editorState?.toJSON() as unknown as Json,
-							chosenAssignments
-						);
+                        setLoading(true)
+						const DBreturn = editingInfo
+							? await editAgenda(supabase, editingInfo.id, {
+									date: values.date,
+									description: editorState?.toJSON() as unknown as Json,
+									assignments: chosenAssignments,
+							  })
+							: await createAgenda(
+									supabase,
+									classID,
+									values.date,
+									editorState?.toJSON() as unknown as Json,
+									chosenAssignments
+							  );
 						if (DBreturn.error) {
+                            setLoading(false);
 							setErrorMessage("Something went wrong processing your request");
 						} else {
+                            setLoading(false);
 							setChosenAssignments([]); //clears your selections in the case of a succesful POST
 							setOpen(false);
 						}
@@ -148,7 +217,7 @@ export const CreateAgenda = ({
 						className="rounded-md border border-gray-300 bg-backdrop/50 p-2 "
 						backdrop={false}
 						updateState={setEditorState}
-						initialState={""}
+						initialState={editingInfo ? editingInfo.description : ""}
 						focus={false}
 					/>
 					{/* Later, we'll need to be able to change the order of the assignments */}
@@ -192,11 +261,12 @@ export const CreateAgenda = ({
 
 					<Button
 						// using 300 light/ 600 dark button color schema, nonstandard for us but I like it better
-						className="w-min mx-auto dark:bg-blue-600"
+						className="w-min mx-auto dark:bg-blue-600 gap-4"
 						color="bg-blue-300"
 						type="submit"
 					>
-						Create
+						{editingInfo? "Save" : "Create"} 
+                        {loading && <LoadingSmall />}
 					</Button>
 				</Form>
 			</Formik>

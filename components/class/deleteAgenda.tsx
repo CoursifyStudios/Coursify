@@ -3,6 +3,7 @@ import { Popup } from "../misc/popup";
 import { Button } from "../misc/button";
 import { deleteAgenda } from "@/lib/db/classes";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { LoadingSmall } from "../misc/loading";
 
 export const DeleteAgenda = ({
 	open,
@@ -14,6 +15,7 @@ export const DeleteAgenda = ({
 	agendaID: string;
 }) => {
 	const supabase = useSupabaseClient();
+    const [loading, setLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
 	return (
 		<Popup closeMenu={() => setOpen(false)} open={open} size="xs">
@@ -27,18 +29,21 @@ export const DeleteAgenda = ({
 				<Button
 					color="bg-red-500"
 					onClick={async () => {
+                        setLoading(true);
 						const DBreturn = await deleteAgenda(supabase, agendaID);
 						if (DBreturn.error) {
+                            setLoading(false);
 							setErrorMessage(
 								"Something went wrong deleting your agenda. Try again later"
 							);
 						} else {
+                            setLoading(false);
 							setErrorMessage("");
 							setOpen(false);
 						}
 					}}
 				>
-					Confirm
+					Confirm {loading && <LoadingSmall />}
 				</Button>
 			</div>
 			<p className="text-red-500">{errorMessage}</p>

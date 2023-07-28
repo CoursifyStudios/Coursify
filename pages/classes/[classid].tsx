@@ -340,13 +340,12 @@ const Class: NextPageWithLayout = () => {
 											new Date(b.date!).getTime() - new Date(a.date!).getTime()
 									)
 									.map((agenda) => (
+                                        typeof classid == "string" &&
 										<Agenda
 											key={agenda.id}
+                                            classID={classid}
 											agenda={agenda}
-											assignments={data.data.assignments.filter(
-												(assignment) =>
-													agenda.assignments?.includes(assignment.id)
-											)}
+                                            allAssignments={data.data.assignments}
 											isTeacher={isTeacher ? true : false}
 										></Agenda>
 									))}
