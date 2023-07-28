@@ -1,15 +1,15 @@
 import { Field, Form, Formik } from "formik";
-import { Popup } from "../misc/popup";
+import { Popup } from "../../misc/popup";
 import { createAgenda, editAgenda } from "@/lib/db/classes";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { useState } from "react";
-import { Button } from "../misc/button";
+import { Button } from "../../misc/button";
 import { EditorState } from "lexical";
-import Editor from "../editors/richeditor";
+import Editor from "../../editors/richeditor";
 import { Json } from "@/lib/db/database.types";
 import Link from "next/link";
 import { to12hourTime } from "@/lib/db/schedule";
-import { ColoredPill } from "../misc/pill";
+import { ColoredPill } from "../../misc/pill";
 import { useSettings } from "@/lib/stores/settings";
 import {
 	EllipsisVerticalIcon,
@@ -17,7 +17,7 @@ import {
 	TrashIcon,
 } from "@heroicons/react/24/outline";
 import { DeleteAgenda } from "./deleteAgenda";
-import { LoadingSmall } from "../misc/loading";
+import { LoadingSmall } from "../../misc/loading";
 
 export const Agenda = ({
 	classID,

@@ -33,7 +33,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment, ReactElement, useEffect, useState } from "react";
-import { Agenda, CreateAgenda } from "@/components/class/agenda";
+import { Agenda, CreateAgenda } from "@/components/class/agendas/agenda";
 
 const Class: NextPageWithLayout = () => {
 	const router = useRouter();
