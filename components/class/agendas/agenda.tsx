@@ -276,7 +276,7 @@ export const CreateAgenda = ({
 										className={`w-full ${
 											chosenAssignments.indexOf(assignment.id) == -1
 												? "bg-gray-200"
-												: "bg-white"
+												: "bg-white dark:bg-black border border-black dark:border-white outline-dashed outline-1"
 										}`}
 										key={assignment.id}
 										type={"button"}
@@ -298,7 +298,7 @@ export const CreateAgenda = ({
 											className={
 												chosenAssignments.indexOf(assignment.id) == -1
 													? "bg-gray-200"
-													: "bg-white"
+													: "bg-white dark:bg-black"
 											}
 										></CompactAssignmentUI>
 									</Button>
