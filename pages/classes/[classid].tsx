@@ -175,6 +175,13 @@ const Class: NextPageWithLayout = () => {
 					open={assignmentCreationOpen}
 					setOpen={setAssignmentCreationOpen}
 					classid={classid}
+					createTempAssignment={(newAssignment: {
+						name: string;
+						description: string;
+						id: string;
+						due_type: number | null;
+						due_date: string | null;
+					}) => setCreatedAssignments(createdAssignments.concat(newAssignment))}
 				/>
 			)}
 			{!compact ? (
