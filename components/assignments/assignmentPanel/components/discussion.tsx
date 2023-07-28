@@ -47,8 +47,9 @@ const Discussion: NextPage<{
 		user,
 	},
 }) => {
-	const [editorOpen, setEditorOpen] = useState(false);
+	const [clearEditor, setClearEditor] = useState(false);
 	const [rawSubmission, setRawSubmission] = useState("");
+
 	// Returns content and if it can be submitted, as well as the length of the text
 	const content = useMemo(() => {
 		if (!submission) return { content: "", finished: false, length: 0 };
@@ -158,7 +159,8 @@ const Discussion: NextPage<{
 		<>
 			<Editor
 				editable={true}
-				backdrop={true}
+				backdrop={false}
+				toolbarClassName="bg-backdrop"
 				focus={true}
 				updateState={(state: EditorState) =>
 					setSubmission({
@@ -166,12 +168,14 @@ const Discussion: NextPage<{
 						content: state.toJSON(),
 					})
 				}
+				clearEditor={clearEditor}
 				updateRaw={setRawSubmission}
 				className=" border-gray-300 mt-4 mb-2 rounded-xl p-4 shadow-lg dark:border"
 				initialState={
 					(revisions &&
 						revisions.length > 0 &&
 						typeof revisions[0].content != "string" &&
+						revisions[0].final == false &&
 						//@ts-expect-error
 						revisions[0].content.content) ||
 					undefined
@@ -218,7 +222,11 @@ const Discussion: NextPage<{
 						className="text-white"
 						color="bg-blue-500"
 						disabled={!content.finished}
-						onClick={() => submit()}
+						onClick={() => {
+							submit();
+							setClearEditor(true);
+							setClearEditor(true);
+						}}
 					>
 						Post
 					</Button>
@@ -226,25 +234,30 @@ const Discussion: NextPage<{
 			</div>
 			{error && `Error occured while saving: ${error}`}
 			<div className="flex flex-col gap-4 mt-8">
-				{revisions.map((v) => (
-					<div className="bg-gray-200 px-4 py-5 rounded-xl" key={v.created_at}>
-						<div className="flex items-center">
-							<div className="bg-blue-500 h-8 w-8 rounded-full"></div>
-							<div className="ml-3">
-								<h3>Username</h3>
-								<p className="text-xs text-gray-700">
-									{formatDate(new Date())}
-								</p>
+				{revisions
+					.filter((revision) => revision.final == true)
+					.map((v) => (
+						<div
+							className="bg-gray-200 px-4 py-5 rounded-xl"
+							key={v.created_at}
+						>
+							<div className="flex items-center">
+								<div className="bg-blue-500 h-8 w-8 rounded-full"></div>
+								<div className="ml-3">
+									<h3>Username</h3>
+									<p className="text-xs text-gray-700">
+										{formatDate(new Date())}
+									</p>
+								</div>
 							</div>
+							<Editor
+								editable={false}
+								className=" "
+								//@ts-expect-error I promise it does exist ts
+								initialState={v.content.content}
+							/>
 						</div>
-						<Editor
-							editable={false}
-							className=" "
-							//@ts-expect-error I promise it does exist ts
-							initialState={v.content.content}
-						/>
-					</div>
-				))}
+					))}
 			</div>
 		</>
 	);

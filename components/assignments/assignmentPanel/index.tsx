@@ -9,6 +9,7 @@ import Text from "./components/text";
 import { Submission, SubmissionSettingsTypes } from "./submission.types";
 import Link from "./components/link";
 import Discussion from "./components/discussion";
+import FileUpload from "./components/file";
 
 const AssignmentPanel: NextPage<{
 	assignmentType: AssignmentTypes;
@@ -44,6 +45,9 @@ const AssignmentPanel: NextPage<{
 		case AssignmentTypes.DISCUSSION_POST:
 			// @ts-expect-error Type conversion
 			return <Discussion imports={imports} />;
+		case AssignmentTypes.FILE_UPLOAD:
+			// @ts-expect-error Type conversion
+			return <FileUpload imports={imports} />;
 	}
 };
 

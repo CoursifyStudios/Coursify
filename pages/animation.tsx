@@ -2,6 +2,7 @@ import styles from "../styles/animation.module.scss";
 
 export default function Animation() {
 	// This is just proof of concept, lukas will make it look good later
+	// Uhh proof?
 	return (
 		<>
 			<div className={styles.container}>

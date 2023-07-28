@@ -20,6 +20,8 @@ import {
 } from "react";
 import { AssignmentLink } from "../../assignmentCreation/three/settings.types";
 import { Submission, SubmissionLink } from "../submission.types";
+import * as Yup from "yup";
+import { ErrorMessage, Formik } from "formik";
 
 const Link: NextPage<{
 	imports: {
@@ -45,10 +47,6 @@ const Link: NextPage<{
 	},
 }) => {
 	const [editorOpen, setEditorOpen] = useState(false);
-	const finished = useMemo(() => {}, []);
-
-	const [error, setError] = useState("");
-	const [loading, setLoading] = useState(false);
 
 	return (
 		<>
@@ -59,15 +57,44 @@ const Link: NextPage<{
 					disabled={false}
 					onClick={() => setEditorOpen(true)}
 				>
-					Open Editor
+					Submit
 				</Button>
+				<Popup open={true} size="sm" closeMenu={() => {}}>
+					<h1 className="title-sm">Link Submission</h1>
+					<Formik
+						onSubmit={() => {}}
+						initialValues={{}}
+						validationSchema={Yup.object().shape({
+							link: Yup.string()
+								.required("Please enter a link")
+								.url("Please enter a valid URL"),
+						})}
+					>
+						<form>
+							<input
+								placeholder="Enter a link"
+								className="flex w-full mt-2"
+								type="text"
+								name="link"
+							></input>
+						</form>
+						<Button
+							className="text-white"
+							color="bg-blue-500"
+							// disabled={!content.finished}
+							// onClick={() => submit()}
+						>
+							Submit
+						</Button>
+					</Formik>
+				</Popup>
 				<Button
 					className="text-white"
 					color="bg-gray-300"
 					disabled={false}
 					onClick={() => {}}
 				>
-					Paste Text
+					Paste Link
 				</Button>
 			</div>
 		</>
