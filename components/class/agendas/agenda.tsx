@@ -13,6 +13,7 @@ import { ColoredPill } from "../../misc/pill";
 import { useSettings } from "@/lib/stores/settings";
 import {
 	EllipsisVerticalIcon,
+	MagnifyingGlassIcon,
 	PencilIcon,
 	TrashIcon,
 } from "@heroicons/react/24/outline";
@@ -201,6 +202,7 @@ export const CreateAgenda = ({
 			: []
 	);
 	const [loading, setLoading] = useState(false);
+	const [search, setSearch] = useState("");
 
 	return (
 		<Popup closeMenu={() => setOpen(false)} open={open} size="md">
@@ -253,7 +255,7 @@ export const CreateAgenda = ({
 					}
 				}}
 			>
-				<Form className="flex flex-col w-full gap-3">
+				<Form className="flex flex-col w-full gap-2">
 					<label htmlFor="date">
 						<Field
 							name="date"
@@ -272,43 +274,68 @@ export const CreateAgenda = ({
 						focus={false}
 					/>
 					{/* Later, we'll need to be able to change the order of the assignments */}
-					<p>Select assignments to include in this agenda:</p>
-					{assignments.length > 0
-						? assignments.map((assignment) => (
-								<div key={assignment.id} className="flex justify-between">
-									<Button
-										className={`w-full ${
-											chosenAssignments.indexOf(assignment.id) == -1
-												? "bg-gray-200"
-												: "bg-white dark:bg-black border border-black dark:border-white outline-dashed outline-1"
-										}`}
-										key={assignment.id}
-										type={"button"}
-										onClick={() => {
-											const index = chosenAssignments.indexOf(assignment.id);
-											if (index == -1) {
-												setChosenAssignments(
-													chosenAssignments.concat(assignment.id)
-												);
-											} else {
-												setChosenAssignments(
-													chosenAssignments.filter((f) => f !== assignment.id)
-												);
-											}
-										}}
-									>
-										<CompactAssignmentUI
-											assignment={assignment}
-											className={
-												chosenAssignments.indexOf(assignment.id) == -1
-													? "bg-gray-200"
-													: "bg-white dark:bg-black"
-											}
-										></CompactAssignmentUI>
-									</Button>
-								</div>
-						  ))
-						: "Make some assignments to include them in your agendas!"}
+					<div className="flex justify-between">
+						<p>Select assignments to include in this agenda:</p>
+						<div className="relative flex items-center">
+							<MagnifyingGlassIcon className="absolute left-3 h-4 w-4" />
+							<input
+								type="text"
+								className="w-48 !rounded-xl py-0.5 transition-all focus:w-96 placeholder:dark:text-gray-400 pl-8"
+								placeholder="Search assignments..."
+								//@ts-ignore DUDE OF COURSE e.target.value exists!
+								onInput={(e) => setSearch(e.target.value)}
+							/>
+						</div>
+					</div>
+					<div className="overflow-auto max-h-80 gap-3 grid">
+						{assignments.length > 0
+							? assignments.map(
+									(assignment) =>
+										(search.length == 0
+											? true
+											: assignment.name
+													.toLowerCase()
+													.includes(search.toLowerCase())) && (
+											<div key={assignment.id} className="flex justify-between">
+												<Button
+													className={`w-full ${
+														chosenAssignments.indexOf(assignment.id) == -1
+															? "bg-gray-300"
+															: "bg-white dark:bg-black border border-black dark:border-white outline-1"
+													}`}
+													key={assignment.id}
+													type={"button"}
+													onClick={() => {
+														const index = chosenAssignments.indexOf(
+															assignment.id
+														);
+														if (index == -1) {
+															setChosenAssignments(
+																chosenAssignments.concat(assignment.id)
+															);
+														} else {
+															setChosenAssignments(
+																chosenAssignments.filter(
+																	(f) => f !== assignment.id
+																)
+															);
+														}
+													}}
+												>
+													<CompactAssignmentUI
+														assignment={assignment}
+														className={
+															chosenAssignments.indexOf(assignment.id) == -1
+																? "bg-gray-300"
+																: "bg-white dark:bg-black"
+														}
+													></CompactAssignmentUI>
+												</Button>
+											</div>
+										)
+							  )
+							: "Make some assignments to include them in your agendas!"}
+					</div>
 
 					<Button
 						// using 300 light/ 600 dark button color schema, nonstandard for us but I like it better
