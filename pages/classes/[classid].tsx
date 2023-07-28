@@ -52,7 +52,7 @@ const Class: NextPageWithLayout = () => {
 		TypeOfAnnouncements[]
 	>([]);
 	const [fetchedClassId, setFetchedClassId] = useState("");
-    const [searchOpen, setSearchOpen] = useState(false);
+	const [searchOpen, setSearchOpen] = useState(false);
 	const [userSearch, setUserSearch] = useState("");
 	const {
 		data: { compact },
@@ -333,15 +333,17 @@ const Class: NextPageWithLayout = () => {
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}>
 							<div className="mb-4 flex justify-between">
-								<div className={`${
+								<div
+									className={`${
 										searchOpen ? "max-w-[24rem]" : "max-w-[14rem]"
-									} relative flex grow items-center pr-2 transition-all`}>
+									} relative flex grow items-center pr-2 transition-all`}
+								>
 									<MagnifyingGlassIcon className="absolute left-3 h-4 w-4" />
 									<input
 										type="text"
 										className="grow !rounded-xl py-0.5 placeholder:dark:text-gray-400 pl-8"
 										placeholder="Search members..."
-                                        onClick={() => setSearchOpen(true)}
+										onClick={() => setSearchOpen(true)}
 										onBlur={() => setSearchOpen(false)}
 										//@ts-ignore DUDE OF COURSE e.target.value exists!
 										onInput={(e) => setUserSearch(e.target.value)}
