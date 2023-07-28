@@ -51,6 +51,15 @@ const Class: NextPageWithLayout = () => {
 	const [extraAnnouncements, setExtraAnnouncements] = useState<
 		TypeOfAnnouncements[]
 	>([]);
+	const [createdAssignments, setCreatedAssignments] = useState<
+		{
+			name: string;
+			description: string;
+			id: string;
+			due_type: number | null;
+			due_date: string | null;
+		}[]
+	>([]);
 	const [fetchedClassId, setFetchedClassId] = useState("");
 	const [searchOpen, setSearchOpen] = useState(false);
 
@@ -429,22 +438,30 @@ const Class: NextPageWithLayout = () => {
 						)}
 						{data.data?.assignments &&
 							user &&
-							getDataInArray(data.data?.assignments).map((assignment) => (
-								<AssignmentPreview
-									key={assignment.id}
-									className="brightness-hover"
-									supabase={supabase}
-									assignment={
-										Array.isArray(assignment) ? assignment[0] : assignment
-									}
-									showClassPill={false}
-									starredAsParam={false}
-									schedule={schedule!}
-									scheduleT={scheduleT!}
-									userId={user.id}
-									classes={data.data}
-								/>
-							))}
+							createdAssignments
+								.concat(getDataInArray(data.data?.assignments))
+								.slice()
+								.sort(
+									(a, b) =>
+										new Date(b.due_date!).getTime() -
+										new Date(a.due_date!).getTime()
+								)
+								.map((assignment) => (
+									<AssignmentPreview
+										key={assignment.id}
+										className="brightness-hover"
+										supabase={supabase}
+										assignment={
+											Array.isArray(assignment) ? assignment[0] : assignment
+										}
+										showClassPill={false}
+										starredAsParam={false}
+										schedule={schedule!}
+										scheduleT={scheduleT!}
+										userId={user.id}
+										classes={data.data}
+									/>
+								))}
 					</div>
 				</section>
 			</div>
