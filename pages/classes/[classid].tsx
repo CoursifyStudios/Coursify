@@ -176,7 +176,7 @@ const Class: NextPageWithLayout = () => {
 					classid={classid}
 				/>
 			)}
-			{data.data.assignments && typeof classid == "string" && (
+			{data.data.assignments && typeof classid == "string" && isTeacher && (
 				<CreateAgenda
 					classID={classid}
 					open={agendaCreationOpen}
@@ -339,14 +339,16 @@ const Class: NextPageWithLayout = () => {
 									</div>
 								)
 							)}
-							<div
-								tabIndex={0}
-								onClick={() => setAgendaCreationOpen(true)}
-								className="my-4 group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white"
-							>
-								<PlusIcon className="-ml-4 mr-4 h-8 w-8 transition group-hover:scale-125" />{" "}
-								<h3 className="text-lg font-medium transition">New Agenda</h3>
-							</div>
+							{isTeacher && (
+								<div
+									tabIndex={0}
+									onClick={() => setAgendaCreationOpen(true)}
+									className="my-4 group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white"
+								>
+									<PlusIcon className="-ml-4 mr-4 h-8 w-8 transition group-hover:scale-125" />{" "}
+									<h3 className="text-lg font-medium transition">New Agenda</h3>
+								</div>
+							)}
 							<div className="gap-3 grid">
 								{createdAgendas
 									.concat(data.data.agendas)
