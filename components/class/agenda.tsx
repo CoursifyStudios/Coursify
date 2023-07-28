@@ -11,10 +11,13 @@ import Link from "next/link";
 import { to12hourTime } from "@/lib/db/schedule";
 import { ColoredPill } from "../misc/pill";
 import { useSettings } from "@/lib/stores/settings";
+import { EllipsisVerticalIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { DeleteAgenda } from "./deleteAgenda";
 
 export const Agenda = ({
 	agenda,
 	assignments,
+	isTeacher,
 }: {
 	agenda: { id: string; date: string | null; description: Json };
 	assignments: {
@@ -24,27 +27,55 @@ export const Agenda = ({
 		due_type: number | null;
 		due_date: string | null;
 	}[];
+	isTeacher: boolean;
 }) => {
+	const [deleting, setDeleting] = useState(false);
 	return (
-		<div className="bg-gray-200 p-4 rounded-lg">
-			<h2>Agenda for {agenda.date}</h2>
-			<Editor
-				editable={false}
-				initialState={agenda.description}
-				className="mt-0.5"
-			/>
-			<div className="grid gap-2">
-				{assignments.map((assignment) => (
-					<Link
-						key={assignment.id}
-						href={"/assignments/" + assignment.id}
-						className="border border-black grid rounded-md"
-					>
-						<CompactAssignmentUI assignment={assignment}></CompactAssignmentUI>
-					</Link>
-				))}
+		<>
+			<DeleteAgenda
+				agendaID={agenda.id}
+				open={deleting}
+				setOpen={setDeleting}
+			></DeleteAgenda>
+			<div className="bg-gray-200 p-4 rounded-lg">
+				<div className="flex justify-between">
+					<h2>Agenda for {agenda.date}</h2>
+					{/* For the moment, I'm commenting this out because:
+                a: only supporting deleting rn, editing UI later
+                b: can't remember which drop down menu Lukas wants me using */}
+					{/* <EllipsisVerticalIcon className="h-6 w-6" tabIndex={0}/> */}
+					{/* AlSO LUKAS WHY CANT I OVERIDE THE BADDING ON THE <Button> ELEMENT */}
+					{isTeacher && (
+						<button
+							className="hover:text-red-600"
+							onClick={() => {
+								setDeleting(true);
+							}}
+						>
+							<TrashIcon className="w-6 h-6" />
+						</button>
+					)}
+				</div>
+				<Editor
+					editable={false}
+					initialState={agenda.description}
+					className="mt-0.5"
+				/>
+				<div className="grid gap-2">
+					{assignments.map((assignment) => (
+						<Link
+							key={assignment.id}
+							href={"/assignments/" + assignment.id}
+							className="border border-black grid rounded-md"
+						>
+							<CompactAssignmentUI
+								assignment={assignment}
+							></CompactAssignmentUI>
+						</Link>
+					))}
+				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 
@@ -94,6 +125,7 @@ export const CreateAgenda = ({
 						if (DBreturn.error) {
 							setErrorMessage("Something went wrong processing your request");
 						} else {
+							setChosenAssignments([]); //clears your selections in the case of a succesful POST
 							setOpen(false);
 						}
 					} else {
@@ -103,7 +135,11 @@ export const CreateAgenda = ({
 			>
 				<Form className="flex flex-col w-full gap-3">
 					<label htmlFor="date">
-						<Field name="date" type="date"></Field>
+						<Field
+							name="date"
+							type="date"
+							className="bg-backdrop/50 dark:placeholder:text-gray-400"
+						></Field>
 					</label>
 					{/* Error handling yay */}
 					<p className="text-red-500">{errorMessage}</p>
@@ -115,7 +151,7 @@ export const CreateAgenda = ({
 						initialState={""}
 						focus={false}
 					/>
-					{/* regular button for speedy dev.t */}
+					{/* Later, we'll need to be able to change the order of the assignments */}
 					<p>Select assignments to include in this agenda:</p>
 					{assignments.length > 1
 						? assignments.map((assignment) => (
@@ -152,9 +188,16 @@ export const CreateAgenda = ({
 									</Button>
 								</div>
 						  ))
-						: "Make some assignments to include them in your agenda!"}
+						: "Make some assignments to include them in your agendas!"}
 
-					<button type="submit">Create</button>
+					<Button
+						// using 300 light/ 600 dark button color schema, nonstandard for us but I like it better
+						className="w-min mx-auto dark:bg-blue-600"
+						color="bg-blue-300"
+						type="submit"
+					>
+						Create
+					</Button>
 				</Form>
 			</Formik>
 		</Popup>

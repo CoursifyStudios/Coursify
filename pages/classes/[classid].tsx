@@ -221,6 +221,7 @@ const Class: NextPageWithLayout = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
+									tabIndex={0}
 									className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none ${
 										selected
 											? "brightness-focus"
@@ -234,6 +235,7 @@ const Class: NextPageWithLayout = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
+									tabIndex={0}
 									className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none ${
 										selected
 											? "brightness-focus"
@@ -247,6 +249,7 @@ const Class: NextPageWithLayout = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
+									tabIndex={0}
 									className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none ${
 										selected
 											? "brightness-focus"
@@ -310,7 +313,7 @@ const Class: NextPageWithLayout = () => {
 								</div>
 							) : (
 								isTeacher && (
-									<div onClick={() => setEditable(true)}>
+									<div tabIndex={0} onClick={() => setEditable(true)}>
 										<ColoredPill
 											color="gray"
 											className="mt-2 cursor-pointer"
@@ -322,6 +325,7 @@ const Class: NextPageWithLayout = () => {
 								)
 							)}
 							<div
+								tabIndex={0}
 								onClick={() => setAgendaCreationOpen(true)}
 								className="my-4 group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white"
 							>
@@ -343,6 +347,7 @@ const Class: NextPageWithLayout = () => {
 												(assignment) =>
 													agenda.assignments?.includes(assignment.id)
 											)}
+											isTeacher={isTeacher ? true : false}
 										></Agenda>
 									))}
 							</div>
@@ -452,6 +457,7 @@ const Class: NextPageWithLayout = () => {
 						<h2 className="title mb-6 mt-8">Assignments</h2>
 						{isTeacher && (
 							<div
+								tabIndex={0}
 								onClick={() => setAssignmentCreationOpen(true)}
 								className="group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white"
 							>
