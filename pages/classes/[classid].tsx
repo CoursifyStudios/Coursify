@@ -28,7 +28,6 @@ import {
 } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { EditorState } from "lexical";
-import { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -52,6 +51,13 @@ const Class: NextPageWithLayout = () => {
 	const [agendaCreationOpen, setAgendaCreationOpen] = useState(false);
 	const [fetchedClassId, setFetchedClassId] = useState("");
 	const [searchOpen, setSearchOpen] = useState(false);
+    const [createdAgendas, setCreatedAgendas] = useState<{
+        id: string;
+        class_id: string;
+        date: string | null; //shouldn't ever be null, but too lazy to change DB
+        description: Json;
+        assignments: string[] | null; // same case as two lines above
+    }[]>([]);
 
 	const {
 		data: { compact },
@@ -174,6 +180,13 @@ const Class: NextPageWithLayout = () => {
 					open={agendaCreationOpen}
 					setOpen={setAgendaCreationOpen as (v: boolean) => void}
 					assignments={data.data.assignments}
+                    createTempAgenda={(newAgenda: {
+                        id: string;
+                        class_id: string;
+                        date: string | null;
+                        description: Json;
+                        assignments: string[] | null;
+                    }) => setCreatedAgendas(createdAgendas.concat(newAgenda))}
 				></CreateAgenda>
 			)}
 			{!compact ? (
@@ -333,22 +346,25 @@ const Class: NextPageWithLayout = () => {
 								<h3 className="text-lg font-medium transition">New Agenda</h3>
 							</div>
 							<div className="gap-3 grid">
-								{data.data.agendas
+								{createdAgendas
+                                .concat(data.data.agendas)
 									.slice()
 									.sort(
 										(a, b) =>
 											new Date(b.date!).getTime() - new Date(a.date!).getTime()
 									)
-									.map((agenda) => (
-                                        typeof classid == "string" &&
-										<Agenda
-											key={agenda.id}
-                                            classID={classid}
-											agenda={agenda}
-                                            allAssignments={data.data.assignments}
-											isTeacher={isTeacher ? true : false}
-										></Agenda>
-									))}
+									.map(
+										(agenda) =>
+											typeof classid == "string" && (
+												<Agenda
+													key={agenda.id}
+													classID={classid}
+													agenda={agenda}
+													allAssignments={data.data.assignments}
+													isTeacher={isTeacher ? true : false}
+												></Agenda>
+											)
+									)}
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1} id="Announcements">

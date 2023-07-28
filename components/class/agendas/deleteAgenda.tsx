@@ -9,15 +9,15 @@ export const DeleteAgenda = ({
 	open,
 	setOpen,
 	agendaID,
-    completed,
+	completed,
 }: {
 	open: boolean;
 	setOpen: (value: boolean) => void;
 	agendaID: string;
-    completed: (value: boolean) => void;
+	completed: (value: boolean) => void;
 }) => {
 	const supabase = useSupabaseClient();
-    const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const [errorMessage, setErrorMessage] = useState("");
 	return (
 		<Popup closeMenu={() => setOpen(false)} open={open} size="xs">
@@ -31,17 +31,17 @@ export const DeleteAgenda = ({
 				<Button
 					color="bg-red-500"
 					onClick={async () => {
-                        setLoading(true);
+						setLoading(true);
 						const DBreturn = await deleteAgenda(supabase, agendaID);
 						if (DBreturn.error) {
-                            setLoading(false);
+							setLoading(false);
 							setErrorMessage(
 								"Something went wrong deleting your agenda. Try again later"
 							);
 						} else {
-                            setLoading(false);
+							setLoading(false);
 							setErrorMessage("");
-                            completed(true);
+							completed(true);
 							setOpen(false);
 						}
 					}}

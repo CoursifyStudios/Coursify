@@ -18,6 +18,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { DeleteAgenda } from "./deleteAgenda";
 import { LoadingSmall } from "../../misc/loading";
+import { getDataOutArray } from "@/lib/misc/dataOutArray";
 
 export const Agenda = ({
 	classID,
@@ -137,6 +138,7 @@ export const CreateAgenda = ({
 	open,
 	setOpen,
 	assignments,
+    createTempAgenda,
 	editingInfo,
 }: {
 	classID: string;
@@ -149,6 +151,15 @@ export const CreateAgenda = ({
 		due_type: number | null;
 		due_date: string | null;
 	}[];
+    // REQUIRED FOR CREATING, BUT NOT EDITING
+    createTempAgenda?: (value: {
+        id: string;
+        class_id: string;
+        date: string | null;
+        description: Json;
+        assignments: string[] | null;
+    }) => void;
+    // REQUIRED FOR EDITING, BUT NOT CREATING
 	editingInfo?: {
 		id: string;
 		date: string;
@@ -201,13 +212,20 @@ export const CreateAgenda = ({
 									editorState?.toJSON() as unknown as Json,
 									chosenAssignments
 							  );
+                        // FAILURE STATE
 						if (DBreturn.error) {
 							setLoading(false);
 							setErrorMessage("Something went wrong processing your request");
-						} else {
+						// SUCCESS STATE
+                        } else {
 							setLoading(false);
 							setChosenAssignments([]); //clears your selections in the case of a succesful POST
 							setOpen(false);
+                            if (createTempAgenda && DBreturn.data) {
+                                createTempAgenda(
+                                    getDataOutArray(DBreturn.data)
+                                )
+                            } 
 						}
 					} else {
 						setErrorMessage("Make sure to include a date and a description!");

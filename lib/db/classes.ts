@@ -272,7 +272,7 @@ export const createAgenda = async (
 		description,
 		date,
 		assignments,
-	});
+	}).select();
 };
 
 export const deleteAgenda = async (
