@@ -8,7 +8,7 @@ _Written_ 📝
 
 _All need to be completed before marking a pr as ready to review_
 
-- [ ] I have reviewed my code and confirmed it doesn't cause any major security issues or create unhanded edge cases (i.e. unhandled errors)
+- [ ] I have reviewed my code and confirmed it doesn't cause any major security issues or create unhandled edge cases (i.e. unhandled errors)
 - [ ] I have tested my code in production and verified that it works as intended
 - [ ] I have organized my code based on our brief style guide and made sure that it's rationally componentized
 - [ ] I have confirmed the pages I edited work on light and dark mode
