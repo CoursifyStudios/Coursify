@@ -2,7 +2,7 @@ import { Field, Form, Formik } from "formik";
 import { Popup } from "../../misc/popup";
 import { createAgenda, editAgenda } from "@/lib/db/classes";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../../misc/button";
 import { EditorState } from "lexical";
 import Editor from "../../editors/richeditor";
@@ -42,80 +42,92 @@ export const Agenda = ({
 	}[];
 	isTeacher: boolean;
 }) => {
+	// This is a 'flag' of sorts, we'll use it to know if the agenda was actually deleted
+	const [deleted, setDeleted] = useState<true | false | null>(null);
 	const [deleting, setDeleting] = useState(false);
 	const [editing, setEditing] = useState(false);
+
 	return (
 		<>
-			{/* For Deleting Agendas */}
-			<DeleteAgenda
-				agendaID={agenda.id}
-				open={deleting}
-				setOpen={setDeleting}
-			></DeleteAgenda>
-			{/* For Editing Agendas */}
-			<CreateAgenda
-				classID={classID}
-				open={editing}
-				setOpen={setEditing}
-				assignments={allAssignments}
-				editingInfo={{
-					id: agenda.id,
-					date: agenda.date ? agenda.date : "No date",
-					description: agenda.description,
-					assignments: allAssignments.filter((assignment) =>
-						agenda.assignments!.includes(assignment.id)
-					),
-				}}
-			></CreateAgenda>
+			{deleted ? null : (
+				<div>
+					{/* For Deleting Agendas */}
+					<DeleteAgenda
+						agendaID={agenda.id}
+						open={deleting}
+						setOpen={setDeleting}
+						completed={setDeleted}
+					></DeleteAgenda>
+					{/* For Editing Agendas */}
+					<CreateAgenda
+						classID={classID}
+						open={editing}
+						setOpen={setEditing}
+						assignments={allAssignments}
+						editingInfo={{
+							id: agenda.id,
+							date: agenda.date ? agenda.date : "No date",
+							description: agenda.description,
+							assignments: allAssignments.filter((assignment) =>
+								agenda.assignments!.includes(assignment.id)
+							),
+						}}
+					></CreateAgenda>
 
-			<div className="bg-gray-200 p-4 rounded-lg">
-				<div className="flex justify-between">
-					<h2>Agenda for {agenda.date}</h2>
-					{/* For the moment, I'm commenting this out because I can't remember which dropdown menu Lukas wants me using */}
-					{/* <EllipsisVerticalIcon className="h-6 w-6" tabIndex={0}/> */}
-					{/* AlSO LUKAS WHY CANT I OVERIDE THE PADDING ON THE <Button> ELEMENT */}
-					{isTeacher && (
-						<div className="gap-2 grid grid-cols-2">
-							<button
-								className="hover:text-green-500"
-								onClick={() => {
-									setEditing(true);
-								}}
-							>
-								<PencilIcon className="w-6 h-6" />
-							</button>
-							<button
-								className="hover:text-red-600"
-								onClick={() => {
-									setDeleting(true);
-								}}
-							>
-								<TrashIcon className="w-6 h-6" />
-							</button>
+					<div className="bg-gray-200 p-4 rounded-lg">
+						<div className="flex justify-between">
+							<h2>Agenda for {agenda.date}</h2>
+							{/* For the moment, I'm commenting this out because I can't remember which dropdown menu Lukas wants me using */}
+							{/* <EllipsisVerticalIcon className="h-6 w-6" tabIndex={0}/> */}
+							{/* TBH actually kind of liking the look w/ out dropdown
+                    yeah this is better */}
+							{/* AlSO LUKAS WHY CANT I OVERIDE THE PADDING ON THE <Button> ELEMENT */}
+							{isTeacher && (
+								<div className="gap-2 grid grid-cols-2">
+									<button
+										className="hover:text-green-500"
+										onClick={() => {
+											setEditing(true);
+										}}
+									>
+										<PencilIcon className="w-6 h-6" />
+									</button>
+									<button
+										className="hover:text-red-600"
+										onClick={() => {
+											setDeleting(true);
+										}}
+									>
+										<TrashIcon className="w-6 h-6" />
+									</button>
+								</div>
+							)}
 						</div>
-					)}
+						<Editor
+							editable={false}
+							initialState={agenda.description}
+							className="mt-0.5"
+						/>
+						<div className="grid gap-2">
+							{allAssignments
+								.filter((assignment) =>
+									agenda.assignments!.includes(assignment.id)
+								)
+								.map((assignment) => (
+									<Link
+										key={assignment.id}
+										href={"/assignments/" + assignment.id}
+										className="border border-black grid rounded-md"
+									>
+										<CompactAssignmentUI
+											assignment={assignment}
+										></CompactAssignmentUI>
+									</Link>
+								))}
+						</div>
+					</div>
 				</div>
-				<Editor
-					editable={false}
-					initialState={agenda.description}
-					className="mt-0.5"
-				/>
-				<div className="grid gap-2">
-					{allAssignments
-						.filter((assignment) => agenda.assignments!.includes(assignment.id))
-						.map((assignment) => (
-							<Link
-								key={assignment.id}
-								href={"/assignments/" + assignment.id}
-								className="border border-black grid rounded-md"
-							>
-								<CompactAssignmentUI
-									assignment={assignment}
-								></CompactAssignmentUI>
-							</Link>
-						))}
-				</div>
-			</div>
+			)}
 		</>
 	);
 };
@@ -158,7 +170,7 @@ export const CreateAgenda = ({
 			? editingInfo.assignments.map((assignment) => assignment.id)
 			: []
 	);
-    const [loading, setLoading] = useState(false);
+	const [loading, setLoading] = useState(false);
 
 	return (
 		<Popup closeMenu={() => setOpen(false)} open={open} size="md">
@@ -175,7 +187,7 @@ export const CreateAgenda = ({
 						editorState &&
 						editorState.toJSON().root.direction !== null
 					) {
-                        setLoading(true)
+						setLoading(true);
 						const DBreturn = editingInfo
 							? await editAgenda(supabase, editingInfo.id, {
 									date: values.date,
@@ -190,10 +202,10 @@ export const CreateAgenda = ({
 									chosenAssignments
 							  );
 						if (DBreturn.error) {
-                            setLoading(false);
+							setLoading(false);
 							setErrorMessage("Something went wrong processing your request");
 						} else {
-                            setLoading(false);
+							setLoading(false);
 							setChosenAssignments([]); //clears your selections in the case of a succesful POST
 							setOpen(false);
 						}
@@ -265,8 +277,8 @@ export const CreateAgenda = ({
 						color="bg-blue-300"
 						type="submit"
 					>
-						{editingInfo? "Save" : "Create"} 
-                        {loading && <LoadingSmall />}
+						{editingInfo ? "Save" : "Create"}
+						{loading && <LoadingSmall />}
 					</Button>
 				</Form>
 			</Formik>

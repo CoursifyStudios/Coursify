@@ -9,10 +9,12 @@ export const DeleteAgenda = ({
 	open,
 	setOpen,
 	agendaID,
+    completed,
 }: {
 	open: boolean;
 	setOpen: (value: boolean) => void;
 	agendaID: string;
+    completed: (value: boolean) => void;
 }) => {
 	const supabase = useSupabaseClient();
     const [loading, setLoading] = useState(false);
@@ -39,6 +41,7 @@ export const DeleteAgenda = ({
 						} else {
                             setLoading(false);
 							setErrorMessage("");
+                            completed(true);
 							setOpen(false);
 						}
 					}}
