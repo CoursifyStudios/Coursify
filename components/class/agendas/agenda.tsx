@@ -267,8 +267,7 @@ export const CreateAgenda = ({
 					<p className="text-red-500">{errorMessage}</p>
 					<Editor
 						editable={true}
-						className="rounded-md border border-gray-300 bg-backdrop/50 p-2 "
-						backdrop={false}
+						className="rounded-md border border-gray-300 bg-backdrop/50 p-2"
 						updateState={setEditorState}
 						initialState={editingInfo ? editingInfo.description : ""}
 						focus={false}
