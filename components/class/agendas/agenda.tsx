@@ -208,7 +208,11 @@ export const CreateAgenda = ({
 			{/* custom datepicker later probably */}
 			<Formik
 				initialValues={{
-					date: editingInfo ? editingInfo.date : "",
+					date: editingInfo
+						? editingInfo.date
+						: // I couldn't get this working until I used this.
+						  // I've found the first (and only) reason for Canada to exist!
+						  new Date().toLocaleDateString("en-CA"),
 				}}
 				onSubmit={async (values) => {
 					setErrorMessage("");
@@ -269,7 +273,7 @@ export const CreateAgenda = ({
 					/>
 					{/* Later, we'll need to be able to change the order of the assignments */}
 					<p>Select assignments to include in this agenda:</p>
-					{assignments.length > 1
+					{assignments.length > 0
 						? assignments.map((assignment) => (
 								<div key={assignment.id} className="flex justify-between">
 									<Button

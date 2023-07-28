@@ -176,12 +176,12 @@ const Class: NextPageWithLayout = () => {
 					classid={classid}
 				/>
 			)}
-			{data.data && typeof classid == "string" && (
+			{data.data.assignments && typeof classid == "string" && (
 				<CreateAgenda
 					classID={classid}
 					open={agendaCreationOpen}
 					setOpen={setAgendaCreationOpen as (v: boolean) => void}
-					assignments={data.data.assignments}
+					assignments={getDataInArray(data.data.assignments)}
 					createTempAgenda={(newAgenda: {
 						id: string;
 						class_id: string;
@@ -362,7 +362,7 @@ const Class: NextPageWithLayout = () => {
 													key={agenda.id}
 													classID={classid}
 													agenda={agenda}
-													allAssignments={data.data.assignments}
+													allAssignments={getDataInArray(data.data.assignments)}
 													isTeacher={isTeacher ? true : false}
 												></Agenda>
 											)
