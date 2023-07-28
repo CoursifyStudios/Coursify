@@ -267,19 +267,23 @@ export const createAgenda = async (
 	description: Json,
 	assignments: string[]
 ) => {
-	return await supabase.from("agendas").insert({
-		class_id,
-		description,
-		date,
-		assignments,
-	}).select();
+	return await supabase
+		.from("agendas")
+		.insert({
+			class_id,
+			description,
+			date,
+			assignments,
+		})
+		.select()
+		.single();
 };
 
 export const deleteAgenda = async (
 	supabase: SupabaseClient<Database>,
 	id: string
 ) => {
-	return await supabase.from("agendas").delete().eq("id", id).select();
+	return await supabase.from("agendas").delete().eq("id", id).select().single();
 };
 
 export const editAgenda = async (
@@ -291,7 +295,12 @@ export const editAgenda = async (
 		assignments: string[];
 	}
 ) => {
-	return await supabase.from("agendas").update(newData).eq("id", id).select();
+	return await supabase
+		.from("agendas")
+		.update(newData)
+		.eq("id", id)
+		.select()
+		.single();
 };
 export const isTeacher = (
 	classData: NonNullableArray<AllClassesResponse["data"]>,

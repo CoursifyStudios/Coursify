@@ -48,9 +48,28 @@ export const Agenda = ({
 	const [deleting, setDeleting] = useState(false);
 	const [editing, setEditing] = useState(false);
 
+	const [editedAgenda, setEditedAgenda] = useState<{
+		date: string | null;
+		description: Json;
+		assignments: string[] | null;
+	} | null>(null);
+
 	return (
 		<>
-			{deleted ? null : (
+			{/* Couldn't get editing the agenda directly to work, so instead we just delete it and add a new in its place (literally) */}
+			{editedAgenda ? (
+				<Agenda
+					classID={classID}
+					agenda={{
+						id: agenda.id,
+						date: editedAgenda.date,
+						description: editedAgenda.description,
+						assignments: editedAgenda.assignments,
+					}}
+					allAssignments={allAssignments}
+					isTeacher={isTeacher}
+				></Agenda>
+			) : deleted ? null : (
 				<div>
 					{/* For Deleting Agendas */}
 					<DeleteAgenda
@@ -65,6 +84,7 @@ export const Agenda = ({
 						open={editing}
 						setOpen={setEditing}
 						assignments={allAssignments}
+						createTempAgenda={setEditedAgenda}
 						editingInfo={{
 							id: agenda.id,
 							date: agenda.date ? agenda.date : "No date",
@@ -138,7 +158,7 @@ export const CreateAgenda = ({
 	open,
 	setOpen,
 	assignments,
-    createTempAgenda,
+	createTempAgenda,
 	editingInfo,
 }: {
 	classID: string;
@@ -151,15 +171,14 @@ export const CreateAgenda = ({
 		due_type: number | null;
 		due_date: string | null;
 	}[];
-    // REQUIRED FOR CREATING, BUT NOT EDITING
-    createTempAgenda?: (value: {
-        id: string;
-        class_id: string;
-        date: string | null;
-        description: Json;
-        assignments: string[] | null;
-    }) => void;
-    // REQUIRED FOR EDITING, BUT NOT CREATING
+	createTempAgenda: (value: {
+		id: string;
+		class_id: string;
+		date: string | null;
+		description: Json;
+		assignments: string[] | null;
+	}) => void;
+	// REQUIRED FOR EDITING, BUT NOT CREATING
 	editingInfo?: {
 		id: string;
 		date: string;
@@ -212,20 +231,18 @@ export const CreateAgenda = ({
 									editorState?.toJSON() as unknown as Json,
 									chosenAssignments
 							  );
-                        // FAILURE STATE
+						// FAILURE STATE
 						if (DBreturn.error) {
 							setLoading(false);
 							setErrorMessage("Something went wrong processing your request");
-						// SUCCESS STATE
-                        } else {
+							// SUCCESS STATE
+						} else if (DBreturn.data) {
 							setLoading(false);
 							setChosenAssignments([]); //clears your selections in the case of a succesful POST
 							setOpen(false);
-                            if (createTempAgenda && DBreturn.data) {
-                                createTempAgenda(
-                                    getDataOutArray(DBreturn.data)
-                                )
-                            } 
+							if (createTempAgenda) {
+								createTempAgenda(getDataOutArray(DBreturn.data));
+							}
 						}
 					} else {
 						setErrorMessage("Make sure to include a date and a description!");

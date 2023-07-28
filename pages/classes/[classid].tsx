@@ -51,13 +51,15 @@ const Class: NextPageWithLayout = () => {
 	const [agendaCreationOpen, setAgendaCreationOpen] = useState(false);
 	const [fetchedClassId, setFetchedClassId] = useState("");
 	const [searchOpen, setSearchOpen] = useState(false);
-    const [createdAgendas, setCreatedAgendas] = useState<{
-        id: string;
-        class_id: string;
-        date: string | null; //shouldn't ever be null, but too lazy to change DB
-        description: Json;
-        assignments: string[] | null; // same case as two lines above
-    }[]>([]);
+	const [createdAgendas, setCreatedAgendas] = useState<
+		{
+			id: string;
+			class_id: string;
+			date: string | null; //shouldn't ever be null, but too lazy to change DB
+			description: Json;
+			assignments: string[] | null; // same case as two lines above
+		}[]
+	>([]);
 
 	const {
 		data: { compact },
@@ -180,13 +182,13 @@ const Class: NextPageWithLayout = () => {
 					open={agendaCreationOpen}
 					setOpen={setAgendaCreationOpen as (v: boolean) => void}
 					assignments={data.data.assignments}
-                    createTempAgenda={(newAgenda: {
-                        id: string;
-                        class_id: string;
-                        date: string | null;
-                        description: Json;
-                        assignments: string[] | null;
-                    }) => setCreatedAgendas(createdAgendas.concat(newAgenda))}
+					createTempAgenda={(newAgenda: {
+						id: string;
+						class_id: string;
+						date: string | null;
+						description: Json;
+						assignments: string[] | null;
+					}) => setCreatedAgendas(createdAgendas.concat(newAgenda))}
 				></CreateAgenda>
 			)}
 			{!compact ? (
@@ -347,7 +349,7 @@ const Class: NextPageWithLayout = () => {
 							</div>
 							<div className="gap-3 grid">
 								{createdAgendas
-                                .concat(data.data.agendas)
+									.concat(data.data.agendas)
 									.slice()
 									.sort(
 										(a, b) =>
