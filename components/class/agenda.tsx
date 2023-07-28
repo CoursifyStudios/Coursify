@@ -26,7 +26,7 @@ export const Agenda = ({
 	}[];
 }) => {
 	return (
-		<div className="bg-gray-200 p-4">
+		<div className="bg-gray-200 p-4 rounded-lg">
 			<h2>Agenda for {agenda.date}</h2>
 			<Editor
 				editable={false}
@@ -38,7 +38,7 @@ export const Agenda = ({
 					<Link
 						key={assignment.id}
 						href={"/assignments/" + assignment.id}
-						className="border-2 border-black grid rounded-md"
+						className="border border-black grid rounded-md"
 					>
 						<CompactAssignmentUI assignment={assignment}></CompactAssignmentUI>
 					</Link>
@@ -119,21 +119,38 @@ export const CreateAgenda = ({
 					<p>Select assignments to include in this agenda:</p>
 					{assignments.length > 1
 						? assignments.map((assignment) => (
-								<Button
-									className="flex justify-between"
-									key={assignment.id}
-									type={"button"}
-									onClick={() =>
-										setChosenAssignments(
-											chosenAssignments.concat(assignment.id)
-										)
-									}
-								>
-									<CompactAssignmentUI
-										assignment={assignment}
-									></CompactAssignmentUI>
-									<p>x</p>
-								</Button>
+								<div key={assignment.id} className="flex justify-between">
+									<Button
+										className={`w-full ${
+											chosenAssignments.indexOf(assignment.id) == -1
+												? "bg-gray-200"
+												: "bg-white"
+										}`}
+										key={assignment.id}
+										type={"button"}
+										onClick={() => {
+											const index = chosenAssignments.indexOf(assignment.id);
+											if (index == -1) {
+												setChosenAssignments(
+													chosenAssignments.concat(assignment.id)
+												);
+											} else {
+												setChosenAssignments(
+													chosenAssignments.filter((f) => f !== assignment.id)
+												);
+											}
+										}}
+									>
+										<CompactAssignmentUI
+											assignment={assignment}
+											className={
+												chosenAssignments.indexOf(assignment.id) == -1
+													? "bg-gray-200"
+													: "bg-white"
+											}
+										></CompactAssignmentUI>
+									</Button>
+								</div>
 						  ))
 						: "Make some assignments to include them in your agenda!"}
 
@@ -146,6 +163,7 @@ export const CreateAgenda = ({
 
 const CompactAssignmentUI = ({
 	assignment,
+	className,
 }: {
 	assignment: {
 		name: string;
@@ -153,13 +171,16 @@ const CompactAssignmentUI = ({
 		due_type: number | null;
 		due_date: string | null;
 	};
+	className?: string;
 }) => {
 	const date = assignment.due_date ? new Date(assignment.due_date) : null;
 	const { data: settings } = useSettings();
 	return (
-		<div key={assignment.id} className="flex justify-between bg-gray-200 p-2">
+		<div
+			key={assignment.id}
+			className={`flex flex-grow justify-between p-2 ${className}`}
+		>
 			<p className="font-semibold">{assignment.name}</p>
-			{/* TODO: parse that */}
 			{date ? (
 				<div className="grid grid-cols-2">
 					<div className="mr-2 font-medium">
