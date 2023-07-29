@@ -77,22 +77,24 @@ export type AssignmentResponse = Awaited<ReturnType<typeof getAssignment>>;
 export type Assignment = Database["public"]["Tables"]["assignments"]["Row"];
 
 export const getAllAssignmentsButNotThese = async (
-    supabase: SupabaseClient<Database>,
-    class_id: string,
-    notThese: string[]
+	supabase: SupabaseClient<Database>,
+	class_id: string,
+	notThese: string[]
 ) => {
-    return await supabase
-        .from("assignments")
-        .select(`
+	return await supabase
+		.from("assignments")
+		.select(
+			`
         id,
         name,
         description,
         due_type,
         due_date
-        `)
-        .eq('class_id', class_id)
-        .not('id', 'in', `(${notThese})`)
-}
+        `
+		)
+		.eq("class_id", class_id)
+		.not("id", "in", `(${notThese})`);
+};
 export interface AssignmentData {
 	// I can't use extends here because I want to have data be undefined sometimes
 	success: boolean;
