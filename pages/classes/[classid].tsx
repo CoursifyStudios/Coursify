@@ -335,6 +335,9 @@ const Class: NextPageWithLayout = () => {
 									agendas={data.data.agendas}
 									allAssignments={data.data.assignments}
 									isTeacher={isTeacher ? true : false}
+									assignmentUpdater={(val) => {
+										setCreatedAssignments(createdAssignments.concat(val));
+									}}
 								/>
 							)}
 						</Tab.Panel>

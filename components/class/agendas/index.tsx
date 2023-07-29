@@ -4,15 +4,18 @@ import { fetchMoreAgendas } from "@/lib/db/classes";
 import { Json } from "@/lib/db/database.types";
 import supabase from "@/lib/supabase";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Agenda } from "./agenda";
 import { CreateAgenda } from "./createAgenda";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { getAllAssignmentsButNotThese } from "@/lib/db/assignments/assignments";
 
 export const AgendasModule = ({
 	classID,
 	agendas,
 	allAssignments,
 	isTeacher,
+	assignmentUpdater,
 }: {
 	classID: string;
 	agendas: {
@@ -30,8 +33,20 @@ export const AgendasModule = ({
 		due_type: number | null;
 		due_date: string | null;
 	}[];
+	assignmentUpdater: (
+		val: {
+			name: string;
+			description: string;
+			id: string;
+			due_type: number | null;
+			due_date: string | null;
+		}[]
+	) => void;
 	isTeacher: boolean;
 }) => {
+	const supabase = useSupabaseClient();
+	const [allAssignmentsForAgendas, setAllAssignmentsForAgendas] =
+		useState(allAssignments);
 	const [agendaCreationOpen, setAgendaCreationOpen] = useState(false);
 	const [createdAgendas, setCreatedAgendas] = useState<
 		{
@@ -54,6 +69,31 @@ export const AgendasModule = ({
 	const [loadingPastAgendas, setLoadingPastAgendas] = useState(false);
 	const [loadingFutureAgendas, setLoadingFutureAgendas] = useState(false);
 
+	// To prevent against the case where the few assignments fetched from the DB
+	// do not include all of the ones that our agendas need, we will fetch the DB
+	// again (after initial load though, it's okay (I think)).
+	useEffect(() => {
+		(async () => {
+			const setOfAgendas = new Set(
+				agendas // from initial page load
+					.concat(createdAgendas) // newly created
+					.concat(extraAgendas)
+					.map((agenda) => agenda.id)
+			); // from Load More
+			const extraAssignments = await getAllAssignmentsButNotThese(
+				supabase,
+				classID,
+				Array.from(setOfAgendas)
+			);
+			if (extraAssignments.data) {
+				assignmentUpdater(extraAssignments.data);
+				setAllAssignmentsForAgendas(
+					allAssignmentsForAgendas.concat(extraAssignments.data)
+				);
+			}
+		})();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [supabase, classID, agendas]);
 	return (
 		<div>
 			{isTeacher && (
@@ -71,7 +111,7 @@ export const AgendasModule = ({
 					classID={classID}
 					open={agendaCreationOpen}
 					setOpen={setAgendaCreationOpen as (v: boolean) => void}
-					assignments={allAssignments}
+					assignments={allAssignmentsForAgendas}
 					createTempAgenda={(newAgenda: {
 						id: string;
 						class_id: string;
@@ -121,7 +161,7 @@ export const AgendasModule = ({
 							key={agenda.id}
 							classID={classID}
 							agenda={agenda}
-							allAssignments={allAssignments}
+							allAssignments={allAssignmentsForAgendas}
 							isTeacher={isTeacher ? true : false}
 						></Agenda>
 					))}
