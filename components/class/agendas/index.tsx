@@ -74,16 +74,17 @@ export const AgendasModule = ({
 	// again (after initial load though, it's okay (I think)).
 	useEffect(() => {
 		(async () => {
-			const setOfAgendas = new Set(
+			const setOfLoadedAssignments = new Set(
 				agendas // from initial page load
 					.concat(createdAgendas) // newly created
 					.concat(extraAgendas)
-					.map((agenda) => agenda.id)
+					.map((agenda) => (agenda.assignments ? agenda.assignments : []))
+					.flat()
 			); // from Load More
 			const extraAssignments = await getAllAssignmentsButNotThese(
 				supabase,
 				classID,
-				Array.from(setOfAgendas).concat(
+				Array.from(setOfLoadedAssignments).concat(
 					allAssignments.map((assignment) => assignment.id)
 				)
 			);
