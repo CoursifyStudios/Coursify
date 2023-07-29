@@ -286,7 +286,7 @@ const AssignmentCreation: NextPage<{
 					(selectedDueType.type == DueType.DATE ? (
 						<input
 							type="datetime-local"
-							className="mt-4 rounded-md border-gray-300  bg-white/50 focus:ring-1 dark:bg-backdrop"
+							className="mt-4 rounded-md border-gray-300 bg-white/50 focus:ring-1 dark:bg-backdrop"
 							onChange={onDateChange}
 							value={
 								assignmentData?.dueDate != undefined
