@@ -37,13 +37,7 @@ const AssignmentCreation: NextPage<{
 		due_type: number | null;
 		due_date: string | null;
 	}) => void;
-}> = ({
-	setStage,
-	closeMenu,
-	classid,
-    daysData,
-	createTempAssignment,
-}) => {
+}> = ({ setStage, closeMenu, classid, daysData, createTempAssignment }) => {
 	const supabase = useSupabaseClient<Database>();
 	const [selectedDueType, setSelectedDueType] = useState(types[0]);
 	const [selectedPublishType, setSelectedPublishType] = useState(types[0]);
