@@ -8,12 +8,7 @@ import { Button } from "@/components/misc/button";
 import { InfoPill, InfoPills } from "@/components/misc/infopills";
 import { ColoredPill } from "@/components/misc/pill";
 import { TypeOfAnnouncements } from "@/lib/db/announcements";
-import {
-	ClassResponse,
-	fetchMoreAgendas,
-	getClass,
-	updateClass,
-} from "@/lib/db/classes";
+import { ClassResponse, getClass, updateClass } from "@/lib/db/classes";
 import { Database, Json } from "@/lib/db/database.types";
 import {
 	ScheduleInterface,
@@ -37,8 +32,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment, ReactElement, useEffect, useState } from "react";
-import { Agenda, CreateAgenda } from "@/components/class/agendas/agenda";
-import { LoadingSmall } from "@/components/misc/loading";
 import { AgendasModule } from "@/components/class/agendas";
 
 const Class: NextPageWithLayout = () => {
@@ -55,7 +48,6 @@ const Class: NextPageWithLayout = () => {
 	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
 	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
 	const [assignmentCreationOpen, setAssignmentCreationOpen] = useState(false);
-	const [agendaCreationOpen, setAgendaCreationOpen] = useState(false); //TODO:
 	const [createdAssignments, setCreatedAssignments] = useState<
 		{
 			name: string;
@@ -67,28 +59,6 @@ const Class: NextPageWithLayout = () => {
 	>([]);
 	const [fetchedClassId, setFetchedClassId] = useState("");
 	const [searchOpen, setSearchOpen] = useState(false);
-	//TODO:
-	const [createdAgendas, setCreatedAgendas] = useState<
-		{
-			id: string;
-			class_id: string;
-			date: string | null; //shouldn't ever be null, but too lazy to change DB
-			description: Json;
-			assignments: string[] | null; // same case as two lines above
-		}[]
-	>([]);
-	const [extraAgendas, setExtraAgendas] = useState<
-		{
-			id: string;
-			class_id: string;
-			date: string | null;
-			description: Json;
-			assignments: string[] | null;
-		}[]
-	>([]);
-	const [loadingPastAgendas, setLoadingPastAgendas] = useState(false);
-	const [loadingFutureAgendas, setLoadingFutureAgendas] = useState(false);
-	//TODO:
 	const {
 		data: { compact },
 	} = useSettings();
@@ -210,21 +180,6 @@ const Class: NextPageWithLayout = () => {
 						due_date: string | null;
 					}) => setCreatedAssignments(createdAssignments.concat(newAssignment))}
 				/>
-			)}
-			{data.data.assignments && typeof classid == "string" && isTeacher && (
-				<CreateAgenda
-					classID={classid}
-					open={agendaCreationOpen}
-					setOpen={setAgendaCreationOpen as (v: boolean) => void}
-					assignments={getDataInArray(data.data.assignments)}
-					createTempAgenda={(newAgenda: {
-						id: string;
-						class_id: string;
-						date: string | null;
-						description: Json;
-						assignments: string[] | null;
-					}) => setCreatedAgendas(createdAgendas.concat(newAgenda))}
-				></CreateAgenda>
 			)}
 			{!compact ? (
 				<div className="relative mb-6 h-48 w-full">
@@ -379,7 +334,7 @@ const Class: NextPageWithLayout = () => {
 									classID={classid}
 									agendas={data.data.agendas}
 									allAssignments={data.data.assignments}
-									isTeacher={isTeacher? true : false}
+									isTeacher={isTeacher ? true : false}
 								/>
 							)}
 						</Tab.Panel>

@@ -5,7 +5,8 @@ import { Json } from "@/lib/db/database.types";
 import supabase from "@/lib/supabase";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-import { CreateAgenda, Agenda } from "./agenda";
+import { Agenda } from "./agenda";
+import { CreateAgenda } from "./createAgenda";
 
 export const AgendasModule = ({
 	classID,
