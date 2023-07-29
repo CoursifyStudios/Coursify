@@ -39,6 +39,7 @@ import { useRouter } from "next/router";
 import { Fragment, ReactElement, useEffect, useState } from "react";
 import { Agenda, CreateAgenda } from "@/components/class/agendas/agenda";
 import { LoadingSmall } from "@/components/misc/loading";
+import { AgendasModule } from "@/components/class/agendas";
 
 const Class: NextPageWithLayout = () => {
 	const router = useRouter();
@@ -54,7 +55,7 @@ const Class: NextPageWithLayout = () => {
 	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
 	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
 	const [assignmentCreationOpen, setAssignmentCreationOpen] = useState(false);
-	const [agendaCreationOpen, setAgendaCreationOpen] = useState(false);
+	const [agendaCreationOpen, setAgendaCreationOpen] = useState(false); //TODO:
 	const [createdAssignments, setCreatedAssignments] = useState<
 		{
 			name: string;
@@ -66,6 +67,7 @@ const Class: NextPageWithLayout = () => {
 	>([]);
 	const [fetchedClassId, setFetchedClassId] = useState("");
 	const [searchOpen, setSearchOpen] = useState(false);
+	//TODO:
 	const [createdAgendas, setCreatedAgendas] = useState<
 		{
 			id: string;
@@ -86,7 +88,7 @@ const Class: NextPageWithLayout = () => {
 	>([]);
 	const [loadingPastAgendas, setLoadingPastAgendas] = useState(false);
 	const [loadingFutureAgendas, setLoadingFutureAgendas] = useState(false);
-
+	//TODO:
 	const {
 		data: { compact },
 	} = useSettings();
@@ -372,94 +374,14 @@ const Class: NextPageWithLayout = () => {
 									</div>
 								)
 							)}
-							{isTeacher && (
-								<div
-									tabIndex={0}
-									onClick={() => setAgendaCreationOpen(true)}
-									className="mt-4 mb-2 group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white"
-								>
-									<PlusIcon className="-ml-4 mr-4 h-8 w-8 transition group-hover:scale-125" />{" "}
-									<h3 className="text-lg font-medium transition">New Agenda</h3>
-								</div>
+							{typeof classid === "string" && (
+								<AgendasModule
+									classID={classid}
+									agendas={data.data.agendas}
+									allAssignments={data.data.assignments}
+									isTeacher={isTeacher? true : false}
+								/>
 							)}
-							<Button
-								className="mb-2 mx-auto"
-								onClick={async () => {
-									setLoadingFutureAgendas(true);
-									const allAgendas = data.data.agendas // from initial page load
-										.concat(createdAgendas) // newly created
-										.concat(extraAgendas); // from Load More
-									const moreAgendas = await fetchMoreAgendas(
-										supabase,
-										classid as string,
-										allAgendas.map((agenda) => agenda.id),
-										allAgendas.sort(
-											(a, b) =>
-												new Date(b.date!).getTime() -
-												new Date(a.date!).getTime()
-										)[0].date!,
-										true
-									);
-
-									setLoadingFutureAgendas(false);
-									if (moreAgendas.data) {
-										setExtraAgendas(extraAgendas.concat(moreAgendas.data));
-									}
-								}}
-							>
-								Load Newer Agendas
-								{loadingFutureAgendas && <LoadingSmall className="ml-4" />}
-							</Button>
-							<div className="gap-3 grid">
-								{createdAgendas // newly created ones (client side before page refresh)
-									.concat(extraAgendas) // from "Load More" button
-									.concat(data.data.agendas) // from initial DB request
-									.slice()
-									.sort(
-										(a, b) =>
-											new Date(b.date!).getTime() - new Date(a.date!).getTime()
-									)
-									.map(
-										(agenda) =>
-											typeof classid == "string" && (
-												<Agenda
-													key={agenda.id}
-													classID={classid}
-													agenda={agenda}
-													allAssignments={getDataInArray(data.data.assignments)}
-													isTeacher={isTeacher ? true : false}
-												></Agenda>
-											)
-									)}
-							</div>
-							<Button
-								className="mt-3 mx-auto"
-								onClick={async () => {
-									setLoadingPastAgendas(true);
-									const allAgendas = data.data.agendas // from initial page load
-										.concat(createdAgendas) // newly created
-										.concat(extraAgendas); // from Load More
-									const moreAgendas = await fetchMoreAgendas(
-										supabase,
-										classid as string,
-										allAgendas.map((agenda) => agenda.id),
-										allAgendas.sort(
-											(a, b) =>
-												new Date(a.date!).getTime() -
-												new Date(b.date!).getTime() // sorting in reverse order for this
-										)[0].date!,
-										false
-									);
-
-									setLoadingPastAgendas(false);
-									if (moreAgendas.data) {
-										setExtraAgendas(extraAgendas.concat(moreAgendas.data));
-									}
-								}}
-							>
-								Load Past Agendas
-								{loadingPastAgendas && <LoadingSmall className="ml-4" />}
-							</Button>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1} id="Announcements">
 							<h2 className="title mb-3">Announcements</h2>
