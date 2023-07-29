@@ -84,7 +84,8 @@ const Class: NextPageWithLayout = () => {
 			assignments: string[] | null;
 		}[]
 	>([]);
-	const [loadingMore, setLoadingMore] = useState(false);
+	const [loadingPastAgendas, setLoadingPastAgendas] = useState(false);
+	const [loadingFutureAgendas, setLoadingFutureAgendas] = useState(false);
 
 	const {
 		data: { compact },
@@ -375,12 +376,40 @@ const Class: NextPageWithLayout = () => {
 								<div
 									tabIndex={0}
 									onClick={() => setAgendaCreationOpen(true)}
-									className="my-4 group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white"
+									className="mt-4 mb-2 group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white"
 								>
 									<PlusIcon className="-ml-4 mr-4 h-8 w-8 transition group-hover:scale-125" />{" "}
 									<h3 className="text-lg font-medium transition">New Agenda</h3>
 								</div>
 							)}
+							<Button
+								className="mb-2 mx-auto"
+								onClick={async () => {
+									setLoadingFutureAgendas(true);
+									const allAgendas = data.data.agendas // from initial page load
+										.concat(createdAgendas) // newly created
+										.concat(extraAgendas); // from Load More
+									const moreAgendas = await fetchMoreAgendas(
+										supabase,
+										classid as string,
+										allAgendas.map((agenda) => agenda.id),
+										allAgendas.sort(
+											(a, b) =>
+												new Date(b.date!).getTime() -
+												new Date(a.date!).getTime()
+										)[0].date!,
+										true
+									);
+
+									setLoadingFutureAgendas(false);
+									if (moreAgendas.data) {
+										setExtraAgendas(extraAgendas.concat(moreAgendas.data));
+									}
+								}}
+							>
+								Load Newer Agendas
+								{loadingFutureAgendas && <LoadingSmall className="ml-4" />}
+							</Button>
 							<div className="gap-3 grid">
 								{createdAgendas // newly created ones (client side before page refresh)
 									.concat(extraAgendas) // from "Load More" button
@@ -406,22 +435,30 @@ const Class: NextPageWithLayout = () => {
 							<Button
 								className="mt-3 mx-auto"
 								onClick={async () => {
-									setLoadingMore(true);
+									setLoadingPastAgendas(true);
+									const allAgendas = data.data.agendas // from initial page load
+										.concat(createdAgendas) // newly created
+										.concat(extraAgendas); // from Load More
 									const moreAgendas = await fetchMoreAgendas(
 										supabase,
 										classid as string,
-										data.data.agendas // from initial page load
-											.concat(createdAgendas) // newly created
-											.concat(extraAgendas) // from Load More
-											.map((agenda) => agenda.id)
+										allAgendas.map((agenda) => agenda.id),
+										allAgendas.sort(
+											(a, b) =>
+												new Date(a.date!).getTime() -
+												new Date(b.date!).getTime() // sorting in reverse order for this
+										)[0].date!,
+										false
 									);
-									setLoadingMore(false);
+
+									setLoadingPastAgendas(false);
 									if (moreAgendas.data) {
 										setExtraAgendas(extraAgendas.concat(moreAgendas.data));
 									}
 								}}
 							>
-								Load More{loadingMore && <LoadingSmall className="ml-4" />}
+								Load Past Agendas
+								{loadingPastAgendas && <LoadingSmall className="ml-4" />}
 							</Button>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1} id="Announcements">
