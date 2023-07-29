@@ -30,7 +30,20 @@ const AssignmentCreation: NextPage<{
 		data: { startTime: Date; endTime: Date }[];
 		refresher: () => void;
 	};
-}> = ({ setStage, closeMenu, classid, daysData }) => {
+	createTempAssignment: (value: {
+		name: string;
+		description: string;
+		id: string;
+		due_type: number | null;
+		due_date: string | null;
+	}) => void;
+}> = ({
+	setStage,
+	closeMenu,
+	classid,
+    daysData,
+	createTempAssignment,
+}) => {
 	const supabase = useSupabaseClient<Database>();
 	const [selectedDueType, setSelectedDueType] = useState(types[0]);
 	const [selectedPublishType, setSelectedPublishType] = useState(types[0]);
@@ -72,30 +85,37 @@ const AssignmentCreation: NextPage<{
 		setSubmitting(true);
 		const { assignmentType: _, ...assignmentSettings } =
 			assignmentData.settings;
-		const data: Database["public"]["Tables"]["assignments"]["Insert"] = {
-			class_id: classid,
-			content: assignmentData.content as unknown as Json,
-			description: assignmentData.description,
-			name: assignmentData.name,
-			submission_instructions: assignmentData.submissionInstructions,
-			type: assignmentData.type,
-			hidden: assignmentData.hidden,
-			settings: assignmentSettings as unknown as Json,
-		};
+		const dataToUpload: Database["public"]["Tables"]["assignments"]["Insert"] =
+			{
+				class_id: classid,
+				content: assignmentData.content as unknown as Json,
+				description: assignmentData.description,
+				name: assignmentData.name,
+				submission_instructions: assignmentData.submissionInstructions,
+				type: assignmentData.type,
+				hidden: assignmentData.hidden,
+				settings: assignmentSettings as unknown as Json,
+			};
 		if (due) {
-			data.due_date = assignmentData.dueDate?.toISOString();
-			data.due_type = assignmentData.dueType;
+			dataToUpload.due_date = assignmentData.dueDate?.toISOString();
+			dataToUpload.due_type = assignmentData.dueType;
 		}
 		if (publish) {
-			data.publish_date = assignmentData.publishDate?.toISOString();
-			data.publish_type = assignmentData.publishType;
+			dataToUpload.publish_date = assignmentData.publishDate?.toISOString();
+			dataToUpload.publish_type = assignmentData.publishType;
 		}
-		const { error } = await supabase.from("assignments").insert(data);
+		const { data, error } = await supabase
+			.from("assignments")
+			.insert(dataToUpload)
+			.select()
+			.single();
 		setSubmitting(false);
 		if (error) {
 			setError(error.message);
 			setSubmitting(undefined);
 			return;
+		} else {
+			createTempAssignment(data);
 		}
 		setTimeout(closeMenu, 500);
 	};
