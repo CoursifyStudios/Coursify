@@ -8,7 +8,12 @@ import { Button } from "@/components/misc/button";
 import { InfoPill, InfoPills } from "@/components/misc/infopills";
 import { ColoredPill } from "@/components/misc/pill";
 import { TypeOfAnnouncements } from "@/lib/db/announcements";
-import { ClassResponse, getClass, updateClass } from "@/lib/db/classes";
+import {
+	ClassResponse,
+	fetchMoreAgendas,
+	getClass,
+	updateClass,
+} from "@/lib/db/classes";
 import { Database, Json } from "@/lib/db/database.types";
 import {
 	ScheduleInterface,
@@ -33,6 +38,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment, ReactElement, useEffect, useState } from "react";
 import { Agenda, CreateAgenda } from "@/components/class/agendas/agenda";
+import { LoadingSmall } from "@/components/misc/loading";
 
 const Class: NextPageWithLayout = () => {
 	const router = useRouter();
@@ -69,6 +75,16 @@ const Class: NextPageWithLayout = () => {
 			assignments: string[] | null; // same case as two lines above
 		}[]
 	>([]);
+	const [extraAgendas, setExtraAgendas] = useState<
+		{
+			id: string;
+			class_id: string;
+			date: string | null;
+			description: Json;
+			assignments: string[] | null;
+		}[]
+	>([]);
+	const [loadingMore, setLoadingMore] = useState(false);
 
 	const {
 		data: { compact },
@@ -366,8 +382,9 @@ const Class: NextPageWithLayout = () => {
 								</div>
 							)}
 							<div className="gap-3 grid">
-								{createdAgendas
-									.concat(data.data.agendas)
+								{createdAgendas // newly created ones (client side before page refresh)
+									.concat(extraAgendas) // from "Load More" button
+									.concat(data.data.agendas) // from initial DB request
 									.slice()
 									.sort(
 										(a, b) =>
@@ -386,6 +403,26 @@ const Class: NextPageWithLayout = () => {
 											)
 									)}
 							</div>
+							<Button
+								className="mt-3 mx-auto"
+								onClick={async () => {
+									setLoadingMore(true);
+									const moreAgendas = await fetchMoreAgendas(
+										supabase,
+										classid as string,
+										data.data.agendas // from initial page load
+											.concat(createdAgendas) // newly created
+											.concat(extraAgendas) // from Load More
+											.map((agenda) => agenda.id)
+									);
+									setLoadingMore(false);
+									if (moreAgendas.data) {
+										setExtraAgendas(extraAgendas.concat(moreAgendas.data));
+									}
+								}}
+							>
+								Load More{loadingMore && <LoadingSmall className="ml-4" />}
+							</Button>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1} id="Announcements">
 							<h2 className="title mb-3">Announcements</h2>

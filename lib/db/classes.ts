@@ -102,7 +102,12 @@ export const getClass = async (
 		.eq("id", classid)
 		// will be improved, don't worry
 		.limit(10, { foreignTable: "assignments" })
-		.limit(5, { foreignTable: "agendas" })
+		.order("date", { foreignTable: "agendas", ascending: true })
+		.gte(
+			"agendas.date",
+			new Date(Date.now() - 86400000).toLocaleDateString("en-CA")
+		)
+		.limit(3, { foreignTable: "agendas" })
 		.order("due_date", { foreignTable: "assignments", ascending: true })
 		.single();
 };
@@ -261,6 +266,18 @@ export const getClassesForUserBasic = async (
 export type BasicClassInfoDB = Awaited<
 	ReturnType<typeof getClassesForUserBasic>
 >;
+
+export const fetchMoreAgendas = async (
+	supabase: SupabaseClient<Database>,
+	classID: string,
+	agendas: string[]
+) => {
+	return await supabase
+		.from("agendas")
+		.select(`*`)
+		.eq("class_id", classID)
+		.not("id", "in", `(${agendas as string[]})`);
+};
 
 export const createAgenda = async (
 	supabase: SupabaseClient<Database>,
