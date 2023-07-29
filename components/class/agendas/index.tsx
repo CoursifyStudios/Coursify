@@ -112,7 +112,7 @@ export const AgendasModule = ({
 					classID={classID}
 					open={agendaCreationOpen}
 					setOpen={setAgendaCreationOpen as (v: boolean) => void}
-					assignments={allAssignmentsForAgendas}
+					assignments={Array.from(new Set(allAssignmentsForAgendas))} //somehow there were duplicated assignments here
 					createTempAgenda={(newAgenda: {
 						id: string;
 						class_id: string;
