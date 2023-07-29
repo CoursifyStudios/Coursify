@@ -2,7 +2,7 @@ import { Field, Form, Formik } from "formik";
 import { Popup } from "../../misc/popup";
 import { createAgenda, editAgenda } from "@/lib/db/classes";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Button } from "../../misc/button";
 import { EditorState } from "lexical";
 import Editor from "../../editors/richeditor";
@@ -12,7 +12,6 @@ import { to12hourTime } from "@/lib/db/schedule";
 import { ColoredPill } from "../../misc/pill";
 import { useSettings } from "@/lib/stores/settings";
 import {
-	EllipsisVerticalIcon,
 	MagnifyingGlassIcon,
 	PencilIcon,
 	TrashIcon,

@@ -15,7 +15,7 @@ import {
 	getSchedule,
 	setThisSchedule,
 } from "@/lib/db/schedule";
-import { getDataInArray, getDataOutArray } from "@/lib/misc/dataOutArray";
+import { getDataInArray } from "@/lib/misc/dataOutArray";
 import { useSettings } from "@/lib/stores/settings";
 import { CreateAssignment } from "@assignments/assignmentCreation";
 import { AssignmentPreview } from "@assignments/assignments";
