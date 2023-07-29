@@ -32,7 +32,21 @@ export const CreateAssignment: NextPage<{
 	block: number;
 	scheduleType: number;
 	classid: string;
-}> = ({ open, setOpen, block, scheduleType, classid }) => {
+	createTempAssignment: (value: {
+		name: string;
+		description: string;
+		id: string;
+		due_type: number | null;
+		due_date: string | null;
+	}) => void;
+}> = ({
+	open,
+	setOpen,
+	block,
+	scheduleType,
+	classid,
+	createTempAssignment,
+}) => {
 	const { data: settings } = useSettings();
 	const [stage, setStage] = useState(1);
 	const { data: assignmentData, set: setAssignmentData } = useAssignmentStore();
@@ -110,6 +124,7 @@ export const CreateAssignment: NextPage<{
 					setStage={setStage}
 					closeMenu={closeMenu}
 					classid={classid}
+					createTempAssignment={createTempAssignment}
 				/>
 			)}
 		</Popup>
