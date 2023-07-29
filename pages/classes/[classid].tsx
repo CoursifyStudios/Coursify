@@ -49,6 +49,15 @@ const Class: NextPageWithLayout = () => {
 	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
 	const [assignmentCreationOpen, setAssignmentCreationOpen] = useState(false);
 	const [agendaCreationOpen, setAgendaCreationOpen] = useState(false);
+	const [createdAssignments, setCreatedAssignments] = useState<
+		{
+			name: string;
+			description: string;
+			id: string;
+			due_type: number | null;
+			due_date: string | null;
+		}[]
+	>([]);
 	const [fetchedClassId, setFetchedClassId] = useState("");
 	const [searchOpen, setSearchOpen] = useState(false);
 	const [createdAgendas, setCreatedAgendas] = useState<
@@ -174,6 +183,13 @@ const Class: NextPageWithLayout = () => {
 					open={assignmentCreationOpen}
 					setOpen={setAssignmentCreationOpen}
 					classid={classid}
+					createTempAssignment={(newAssignment: {
+						name: string;
+						description: string;
+						id: string;
+						due_type: number | null;
+						due_date: string | null;
+					}) => setCreatedAssignments(createdAssignments.concat(newAssignment))}
 				/>
 			)}
 			{data.data.assignments && typeof classid == "string" && isTeacher && (
@@ -488,22 +504,30 @@ const Class: NextPageWithLayout = () => {
 						)}
 						{data.data?.assignments &&
 							user &&
-							getDataInArray(data.data?.assignments).map((assignment) => (
-								<AssignmentPreview
-									key={assignment.id}
-									className="brightness-hover"
-									supabase={supabase}
-									assignment={
-										Array.isArray(assignment) ? assignment[0] : assignment
-									}
-									showClassPill={false}
-									starredAsParam={false}
-									schedule={schedule!}
-									scheduleT={scheduleT!}
-									userId={user.id}
-									classes={data.data}
-								/>
-							))}
+							createdAssignments
+								.concat(getDataInArray(data.data?.assignments))
+								.slice()
+								.sort(
+									(a, b) =>
+										new Date(b.due_date!).getTime() -
+										new Date(a.due_date!).getTime()
+								)
+								.map((assignment) => (
+									<AssignmentPreview
+										key={assignment.id}
+										className="brightness-hover"
+										supabase={supabase}
+										assignment={
+											Array.isArray(assignment) ? assignment[0] : assignment
+										}
+										showClassPill={false}
+										starredAsParam={false}
+										schedule={schedule!}
+										scheduleT={scheduleT!}
+										userId={user.id}
+										classes={data.data}
+									/>
+								))}
 					</div>
 				</section>
 			</div>
