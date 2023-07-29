@@ -83,7 +83,9 @@ export const AgendasModule = ({
 			const extraAssignments = await getAllAssignmentsButNotThese(
 				supabase,
 				classID,
-				Array.from(setOfAgendas)
+				Array.from(setOfAgendas).concat(
+					allAssignments.map((assignment) => assignment.id)
+				)
 			);
 			if (extraAssignments.data) {
 				assignmentUpdater(extraAssignments.data);
