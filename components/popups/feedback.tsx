@@ -72,9 +72,41 @@ const FeedbackPopup = ({
 		confetti({
 			particleCount: 200,
 			disableForReducedMotion: true,
-			spread: 150,
+			spread: 80,
+			angle: 80,
+			origin: {
+				y: 0.7,
+				x: 0.55,
+			},
+		});
+		confetti({
+			particleCount: 200,
+			disableForReducedMotion: true,
+			spread: 80,
+			angle: 110,
 			origin: {
 				y: 0.6,
+				x: 0.45,
+			},
+		});
+		confetti({
+			particleCount: 100,
+			disableForReducedMotion: true,
+			spread: 80,
+			startVelocity: 55,
+			origin: {
+				y: 0.6,
+				x: 0.5,
+			},
+		});
+		confetti({
+			particleCount: 100,
+			disableForReducedMotion: true,
+			spread: 80,
+			angle: 100,
+			origin: {
+				y: 0.65,
+				x: 0.47,
 			},
 		});
 	};
@@ -160,6 +192,17 @@ const FeedbackPopup = ({
 								account restrictions.{" "}
 							</span>
 						</label>
+					</>
+				)}
+				{page == 3 && (
+					<>
+						<h2 className="text-xl font-medium text-center">Thanks!</h2>
+						<p className="text-center text-sm">
+							Your feedback is truly invaluable. We appreciate hearing from
+							users like you as it helps us enhance Coursify and create a better
+							learning experience for everyone. Please note, in some cases, we
+							may email you to follow up on specific issues or feature requests.
+						</p>
 					</>
 				)}
 			</div>
