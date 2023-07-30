@@ -4,6 +4,9 @@ import { Button } from "../misc/button";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { Database } from "@/lib/db/database.types";
 import { newFeedback } from "@/lib/db/feedback";
+import { LoadingSmall } from "../misc/loading";
+import { useRouter } from "next/router";
+import confetti from "canvas-confetti";
 
 export const topics = [
 	"General Bug Report",
@@ -44,6 +47,7 @@ const FeedbackPopup = ({
 	const [error, setError] = useState("");
 	const supabase = useSupabaseClient<Database>();
 	const user = useUser();
+	const router = useRouter();
 
 	const submitFeedback = async () => {
 		if (!user) {
@@ -55,7 +59,7 @@ const FeedbackPopup = ({
 			supabase,
 			{
 				...content,
-				route: "",
+				route: router.asPath,
 			},
 			user.id
 		);
@@ -65,6 +69,14 @@ const FeedbackPopup = ({
 		}
 		setPage(3);
 		setLoading(false);
+		confetti({
+			particleCount: 200,
+			disableForReducedMotion: true,
+			spread: 150,
+			origin: {
+				y: 0.6,
+			},
+		});
 	};
 
 	const closeMenu = () => {
@@ -166,7 +178,7 @@ const FeedbackPopup = ({
 							content.content.length == 0
 						}
 					>
-						Submit
+						Submit {loading && <LoadingSmall className="ml-2" />}
 					</Button>
 				)}
 			</div>

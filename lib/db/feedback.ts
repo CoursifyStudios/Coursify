@@ -14,6 +14,7 @@ export const newFeedback = async (
 		content: feedback.content,
 		code: [feedback.topic, feedback.page],
 		user_id: userID,
+		route: feedback.route,
 	});
 };
 
