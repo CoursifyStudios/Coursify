@@ -348,7 +348,11 @@ const Class: NextPageWithLayout = () => {
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}>
-							<div className="mb-4 flex justify-between">
+							<div
+								className={`mb-4 flex justify-between ${
+									isTeacher && "flex-col gap-2 md:flex-row md:gap-0"
+								}`}
+							>
 								<div
 									className={`${
 										searchOpen ? "max-w-[24rem]" : "max-w-[14rem]"
