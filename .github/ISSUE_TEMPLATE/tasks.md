@@ -18,10 +18,10 @@ Feel free to use the comments for noting items.
 
 ## Tasks
 
-<!-- List of tasks started with [] so it can be checked off -->
+<!-- List of tasks started with [ ] so it can be checked off -->
 
-- []
-- []
+- [ ]
+- [ ]
 
 ## Target finish date
 
