@@ -1,8 +1,9 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { Popup } from "../misc/popup";
 import { Button } from "../misc/button";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { Database } from "@/lib/db/database.types";
+import { newFeedback } from "@/lib/db/feedback";
 
 export const topics = [
 	"General Bug Report",
@@ -42,9 +43,34 @@ const FeedbackPopup = ({
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 	const supabase = useSupabaseClient<Database>();
+	const user = useUser();
 
-	const submitFeedback = () => {
+	const submitFeedback = async () => {
+		if (!user) {
+			setError("No user found");
+			return;
+		}
 		setLoading(true);
+		const { error } = await newFeedback(
+			supabase,
+			{
+				...content,
+				route: "",
+			},
+			user.id
+		);
+		if (error) {
+			setError(error.message);
+			return;
+		}
+		setPage(3);
+		setLoading(false);
+	};
+
+	const closeMenu = () => {
+		setOpen(false);
+		setContent(defaultContent);
+		setPage(0);
 	};
 
 	const Selector = ({
@@ -68,15 +94,7 @@ const FeedbackPopup = ({
 	);
 
 	return (
-		<Popup
-			open={open}
-			closeMenu={() => {
-				setOpen(false);
-				setContent(defaultContent);
-				setPage(0);
-			}}
-			size="xs"
-		>
+		<Popup open={open} closeMenu={closeMenu} size="xs">
 			<h2 className="title-sm">Coursify feedback</h2>
 			<div className="gap-4 flex flex-col mt-4 [&>label]:flex [&>label]:flex-col">
 				{page == 0 &&
@@ -152,6 +170,15 @@ const FeedbackPopup = ({
 					</Button>
 				)}
 			</div>
+			{page == 3 && (
+				<Button
+					onClick={closeMenu}
+					color="bg-blue-500"
+					className="text-white mx-auto"
+				>
+					Close
+				</Button>
+			)}
 			<span className="text-red-700">{error && `Error: ${error}`}</span>
 		</Popup>
 	);
