@@ -76,6 +76,19 @@ textarea:not(.noinputcss),
 	@apply rounded-md border-gray-300 bg-backdrop/50 focus:ring-1 dark:placeholder:text-gray-400;
 }
 
+input[type="checkbox"]:not(.noinputcss) {
+	@apply rounded border-2 border-gray-300 h-5 w-5 dark:bg-neutral-950 checked:bg-gray-300 checked:border-gray-300 ring-0 ring-offset-0 cursor-pointer;
+}
+
+.label-text {
+	@apply font-medium text-sm mb-0.5;
+}
+
+.label-required:after {
+	content: " *";
+	@apply text-red-500 font-normal;
+}
+
 /*Tags Css*/
 
 .react-tagsinput-tag {
