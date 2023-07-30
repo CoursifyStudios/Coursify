@@ -63,7 +63,8 @@ const HomepageClassesUI: NextPage<{
 		if ((view == "student" || view == "tabbedStudent") && tab !== 1) {
 			setTab(1);
 		}
-	}, [tab, view]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [view]);
 
 	const Classes = ({ teaching }: { teaching: boolean }) => {
 		if (classes && classes.data && schedules)
