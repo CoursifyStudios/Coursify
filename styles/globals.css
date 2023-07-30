@@ -77,7 +77,7 @@ textarea:not(.noinputcss),
 }
 
 input[type="checkbox"]:not(.noinputcss) {
-	@apply rounded border-2 border-gray-300 h-5 w-5 dark:bg-neutral-950 checked:bg-gray-300 checked:border-gray-300 ring-0 ring-offset-0 cursor-pointer;
+	@apply rounded border-2 border-gray-300 h-5 w-5 dark:bg-neutral-950 checked:dark:bg-gray-300 checked:bg-gray-800 checked:border-gray-300 ring-0 ring-offset-0 cursor-pointer;
 }
 
 .label-text {
