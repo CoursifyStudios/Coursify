@@ -1,15 +1,17 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { Popup } from "../misc/popup";
 import { Button } from "../misc/button";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { Database } from "@/lib/db/database.types";
 
-const topics = [
+export const topics = [
 	"General Bug Report",
 	"Feature Request",
 	"Performance Feedback",
 	"Security Concerns",
 	"Keyboard Navigation/Screenreader Issues",
 ];
-const pages = [
+export const pages = [
 	"Homepage Classes/Assignments",
 	"Homepage Schedule",
 	"Assignments Dashboard",
@@ -37,6 +39,13 @@ const FeedbackPopup = ({
 	const [content, setContent] = useState(defaultContent);
 	const [page, setPage] = useState(0);
 	const [accepted, setAccecpted] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const [error, setError] = useState("");
+	const supabase = useSupabaseClient<Database>();
+
+	const submitFeedback = () => {
+		setLoading(true);
+	};
 
 	const Selector = ({
 		content,
@@ -125,13 +134,14 @@ const FeedbackPopup = ({
 				)}
 			</div>
 			<div className="mt-4 flex ml-auto gap-4">
-				{page != 0 && (
+				{page != 0 && page != 3 && (
 					<Button onClick={() => setPage((page) => page - 1)}>Back</Button>
 				)}
 				{page == 2 && (
 					<Button
 						color="bg-blue-500"
 						className="text-white"
+						onClick={submitFeedback}
 						disabled={
 							!accepted ||
 							content.title.length == 0 ||
@@ -142,6 +152,7 @@ const FeedbackPopup = ({
 					</Button>
 				)}
 			</div>
+			<span className="text-red-700">{error && `Error: ${error}`}</span>
 		</Popup>
 	);
 };

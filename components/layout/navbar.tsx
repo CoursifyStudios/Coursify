@@ -26,6 +26,7 @@ const Navbar: NextComponentType = () => {
 	const user = useUser();
 	const [feedbackOpen, setFeedbackOpen] = useState(false);
 	const supabase = useSupabaseClient<Database>();
+	const [hydrated, setHydrated] = useState(false);
 	const isDemoUser = user?.id == "d62d46a3-138b-4014-852e-f32f0421213b";
 	const userMetadata = isDemoUser
 		? {
@@ -36,6 +37,8 @@ const Navbar: NextComponentType = () => {
 				full_name: "Coursify Demo User",
 		  }
 		: user?.user_metadata ?? {};
+
+	useEffect(() => setHydrated(true), []);
 
 	const logOut = async () => {
 		await supabase.auth.signOut();
@@ -51,9 +54,9 @@ const Navbar: NextComponentType = () => {
 						<TabUI key={i} canClose={false} tab={v} />
 					))}
 					<div className="graydient h-10 w-[0.07rem] "></div>
-					{tabs.map((v, i) => (
-						<TabUI key={i} canClose={true} tab={v} />
-					))}
+					{tabs.map(
+						(v, i) => hydrated && <TabUI key={i} canClose={true} tab={v} />
+					)}
 				</div>
 				<div className="ml-4 flex flex-grow-0 items-center space-x-4">
 					<ButtonIcon icon={<MagnifyingGlassIcon className=" h-5 w-5" />} />
