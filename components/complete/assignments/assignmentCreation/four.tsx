@@ -10,7 +10,6 @@ import {
 } from "react";
 
 import { NewAssignmentData } from "@/lib/db/assignments/assignments";
-import { getClassTimesForXDays } from "@/lib/db/classes";
 import { Database, Json } from "@/lib/db/database.types";
 import { useAssignmentStore } from ".";
 import Editor from "../../../editors/richeditor";
@@ -25,10 +24,12 @@ import { submissionType } from "./submissionType";
 
 const AssignmentCreation: NextPage<{
 	setStage: Dispatch<SetStateAction<number>>;
-	block: number;
-	scheduleType: number;
 	classid: string;
 	closeMenu: () => void;
+	daysData: {
+		data: { startTime: Date; endTime: Date }[];
+		refresher: () => void;
+	};
 	createTempAssignment: (value: {
 		name: string;
 		description: string;
@@ -36,21 +37,12 @@ const AssignmentCreation: NextPage<{
 		due_type: number | null;
 		due_date: string | null;
 	}) => void;
-}> = ({
-	setStage,
-	block,
-	scheduleType,
-	closeMenu,
-	classid,
-	createTempAssignment,
-}) => {
+}> = ({ setStage, closeMenu, classid, daysData, createTempAssignment }) => {
 	const supabase = useSupabaseClient<Database>();
 	const [selectedDueType, setSelectedDueType] = useState(types[0]);
 	const [selectedPublishType, setSelectedPublishType] = useState(types[0]);
 	const [publish, setPublished] = useState(false);
 	const [due, setDue] = useState(true);
-	const [daysData, setDaysData] =
-		useState<{ startTime: Date; endTime: Date }[]>();
 	const [submitting, setSubmitting] = useState<boolean>();
 	const [error, setError] = useState("");
 
@@ -64,17 +56,6 @@ const AssignmentCreation: NextPage<{
 			setSelectedPublishType(type);
 			setAssignmentData({ publishType: type.type } as NewAssignmentData);
 		}
-	};
-
-	const refreshData = async () => {
-		setDaysData(undefined);
-		const classDays = await getClassTimesForXDays(
-			supabase,
-			{ block, type: scheduleType },
-			new Date(),
-			80
-		);
-		setDaysData(classDays);
 	};
 
 	const canCreate = useMemo(() => {
@@ -134,7 +115,7 @@ const AssignmentCreation: NextPage<{
 	};
 
 	useEffect(() => {
-		if (!daysData) refreshData();
+		if (!daysData.data) daysData.refresher();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -305,7 +286,7 @@ const AssignmentCreation: NextPage<{
 					(selectedDueType.type == DueType.DATE ? (
 						<input
 							type="datetime-local"
-							className="mt-4 rounded-md border-gray-300  bg-white/50 focus:ring-1 dark:bg-backdrop"
+							className="mt-4 rounded-md border-gray-300 bg-white/50 focus:ring-1 dark:bg-backdrop"
 							onChange={onDateChange}
 							value={
 								assignmentData?.dueDate != undefined
@@ -314,7 +295,7 @@ const AssignmentCreation: NextPage<{
 							}
 						/>
 					) : (
-						<AssignmentCalender type="due" daysData={daysData} />
+						<AssignmentCalender type="due" daysData={daysData.data} />
 					))}
 
 				{type == "publish" &&
@@ -330,7 +311,7 @@ const AssignmentCreation: NextPage<{
 							}
 						/>
 					) : (
-						<AssignmentCalender type="publish" daysData={daysData} />
+						<AssignmentCalender type="publish" daysData={daysData.data} />
 					))}
 			</>
 		);
