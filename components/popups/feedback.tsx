@@ -186,10 +186,8 @@ const FeedbackPopup = ({
 								onChange={(v) => setAccecpted(v.target.checked)}
 							/>
 							<span className="ml-4 label-required">
-								This suggestion is not spam, harmful or potentiually unwanted
-								content. If you{"'"}re unsure, do not submit it. Doing so may
-								led to a suspension from the feedback system, among other
-								account restrictions.{" "}
+								This submission is relevant and provides value to the Coursify
+								Team.
 							</span>
 						</label>
 					</>
