@@ -43,6 +43,7 @@ import {
 	getUsersPages,
 	setAdmin,
 	updateClass,
+	updateClassUsers,
 	updateUser,
 } from "@/lib/db/admin";
 import { useRouter } from "next/router";
@@ -564,7 +565,9 @@ Activities	The user's activities, as displayed on their profile
 	};
 
 	const newNotification = (name: string) => {
-		setNotifications((v) => v.concat([{ name, expireAt: Date.now() + 2000 }]));
+		setNotifications((v) =>
+			v.concat([{ name, expireAt: Date.now() + 100000 }])
+		);
 	};
 
 	const copyID = async () => {
@@ -970,6 +973,41 @@ Activities	The user's activities, as displayed on their profile
 			);
 		}
 
+		setLoading(false);
+	};
+
+	const updateUsers = async (users: ReturnedUser[]) => {
+		if (
+			users
+				.map((user) => user.id)
+				.sort()
+				.join(",") ===
+			selectedClass?.users
+				.map((user) => user.id)
+				.sort()
+				.join(",")
+		)
+			return;
+		setLoading(true);
+		const {
+			userList: { error },
+			removedUsers,
+		} = await updateClassUsers(
+			supabase,
+			selectedClass?.id || "",
+			users,
+			selectedClass?.users
+				.filter((user) => !users.some((u) => u.id === user.id))
+				.map((user) => user.id) ?? []
+		);
+		const errors = removedUsers.filter((ru) => Boolean(ru.error));
+		if (error) {
+			newNotification(error.message);
+		} else if (errors.length > 0) {
+			errors.forEach((error) => newNotification(error.error?.message || ""));
+		} else {
+			newNotification("Updated userlist");
+		}
 		setLoading(false);
 	};
 
@@ -1930,7 +1968,7 @@ Activities	The user's activities, as displayed on their profile
 																		)!.main_teacher || false,
 																})) ?? []
 															}
-															setValues={(v) => {}}
+															setValues={updateUsers}
 															button={
 																<Button className="rounded-xl !px-2.5 h-full">
 																	<UserGroupIcon className="h-5 w-5" />

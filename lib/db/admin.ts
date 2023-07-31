@@ -265,15 +265,25 @@ export const updateClassUsers = async (
 	supabase: SupabaseClient<Database>,
 	classID: string,
 	users: ReturnedUser[],
-	initialUsers: ReturnedUser[]
+	removeUsers: string[]
 ) => {
 	const u = Array.isArray(users) ? users : [users];
-	return await supabase.from("class_users").upsert(
-		u.map((mappedUser) => ({
-			main_teacher: mappedUser.main_teacher,
-			user_id: mappedUser.id,
-			class_id: classID,
-			teacher: mappedUser.teacher,
-		}))
-	);
+
+	const [userList, removedUsers] = await Promise.all([
+		supabase.from("class_users").upsert(
+			u.map((mappedUser) => ({
+				main_teacher: mappedUser.main_teacher,
+				user_id: mappedUser.id,
+				class_id: classID,
+				teacher: mappedUser.teacher,
+			}))
+		),
+		await Promise.all(
+			removeUsers.map((id) =>
+				supabase.from("class_users").delete().eq("user_id", id)
+			)
+		),
+	]);
+
+	return { userList, removedUsers };
 };
