@@ -59,7 +59,7 @@ const Navbar: NextComponentType = () => {
 					)}
 				</div>
 				<div className="ml-4 flex flex-grow-0 items-center space-x-4">
-					<ButtonIcon icon={<MagnifyingGlassIcon className=" h-5 w-5" />} />
+					{/* <ButtonIcon icon={<MagnifyingGlassIcon className=" h-5 w-5" />} />
 					<ButtonIcon
 						icon={<CalendarDaysIcon className="h-5 w-5" />}
 						to="/calendar"
@@ -67,7 +67,7 @@ const Navbar: NextComponentType = () => {
 					<ButtonIcon
 						icon={<MegaphoneIcon className="h-5 w-5" />}
 						to="/announcements"
-					/>
+					/> */}
 					<Menu
 						className="relative !ml-4 flex w-10 flex-col items-center"
 						as="div"
