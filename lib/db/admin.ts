@@ -280,7 +280,11 @@ export const updateClassUsers = async (
 		),
 		await Promise.all(
 			removeUsers.map((id) =>
-				supabase.from("class_users").delete().eq("user_id", id)
+				supabase
+					.from("class_users")
+					.delete()
+					.eq("user_id", id)
+					.eq("class_id", classID)
 			)
 		),
 	]);
