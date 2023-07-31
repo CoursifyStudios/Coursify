@@ -153,122 +153,135 @@ const Home = () => {
 							</div>
 						</section>
 					</div>
-					<div className="flex flex-col xl:flex-row ">
-						{/* Assignments UI */}
-						<section id="Assignments">
-							<h2 className="title mb-4">Assignments</h2>
-							<div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:w-[58.5rem] ">
-								{classes &&
-									Array.isArray(classes) &&
-									classes
+					{!(
+						classes?.filter(
+							(mappedClass) =>
+								!mappedClass.class?.class_users.some(
+									(cu) => cu.user_id == user.id && cu.teacher
+								)
+						).length == 0
+					) && (
+						<div className="flex flex-col xl:flex-row ">
+							{/* Assignments UI */}
+							<section id="Assignments">
+								<h2 className="title mb-4">Assignments</h2>
+								<div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:w-[58.5rem] ">
+									{classes &&
+										Array.isArray(classes) &&
+										classes
 
-										.sort(
-											(a, b) =>
-												//sortClasses(a, b, schedules[0], schedules[1])
-												a.class!.block - b.class!.block
-										)
+											.sort(
+												(a, b) =>
+													//sortClasses(a, b, schedules[0], schedules[1])
+													a.class!.block - b.class!.block
+											)
 
-										//temporary measure
+											.map((mappedClass) => {
+												const aClass = mappedClass.class;
 
-										.map((mappedClass) => {
-											const aClass = mappedClass.class;
+												if (
+													aClass == null ||
+													aClass.class_users.some(
+														(cu) => cu.user_id == user.id && cu.teacher
+													)
+												)
+													return null;
 
-											if (aClass == null) return null;
-
-											return (
-												<div key={aClass.id}>
-													<div>
-														<Link href={"/classes/" + aClass.id}>
-															<h2 className="mb-2 text-xl font-semibold">
-																{aClass.name}
-															</h2>
-														</Link>
-														<div className="mb-5 flex-col space-y-4 first-letter:space-y-4">
-															{Array.isArray(aClass.assignments) &&
-																schedules &&
-																aClass.assignments
-																	.slice(0, 3)
-																	.map((assignment) => (
-																		<AssignmentPreview
-																			className="brightness-hover"
-																			key={assignment.id}
-																			supabase={supabaseClient}
-																			assignment={
-																				Array.isArray(assignment)
-																					? assignment[0]
-																					: assignment
-																			}
-																			userId={user.id}
-																			starredAsParam={
-																				assignment.starred
-																					? Array.isArray(assignment.starred)
-																						? assignment.starred.length > 0
-																						: !!assignment.starred
-																					: false
-																			}
-																			showClassPill={false}
-																			schedule={schedules[0]!}
-																			scheduleT={schedules[1]!}
-																			classes={aClass}
-																		/>
-																	))}
+												return (
+													<div key={aClass.id}>
+														<div>
+															<Link href={"/classes/" + aClass.id}>
+																<h2 className="mb-2 text-xl font-semibold">
+																	{aClass.name}
+																</h2>
+															</Link>
+															<div className="mb-5 flex-col space-y-4 first-letter:space-y-4">
+																{Array.isArray(aClass.assignments) &&
+																	schedules &&
+																	aClass.assignments
+																		.slice(0, 3)
+																		.map((assignment) => (
+																			<AssignmentPreview
+																				className="brightness-hover"
+																				key={assignment.id}
+																				supabase={supabaseClient}
+																				assignment={
+																					Array.isArray(assignment)
+																						? assignment[0]
+																						: assignment
+																				}
+																				userId={user.id}
+																				starredAsParam={
+																					assignment.starred
+																						? Array.isArray(assignment.starred)
+																							? assignment.starred.length > 0
+																							: !!assignment.starred
+																						: false
+																				}
+																				showClassPill={false}
+																				schedule={schedules[0]!}
+																				scheduleT={schedules[1]!}
+																				classes={aClass}
+																			/>
+																		))}
+															</div>
 														</div>
 													</div>
-												</div>
-											);
+												);
+											})}
+								</div>
+							</section>
+							<section className=" grow xl:ml-10" id="Starred">
+								<h2 className="title mb-4 mr-2">Starred</h2>
+								<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
+									{classes &&
+										Array.isArray(classes) &&
+										classes.map((mappedClass) => {
+											const aClass = mappedClass.class;
+											if (aClass == null) return null;
+
+											const assignments: ReactNode[] = [];
+
+											Array.isArray(aClass.assignments) &&
+												schedules &&
+												aClass.assignments.map(
+													(assignment) =>
+														(assignment.starred
+															? Array.isArray(assignment.starred)
+																? assignment.starred.length > 0
+																: !!assignment.starred
+															: false) &&
+														assignments.push(
+															<AssignmentPreview
+																key={assignment.id}
+																className="brightness-hover"
+																supabase={supabaseClient}
+																assignment={
+																	Array.isArray(assignment)
+																		? assignment[0]
+																		: assignment
+																}
+																userId={user.id}
+																starredAsParam={
+																	assignment.starred
+																		? Array.isArray(assignment.starred)
+																			? assignment.starred.length > 0
+																			: !!assignment.starred
+																		: false
+																}
+																showClassPill={true}
+																schedule={schedules[0]!}
+																scheduleT={schedules[1]!}
+																classes={aClass}
+															/>
+														)
+												);
+											return assignments;
 										})}
-							</div>
-						</section>
-						<section className=" grow xl:ml-10" id="Starred">
-							<h2 className="title mb-4 mr-2">Starred</h2>
-							<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
-								{classes &&
-									Array.isArray(classes) &&
-									classes.map((mappedClass) => {
-										const aClass = mappedClass.class;
-										if (aClass == null) return null;
-
-										const assignments: ReactNode[] = [];
-
-										Array.isArray(aClass.assignments) &&
-											schedules &&
-											aClass.assignments.map(
-												(assignment) =>
-													(assignment.starred
-														? Array.isArray(assignment.starred)
-															? assignment.starred.length > 0
-															: !!assignment.starred
-														: false) &&
-													assignments.push(
-														<AssignmentPreview
-															key={assignment.id}
-															className="brightness-hover"
-															supabase={supabaseClient}
-															assignment={
-																Array.isArray(assignment)
-																	? assignment[0]
-																	: assignment
-															}
-															userId={user.id}
-															starredAsParam={
-																assignment.starred
-																	? Array.isArray(assignment.starred)
-																		? assignment.starred.length > 0
-																		: !!assignment.starred
-																	: false
-															}
-															showClassPill={true}
-															schedule={schedules[0]!}
-															scheduleT={schedules[1]!}
-															classes={aClass}
-														/>
-													)
-											);
-										return assignments;
-									})}
-							</div>
-						</section>
-					</div>
+								</div>
+							</section>
+						</div>
+					)}
 				</div>
 			</div>
 		</>
