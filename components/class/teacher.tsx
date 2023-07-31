@@ -111,7 +111,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 			</Link>
 			{/* Grades */}
 			<section
-				className={`group flex cursor-pointer flex-col rounded-xl bg-backdrop-200 px-3 py-2 hover:z-20 compact:p-2`}
+				className={`group flex cursor-pointer flex-col rounded-xl bg-backdrop-200 px-3 py-2 hover:z-20 compact:p-2 relative`}
 			>
 				<div className="flex justify-between">
 					<div>
@@ -130,6 +130,9 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 					<GradesSection name="Overall" grade={allGrades[0]} />
 					<GradesSection name="Summative (80%)" grade={allGrades[1]} />
 					<GradesSection name="Formative (20%)" grade={allGrades[2]} />
+				</div>
+				<div className="absolute -inset-3 bg-backdrop/10 backdrop-blur-[3px] grid place-items-center font-medium">
+					Grading is coming soon
 				</div>
 			</section>
 			{classData.assignments &&

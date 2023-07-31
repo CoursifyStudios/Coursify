@@ -76,7 +76,7 @@ const HomepageClassesUI: NextPage<{
 				<>
 					{classes
 						.slice(0, classes.length)
-						.sort((a, b) => sortClasses(a, b, schedules[0], schedules[1]))
+						.sort((a, b) => a.class!.block - b.class!.block)
 						.map((mappedClass) => {
 							const teacher = isTeacher(mappedClass, userID);
 							if (
