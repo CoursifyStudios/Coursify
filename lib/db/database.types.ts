@@ -48,21 +48,21 @@ export interface Database {
 					assignments: string[] | null;
 					class_id: string;
 					date: string | null;
-					description: Json | null;
+					description: string | null;
 					id: string;
 				};
 				Insert: {
 					assignments?: string[] | null;
 					class_id: string;
 					date?: string | null;
-					description?: Json | null;
+					description?: string | null;
 					id?: string;
 				};
 				Update: {
 					assignments?: string[] | null;
 					class_id?: string;
 					date?: string | null;
-					description?: Json | null;
+					description?: string | null;
 					id?: string;
 				};
 				Relationships: [

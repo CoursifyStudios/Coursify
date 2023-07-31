@@ -1,50 +1,36 @@
 // Export with `deno task export`
+import { savePolicies } from "./ScriptQL.ts";
 import {
-	AND,
-	EQ,
-	IN,
-	IS,
-	LTE,
-	OR,
-	Policy,
-	SELECT,
-	savePolicies,
-} from "./ScriptQL.ts";
+	assignmentManagement,
+	assignmentViewing,
+} from "./tables/assignments.ts";
+import {
+	classManagement,
+	classUpdating,
+	classViewing,
+} from "./tables/classes.ts";
+import {
+	adminModifyEnrolled,
+	adminModifyEnrolledUserData,
+} from "./tables/enrolled.ts";
+import {
+	assignmentSubmissionAdd,
+	assignmentSubmissionUpdate,
+	assignmentSubmissionView,
+} from "./tables/submissions.ts";
+import { adminModifyClassUsers } from "./tables/classUsers.ts";
 
-const assignmentViewing = new Policy({
-	name: "Student assignment viewing",
-	author: "Bloxs",
-	query: IN(
-		"auth.uid()",
-		SELECT(
-			"class_users",
-			["user_id"],
-			AND(
-				EQ("$.class_id", "class_id"),
-				OR(
-					EQ("$.teacher", "TRUE"),
-					AND(
-						EQ("hidden", "FALSE"),
-						// Thanks Seagullz for giving ideas on what's the issue
-						OR(IS("publish_date", "NULL"), LTE("publish_date", "now()"))
-					)
-				)
-			)
-		)
-	),
-});
-
-const assignmentManagement = new Policy({
-	name: "Teacher assignment management",
-	author: "Bloxs",
-	query: IN(
-		"auth.uid()",
-		SELECT(
-			"class_users",
-			["user_id"],
-			AND(EQ("$.class_id", "class_id"), EQ("$.teacher", "TRUE"))
-		)
-	),
-});
-
-savePolicies("./policies.sql", assignmentViewing, assignmentManagement);
+savePolicies(
+	"./policies.sql",
+	assignmentViewing,
+	assignmentManagement,
+	assignmentSubmissionView,
+	assignmentSubmissionAdd,
+	assignmentSubmissionUpdate,
+	adminModifyEnrolled,
+	adminModifyEnrolledUserData,
+	classViewing,
+	classUpdating,
+	classManagement,
+	adminModifyClassUsers
+);

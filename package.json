@@ -11,7 +11,9 @@
 		"next-lint": "next lint",
 		"prepare": "husky install",
 		"fmt": "yarn prettier --write .",
-		"types": "supabase gen types typescript --project-id hhrehffmdrcjqowwvgqg > lib/db/database.types.ts",
+		"types": "npm run types:next && npm run types:deno",
+		"types:next": "supabase gen types typescript --project-id hhrehffmdrcjqowwvgqg > lib/db/database.types.ts",
+		"types:deno": "supabase gen types typescript --project-id hhrehffmdrcjqowwvgqg > supabase/functions/_shared/database.types.ts",
 		"slink": "supabase link --project-ref hhrehffmdrcjqowwvgqg",
 		"static": "next export",
 		"ionic:build": "yarn build && yarn static",
@@ -46,6 +48,7 @@
 		"@types/react-dom": "^18.2.7",
 		"@types/react-tagsinput": "^3.20.0",
 		"@vercel/analytics": "^1.0.1",
+		"export-to-csv": "^0.2.1",
 		"canvas-confetti": "^1.6.0",
 		"formik": "^2.4.2",
 		"lexical": "^0.11.3",
@@ -61,7 +64,7 @@
 		"typescript": "^5.0.4",
 		"use-child": "^1.0.0",
 		"yup": "^1.2.0",
-		"zustand": "^4.3.8"
+		"zustand": "^4.3.9"
 	},
 	"devDependencies": {
 		"@tailwindcss/forms": "^0.5.4",
