@@ -35,8 +35,8 @@ export default function ScheduleComponent({
 				{schedule && //checks if the useState that stores the schedule UI is not null
 					schedule.map(
 						(item, index) =>
-							// @ts-expect-error I give up
 							(checkClassMatchesSchedule(item) &&
+								// @ts-expect-error I give up
 								checkClassMatchesSchedule(item).class!.name &&
 								/* checks that item (a ScheduleInterface) matches to a class, (see the function), and that the name attribute on it is not null */
 								!item.specialEvent && ( //If the item is not a special event... ...fill the UI with the stuff...
@@ -44,10 +44,10 @@ export default function ScheduleComponent({
 										key={index}
 										className="flex grow items-center justify-between font-semibold"
 										href={
-											// @ts-expect-error
 											"/classes/" +
 											(checkClassMatchesSchedule(item)
-												? checkClassMatchesSchedule(item).class!.id
+												? // @ts-expect-error
+												  checkClassMatchesSchedule(item).class!.id
 												: "") //link to the correct class
 										}
 									>
