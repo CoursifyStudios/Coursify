@@ -8,10 +8,12 @@ import {
 	ChevronRightIcon,
 	ChevronUpDownIcon,
 	ClipboardDocumentListIcon,
+	EllipsisVerticalIcon,
 	MagnifyingGlassIcon,
 	PencilSquareIcon,
 	ShieldCheckIcon,
 	TrashIcon,
+	UserGroupIcon,
 	UserIcon,
 	UsersIcon,
 } from "@heroicons/react/24/outline";
@@ -23,6 +25,7 @@ import {
 	Dispatch,
 	Fragment,
 	ReactElement,
+	ReactNode,
 	SetStateAction,
 	useEffect,
 	useMemo,
@@ -55,8 +58,9 @@ import { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import ImagePicker from "@/components/pickers/imagePicker";
 import Layout from "@/components/layout/layout";
 import { NextPageWithLayout } from "../_app";
-import { getUserData } from "@/lib/db/settings";
+import { getBulkUserData, getUserData } from "@/lib/db/settings";
 import { Toggle } from "@/components/misc/toggle";
+import MenuSelect from "@/components/misc/menu";
 
 /**
  * This file is not intended for long term use.
@@ -133,6 +137,7 @@ const Admin: NextPageWithLayout = () => {
 				bio: string | null;
 				phone_number: string | null;
 				student_id: string | null;
+				avatar_url: string;
 				enrolled: {
 					admin_bool: boolean;
 				}[];
@@ -161,6 +166,11 @@ const Admin: NextPageWithLayout = () => {
 					full_name: string;
 					email: string;
 					avatar_url: string;
+					class_users: {
+						teacher: boolean;
+						main_teacher: boolean | null;
+						class_id: string;
+					}[];
 				}[];
 		  }[]
 		| null
@@ -191,6 +201,7 @@ const Admin: NextPageWithLayout = () => {
 		{ name: string; expireAt: number }[]
 	>([]);
 	const [selectedColor, setSelectedColor] = useState(colors[0]);
+	const [classUsers, setClassUsers] = useState<ReturnedUser[]>([]);
 
 	const selectedUser = useMemo(
 		() => users?.find((user) => user.id == selectedRows[0]),
@@ -315,6 +326,7 @@ const Admin: NextPageWithLayout = () => {
 				getClasses(supabase, 1, 50, sid),
 				getClassesPages(supabase, 50, sid),
 			]);
+
 			if (data.data && pages && classesData.data) {
 				// @ts-expect-error relationships will never be an array
 				setUsers(data.data.users);
@@ -893,12 +905,22 @@ Activities	The user's activities, as displayed on their profile
 		if (error != undefined) {
 			newNotification("Something went wrong, please try again");
 		} else {
-			newNotification("Created class");
-			setClasses((classes) => [
-				...(classes ?? []),
-				// This doesn't work since the type expects more than just the class itself
-				data,
-			]);
+			const { error } = await supabase.from("class_users").insert(
+				classUsers.map((u) => ({
+					class_id: selectedClass!.id,
+					user_id: u.id,
+					teacher: u.teacher,
+					main_teacher: u.main_teacher,
+				}))
+			);
+
+			if (error != undefined) {
+				newNotification("Something went wrong, please try again");
+			} else {
+				newNotification("Created class");
+				// @ts-ignore Fuck supabase - Bloxs
+				setClasses((classes) => [...(classes ?? []), data]);
+			}
 		}
 
 		setLoading(false);
@@ -1667,6 +1689,7 @@ Activities	The user's activities, as displayed on their profile
 										block: 1,
 										schedule_type: 1,
 										image: "",
+										users: [] as ReturnedUser[],
 									}}
 									onSubmit={(v) => {
 										createClass(v);
@@ -1678,6 +1701,9 @@ Activities	The user's activities, as displayed on their profile
 										block: Yup.number().required(),
 										schedule_type: Yup.number().required(),
 										image: Yup.string().required("Choose an image!"),
+										user: Yup.array()
+											.min(1, "You must have at least 1 user!")
+											.of(Yup.object()),
 									})}
 								>
 									{({ setValues, errors, values }) => (
@@ -1751,7 +1777,13 @@ Activities	The user's activities, as displayed on their profile
 													<ErrorMessage name="image" />
 												</span>
 											</label>
-											<UserSelector initialUsers={[]} supabase={supabase} />
+											<UserSelector
+												initialUsers={[]}
+												supabase={supabase}
+												setValues={(users) =>
+													setValues((values) => ({ ...values, users: users }))
+												}
+											/>
 											{/* <p className="italic text-sm">
 											Leave the Student ID and Graduation year fields blank for
 											a non-student account
@@ -1863,14 +1895,42 @@ Activities	The user's activities, as displayed on their profile
 													<ArrowDownTrayIcon className="h-5 w-5" />
 												</Button>
 												{selectedRows.length == 1 && selectedClass && (
-													<Button
-														className="rounded-xl !px-2.5"
-														onClick={() => {}}
-													>
-														<div
-															className={`h-4 w-4 mx-0.5 rounded-full brightness-50 saturate-[5] bg-${selectedClass.color}-200`}
-														></div>
-													</Button>
+													<>
+														<UserSelector
+															supabase={supabase}
+															initialUsers={
+																selectedClass.users?.map((user) => ({
+																	id: user.id,
+																	full_name: user.full_name,
+																	email: user.email ?? "",
+																	avatar_url: user.avatar_url,
+																	teacher:
+																		user.class_users.find(
+																			(c) => c.class_id == selectedClass.id
+																		)!.teacher || false,
+																	main_teacher:
+																		user.class_users.find(
+																			(c) => c.class_id == selectedClass.id
+																		)!.main_teacher || false,
+																})) ?? []
+															}
+															setValues={setClassUsers}
+															button={
+																<Button className="rounded-xl !px-2.5 h-full">
+																	<UserGroupIcon className="h-5 w-5" />
+																</Button>
+															}
+														/>
+
+														<Button
+															className="rounded-xl !px-2.5"
+															onClick={() => {}}
+														>
+															<div
+																className={`h-4 w-4 mx-0.5 rounded-full brightness-50 saturate-[5] bg-${selectedClass.color}-200`}
+															></div>
+														</Button>
+													</>
 												)}
 												<Button
 													onClick={() => setDeleteOpen(true)}
@@ -2277,9 +2337,13 @@ function DeleteUI({
 function UserSelector({
 	supabase,
 	initialUsers,
+	button,
+	setValues,
 }: {
 	supabase: SupabaseClient<Database>;
 	initialUsers: User[];
+	button?: ReactNode;
+	setValues: (users: ReturnedUser[]) => void;
 }) {
 	const [students, setStudents] = useState<User[]>([]);
 	const [teachers, setTeachers] = useState<User[]>([]);
@@ -2288,6 +2352,30 @@ function UserSelector({
 	const [userText, setUserText] = useState("");
 	const [teacher, setTeacher] = useState(false);
 	const [error, setError] = useState<string>();
+
+	useEffect(() => {
+		if (students.length == 0 && teachers.length == 0) {
+			initialUsers.forEach((user) => {
+				if (user.teacher) {
+					if (user.main_teacher) {
+						setTeachers((teachers) => {
+							teachers.unshift(user);
+							return teachers;
+						});
+					} else {
+						setTeachers((teachers) => {
+							teachers.push(user);
+							return teachers;
+						});
+					}
+				} else {
+					setStudents((students) => students.concat([user]));
+				}
+			});
+		}
+		// At this point I don't care - Lukas
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [initialUsers]);
 
 	const addUser = async () => {
 		if (
@@ -2298,18 +2386,27 @@ function UserSelector({
 				(student) => student.id == userText || student.email == userText
 			)
 		) {
-			setError("This user is already in this class");
-			return;
+			if (
+				students.find(
+					(student) => student.id == userText || student.email == userText
+				) &&
+				teacher
+			) {
+				setStudents((s) =>
+					s.filter(
+						(student) => student.id == userText || student.email == userText
+					)
+				);
+			} else {
+				setError("This user is already in this class");
+				return;
+			}
 		}
 
 		setLoading(true);
 		setError(undefined);
 
-		const userData = await getUserData(
-			supabase,
-			userText,
-			userText.includes("@")
-		);
+		const userData = await getUserData(supabase, userText);
 		if (userData.data) {
 			if (teacher) {
 				setTeachers((teachers) => teachers.concat([userData.data]));
@@ -2324,59 +2421,180 @@ function UserSelector({
 		setLoading(false);
 	};
 
+	const returnUsers = () => {
+		setValues(
+			students
+				.map((s) => ({ id: s.id, teacher: false, main_teacher: false }))
+				.concat(
+					teachers.map((t, i) => ({
+						id: t.id,
+						teacher: true,
+						main_teacher: i == 0,
+					}))
+				)
+		);
+	};
+
+	const bulkAddUsers = async () => {
+		const users = userText
+			.split(",")
+			.map((u) => u.trim())
+			.filter((u) => !teachers.find((s) => s.id == u || s.email == u));
+
+		if (users.length == 0) {
+			setUserText("");
+			return;
+		}
+
+		setLoading(true);
+		setError(undefined);
+
+		const userData = await getBulkUserData(supabase, users);
+
+		if (userData.data) {
+			for (const user of userData.data) {
+				if (students.find((student) => student.id == user.id)) {
+					if (teacher) {
+						setStudents((s) => s.filter((student) => student.id != user.id));
+						setTeachers((s) => s.concat([user]));
+					}
+					continue;
+				}
+				setStudents((s) => s.concat([user]));
+			}
+		} else if (userData.error) {
+			setError(userData.error.message);
+		}
+
+		setUserText("");
+		setLoading(false);
+	};
+
 	return (
 		<div>
-			<h3 className="text-sm font-medium">Users</h3>
-			<Button
-				type="button"
-				className="mt-2"
-				color={
-					students.length == 0 && teachers.length == 0
-						? "bg-blue-500"
-						: undefined
-				}
-				onClick={() => setOpen(true)}
-			>
-				{students.length == 0 && teachers.length == 0
-					? "Add Users"
-					: "Edit Users"}
-			</Button>
+			{button ? (
+				<div className="h-full" onClick={() => setOpen(true)}>
+					{button}
+				</div>
+			) : (
+				<>
+					<h3 className="text-sm font-medium">Users</h3>
+					<Button
+						type="button"
+						className="mt-2"
+						color={
+							students.length == 0 && teachers.length == 0
+								? "bg-blue-500"
+								: undefined
+						}
+						onClick={() => setOpen(true)}
+					>
+						{students.length == 0 && teachers.length == 0
+							? "Add Users"
+							: "Edit Users"}
+					</Button>
+				</>
+			)}
 			<Popup
 				closeMenu={() => {
 					setOpen(false);
+					returnUsers();
 				}}
 				open={open}
 				size="xs"
 			>
 				<h2 className="title-sm">Users</h2>
 				<span className="text-sm font-medium mt-4">Teachers</span>
-				<div className="grid grid-cols-2">
+				<div className="grid grid-cols-2 gap-2 ">
 					{teachers.length == 0 ? (
 						<span className="italic text-sm">No Teachers Found</span>
 					) : (
-						teachers.map((teacher) => (
+						teachers.map((teacher, i) => (
 							<div key={teacher.id} className="flex items-center p-2 ">
 								<Image
 									src={teacher.avatar_url}
 									width={25}
 									height={25}
 									alt={`${teacher.full_name}'s profile picture`}
-									className="rounded-full mr-4 ring"
+									className={`rounded-full mr-4 h-8 w-8 ${i == 0 && "ring"}`}
 								/>
-								<div className="flex flex-col">
-									<p className="font-medium ">{teacher.full_name}</p>
-									<span className="text-xs">Main teacher</span>
+								<div className="flex flex-col max-w-[10rem]">
+									<p className="font-medium truncate">{teacher.full_name}</p>
+									{i == 0 && <span className="text-xs">Main teacher</span>}
 								</div>
+								<div className="ml-auto"></div>
+								<MenuSelect
+									items={[
+										{
+											content: "Remove",
+											onClick: () =>
+												setTeachers((teachers) =>
+													teachers.filter((t) => t.id != teacher.id)
+												),
+										},
+										...(i != 0
+											? [
+													{
+														content: "Make Main Teacher",
+														onClick: () =>
+															setTeachers((teachers) =>
+																teachers
+																	.filter((t) => t.id == teacher.id)
+																	.concat(
+																		teachers.filter((t) => t.id != teacher.id)
+																	)
+															),
+													},
+											  ]
+											: []),
+									]}
+								>
+									<div className="ml-auto p-1 hover:bg-gray-200 cursor-pointer rounded-lg">
+										<EllipsisVerticalIcon className="w-6 h-6" />
+									</div>
+								</MenuSelect>
 							</div>
 						))
 					)}
 				</div>
 				<span className="text-sm font-medium mt-4">Students</span>
-				{students.length == 0 ? (
-					<span className="italic text-sm">No Students Found</span>
-				) : (
-					students.map((student) => <div key={student.id}></div>)
-				)}
+				<div className="grid grid-cols-2 gap-2 ">
+					{students.length == 0 ? (
+						<span className="italic text-sm">No Students Found</span>
+					) : (
+						students.map((student) => (
+							<div key={student.id} className="flex items-center p-2">
+								<Image
+									src={student.avatar_url}
+									width={25}
+									height={25}
+									alt={`${student.full_name}'s profile picture`}
+									className={`rounded-full mr-4 h-8 w-8`}
+								/>
+								<div className="flex flex-col max-w-[10rem]">
+									<p className="font-medium truncate">{student.full_name}</p>
+								</div>
+								<div className="ml-auto"></div>
+								<MenuSelect
+									items={[
+										{
+											content: "Remove",
+											onClick: () =>
+												setStudents((students) =>
+													students.filter((t) => t.id != student.id)
+												),
+										},
+									]}
+								>
+									<div className="ml-auto p-1 hover:bg-gray-200 cursor-pointer rounded-lg">
+										<EllipsisVerticalIcon className="w-6 h-6" />
+									</div>
+								</MenuSelect>
+							</div>
+						))
+					)}
+				</div>
+
 				<div className="mt-4 flex items-center">
 					<input
 						type="text"
@@ -2385,6 +2603,7 @@ function UserSelector({
 						onChange={(v) => setUserText(v.target.value)}
 						disabled={loading}
 						value={userText}
+						placeholder="User email or id seperate with , for multiple"
 					/>
 					<div className="flex flex-col items-center text-xs">
 						<p className="mb-1">Teacher</p>
@@ -2398,7 +2617,7 @@ function UserSelector({
 						className="ml-4"
 						color="bg-blue-500"
 						disabled={userText.length == 0 || loading}
-						onClick={addUser}
+						onClick={userText.includes(",") ? bulkAddUsers : addUser}
 					>
 						Add User
 						{loading && <LoadingSmall className={`ml-2 `} />}
@@ -2415,6 +2634,14 @@ interface User {
 	full_name: string;
 	email: string;
 	avatar_url: string;
+	teacher?: boolean;
+	main_teacher?: boolean;
+}
+
+interface ReturnedUser {
+	id: string;
+	teacher: boolean;
+	main_teacher: boolean;
 }
 
 export default Admin;

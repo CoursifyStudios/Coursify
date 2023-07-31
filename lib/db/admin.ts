@@ -14,7 +14,7 @@ export const getUsers = async (
 		`
 			name, id,
 				users (
-					id, full_name, email, year, bio, phone_number, student_id,
+					id, full_name, email, year, bio, phone_number, student_id, avatar_url,
 					relationships (
 						parent_id, student_id
 					),
@@ -184,7 +184,10 @@ export const getClasses = async (
 				classes (
 					id, name, description, block, schedule_type, name_full, room, color, full_description, classpills, image,
 					users (
-						id, full_name, email, avatar_url
+						id, full_name, email, avatar_url,
+						class_users (
+							teacher, main_teacher, class_id
+						)
 					)
 				)
 		`
