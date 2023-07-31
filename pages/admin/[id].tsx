@@ -1006,7 +1006,9 @@ Activities	The user's activities, as displayed on their profile
 		} else if (errors.length > 0) {
 			errors.forEach((error) => newNotification(error.error?.message || ""));
 		} else {
-			newNotification("Updated userlist");
+			newNotification(
+				"Updated userlist! Changes may require reloading to view"
+			);
 		}
 		setLoading(false);
 	};
