@@ -32,11 +32,6 @@ export default function Footer() {
 							Privacy Policy
 						</ColoredPill>
 					</Link>
-					<Link href="/feedback">
-						<ColoredPill color="gray" hoverState>
-							Leave Feedback
-						</ColoredPill>
-					</Link>
 					<Link href="/schedule-editor">
 						<ColoredPill color="gray" hoverState>
 							Schedule Editor

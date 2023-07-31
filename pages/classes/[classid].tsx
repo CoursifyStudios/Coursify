@@ -59,6 +59,7 @@ const Class: NextPageWithLayout = () => {
 	>([]);
 	const [fetchedClassId, setFetchedClassId] = useState("");
 	const [searchOpen, setSearchOpen] = useState(false);
+	const [userSearch, setUserSearch] = useState("");
 	const {
 		data: { compact },
 	} = useSettings();
@@ -360,20 +361,26 @@ const Class: NextPageWithLayout = () => {
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}>
-							<div className="mb-4 flex justify-between">
+							<div
+								className={`mb-4 flex justify-between ${
+									isTeacher && "flex-col gap-2 md:flex-row md:gap-0"
+								}`}
+							>
 								<div
 									className={`${
 										searchOpen ? "max-w-[24rem]" : "max-w-[14rem]"
 									} relative flex grow items-center pr-2 transition-all`}
 								>
+									<MagnifyingGlassIcon className="absolute left-3 h-4 w-4" />
 									<input
 										type="text"
-										className="grow !rounded-xl py-0.5 placeholder:dark:text-gray-400"
+										className="grow !rounded-xl py-0.5 placeholder:dark:text-gray-400 pl-8"
+										placeholder="Search members..."
 										onClick={() => setSearchOpen(true)}
 										onBlur={() => setSearchOpen(false)}
-										placeholder="Search users..."
+										//@ts-ignore DUDE OF COURSE e.target.value exists!
+										onInput={(e) => setUserSearch(e.target.value)}
 									/>
-									<MagnifyingGlassIcon className="absolute right-3 h-4 w-4" />
 								</div>
 								{isTeacher && data.data.users && (
 									<div className="flex gap-2">
@@ -410,20 +417,27 @@ const Class: NextPageWithLayout = () => {
 
 							<div className="grid gap-4 max-sm:mx-auto max-sm:w-[20.5rem] lg:grid-cols-2 xl:grid-cols-3">
 								{data.data.users ? (
-									getDataInArray(data.data.users).map((user) => (
-										<Member
-											key={user.id}
-											user={user}
-											leader={
-												getDataInArray(data.data.class_users).find(
-													(userInUsersGroups) =>
-														user?.id == userInUsersGroups?.user_id
-												)?.teacher
-													? true
-													: false
-											}
-										></Member>
-									))
+									getDataInArray(data.data.users).map(
+										(user) =>
+											(userSearch.length == 0
+												? true
+												: user.full_name
+														.toLowerCase()
+														.includes(userSearch.trim().toLowerCase())) && (
+												<Member
+													key={user.id}
+													user={user}
+													leader={
+														getDataInArray(data.data.class_users).find(
+															(userInUsersGroups) =>
+																user?.id == userInUsersGroups?.user_id
+														)?.teacher
+															? true
+															: false
+													}
+												></Member>
+											)
+									)
 								) : (
 									<div className="rounded-xl bg-gray-200 p-4">
 										An error occurred
