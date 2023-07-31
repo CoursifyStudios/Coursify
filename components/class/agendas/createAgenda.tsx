@@ -64,7 +64,7 @@ export const CreateAgenda = ({
 
 	return (
 		<Popup closeMenu={() => setOpen(false)} open={open} size="md">
-			<h2 className="font-semibold mb-2">Create a new Agenda</h2>
+			<h2 className="title-sm">Create a new Agenda</h2>
 			{/* custom datepicker later probably */}
 			<Formik
 				initialValues={{
@@ -113,7 +113,7 @@ export const CreateAgenda = ({
 					}
 				}}
 			>
-				<Form className="flex flex-col w-full gap-2">
+				<Form className="flex flex-col w-full gap-4">
 					<label htmlFor="date">
 						<Field
 							name="date"
@@ -133,16 +133,16 @@ export const CreateAgenda = ({
 					{/* Later, we'll need to be able to change the order of the assignments */}
 					<div className="flex justify-between">
 						<p>Select assignments to include in this agenda:</p>
-						<div className="relative flex items-center">
-							<MagnifyingGlassIcon className="absolute left-3 h-4 w-4" />
-							<input
-								type="text"
-								className="w-48 !rounded-xl py-0.5 transition-all focus:w-96 placeholder:dark:text-gray-400 pl-8"
-								placeholder="Search assignments..."
-								//@ts-ignore DUDE OF COURSE e.target.value exists!
-								onInput={(e) => setSearch(e.target.value)}
-							/>
-						</div>
+					</div>
+					<div className="relative flex items-center">
+						<MagnifyingGlassIcon className="absolute left-3 h-4 w-4" />
+						<input
+							type="text"
+							className="w-56 !rounded-xl py-0.5 transition-all focus:w-96 placeholder:dark:text-gray-400 pl-8"
+							placeholder="Search assignments..."
+							//@ts-ignore DUDE OF COURSE e.target.value exists!
+							onInput={(e) => setSearch(e.target.value)}
+						/>
 					</div>
 					<div className="overflow-auto max-h-80 gap-3 grid">
 						{assignments.length > 0
@@ -158,7 +158,7 @@ export const CreateAgenda = ({
 													className={`w-full ${
 														chosenAssignments.indexOf(assignment.id) == -1
 															? "bg-gray-300"
-															: "bg-white dark:bg-black border border-black dark:border-white outline-1"
+															: "bg-white dark:bg-black border border-black dark:border-white outline-0.5"
 													}`}
 													key={assignment.id}
 													type={"button"}
@@ -181,11 +181,6 @@ export const CreateAgenda = ({
 												>
 													<CompactAssignmentUI
 														assignment={assignment}
-														className={
-															chosenAssignments.indexOf(assignment.id) == -1
-																? "bg-gray-300"
-																: "bg-white dark:bg-black"
-														}
 													></CompactAssignmentUI>
 												</Button>
 											</div>
@@ -193,11 +188,10 @@ export const CreateAgenda = ({
 							  )
 							: "Make some assignments to include them in your agendas!"}
 					</div>
-
 					<Button
 						// using 300 light/ 600 dark button color schema, nonstandard for us but I like it better
-						className="w-min mx-auto dark:bg-blue-600 gap-4"
-						color="bg-blue-300"
+						className="w-min mx-auto gap-4"
+						color="bg-blue-500"
 						type="submit"
 					>
 						{editingInfo ? "Save" : "Create"}
