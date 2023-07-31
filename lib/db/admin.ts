@@ -1,5 +1,6 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database } from "./database.types";
+import { ReturnedUser } from "@/pages/admin/[id]";
 
 export const getUsers = async (
 	supabase: SupabaseClient<Database>,
@@ -258,4 +259,21 @@ export const getClassesPages = async (
 	}
 
 	return Math.ceil(count / pageSize);
+};
+
+export const updateClassUsers = async (
+	supabase: SupabaseClient<Database>,
+	classID: string,
+	users: ReturnedUser[],
+	initialUsers: ReturnedUser[]
+) => {
+	const u = Array.isArray(users) ? users : [users];
+	return await supabase.from("class_users").upsert(
+		u.map((mappedUser) => ({
+			main_teacher: mappedUser.main_teacher,
+			user_id: mappedUser.id,
+			class_id: classID,
+			teacher: mappedUser.teacher,
+		}))
+	);
 };

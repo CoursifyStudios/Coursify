@@ -201,7 +201,6 @@ const Admin: NextPageWithLayout = () => {
 		{ name: string; expireAt: number }[]
 	>([]);
 	const [selectedColor, setSelectedColor] = useState(colors[0]);
-	const [classUsers, setClassUsers] = useState<ReturnedUser[]>([]);
 
 	const selectedUser = useMemo(
 		() => users?.find((user) => user.id == selectedRows[0]),
@@ -870,6 +869,7 @@ Activities	The user's activities, as displayed on their profile
 		block,
 		schedule_type,
 		image,
+		users,
 	}: {
 		name: string;
 		name_full: string;
@@ -877,6 +877,7 @@ Activities	The user's activities, as displayed on their profile
 		block: number;
 		schedule_type: number;
 		image: string;
+		users: ReturnedUser[];
 	}) => {
 		setLoading(true);
 		const { data, error } = await supabase
@@ -894,10 +895,7 @@ Activities	The user's activities, as displayed on their profile
 			// Copy pasted from getClasses
 			.select(
 				`
-			id, name, description, block, schedule_type, name_full, room, color, full_description, classpills, image,
-			users (
-				id, full_name, email, avatar_url
-			)
+			id
 			`
 			)
 			.single();
@@ -906,8 +904,8 @@ Activities	The user's activities, as displayed on their profile
 			newNotification("Something went wrong, please try again");
 		} else {
 			const { error } = await supabase.from("class_users").insert(
-				classUsers.map((u) => ({
-					class_id: selectedClass!.id,
+				users.map((u) => ({
+					class_id: data.id,
 					user_id: u.id,
 					teacher: u.teacher,
 					main_teacher: u.main_teacher,
@@ -917,9 +915,27 @@ Activities	The user's activities, as displayed on their profile
 			if (error != undefined) {
 				newNotification("Something went wrong, please try again");
 			} else {
-				newNotification("Created class");
-				// @ts-ignore Fuck supabase - Bloxs
-				setClasses((classes) => [...(classes ?? []), data]);
+				newNotification(
+					"Created class! Loading user data to populate dashboard..."
+				);
+				const { data: classData } = await supabase
+					.from("classes")
+					.select(
+						`
+				id, name, description, block, schedule_type, name_full, room, color, full_description, classpills, image,
+					users (
+						id, full_name, email, avatar_url,
+						class_users (
+							teacher, main_teacher, class_id
+						)
+					)
+					`
+					)
+					.eq("id", data.id)
+					.single();
+
+				// @ts-ignore Fuck supabase - Bloxs			:skull:, also btw you coded this wrong, had to fix - Lukas
+				setClasses((classes) => [...(classes ?? []), classData]);
 			}
 		}
 
@@ -1914,7 +1930,7 @@ Activities	The user's activities, as displayed on their profile
 																		)!.main_teacher || false,
 																})) ?? []
 															}
-															setValues={setClassUsers}
+															setValues={(v) => {}}
 															button={
 																<Button className="rounded-xl !px-2.5 h-full">
 																	<UserGroupIcon className="h-5 w-5" />
@@ -2638,7 +2654,7 @@ interface User {
 	main_teacher?: boolean;
 }
 
-interface ReturnedUser {
+export interface ReturnedUser {
 	id: string;
 	teacher: boolean;
 	main_teacher: boolean;
