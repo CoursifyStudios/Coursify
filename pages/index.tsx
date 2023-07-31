@@ -1,6 +1,6 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, ReactNode, useEffect, useState } from "react";
 import HomepageClassesUI from "../components/class/homepage";
 import { sortClasses } from "../components/class/sorting";
 import { AssignmentPreview } from "../components/complete/assignments/assignments";
@@ -109,6 +109,7 @@ const Home = () => {
 				sessionStorage.setItem("schedule", JSON.stringify(fullSchedule));
 			}
 		})();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, supabaseClient]);
 	if (!user) {
 		return null;
@@ -160,13 +161,15 @@ const Home = () => {
 								{classes &&
 									Array.isArray(classes) &&
 									classes
-										.slice(0, classes.length)
-										.sort((a, b) =>
-											sortClasses(a, b, schedules[0], schedules[1])
+
+										.sort(
+											(a, b) =>
+												//sortClasses(a, b, schedules[0], schedules[1])
+												a.class!.block - b.class!.block
 										)
 
 										//temporary measure
-										.slice(0, 3)
+
 										.map((mappedClass) => {
 											const aClass = mappedClass.class;
 
@@ -183,30 +186,32 @@ const Home = () => {
 														<div className="mb-5 flex-col space-y-4 first-letter:space-y-4">
 															{Array.isArray(aClass.assignments) &&
 																schedules &&
-																aClass.assignments.map((assignment) => (
-																	<AssignmentPreview
-																		className="brightness-hover"
-																		key={assignment.id}
-																		supabase={supabaseClient}
-																		assignment={
-																			Array.isArray(assignment)
-																				? assignment[0]
-																				: assignment
-																		}
-																		userId={user.id}
-																		starredAsParam={
-																			assignment.starred
-																				? Array.isArray(assignment.starred)
-																					? assignment.starred.length > 0
-																					: !!assignment.starred
-																				: false
-																		}
-																		showClassPill={false}
-																		schedule={schedules[0]!}
-																		scheduleT={schedules[1]!}
-																		classes={aClass}
-																	/>
-																))}
+																aClass.assignments
+																	.slice(0, 3)
+																	.map((assignment) => (
+																		<AssignmentPreview
+																			className="brightness-hover"
+																			key={assignment.id}
+																			supabase={supabaseClient}
+																			assignment={
+																				Array.isArray(assignment)
+																					? assignment[0]
+																					: assignment
+																			}
+																			userId={user.id}
+																			starredAsParam={
+																				assignment.starred
+																					? Array.isArray(assignment.starred)
+																						? assignment.starred.length > 0
+																						: !!assignment.starred
+																					: false
+																			}
+																			showClassPill={false}
+																			schedule={schedules[0]!}
+																			scheduleT={schedules[1]!}
+																			classes={aClass}
+																		/>
+																	))}
 														</div>
 													</div>
 												</div>
@@ -223,8 +228,9 @@ const Home = () => {
 										const aClass = mappedClass.class;
 										if (aClass == null) return null;
 
-										return (
-											Array.isArray(aClass.assignments) &&
+										const assignments: ReactNode[] = [];
+
+										Array.isArray(aClass.assignments) &&
 											schedules &&
 											aClass.assignments.map(
 												(assignment) =>
@@ -232,7 +238,8 @@ const Home = () => {
 														? Array.isArray(assignment.starred)
 															? assignment.starred.length > 0
 															: !!assignment.starred
-														: false) && (
+														: false) &&
+													assignments.push(
 														<AssignmentPreview
 															key={assignment.id}
 															className="brightness-hover"
@@ -256,8 +263,8 @@ const Home = () => {
 															classes={aClass}
 														/>
 													)
-											)
-										);
+											);
+										return assignments;
 									})}
 							</div>
 						</section>

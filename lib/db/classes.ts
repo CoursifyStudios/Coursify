@@ -8,6 +8,12 @@ export async function getAllClasses(
 	supabase: SupabaseClient<Database>,
 	userID: string
 ) {
+	const now = new Date();
+	now.setHours(0);
+	now.setDate(now.getDate() - 1);
+
+	const later = new Date(now);
+	later.setDate(later.getDate() + 20);
 	return await supabase
 		.from("class_users")
 		.select(
@@ -41,7 +47,9 @@ export async function getAllClasses(
 			`
 		)
 		.eq("classes.type", CommunityType.CLASS)
-		.eq("user_id", userID);
+		.eq("user_id", userID)
+		.gte("classes.assignments.due_date", now.toISOString())
+		.lte("classes.assignments.due_date", later.toISOString());
 }
 
 export type AllClassesResponse = Awaited<ReturnType<typeof getAllClasses>>;

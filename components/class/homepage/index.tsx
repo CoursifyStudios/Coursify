@@ -32,7 +32,7 @@ const HomepageClassesUI: NextPage<{
 				}
 				return settings.homepageView;
 			}
-			if (!classes) {
+			if (!classes || !Array.isArray(classes)) {
 				return "loading";
 			}
 			let student = 0;

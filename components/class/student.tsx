@@ -95,7 +95,7 @@ const StudentClass: NextPage<StudentClassType> = ({
 										if (!user)
 											return (
 												<p className="text-sm italic text-gray-700" key={i}>
-													No teacher
+													No teacher found
 												</p>
 											);
 
@@ -131,7 +131,7 @@ const StudentClass: NextPage<StudentClassType> = ({
 										);
 									})
 							) : (
-								<p className="text-sm italic text-gray-700">No teacher</p>
+								<p className="text-sm italic text-gray-700">No teacher found</p>
 							)
 						) : (
 							<p>An unknown error occurred</p>
