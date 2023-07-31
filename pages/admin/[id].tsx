@@ -1122,7 +1122,7 @@ Activities	The user's activities, as displayed on their profile
 									}}
 								>
 									<h3 className="title-sm">Upload .csv Files</h3>
-									<h4 className="font-medium mt-4 mb-2">File format</h4>
+									{/* <h4 className="font-medium mt-4 mb-2">File format</h4>
 									<div className=" overflow-hidden border rounded-md divide-y">
 										<div className=" [&>p]:px-2.5 [&>p]:py-2 divide-x grid grid-cols-6 font-medium">
 											<p>First Name</p>
@@ -1142,13 +1142,13 @@ Activities	The user's activities, as displayed on their profile
 												<p>{u.email}</p>
 												<p>{u.grad_year ?? "NULL"}</p>
 												<p></p>
-												{/* <p>{u.parent ? "Yes" : "No"}</p> */}
+												{/* <p>{u.parent ? "Yes" : "No"}</p> /}
 												<p>{u.student_id ?? "NULL"}</p>
 											</div>
 										))}
-									</div>
+									</div> */}
 									{uploaded ? (
-										<>Insert confirm and cancel and stuff button here</>
+										<>Uploaded List!</>
 									) : (
 										<>
 											<p className="text-sm italic mt-1">
@@ -1705,8 +1705,8 @@ Activities	The user's activities, as displayed on their profile
 					<Tab.Panel>
 						<div className="grid grid-cols-4 gap-4">
 							<div
-								className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center col-span-2"
-								onClick={() => setUploadOpen(true)}
+								className="bg-gray-200 grayscale rounded-2xl h-36 mt-2 flex flex-col items-center justify-center col-span-2"
+								//onClick={() => setUploadOpen(true)}
 							>
 								<Image
 									src={uploadImage}

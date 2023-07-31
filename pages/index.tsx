@@ -5,7 +5,11 @@ import HomepageClassesUI from "../components/class/homepage";
 import { sortClasses } from "../components/class/sorting";
 import { AssignmentPreview } from "../components/complete/assignments/assignments";
 import ScheduleComponent from "../components/complete/schedule";
-import { AllClassesResponse, getAllClasses } from "../lib/db/classes";
+import {
+	AllClasses,
+	AllClassesResponse,
+	getAllClasses,
+} from "../lib/db/classes";
 import { Database } from "../lib/db/database.types";
 import { ScheduleInterface, getSchedulesForXDays } from "../lib/db/schedule";
 import { useSettings } from "../lib/stores/settings";
@@ -14,7 +18,7 @@ import Layout from "@/components/layout/layout";
 const Home = () => {
 	const supabaseClient = useSupabaseClient<Database>();
 	const user = useUser();
-	const [classes, setClasses] = useState<AllClassesResponse>();
+	const [classes, setClasses] = useState<AllClasses>();
 	const [loading, setLoading] = useState(true);
 	const [schedules, setSchedules] = useState<ScheduleInterface[][]>([]);
 	const { data: settings } = useSettings();
@@ -55,16 +59,21 @@ const Home = () => {
 	}, []);
 
 	useEffect(() => {
+		if (!Array.isArray(classes)) setClasses(undefined);
 		(async () => {
 			if (user) {
 				const [classes, scheduleDB] = await Promise.all([
-					getAllClasses(supabaseClient),
+					getAllClasses(supabaseClient, user.id),
 					// read comment in above useEffect as to why I'm fetching 3 dates -Lukas
 					// I'm going to fetch like 5 because weekends or some excuse - Bill
 					getSchedulesForXDays(supabaseClient, new Date(), 5),
 				]);
 
-				setClasses(classes);
+				if (classes.data && classes.data[0]) {
+					const data = classes.data.filter((mappedClass) => mappedClass.class);
+					setClasses(data);
+				}
+
 				const fullSchedule: { date: Date; schedule: ScheduleInterface[] }[] =
 					[];
 
@@ -149,69 +158,72 @@ const Home = () => {
 							<h2 className="title mb-4">Assignments</h2>
 							<div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:w-[58.5rem] ">
 								{classes &&
-									classes.data &&
-									classes.data
-										.slice(0, classes.data.length)
+									Array.isArray(classes) &&
+									classes
+										.slice(0, classes.length)
 										.sort((a, b) =>
 											sortClasses(a, b, schedules[0], schedules[1])
 										)
-										.filter(
-											(element) =>
-												!(
-													Array.isArray(element.assignments) &&
-													element.assignments.length == 0
-												)
-										)
+
 										//temporary measure
 										.slice(0, 3)
-										.map((aClass) => (
-											<div key={aClass.id}>
-												<div>
-													<Link href={"/classes/" + aClass.id}>
-														<h2 className="mb-2 text-xl font-semibold">
-															{aClass.name}
-														</h2>
-													</Link>
-													<div className="mb-5 flex-col space-y-4 first-letter:space-y-4">
-														{Array.isArray(aClass.assignments) &&
-															schedules &&
-															aClass.assignments.map((assignment) => (
-																<AssignmentPreview
-																	className="brightness-hover"
-																	key={assignment.id}
-																	supabase={supabaseClient}
-																	assignment={
-																		Array.isArray(assignment)
-																			? assignment[0]
-																			: assignment
-																	}
-																	userId={user.id}
-																	starredAsParam={
-																		assignment.starred
-																			? Array.isArray(assignment.starred)
-																				? assignment.starred.length > 0
-																				: !!assignment.starred
-																			: false
-																	}
-																	showClassPill={false}
-																	schedule={schedules[0]!}
-																	scheduleT={schedules[1]!}
-																	classes={aClass}
-																/>
-															))}
+										.map((mappedClass) => {
+											const aClass = mappedClass.class;
+
+											if (aClass == null) return null;
+
+											return (
+												<div key={aClass.id}>
+													<div>
+														<Link href={"/classes/" + aClass.id}>
+															<h2 className="mb-2 text-xl font-semibold">
+																{aClass.name}
+															</h2>
+														</Link>
+														<div className="mb-5 flex-col space-y-4 first-letter:space-y-4">
+															{Array.isArray(aClass.assignments) &&
+																schedules &&
+																aClass.assignments.map((assignment) => (
+																	<AssignmentPreview
+																		className="brightness-hover"
+																		key={assignment.id}
+																		supabase={supabaseClient}
+																		assignment={
+																			Array.isArray(assignment)
+																				? assignment[0]
+																				: assignment
+																		}
+																		userId={user.id}
+																		starredAsParam={
+																			assignment.starred
+																				? Array.isArray(assignment.starred)
+																					? assignment.starred.length > 0
+																					: !!assignment.starred
+																				: false
+																		}
+																		showClassPill={false}
+																		schedule={schedules[0]!}
+																		scheduleT={schedules[1]!}
+																		classes={aClass}
+																	/>
+																))}
+														</div>
 													</div>
 												</div>
-											</div>
-										))}
+											);
+										})}
 							</div>
 						</section>
 						<section className=" grow xl:ml-10" id="Starred">
 							<h2 className="title mb-4 mr-2">Starred</h2>
 							<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
 								{classes &&
-									classes.data &&
-									classes.data.map(
-										(aClass) =>
+									Array.isArray(classes) &&
+									classes.map((mappedClass) => {
+										const aClass = mappedClass.class;
+										if (aClass == null) return null;
+
+										return (
 											Array.isArray(aClass.assignments) &&
 											schedules &&
 											aClass.assignments.map(
@@ -245,7 +257,8 @@ const Home = () => {
 														/>
 													)
 											)
-									)}
+										);
+									})}
 							</div>
 						</section>
 					</div>

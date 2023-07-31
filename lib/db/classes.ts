@@ -3,11 +3,16 @@ import { getDataInArray, getDataOutArray } from "../misc/dataOutArray";
 import { NonNullableArray } from "../misc/misc.types";
 import type { Database } from "./database.types";
 import { ScheduleInterface, getSchedulesForXDays } from "./schedule";
-export async function getAllClasses(supabase: SupabaseClient<Database>) {
-	const { data, error } = await supabase
-		.from("classes")
+
+export async function getAllClasses(
+	supabase: SupabaseClient<Database>,
+	userID: string
+) {
+	return await supabase
+		.from("class_users")
 		.select(
 			`
+			class:classes (
 			id,
 			name,
 			description,
@@ -32,23 +37,16 @@ export async function getAllClasses(supabase: SupabaseClient<Database>) {
 							*
 					)
 			)
+			)
 			`
 		)
-		.eq("type", CommunityType.CLASS);
-	if (!error) {
-		return {
-			success: true,
-			data: data,
-		};
-	} else {
-		return {
-			success: false,
-			error: error,
-		};
-	}
+		.eq("classes.type", CommunityType.CLASS)
+		.eq("user_id", userID);
 }
 
 export type AllClassesResponse = Awaited<ReturnType<typeof getAllClasses>>;
+
+export type AllClasses = Exclude<AllClassesResponse["data"], null>;
 
 export const getClass = async (
 	supabase: SupabaseClient<Database>,
@@ -258,12 +256,13 @@ export type BasicClassInfoDB = Awaited<
 >;
 
 export const isTeacher = (
-	classData: NonNullableArray<AllClassesResponse["data"]>,
+	classData: NonNullableArray<AllClasses>,
 	userID: string
 ) => {
 	return Boolean(
-		getDataInArray(classData.class_users).find(
-			(user) => user?.user_id == userID && user?.teacher
-		)
+		classData.class &&
+			getDataInArray(classData.class.class_users).find(
+				(user) => user?.user_id == userID && user?.teacher
+			)
 	);
 };
