@@ -93,6 +93,7 @@ While there aren't currently any style or brand guidelines, we do have a few rul
   - For icons use the [Button Icon](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/button.tsx#L23-L45) component.
   - In the event that a "fake" button is required, to add accessibility by screen readers and keyboard navigation, add `tabIndex={0}`.
 - For tooltips the user can copy, use the [Copied Hover](https://github.com/CoursifyStudios/karasu/blob/main/components/misc/pill.tsx#L34-L72) component.
+- Use the styles `label-text` and `label-required` to create a label with an input.
 
 ### Examples
 
@@ -103,6 +104,26 @@ While there aren't currently any style or brand guidelines, we do have a few rul
 	<ButtonIcon icon={<LinkIcon className="h-5 w-5" />} />
 </CopiedHover>
 ```
+
+**Label Styles**
+
+```jsx
+<label>
+	<span className="label-text label-required">Input name</span>
+	<input type="text" /> {/*`type="text"`` is required to add default styles to the input element*/}
+</label>
+```
+
+_You can remove `label-required` if the field isn't required._
+
+```jsx
+<label>
+	<span className="label-text">Input name</span>
+	<input type="text" /> {/*`type="text"`` is required to add default styles to the input element*/}
+</label>
+```
+
+You'll probably need to make the label a flexbox (column, not row).
 
 ## Code Conventions
 

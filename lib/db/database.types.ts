@@ -350,6 +350,49 @@ export interface Database {
 					},
 				];
 			};
+			feedback: {
+				Row: {
+					affected_page: string;
+					code: number[];
+					content: string;
+					created_at: string;
+					id: string;
+					route: string | null;
+					title: string;
+					topic: string;
+					user_id: string;
+				};
+				Insert: {
+					affected_page: string;
+					code: number[];
+					content: string;
+					created_at?: string;
+					id?: string;
+					route?: string | null;
+					title: string;
+					topic: string;
+					user_id: string;
+				};
+				Update: {
+					affected_page?: string;
+					code?: number[];
+					content?: string;
+					created_at?: string;
+					id?: string;
+					route?: string | null;
+					title?: string;
+					topic?: string;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: "feedback_user_id_fkey";
+						columns: ["user_id"];
+						referencedRelation: "users";
+						referencedColumns: ["id"];
+					},
+				];
+			};
 			relationships: {
 				Row: {
 					parent_id: string[] | null;

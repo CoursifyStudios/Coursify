@@ -1,6 +1,6 @@
 name: Bug Report
 description: Report broken UI or unintentded features
-labels: []
+labels: ["bug"]
 
 body:
   - type: input
