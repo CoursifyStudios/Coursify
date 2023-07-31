@@ -15,7 +15,7 @@ export const getUsers = async (
 		`
 			name, id,
 				users (
-					id, full_name, email, year, bio, phone_number, student_id, avatar_url,
+					id, full_name, email, year, bio, phone_number, student_id, avatar_url, onboarded,
 					relationships (
 						parent_id, student_id
 					),
@@ -132,8 +132,7 @@ export const getUsersPages = async (
 
 	const { data, error } = await supabaseRequest;
 	// @ts-expect-error Supabase doesn't really support this method, but theres no official way to get the sount of foreign tables as far as I can tell
-	const count = data ? data[0].users[0].count : 0;
-
+	const count = data ? data[0].users[0].count : 1;
 	if (error || !count) {
 		throw error;
 	}
@@ -252,9 +251,8 @@ export const getClassesPages = async (
 	}
 	const { data, error } = await supabaseRequest;
 	// @ts-expect-error Supabase doesn't really support this method, but theres no official way to get the sount of foreign tables as far as I can tell
-	const count = data ? data[0].classes[0].count : 0;
-
-	if (error || !count) {
+	const count = data ? data[0].classes[0].count : 1;
+	if (error || count == null || count == undefined) {
 		throw error;
 	}
 

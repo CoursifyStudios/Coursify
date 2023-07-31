@@ -139,6 +139,7 @@ const Admin: NextPageWithLayout = () => {
 				phone_number: string | null;
 				student_id: string | null;
 				avatar_url: string;
+				onboarded: boolean;
 				enrolled: {
 					admin_bool: boolean;
 				}[];
@@ -319,7 +320,6 @@ const Admin: NextPageWithLayout = () => {
 		(async () => {
 			if (!user || !id || !supabase || users) return;
 			const sid = typeof id == "string" ? id : "";
-
 			const [data, pages, classesData, classesPages] = await Promise.all([
 				getUsers(supabase, 1, 50, sid),
 				getUsersPages(supabase, 50, sid),
@@ -854,8 +854,9 @@ Activities	The user's activities, as displayed on their profile
 						.map((uid) => `and(${uid}.eq.user_id,${id}.eq.school_id)`)
 						.join(",")
 				),
-			// uhhhhhh how the FUCK do I do this
+			// uhhhhhh how the FUCK do I do this- Bloxs
 			// Delete from submissions, assignment comments (Waiting on ), starred for assignments in school
+			// Honestly skill issue - Lukas
 		]);
 		setLoading(false);
 		if (errors.map((error) => error.error !== null).includes(true)) {
@@ -1499,11 +1500,19 @@ Activities	The user's activities, as displayed on their profile
 											>
 												{mappedUser.enrolled[0].admin_bool ? (
 													<ShieldCheckIcon
-														className={`${svgClassname} text-blue-500`}
+														className={`${svgClassname} ${
+															mappedUser.onboarded
+																? "text-blue-500"
+																: "text-red-500"
+														}`}
 													/>
 												) : (
 													<UserIcon
-														className={`${svgClassname} text-gray-300`}
+														className={`${svgClassname} ${
+															mappedUser.onboarded
+																? "text-gray-300"
+																: "text-red-500"
+														}`}
 													/>
 												)}{" "}
 												<p className="truncate">{mappedUser.full_name}</p>
@@ -2227,6 +2236,10 @@ Activities	The user's activities, as displayed on their profile
 					<p>Standard Account</p>
 				</div>
 				<div>
+					<UserIcon className="w-5 h-5 text-red-500" />
+					<p>Non-onboarded Account</p>
+				</div>
+				<div>
 					<UsersIcon className="w-5 h-5 text-blue-500" /> <p>Parent</p>
 				</div>
 				<div>
@@ -2519,7 +2532,7 @@ function UserSelector({
 				setStudents((s) => s.concat([user]));
 			}
 		} else if (userData.error) {
-			setError(userData.error.message);
+			setError(userData.error.message + " (User doesn't exist?)");
 		}
 
 		setUserText("");
@@ -2620,15 +2633,22 @@ function UserSelector({
 					) : (
 						students.map((student) => (
 							<div key={student.id} className="flex items-center p-2">
-								<Image
-									src={student.avatar_url}
-									width={25}
-									height={25}
-									alt={`${student.full_name}'s profile picture`}
-									className={`rounded-full mr-4 h-8 w-8`}
-								/>
+								{student.avatar_url ? (
+									<Image
+										src={student.avatar_url}
+										width={25}
+										height={25}
+										alt={`${student.full_name}'s profile picture`}
+										className={`rounded-full mr-4 h-8 w-8`}
+									/>
+								) : (
+									<div className="bg-gradient-to-br from-blue-500 w-8 mr-4 rounded-full h-8" />
+								)}
 								<div className="flex flex-col max-w-[10rem]">
 									<p className="font-medium truncate">{student.full_name}</p>
+									{!student.avatar_url && (
+										<p className="text-xs">Non-onboarded User</p>
+									)}
 								</div>
 								<div className="ml-auto"></div>
 								<MenuSelect
