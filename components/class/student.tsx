@@ -84,7 +84,8 @@ const StudentClass: NextPage<StudentClassType> = ({
 								.length > 0 ? (
 								classData
 									.class_users!.filter((userData) => userData.teacher)
-									.splice(0, settings.compact ? 2 : 6)
+									.sort((a, b) => (a.main_teacher ? 1 : -1))
+									.splice(0, 1)
 									.map((userData, i) => {
 										const user = !Array.isArray(classData.users!)
 											? classData.users!

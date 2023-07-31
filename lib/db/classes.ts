@@ -13,30 +13,30 @@ export async function getAllClasses(
 		.select(
 			`
 			class:classes (
-			id,
-			name,
-			description,
-			block,
-			schedule_type,
-			color,
-			name_full,
-			room,
-			full_description,
-			classpills,
-			image,
-			type,
-			users (
-				avatar_url, id, full_name
-			),
-			class_users (
-				user_id, teacher, grades, grade
-			),
-			assignments (
-					*,
-					starred (
-							*
-					)
-			)
+				id,
+				name,
+				description,
+				block,
+				schedule_type,
+				color,
+				name_full,
+				room,
+				full_description,
+				classpills,
+				image,
+				type,
+				users (
+					avatar_url, id, full_name
+				),
+				class_users (
+					user_id, teacher, grades, grade, main_teacher
+				),
+				assignments (
+						*,
+						starred (
+								*
+						)
+				)
 			)
 			`
 		)
@@ -87,7 +87,7 @@ export const getClass = async (
 			name, description, id, due_type, due_date
 		),
 		class_users (
-			user_id, grade, teacher
+			user_id, grade, teacher, main_teacher
 		),
 		users (
 			*
