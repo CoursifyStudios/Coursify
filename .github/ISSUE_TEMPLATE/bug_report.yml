@@ -56,6 +56,7 @@ body:
       description: What browser(s) are you seeing the problem on?
       multiple: true
       options:
+        - "Arc"
         - "Brave"
         - "Firefox"
         - "Chrome"
