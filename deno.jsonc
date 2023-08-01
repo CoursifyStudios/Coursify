@@ -5,5 +5,12 @@
 		"rules": {
 			"exclude": ["ban-ts-comment", "require-await"]
 		}
+	},
+	"fmt": {
+		"indentWidth": 4,
+		"useTabs": true,
+		"singleQuote": false,
+		"semiColons": true,
+		"lineWidth": 80
 	}
 }

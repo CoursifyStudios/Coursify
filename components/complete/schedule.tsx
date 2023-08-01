@@ -1,15 +1,22 @@
 import Link from "next/link";
-import { AllClassesResponse } from "../../lib/db/classes";
-import { ScheduleInterface, to12hourTime } from "../../lib/db/schedule";
+import { AllClasses, AllClassesResponse } from "../../lib/db/classes";
+import {
+	ScheduleInterface,
+	handleTimezone,
+	to12hourTime,
+} from "../../lib/db/schedule";
 import { ColoredPill } from "../misc/pill";
+import { useSettings } from "@/lib/stores/settings";
 
 export default function ScheduleComponent({
 	schedule,
 	classes,
 }: {
 	schedule: ScheduleInterface[] | undefined;
-	classes: AllClassesResponse | undefined;
+	classes: AllClasses | undefined;
 }) {
+	const { data: settings } = useSettings();
+
 	if (!(schedule && classes))
 		return (
 			<div className="my-5 flex h-36 animate-pulse flex-col justify-between rounded-xl bg-backdrop-200 p-4">
@@ -28,31 +35,46 @@ export default function ScheduleComponent({
 				{schedule && //checks if the useState that stores the schedule UI is not null
 					schedule.map(
 						(item, index) =>
-							(checkClassMatchesSchedule(item)?.name &&
+							(checkClassMatchesSchedule(item) &&
+								// @ts-expect-error I give up
+								checkClassMatchesSchedule(item).class!.name &&
 								/* checks that item (a ScheduleInterface) matches to a class, (see the function), and that the name attribute on it is not null */
 								!item.specialEvent && ( //If the item is not a special event... ...fill the UI with the stuff...
 									<Link
 										key={index}
 										className="flex grow items-center justify-between font-semibold"
 										href={
-											"/classes/" + checkClassMatchesSchedule(item)?.id //link to the correct class
+											"/classes/" +
+											(checkClassMatchesSchedule(item)
+												? // @ts-expect-error
+												  checkClassMatchesSchedule(item).class!.id
+												: "") //link to the correct class
 										}
 									>
 										{
-											classes?.data?.find(
+											classes.find(
 												/* Here we check that the schedule and classes match up, using a slightly different process to the one used by checkClassMatchesSchedule). */
 												(v) =>
-													v.block == item.block && v.schedule_type == item.type
-											)?.name // And we fill in the UI with the name
+													v.class &&
+													v.class.block == item.block &&
+													v.class.schedule_type == item.type
+											)?.class!.name // And we fill in the UI with the name
 										}
 										<ColoredPill
 											color={
 												//@ts-ignore WHY THE HELL DOES IT THINK THAT IT CAN JUST DO THAT TO ME
-												checkClassMatchesSchedule(item).color
+												checkClassMatchesSchedule(item).class.color
 											}
 										>
-											{to12hourTime(item.timeStart)} -{" "}
-											{to12hourTime(item.timeEnd)}
+											{to12hourTime(
+												handleTimezone(item.timeStart),
+												settings.showAMPM
+											)}{" "}
+											-{" "}
+											{to12hourTime(
+												handleTimezone(item.timeEnd),
+												settings.showAMPM
+											)}
 										</ColoredPill>
 									</Link>
 								)) ||
@@ -68,8 +90,15 @@ export default function ScheduleComponent({
 										<ColoredPill
 											color={item.customColor ? item.customColor : "green"}
 										>
-											{to12hourTime(item.timeStart)} -{" "}
-											{to12hourTime(item.timeEnd)}
+											{to12hourTime(
+												handleTimezone(item.timeStart),
+												settings.showAMPM
+											)}{" "}
+											-{" "}
+											{to12hourTime(
+												handleTimezone(item.timeEnd),
+												settings.showAMPM
+											)}
 										</ColoredPill>
 									</div>
 								))
@@ -78,9 +107,10 @@ export default function ScheduleComponent({
 		</div>
 	);
 	function checkClassMatchesSchedule(scheduleItem: ScheduleInterface) {
-		return classes?.data?.find(
+		return classes?.find(
 			(v) =>
-				v.block == scheduleItem.block && v.schedule_type == scheduleItem.type
+				v.class!.block == scheduleItem.block &&
+				v.class!.schedule_type == scheduleItem.type
 		);
 	}
 }

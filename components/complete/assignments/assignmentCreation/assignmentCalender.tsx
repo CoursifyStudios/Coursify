@@ -87,7 +87,7 @@ const AssignmentCalender: NextPage<{
 							)}
 							<div
 								key={i}
-								className={`grid h-10 w-10 place-items-center rounded-lg font-medium 
+								className={`grid h-10 w-10 select-none place-items-center rounded-lg font-medium 
 								${
 									daysData.find(
 										(day) =>

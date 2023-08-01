@@ -70,9 +70,9 @@ const StudentClass: NextPage<StudentClassType> = ({
 						}
 					>
 						{time?.timeStart != undefined && !showTimeLoading
-							? to12hourTime(time?.timeStart) +
+							? to12hourTime(time?.timeStart, settings.showAMPM) +
 							  " - " +
-							  to12hourTime(time?.timeEnd)
+							  to12hourTime(time?.timeEnd, settings.showAMPM)
 							: ""}
 					</ColoredPill>
 				</div>
@@ -84,7 +84,8 @@ const StudentClass: NextPage<StudentClassType> = ({
 								.length > 0 ? (
 								classData
 									.class_users!.filter((userData) => userData.teacher)
-									.splice(0, settings.compact ? 2 : 6)
+									.sort((a, b) => (a.main_teacher ? 1 : -1))
+									.splice(0, 1)
 									.map((userData, i) => {
 										const user = !Array.isArray(classData.users!)
 											? classData.users!
@@ -94,7 +95,7 @@ const StudentClass: NextPage<StudentClassType> = ({
 										if (!user)
 											return (
 												<p className="text-sm italic text-gray-700" key={i}>
-													No teacher
+													No teacher found
 												</p>
 											);
 
@@ -116,7 +117,7 @@ const StudentClass: NextPage<StudentClassType> = ({
 															src={user.avatar_url}
 															alt="Profile picture"
 															referrerPolicy="no-referrer"
-															className=" mr-1 rounded-full object-cover shadow shadow-black/25"
+															className="h-5 w-5 mr-1 rounded-full object-cover shadow shadow-black/25"
 															height={20}
 															width={20}
 														/>
@@ -130,7 +131,7 @@ const StudentClass: NextPage<StudentClassType> = ({
 										);
 									})
 							) : (
-								<p className="text-sm italic text-gray-700">No teacher</p>
+								<p className="text-sm italic text-gray-700">No teacher found</p>
 							)
 						) : (
 							<p>An unknown error occurred</p>

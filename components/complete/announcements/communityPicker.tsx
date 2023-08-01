@@ -25,7 +25,7 @@ export const CommunityPicker = ({
 			open={showCrossPosting}
 			size="xs"
 		>
-			<h2 className="mb-5 text-lg font-medium">Select Groups...</h2>
+			<h2 className="mb-5 text-lg font-medium">Select Communities...</h2>
 			<div className="h- grid grid-cols-2 gap-2">
 				{communities.length != 0
 					? communities.map((community) => {

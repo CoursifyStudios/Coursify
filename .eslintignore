@@ -51,6 +51,7 @@ supabase/config.toml
 .eslintrc.json
 /public
 *.txt
+deno.lock
 
-#sql
+# sql
 /supabase

@@ -8,6 +8,7 @@ const nextConfig = {
 			"cdn.discordapp.com",
 			"media.discordapp.net",
 			"images.unsplash.com",
+			"http.cat",
 		],
 	},
 	async redirects() {

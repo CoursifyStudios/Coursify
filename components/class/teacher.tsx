@@ -40,7 +40,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 	const [selectedSort, setSelectedSort] = useState(sortTypes[0]);
 
 	const grades: number[] = getDataInArray(classData.class_users!).map(
-		(user) => user.grade || 0
+		(user) => user.grade ?? 0
 	);
 	const getGrade = (grades: number[], type: number): number => {
 		switch (type) {
@@ -111,7 +111,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 			</Link>
 			{/* Grades */}
 			<section
-				className={`group flex cursor-pointer flex-col rounded-xl bg-backdrop-200 px-3 py-2 hover:z-20 compact:p-2`}
+				className={`group flex cursor-pointer flex-col rounded-xl bg-backdrop-200 px-3 py-2 hover:z-20 compact:p-2 relative`}
 			>
 				<div className="flex justify-between">
 					<div>
@@ -130,6 +130,9 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 					<GradesSection name="Overall" grade={allGrades[0]} />
 					<GradesSection name="Summative (80%)" grade={allGrades[1]} />
 					<GradesSection name="Formative (20%)" grade={allGrades[2]} />
+				</div>
+				<div className="absolute -inset-3 bg-backdrop/10 backdrop-blur-[3px] grid place-items-center font-medium">
+					Grading is coming soon
 				</div>
 			</section>
 			{classData.assignments &&
@@ -164,7 +167,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 											{dueDate.getMonth() + 1}/{dueDate.getDate()}
 										</div>
 										<ColoredPill color={classData.color} className="text-xs">
-											{`${to12hourTime(dueDate)}`}
+											{`${to12hourTime(dueDate, settings.showAMPM)}`}
 										</ColoredPill>
 									</>
 								)}

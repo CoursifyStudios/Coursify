@@ -7,6 +7,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import Link from "next/link";
 import { useState } from "react";
 import Starred from "./starred";
+import { useSettings } from "@/lib/stores/settings";
 
 export function AssignmentPreview({
 	supabase,
@@ -38,6 +39,8 @@ export function AssignmentPreview({
 	const date = assignment.due_date ? new Date(assignment.due_date) : null;
 	const [starred, setStarred] = useState(starredAsParam);
 
+	const { data: settings } = useSettings();
+
 	return (
 		<div className="relative">
 			<Link
@@ -59,10 +62,10 @@ export function AssignmentPreview({
 							{date ? (
 								<>
 									<div className="mr-2 font-medium">
-										{date.getMonth()}/{date.getDate()}
+										{date.getMonth() + 1}/{date.getDate()}
 									</div>
 									<ColoredPill color={classes.color}>
-										{`${to12hourTime(date)}`}
+										{`${to12hourTime(date, settings.showAMPM)}`}
 									</ColoredPill>
 								</>
 							) : (
@@ -85,7 +88,7 @@ export function AssignmentPreview({
 				<CheckIcon className="h-6 w-6 shrink-0" />
 			</div>
 			<div
-				className="absolute left-2 top-3"
+				className="absolute left-2 top-3 cursor-pointer"
 				tabIndex={0}
 				onClick={() => {
 					setStarred((starred) => {

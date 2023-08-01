@@ -1,6 +1,6 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { ColoredPill } from "../components/misc/pill";
 import { Database } from "../lib/db/database.types";
 import {
@@ -13,8 +13,11 @@ import {
 	to12hourTime,
 } from "../lib/db/schedule";
 import { useTabs } from "../lib/tabs/handleTabs";
+import { useSettings } from "@/lib/stores/settings";
+import Layout from "@/components/layout/layout";
+import { NextPageWithLayout } from "./_app";
 
-const ScheduleEditor = () => {
+const ScheduleEditor: NextPageWithLayout = () => {
 	const supabaseClient = useSupabaseClient<Database>();
 	const tabs = useTabs((state) => state.tabs);
 	const [tempSchedule, setTempSchedule] = useState<ScheduleInterface[]>();
@@ -23,6 +26,9 @@ const ScheduleEditor = () => {
 		useState<ScheduleTemplatesDB>();
 	const [templateName, setTemplateName] = useState<string>();
 	const [template, setTemplate] = useState<number | null>(null);
+	const [error, setError] = useState<string>();
+
+	const { data: settings } = useSettings();
 	useEffect(() => {
 		(async () => {
 			const scheduleTemplates = await getScheduleTemplates(supabaseClient);
@@ -30,7 +36,12 @@ const ScheduleEditor = () => {
 		})();
 	}, [supabaseClient]);
 	return (
-		<div>
+		<div className="font-mono">
+			<h4 className="bg-red-600 p-3 px-10">
+				Warning: The schedule editor is currently still in development. For the
+				time being, remember that it is only to be used when the local timezone
+				is Pacific Standard Time, 7 hours behind GMT.
+			</h4>
 			<div className="grid grid-cols-2">
 				<section className="my-6 ml-5 px-5">
 					<h2 className="mb-4 text-lg font-semibold">
@@ -86,53 +97,59 @@ const ScheduleEditor = () => {
 							}
 						}}
 					>
-						<Form className="flex flex-col">
-							<label htmlFor="itemStartTime">Start time</label>
-							<Field name="itemStartTime" type="time" step="min" />
-							<ErrorMessage name="itemStartTime" />
+						<Form className="flex flex-col [&>label]:flex [&>label]:flex-col gap-4 font-medium">
+							<label htmlFor="itemStartTime">
+								Start time
+								<Field name="itemStartTime" type="time" step="min" />
+								<ErrorMessage name="itemStartTime" />
+							</label>
 
-							<label htmlFor="itemEndTime">End Time</label>
-							<Field name="itemEndTime" type="time" step="min" />
-							<ErrorMessage name="itemEndTime" />
+							<label htmlFor="itemEndTime">
+								End Time
+								<Field name="itemEndTime" type="time" step="min" />
+								<ErrorMessage name="itemEndTime" />
+							</label>
 
 							<label htmlFor="itemBlockNumber">
 								Block #, if special event decides which block to match schedule
 								with
+								<Field
+									name="itemBlockNumber"
+									type="number"
+									min="1"
+									step="1"
+								></Field>
+								<ErrorMessage name="itemBlockNumber" />
 							</label>
-							<Field
-								name="itemBlockNumber"
-								type="number"
-								min="1"
-								step="1"
-							></Field>
-							<ErrorMessage name="itemBlockNumber" />
 
-							<label htmlFor="itemScheduleType">Schedule type #</label>
-							<Field
-								name="itemScheduleType"
-								type="number"
-								min="1"
-								max="2"
-								step="1"
-							></Field>
-							{/* Only two schedule types supported for now */}
-							<ErrorMessage name="itemScheduleType" />
+							<label htmlFor="itemScheduleType">
+								Schedule type #
+								<Field
+									name="itemScheduleType"
+									type="number"
+									min="1"
+									max="2"
+									step="1"
+								></Field>
+								{/* Only two schedule types supported for now */}
+								<ErrorMessage name="itemScheduleType" />
+							</label>
 
 							<label htmlFor="itemSpecialType">
 								Special event (optional. Use for lunch, etc.)
+								<Field name="itemSpecialType" type="text"></Field>
+								<ErrorMessage name="itemSpecialType" />
 							</label>
-							<Field name="itemSpecialType" type="text"></Field>
-							<ErrorMessage name="itemSpecialType" />
 
 							<label htmlFor="itemCustomColor">
 								Special event color (optional)
+								<Field name="itemCustomColor" type="text"></Field>
+								<ErrorMessage name="itemCustomColor" />
 							</label>
-							<Field name="itemCustomColor" type="text"></Field>
-							<ErrorMessage name="itemCustomColor" />
 
 							<button
 								type="submit"
-								className="mr-auto mt-4 rounded-lg bg-blue-200 px-4 py-2 text-blue-600"
+								className="mr-auto mt-4  px-4 py-2 bg-black dark:bg-white text-white dark:text-black hover:invert transition hover:border-black border border-transparent"
 							>
 								Add schedule item
 							</button>
@@ -166,8 +183,15 @@ const ScheduleEditor = () => {
 																	: scheduleItem.customColor
 															}
 														>
-															{to12hourTime(scheduleItem.timeStart)} -{" "}
-															{to12hourTime(scheduleItem.timeEnd)}{" "}
+															{to12hourTime(
+																scheduleItem.timeStart,
+																settings.showAMPM
+															)}{" "}
+															-{" "}
+															{to12hourTime(
+																scheduleItem.timeEnd,
+																settings.showAMPM
+															)}{" "}
 														</ColoredPill>
 														<p
 															className="ml-3 text-red-600"
@@ -213,8 +237,15 @@ const ScheduleEditor = () => {
 																	: scheduleItem.customColor
 															}
 														>
-															{to12hourTime(scheduleItem.timeStart)} -{" "}
-															{to12hourTime(scheduleItem.timeEnd)}{" "}
+															{to12hourTime(
+																scheduleItem.timeStart,
+																settings.showAMPM
+															)}{" "}
+															-{" "}
+															{to12hourTime(
+																scheduleItem.timeEnd,
+																settings.showAMPM
+															)}{" "}
 														</ColoredPill>
 														<p
 															className="ml-3 text-red-600"
@@ -244,17 +275,21 @@ const ScheduleEditor = () => {
 							createNewSchedule(supabaseClient, v.day, template, null);
 						} else if (tempSchedule) {
 							createNewSchedule(supabaseClient, v.day, template, tempSchedule);
-						} else alert("Please add one or more schedule items first");
+						} else setError("Please add one or more schedule items first");
 					}}
 				>
 					<Form className="grid grid-cols-1">
 						<label htmlFor="day">Day</label>
-						<Field name="day" type="date"></Field>
+						<Field
+							name="day"
+							type="date"
+							className="rounded-md border-gray-300 bg-backdrop/50 focus:ring-1 dark:placeholder:text-gray-400"
+						></Field>
 						<ErrorMessage name="day" />
 
 						<button
 							type="submit"
-							className="mr-auto mt-4 rounded-lg bg-blue-200 px-4 py-2 text-blue-600"
+							className="mr-auto mt-4  px-4 py-2 bg-black dark:bg-white text-white dark:text-black hover:invert transition hover:border-black border border-transparent"
 						>
 							Add as a Schedule (send to server)
 						</button>
@@ -265,11 +300,11 @@ const ScheduleEditor = () => {
 						initialValues={{ name: "" }}
 						onSubmit={(v) => {
 							if (template) {
-								alert("Please alter the template");
+								setError("Please alter the template");
 							} else if (tempSchedule) {
 								createNewTemplate(supabaseClient, v.name, tempSchedule);
 							} else
-								alert(
+								setError(
 									"Please add one or more schedule items first and name your "
 								);
 						}}
@@ -281,7 +316,7 @@ const ScheduleEditor = () => {
 
 							<button
 								type="submit"
-								className="mr-auto mt-4 rounded-lg bg-blue-200 px-4 py-2 text-blue-600"
+								className="mr-auto mt-4  px-4 py-2 bg-black dark:bg-white text-white dark:text-black hover:invert transition hover:border-black border border-transparent"
 							>
 								Add a New Template
 							</button>
@@ -291,6 +326,8 @@ const ScheduleEditor = () => {
 			</div>
 			<div className="mx-10 mt-5">
 				<h2>Schedule Templates:</h2>
+				{/* this will be made DRY-er later */}
+				{/* I'd like to coin a new term "wringin" for this purpose */}
 				<div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
 					{scheduleTemplates &&
 						scheduleTemplates.data &&
@@ -314,9 +351,9 @@ const ScheduleEditor = () => {
 												(period, iterator) =>
 													period.type == 1 && (
 														<div className="whitespace-nowrap" key={iterator}>
-															{period.timeStart}
+															{period.timeStart.substring(0, 5)}
 															{" - "}
-															{period.timeEnd}
+															{period.timeEnd.substring(0, 5)}
 														</div>
 													)
 											)}
@@ -326,9 +363,9 @@ const ScheduleEditor = () => {
 												(period, iterator) =>
 													period.type == 2 && (
 														<div className="whitespace-nowrap" key={iterator}>
-															{period.timeStart}
+															{period.timeStart.substring(0, 5)}
 															{" - "}
-															{period.timeEnd}
+															{period.timeEnd.substring(0, 5)}
 														</div>
 													)
 											)}
@@ -339,8 +376,12 @@ const ScheduleEditor = () => {
 						)}
 				</div>
 			</div>
+			{error && <p className="text-red-500">Error: {error}</p>}
 		</div>
 	);
 };
-
 export default ScheduleEditor;
+
+ScheduleEditor.getLayout = function getLayout(page: ReactElement) {
+	return <Layout>{page}</Layout>;
+};

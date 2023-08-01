@@ -2,6 +2,7 @@ import { Menu, Transition } from "@headlessui/react";
 import {
 	ArrowLeftOnRectangleIcon,
 	CalendarDaysIcon,
+	ChatBubbleBottomCenterTextIcon,
 	Cog6ToothIcon,
 	MagnifyingGlassIcon,
 	MegaphoneIcon,
@@ -17,13 +18,15 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import { Database } from "../../lib/db/database.types";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import { ButtonIcon } from "../misc/button";
+import FeedbackPopup from "../popups/feedback";
 
 const Navbar: NextComponentType = () => {
 	const { newTab, closeTab, tabs } = useTabs();
 	const router = useRouter();
 	const user = useUser();
-	const [hydrated, setHydrated] = useState(false);
+	const [feedbackOpen, setFeedbackOpen] = useState(false);
 	const supabase = useSupabaseClient<Database>();
+	const [hydrated, setHydrated] = useState(false);
 	const isDemoUser = user?.id == "d62d46a3-138b-4014-852e-f32f0421213b";
 	const userMetadata = isDemoUser
 		? {
@@ -37,126 +40,135 @@ const Navbar: NextComponentType = () => {
 
 	useEffect(() => setHydrated(true), []);
 
-	if (router.isReady && hydrated && router.asPath.startsWith("/login")) {
-		return <></>;
-	}
-
 	const logOut = async () => {
 		await supabase.auth.signOut();
 		router.reload();
 	};
 
 	return (
-		<nav className="flex h-14 items-center justify-between bg-gray-200 px-8 compact:h-12">
-			<div className="scrollbar-fancy flex shrink items-center space-x-4 overflow-x-auto">
-				{defaultTabs.map((v, i) => (
-					<TabUI key={i} canClose={false} tab={v} />
-				))}
-				<div className="graydient h-10 w-[0.07rem] "></div>
-				{tabs.map(
-					(v, i) => hydrated && <TabUI key={i} canClose={true} tab={v} />
-				)}
-			</div>
-			<div className="ml-4 flex flex-grow-0 items-center space-x-4">
-				<ButtonIcon icon={<MagnifyingGlassIcon className=" h-5 w-5" />} />
-				<ButtonIcon
-					icon={<CalendarDaysIcon className="h-5 w-5" />}
-					to="/calendar"
-				/>
-				<ButtonIcon
-					icon={<MegaphoneIcon className="h-5 w-5" />}
-					to="/announcements"
-				/>
-				<Menu
-					className="relative !ml-4 flex w-10 flex-col items-center"
-					as="div"
-				>
-					<Menu.Button>
-						{user ? (
-							<Image
-								src={userMetadata.picture}
-								alt="Profile picture"
-								referrerPolicy="no-referrer"
-								className="h-10 w-10 rounded-full object-cover shadow-md shadow-black/25 compact:h-9 compact:w-9"
-								height={40}
-								width={40}
-							/>
-						) : (
-							<div className="!ml-2 h-10 w-10 rounded-full bg-gray-300"></div>
-						)}
-					</Menu.Button>
-					<Transition
-						as={Fragment}
-						enter="transition ease-out duration-100"
-						enterFrom=" opacity-0 scale-95 translate-x-1 -translate-y-2"
-						enterTo=" opacity-100 scale-100"
-						leave="transition ease-in duration-75"
-						leaveFrom=" opacity-100 scale-100"
-						leaveTo=" opacity-0 scale-95 translate-x-1 -translate-y-2"
+		<>
+			<FeedbackPopup setOpen={setFeedbackOpen} open={feedbackOpen} />
+			<nav className="flex h-14 items-center justify-between bg-gray-200 px-8 compact:h-12 select-none">
+				<div className="scrollbar-fancy flex shrink items-center space-x-4 overflow-x-auto">
+					{defaultTabs.map((v, i) => (
+						<TabUI key={i} canClose={false} tab={v} />
+					))}
+					<div className="graydient h-10 w-[0.07rem] "></div>
+					{tabs.map(
+						(v, i) => hydrated && <TabUI key={i} canClose={true} tab={v} />
+					)}
+				</div>
+				<div className="ml-4 flex flex-grow-0 items-center space-x-4">
+					{/* <ButtonIcon icon={<MagnifyingGlassIcon className=" h-5 w-5" />} />
+					<ButtonIcon
+						icon={<CalendarDaysIcon className="h-5 w-5" />}
+						to="/calendar"
+					/>
+					<ButtonIcon
+						icon={<MegaphoneIcon className="h-5 w-5" />}
+						to="/announcements"
+					/> */}
+					<Menu
+						className="relative !ml-4 flex w-10 flex-col items-center"
+						as="div"
 					>
-						<div className="absolute right-0 z-50 mt-14">
-							<Menu.Items
-								as="div"
-								className="flex w-48 flex-col  rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-xl"
-							>
-								<Link
-									href={`/profile/${user?.id}`}
-									onClick={() =>
-										newTab(
-											"/profile/1e5024f5-d493-4e32-9822-87f080ad5516",
-											`${userMetadata.name}'s Profile`
-										)
-									}
-								>
-									<Menu.Item as="div" className="mx-2 flex flex-col">
-										<h3 className="line-clamp-2 font-medium">
-											{userMetadata.full_name}
-										</h3>
-										<p className="truncate text-xs">{userMetadata.email}</p>
-									</Menu.Item>
-								</Link>
-								<div className="graydient-90deg my-3 h-0.5 w-full"></div>
-								<Link
-									href={`/profile/${user?.id}`}
-									onClick={() =>
-										newTab(
-											`/profile/${user?.id}`,
-											`${userMetadata.name}'s Profile`
-										)
-									}
-								>
-									<Menu.Item
-										as="div"
-										className="flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300"
-									>
-										Profile <UserIcon className="h-5 w-5" />
-									</Menu.Item>
-								</Link>
-								<Link
-									href={`/settings`}
-									className="mt-1"
-									onClick={() => newTab("/settings")}
-								>
-									<Menu.Item
-										as="div"
-										className="flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300"
-									>
-										Settings <Cog6ToothIcon className="h-5 w-5" />
-									</Menu.Item>
-								</Link>
-								<Menu.Item
+						<Menu.Button>
+							{user ? (
+								<Image
+									src={userMetadata.picture}
+									alt="Profile picture"
+									referrerPolicy="no-referrer"
+									className="h-10 w-10 rounded-full object-cover shadow-md shadow-black/25 compact:h-9 compact:w-9"
+									height={40}
+									width={40}
+								/>
+							) : (
+								<div className="!ml-2 h-10 w-10 rounded-full bg-gray-300"></div>
+							)}
+						</Menu.Button>
+						<Transition
+							as={Fragment}
+							enter="transition ease-out duration-100"
+							enterFrom=" opacity-0 scale-95 translate-x-1 -translate-y-2"
+							enterTo=" opacity-100 scale-100"
+							leave="transition ease-in duration-75"
+							leaveFrom=" opacity-100 scale-100"
+							leaveTo=" opacity-0 scale-95 translate-x-1 -translate-y-2"
+						>
+							<div className="absolute right-0 z-50 mt-14">
+								<Menu.Items
 									as="div"
-									className="mt-1 flex cursor-pointer items-center justify-between rounded-lg bg-red-500/25 px-2 py-1 font-medium transition hover:bg-red-400/50"
-									onClick={() => logOut()}
+									className="flex w-48 flex-col  rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-xl"
 								>
-									Logout <ArrowLeftOnRectangleIcon className="h-5 w-5" />
-								</Menu.Item>
-							</Menu.Items>
-						</div>
-					</Transition>
-				</Menu>
-			</div>
-		</nav>
+									<Link
+										href={`/profile/${user?.id}`}
+										onClick={() =>
+											newTab(
+												"/profile/1e5024f5-d493-4e32-9822-87f080ad5516",
+												`${userMetadata.name}'s Profile`
+											)
+										}
+									>
+										<Menu.Item as="div" className="mx-2 flex flex-col">
+											<h3 className="line-clamp-2 font-medium">
+												{userMetadata.full_name}
+											</h3>
+											<p className="truncate text-xs">{userMetadata.email}</p>
+										</Menu.Item>
+									</Link>
+									<div className="graydient-90deg my-3 h-0.5 w-full"></div>
+									<Link
+										href={`/profile/${user?.id}`}
+										onClick={() =>
+											newTab(
+												`/profile/${user?.id}`,
+												`${userMetadata.name}'s Profile`
+											)
+										}
+									>
+										<Menu.Item
+											as="div"
+											className="flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300"
+										>
+											Profile <UserIcon className="h-5 w-5" />
+										</Menu.Item>
+									</Link>
+
+									<Menu.Item
+										as="button"
+										className="flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300 mt-1 "
+										onClick={() => setFeedbackOpen(true)}
+									>
+										Feedback{" "}
+										<ChatBubbleBottomCenterTextIcon className="h-5 w-5" />
+									</Menu.Item>
+
+									<Link
+										href={`/settings`}
+										className="mt-1"
+										onClick={() => newTab("/settings")}
+									>
+										<Menu.Item
+											as="div"
+											className="flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300"
+										>
+											Settings <Cog6ToothIcon className="h-5 w-5" />
+										</Menu.Item>
+									</Link>
+									<Menu.Item
+										as="div"
+										className="mt-1 flex cursor-pointer items-center justify-between rounded-lg bg-red-500/25 px-2 py-1 font-medium transition hover:bg-red-400/50"
+										onClick={() => logOut()}
+									>
+										Logout <ArrowLeftOnRectangleIcon className="h-5 w-5" />
+									</Menu.Item>
+								</Menu.Items>
+							</div>
+						</Transition>
+					</Menu>
+				</div>
+			</nav>
+		</>
 	);
 
 	function TabUI({ tab, canClose }: { tab: Tab; canClose: boolean }) {

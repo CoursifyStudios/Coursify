@@ -1,12 +1,13 @@
-import { Announcement } from "@/components/complete/announcements";
-import { AnnouncementPostingUI } from "@/components/complete/announcements/announcementPosting";
+import { AnnouncementsComponent } from "@/components/complete/announcements/announcementsComponent";
 import { Member } from "@/components/complete/members";
 import CircleCounter from "@/components/counters/circle";
 import Editor from "@/components/editors/richeditor";
+import Layout from "@/components/layout/layout";
+import { NextPageWithLayout } from "@/pages/_app";
 import { Button } from "@/components/misc/button";
 import { InfoPill, InfoPills } from "@/components/misc/infopills";
 import { ColoredPill } from "@/components/misc/pill";
-import { AnnouncementType, TypeOfAnnouncements } from "@/lib/db/announcements";
+import { TypeOfAnnouncements } from "@/lib/db/announcements";
 import { ClassResponse, getClass, updateClass } from "@/lib/db/classes";
 import { Database, Json } from "@/lib/db/database.types";
 import {
@@ -14,7 +15,7 @@ import {
 	getSchedule,
 	setThisSchedule,
 } from "@/lib/db/schedule";
-import { getDataInArray, getDataOutArray } from "@/lib/misc/dataOutArray";
+import { getDataInArray } from "@/lib/misc/dataOutArray";
 import { useSettings } from "@/lib/stores/settings";
 import { CreateAssignment } from "@assignments/assignmentCreation";
 import { AssignmentPreview } from "@assignments/assignments";
@@ -31,9 +32,9 @@ import { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment, ReactElement, useEffect, useState } from "react";
 
-const Class: NextPage = () => {
+const Class: NextPageWithLayout = () => {
 	const router = useRouter();
 	const { classid } = router.query;
 	const user = useUser();
@@ -50,9 +51,18 @@ const Class: NextPage = () => {
 	const [extraAnnouncements, setExtraAnnouncements] = useState<
 		TypeOfAnnouncements[]
 	>([]);
+	const [createdAssignments, setCreatedAssignments] = useState<
+		{
+			name: string;
+			description: string;
+			id: string;
+			due_type: number | null;
+			due_date: string | null;
+		}[]
+	>([]);
 	const [fetchedClassId, setFetchedClassId] = useState("");
 	const [searchOpen, setSearchOpen] = useState(false);
-
+	const [userSearch, setUserSearch] = useState("");
 	const {
 		data: { compact },
 	} = useSettings();
@@ -165,6 +175,13 @@ const Class: NextPage = () => {
 					open={assignmentCreationOpen}
 					setOpen={setAssignmentCreationOpen}
 					classid={classid}
+					createTempAssignment={(newAssignment: {
+						name: string;
+						description: string;
+						id: string;
+						due_type: number | null;
+						due_date: string | null;
+					}) => setCreatedAssignments(createdAssignments.concat(newAssignment))}
 				/>
 			)}
 			{!compact ? (
@@ -315,103 +332,42 @@ const Class: NextPage = () => {
 						<Tab.Panel tabIndex={-1} id="Announcements">
 							<h2 className="title mb-3">Announcements</h2>
 							<div className="space-y-3">
-								{isTeacher && (
-									<AnnouncementPostingUI
-										announcements={extraAnnouncements}
-										setAnnouncements={setExtraAnnouncements}
-										communityid={classid as string}
-									/>
+								{classid && typeof classid == "string" && (
+									<div className="space-y-4">
+										<AnnouncementsComponent
+											fetchedAnnouncements={
+												getDataInArray(
+													data.data.announcements
+												) as unknown as TypeOfAnnouncements[]
+											}
+											communityid={classid}
+											showPostingUI={isTeacher ? true : false}
+										></AnnouncementsComponent>
+									</div>
 								)}
-								{extraAnnouncements.reverse().map(
-									(announcement) =>
-										announcement && (
-											<Announcement
-												key={announcement.id}
-												announcement={{
-													id: announcement.id,
-													author: announcement.author,
-													title: announcement.title,
-													content: announcement.content,
-													time: announcement.time,
-													type: announcement.type,
-													users: announcement.users,
-												}}
-												classID={classid as string}
-												comments={
-													getDataInArray(data.data.announcements).filter(
-														(possibleComment) =>
-															possibleComment?.type == AnnouncementType.COMMENT
-													) as unknown as TypeOfAnnouncements[]
-												}
-												announcements={extraAnnouncements}
-												setAnnouncements={setExtraAnnouncements}
-											></Announcement>
-										)
-								)}
-								{typeof classid == "string" &&
-									data.data &&
-									data.data.announcements && //change below when I get actual types
-									getDataInArray(data.data.announcements)
-										.sort((a, b) => {
-											if (
-												new Date(a.time!).getTime() >
-												new Date(b.time!).getTime()
-											)
-												return -1;
-											if (
-												new Date(a.time!).getTime() <
-												new Date(b.time!).getTime()
-											)
-												return 1;
-											return 0;
-										})
-										.map(
-											(announcement) =>
-												(announcement.type == AnnouncementType.ANNOUNCEMENT ||
-													announcement.type == AnnouncementType.CROSSPOST) &&
-												announcement.users &&
-												typeof getDataOutArray(announcement.users).avatar_url ==
-													"string" &&
-												typeof getDataOutArray(announcement.users).full_name ==
-													"string" && (
-													<Announcement
-														key={announcement.id}
-														announcement={
-															announcement as unknown as TypeOfAnnouncements
-														}
-														classID={classid}
-														comments={
-															getDataInArray(data.data.announcements).filter(
-																(possibleComment) =>
-																	possibleComment?.type ==
-																		AnnouncementType.COMMENT &&
-																	//@ts-expect-error
-																	getDataOutArray(possibleComment.parent)?.id ==
-																		announcement.id
-															) as unknown as TypeOfAnnouncements[]
-														}
-														announcements={extraAnnouncements}
-														setAnnouncements={setExtraAnnouncements}
-													></Announcement>
-												)
-										)}
 							</div>
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1}>
-							<div className="mb-4 flex justify-between">
+							<div
+								className={`mb-4 flex justify-between ${
+									isTeacher && "flex-col gap-2 md:flex-row md:gap-0"
+								}`}
+							>
 								<div
 									className={`${
 										searchOpen ? "max-w-[24rem]" : "max-w-[14rem]"
 									} relative flex grow items-center pr-2 transition-all`}
 								>
+									<MagnifyingGlassIcon className="absolute left-3 h-4 w-4" />
 									<input
 										type="text"
-										className="grow !rounded-xl py-0.5 placeholder:dark:text-gray-400"
+										className="grow !rounded-xl py-0.5 placeholder:dark:text-gray-400 pl-8"
+										placeholder="Search members..."
 										onClick={() => setSearchOpen(true)}
 										onBlur={() => setSearchOpen(false)}
-										placeholder="Search users..."
+										//@ts-ignore DUDE OF COURSE e.target.value exists!
+										onInput={(e) => setUserSearch(e.target.value)}
 									/>
-									<MagnifyingGlassIcon className="absolute right-3 h-4 w-4" />
 								</div>
 								{isTeacher && data.data.users && (
 									<div className="flex gap-2">
@@ -448,20 +404,27 @@ const Class: NextPage = () => {
 
 							<div className="grid gap-4 max-sm:mx-auto max-sm:w-[20.5rem] lg:grid-cols-2 xl:grid-cols-3">
 								{data.data.users ? (
-									getDataInArray(data.data.users).map((user) => (
-										<Member
-											key={user.id}
-											user={user}
-											leader={
-												getDataInArray(data.data.class_users).find(
-													(userInUsersGroups) =>
-														user?.id == userInUsersGroups?.user_id
-												)?.teacher
-													? true
-													: false
-											}
-										></Member>
-									))
+									getDataInArray(data.data.users).map(
+										(user) =>
+											(userSearch.length == 0
+												? true
+												: user.full_name
+														.toLowerCase()
+														.includes(userSearch.trim().toLowerCase())) && (
+												<Member
+													key={user.id}
+													user={user}
+													leader={
+														getDataInArray(data.data.class_users).find(
+															(userInUsersGroups) =>
+																user?.id == userInUsersGroups?.user_id
+														)?.teacher
+															? true
+															: false
+													}
+												></Member>
+											)
+									)
 								) : (
 									<div className="rounded-xl bg-gray-200 p-4">
 										An error occurred
@@ -495,22 +458,30 @@ const Class: NextPage = () => {
 						)}
 						{data.data?.assignments &&
 							user &&
-							getDataInArray(data.data?.assignments).map((assignment) => (
-								<AssignmentPreview
-									key={assignment.id}
-									className="brightness-hover"
-									supabase={supabase}
-									assignment={
-										Array.isArray(assignment) ? assignment[0] : assignment
-									}
-									showClassPill={false}
-									starredAsParam={false}
-									schedule={schedule!}
-									scheduleT={scheduleT!}
-									userId={user.id}
-									classes={data.data}
-								/>
-							))}
+							createdAssignments
+								.concat(getDataInArray(data.data?.assignments))
+								.slice()
+								.sort(
+									(a, b) =>
+										new Date(b.due_date!).getTime() -
+										new Date(a.due_date!).getTime()
+								)
+								.map((assignment) => (
+									<AssignmentPreview
+										key={assignment.id}
+										className="brightness-hover"
+										supabase={supabase}
+										assignment={
+											Array.isArray(assignment) ? assignment[0] : assignment
+										}
+										showClassPill={false}
+										starredAsParam={false}
+										schedule={schedule!}
+										scheduleT={scheduleT!}
+										userId={user.id}
+										classes={data.data}
+									/>
+								))}
 					</div>
 				</section>
 			</div>
@@ -519,3 +490,7 @@ const Class: NextPage = () => {
 };
 
 export default Class;
+
+Class.getLayout = function getLayout(page: ReactElement) {
+	return <Layout>{page}</Layout>;
+};
