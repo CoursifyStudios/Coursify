@@ -9,8 +9,13 @@ export const getAllAssignments = async (
 	page: number,
 	filter?: number
 ) => {
-	let query = supabaseClient.from("assignments").select(
-		`
+	// Admins can view all assignments in schools they administrate
+	// According to lukas this was a pain in the ass to fix so
+	// Fuck that, not my problem :trollface: - Bloxs
+	let query = supabaseClient
+		.from("assignments")
+		.select(
+			`
 		*,
 		classes (
 			name, id, color, block, schedule_type
@@ -18,10 +23,12 @@ export const getAllAssignments = async (
 		starred (
 			assignment_id
 		)
-		`, {
-			count: "exact",
-		}
-	).range(page * 10, (page + 1) * 10 - 1);
+		`,
+			{
+				count: "exact",
+			}
+		)
+		.range(page * 10, (page + 1) * 10 - 1);
 
 	if (filter != undefined) {
 		switch (filter) {
@@ -33,12 +40,12 @@ export const getAllAssignments = async (
 			}
 			case 1: {
 				// Due by closest
-				query = query.order("due_date", { ascending: true })
+				query = query.order("due_date", { ascending: true });
 				break;
 			}
 			case 2: {
 				// Due by farthest
-				query = query.order("due_date", { ascending: false })
+				query = query.order("due_date", { ascending: false });
 				break;
 			}
 		}

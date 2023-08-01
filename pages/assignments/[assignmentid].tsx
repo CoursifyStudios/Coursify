@@ -24,7 +24,12 @@ import { getDataOutArray } from "@/lib/misc/dataOutArray";
 import launch from "@/public/svgs/launch.svg";
 import noData from "@/public/svgs/no-data.svg";
 import { AssignmentPreview } from "@assignments/assignments";
-import { BarsArrowDownIcon, ChevronLeftIcon, ChevronRightIcon, PlusIcon } from "@heroicons/react/24/outline";
+import {
+	BarsArrowDownIcon,
+	ChevronLeftIcon,
+	ChevronRightIcon,
+	PlusIcon,
+} from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { SerializedEditorState } from "lexical";
 import { NextPage } from "next";
@@ -78,19 +83,27 @@ const Post: NextPageWithLayout = () => {
 		setSelected(value);
 		if (user) {
 			// This code will break if someone edits the options array but I'll leave them to deal with it :trojker: - Bloxs
-			const assignments = await getAllAssignments(supabase, 0, options.indexOf(value));
+			const assignments = await getAllAssignments(
+				supabase,
+				0,
+				options.indexOf(value)
+			);
 			setAllAssignments(assignments);
 			setPage(0);
-			setMaxPages(Math.ceil((assignments.count ?? 1) / 10))
+			setMaxPages(Math.ceil((assignments.count ?? 1) / 10));
 		}
-	}
+	};
 
 	const refetchAssignments = async () => {
 		if (user) {
-			const assignments = await getAllAssignments(supabase, page, options.indexOf(selected));
+			const assignments = await getAllAssignments(
+				supabase,
+				page,
+				options.indexOf(selected)
+			);
 			setAllAssignments(assignments);
 		}
-	}
+	};
 
 	// Gets the data from the db
 	useEffect(() => {
@@ -99,7 +112,7 @@ const Post: NextPageWithLayout = () => {
 				const assignments = await getAllAssignments(supabase, 0, 0);
 				setAllAssignments(assignments);
 				setPage(0);
-				setMaxPages(Math.ceil((assignments.count ?? 1) / 10))
+				setMaxPages(Math.ceil((assignments.count ?? 1) / 10));
 			}
 			// In theory, most people will have the schedule already cached. This is a band-aid solution and won't be used later on
 			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
@@ -179,19 +192,25 @@ const Post: NextPageWithLayout = () => {
 						<div className="flex">
 							{/* ~~Graphic Design~~ CSS is my passion - Bloxs */}
 							{/* https://i.kym-cdn.com/photos/images/newsfeed/001/018/866/e44.png */}
-							<ChevronLeftIcon className={`h-6 w-6 ${page == 0 ? "text-gray-600" : ""}`} onClick={() => {
-								if (page > 0) {
-									setPage(page - 1);
-									refetchAssignments();
-								}
-							}}/>
+							<ChevronLeftIcon
+								className={`h-6 w-6 ${page == 0 ? "text-gray-600" : ""}`}
+								onClick={() => {
+									if (page > 0) {
+										setPage(page - 1);
+										refetchAssignments();
+									}
+								}}
+							/>
 							{page + 1} / {maxPages + 1}
-							<ChevronRightIcon className={`h-6 w-6 ${page >= maxPages ? "text-gray-600" : ""}`} onClick={() => {
-								if (page < maxPages) {
-									setPage(page + 1);
-									refetchAssignments();
-								}
-							}}/>
+							<ChevronRightIcon
+								className={`h-6 w-6 ${page >= maxPages ? "text-gray-600" : ""}`}
+								onClick={() => {
+									if (page < maxPages) {
+										setPage(page + 1);
+										refetchAssignments();
+									}
+								}}
+							/>
 						</div>
 
 						<Dropdown
