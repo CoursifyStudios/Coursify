@@ -3,7 +3,11 @@ import { ErrorMessage, Field, Form, Formik } from "formik";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { postComment } from "../../../lib/db/announcements";
+import {
+	AnnouncementType,
+	editAnnouncement,
+	postCommentOrReply,
+} from "../../../lib/db/announcements";
 import { howLongAgo } from "../../../lib/misc/dates";
 import { useTabs } from "../../../lib/tabs/handleTabs";
 import { Button } from "../../misc/button";
@@ -14,6 +18,8 @@ export const Comment = ({
 	time,
 	content,
 	users,
+	communityid,
+	type,
 }: {
 	author: string;
 	time: string;
@@ -22,9 +28,17 @@ export const Comment = ({
 		full_name: string;
 		avatar_url: string;
 	};
-	id?: string;
+	communityid: string;
+	id: string;
+	type: AnnouncementType;
 }) => {
+	const supabase = useSupabaseClient();
+	const user = useUser();
 	const { newTab } = useTabs();
+	const [text, setText] = useState(content);
+	// const [showReplying, setShowReplying] = useState(false); not prod ready
+	const [editing, setEditing] = useState(false);
+	const [errorText, setErrorText] = useState("");
 	return (
 		<div className="ml-4">
 			<div className="flex items-center pt-1 ">
@@ -51,25 +65,107 @@ export const Comment = ({
 					</p>
 				</Link>
 				<p className="pl-1.5 text-gray-600 dark:text-gray-400">{time}</p>
+				{/* TODO: add an edit. share, and delete button here*/}
 			</div>
-			<p>{content}</p>
+			{/* editing is unavailable atm because the dropdown is gone */}
+			{editing ? (
+				<Formik
+					initialValues={{
+						content: text,
+					}}
+					onSubmit={async (formData) => {
+						setErrorText("");
+						const newEditedAnnouncement = await editAnnouncement(
+							supabase,
+							//kind of confusing but a comment's content uses the title field
+							{ id: id, author: user!.id, title: content, clone_id: null },
+							{ title: formData.content, content: null }
+						);
+						if (newEditedAnnouncement.error) {
+							//TODO: better error handling
+							setErrorText(
+								"Something went wrong, and your comment could not be edited"
+							);
+						} else {
+							setErrorText("");
+							setEditing(false);
+							setText(formData.content);
+						}
+					}}
+				>
+					{({ values }) => (
+						<Form className="focus:outline-none">
+							<label htmlFor="content">
+								<Field
+									component="textarea"
+									name="content"
+									type="text"
+									className="min-h-[2.5rem] w-full resize-y border-none bg-gray-300 px-4 py-2.5 !ring-0 dark:placeholder:text-gray-400"
+									placeholder="Enter your revised comment here"
+									autoFocus
+								></Field>
+							</label>
+							<ErrorMessage name="content" />
+							<div className="m-1 flex justify-end gap-2">
+								<Button
+									className="brightness-hover transition hover:bg-red-300"
+									onClick={() => setEditing(false)}
+								>
+									Cancel
+								</Button>
+								<button
+									className={`rounded-md bg-blue-500 px-4 py-1 font-semibold text-white ${
+										values.content.length < 1
+											? "cursor-not-allowed brightness-75"
+											: "brightness-hover"
+									}`}
+									type="submit"
+								>
+									Post
+								</button>
+							</div>
+						</Form>
+					)}
+				</Formik>
+			) : (
+				<p>{text}</p>
+			)}
+			{/* Replying UI is below. Replying is coming later! so uh. Yeah */}
+			{/* 
+			<button
+				className="ml-2"
+				onClick={() => {
+					setShowReplying(true);
+				}}
+			>
+				<p>{showReplying ? "Replying to " + users.full_name : "Reply"}</p>
+			</button>
+			{showReplying && (
+				<Commenting
+					communityid={communityid}
+					parentID={id!}
+					showMe={setShowReplying}
+				></Commenting>
+			)} */}
 		</div>
 	);
 };
 
 export const Commenting = ({
 	communityid,
-	announcementid,
+	parentID,
+	showMe,
 }: {
 	communityid: string;
-	announcementid: string;
+	parentID: string;
+	showMe?: (value: boolean) => void;
 }) => {
 	const supabase = useSupabaseClient();
 	const user = useUser();
 	const [showCommenting, setShowCommenting] = useState(false);
 	const [tempComments, setTempComments] = useState<
 		{
-			id?: string;
+			id: string;
 			author: string;
 			time: string;
 			content: string;
@@ -79,6 +175,7 @@ export const Commenting = ({
 			};
 		}[]
 	>([]);
+	const [errorText, setErrorText] = useState("");
 
 	return (
 		<>
@@ -90,28 +187,37 @@ export const Commenting = ({
 							content: "",
 						}}
 						onSubmit={async (formData) => {
-							setShowCommenting(false);
-							const test = await postComment(
+							setErrorText("");
+							const dBResponse = await postCommentOrReply(
 								supabase,
 								user.id,
 								communityid,
-								announcementid,
-								formData.content
+								parentID,
+								formData.content,
+								AnnouncementType.COMMENT
 							);
-							setTempComments(
-								tempComments.concat({
-									id: test.data?.id,
-									author: user.id,
-									time: test.data?.time
-										? howLongAgo(test.data.time)
-										: "Posted just now",
-									content: formData.content,
-									users: {
-										full_name: user.user_metadata.name,
-										avatar_url: user.user_metadata.picture,
-									},
-								})
-							);
+							if (dBResponse.error) {
+								setErrorText("Error: failed to post comment");
+							} else {
+								setErrorText("");
+								setShowCommenting(false);
+
+								setTempComments(
+									tempComments.concat({
+										//possibly a dumb idea
+										id: dBResponse.data!.id,
+										author: user.id,
+										time: dBResponse.data?.time
+											? howLongAgo(dBResponse.data.time)
+											: "Posted just now",
+										content: formData.content,
+										users: {
+											full_name: user.user_metadata.name,
+											avatar_url: user.user_metadata.picture,
+										},
+									})
+								);
+							}
 						}}
 					>
 						{({ values }) => (
@@ -127,23 +233,29 @@ export const Commenting = ({
 									></Field>
 								</label>
 								<ErrorMessage name="content" />
-								<div className="m-1 flex justify-end gap-2">
-									<Button
-										className="brightness-hover transition hover:bg-red-300"
-										onClick={() => setShowCommenting(false)}
-									>
-										Cancel
-									</Button>
-									<button
-										className={`rounded-md bg-blue-500 px-4 py-1 font-semibold text-white ${
-											values.content.length < 1
-												? "cursor-not-allowed brightness-75"
-												: "brightness-hover"
-										}`}
-										type="submit"
-									>
-										Post
-									</button>
+								<div className="m-1 flex gap-2">
+									<p className="text-red-500">{errorText}</p>
+									<div className="flex ml-auto">
+										<Button
+											className="brightness-hover transition hover:bg-red-300"
+											onClick={() => {
+												setShowCommenting(false);
+												if (showMe) showMe(false);
+											}}
+										>
+											Cancel
+										</Button>
+										<button
+											className={`rounded-md bg-blue-500 px-4 py-1 font-semibold text-white ${
+												values.content.length < 1
+													? "cursor-not-allowed brightness-75"
+													: "brightness-hover"
+											}`}
+											type="submit"
+										>
+											Post
+										</button>
+									</div>
 								</div>
 							</Form>
 						)}
@@ -168,6 +280,8 @@ export const Commenting = ({
 					time={comment.time}
 					content={comment.content}
 					users={comment.users}
+					communityid={communityid}
+					type={AnnouncementType.COMMENT}
 				></Comment>
 			))}
 		</>

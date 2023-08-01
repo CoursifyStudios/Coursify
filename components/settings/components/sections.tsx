@@ -72,7 +72,7 @@ export function DropdownSection<T = string | number>({
 						: currentValue
 				}
 				values={values}
-				className="w-40"
+				className="w-44"
 			/>
 		</div>
 	);
