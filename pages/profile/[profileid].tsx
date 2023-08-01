@@ -16,6 +16,7 @@ import { useSettings } from "../../lib/stores/settings";
 import { Button } from "@/components/misc/button";
 import Link from "next/link";
 import Layout from "@/components/layout/layout";
+import Avatar from "@/components/misc/avatar";
 
 export default function Profile() {
 	const [profile, setProfile] = useState<ProfilesResponse>();
@@ -53,13 +54,12 @@ export default function Profile() {
 			<div className="flex shrink-0 flex-col items-center md:flex-row lg:h-max lg:max-h-[calc(100vh-8rem)] lg:w-72 lg:flex-col">
 				<div className="flex w-full flex-col items-center rounded-xl bg-backdrop-200 p-6">
 					{profile && profile.data ? (
-						<Image
-							src={profile.data.avatar_url}
-							alt="Profile Picture"
-							//referrerPolicy="no-referrer"
-							className="!ml-2 h-36 w-36 rounded-full object-cover shadow-md shadow-black/25"
-							width={144}
-							height={144}
+						<Avatar
+							full_name={profile.data.full_name}
+							width="36"
+							height="36"
+							text_size="4xl"
+							avatar_url={profile.data.avatar_url}
 						/>
 					) : (
 						<div className="!ml-2 h-36 w-36 animate-pulse rounded-full bg-gray-300"></div>
@@ -161,28 +161,40 @@ export default function Profile() {
 				</div>
 			</div>
 			{/* Right sidepanel, list of groups */}
-			<div className="hidden w-full flex-col rounded-xl lg:h-[calc(100vh-8rem)] xl:flex">
-				<h2 className="title mb-4">Groups</h2>
-				<div className="scrollbar-fancy flex snap-y snap-proximity flex-col space-y-5 overflow-y-auto">
-					{communities && communities.data
-						? communities.data.map(
-								(group) =>
-									group.type >= CommunityType.SCHOOLWIDE_GROUP && (
-										<GroupSmall
-											key={group.id}
-											photo={group.image}
-											title={group.name}
-											id={group.id}
-											isLink={true}
-										/>
-									)
-						  )
-						: [...new Array(4)].map((_, i) => (
-								<div
-									key={i}
-									className="h-24 w-[16rem] animate-pulse rounded-xl bg-gray-200"
-								></div>
-						  ))}
+
+			<div className="flex-col rounded-xl flex">
+				<h2 className="title mb-4">Groups</h2>{" "}
+				<div className="relative">
+					<div className="absolute inset-0 select-none grid place-items-center font-medium z-10">
+						Groups are coming soon
+					</div>
+					<div className="flex flex-col space-y-5 blur-sm">
+						{/*
+						{communities && communities.data
+							? communities.data.map(
+									(group) =>
+										group.type >= CommunityType.SCHOOLWIDE_GROUP && (
+											<GroupSmall
+												key={group.id}
+												photo={group.image}
+												title={group.name}
+												id={group.id}
+												isLink={true}
+											/>
+										)
+							  )
+							: [...new Array(4)].map((_, i) => (
+									<div
+										key={i}
+										className="h-24 w-[16rem] animate-pulse rounded-xl bg-gray-200"
+									></div>
+							  ))}*/}
+						<div className="h-28 w-[16rem] rounded-xl bg-gray-200"></div>
+						<div className="h-28 w-[16rem] rounded-xl bg-gray-200"></div>
+						<div className="h-28 w-[16rem] rounded-xl bg-gray-200"></div>
+						<div className="h-28 w-[16rem] rounded-xl bg-gray-200"></div>
+						<div className="h-28 w-[16rem] rounded-xl bg-gray-200"></div>
+					</div>
 				</div>
 			</div>
 		</div>
