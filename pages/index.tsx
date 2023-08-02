@@ -276,8 +276,27 @@ const Home = () => {
 															/>
 														)
 												);
+
 											return assignments;
 										})}
+									{classes &&
+										Array.isArray(classes) &&
+										classes.every(
+											(mappedClass) =>
+												!mappedClass.class ||
+												!Array.isArray(mappedClass.class.assignments) ||
+												mappedClass.class.assignments.every(
+													(assignment) =>
+														!assignment.starred ||
+														(Array.isArray(assignment.starred)
+															? assignment.starred.length === 0
+															: !assignment.starred)
+												)
+										) && (
+											<div className="w-full h-full">
+												No assignments found for any class.
+											</div>
+										)}
 								</div>
 							</section>
 						</div>
