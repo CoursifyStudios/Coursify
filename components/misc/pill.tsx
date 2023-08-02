@@ -64,7 +64,7 @@ export const CopiedHover: NextPage<{ children: ReactNode; copy: string }> = ({
 			<div className="absolute left-0 right-0 mt-2 flex justify-center brightness-105">
 				<div
 					className={`min-w-[6rem] scale-0 rounded transition-all ${
-						copied ? "bg-green-50" : "bg-gray-50"
+						copied ? "bg-gray-300" : "bg-gray-300"
 					} px-2  py-0.5 text-center text-sm font-medium shadow-lg transition ${
 						copiedHover && "scale-100"
 					}`}
