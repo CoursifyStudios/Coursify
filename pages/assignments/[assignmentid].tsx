@@ -230,6 +230,8 @@ const Post: NextPageWithLayout = () => {
 						alt="Nothing present icon"
 						width={150}
 						height={150}
+						draggable={false}
+						className="select-none"
 					/>
 					<h1 className=" mt-4 max-w-xs text-center font-semibold">
 						Click an assignment on the left pane to get started

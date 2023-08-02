@@ -61,11 +61,11 @@ export const CopiedHover: NextPage<{ children: ReactNode; copy: string }> = ({
 			onMouseLeave={() => setCopiedHover(false)}
 		>
 			{children}
-			<div className="absolute left-0 right-0 mt-2 flex justify-center brightness-105">
+			<div className="absolute select-none left-0 right-0 mt-2 flex justify-center brightness-105">
 				<div
 					className={`min-w-[6rem] scale-0 rounded transition-all ${
 						copied ? "bg-gray-300" : "bg-gray-300"
-					} px-2  py-0.5 text-center text-sm font-medium shadow-lg transition ${
+					} px-2 py-0.5 text-center text-sm font-medium shadow-lg transition ${
 						copiedHover && "scale-100"
 					}`}
 				>
