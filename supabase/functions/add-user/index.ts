@@ -1,6 +1,7 @@
 // Follow this setup guide to integrate the Deno language server with your editor:
 // https://deno.land/manual/getting_started/setup_your_environment
 // This enables autocomplete, go to definition, etc.
+/* eslint-disable no-console */
 
 import { serve } from "https://deno.land/std@0.195.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.5.0";
@@ -22,7 +23,7 @@ serve(async (req: Request) => {
 				},
 			}
 		);
-		const serversideSupabaseClient = createClient(
+		const serversideSupabaseClient = createClient<Database>(
 			Deno.env.get("SUPABASE_URL") ?? "",
 			Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
 		);
@@ -65,45 +66,44 @@ serve(async (req: Request) => {
 			});
 		}
 
+		const registeredUsers = await serversideSupabaseClient
+			.from("users")
+			.select("id, email")
+			.or(
+				studentsToEnroll.map((student) => `${student.email}.eq.email`).join(",")
+			);
+
+		if (registeredUsers.error || registeredUsers.data == undefined) {
+			return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+				headers: { "Content-Type": "application/json", ...corsHeaders },
+				status: 200,
+			});
+		}
+
 		const newUsers = await serversideSupabaseClient
 			.from("users")
-			.upsert(
+			.insert(
 				[
-					...studentsToEnroll.map((student) => ({
+					...studentsToEnroll.filter((s) => registeredUsers.data.find((u) => u.email == s.email) == undefined).map((student) => ({
 						...student,
 						avatar_url: "",
 						id: crypto.randomUUID(),
 					})),
-				],
-				{
-					ignoreDuplicates: true,
-				}
-			)
+				])
 			.select("id");
 
 		if (newUsers.error) {
-			if (
-				newUsers.error.message.includes(
-					"duplicate key value violates unique constraint"
-				)
-			) {
-				return new Response(JSON.stringify({ error: "Duplicate email" }), {
-					headers: { "Content-Type": "application/json", ...corsHeaders },
-					// This should be 400 but supabase function invoke doesn't return the response when it is
-					status: 200,
-				});
-			}
-
+			console.log(newUsers.error);
 			return new Response(JSON.stringify({ error: newUsers.error.message }), {
 				headers: { "Content-Type": "application/json", ...corsHeaders },
-				status: 500,
+				status: 200,
 			});
 		}
 
 		if (newUsers.data == undefined) {
-			return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+			return new Response(JSON.stringify({ error: "Unknown error while registering" }), {
 				headers: { "Content-Type": "application/json", ...corsHeaders },
-				status: 500,
+				status: 200,
 			});
 		}
 
@@ -115,7 +115,19 @@ serve(async (req: Request) => {
 					school_id: schoolId,
 					user_id: user.id,
 				})),
+				...registeredUsers.data.map((u) => ({
+					admin_bool: false,
+					school_id: schoolId,
+					user_id: u.id,
+				}))
 			]);
+
+		if (newEnrollments.error) {
+			return new Response(JSON.stringify({ error: "Internal Server Error while enrolling" }), {
+				headers: { "Content-Type": "application/json", ...corsHeaders },
+				status: 200,
+			});
+		}
 
 		return new Response(JSON.stringify({ message: "ok" }), {
 			headers: { "Content-Type": "application/json", ...corsHeaders },
