@@ -1,5 +1,5 @@
 import { NextPage } from "next";
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { create } from "zustand";
 
 import { Popup } from "@/components/misc/popup";
@@ -10,6 +10,8 @@ import AssignmentCreation from "./four";
 import { submissionType } from "./submissionType";
 import AssignmentSettings from "./three";
 import AssignmentDetails from "./two";
+import { getClassTimesForXDays } from "@/lib/db/classes";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 interface AssignmentState {
 	data: NewAssignmentData | undefined;
@@ -32,17 +34,47 @@ export const CreateAssignment: NextPage<{
 	block: number;
 	scheduleType: number;
 	classid: string;
-}> = ({ open, setOpen, block, scheduleType, classid }) => {
+	createTempAssignment: (value: {
+		name: string;
+		description: string;
+		id: string;
+		due_type: number | null;
+		due_date: string | null;
+	}) => void;
+}> = ({
+	open,
+	setOpen,
+	block,
+	scheduleType,
+	classid,
+	createTempAssignment,
+}) => {
 	const { data: settings } = useSettings();
 	const [stage, setStage] = useState(1);
 	const { data: assignmentData, set: setAssignmentData } = useAssignmentStore();
-
+	const supabase = useSupabaseClient();
+	const [daysData, setDaysData] =
+		useState<{ startTime: Date; endTime: Date }[]>();
+	const [refreshState, refresher] = useState(1);
 	const closeMenu = () => {
 		setOpen(false);
 		setStage(1);
 		setAssignmentData(undefined);
 		setAssignmentData(undefined);
 	};
+
+	useEffect(() => {
+		(async () => {
+			setDaysData(undefined);
+			const classDays = await getClassTimesForXDays(
+				supabase,
+				{ block, type: scheduleType },
+				new Date(),
+				80
+			);
+			setDaysData(classDays);
+		})();
+	}, [refreshState, block, supabase, scheduleType]);
 
 	return (
 		<Popup open={open} closeMenu={() => closeMenu()}>
@@ -105,11 +137,14 @@ export const CreateAssignment: NextPage<{
 			<AssignmentSettings stage={stage} setStage={setStage} />
 			{stage == 4 && (
 				<AssignmentCreation
-					block={block}
-					scheduleType={scheduleType}
 					setStage={setStage}
 					closeMenu={closeMenu}
 					classid={classid}
+					createTempAssignment={createTempAssignment}
+					daysData={{
+						data: daysData!,
+						refresher: () => refresher(refreshState * -1),
+					}}
 				/>
 			)}
 		</Popup>

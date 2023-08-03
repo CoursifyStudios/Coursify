@@ -8,8 +8,22 @@ export const getUserData = async (
 	return await supabase
 		.from("users")
 		.select(`id, full_name, email, bio, year, avatar_url`)
-		.eq("id", profileid)
+		.eq(profileid.includes("@") ? "email" : "id", profileid)
 		.single();
+};
+
+export const getBulkUserData = async (
+	supabase: SupabaseClient<Database>,
+	profiles: string[]
+) => {
+	return await supabase
+		.from("users")
+		.select(`id, full_name, email, bio, year, avatar_url`)
+		.or(
+			profiles
+				.map((p) => `${p.includes("@") ? "email" : "id"}.eq."${p}"`)
+				.join(",")
+		);
 };
 
 export type UserDataType = Awaited<ReturnType<typeof getUserData>>;

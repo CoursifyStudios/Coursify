@@ -1,6 +1,6 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { ErrorMessage, Field, Form, Formik } from "formik";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 import { ColoredPill } from "../components/misc/pill";
 import { Database } from "../lib/db/database.types";
 import {
@@ -14,8 +14,10 @@ import {
 } from "../lib/db/schedule";
 import { useTabs } from "../lib/tabs/handleTabs";
 import { useSettings } from "@/lib/stores/settings";
+import Layout from "@/components/layout/layout";
+import { NextPageWithLayout } from "./_app";
 
-const ScheduleEditor = () => {
+const ScheduleEditor: NextPageWithLayout = () => {
 	const supabaseClient = useSupabaseClient<Database>();
 	const tabs = useTabs((state) => state.tabs);
 	const [tempSchedule, setTempSchedule] = useState<ScheduleInterface[]>();
@@ -34,7 +36,7 @@ const ScheduleEditor = () => {
 		})();
 	}, [supabaseClient]);
 	return (
-		<div>
+		<div className="font-mono">
 			<h4 className="bg-red-600 p-3 px-10">
 				Warning: The schedule editor is currently still in development. For the
 				time being, remember that it is only to be used when the local timezone
@@ -147,7 +149,7 @@ const ScheduleEditor = () => {
 
 							<button
 								type="submit"
-								className="mr-auto mt-4 rounded-lg bg-blue-200 px-4 py-2 text-blue-600 dark:bg-blue-900/10"
+								className="mr-auto mt-4  px-4 py-2 bg-black dark:bg-white text-white dark:text-black hover:invert transition hover:border-black border border-transparent"
 							>
 								Add schedule item
 							</button>
@@ -287,7 +289,7 @@ const ScheduleEditor = () => {
 
 						<button
 							type="submit"
-							className="mr-auto mt-4 rounded-lg bg-blue-200 dark:bg-blue-900/10 px-4 py-2 text-blue-600"
+							className="mr-auto mt-4  px-4 py-2 bg-black dark:bg-white text-white dark:text-black hover:invert transition hover:border-black border border-transparent"
 						>
 							Add as a Schedule (send to server)
 						</button>
@@ -314,7 +316,7 @@ const ScheduleEditor = () => {
 
 							<button
 								type="submit"
-								className="mr-auto mt-4 rounded-lg bg-blue-200 dark:bg-blue-900/10 px-4 py-2 text-blue-600"
+								className="mr-auto mt-4  px-4 py-2 bg-black dark:bg-white text-white dark:text-black hover:invert transition hover:border-black border border-transparent"
 							>
 								Add a New Template
 							</button>
@@ -379,3 +381,7 @@ const ScheduleEditor = () => {
 	);
 };
 export default ScheduleEditor;
+
+ScheduleEditor.getLayout = function getLayout(page: ReactElement) {
+	return <Layout>{page}</Layout>;
+};

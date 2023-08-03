@@ -1,19 +1,24 @@
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { ReactElement, ReactNode, useEffect, useState } from "react";
 import HomepageClassesUI from "../components/class/homepage";
 import { sortClasses } from "../components/class/sorting";
 import { AssignmentPreview } from "../components/assignments/assignments";
 import ScheduleComponent from "../components/complete/schedule";
-import { AllClassesResponse, getAllClasses } from "../lib/db/classes";
+import {
+	AllClasses,
+	AllClassesResponse,
+	getAllClasses,
+} from "../lib/db/classes";
 import { Database } from "../lib/db/database.types";
 import { ScheduleInterface, getSchedulesForXDays } from "../lib/db/schedule";
 import { useSettings } from "../lib/stores/settings";
+import Layout from "@/components/layout/layout";
 
-export default function Home() {
+const Home = () => {
 	const supabaseClient = useSupabaseClient<Database>();
 	const user = useUser();
-	const [classes, setClasses] = useState<AllClassesResponse>();
+	const [classes, setClasses] = useState<AllClasses>();
 	const [loading, setLoading] = useState(true);
 	const [schedules, setSchedules] = useState<ScheduleInterface[][]>([]);
 	const { data: settings } = useSettings();
@@ -54,16 +59,21 @@ export default function Home() {
 	}, []);
 
 	useEffect(() => {
+		if (!Array.isArray(classes)) setClasses(undefined);
 		(async () => {
 			if (user) {
 				const [classes, scheduleDB] = await Promise.all([
-					getAllClasses(supabaseClient),
+					getAllClasses(supabaseClient, user.id),
 					// read comment in above useEffect as to why I'm fetching 3 dates -Lukas
 					// I'm going to fetch like 5 because weekends or some excuse - Bill
 					getSchedulesForXDays(supabaseClient, new Date(), 5),
 				]);
 
-				setClasses(classes);
+				if (classes.data && classes.data[0]) {
+					const data = classes.data.filter((mappedClass) => mappedClass.class);
+					setClasses(data);
+				}
+
 				const fullSchedule: { date: Date; schedule: ScheduleInterface[] }[] =
 					[];
 
@@ -99,6 +109,7 @@ export default function Home() {
 				sessionStorage.setItem("schedule", JSON.stringify(fullSchedule));
 			}
 		})();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [user, supabaseClient]);
 	if (!user) {
 		return null;
@@ -142,114 +153,143 @@ export default function Home() {
 							</div>
 						</section>
 					</div>
-					<div className="flex flex-col xl:flex-row ">
-						{/* Assignments UI */}
-						<section id="Assignments">
-							<h2 className="title mb-4">Assignments</h2>
-							<div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:w-[58.5rem] ">
-								{classes &&
-									classes.data &&
-									classes.data
-										.slice(0, classes.data.length)
-										.sort((a, b) =>
-											sortClasses(a, b, schedules[0], schedules[1])
-										)
-										.filter(
-											(element) =>
-												!(
-													Array.isArray(element.assignments) &&
-													element.assignments.length == 0
-												)
-										)
-										//temporary measure
-										.slice(0, 3)
-										.map((aClass) => (
-											<div key={aClass.id}>
-												<div>
-													<Link href={"/classes/" + aClass.id}>
-														<h2 className="mb-2 text-xl font-semibold">
-															{aClass.name}
-														</h2>
-													</Link>
-													<div className="mb-5 flex-col space-y-4 first-letter:space-y-4">
-														{Array.isArray(aClass.assignments) &&
-															schedules &&
-															aClass.assignments.map((assignment) => (
-																<AssignmentPreview
-																	className="brightness-hover"
-																	key={assignment.id}
-																	supabase={supabaseClient}
-																	assignment={
-																		Array.isArray(assignment)
-																			? assignment[0]
-																			: assignment
-																	}
-																	userId={user.id}
-																	starredAsParam={
-																		assignment.starred
-																			? Array.isArray(assignment.starred)
-																				? assignment.starred.length > 0
-																				: !!assignment.starred
-																			: false
-																	}
-																	showClassPill={false}
-																	schedule={schedules[0]!}
-																	scheduleT={schedules[1]!}
-																	classes={aClass}
-																/>
-															))}
-													</div>
-												</div>
-											</div>
-										))}
-							</div>
-						</section>
-						<section className=" grow xl:ml-10" id="Starred">
-							<h2 className="title mb-4 mr-2">Starred</h2>
-							<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
-								{classes &&
-									classes.data &&
-									classes.data.map(
-										(aClass) =>
-											Array.isArray(aClass.assignments) &&
-											schedules &&
-											aClass.assignments.map(
-												(assignment) =>
-													(assignment.starred
-														? Array.isArray(assignment.starred)
-															? assignment.starred.length > 0
-															: !!assignment.starred
-														: false) && (
-														<AssignmentPreview
-															key={assignment.id}
-															className="brightness-hover"
-															supabase={supabaseClient}
-															assignment={
-																Array.isArray(assignment)
-																	? assignment[0]
-																	: assignment
-															}
-															userId={user.id}
-															starredAsParam={
-																assignment.starred
-																	? Array.isArray(assignment.starred)
-																		? assignment.starred.length > 0
-																		: !!assignment.starred
-																	: false
-															}
-															showClassPill={true}
-															schedule={schedules[0]!}
-															scheduleT={schedules[1]!}
-															classes={aClass}
-														/>
-													)
+					{!(
+						classes?.filter(
+							(mappedClass) =>
+								!mappedClass.class?.class_users.some(
+									(cu) => cu.user_id == user.id && cu.teacher
+								)
+						).length == 0
+					) && (
+						<div className="flex flex-col xl:flex-row ">
+							{/* Assignments UI */}
+							<section id="Assignments">
+								<h2 className="title mb-4">Assignments</h2>
+								<div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:w-[58.5rem] ">
+									{classes &&
+										Array.isArray(classes) &&
+										classes
+
+											.sort(
+												(a, b) =>
+													//sortClasses(a, b, schedules[0], schedules[1])
+													a.class!.block - b.class!.block
 											)
-									)}
-							</div>
-						</section>
-					</div>
+
+											.map((mappedClass) => {
+												const aClass = mappedClass.class;
+
+												if (
+													aClass == null ||
+													aClass.class_users.some(
+														(cu) => cu.user_id == user.id && cu.teacher
+													)
+												)
+													return null;
+
+												return (
+													<div key={aClass.id}>
+														<div>
+															<Link href={"/classes/" + aClass.id}>
+																<h2 className="mb-2 text-xl font-semibold">
+																	{aClass.name}
+																</h2>
+															</Link>
+															<div className="mb-5 flex-col space-y-4 first-letter:space-y-4">
+																{Array.isArray(aClass.assignments) &&
+																	schedules &&
+																	aClass.assignments
+																		.slice(0, 3)
+																		.map((assignment) => (
+																			<AssignmentPreview
+																				className="brightness-hover"
+																				key={assignment.id}
+																				supabase={supabaseClient}
+																				assignment={
+																					Array.isArray(assignment)
+																						? assignment[0]
+																						: assignment
+																				}
+																				userId={user.id}
+																				starredAsParam={
+																					assignment.starred
+																						? Array.isArray(assignment.starred)
+																							? assignment.starred.length > 0
+																							: !!assignment.starred
+																						: false
+																				}
+																				showClassPill={false}
+																				schedule={schedules[0]!}
+																				scheduleT={schedules[1]!}
+																				classes={aClass}
+																			/>
+																		))}
+															</div>
+														</div>
+													</div>
+												);
+											})}
+								</div>
+							</section>
+							<section className=" grow xl:ml-10" id="Starred">
+								<h2 className="title mb-4 mr-2">Starred</h2>
+								<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
+									{classes &&
+										Array.isArray(classes) &&
+										classes.map((mappedClass) => {
+											const aClass = mappedClass.class;
+											if (aClass == null) return null;
+
+											const assignments: ReactNode[] = [];
+
+											Array.isArray(aClass.assignments) &&
+												schedules &&
+												aClass.assignments.map(
+													(assignment) =>
+														(assignment.starred
+															? Array.isArray(assignment.starred)
+																? assignment.starred.length > 0
+																: !!assignment.starred
+															: false) &&
+														assignments.push(
+															<AssignmentPreview
+																key={assignment.id}
+																className="brightness-hover"
+																supabase={supabaseClient}
+																assignment={
+																	Array.isArray(assignment)
+																		? assignment[0]
+																		: assignment
+																}
+																userId={user.id}
+																starredAsParam={
+																	assignment.starred
+																		? Array.isArray(assignment.starred)
+																			? assignment.starred.length > 0
+																			: !!assignment.starred
+																		: false
+																}
+																showClassPill={true}
+																schedule={schedules[0]!}
+																scheduleT={schedules[1]!}
+																classes={aClass}
+															/>
+														)
+												);
+											return assignments;
+										})}
+								</div>
+							</section>
+						</div>
+					)}
 				</div>
 			</div>
 		</>
 	);
-}
+};
+
+export default Home;
+
+Home.getLayout = function getLayout(page: ReactElement) {
+	return <Layout>{page}</Layout>;
+};

@@ -10,7 +10,6 @@ import {
 } from "react";
 
 import { NewAssignmentData } from "@/lib/db/assignments/assignments";
-import { getClassTimesForXDays } from "@/lib/db/classes";
 import { Database, Json } from "@/lib/db/database.types";
 import { useAssignmentStore } from ".";
 import Editor from "../../editors/richeditor";
@@ -25,18 +24,25 @@ import { submissionType } from "./submissionType";
 
 const AssignmentCreation: NextPage<{
 	setStage: Dispatch<SetStateAction<number>>;
-	block: number;
-	scheduleType: number;
 	classid: string;
 	closeMenu: () => void;
-}> = ({ setStage, block, scheduleType, closeMenu, classid }) => {
+	daysData: {
+		data: { startTime: Date; endTime: Date }[];
+		refresher: () => void;
+	};
+	createTempAssignment: (value: {
+		name: string;
+		description: string;
+		id: string;
+		due_type: number | null;
+		due_date: string | null;
+	}) => void;
+}> = ({ setStage, closeMenu, classid, daysData, createTempAssignment }) => {
 	const supabase = useSupabaseClient<Database>();
 	const [selectedDueType, setSelectedDueType] = useState(types[0]);
 	const [selectedPublishType, setSelectedPublishType] = useState(types[0]);
 	const [publish, setPublished] = useState(false);
 	const [due, setDue] = useState(true);
-	const [daysData, setDaysData] =
-		useState<{ startTime: Date; endTime: Date }[]>();
 	const [submitting, setSubmitting] = useState<boolean>();
 	const [error, setError] = useState("");
 
@@ -50,17 +56,6 @@ const AssignmentCreation: NextPage<{
 			setSelectedPublishType(type);
 			setAssignmentData({ publishType: type.type } as NewAssignmentData);
 		}
-	};
-
-	const refreshData = async () => {
-		setDaysData(undefined);
-		const classDays = await getClassTimesForXDays(
-			supabase,
-			{ block, type: scheduleType },
-			new Date(),
-			80
-		);
-		setDaysData(classDays);
 	};
 
 	const canCreate = useMemo(() => {
@@ -84,36 +79,43 @@ const AssignmentCreation: NextPage<{
 		setSubmitting(true);
 		const { assignmentType: _, ...assignmentSettings } =
 			assignmentData.settings;
-		const data: Database["public"]["Tables"]["assignments"]["Insert"] = {
-			class_id: classid,
-			content: assignmentData.content as unknown as Json,
-			description: assignmentData.description,
-			name: assignmentData.name,
-			submission_instructions: assignmentData.submissionInstructions,
-			type: assignmentData.type,
-			hidden: assignmentData.hidden,
-			settings: assignmentSettings as unknown as Json,
-		};
+		const dataToUpload: Database["public"]["Tables"]["assignments"]["Insert"] =
+			{
+				class_id: classid,
+				content: assignmentData.content as unknown as Json,
+				description: assignmentData.description,
+				name: assignmentData.name,
+				submission_instructions: assignmentData.submissionInstructions,
+				type: assignmentData.type,
+				hidden: assignmentData.hidden,
+				settings: assignmentSettings as unknown as Json,
+			};
 		if (due) {
-			data.due_date = assignmentData.dueDate?.toISOString();
-			data.due_type = assignmentData.dueType;
+			dataToUpload.due_date = assignmentData.dueDate?.toISOString();
+			dataToUpload.due_type = assignmentData.dueType;
 		}
 		if (publish) {
-			data.publish_date = assignmentData.publishDate?.toISOString();
-			data.publish_type = assignmentData.publishType;
+			dataToUpload.publish_date = assignmentData.publishDate?.toISOString();
+			dataToUpload.publish_type = assignmentData.publishType;
 		}
-		const { error } = await supabase.from("assignments").insert(data);
+		const { data, error } = await supabase
+			.from("assignments")
+			.insert(dataToUpload)
+			.select()
+			.single();
 		setSubmitting(false);
 		if (error) {
 			setError(error.message);
 			setSubmitting(undefined);
 			return;
+		} else {
+			createTempAssignment(data);
 		}
 		setTimeout(closeMenu, 500);
 	};
 
 	useEffect(() => {
-		if (!daysData) refreshData();
+		if (!daysData.data) daysData.refresher();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
@@ -284,7 +286,7 @@ const AssignmentCreation: NextPage<{
 					(selectedDueType.type == DueType.DATE ? (
 						<input
 							type="datetime-local"
-							className="mt-4 rounded-md border-gray-300  bg-white/50 focus:ring-1 dark:bg-backdrop"
+							className="mt-4 rounded-md border-gray-300 bg-white/50 focus:ring-1 dark:bg-backdrop"
 							onChange={onDateChange}
 							value={
 								assignmentData?.dueDate != undefined
@@ -293,7 +295,7 @@ const AssignmentCreation: NextPage<{
 							}
 						/>
 					) : (
-						<AssignmentCalender type="due" daysData={daysData} />
+						<AssignmentCalender type="due" daysData={daysData.data} />
 					))}
 
 				{type == "publish" &&
@@ -309,7 +311,7 @@ const AssignmentCreation: NextPage<{
 							}
 						/>
 					) : (
-						<AssignmentCalender type="publish" daysData={daysData} />
+						<AssignmentCalender type="publish" daysData={daysData.data} />
 					))}
 			</>
 		);

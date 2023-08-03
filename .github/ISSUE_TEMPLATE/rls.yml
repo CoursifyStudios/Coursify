@@ -1,6 +1,6 @@
 name: Add RLS
 description: "Want to make Bloxs suffer? You've come to the right place!"
-labels: []
+labels: ["rls"]
 assignees: [Blocksnmore]
 
 body:

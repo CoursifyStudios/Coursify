@@ -3,7 +3,7 @@ import { Menu, Transition } from "@headlessui/react";
 import Link from "next/link";
 import { Fragment, ReactNode } from "react";
 
-export default function CMenu({
+export default function MenuSelect({
 	children,
 	items,
 }: {

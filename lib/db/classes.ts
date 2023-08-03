@@ -3,52 +3,58 @@ import { getDataInArray, getDataOutArray } from "../misc/dataOutArray";
 import { NonNullableArray } from "../misc/misc.types";
 import type { Database } from "./database.types";
 import { ScheduleInterface, getSchedulesForXDays } from "./schedule";
-export async function getAllClasses(supabase: SupabaseClient<Database>) {
-	const { data, error } = await supabase
-		.from("classes")
+
+export async function getAllClasses(
+	supabase: SupabaseClient<Database>,
+	userID: string
+) {
+	const now = new Date();
+	now.setHours(0);
+	now.setDate(now.getDate() - 1);
+
+	const later = new Date(now);
+	later.setDate(later.getDate() + 20);
+	return await supabase
+		.from("class_users")
 		.select(
 			`
-			id,
-			name,
-			description,
-			block,
-			schedule_type,
-			color,
-			name_full,
-			room,
-			full_description,
-			classpills,
-			image,
-			type,
-			users (
-				avatar_url, id, full_name
-			),
-			class_users (
-				user_id, teacher, grade
-			),
-			assignments (
-					*,
-					starred (
-							*
-					)
+			class:classes (
+				id,
+				name,
+				description,
+				block,
+				schedule_type,
+				color,
+				name_full,
+				room,
+				full_description,
+				classpills,
+				image,
+				type,
+				users (
+					avatar_url, id, full_name
+				),
+				class_users (
+					user_id, teacher, grades, grade, main_teacher
+				),
+				assignments (
+						*,
+						starred (
+								*
+						)
+				)
 			)
 			`
 		)
-		.eq("type", CommunityType.CLASS);
-	if (!error) {
-		return {
-			success: true,
-			data: data,
-		};
-	} else {
-		return {
-			success: false,
-			error: error,
-		};
-	}
+		.eq("classes.type", CommunityType.CLASS)
+		.eq("user_id", userID)
+		.gte("classes.assignments.due_date", now.toISOString())
+		.lte("classes.assignments.due_date", later.toISOString());
 }
 
 export type AllClassesResponse = Awaited<ReturnType<typeof getAllClasses>>;
+
+export type AllClasses = Exclude<AllClassesResponse["data"], null>;
 
 export const getClass = async (
 	supabase: SupabaseClient<Database>,
@@ -89,7 +95,7 @@ export const getClass = async (
 			name, description, id, due_type, due_date
 		),
 		class_users (
-			user_id, grade, teacher
+			user_id, grade, teacher, main_teacher
 		),
 		users (
 			*
@@ -258,12 +264,13 @@ export type BasicClassInfoDB = Awaited<
 >;
 
 export const isTeacher = (
-	classData: NonNullableArray<AllClassesResponse["data"]>,
+	classData: NonNullableArray<AllClasses>,
 	userID: string
 ) => {
 	return Boolean(
-		getDataInArray(classData.class_users).find(
-			(user) => user?.user_id == userID && user?.teacher
-		)
+		classData.class &&
+			getDataInArray(classData.class.class_users).find(
+				(user) => user?.user_id == userID && user?.teacher
+			)
 	);
 };
