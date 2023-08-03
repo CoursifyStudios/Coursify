@@ -59,35 +59,7 @@ const Link: NextPage<{
 				>
 					Submit
 				</Button>
-				<Popup open={true} size="sm" closeMenu={() => {}}>
-					<h1 className="title-sm">Link Submission</h1>
-					<Formik
-						onSubmit={() => {}}
-						initialValues={{}}
-						validationSchema={Yup.object().shape({
-							link: Yup.string()
-								.required("Please enter a link")
-								.url("Please enter a valid URL"),
-						})}
-					>
-						<form>
-							<input
-								placeholder="Enter a link"
-								className="flex w-full mt-2"
-								type="text"
-								name="link"
-							></input>
-						</form>
-						<Button
-							className="text-white"
-							color="bg-blue-500"
-							// disabled={!content.finished}
-							// onClick={() => submit()}
-						>
-							Submit
-						</Button>
-					</Formik>
-				</Popup>
+
 				<Button
 					className="text-white"
 					color="bg-gray-300"

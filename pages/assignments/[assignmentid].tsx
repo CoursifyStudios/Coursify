@@ -299,12 +299,12 @@ const Post: NextPageWithLayout = () => {
 							</div>
 							{assignment.data.type != AssignmentTypes.DISCUSSION_POST ? (
 								<div
-									className={`sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:mb-0 xl:ml-4 xl:w-72 `}
+									className={`sticky mb-7 flex shrink-0 flex-col  xl:top-0 xl:mb-0 xl:ml-4 xl:w-72 `}
 								>
 									<h2 className="text-xl font-semibold">Submission</h2>
 									<div
-										className={`mt-2 rounded-xl bg-gray-200 ${
-											open ? "max-h-16 p-1" : "max-h-96 px-5 py-4"
+										className={`mt-2 rounded-xl overflow-y-auto scrollbar-fancy bg-gray-200 ${
+											open ? "max-h-16 p-1" : "max-h-[36rem] px-5 py-4"
 										}  overflow-hidden transition-all duration-300`}
 									>
 										{!open ? (
@@ -323,7 +323,7 @@ const Post: NextPageWithLayout = () => {
 														Submit assignment
 													</h2>
 												)}
-												<div className="mt-4 flex flex-col  space-y-4">
+												<div className="mt-4 flex flex-col space-y-4">
 													<Panel
 														assignmentType={assignment.data.type}
 														setRevisions={setRevisions}

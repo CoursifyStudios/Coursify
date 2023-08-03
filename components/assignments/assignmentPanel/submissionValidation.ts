@@ -39,12 +39,16 @@ export const submissionMediaValidation = Yup.object({
 });
 
 export const submissionFileUploadValidation = Yup.object({
-	files: Yup.array().of(
-		Yup.object({
-			link: Yup.string().required(),
-			caption: Yup.string().optional(),
-		})
-	),
+	files: Yup.array()
+		.of(
+			Yup.object({
+				link: Yup.string().required(),
+				uuid: Yup.string().required(),
+				name: Yup.string().required(),
+				size: Yup.number().required(),
+			})
+		)
+		.required(),
 });
 
 export const submissionCheckoffValidation = Yup.object({
