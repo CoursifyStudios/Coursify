@@ -29,13 +29,10 @@ serve(async (req: Request) => {
 		);
 		const {
 			schoolId,
-			studentsToEnroll,
+			studentsToRemove,
 		}: {
 			schoolId: string;
-			studentsToEnroll: Omit<
-				Omit<Database["public"]["Tables"]["users"]["Insert"], "avatar_url">,
-				"id"
-			>[];
+			studentsToRemove: string[];
 		} = await req.json();
 		const {
 			data: { user },
@@ -66,68 +63,79 @@ serve(async (req: Request) => {
 			});
 		}
 
-		const registeredUsers = await serversideSupabaseClient
-			.from("users")
-			.select("id, email")
+		const deletedEnrollments = await clientSideSupabaseClient
+			.from("enrolled")
+			.delete()
+			.or(studentsToRemove.map((s) => `user_id.eq.${s}`).join(","))
+			.select("*");
+
+		if (deletedEnrollments.error || deletedEnrollments.data == undefined) {
+			console.log(deletedEnrollments.error, deletedEnrollments.data);
+			return new Response(
+				JSON.stringify({ error: "Unknown error while removing" }),
+				{
+					headers: { "Content-Type": "application/json", ...corsHeaders },
+					status: 200,
+				}
+			);
+		}
+
+		const deletedClassRelations = await clientSideSupabaseClient
+			.from("class_users")
+			.delete()
+			.or(studentsToRemove.map((s) => `user_id.eq.${s}`).join(","))
+			.select("*");
+
+		if (
+			deletedClassRelations.error ||
+			deletedClassRelations.data == undefined
+		) {
+			console.log(deletedClassRelations.error, deletedClassRelations.data);
+			return new Response(
+				JSON.stringify({ error: "Unknown error while unenrolling" }),
+				{
+					headers: { "Content-Type": "application/json", ...corsHeaders },
+					status: 200,
+				}
+			);
+		}
+
+		const assignmentIds = await serversideSupabaseClient
+			.from("assignments")
+			.select("id")
 			.or(
-				studentsToEnroll.map((student) => `email.eq."${student.email}"`).join(",")
+				deletedClassRelations.data
+					.map((c) => `class_id.eq.${c.class_id}`)
+					.join(",")
 			);
 
-		if (registeredUsers.error || registeredUsers.data == undefined) {
-			console.log(registeredUsers.error, registeredUsers.data);
-			return new Response(JSON.stringify({ error: "Internal Server Error" }), {
-				headers: { "Content-Type": "application/json", ...corsHeaders },
-				status: 200,
-			});
+		const achievementIds = await serversideSupabaseClient
+			.from("achievements")
+			.select("id")
+			.eq("school", schoolId);
+
+		// No point returning an error if no submissions were deleted
+		if (assignmentIds.error == undefined && assignmentIds.data != undefined) {
+			await serversideSupabaseClient
+				.from("submissions")
+				.delete()
+				.or(
+					`and(assignment_id.in.(${assignmentIds.data
+						.map((a) => a.id)
+						.join(",")}),user_id.in.(${studentsToRemove.join(",")}))`
+				);
 		}
 
-		const newUsers = await serversideSupabaseClient
-			.from("users")
-			.insert(
-				[
-					...studentsToEnroll.filter((s) => registeredUsers.data.find((u) => u.email == s.email) == undefined).map((student) => ({
-						...student,
-						avatar_url: "",
-						id: crypto.randomUUID(),
-					})),
-				])
-			.select("id");
-
-		if (newUsers.error) {
-			console.log(newUsers.error);
-			return new Response(JSON.stringify({ error: newUsers.error.message }), {
-				headers: { "Content-Type": "application/json", ...corsHeaders },
-				status: 200,
-			});
-		}
-
-		if (newUsers.data == undefined) {
-			return new Response(JSON.stringify({ error: "Unknown error while registering" }), {
-				headers: { "Content-Type": "application/json", ...corsHeaders },
-				status: 200,
-			});
-		}
-
-		const newEnrollments = await serversideSupabaseClient
-			.from("enrolled")
-			.insert([
-				...newUsers.data.map((user) => ({
-					admin_bool: false,
-					school_id: schoolId,
-					user_id: user.id,
-				})),
-				...registeredUsers.data.map((u) => ({
-					admin_bool: false,
-					school_id: schoolId,
-					user_id: u.id,
-				}))
-			]);
-
-		if (newEnrollments.error) {
-			return new Response(JSON.stringify({ error: "Internal Server Error while enrolling" }), {
-				headers: { "Content-Type": "application/json", ...corsHeaders },
-				status: 200,
-			});
+		// No point returning an error if no achievements were found
+		if (achievementIds.error == undefined && achievementIds.data != undefined) {
+			await serversideSupabaseClient
+				.from("user_achievements")
+				.delete()
+				.or(
+					`and(achievement_id.in.(${achievementIds.data
+						.map((a) => a.id)
+						.join(",")}),user_id.in.(${studentsToRemove.join(",")}))`
+				);
 		}
 
 		return new Response(JSON.stringify({ message: "ok" }), {
