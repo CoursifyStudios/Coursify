@@ -43,9 +43,10 @@ export const submissionFileUploadValidation = Yup.object({
 		.of(
 			Yup.object({
 				link: Yup.string().required(),
-				uuid: Yup.string().required(),
-				name: Yup.string().required(),
+				fileName: Yup.string().required(),
+				realName: Yup.string().required(),
 				size: Yup.number().required(),
+				uploading: Yup.boolean(),
 			})
 		)
 		.required(),

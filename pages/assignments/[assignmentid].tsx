@@ -304,7 +304,7 @@ const Post: NextPageWithLayout = () => {
 									<h2 className="text-xl font-semibold">Submission</h2>
 									<div
 										className={`mt-2 rounded-xl overflow-y-auto scrollbar-fancy bg-gray-200 ${
-											open ? "max-h-16 p-1" : "max-h-[36rem] px-5 py-4"
+											open ? "max-h-16 p-1" : "max-h-[32rem] px-5 py-4"
 										}  overflow-hidden transition-all duration-300`}
 									>
 										{!open ? (

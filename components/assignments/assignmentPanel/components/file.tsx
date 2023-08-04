@@ -60,10 +60,14 @@ const FileUpload: NextPage<{
 }) => {
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
+	const [disableSubmit, setDisableSubmit] = useState(false);
+	let currentSubmission: SubmissionFileUpload = {
+		assignmentType: AssignmentTypes.FILE_UPLOAD,
+		files: [],
+	};
 	const finished = useMemo(() => {
 		return true;
 	}, []);
-	const [files, setFiles] = useState<File[]>([]);
 
 	const dbSubmission = useMemo(() => {
 		if (revisions.length > 0) {
@@ -77,12 +81,18 @@ const FileUpload: NextPage<{
 	useLayoutEffect(() => {
 		if (dbSubmission) {
 			setSubmission(dbSubmission.content as SubmissionFileUpload);
+		} else {
+			setSubmission({
+				assignmentType: AssignmentTypes.FILE_UPLOAD,
+				files: [],
+			});
 		}
 	}, [dbSubmission, setSubmission]);
 
-	const submit = async (final: boolean) => {
+	const uploadFile = async (file: File) => {
 		setError("");
-		if (files.some((file) => file.size > settings.maxSize * 1048576)) {
+
+		if (file.size > settings.maxSize * 1048576) {
 			setError(
 				`One of your files is too big. Max size in bytes: ${
 					settings.maxSize * 1048576
@@ -90,11 +100,7 @@ const FileUpload: NextPage<{
 			);
 			return;
 		}
-		if (
-			files.some((file) =>
-				settings.fileTypes ? settings.fileTypes.includes(file.type) : false
-			)
-		) {
+		if (settings.fileTypes ? settings.fileTypes.includes(file.type) : true) {
 			setError(
 				`You can only submit files of the types ${settings.fileTypes?.join(
 					", "
@@ -102,32 +108,81 @@ const FileUpload: NextPage<{
 			);
 			return;
 		}
-		setLoading(true);
-		const UUID = window.crypto.randomUUID();
-
-		const { data, error } = await supabase.storage
-			.from("ugc")
-			.upload(UUID, files[0]);
-
-		if (error) {
-			setError(error.message);
-			setLoading(false);
+		if (submission.files.some((f) => f.realName == file.name)) {
+			setError("You can't submit multiple files with the same name");
 			return;
 		}
 
-		const link = `https://cdn.coursify.one/storage/v1/object/public/ugc/${data?.path}`;
+		const UUID = window.crypto.randomUUID();
+		const name = `${UUID}--${user.id}`;
+		const path = `submissions/${name}`;
+
+		setDisableSubmit(true);
+		setSubmission((submission) => ({
+			assignmentType: AssignmentTypes.FILE_UPLOAD,
+			files: [
+				...submission.files,
+				{
+					link: `https://cdn.coursify.one/storage/v1/object/public/ugc/${path}`,
+					realName: file.name,
+					fileName: name,
+					size: file.size,
+					uploading: true,
+				},
+			],
+		}));
+
+		const { data, error } = await supabase.storage
+			.from("ugc")
+			.upload(path, file);
+
+		if (error) {
+			setError(error.message);
+			return;
+		}
+
+		setSubmission((submission) => ({
+			assignmentType: AssignmentTypes.FILE_UPLOAD,
+			files: submission.files.map((f) => {
+				if (f.fileName != name) return f;
+				const { uploading: _, ...newFile } = f;
+				return newFile;
+			}),
+		}));
+		setDisableSubmit(false);
+
+		/**
+		 * This is a bit jank, bassiclly if the user initiates multiple file uploads
+		 * at the same time and a subsequest one finishes before this one, it'll
+		 * be overwritten on the database. If there was a way to fetch the latest version of
+		 * state, I wouldn't have to do this, but oh well. We're saving drafts since I don't want
+		 * random files not tied to a user since someone forgot to click save draft - Lukas
+		 */
+		currentSubmission = {
+			assignmentType: AssignmentTypes.FILE_UPLOAD,
+			files: [
+				...currentSubmission.files,
+				{
+					link: `https://cdn.coursify.one/storage/v1/object/public/ugc/${path}`,
+					realName: file.name,
+					fileName: name,
+					size: file.size,
+				},
+			],
+		};
+		const submissionError = await assignmentSubmission(
+			assignmentID,
+			currentSubmission,
+			supabase,
+			user,
+			false
+		);
+	};
+
+	const submit = async () => {
+		setLoading(true);
 
 		const now = new Date().toUTCString();
-
-		const submission: SubmissionFileUpload = {
-			assignmentType: AssignmentTypes.FILE_UPLOAD,
-			files: files.map((file) => ({
-				name: file.name,
-				link,
-				uuid: UUID,
-				size: file.size,
-			})),
-		};
 
 		setSubmission(submission);
 
@@ -136,7 +191,7 @@ const FileUpload: NextPage<{
 			submission,
 			supabase,
 			user,
-			final
+			true
 		);
 		if (submissionError) {
 			setError(submissionError.message);
@@ -146,26 +201,28 @@ const FileUpload: NextPage<{
 			{
 				content: submission,
 				created_at: now,
-				final,
+				final: true,
 			},
 			...revisions,
 		]);
 		setLoading(false);
 	};
 
+	if (!submission) return null;
+
 	return (
 		<>
-			{(settings.minFiles > files.length || settings.maxFiles) && (
+			{(settings.minFiles > submission.files.length || settings.maxFiles) && (
 				<ColoredPill className="mx-auto text-sm " color="gray">
-					{settings.minFiles > files.length
-						? `${files.length}/${settings.minFiles} minimum files`
+					{settings.minFiles > submission.files.length
+						? `${submission.files.length}/${settings.minFiles} minimum files`
 						: settings.maxFiles &&
-						  `${files.length}/${settings.maxFiles} maximum files`}
+						  `${submission.files.length}/${settings.maxFiles} maximum files`}
 				</ColoredPill>
 			)}
-			{files.length > 0 && (
+			{submission.files.length > 0 && (
 				<div className="grid lg:grid-cols-2 xl:grid-cols-1 gap-2">
-					{files.map((file, i) => (
+					{submission.files.map((file, i) => (
 						<div
 							className="rounded-lg border border-gray-300 p-3 flex items-center"
 							key={i}
@@ -173,21 +230,14 @@ const FileUpload: NextPage<{
 							<DocumentIcon className="w-6 h-6" />
 							<div className="truncate mx-2 ">
 								<p className="truncate max-w-xs text-sm font-medium">
-									{file.name}
+									{file.realName}
 								</p>
 								<p className="text-xs">{formatBytes(file.size)}</p>
 							</div>
+							{file.uploading && "uploading"}
 							<div
 								className="rounded hover:bg-gray-300 p-0.5 ml-auto cursor-pointer"
-								onClick={() =>
-									setFiles((files) =>
-										files.filter(
-											(mappedFile) =>
-												mappedFile.name != file.name &&
-												mappedFile.size != file.size
-										)
-									)
-								}
+								onClick={() => {}}
 							>
 								<XMarkIcon className="h-4 w-4 text-red-500" />
 							</div>
@@ -195,41 +245,37 @@ const FileUpload: NextPage<{
 					))}
 				</div>
 			)}
-			{files.length != 5 && (
-				<label
-					className="rounded-lg bg-gray-300 p-3 flex items-center brightness-hover cursor-pointer"
-					onChange={(e) => {
-						// @ts-expect-error idk what react is on but files will be defined
-						setFiles((files) => files.concat([...e.target.files]));
-					}}
-				>
-					<DocumentArrowUpIcon className="w-6 h-6" />
-					<div className="ml-4">
-						<h4 className="font-medium text-sm">Upload File</h4>
-						<p className="text-xs">Click to select or drop file</p>
-					</div>
-					<input type="file" className="hidden" />
-				</label>
-			)}
+			{settings.maxFiles
+				? submission.files.length != settings.maxFiles
+				: true && (
+						<label
+							className="rounded-lg bg-gray-300 p-3 flex items-center brightness-hover cursor-pointer"
+							onChange={(e) => {
+								// @ts-expect-error idk what react is on but files will be defined
+								uploadFile([...e.target.files][0]);
+							}}
+						>
+							<DocumentArrowUpIcon className="w-6 h-6" />
+							<div className="ml-4">
+								<h4 className="font-medium text-sm">Upload File</h4>
+								<p className="text-xs">Click to select or drop file</p>
+							</div>
+							<input type="file" className="hidden" />
+						</label>
+				  )}
 
-			<div className="flex items-center gap-4">
+			<div className="flex items-center gap-4 justify-between">
 				<Button
 					className="text-white"
 					color="bg-blue-500"
 					disabled={false}
-					onClick={() => submit(true)}
+					onClick={submit}
 				>
 					Submit
 				</Button>
-				<Button
-					color="bg-gray-300"
-					disabled={false}
-					onClick={() => submit(false)}
-				>
-					Save Draft
-				</Button>
+				{loading && <Loading className="bg-gray-300" />}
 			</div>
-			{loading && <Loading className="bg-gray-300" />}
+
 			{error && `Error occured while saving: ${error}`}
 		</>
 	);
