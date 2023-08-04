@@ -1,5 +1,5 @@
 import { Button } from "@/components/misc/button";
-import Loading from "@/components/misc/loading";
+import Loading, { LoadingSmall } from "@/components/misc/loading";
 import { Popup } from "@/components/misc/popup";
 import { AssignmentTypes } from "@/lib/db/assignments/assignments";
 import { assignmentSubmission } from "@/lib/db/assignments/submission";
@@ -61,10 +61,7 @@ const FileUpload: NextPage<{
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [disableSubmit, setDisableSubmit] = useState(false);
-	let currentSubmission: SubmissionFileUpload = {
-		assignmentType: AssignmentTypes.FILE_UPLOAD,
-		files: [],
-	};
+
 	const finished = useMemo(() => {
 		return true;
 	}, []);
@@ -75,6 +72,14 @@ const FileUpload: NextPage<{
 		}
 		return undefined;
 	}, [revisions]);
+
+	let currentSubmission: SubmissionFileUpload = {
+		assignmentType: AssignmentTypes.FILE_UPLOAD,
+		files:
+			dbSubmission && dbSubmission.content
+				? (dbSubmission.content as SubmissionFileUpload).files
+				: [],
+	};
 
 	// TODO: file upload should upload the file the second the user submits it rather then when clicking submit
 
@@ -132,9 +137,7 @@ const FileUpload: NextPage<{
 			],
 		}));
 
-		const { data, error } = await supabase.storage
-			.from("ugc")
-			.upload(path, file);
+		const { error } = await supabase.storage.from("ugc").upload(path, file);
 
 		if (error) {
 			setError(error.message);
@@ -170,13 +173,56 @@ const FileUpload: NextPage<{
 				},
 			],
 		};
-		const submissionError = await assignmentSubmission(
+		await assignmentSubmission(
 			assignmentID,
 			currentSubmission,
 			supabase,
 			user,
 			false
 		);
+	};
+
+	const deleteFile = async (fileName: string) => {
+		setError("");
+
+		setSubmission((submission) => ({
+			assignmentType: AssignmentTypes.FILE_UPLOAD,
+			files: submission.files.map((f) => {
+				if (f.fileName != fileName) return f;
+
+				return { ...f, uploading: true };
+			}),
+		}));
+
+		const { error } = await supabase.storage
+			.from("ugc")
+			.remove([`submissions/${fileName}`]);
+		if (error) {
+			setError("Failed to delete file!");
+			return;
+		}
+
+		// Another bonus of currentSubmission is I can use it to update stuff in the background without affecting the UI
+
+		currentSubmission = {
+			...currentSubmission,
+			files: [
+				...currentSubmission.files.filter((file) => file.fileName != fileName),
+			],
+		};
+
+		await assignmentSubmission(
+			assignmentID,
+			currentSubmission,
+			supabase,
+			user,
+			false
+		);
+
+		setSubmission((submission) => ({
+			assignmentType: AssignmentTypes.FILE_UPLOAD,
+			files: submission.files.filter((file) => file.fileName != fileName),
+		}));
 	};
 
 	const submit = async () => {
@@ -227,20 +273,25 @@ const FileUpload: NextPage<{
 							className="rounded-lg border border-gray-300 p-3 flex items-center"
 							key={i}
 						>
-							<DocumentIcon className="w-6 h-6" />
+							<DocumentIcon className="min-w-[1.5rem] w-6 h-6" />
 							<div className="truncate mx-2 ">
 								<p className="truncate max-w-xs text-sm font-medium">
 									{file.realName}
 								</p>
 								<p className="text-xs">{formatBytes(file.size)}</p>
 							</div>
-							{file.uploading && "uploading"}
-							<div
-								className="rounded hover:bg-gray-300 p-0.5 ml-auto cursor-pointer"
-								onClick={() => {}}
-							>
-								<XMarkIcon className="h-4 w-4 text-red-500" />
-							</div>
+							{file.uploading ? (
+								<div className="ml-auto">
+									<LoadingSmall />
+								</div>
+							) : (
+								<div
+									className="rounded hover:bg-gray-300 p-0.5 ml-auto cursor-pointer"
+									onClick={() => deleteFile(file.fileName)}
+								>
+									<XMarkIcon className="h-4 w-4 text-red-500" />
+								</div>
+							)}
 						</div>
 					))}
 				</div>
