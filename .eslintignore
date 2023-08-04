@@ -52,6 +52,7 @@ supabase/config.toml
 /public
 *.txt
 deno.lock
+supabase/functions/add-user/index.ts
 
 # sql
 /supabase
