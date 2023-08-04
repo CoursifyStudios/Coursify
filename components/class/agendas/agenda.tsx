@@ -120,8 +120,10 @@ export const Agenda = ({
 						/>
 						<div className="grid gap-2">
 							{allAssignments
-								.filter((assignment) =>
-									agenda.assignments!.includes(assignment.id)
+								.filter(
+									(assignment) =>
+										agenda.assignments &&
+										agenda.assignments.includes(assignment.id)
 								)
 								.map((assignment) => (
 									<Link

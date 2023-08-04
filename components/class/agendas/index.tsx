@@ -133,10 +133,12 @@ export const AgendasModule = ({
 						supabase,
 						classID as string,
 						allAgendas.map((agenda) => agenda.id),
-						allAgendas.sort(
-							(a, b) =>
-								new Date(b.date!).getTime() - new Date(a.date!).getTime()
-						)[0].date!,
+						allAgendas.length == 0
+							? new Date().toLocaleDateString("en-CA")
+							: allAgendas.sort(
+									(a, b) =>
+										new Date(b.date!).getTime() - new Date(a.date!).getTime()
+							  )[0].date!,
 						true
 					);
 
@@ -178,10 +180,12 @@ export const AgendasModule = ({
 						supabase,
 						classID,
 						allAgendas.map((agenda) => agenda.id),
-						allAgendas.sort(
-							(a, b) =>
-								new Date(a.date!).getTime() - new Date(b.date!).getTime() // sorting in reverse order for this
-						)[0].date!,
+						allAgendas.length == 0
+							? new Date().toLocaleDateString("en-CA")
+							: allAgendas.sort(
+									(a, b) =>
+										new Date(a.date!).getTime() - new Date(b.date!).getTime() // sorting in reverse order for this
+							  )[0].date!,
 						false
 					);
 
