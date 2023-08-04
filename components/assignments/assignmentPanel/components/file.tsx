@@ -19,6 +19,7 @@ import {
 	SetStateAction,
 	useLayoutEffect,
 	useMemo,
+	useRef,
 	useState,
 } from "react";
 import {
@@ -73,13 +74,13 @@ const FileUpload: NextPage<{
 		return undefined;
 	}, [revisions]);
 
-	let currentSubmission: SubmissionFileUpload = {
+	let currentSubmission = useRef<SubmissionFileUpload>({
 		assignmentType: AssignmentTypes.FILE_UPLOAD,
 		files:
 			dbSubmission && dbSubmission.content
 				? (dbSubmission.content as SubmissionFileUpload).files
 				: [],
-	};
+	});
 
 	// TODO: file upload should upload the file the second the user submits it rather then when clicking submit
 
@@ -144,6 +145,35 @@ const FileUpload: NextPage<{
 			return;
 		}
 
+		/**
+		 * This is a bit jank, bassiclly if the user initiates multiple file uploads
+		 * at the same time and a subsequest one finishes before this one, it'll
+		 * be overwritten on the database. If there was a way to fetch the latest version of
+		 * state, I wouldn't have to do this, but oh well. We're saving drafts since I don't want
+		 * random files not tied to a user since someone forgot to click save draft - Lukas
+		 */
+
+		currentSubmission.current = {
+			assignmentType: AssignmentTypes.FILE_UPLOAD,
+			files: [
+				...currentSubmission.current.files,
+				{
+					link: `https://cdn.coursify.one/storage/v1/object/public/ugc/${path}`,
+					realName: file.name,
+					fileName: name,
+					size: file.size,
+				},
+			],
+		};
+
+		await assignmentSubmission(
+			assignmentID,
+			currentSubmission.current,
+			supabase,
+			user,
+			false
+		);
+
 		setSubmission((submission) => ({
 			assignmentType: AssignmentTypes.FILE_UPLOAD,
 			files: submission.files.map((f) => {
@@ -154,36 +184,19 @@ const FileUpload: NextPage<{
 		}));
 		setDisableSubmit(false);
 
-		/**
-		 * This is a bit jank, bassiclly if the user initiates multiple file uploads
-		 * at the same time and a subsequest one finishes before this one, it'll
-		 * be overwritten on the database. If there was a way to fetch the latest version of
-		 * state, I wouldn't have to do this, but oh well. We're saving drafts since I don't want
-		 * random files not tied to a user since someone forgot to click save draft - Lukas
-		 */
-		currentSubmission = {
-			assignmentType: AssignmentTypes.FILE_UPLOAD,
-			files: [
-				...currentSubmission.files,
-				{
-					link: `https://cdn.coursify.one/storage/v1/object/public/ugc/${path}`,
-					realName: file.name,
-					fileName: name,
-					size: file.size,
-				},
-			],
-		};
-		await assignmentSubmission(
-			assignmentID,
-			currentSubmission,
-			supabase,
-			user,
-			false
-		);
+		setRevisions((revisions) => [
+			{
+				content: currentSubmission.current,
+				created_at: new Date().toUTCString(),
+				final: false,
+			},
+			...revisions,
+		]);
 	};
 
 	const deleteFile = async (fileName: string) => {
 		setError("");
+		setDisableSubmit(true);
 
 		setSubmission((submission) => ({
 			assignmentType: AssignmentTypes.FILE_UPLOAD,
@@ -197,6 +210,7 @@ const FileUpload: NextPage<{
 		const { error } = await supabase.storage
 			.from("ugc")
 			.remove([`submissions/${fileName}`]);
+
 		if (error) {
 			setError("Failed to delete file!");
 			return;
@@ -204,16 +218,18 @@ const FileUpload: NextPage<{
 
 		// Another bonus of currentSubmission is I can use it to update stuff in the background without affecting the UI
 
-		currentSubmission = {
-			...currentSubmission,
+		currentSubmission.current = {
+			...currentSubmission.current,
 			files: [
-				...currentSubmission.files.filter((file) => file.fileName != fileName),
+				...currentSubmission.current.files.filter(
+					(file) => file.fileName != fileName
+				),
 			],
 		};
 
 		await assignmentSubmission(
 			assignmentID,
-			currentSubmission,
+			currentSubmission.current,
 			supabase,
 			user,
 			false
@@ -223,6 +239,16 @@ const FileUpload: NextPage<{
 			assignmentType: AssignmentTypes.FILE_UPLOAD,
 			files: submission.files.filter((file) => file.fileName != fileName),
 		}));
+
+		setRevisions((revisions) => [
+			{
+				content: currentSubmission.current,
+				created_at: new Date().toUTCString(),
+				final: false,
+			},
+			...revisions,
+		]);
+		setDisableSubmit(false);
 	};
 
 	const submit = async () => {
@@ -319,10 +345,21 @@ const FileUpload: NextPage<{
 				<Button
 					className="text-white"
 					color="bg-blue-500"
-					disabled={false}
+					disabled={
+						disableSubmit ||
+						(
+							revisions.find((submission) => submission.final == true)
+								?.content as SubmissionFileUpload
+						).files
+							.map((f) => f.fileName)
+							.join(",") == submission.files.map((f) => f.fileName).join(",") ||
+						loading
+					}
 					onClick={submit}
 				>
-					Submit
+					{revisions.some((submission) => submission.final == true)
+						? "Resubmit"
+						: "Submit"}
 				</Button>
 				{loading && <Loading className="bg-gray-300" />}
 			</div>
