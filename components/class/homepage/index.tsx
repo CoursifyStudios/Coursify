@@ -2,7 +2,11 @@ import { Tab } from "@headlessui/react";
 import { NextPage } from "next";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Class } from "..";
-import { AllClassesResponse, isTeacher } from "../../../lib/db/classes";
+import {
+	AllClasses,
+	AllClassesResponse,
+	isTeacher,
+} from "../../../lib/db/classes";
 import { ScheduleInterface } from "../../../lib/db/schedule";
 import { Settings, useSettings } from "../../../lib/stores/settings";
 import { LoadingStudentClass } from "../loading";
@@ -10,7 +14,7 @@ import { sortClasses } from "../sorting";
 
 const HomepageClassesUI: NextPage<{
 	loading: boolean;
-	classes?: AllClassesResponse;
+	classes?: AllClasses;
 	schedules?: ScheduleInterface[][];
 	userID: string;
 }> = ({ classes, loading, schedules, userID }) => {
@@ -28,13 +32,13 @@ const HomepageClassesUI: NextPage<{
 				}
 				return settings.homepageView;
 			}
-			if (!classes || !classes.data) {
+			if (!classes || !Array.isArray(classes)) {
 				return "loading";
 			}
 			let student = 0;
 			let teacher = 0;
-			classes.data.forEach((singleClass) => {
-				if (isTeacher(singleClass, userID)) {
+			classes.forEach((mappedClass) => {
+				if (isTeacher(mappedClass, userID)) {
 					teacher += 1;
 				} else {
 					student += 1;
@@ -67,29 +71,35 @@ const HomepageClassesUI: NextPage<{
 	}, [view]);
 
 	const Classes = ({ teaching }: { teaching: boolean }) => {
-		if (classes && classes.data && schedules)
+		if (classes && Array.isArray(classes) && schedules)
 			return (
 				<>
-					{classes.data
-						.slice(0, classes.data.length)
-						.sort((a, b) => sortClasses(a, b, schedules[0], schedules[1]))
-						.map((singleClass) => {
-							const teacher = isTeacher(singleClass, userID);
-							if ((teaching && !teacher) || (!teaching && teacher)) return null;
+					{classes
+						.slice(0, classes.length)
+						.sort((a, b) => a.class!.block - b.class!.block)
+						.map((mappedClass) => {
+							const teacher = isTeacher(mappedClass, userID);
+							if (
+								(teaching && !teacher) ||
+								(!teaching && teacher) ||
+								!mappedClass.class
+							)
+								return null;
 
 							return (
 								<Class
-									classData={singleClass}
+									classData={mappedClass.class}
 									showTimeLoading={loading}
 									teacher={teacher}
-									key={singleClass.id}
+									key={mappedClass.class.id}
 									className="h-full !w-full lg:!w-[18.5rem]"
 									isLink={true}
 									time={schedules[0]?.find(
 										(s) =>
 											s.specialEvent == undefined &&
-											singleClass.block == s.block &&
-											singleClass.schedule_type == s.type
+											mappedClass.class &&
+											mappedClass.class.block == s.block &&
+											mappedClass.class.schedule_type == s.type
 									)}
 								/>
 							);

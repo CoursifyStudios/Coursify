@@ -1,5 +1,9 @@
 import Link from "next/link";
-import { AllClassesResponse, IndividualClass } from "../../lib/db/classes";
+import {
+	AllClasses,
+	AllClassesResponse,
+	IndividualClass,
+} from "../../lib/db/classes";
 import { ScheduleInterface } from "../../lib/db/schedule";
 import { NonNullableArray } from "../../lib/misc/misc.types";
 import { useTabs } from "../../lib/tabs/handleTabs";
@@ -39,7 +43,9 @@ export function Class({
 		if (teacher && classData.class_users)
 			return (
 				<TeacherClass
-					classData={classData as NonNullableArray<AllClassesResponse["data"]>}
+					classData={
+						classData as Exclude<NonNullableArray<AllClasses>["class"], null>
+					}
 					className={className}
 					showTimeLoading={showTimeLoading}
 					teacher={teacher}
@@ -79,10 +85,10 @@ export interface StudentClassType {
 
 export interface TeacherClassType extends StudentClassType {
 	teacher: true;
-	classData: NonNullableArray<AllClassesResponse["data"]>;
+	classData: Exclude<NonNullableArray<AllClasses>["class"], null>;
 	isLink?: boolean;
 }
 
 export type ClassData =
 	| IndividualClass["data"]
-	| NonNullableArray<AllClassesResponse["data"]>;
+	| Exclude<NonNullableArray<AllClasses>["class"], null>;

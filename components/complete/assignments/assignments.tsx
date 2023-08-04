@@ -62,7 +62,7 @@ export function AssignmentPreview({
 							{date ? (
 								<>
 									<div className="mr-2 font-medium">
-										{date.getMonth()}/{date.getDate()}
+										{date.getMonth() + 1}/{date.getDate()}
 									</div>
 									<ColoredPill color={classes.color}>
 										{`${to12hourTime(date, settings.showAMPM)}`}
@@ -88,7 +88,7 @@ export function AssignmentPreview({
 				<CheckIcon className="h-6 w-6 shrink-0" />
 			</div>
 			<div
-				className="absolute left-2 top-3"
+				className="absolute left-2 top-3 cursor-pointer"
 				tabIndex={0}
 				onClick={() => {
 					setStarred((starred) => {

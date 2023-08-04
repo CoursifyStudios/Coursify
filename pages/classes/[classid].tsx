@@ -187,7 +187,8 @@ const Class: NextPageWithLayout = () => {
 					<Image
 						src={data.data.image || ""}
 						alt="Example Image"
-						className="rounded-xl object-cover object-center"
+						className="rounded-xl select-none object-cover object-center"
+						draggable={false}
 						fill
 					/>
 					<ColoredPill className="absolute left-5 top-5 !bg-neutral-500/20 text-lg !text-gray-300 backdrop-blur-xl dark:!text-gray-100">

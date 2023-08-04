@@ -36,7 +36,7 @@ const ScheduleEditor: NextPageWithLayout = () => {
 		})();
 	}, [supabaseClient]);
 	return (
-		<div>
+		<div className="font-mono">
 			<h4 className="bg-red-600 p-3 px-10">
 				Warning: The schedule editor is currently still in development. For the
 				time being, remember that it is only to be used when the local timezone
@@ -149,7 +149,7 @@ const ScheduleEditor: NextPageWithLayout = () => {
 
 							<button
 								type="submit"
-								className="mr-auto mt-4 rounded-lg bg-blue-200 px-4 py-2 text-blue-600 dark:bg-blue-900/10"
+								className="mr-auto mt-4  px-4 py-2 bg-black dark:bg-white text-white dark:text-black hover:invert transition hover:border-black border border-transparent"
 							>
 								Add schedule item
 							</button>
@@ -289,7 +289,7 @@ const ScheduleEditor: NextPageWithLayout = () => {
 
 						<button
 							type="submit"
-							className="mr-auto mt-4 rounded-lg bg-blue-200 dark:bg-blue-900/10 px-4 py-2 text-blue-600"
+							className="mr-auto mt-4  px-4 py-2 bg-black dark:bg-white text-white dark:text-black hover:invert transition hover:border-black border border-transparent"
 						>
 							Add as a Schedule (send to server)
 						</button>
@@ -316,7 +316,7 @@ const ScheduleEditor: NextPageWithLayout = () => {
 
 							<button
 								type="submit"
-								className="mr-auto mt-4 rounded-lg bg-blue-200 dark:bg-blue-900/10 px-4 py-2 text-blue-600"
+								className="mr-auto mt-4  px-4 py-2 bg-black dark:bg-white text-white dark:text-black hover:invert transition hover:border-black border border-transparent"
 							>
 								Add a New Template
 							</button>

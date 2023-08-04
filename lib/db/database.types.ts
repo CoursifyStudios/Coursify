@@ -48,21 +48,21 @@ export interface Database {
 					assignments: string[] | null;
 					class_id: string;
 					date: string | null;
-					description: Json | null;
+					description: string | null;
 					id: string;
 				};
 				Insert: {
 					assignments?: string[] | null;
 					class_id: string;
 					date?: string | null;
-					description?: Json | null;
+					description?: string | null;
 					id?: string;
 				};
 				Update: {
 					assignments?: string[] | null;
 					class_id?: string;
 					date?: string | null;
-					description?: Json | null;
+					description?: string | null;
 					id?: string;
 				};
 				Relationships: [
@@ -344,6 +344,49 @@ export interface Database {
 					},
 					{
 						foreignKeyName: "enrolled_user_id_fkey";
+						columns: ["user_id"];
+						referencedRelation: "users";
+						referencedColumns: ["id"];
+					},
+				];
+			};
+			feedback: {
+				Row: {
+					affected_page: string;
+					code: number[];
+					content: string;
+					created_at: string;
+					id: string;
+					route: string | null;
+					title: string;
+					topic: string;
+					user_id: string;
+				};
+				Insert: {
+					affected_page: string;
+					code: number[];
+					content: string;
+					created_at?: string;
+					id?: string;
+					route?: string | null;
+					title: string;
+					topic: string;
+					user_id: string;
+				};
+				Update: {
+					affected_page?: string;
+					code?: number[];
+					content?: string;
+					created_at?: string;
+					id?: string;
+					route?: string | null;
+					title?: string;
+					topic?: string;
+					user_id?: string;
+				};
+				Relationships: [
+					{
+						foreignKeyName: "feedback_user_id_fkey";
 						columns: ["user_id"];
 						referencedRelation: "users";
 						referencedColumns: ["id"];
