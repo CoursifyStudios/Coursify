@@ -347,13 +347,17 @@ const FileUpload: NextPage<{
 					color="bg-blue-500"
 					disabled={
 						disableSubmit ||
-						(
-							revisions.find((submission) => submission.final == true)
-								?.content as SubmissionFileUpload
-						).files
-							.map((f) => f.fileName)
-							.join(",") == submission.files.map((f) => f.fileName).join(",") ||
-						loading
+						(revisions.find((submission) => submission.final == true)
+							?.content as SubmissionFileUpload)
+							? (
+									revisions.find((submission) => submission.final == true)
+										?.content as SubmissionFileUpload
+							  ).files
+									.map((f) => f.fileName)
+									.join(",") ==
+							  submission.files.map((f) => f.fileName).join(",")
+							: false || loading
+						// add min/max validation
 					}
 					onClick={submit}
 				>

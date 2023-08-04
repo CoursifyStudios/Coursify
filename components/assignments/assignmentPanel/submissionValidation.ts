@@ -26,7 +26,7 @@ const submissionValidation = (object: SubmissionSettingsTypes) => {
 export default submissionValidation;
 
 export const submissionLinkValidation = Yup.object({
-	links: Yup.array().of(Yup.string().required()),
+	links: Yup.array().of(Yup.string().required()).required(),
 });
 
 export const submissionMediaValidation = Yup.object({
