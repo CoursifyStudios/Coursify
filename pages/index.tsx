@@ -13,7 +13,9 @@ import {
 import { Database } from "../lib/db/database.types";
 import { ScheduleInterface, getSchedulesForXDays } from "../lib/db/schedule";
 import { useSettings } from "../lib/stores/settings";
+import blankCanvas from "@/public/svgs/blank-canvas.svg";
 import Layout from "@/components/layout/layout";
+import Image from "next/image";
 
 const Home = () => {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -276,8 +278,35 @@ const Home = () => {
 															/>
 														)
 												);
+
 											return assignments;
 										})}
+									{classes &&
+										Array.isArray(classes) &&
+										classes.every(
+											(mappedClass) =>
+												!mappedClass.class ||
+												!Array.isArray(mappedClass.class.assignments) ||
+												mappedClass.class.assignments.every(
+													(assignment) =>
+														!assignment.starred ||
+														(Array.isArray(assignment.starred)
+															? assignment.starred.length === 0
+															: !assignment.starred)
+												)
+										) && (
+											<div className="w-full m-auto flex flex-col justify-center items-center h-full">
+												<Image
+													src={blankCanvas}
+													draggable={false}
+													alt="No starred assignments found"
+													className="px-20"
+												/>
+												<h1 className="mt-6 max-w-xs text-center font-semibold">
+													Star an assignment to view it here
+												</h1>
+											</div>
+										)}
 								</div>
 							</section>
 						</div>
