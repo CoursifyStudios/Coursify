@@ -2,7 +2,6 @@ import { Button } from "@/components/misc/button";
 import { LoadingSmall } from "@/components/misc/loading";
 import { fetchMoreAgendas } from "@/lib/db/classes";
 import { Json } from "@/lib/db/database.types";
-import supabase from "@/lib/supabase";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { Agenda } from "./agenda";

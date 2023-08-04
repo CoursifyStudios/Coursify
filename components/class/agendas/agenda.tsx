@@ -5,7 +5,13 @@ import Link from "next/link";
 import { to12hourTime } from "@/lib/db/schedule";
 import { ColoredPill } from "../../misc/pill";
 import { useSettings } from "@/lib/stores/settings";
-import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
+import {
+	CheckCircleIcon,
+	MinusCircleIcon,
+	PencilIcon,
+	PlusCircleIcon,
+	TrashIcon,
+} from "@heroicons/react/24/outline";
 import { DeleteAgenda } from "./deleteAgenda";
 import { CreateAgenda } from "./createAgenda";
 
@@ -119,23 +125,24 @@ export const Agenda = ({
 							className="mt-0.5"
 						/>
 						<div className="grid gap-2">
-							{allAssignments
-								.filter(
-									(assignment) =>
-										agenda.assignments &&
-										agenda.assignments.includes(assignment.id)
-								)
-								.map((assignment) => (
-									<Link
-										key={assignment.id}
-										href={"/assignments/" + assignment.id}
-										className="border border-black grid rounded-md"
-									>
-										<CompactAssignmentUI
-											assignment={assignment}
-										></CompactAssignmentUI>
-									</Link>
-								))}
+							{true &&
+								allAssignments
+									.filter(
+										(assignment) =>
+											agenda.assignments &&
+											agenda.assignments.includes(assignment.id)
+									)
+									.map((assignment) => (
+										<Link
+											key={assignment.id}
+											href={"/assignments/" + assignment.id}
+											className="border border-black grid rounded-md"
+										>
+											<CompactAssignmentUI
+												assignment={assignment}
+											></CompactAssignmentUI>
+										</Link>
+									))}
 						</div>
 					</div>
 				</div>
@@ -147,6 +154,7 @@ export const Agenda = ({
 export const CompactAssignmentUI = ({
 	assignment,
 	className,
+	selected,
 }: {
 	assignment: {
 		name: string;
@@ -155,27 +163,44 @@ export const CompactAssignmentUI = ({
 		due_date: string | null;
 	};
 	className?: string;
+	selected?: boolean;
 }) => {
 	const date = assignment.due_date ? new Date(assignment.due_date) : null;
 	const { data: settings } = useSettings();
+	const [hovered, setHovered] = useState(false);
 	return (
 		<div
+			onMouseEnter={(e) => setHovered(true)}
+			onMouseLeave={(e) => setHovered(false)}
 			key={assignment.id}
 			className={`flex flex-grow justify-between p-2 ${className}`}
 		>
 			<p className="font-semibold">{assignment.name}</p>
-			{date ? (
-				<div className="grid grid-cols-2">
-					<div className="mr-2 font-medium">
-						{date.getMonth()}/{date.getDate()}
+			<div className="flex gap-2">
+				{date ? (
+					<div className="grid grid-cols-2">
+						<div className=" font-medium">
+							{date.getMonth() + 1}/{date.getDate()}
+						</div>
+						<ColoredPill color={"gray"}>
+							{`${to12hourTime(date, settings.showAMPM)}`}
+						</ColoredPill>
 					</div>
-					<ColoredPill color={"gray"}>
-						{`${to12hourTime(date, settings.showAMPM)}`}
-					</ColoredPill>
-				</div>
-			) : (
-				<span className="text-sm italic">No due date</span>
-			)}
+				) : (
+					<span className="text-sm italic">No due date</span>
+				)}
+				{hovered ? (
+					selected ? (
+						<MinusCircleIcon className="w-6 h-6" />
+					) : (
+						<PlusCircleIcon className="w-6 h-6" />
+					)
+				) : selected ? (
+					<CheckCircleIcon className="w-6 h-6" />
+				) : (
+					<div className="w-6"></div>
+				)}
+			</div>
 		</div>
 	);
 };

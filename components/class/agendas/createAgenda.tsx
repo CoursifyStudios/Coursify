@@ -181,6 +181,9 @@ export const CreateAgenda = ({
 												>
 													<CompactAssignmentUI
 														assignment={assignment}
+														selected={
+															chosenAssignments.indexOf(assignment.id) != -1
+														}
 													></CompactAssignmentUI>
 												</Button>
 											</div>
