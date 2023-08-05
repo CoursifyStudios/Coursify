@@ -6,7 +6,10 @@ import { assignmentSubmission } from "@/lib/db/assignments/submission";
 import { Database } from "@/lib/db/database.types";
 import {
 	CheckCircleIcon,
+	EllipsisVerticalIcon,
 	MinusCircleIcon,
+	PencilIcon,
+	TrashIcon,
 	XCircleIcon,
 } from "@heroicons/react/24/outline";
 import { SupabaseClient, User } from "@supabase/supabase-js";
@@ -23,6 +26,10 @@ import { Submission, SubmissionText } from "../submission.types";
 import Editor from "@/components/editors/richeditor";
 import { EditorState } from "lexical";
 import { formatDate } from "@/lib/misc/dates";
+import MenuSelect from "@/components/misc/menu";
+import Image from "next/image";
+import Link from "next/link";
+import { useTabs } from "@/lib/tabs/handleTabs";
 
 const Discussion: NextPage<{
 	imports: {
@@ -49,6 +56,7 @@ const Discussion: NextPage<{
 }) => {
 	const [clearEditor, setClearEditor] = useState(false);
 	const [rawSubmission, setRawSubmission] = useState("");
+	const { newTab } = useTabs();
 
 	// Returns content and if it can be submitted, as well as the length of the text
 	const content = useMemo(() => {
@@ -149,6 +157,7 @@ const Discussion: NextPage<{
 				content: submission,
 				created_at: now,
 				final: draft ? false : content.finished,
+				// add user
 			},
 			...revisions,
 		]);
@@ -211,7 +220,7 @@ const Discussion: NextPage<{
 					<p className="text-blue-500 hover:underline cursor-pointer" onClick={() => setSubmission(undefined)}>Reset to rich editor</p>
 					} */}
 					<Button
-						className="text-white"
+						className="dark:text-white"
 						color="bg-gray-200 mx-4 "
 						disabled={content.length === 0}
 						onClick={() => submit(true)}
@@ -242,12 +251,52 @@ const Discussion: NextPage<{
 							key={v.created_at}
 						>
 							<div className="flex items-center">
-								<div className="bg-blue-500 h-8 w-8 rounded-full"></div>
+								<Image
+									width={32}
+									height={32}
+									className="rounded-full h-8 w-8 select-none"
+									src={v.users?.avatar_url || ""}
+									alt="user avatar"
+									draggable={false}
+								/>
 								<div className="ml-3">
-									<h3>Username</h3>
+									<Link
+										href={`/profile/${v.users?.id}`}
+										onClick={() => newTab(`/profile/${v.users?.id}`)}
+									>
+										<h3 className="font-medium">{v.users?.full_name}</h3>
+									</Link>
 									<p className="text-xs text-gray-700">
 										{formatDate(new Date())}
 									</p>
+								</div>
+								<div className="ml-auto">
+									<MenuSelect
+										items={[
+											{
+												content: (
+													<>
+														{" "}
+														Edit <PencilIcon className="h-5 w-5" />{" "}
+													</>
+												),
+												className: "",
+												onClick: () => {},
+											},
+											{
+												content: (
+													<>
+														{" "}
+														Delete <TrashIcon className="h-5 w-5" />{" "}
+													</>
+												),
+											},
+										]}
+									>
+										<div className=" p-2 hover:bg-gray-200">
+											<EllipsisVerticalIcon className="h-6 w-6" />
+										</div>
+									</MenuSelect>
 								</div>
 							</div>
 							<Editor

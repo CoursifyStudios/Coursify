@@ -2,7 +2,8 @@ import { AssignmentSettingsTypes } from "@assignments/assignmentCreation/three/s
 import { DueType } from "@assignments/assignments";
 import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { SerializedEditorState } from "lexical";
-import { Database } from "../database.types";
+import { Database, Json } from "../database.types";
+import { SubmissionDiscussionPost } from "@/components/assignments/assignmentPanel/submission.types";
 
 export const getAllAssignments = async (
 	supabaseClient: SupabaseClient<Database>
@@ -62,7 +63,10 @@ export const getAssignment = async (
 		submissions (
 			content,
 			final,
-			created_at
+			created_at,
+			users (
+				id, full_name, avatar_url
+			)
 		)
 		`
 		)
@@ -75,6 +79,20 @@ export type AssignmentResponse = Awaited<ReturnType<typeof getAssignment>>;
 
 //Lukas is building the world's first 7D array
 export type Assignment = Database["public"]["Tables"]["assignments"]["Row"];
+
+export const editDiscussionPost = async (
+	supabase: SupabaseClient<Database>,
+	content: SubmissionDiscussionPost,
+	id: string
+) => {
+	const { assignmentType: _, ...newContent } = content;
+	return await supabase
+		.from("submissions")
+		.update({ content: newContent as unknown as Json })
+		.eq("id", id)
+		.select()
+		.single();
+};
 
 export interface AssignmentData {
 	// I can't use extends here because I want to have data be undefined sometimes

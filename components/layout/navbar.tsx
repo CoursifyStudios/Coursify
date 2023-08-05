@@ -1,11 +1,8 @@
 import { Menu, Transition } from "@headlessui/react";
 import {
 	ArrowLeftOnRectangleIcon,
-	CalendarDaysIcon,
 	ChatBubbleBottomCenterTextIcon,
 	Cog6ToothIcon,
-	MagnifyingGlassIcon,
-	MegaphoneIcon,
 	UserIcon,
 	XMarkIcon,
 } from "@heroicons/react/24/outline";
