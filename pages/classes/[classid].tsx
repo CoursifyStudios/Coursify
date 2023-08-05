@@ -338,7 +338,9 @@ const Class: NextPageWithLayout = () => {
 									allAssignments={data.data.assignments}
 									isTeacher={isTeacher ? true : false}
 									assignmentUpdater={(val) => {
-										setCreatedAssignments(createdAssignments.concat(val));
+										setCreatedAssignments(
+											Array.from(new Set([...createdAssignments, ...val]))
+										);
 									}}
 								/>
 							)}
@@ -473,8 +475,12 @@ const Class: NextPageWithLayout = () => {
 						)}
 						{data.data?.assignments &&
 							user &&
-							createdAssignments
-								.concat(getDataInArray(data.data?.assignments))
+							Array.from(
+								new Set([
+									...createdAssignments,
+									...getDataInArray(data.data?.assignments),
+								])
+							)
 								.slice()
 								.sort(
 									(a, b) =>

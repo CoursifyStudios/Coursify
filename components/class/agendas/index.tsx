@@ -48,6 +48,7 @@ export const AgendasModule = ({
 		new Set(allAssignments)
 	);
 	const [agendaCreationOpen, setAgendaCreationOpen] = useState(false);
+	// Dynamic client update buffers (idk what to call these things)
 	const [createdAgendas, setCreatedAgendas] = useState<
 		{
 			id: string;
@@ -66,8 +67,10 @@ export const AgendasModule = ({
 			assignments: string[] | null;
 		}[]
 	>([]);
+	// Loading state controls
 	const [loadingPastAgendas, setLoadingPastAgendas] = useState(false);
 	const [loadingFutureAgendas, setLoadingFutureAgendas] = useState(false);
+	// Error handling
 	const [newAgendasError, setNewAgendasError] = useState("");
 	const [oldAgendasError, setOldAgendasError] = useState("");
 
@@ -83,16 +86,18 @@ export const AgendasModule = ({
 			// 		.map((agenda) => (agenda.assignments ? agenda.assignments : []))
 			// 		.flat()
 			// ); // from Load More
-			const extraAssignments = await getAllAssignmentsButNotThese(
-				supabase,
-				classID,
-				allAssignments.map((assignment) => assignment.id)
-			);
-			if (extraAssignments.data) {
-				assignmentUpdater(extraAssignments.data);
-				setAllAssignmentsForAgendas(
-					new Set([...allAssignmentsForAgendas, ...extraAssignments.data])
+			if (supabase) {
+				const extraAssignments = await getAllAssignmentsButNotThese(
+					supabase,
+					classID,
+					allAssignments.map((assignment) => assignment.id)
 				);
+				if (extraAssignments.data) {
+					assignmentUpdater(extraAssignments.data);
+					setAllAssignmentsForAgendas(
+						new Set([...allAssignments, ...extraAssignments.data])
+					);
+				}
 			}
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -146,18 +151,27 @@ export const AgendasModule = ({
 
 					setLoadingFutureAgendas(false);
 					if (moreAgendas.data?.length == 0) {
-						setNewAgendasError("All future agendas have been fetched");
+						setNewAgendasError("All future agendas have been fetched.");
 					} else if (moreAgendas.data) {
 						setExtraAgendas(extraAgendas.concat(moreAgendas.data));
 					} else {
-						setNewAgendasError("An error occured while fetching your agendas");
+						setNewAgendasError("An error occured while fetching your agendas.");
 					}
 				}}
 			>
 				Load Newer Agendas
 				{loadingFutureAgendas && <LoadingSmall className="ml-4" />}
 			</Button>
-			<p className="text-red-500">{newAgendasError}</p>
+			<div className="flex gap-2">
+				<p className="text-red-500">{newAgendasError}</p>
+				<p
+					className="text-red-500 underline"
+					tabIndex={0}
+					onClick={() => setNewAgendasError("")}
+				>
+					{newAgendasError.length > 0 && "Dismiss"}
+				</p>
+			</div>
 			<div className="gap-3 grid">
 				{createdAgendas // newly created ones (client side before page refresh)
 					.concat(extraAgendas) // from "Load More" button
@@ -198,18 +212,27 @@ export const AgendasModule = ({
 
 					setLoadingPastAgendas(false);
 					if (moreAgendas.data?.length == 0) {
-						setOldAgendasError("All past agendas have been fetched");
+						setOldAgendasError("All past agendas have been fetched.");
 					} else if (moreAgendas.data) {
 						setExtraAgendas(extraAgendas.concat(moreAgendas.data));
 					} else {
-						setOldAgendasError("An error occured while fetching your agendas");
+						setOldAgendasError("An error occured while fetching your agendas.");
 					}
 				}}
 			>
 				Load Past Agendas
 				{loadingPastAgendas && <LoadingSmall className="ml-4" />}
 			</Button>
-			<p className="text-red-500">{oldAgendasError}</p>
+			<div className="flex gap-2">
+				<p className="text-red-500">{oldAgendasError}</p>
+				<p
+					tabIndex={0}
+					className="text-red-500 underline"
+					onClick={() => setOldAgendasError("")}
+				>
+					{oldAgendasError.length > 0 && "Dismiss"}
+				</p>
+			</div>
 		</div>
 	);
 };

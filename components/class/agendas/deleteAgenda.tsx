@@ -29,6 +29,7 @@ export const DeleteAgenda = ({
 					Cancel
 				</Button>
 				<Button
+					className="gap-2"
 					color="bg-red-500"
 					onClick={async () => {
 						setLoading(true);
