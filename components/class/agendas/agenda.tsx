@@ -154,6 +154,7 @@ export const Agenda = ({
 export const CompactAssignmentUI = ({
 	assignment,
 	className,
+	picker,
 	selected,
 }: {
 	assignment: {
@@ -162,6 +163,7 @@ export const CompactAssignmentUI = ({
 		due_type: number | null;
 		due_date: string | null;
 	};
+	picker?: boolean;
 	className?: string;
 	selected?: boolean;
 }) => {
@@ -189,7 +191,7 @@ export const CompactAssignmentUI = ({
 				) : (
 					<span className="text-sm italic">No due date</span>
 				)}
-				{hovered ? (
+				{picker && hovered ? (
 					selected ? (
 						<MinusCircleIcon className="w-6 h-6 stroke-red-500" />
 					) : (

@@ -68,6 +68,8 @@ export const AgendasModule = ({
 	>([]);
 	const [loadingPastAgendas, setLoadingPastAgendas] = useState(false);
 	const [loadingFutureAgendas, setLoadingFutureAgendas] = useState(false);
+	const [newAgendasError, setNewAgendasError] = useState("");
+	const [oldAgendasError, setOldAgendasError] = useState("");
 
 	// To prevent against the case where the few assignments fetched from the DB
 	// do not include all of the ones that our agendas need, we will fetch the DB
@@ -143,14 +145,19 @@ export const AgendasModule = ({
 					);
 
 					setLoadingFutureAgendas(false);
-					if (moreAgendas.data) {
+					if (moreAgendas.data?.length == 0) {
+						setNewAgendasError("All future agendas have been fetched");
+					} else if (moreAgendas.data) {
 						setExtraAgendas(extraAgendas.concat(moreAgendas.data));
+					} else {
+						setNewAgendasError("An error occured while fetching your agendas");
 					}
 				}}
 			>
 				Load Newer Agendas
 				{loadingFutureAgendas && <LoadingSmall className="ml-4" />}
 			</Button>
+			<p className="text-red-500">{newAgendasError}</p>
 			<div className="gap-3 grid">
 				{createdAgendas // newly created ones (client side before page refresh)
 					.concat(extraAgendas) // from "Load More" button
@@ -190,14 +197,19 @@ export const AgendasModule = ({
 					);
 
 					setLoadingPastAgendas(false);
-					if (moreAgendas.data) {
+					if (moreAgendas.data?.length == 0) {
+						setOldAgendasError("All past agendas have been fetched");
+					} else if (moreAgendas.data) {
 						setExtraAgendas(extraAgendas.concat(moreAgendas.data));
+					} else {
+						setOldAgendasError("An error occured while fetching your agendas");
 					}
 				}}
 			>
 				Load Past Agendas
 				{loadingPastAgendas && <LoadingSmall className="ml-4" />}
 			</Button>
+			<p className="text-red-500">{oldAgendasError}</p>
 		</div>
 	);
 };

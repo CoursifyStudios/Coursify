@@ -147,6 +147,7 @@ export const CreateAgenda = ({
 							className="w-56 !rounded-xl py-0.5 transition-all focus:w-96 placeholder:dark:text-gray-400 pl-8"
 							placeholder="Search assignments..."
 							onInput={(e) => {
+								e.preventDefault();
 								//@ts-ignore DUDE OF COURSE e.target.value exists!
 								setSearch(e.target.value);
 							}}
@@ -193,6 +194,7 @@ export const CreateAgenda = ({
 														selected={
 															chosenAssignments.indexOf(assignment.id) != -1
 														}
+														picker={true}
 													></CompactAssignmentUI>
 												</Button>
 											</div>
