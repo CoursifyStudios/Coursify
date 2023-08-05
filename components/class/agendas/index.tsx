@@ -94,7 +94,7 @@ export const AgendasModule = ({
 			}
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [supabase, classID, agendas]);
+	}, [supabase, classID]);
 	return (
 		<div>
 			{isTeacher && (
@@ -112,7 +112,7 @@ export const AgendasModule = ({
 					classID={classID}
 					open={agendaCreationOpen}
 					setOpen={setAgendaCreationOpen as (v: boolean) => void}
-					assignments={Array.from(new Set(allAssignmentsForAgendas))} //somehow there were duplicated assignments here
+					assignments={Array.from(allAssignmentsForAgendas)} //somehow there were duplicated assignments here
 					createTempAgenda={(newAgenda: {
 						id: string;
 						class_id: string;

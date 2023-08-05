@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Popup } from "../../misc/popup";
 import { Button } from "../../misc/button";
-import { deleteAgenda } from "@/lib/db/classes";
+import { deleteAgenda } from "@/lib/db/agendas";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { LoadingSmall } from "../../misc/loading";
 
