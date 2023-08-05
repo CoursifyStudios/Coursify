@@ -193,9 +193,8 @@ const FeedbackPopup = ({
 							/>
 							<span className="ml-4 label-required">
 								{/* I understand why we wanted this here, but I think it could discourage people from reaching out */}
-								I understand that submitting bogus information is detrimental to
-								Coursify{"'"}s goal of providing a better learning experience to
-								students, teachers and administrators alike.
+								This submission is relevant and provides value to the Coursify
+								Team.
 							</span>
 						</label>
 					</>

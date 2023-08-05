@@ -9,11 +9,11 @@ export const Button: NextPage<{
 	disabled?: boolean;
 	onClick?: () => void;
 	type?: "submit" | "reset" | "button";
-    tabIndex?: number;
+	tabIndex?: number;
 }> = ({ className, children, color, disabled, onClick, type, tabIndex }) => {
 	return (
 		<button
-            tabIndex={tabIndex?? 0}
+			tabIndex={tabIndex ?? 0}
 			disabled={disabled}
 			className={`flex items-center rounded-md px-4 py-1 font-semibold focus:outline-none ${className} ${
 				color ? color : "bg-gray-200"
