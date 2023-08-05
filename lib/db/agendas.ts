@@ -60,11 +60,21 @@ export const editAgenda = async (
 		.single();
 };
 
-// export const searchDB = async (
-//     supabase: SupabaseClient<Database>,
-//     query: string
-// ) => {
-//     const thing = await supabase.from("assignments").select().textSearch("name", `${query}`).limit(10);
-//     console.log(thing);
-//     return thing;
-// }
+export const searchDB = async (
+	supabase: SupabaseClient<Database>,
+	query: string
+) => {
+	const thing = await supabase
+		.from("assignments")
+		.select()
+		.ilike(
+			"name",
+			`%${query
+				.replace(/"/g, '\\"')
+				.replace(/\*/g, "\\*")
+				.replace(/\%/g, "*")}%"`
+		)
+		.limit(10);
+	console.log(thing);
+	return thing;
+};

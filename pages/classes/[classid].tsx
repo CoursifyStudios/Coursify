@@ -473,7 +473,8 @@ const Class: NextPageWithLayout = () => {
 								</h3>
 							</div>
 						)}
-						{data.data?.assignments &&
+						{data.data &&
+							data.data.assignments &&
 							user &&
 							Array.from(
 								new Set([
@@ -481,7 +482,6 @@ const Class: NextPageWithLayout = () => {
 									...getDataInArray(data.data?.assignments),
 								])
 							)
-								.slice()
 								.sort(
 									(a, b) =>
 										new Date(b.due_date!).getTime() -

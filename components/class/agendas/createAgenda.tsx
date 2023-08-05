@@ -10,7 +10,7 @@ import { Formik, Form, Field } from "formik";
 import { EditorState } from "lexical";
 import { useState } from "react";
 import { CompactAssignmentUI } from "./agenda";
-import { createAgenda, editAgenda } from "@/lib/db/agendas";
+import { createAgenda, editAgenda, searchDB } from "@/lib/db/agendas";
 
 export const CreateAgenda = ({
 	classID,
@@ -61,6 +61,7 @@ export const CreateAgenda = ({
 	);
 	const [loading, setLoading] = useState(false);
 	const [search, setSearch] = useState("");
+	const [searchChangedSinceReq, setSearchChangedSinceReq] = useState(false);
 
 	// useEffect(() => {
 	//     (async() => {
@@ -144,14 +145,28 @@ export const CreateAgenda = ({
 						<MagnifyingGlassIcon className="absolute left-3 h-4 w-4" />
 						<input
 							type="text"
-							className="w-56 !rounded-xl py-0.5 transition-all focus:w-96 placeholder:dark:text-gray-400 pl-8"
+							className="max-w-[24rem] grow !rounded-xl py-1 placeholder:dark:text-gray-400 pl-8"
 							placeholder="Search assignments..."
 							onInput={(e) => {
 								e.preventDefault();
 								//@ts-ignore DUDE OF COURSE e.target.value exists!
 								setSearch(e.target.value);
+								setSearchChangedSinceReq(true);
+							}}
+							onKeyUp={(key) => {
+								if (
+									(key.key == "Enter" ||
+										key.key == " " ||
+										key.key == "Return") &&
+									search.trim().length > 0 &&
+									searchChangedSinceReq
+								) {
+									setSearchChangedSinceReq(false);
+									searchDB(supabase, search);
+								}
 							}}
 						/>
+						<Button className="ml-auto">Search</Button>
 					</div>
 
 					<div className="overflow-auto max-h-80 gap-3 grid">
