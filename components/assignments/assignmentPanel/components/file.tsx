@@ -63,10 +63,6 @@ const FileUpload: NextPage<{
 	const [loading, setLoading] = useState(false);
 	const [disableSubmit, setDisableSubmit] = useState(false);
 
-	const finished = useMemo(() => {
-		return true;
-	}, []);
-
 	const dbSubmission = useMemo(() => {
 		if (revisions.length > 0) {
 			return revisions[0];
@@ -347,7 +343,8 @@ const FileUpload: NextPage<{
 					color="bg-blue-500"
 					disabled={
 						disableSubmit ||
-						(revisions.find((submission) => submission.final == true)
+						// check if submission is the same as the final submission on the db
+						((revisions.find((submission) => submission.final == true)
 							?.content as SubmissionFileUpload)
 							? (
 									revisions.find((submission) => submission.final == true)
@@ -356,8 +353,13 @@ const FileUpload: NextPage<{
 									.map((f) => f.fileName)
 									.join(",") ==
 							  submission.files.map((f) => f.fileName).join(",")
-							: false || loading
-						// add min/max validation
+							: false) ||
+						loading ||
+						// min/max validation
+						submission.files.length < settings.minFiles ||
+						(settings.maxFiles
+							? submission.files.length > settings.maxFiles
+							: false)
 					}
 					onClick={submit}
 				>
