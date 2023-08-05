@@ -13,7 +13,7 @@ export const topics = [
 	"Feature Request",
 	"Performance Feedback",
 	"Security Concerns",
-	"Screen Reader Issues",
+	"Screen Reader / Keyboard Navigation Issues",
 ];
 export const pages = [
 	"Homepage Classes & Assignments",
