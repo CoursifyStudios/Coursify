@@ -15,6 +15,7 @@ export const AgendasModule = ({
 	allAssignments,
 	isTeacher,
 	assignmentUpdater,
+	fetchExtra,
 }: {
 	classID: string;
 	agendas: {
@@ -42,6 +43,7 @@ export const AgendasModule = ({
 		}[]
 	) => void;
 	isTeacher: boolean;
+	fetchExtra: { isOK: boolean; setOK: (value: boolean) => void };
 }) => {
 	const supabase = useSupabaseClient();
 	const [allAssignmentsForAgendas, setAllAssignmentsForAgendas] = useState(
@@ -73,8 +75,6 @@ export const AgendasModule = ({
 	// Error handling
 	const [newAgendasError, setNewAgendasError] = useState("");
 	const [oldAgendasError, setOldAgendasError] = useState("");
-    // Fixing stupidity
-    const [fetchedExtraAssignments, setFetchedExtraAssignments] = useState(false);
 
 	// To prevent against the case where the few assignments fetched from the DB
 	// do not include all of the ones that our agendas need, we will fetch the DB
@@ -88,7 +88,7 @@ export const AgendasModule = ({
 			// 		.map((agenda) => (agenda.assignments ? agenda.assignments : []))
 			// 		.flat()
 			// ); // from Load More
-			if (supabase && !fetchedExtraAssignments) {
+			if (supabase && allAssignments && fetchExtra.isOK) {
 				const extraAssignments = await getAllAssignmentsButNotThese(
 					supabase,
 					classID,
@@ -99,12 +99,11 @@ export const AgendasModule = ({
 					setAllAssignmentsForAgendas(
 						new Set([...allAssignments, ...extraAssignments.data])
 					);
-                    console.log(fetchedExtraAssignments)
-					setFetchedExtraAssignments(true)
-                    console.log(fetchedExtraAssignments)
+					fetchExtra.setOK(false);
 				}
 			}
 		})();
+		//finally fixed
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [supabase, classID]);
 	return (

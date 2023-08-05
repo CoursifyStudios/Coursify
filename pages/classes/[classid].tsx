@@ -60,6 +60,8 @@ const Class: NextPageWithLayout = () => {
 	const [fetchedClassId, setFetchedClassId] = useState("");
 	const [searchOpen, setSearchOpen] = useState(false);
 	const [userSearch, setUserSearch] = useState("");
+	//fixing stupidity
+	const [shouldFetchExtra, setShouldFetchExtra] = useState(true);
 	const {
 		data: { compact },
 	} = useSettings();
@@ -341,6 +343,10 @@ const Class: NextPageWithLayout = () => {
 										setCreatedAssignments(
 											Array.from(new Set([...createdAssignments, ...val]))
 										);
+									}}
+									fetchExtra={{
+										isOK: shouldFetchExtra,
+										setOK: setShouldFetchExtra,
 									}}
 								/>
 							)}

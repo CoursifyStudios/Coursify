@@ -62,11 +62,13 @@ export const editAgenda = async (
 
 export const searchDB = async (
 	supabase: SupabaseClient<Database>,
-	query: string
+	query: string,
+	excludeThese?: string[]
 ) => {
-	const thing = await supabase
+	return await supabase
 		.from("assignments")
 		.select()
+		.not("id", "in", `(${excludeThese as string[]})`)
 		.ilike(
 			"name",
 			`%${query
@@ -75,6 +77,4 @@ export const searchDB = async (
 				.replace(/\%/g, "*")}%"`
 		)
 		.limit(10);
-	console.log(thing);
-	return thing;
 };
