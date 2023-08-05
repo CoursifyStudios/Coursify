@@ -48,6 +48,9 @@ const AssignmentPanel: NextPage<{
 		case AssignmentTypes.FILE_UPLOAD:
 			// @ts-expect-error Type conversion
 			return <FileUpload imports={imports} />;
+		case AssignmentTypes.MEDIA:
+			// @ts-expect-error Type conversion
+			return <FileUpload imports={imports} />;
 	}
 };
 

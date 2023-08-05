@@ -35,6 +35,7 @@ import Editor from "@/components/editors/richeditor";
 import { EditorState } from "lexical";
 import { formatBytes } from "@/lib/misc/convertBytes";
 import { ColoredPill } from "@/components/misc/pill";
+import Image from "next/image";
 
 const FileUpload: NextPage<{
 	imports: {
@@ -62,6 +63,16 @@ const FileUpload: NextPage<{
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
 	const [disableSubmit, setDisableSubmit] = useState(false);
+	const mediaFileExtensions = [
+		"png",
+		"jpg",
+		"jpeg",
+		"dng",
+		"gif",
+		"mp4",
+		"mov",
+		"webp",
+	];
 
 	const dbSubmission = useMemo(() => {
 		if (revisions.length > 0) {
@@ -78,8 +89,6 @@ const FileUpload: NextPage<{
 				: [],
 	});
 
-	// TODO: file upload should upload the file the second the user submits it rather then when clicking submit
-
 	useLayoutEffect(() => {
 		if (dbSubmission) {
 			setSubmission(dbSubmission.content as SubmissionFileUpload);
@@ -92,6 +101,7 @@ const FileUpload: NextPage<{
 	}, [dbSubmission, setSubmission]);
 
 	const uploadFile = async (file: File) => {
+		if (!file) return;
 		setError("");
 
 		if (file.size > settings.maxSize * 1048576) {
@@ -102,7 +112,11 @@ const FileUpload: NextPage<{
 			);
 			return;
 		}
-		if (settings.fileTypes ? settings.fileTypes.includes(file.type) : true) {
+		if (
+			settings.fileTypes.length > 0
+				? !settings.fileTypes.includes(`.${file.name.split(".").pop()}`)
+				: false
+		) {
 			setError(
 				`You can only submit files of the types ${settings.fileTypes?.join(
 					", "
@@ -135,12 +149,11 @@ const FileUpload: NextPage<{
 		}));
 
 		const { error } = await supabase.storage.from("ugc").upload(path, file);
-
 		if (error) {
 			setError(error.message);
+			setDisableSubmit(false);
 			return;
 		}
-
 		/**
 		 * This is a bit jank, bassiclly if the user initiates multiple file uploads
 		 * at the same time and a subsequest one finishes before this one, it'll
@@ -162,13 +175,19 @@ const FileUpload: NextPage<{
 			],
 		};
 
-		await assignmentSubmission(
+		const errorMessage = await assignmentSubmission(
 			assignmentID,
 			currentSubmission.current,
 			supabase,
 			user,
 			false
 		);
+
+		if (errorMessage) {
+			setError(errorMessage.message);
+			setDisableSubmit(false);
+			return;
+		}
 
 		setSubmission((submission) => ({
 			assignmentType: AssignmentTypes.FILE_UPLOAD,
@@ -295,12 +314,29 @@ const FileUpload: NextPage<{
 							className="rounded-lg border border-gray-300 p-3 flex items-center"
 							key={i}
 						>
-							<DocumentIcon className="min-w-[1.5rem] w-6 h-6" />
+							{" "}
+							{!file.uploading &&
+							mediaFileExtensions.includes(
+								file.realName.split(".").pop() || ""
+							) ? (
+								<Image
+									src={file.link}
+									alt={`ugc image of ${file.realName}`}
+									width={24}
+									height={24}
+									className="rounded object-cover object-center h-6"
+								/>
+							) : (
+								<DocumentIcon className="min-w-[1.5rem] w-6 h-6" />
+							)}
 							<div className="truncate mx-2 ">
-								<p className="truncate max-w-xs text-sm font-medium">
+								<span className="truncate max-w-xs text-sm font-medium">
 									{file.realName}
+								</span>
+								<p className="text-xs">
+									.{file.realName.split(".").pop()} file,{" "}
+									{formatBytes(file.size)}
 								</p>
-								<p className="text-xs">{formatBytes(file.size)}</p>
 							</div>
 							{file.uploading ? (
 								<div className="ml-auto">
@@ -318,25 +354,24 @@ const FileUpload: NextPage<{
 					))}
 				</div>
 			)}
-			{settings.maxFiles
+			{(settings.maxFiles
 				? submission.files.length != settings.maxFiles
-				: true && (
-						<label
-							className="rounded-lg bg-gray-300 p-3 flex items-center brightness-hover cursor-pointer"
-							onChange={(e) => {
-								// @ts-expect-error idk what react is on but files will be defined
-								uploadFile([...e.target.files][0]);
-							}}
-						>
-							<DocumentArrowUpIcon className="w-6 h-6" />
-							<div className="ml-4">
-								<h4 className="font-medium text-sm">Upload File</h4>
-								<p className="text-xs">Click to select or drop file</p>
-							</div>
-							<input type="file" className="hidden" />
-						</label>
-				  )}
-
+				: true) && (
+				<label
+					className="rounded-lg bg-gray-300 p-3 flex items-center brightness-hover cursor-pointer"
+					onChange={(e) => {
+						// @ts-expect-error idk what react is on but files will be defined
+						uploadFile([...e.target.files][0]);
+					}}
+				>
+					<DocumentArrowUpIcon className="w-6 h-6" />
+					<div className="ml-4">
+						<h4 className="font-medium text-sm">Upload File</h4>
+						<p className="text-xs">Click to select or drop file</p>
+					</div>
+					<input type="file" className="hidden" />
+				</label>
+			)}
 			<div className="flex items-center gap-4 justify-between">
 				<Button
 					className="text-white"
@@ -369,8 +404,11 @@ const FileUpload: NextPage<{
 				</Button>
 				{loading && <Loading className="bg-gray-300" />}
 			</div>
-
-			{error && `Error occured while saving: ${error}`}
+			{error && (
+				<div className="text-red-500 text-sm">
+					Error occured while uploading: {error}
+				</div>
+			)}
 		</>
 	);
 };
