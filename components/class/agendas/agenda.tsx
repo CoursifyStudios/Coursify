@@ -191,9 +191,9 @@ export const CompactAssignmentUI = ({
 				)}
 				{hovered ? (
 					selected ? (
-						<MinusCircleIcon className="w-6 h-6" />
+						<MinusCircleIcon className="w-6 h-6 stroke-red-500" />
 					) : (
-						<PlusCircleIcon className="w-6 h-6" />
+						<PlusCircleIcon className="w-6 h-6 stroke-green-500" />
 					)
 				) : selected ? (
 					<CheckCircleIcon className="w-6 h-6" />

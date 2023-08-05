@@ -1,7 +1,6 @@
 import { Button } from "@/components/misc/button";
 import { LoadingSmall } from "@/components/misc/loading";
 import { Popup } from "@/components/misc/popup";
-import { editAgenda, createAgenda } from "@/lib/db/classes";
 import { Json } from "@/lib/db/database.types";
 import { getDataOutArray } from "@/lib/misc/dataOutArray";
 import Editor from "../../editors/richeditor";
@@ -11,6 +10,7 @@ import { Formik, Form, Field } from "formik";
 import { EditorState } from "lexical";
 import { useState } from "react";
 import { CompactAssignmentUI } from "./agenda";
+import { createAgenda, editAgenda } from "@/lib/db/agendas";
 
 export const CreateAgenda = ({
 	classID,
@@ -62,9 +62,15 @@ export const CreateAgenda = ({
 	const [loading, setLoading] = useState(false);
 	const [search, setSearch] = useState("");
 
+	// useEffect(() => {
+	//     (async() => {
+	//         searchDB(supabase, search)
+	//     })();
+	// }, [supabase, search])
+
 	return (
 		<Popup closeMenu={() => setOpen(false)} open={open} size="md">
-			<h2 className="title-sm">Create a new Agenda</h2>
+			<h2 className="title-sm mb-2">Create a new Agenda</h2>
 			{/* custom datepicker later probably */}
 			<Formik
 				initialValues={{
@@ -113,7 +119,7 @@ export const CreateAgenda = ({
 					}
 				}}
 			>
-				<Form className="flex flex-col w-full gap-4">
+				<Form className="flex flex-col w-full gap-2">
 					<label htmlFor="date">
 						<Field
 							name="date"
@@ -125,7 +131,7 @@ export const CreateAgenda = ({
 					<p className="text-red-500">{errorMessage}</p>
 					<Editor
 						editable={true}
-						className="rounded-md border border-gray-300 bg-backdrop/50 p-2"
+						className="rounded-md border border-gray-300 bg-backdrop/50 px-2"
 						updateState={setEditorState}
 						initialState={editingInfo ? editingInfo.description : ""}
 						focus={false}
@@ -134,16 +140,19 @@ export const CreateAgenda = ({
 					<div className="flex justify-between">
 						<p>Select assignments to include in this agenda:</p>
 					</div>
-					<div className="relative flex items-center">
+					<div className="relative flex items-center mb-2">
 						<MagnifyingGlassIcon className="absolute left-3 h-4 w-4" />
 						<input
 							type="text"
 							className="w-56 !rounded-xl py-0.5 transition-all focus:w-96 placeholder:dark:text-gray-400 pl-8"
 							placeholder="Search assignments..."
-							//@ts-ignore DUDE OF COURSE e.target.value exists!
-							onInput={(e) => setSearch(e.target.value)}
+							onInput={(e) => {
+								//@ts-ignore DUDE OF COURSE e.target.value exists!
+								setSearch(e.target.value);
+							}}
 						/>
 					</div>
+
 					<div className="overflow-auto max-h-80 gap-3 grid">
 						{assignments.length > 0
 							? assignments.map(

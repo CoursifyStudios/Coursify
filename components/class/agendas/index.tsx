@@ -1,6 +1,6 @@
 import { Button } from "@/components/misc/button";
 import { LoadingSmall } from "@/components/misc/loading";
-import { fetchMoreAgendas } from "@/lib/db/classes";
+import { fetchMoreAgendas } from "@/lib/db/agendas";
 import { Json } from "@/lib/db/database.types";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
@@ -44,8 +44,9 @@ export const AgendasModule = ({
 	isTeacher: boolean;
 }) => {
 	const supabase = useSupabaseClient();
-	const [allAssignmentsForAgendas, setAllAssignmentsForAgendas] =
-		useState(allAssignments);
+	const [allAssignmentsForAgendas, setAllAssignmentsForAgendas] = useState(
+		new Set(allAssignments)
+	);
 	const [agendaCreationOpen, setAgendaCreationOpen] = useState(false);
 	const [createdAgendas, setCreatedAgendas] = useState<
 		{
@@ -88,7 +89,7 @@ export const AgendasModule = ({
 			if (extraAssignments.data) {
 				assignmentUpdater(extraAssignments.data);
 				setAllAssignmentsForAgendas(
-					allAssignmentsForAgendas.concat(extraAssignments.data)
+					new Set([...allAssignmentsForAgendas, ...extraAssignments.data])
 				);
 			}
 		})();
@@ -163,7 +164,7 @@ export const AgendasModule = ({
 							key={agenda.id}
 							classID={classID}
 							agenda={agenda}
-							allAssignments={allAssignmentsForAgendas}
+							allAssignments={Array.from(allAssignmentsForAgendas)}
 							isTeacher={isTeacher ? true : false}
 						></Agenda>
 					))}

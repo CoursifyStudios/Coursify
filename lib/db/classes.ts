@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getDataInArray, getDataOutArray } from "../misc/dataOutArray";
 import { NonNullableArray } from "../misc/misc.types";
-import type { Database, Json } from "./database.types";
+import type { Database } from "./database.types";
 import { ScheduleInterface, getSchedulesForXDays } from "./schedule";
 
 export async function getAllClasses(
@@ -273,63 +273,6 @@ export type BasicClassInfoDB = Awaited<
 	ReturnType<typeof getClassesForUserBasic>
 >;
 
-export const fetchMoreAgendas = async (
-	supabase: SupabaseClient<Database>,
-	classID: string,
-	agendas: string[],
-	date: string,
-	fetchFuture: boolean
-) => {
-	return await supabase
-		.from("agendas")
-		.select(`*`)
-		.eq("class_id", classID)
-		.filter("date", fetchFuture ? "gte" : "lte", date) // grr
-		.not("id", "in", `(${agendas as string[]})`);
-};
-
-export const createAgenda = async (
-	supabase: SupabaseClient<Database>,
-	class_id: string,
-	date: string,
-	description: Json,
-	assignments: string[]
-) => {
-	return await supabase
-		.from("agendas")
-		.insert({
-			class_id,
-			description,
-			date,
-			assignments,
-		})
-		.select()
-		.single();
-};
-
-export const deleteAgenda = async (
-	supabase: SupabaseClient<Database>,
-	id: string
-) => {
-	return await supabase.from("agendas").delete().eq("id", id).select().single();
-};
-
-export const editAgenda = async (
-	supabase: SupabaseClient<Database>,
-	id: string,
-	newData: {
-		date: string;
-		description: Json;
-		assignments: string[];
-	}
-) => {
-	return await supabase
-		.from("agendas")
-		.update(newData)
-		.eq("id", id)
-		.select()
-		.single();
-};
 export const isTeacher = (
 	classData: NonNullableArray<AllClasses>,
 	userID: string
