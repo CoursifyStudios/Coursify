@@ -43,17 +43,20 @@ const Onboarding = () => {
 						access.
 					</p>
 					<p
-						className="text-center text-sm mt-6 hover:underline select-none cursor-pointer"
+						className="text-center  font-semibold text-sm mt-6 hover:underline select-none cursor-pointer"
 						onClick={() => setContactOpen(true)}
 					>
 						I want to create a new school
 						<Popup closeMenu={() => setContactOpen(false)} open={contactOpen}>
 							<h3 className="title-sm mb-4">Contact</h3>
 							<p>
-								Coursify LMS is currently in a closed beta phase. If you{"'"}re
-								interested in using Coursify, please reach out to our growth
-								team at coursify@shcp.edu. If you would just like demo the
-								platform,{" "}
+								Coursify LMS is currently in a closed beta. If you{"'"}re an
+								administrator interested in using Coursify, please reach out to
+								our growth team at{" "}
+								<Link href="mailto:growth@coursify.studio" target="_blank">
+									growth@coursify.studio
+								</Link>
+								. If you would like demo the platform,{" "}
 								<Link href={"/demo"} className="text-blue-500">
 									click here
 								</Link>
