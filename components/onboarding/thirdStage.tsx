@@ -18,7 +18,7 @@ const OnboardingThirdStage = ({
 			</h2>
 			<div className="gap-4 flex flex-col select-none">
 				{classes
-					.sort((a, b) => a.class?.block - b.class?.block)
+					.sort((a, b) => (a.class?.block ?? 0) - (b.class?.block ?? 0))
 					.map((mappedClass) => {
 						if (!mappedClass.class) return null;
 						const teachers = mappedClass.class.class_users.filter(
