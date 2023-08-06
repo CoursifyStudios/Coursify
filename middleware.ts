@@ -110,8 +110,8 @@ export const config = {
 export enum OnboardingState {
 	NotStarted = "0",
 	Done = "1",
-	Parent = "2",
-	NoAccount = "3",
+	Parent = "2", // if parent is in system
+	NoAccount = "3", // if user is not in system
 	FirstStage = "4",
 	SecondStage = "5",
 	ThirdStage = "6",

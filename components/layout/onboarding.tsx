@@ -35,7 +35,7 @@ export const OnboardingLayout = ({ children }: { children: ReactNode }) => {
 			<div className="flex items-center min-h-screen flex-col py-10 z-50 grow ">
 				{children}
 
-				<h3 className="text-center z-50 bg-gradient-to-r pt-10 from-pink-400 to-orange-300 bg-clip-text text-3xl font-extrabold text-transparent md:ml-0 mt-auto">
+				<h3 className="text-center z-50 bg-gradient-to-r pt-10 from-brand-pink to-brand-orange bg-clip-text text-3xl font-extrabold text-transparent md:ml-0 mt-auto">
 					Coursify
 				</h3>
 			</div>
