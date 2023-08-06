@@ -36,6 +36,7 @@ const OnboardingSecondStage = ({
 					<input
 						type="text"
 						className="grow noinputcss onboardingInput"
+						autoFocus
 						onChange={(v) =>
 							setNewData((data) => ({
 								...data,
@@ -77,14 +78,19 @@ const OnboardingSecondStage = ({
 						}}
 					/>
 				</label>
-				<div className="flex">
-					<input type="checkbox" className="!bg-backdrop/25 !border " />
-					<p className="text-xs font-medium ml-4">
-						By providing Coursify with your phone number, you consent to
-						receiving important information and notices from your enrolled
-						schools and Coursify via SMS
-					</p>
-				</div>
+				{newData.phone_number && (
+					<label className="flex cursor-pointer">
+						<input
+							type="checkbox"
+							className="!bg-backdrop/25 !border dark:!border-gray-800/10"
+						/>
+						<p className="text-xs font-medium ml-4 label-required">
+							By providing Coursify with your phone number, you consent to
+							receiving important information and notices from your enrolled
+							schools and <a className="">Coursify</a> via SMS
+						</p>
+					</label>
+				)}
 			</div>
 		</>
 	);

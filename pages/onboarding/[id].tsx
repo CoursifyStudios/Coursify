@@ -5,6 +5,8 @@ import Loading from "@/components/misc/loading";
 import { Popup } from "@/components/misc/popup";
 import OnboardingFirstStage from "@/components/onboarding/firstStage";
 import OnboardingSecondStage from "@/components/onboarding/secondStage";
+import OnboardingThirdStage from "@/components/onboarding/thirdStage";
+import { AllClasses, getAllClasses } from "@/lib/db/classes";
 import { Database } from "@/lib/db/database.types";
 import { ProfilesResponse, getProfile } from "@/lib/db/profiles";
 import { OnboardingState } from "@/middleware";
@@ -15,6 +17,7 @@ import { ReactElement, useEffect, useState } from "react";
 const Onboarding = () => {
 	const [userData, setUserData] =
 		useState<Exclude<ProfilesResponse["data"], null>>();
+	const [classes, setClasses] = useState<AllClasses>();
 	const user = useUser();
 	const supabase = useSupabaseClient<Database>();
 	const router = useRouter();
@@ -38,11 +41,19 @@ const Onboarding = () => {
 				// TODO: check cookies to see if it should redirect to a specific page.
 
 				// This is called first incase the user already started on another devide, we don't want to try and re-convert them
-				const fetchedUserData = await getProfile(supabase, user.id);
+				const [fetchedUserData, classesData] = await Promise.all([
+					await getProfile(supabase, user.id),
+					await getAllClasses(supabase, user.id),
+				]);
 				if (fetchedUserData.data) {
 					setUserData(fetchedUserData.data);
+					if (classesData.data) {
+						setClasses(classesData.data);
+					}
+
 					// if the onboarding cookie isn't set, go to first stage
 					//setStage(OnboardingState.FirstStage);
+					// if it is, go to the stage they're on
 					return;
 				}
 
@@ -64,6 +75,10 @@ const Onboarding = () => {
 		);
 	}
 
+	if (userData && !classes) {
+		return <div>We couldn{"'"}t find your classes...</div>;
+	}
+
 	return (
 		<>
 			<h1 className="text-3xl md:text-4xl mb-10 font-bold truncate w-[calc(100vw-2rem)] text-center">
@@ -72,9 +87,26 @@ const Onboarding = () => {
 			<div className="px-4 my-auto max-w-2xl w-full">
 				<>
 					<div
-						className={`bg-backdrop-200/25 dark:bg-backdrop-200/10 backdrop-blur-3xl border border-white/10 p-8 rounded-xl shadow-xl transition-all duration-300 ${
-							id == OnboardingState.FirstStage ? "h-96" : "h-96"
-						} `}
+						className={`bg-backdrop-200/25 overflow-hidden dark:bg-backdrop-200/10 backdrop-blur-3xl border border-white/10 p-8 rounded-xl shadow-xl transition-all duration-300 ${
+							id == OnboardingState.FirstStage && "h-96"
+						} 
+						${
+							id == OnboardingState.SecondStage &&
+							(newData.phone_number ? "h-[26.5rem] " : "h-96")
+						}
+							`}
+						style={
+							id == OnboardingState.ThirdStage && classes
+								? {
+										height: `${
+											classes.filter((c) => Boolean(c.class)).length * 6 + 6
+										}rem`,
+										WebkitTransform: `translate3d(0, 0, 0)`,
+										msTransform: `translate3d(0, 0, 0)`,
+										transform: `translate3d(0, 0, 0)`,
+								  }
+								: undefined
+						}
 					>
 						<OnboardingFirstStage
 							id={id as OnboardingState}
@@ -85,6 +117,10 @@ const Onboarding = () => {
 							userData={userData}
 							newData={newData}
 							setNewData={setNewData}
+						/>
+						<OnboardingThirdStage
+							id={id as OnboardingState}
+							classes={classes}
 						/>
 					</div>
 					<div className="flex flex-col items-center ">
@@ -105,6 +141,59 @@ const Onboarding = () => {
 								>
 									Contact Admins
 								</button>
+							</>
+						)}
+						{id == OnboardingState.SecondStage && (
+							<>
+								<div className="flex gap-6">
+									<Button
+										className="secondaryOnboardingButton mt-8"
+										onClick={() => setStage(OnboardingState.FirstStage)}
+									>
+										Back
+									</Button>
+									<Button
+										className="onboardingButton mt-8"
+										onClick={() => setStage(OnboardingState.ThirdStage)}
+									>
+										Next
+									</Button>
+								</div>
+								<div className="invisible">
+									<p className="mt-1 text-sm  text-gray-600 dark:text-gray-400">
+										or
+									</p>
+									<button
+										className=" text-sm text-gray-700 font-semibold hover:underline cursor-pointer select-none"
+										onClick={() => setContactOpen(true)}
+									>
+										Contact Admins
+									</button>
+								</div>
+							</>
+						)}
+						{id == OnboardingState.ThirdStage && (
+							<>
+								<div className="flex gap-6">
+									<Button
+										className="secondaryOnboardingButton mt-8"
+										onClick={() => setStage(OnboardingState.SecondStage)}
+									>
+										Back
+									</Button>
+									<Button className="onboardingButton mt-8">Finish</Button>
+								</div>
+								<div className="invisible">
+									<p className="mt-1 text-sm  text-gray-600 dark:text-gray-400">
+										or
+									</p>
+									<button
+										className=" text-sm text-gray-700 font-semibold hover:underline cursor-pointer select-none"
+										onClick={() => setContactOpen(true)}
+									>
+										Contact Admins
+									</button>
+								</div>
 							</>
 						)}
 						<Popup closeMenu={() => setContactOpen(false)} open={contactOpen}>

@@ -15,7 +15,7 @@ export const OnboardingLayout = ({ children }: { children: ReactNode }) => {
 					draggable="false"
 				/>
 			</div>
-			<div className="dark:visible invisible absolute top-0 right-0">
+			<div className="dark:visible invisible select-none absolute top-0 right-0">
 				<Image
 					src={blueCircle}
 					alt="A Blue Circle"
@@ -23,7 +23,7 @@ export const OnboardingLayout = ({ children }: { children: ReactNode }) => {
 					draggable="false"
 				/>
 			</div>
-			<div className="dark:visible invisible absolute bottom-0 right-0">
+			<div className="dark:visible select-none invisible absolute bottom-0 right-0">
 				<Image
 					src={orangeCircle}
 					alt="A Orange Circle"

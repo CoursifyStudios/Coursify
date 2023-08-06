@@ -43,7 +43,7 @@ const Onboarding = () => {
 						access.
 					</p>
 					<p
-						className="text-center text-sm mt-6 cursor-pointer"
+						className="text-center text-sm mt-6 hover:underline select-none cursor-pointer"
 						onClick={() => setContactOpen(true)}
 					>
 						I want to create a new school
