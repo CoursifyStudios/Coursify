@@ -109,8 +109,8 @@ const Onboarding = () => {
 			<div className="px-4 my-auto max-w-2xl w-full">
 				<>
 					<div
-						className={`bg-backdrop-200/25 overflow-hidden dark:bg-backdrop-200/10 backdrop-blur-3xl border border-white/10 p-8 rounded-xl shadow-xl transition-all duration-300 ${
-							id == OnboardingState.FirstStage && "h-96"
+						className={`bg-backdrop-200/25 overflow-hidden dark:bg-backdrop-200/10 backdrop-blur-3xl border border-white/10 p-8 rounded-xl shadow-xl transition-all duration-300 scaley ${
+							id == OnboardingState.FirstStage && (userData.student_id ? userData.year ? "h-96" : "h-[18.5rem]" : userData.year ? "h-[18.5rem]" : "h-56" )
 						} 
 						${
 							id == OnboardingState.SecondStage &&
@@ -243,4 +243,4 @@ Onboarding.getLayout = function getLayout(page: ReactElement) {
 			<OnboardingLayout>{page}</OnboardingLayout>
 		</BasicLayout>
 	);
-};
+};	
