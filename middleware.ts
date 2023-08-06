@@ -13,6 +13,57 @@ export async function middleware(req: NextRequest) {
 	const redirectUrl = req.nextUrl.clone();
 
 	if (session) {
+		const onboarded = req.cookies.get("onboardingState")?.value ?? "";
+
+		res.cookies.set("onboardingState", onboarded, {
+			maxAge: Date.now() + 60 * 60 * 24 * 365,
+		});
+
+		if (onboarded != OnboardingState.Done) {
+			if (onboarded == "") {
+				const { data } = await supabase
+					.from("users")
+					.select("onboarded")
+					.eq("id", session.user.id)
+					.single();
+				if (data) {
+					if (data.onboarded) {
+						res.cookies.set("onboardingState", OnboardingState.Done, {
+							maxAge: Date.now() + 60 * 60 * 24 * 365,
+						});
+					} else {
+						res.cookies.set("onboardingState", OnboardingState.NotStarted, {
+							maxAge: Date.now() + 60 * 60 * 24 * 365,
+						});
+					}
+				} else {
+					// Weird edge case that should never happen
+				}
+			} else {
+				if (!req.nextUrl.pathname.startsWith("/onboarding")) {
+					redirectUrl.pathname = `/onboarding/${onboarded}`;
+					const redirect = NextResponse.redirect(redirectUrl);
+
+					redirect.cookies.set("onboardingState", onboarded, {
+						maxAge: Date.now() + 60 * 60 * 24 * 365,
+					});
+
+					return redirect;
+				}
+			}
+		} else {
+			if (req.nextUrl.pathname.startsWith("/onboarding")) {
+				redirectUrl.pathname = "/";
+				const redirect = NextResponse.redirect(redirectUrl);
+
+				redirect.cookies.set("onboardingState", onboarded, {
+					maxAge: Date.now() + 60 * 60 * 24 * 365,
+				});
+
+				return redirect;
+			}
+		}
+
 		if (
 			req.nextUrl.pathname.startsWith("/admin") ||
 			req.nextUrl.pathname.startsWith("/schedule-editor")
@@ -37,6 +88,12 @@ export async function middleware(req: NextRequest) {
 			redirectUrl.pathname = "/";
 			return NextResponse.redirect(redirectUrl);
 		}
+
+		if (req.nextUrl.pathname.startsWith("/login")) {
+			redirectUrl.pathname = "/";
+			return NextResponse.redirect(redirectUrl);
+		}
+
 		return res;
 	}
 
@@ -49,3 +106,14 @@ export const config = {
 	matcher:
 		"/((?!api|_next/static|favicon.ico|login|txt|svg|privacypolicy.txt|termsandconditions.txt|brand-logos).*)",
 };
+
+export enum OnboardingState {
+	NotStarted = "0",
+	Done = "1",
+	Parent = "2",
+	NoAccount = "3",
+	FirstStage = "4",
+	SecondStage = "5",
+	ThirdStage = "6",
+	SettingsStage = "7",
+}
