@@ -76,17 +76,11 @@ const Onboarding = () => {
 						></div>
 						<div className="flex flex-col items-center">
 							<>
-								<Button
-									className="onboardingButton mt-8"
-								>
-									Looks Good
-								</Button>
+								<Button className="onboardingButton mt-8">Looks Good</Button>
 								<p className="mt-1 text-sm  text-gray-600 dark:text-gray-400">
 									or
 								</p>
-								<button
-									className=" text-sm text-gray-700 font-semibold hover:underline cursor-pointer select-none"
-								>
+								<button className=" text-sm text-gray-700 font-semibold hover:underline cursor-pointer select-none">
 									Contact Admins
 								</button>
 							</>
@@ -110,7 +104,14 @@ const Onboarding = () => {
 				<>
 					<div
 						className={`bg-backdrop-200/25 overflow-hidden dark:bg-backdrop-200/10 backdrop-blur-3xl border border-white/10 p-8 rounded-xl shadow-xl transition-all duration-300 scaley ${
-							id == OnboardingState.FirstStage && (userData.student_id ? userData.year ? "h-96" : "h-[18.5rem]" : userData.year ? "h-[18.5rem]" : "h-56" )
+							id == OnboardingState.FirstStage &&
+							(userData.student_id
+								? userData.year
+									? "h-96"
+									: "h-[18.5rem]"
+								: userData.year
+								? "h-[18.5rem]"
+								: "h-56")
 						} 
 						${
 							id == OnboardingState.SecondStage &&
@@ -121,7 +122,7 @@ const Onboarding = () => {
 							id == OnboardingState.ThirdStage && classes
 								? {
 										height: `${
-											classes.filter((c) => Boolean(c.class)).length * 6 + 6
+											classes.filter((c) => Boolean(c.class)).length * 6 + 6.5
 										}rem`,
 										WebkitTransform: `translate3d(0, 0, 0)`,
 										msTransform: `translate3d(0, 0, 0)`,
@@ -243,4 +244,4 @@ Onboarding.getLayout = function getLayout(page: ReactElement) {
 			<OnboardingLayout>{page}</OnboardingLayout>
 		</BasicLayout>
 	);
-};	
+};

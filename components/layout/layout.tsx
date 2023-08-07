@@ -92,7 +92,7 @@ export function BasicLayout(props: { children: ReactNode }) {
 
 	return (
 		<div
-			className={`flex min-h-screen flex-col bg-backdrop text-gray-800 transition-all duration-300
+			className={`flex h-screen flex-col bg-backdrop text-gray-800 transition-all duration-300
 			 ${data.compact && hydrated ? "compact" : ""}`}
 		>
 			<div className="flex flex-1 flex-col">{props.children}</div>
