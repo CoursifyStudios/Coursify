@@ -10,13 +10,13 @@ export default function OnboardClasses({
 	color: string;
 }) {
 	return (
-		<div className="flex justify-between items-center  bg-white/50 border dark:order-white/10 rounded-xl h-20 px-6">
+		<div className="flex justify-between items-center  bg-white/50 dark:bg-transparent border dark:border-white/10 rounded-xl h-20 px-6">
 			<div>
 				<h1 className="text-xl font-semibold">{class_name}</h1>
 				<p className="text-sm">{teacherName}</p>
 			</div>
 			<h2
-				className={`text-2xl font-bold px-3 py-1 bg-backdrop-200/20 rounded-lg text-${color}-300 saturate-200 border border-gray-300 dark:border-gray-800/10 backdrop-blur-xl`}
+				className={`text-2xl font-bold px-3 py-1 bg-backdrop-200/20  rounded-lg text-${color}-300 saturate-200 dark:saturate-100 border border-gray-300 dark:border-gray-800/10 backdrop-blur-xl`}
 			>
 				{blockNum}
 			</h2>
