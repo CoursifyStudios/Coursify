@@ -48,12 +48,19 @@ input[type="number"] {
 	width: 16px;
 }
 
-.scrollbar-fancy::-webkit-scrollbar-thumb {
+.scrollbar-fancy:not(.scrollbar-fancy-glass)::-webkit-scrollbar-thumb {
 	@apply dark:bg-neutral-900;
 	border: 4px solid rgba(0, 0, 0, 0);
 	background-clip: padding-box;
 	border-radius: 9999px;
 	background-color: #d1d5db;
+}
+
+.scrollbar-fancy-glass::-webkit-scrollbar-thumb {
+	@apply bg-[rgba(255,255,255,0.5)] dark:bg-[rgba(0,0,0,0.2)];
+	border: 4px solid rgba(0, 0, 0, 0);
+	background-clip: padding-box;
+	border-radius: 9999px;
 }
 
 .scrollbar-fancy-darker::-webkit-scrollbar-thumb {

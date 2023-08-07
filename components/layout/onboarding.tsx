@@ -31,7 +31,7 @@ export const OnboardingLayout = ({ children }: { children: ReactNode }) => {
 					draggable="false"
 				/>
 			</div>
-			<div className="absolute inset-0 backdrop-blur-xl overflow-y-auto ">
+			<div className="absolute inset-0 backdrop-blur-xl overflow-y-auto scrollbar-fancy scrollbar-fancy-glass ">
 				<div className="flex items-center flex-col py-10 z-50 min-h-screen ">
 					{children}
 
