@@ -5,9 +5,11 @@ import OnboardClasses from "./onboardingClass";
 const OnboardingThirdStage = ({
 	id,
 	classes,
+	bsLoading,
 }: {
 	id: OnboardingState;
 	classes: AllClasses | undefined;
+	bsLoading: boolean;
 }) => {
 	if (id != OnboardingState.ThirdStage || !classes) return;
 

@@ -1,7 +1,7 @@
 import { BasicLayout } from "@/components/layout/layout";
 import { OnboardingLayout } from "@/components/layout/onboarding";
 import { Button } from "@/components/misc/button";
-import Loading from "@/components/misc/loading";
+import Loading, { LoadingSmall } from "@/components/misc/loading";
 import { Popup } from "@/components/misc/popup";
 import OnboardingFirstStage from "@/components/onboarding/firstStage";
 import OnboardingSecondStage from "@/components/onboarding/secondStage";
@@ -9,10 +9,18 @@ import OnboardingThirdStage from "@/components/onboarding/thirdStage";
 import { AllClasses, getAllClasses } from "@/lib/db/classes";
 import { Database } from "@/lib/db/database.types";
 import { ProfilesResponse, getProfile } from "@/lib/db/profiles";
+import { updateBio, updateProfile } from "@/lib/db/settings";
 import { OnboardingState } from "@/middleware";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 import { ReactElement, useEffect, useState } from "react";
+
+const initialNewData = {
+	preferred_name: null,
+	bio: null,
+	phone_number: null,
+	approvedPhone: false,
+};
 
 const Onboarding = () => {
 	const [userData, setUserData] =
@@ -22,31 +30,97 @@ const Onboarding = () => {
 	const supabase = useSupabaseClient<Database>();
 	const router = useRouter();
 	const [contactOpen, setContactOpen] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const [bsLoading, setBSloading] = useState(false);
 	const { id } = router.query;
-	const [newData, setNewData] = useState<NewUserData>({
-		preferred_name: null,
-		bio: null,
-		phone_number: null,
-		approvedPhone: false,
-	});
+	const [newData, setNewData] = useState<NewUserData>(initialNewData);
+	const [error, setError] = useState("");
 
 	const setStage = (stage: OnboardingState) => {
+		setError("");
 		router.push(`/onboarding/${stage}`);
 		//set cookie here
+	};
+
+	const finish = () => {
+		setBSloading(true);
+		setTimeout(() => {
+			setBSloading(false);
+			setStage(OnboardingState.Done);
+		}, 3500);
+	};
+
+	const saveNewData = async () => {
+		setError("");
+
+		if (!newData.approvedPhone && newData.phone_number) {
+			setError("You need to accept the terms to add a phone number");
+			return;
+		}
+
+		if (
+			newData.phone_number &&
+			// if the phone number isn't 10 or 11 digits
+			!(newData.phone_number.length == 10 || newData.phone_number.length == 11)
+		) {
+			setError("Your phone number is incomplete! (shortcodes are not allowed)");
+			return;
+		}
+		setLoading(true);
+		const { approvedPhone: _, ...data }: NewUserData = newData;
+		const phone = newData.phone_number
+			? newData.phone_number.length == 10
+				? "1" + newData.phone_number
+				: newData.phone_number
+			: null;
+		const toInsert = {
+			...data,
+			phone_number: phone,
+		};
+		if (
+			userData &&
+			JSON.stringify(toInsert) !=
+				JSON.stringify({
+					bio: userData.bio,
+					phone_number: userData.phone_number,
+					preferred_name: userData.preferred_name,
+				})
+		) {
+			const { error } = await updateProfile(supabase, user?.id ?? "", {
+				...data,
+				phone_number: phone,
+			});
+			if (error) {
+				setError(error.message);
+				return;
+			}
+		}
+
+		setLoading(false);
+
+		setStage(OnboardingState.ThirdStage);
 	};
 
 	useEffect(() => {
 		(async () => {
 			if (user && supabase && !userData) {
-				// TODO: check cookies to see if it should redirect to a specific page.
+				// TODO: check cookies to see if it should redirect to a specific page. Probably worth using middleware too -LS
 
-				// This is called first incase the user already started on another devide, we don't want to try and re-convert them
+				// This is called first incase the user already started on another screen, we don't want to try and re-convert them -LS
+
 				const [fetchedUserData, classesData] = await Promise.all([
 					await getProfile(supabase, user.id),
 					await getAllClasses(supabase, user.id),
 				]);
 				if (fetchedUserData.data) {
+					const user = fetchedUserData.data;
 					setUserData(fetchedUserData.data);
+					setNewData({
+						approvedPhone: Boolean(user.phone_number),
+						bio: user.bio,
+						phone_number: user.phone_number,
+						preferred_name: user.preferred_name,
+					});
 					if (classesData.data) {
 						setClasses(classesData.data);
 					}
@@ -57,7 +131,7 @@ const Onboarding = () => {
 					return;
 				}
 
-				// TODO: call onboarding function here. Should probably return the same info as profiles response, or we can just call it again
+				// TODO: call onboarding function here. Should probably return the same info as profiles response, or we can just call it again -LS
 			}
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -177,11 +251,12 @@ const Onboarding = () => {
 									</Button>
 									<Button
 										className="onboardingButton mt-8"
-										onClick={() => setStage(OnboardingState.ThirdStage)}
+										onClick={saveNewData}
 									>
-										Next
+										Next {loading && <LoadingSmall className="ml-2" />}
 									</Button>
 								</div>
+								{/* TThis is a really stupid hack to prevent wierd cls transitions */}
 								<div className="invisible">
 									<p className="mt-1 text-sm  text-gray-600 dark:text-gray-400">
 										or
@@ -229,6 +304,9 @@ const Onboarding = () => {
 								inconvenience this may have caused.{" "}
 							</p>
 						</Popup>
+						{error && (
+							<div className="text-red-500 text-sm">Error: {error}</div>
+						)}
 					</div>
 				</>
 			</div>

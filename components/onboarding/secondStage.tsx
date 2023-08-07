@@ -37,6 +37,7 @@ const OnboardingSecondStage = ({
 						type="text"
 						className="grow noinputcss onboardingInput"
 						autoFocus
+						value={newData.preferred_name ?? undefined}
 						onChange={(v) =>
 							setNewData((data) => ({
 								...data,
@@ -81,7 +82,7 @@ const OnboardingSecondStage = ({
 							if (v.target.value.length < 50)
 								setNewData((data) => ({
 									...data,
-									phone_number: v.target.value,
+									phone_number: v.target.value.replace(/\D/g, ""),
 								}));
 						}}
 					/>
@@ -91,6 +92,12 @@ const OnboardingSecondStage = ({
 						<input
 							type="checkbox"
 							className="!bg-backdrop/25 !border dark:!border-gray-800/10"
+							onChange={(v) =>
+								setNewData((data) => ({
+									...data,
+									approvedPhone: v.target.checked,
+								}))
+							}
 						/>
 						<p className="text-xs font-medium ml-4 label-required">
 							By providing Coursify with your phone number, you consent to
