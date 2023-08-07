@@ -28,7 +28,7 @@ const OnboardingSecondStage = ({
 						Preferred First Name{" "}
 						<ColoredPill
 							color="gray"
-							className="!bg-opacity-25 border border-white/10 text-xs ml-1.5"
+							className="!bg-white dark:!bg-black/10 border border-white/10 text-xs ml-1.5"
 						>
 							Optional
 						</ColoredPill>
@@ -46,7 +46,15 @@ const OnboardingSecondStage = ({
 					/>
 				</label>
 				<label htmlFor="" className="flex flex-col">
-					<span className="label-text">Bio</span>
+					<span className="label-text flex items-end !mb-1">
+						Bio{" "}
+						<ColoredPill
+							color="gray"
+							className="!bg-white dark:!bg-black/10 border border-white/10 text-xs ml-1.5"
+						>
+							Optional
+						</ColoredPill>
+					</span>
 					<input
 						type="text"
 						className="grow noinputcss onboardingInput"
