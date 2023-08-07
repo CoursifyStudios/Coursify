@@ -88,7 +88,7 @@ textarea:not(.noinputcss),
 }
 
 .onboardingButton {
-	@apply dark:bg-white/5 backdrop-blur-3xl hover:dark:bg-opacity-25 dark:border dark:!border-gray-800/10 shadow-md;
+	@apply bg-gray-800 text-white hover:bg-opacity-90 dark:bg-white/5 backdrop-blur-3xl hover:dark:bg-opacity-25 dark:border dark:!border-gray-800/10 shadow-md;
 }
 
 .secondaryOnboardingButton {
