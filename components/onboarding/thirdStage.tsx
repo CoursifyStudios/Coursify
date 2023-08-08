@@ -1,6 +1,8 @@
 import { AllClasses } from "@/lib/db/classes";
 import { OnboardingState } from "@/middleware";
 import OnboardClasses from "./onboardingClass";
+import { RaceBy } from "@uiball/loaders";
+import { useEffect, useState } from "react";
 
 const OnboardingThirdStage = ({
 	id,
@@ -11,15 +13,35 @@ const OnboardingThirdStage = ({
 	classes: AllClasses | undefined;
 	bsLoading: boolean;
 }) => {
+	const [bsLoadingLabel, setBsLoadingLabel] = useState("");
+
+	const bsLoadingLabels = [
+		"Customizing your experiance",
+		"Fetching classes",
+		"Configuring your profile",
+		"Tailoring your preferences",
+	];
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			setBsLoadingLabel((label) => {
+				const i = bsLoadingLabels.findIndex((l) => l == label);
+				return bsLoadingLabels[i == bsLoadingLabels.length - 1 ? 0 : i + 1];
+			});
+		}, 1300);
+		return () => clearInterval(interval);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
 	if (id != OnboardingState.ThirdStage || !classes) return;
 
 	if (bsLoading) {
 		return (
-			<div>
-				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus quod
-				quia officiis. Nisi impedit exercitationem dolorem, reprehenderit,
-				officia odit neque adipisci architecto repudiandae suscipit quam cum?
-				Incidunt provident autem suscipit!
+			<div className="flex flex-col justify-center items-center text-gray-200 py-8">
+				<RaceBy speed={0.8} size={170} color="white" />
+				<h2 className="font-semibold text-lg dark:text-white mt-8">
+					{bsLoadingLabel}...
+				</h2>
 			</div>
 		);
 	}

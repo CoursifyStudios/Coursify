@@ -39,15 +39,21 @@ const Onboarding = () => {
 	const setStage = (stage: OnboardingState) => {
 		setError("");
 		router.push(`/onboarding/${stage}`);
+		setBSloading(false);
 		//set cookie here
 	};
 
-	const finish = () => {
+	const finish = async () => {
+		const { error } = await supabase
+			.from("users")
+			.update({ onboarded: true })
+			.eq("id", user ? user.id : "");
 		setBSloading(true);
+
 		setTimeout(() => {
-			setStage(OnboardingState.Done);
-			setBSloading(false);
-		}, 3500);
+			// set cookie to done here
+		router.push("/")
+		}, 4000);
 	};
 
 	const saveNewData = async () => {
@@ -138,27 +144,30 @@ const Onboarding = () => {
 	}, [supabase, user]);
 
 	if (!userData) {
+		if (!user) {
+			return null;
+		}
 		return (
 			<>
 				<h1 className="text-3xl md:text-4xl mb-10 font-bold truncate w-[calc(100vw-2rem)] text-center">
-					Welcome,
+					Welcome, {user.user_metadata.full_name.split(" ")[0]}
 				</h1>
 				<div className="px-4 my-auto max-w-2xl w-full">
-					<div>
-						<div
-							className={`bg-backdrop-200/25 overflow-hidden dark:bg-backdrop-200/10 backdrop-blur-3xl border border-white/10 p-8 rounded-xl shadow-xl transition-all duration-300 h-96`}
-						></div>
-						<div className="flex flex-col items-center">
-							<>
-								<Button className="onboardingButton mt-8">Looks Good</Button>
-								<p className="mt-1 text-sm  text-gray-600 dark:text-gray-400">
-									or
-								</p>
-								<button className=" text-sm text-gray-700 font-semibold hover:underline cursor-pointer select-none">
-									Contact Admins
-								</button>
-							</>
-						</div>
+					<div className="bg-backdrop-200/25 overflow-hidden dark:bg-backdrop-200/10 backdrop-blur-3xl border border-white/10 opacity-0 rounded-xl shadow-xl transition-all duration-300 "></div>
+					<div className="flex flex-col items-center opacity-0 transition duration-300">
+						<Button
+							className="onboardingButton mt-8"
+							onClick={() => setStage(OnboardingState.SecondStage)}
+						>
+							Looks Good
+						</Button>
+						<p className="mt-1 text-sm  text-gray-600 dark:text-gray-400">or</p>
+						<button
+							className=" text-sm text-gray-700 font-semibold hover:underline cursor-pointer select-none"
+							onClick={() => setContactOpen(true)}
+						>
+							Contact Admins
+						</button>
 					</div>
 				</div>
 			</>
@@ -177,7 +186,7 @@ const Onboarding = () => {
 			<div className="px-4 my-auto max-w-2xl w-full">
 				<>
 					<div
-						className={`bg-backdrop-200/25 overflow-hidden dark:bg-backdrop-200/10 backdrop-blur-3xl border border-white/10 p-8 rounded-xl shadow-xl transition-all duration-300 scaley ${
+						className={`bg-backdrop-200/25 overflow-hidden dark:bg-backdrop-200/10 backdrop-blur-3xl border border-white/10 p-8 opacity-100 rounded-xl shadow-xl transition-all duration-300 ${
 							id == OnboardingState.FirstStage &&
 							(userData.student_id
 								? userData.year
@@ -191,9 +200,10 @@ const Onboarding = () => {
 							id == OnboardingState.SecondStage &&
 							(newData.phone_number ? "h-[26.5rem] " : "h-96")
 						}
+						${id == OnboardingState.ThirdStage && bsLoading && "h-48"}
 							`}
 						style={
-							id == OnboardingState.ThirdStage && classes
+							id == OnboardingState.ThirdStage && classes && !bsLoading
 								? {
 										height: `${
 											classes.filter((c) => Boolean(c.class)).length * 6 + 6.5
@@ -221,7 +231,7 @@ const Onboarding = () => {
 							bsLoading={bsLoading}
 						/>
 					</div>
-					<div className="flex flex-col items-center ">
+					<div className="flex flex-col items-center opacity-100 transition duration-300">
 						{id == OnboardingState.FirstStage && (
 							<>
 								<Button

@@ -92,6 +92,7 @@ const OnboardingSecondStage = ({
 						<input
 							type="checkbox"
 							className="!bg-backdrop/25 !border dark:!border-gray-800/10"
+							checked={newData.approvedPhone}
 							onChange={(v) =>
 								setNewData((data) => ({
 									...data,
