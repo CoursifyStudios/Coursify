@@ -13,6 +13,17 @@ const OnboardingThirdStage = ({
 }) => {
 	if (id != OnboardingState.ThirdStage || !classes) return;
 
+	if (bsLoading) {
+		return (
+			<div>
+				Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloribus quod
+				quia officiis. Nisi impedit exercitationem dolorem, reprehenderit,
+				officia odit neque adipisci architecto repudiandae suscipit quam cum?
+				Incidunt provident autem suscipit!
+			</div>
+		);
+	}
+
 	return (
 		<>
 			<h2 className="text-2xl mb-6 font-semibold max-w-[16rem] ">

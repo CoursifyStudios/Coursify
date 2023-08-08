@@ -45,8 +45,8 @@ const Onboarding = () => {
 	const finish = () => {
 		setBSloading(true);
 		setTimeout(() => {
-			setBSloading(false);
 			setStage(OnboardingState.Done);
+			setBSloading(false);
 		}, 3500);
 	};
 
@@ -218,6 +218,7 @@ const Onboarding = () => {
 						<OnboardingThirdStage
 							id={id as OnboardingState}
 							classes={classes}
+							bsLoading={bsLoading}
 						/>
 					</div>
 					<div className="flex flex-col items-center ">
@@ -279,7 +280,9 @@ const Onboarding = () => {
 									>
 										Back
 									</Button>
-									<Button className="onboardingButton mt-8">Finish</Button>
+									<Button className="onboardingButton mt-8" onClick={finish}>
+										Finish
+									</Button>
 								</div>
 								<div className="invisible">
 									<p className="mt-1 text-sm  text-gray-600 dark:text-gray-400">
