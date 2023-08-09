@@ -21,7 +21,7 @@ import {
 	useMemo,
 	useState,
 } from "react";
-import { AssignmentText } from "../../assignmentCreation/three/settings.types";
+import { AssignmentDiscussionPost } from "../../assignmentCreation/three/settings.types";
 import { Submission, SubmissionText } from "../submission.types";
 import Editor from "@/components/editors/richeditor";
 import { EditorState } from "lexical";
@@ -36,7 +36,7 @@ const Discussion: NextPage<{
 		revisions: Submission[];
 		setRevisions: Dispatch<SetStateAction<Submission[]>>;
 		assignmentID: string;
-		settings: AssignmentText;
+		settings: AssignmentDiscussionPost;
 		submission: SubmissionText;
 		setSubmission: Dispatch<SetStateAction<SubmissionText>>;
 		supabase: SupabaseClient<Database>;
@@ -255,16 +255,20 @@ const Discussion: NextPage<{
 									width={32}
 									height={32}
 									className="rounded-full h-8 w-8 select-none"
-									src={v.users?.avatar_url || ""}
+									src={v.users?.avatar_url || user.user_metadata.avatar_url}
 									alt="user avatar"
 									draggable={false}
 								/>
 								<div className="ml-3">
 									<Link
-										href={`/profile/${v.users?.id}`}
-										onClick={() => newTab(`/profile/${v.users?.id}`)}
+										href={`/profile/${
+											v.users?.id || user.user_metadata.full_name
+										}`}
+										onClick={() => newTab(`/profile/${v.users?.id || user.id}`)}
 									>
-										<h3 className="font-medium">{v.users?.full_name}</h3>
+										<h3 className="font-medium">
+											{v.users?.full_name || user.user_metadata.full_name}
+										</h3>
 									</Link>
 									<p className="text-xs text-gray-700">
 										{formatDate(new Date())}

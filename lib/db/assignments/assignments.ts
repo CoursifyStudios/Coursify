@@ -4,27 +4,43 @@ import type { PostgrestError, SupabaseClient } from "@supabase/supabase-js";
 import { SerializedEditorState } from "lexical";
 import { Database, Json } from "../database.types";
 import { SubmissionDiscussionPost } from "@/components/assignments/assignmentPanel/submission.types";
+import { ArrayElementType } from "@/lib/misc/elementarraytype.types";
 
 export const getAllAssignments = async (
-	supabaseClient: SupabaseClient<Database>
+	supabaseClient: SupabaseClient<Database>,
+	userID: string
 ) => {
-	return await supabaseClient.from("assignments").select(
+	return await supabaseClient
+		.from("class_users")
+		.select(
+			`
+			classes (
+				assignments (
+				*,
+				
+				classes (
+					name, id, color, block, schedule_type
+				),
+				starred (
+					assignment_id
+				)
+				)
+			)
 		`
-		*,
-		
-		classes (
-			name, id, color, block, schedule_type
-		),
-		starred (
-			assignment_id
 		)
-		`
-	);
+		.eq("user_id", userID);
 };
 
 export type AllAssignmentResponse = Awaited<
 	ReturnType<typeof getAllAssignments>
 >;
+
+export type AllAssignments = Exclude<
+	ArrayElementType<
+		Exclude<Awaited<ReturnType<typeof getAllAssignments>>["data"], null>
+	>["classes"],
+	null
+>["assignments"];
 
 export const handleStarred = async (
 	supabase: SupabaseClient<Database>,
@@ -51,7 +67,8 @@ export const handleStarred = async (
 
 export const getAssignment = async (
 	supabase: SupabaseClient<Database>,
-	assignmentuuid: string
+	assignmentuuid: string,
+	userID: string
 ) => {
 	return await supabase
 		.from("assignments")
@@ -71,6 +88,7 @@ export const getAssignment = async (
 		`
 		)
 		.order("created_at", { foreignTable: "submissions", ascending: false })
+		.eq("submissions.user_id", userID)
 		.eq("id", assignmentuuid)
 		.single();
 };

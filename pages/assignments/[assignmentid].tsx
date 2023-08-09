@@ -9,6 +9,7 @@ import Dropdown from "@/components/misc/dropdown";
 import { Info } from "@/components/tooltips/info";
 import {
 	AllAssignmentResponse,
+	AllAssignments,
 	AssignmentResponse,
 	AssignmentTypes,
 	getAllAssignments,
@@ -51,7 +52,7 @@ const Panel = dynamic(
 
 const Post: NextPageWithLayout = () => {
 	const supabase = useSupabaseClient<Database>();
-	const [allAssignments, setAllAssignments] = useState<AllAssignmentResponse>();
+	const [allAssignments, setAllAssignments] = useState<AllAssignments>();
 	const [assignment, setAssignment] = useState<AssignmentResponse>();
 	//obviously we need a better solution
 	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
@@ -74,7 +75,16 @@ const Post: NextPageWithLayout = () => {
 	useEffect(() => {
 		(async () => {
 			if (user && !allAssignments) {
-				const assignments = await getAllAssignments(supabase);
+				const rawData = await getAllAssignments(supabase, user.id);
+				let assignments: AllAssignments = [];
+
+				if (rawData.data) {
+					rawData.data.forEach((a) => {
+						if (!a.classes) return;
+						assignments = assignments.concat(a.classes.assignments);
+					});
+				}
+
 				setAllAssignments(assignments);
 			}
 			// In theory, most people will have the schedule already cached. This is a band-aid solution and won't be used later on
@@ -107,7 +117,7 @@ const Post: NextPageWithLayout = () => {
 					: true)
 			) {
 				setAssignment(undefined);
-				const assignment = await getAssignment(supabase, assignmentid);
+				const assignment = await getAssignment(supabase, assignmentid, user.id);
 				setAssignment(assignment);
 				if (assignment.data)
 					setRevisions(assignment.data.submissions as Submission[]);
@@ -159,10 +169,9 @@ const Post: NextPageWithLayout = () => {
 					</div>
 				</div>
 				{allAssignments ? (
-					!allAssignments.error &&
 					user &&
 					schedule &&
-					allAssignments.data.map(
+					allAssignments.map(
 						(assignment) =>
 							assignment.classes && (
 								<AssignmentPreview
