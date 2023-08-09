@@ -30,7 +30,7 @@ function Avatar({
 					width={350}
 					height={350}
 					alt={`${full_name}'s profile picture`}
-					className={`rounded-full mr-4 h-${height} w-${width}`}
+					className={`rounded-full h-${height} w-${width}`}
 				/>
 			) : (
 				<div
