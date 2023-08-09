@@ -1,10 +1,7 @@
-import { LinkIcon } from "@heroicons/react/24/outline";
-
 import {
 	Body,
 	Button,
 	Container,
-	Head,
 	Heading,
 	Hr,
 	Html,
@@ -20,14 +17,16 @@ import * as React from "react";
 interface VercelInviteUserEmailProps {
 	name: string;
 	schoolName: string;
+	classCount: number;
 }
 
 export const VercelInviteUserEmail = ({
 	name = "Lukas",
 	schoolName = "Sacred Heart Cathedral Preparatory",
+	classCount = 2,
 }: VercelInviteUserEmailProps) => {
 	const previewText = `Join ${schoolName} on Coursify`;
-
+	const classesString = classCount === 1 ? "class" : "classes";
 	return (
 		<Html>
 			<Preview>{previewText}</Preview>
@@ -51,7 +50,10 @@ export const VercelInviteUserEmail = ({
 						</Text>
 						<Text className="text-black text-[14px] leading-[24px]">
 							<strong>{schoolName}</strong> has invited you to{" "}
-							<strong>5 classes</strong> on Coursify.
+							<strong>
+								{classCount} {classesString}
+							</strong>{" "}
+							on Coursify.
 						</Text>
 
 						<Section className="text-center mt-[32px] mb-[32px]">
