@@ -14,6 +14,7 @@ import { OnboardingState } from "@/middleware";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { useRouter } from "next/router";
 import { ReactElement, useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
 const initialNewData = {
 	preferred_name: null,
@@ -35,12 +36,13 @@ const Onboarding = () => {
 	const { id } = router.query;
 	const [newData, setNewData] = useState<NewUserData>(initialNewData);
 	const [error, setError] = useState("");
+	const [cookies, setCookie, removeCookie] = useCookies(["onboarding"]);
 
 	const setStage = (stage: OnboardingState) => {
 		setError("");
 		router.push(`/onboarding/${stage}`);
 		setBSloading(false);
-		//set cookie here
+		setCookie("onboarding", stage);
 	};
 
 	const finish = async () => {
@@ -51,8 +53,8 @@ const Onboarding = () => {
 		setBSloading(true);
 
 		setTimeout(() => {
-			// set cookie to done here
-		router.push("/")
+			setCookie("onboarding", OnboardingState.Done);
+			router.push("/");
 		}, 4000);
 	};
 
@@ -110,7 +112,14 @@ const Onboarding = () => {
 	useEffect(() => {
 		(async () => {
 			if (user && supabase && !userData) {
-				// TODO: check cookies to see if it should redirect to a specific page. Probably worth using middleware too -LS
+				// check cookies to see if it should redirect to a specific page. Probably worth using middleware too -LS
+
+				if (cookies.onboarding == OnboardingState.Done) {
+					router.push("/");
+				}
+				if (cookies.onboarding == OnboardingState.NoAccount) {
+					setStage(OnboardingState.NoAccount);
+				}
 
 				// This is called first incase the user already started on another screen, we don't want to try and re-convert them -LS
 
@@ -118,6 +127,7 @@ const Onboarding = () => {
 					await getProfile(supabase, user.id),
 					await getAllClasses(supabase, user.id),
 				]);
+
 				if (fetchedUserData.data) {
 					const user = fetchedUserData.data;
 					setUserData(fetchedUserData.data);
@@ -131,13 +141,15 @@ const Onboarding = () => {
 						setClasses(classesData.data);
 					}
 
-					// if the onboarding cookie isn't set, go to first stage
-					//setStage(OnboardingState.FirstStage);
-					// if it is, go to the stage they're on
+					if (cookies.onboarding) {
+						// if the onboarding cookie isn't set, go to first stage
+						setStage(OnboardingState.FirstStage);
+						// if it is, go to the stage they're on
+						setStage(cookies.onboarding);
+					}
+
 					return;
 				}
-
-				// TODO: call onboarding function here. Should probably return the same info as profiles response, or we can just call it again -LS
 			}
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps

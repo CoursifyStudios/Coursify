@@ -57,6 +57,7 @@
 		"next-themes": "^0.2.1",
 		"prettier-plugin-organize-imports": "^3.2.3",
 		"react": "^18.2.0",
+		"react-cookie": "^4.1.1",
 		"react-dom": "^18.2.0",
 		"react-tagsinput": "^3.20.3",
 		"sass": "^1.64.1",
