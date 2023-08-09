@@ -57,6 +57,8 @@ const Discussion: NextPage<{
 	const [clearEditor, setClearEditor] = useState(false);
 	const [rawSubmission, setRawSubmission] = useState("");
 	const { newTab } = useTabs();
+	const posted = useMemo(() => revisions.some((rev) => rev.final), [revisions]);
+	const [loadingMsg, setLoadingMsg] = useState("");
 
 	// Returns content and if it can be submitted, as well as the length of the text
 	const content = useMemo(() => {
@@ -164,6 +166,25 @@ const Discussion: NextPage<{
 		setLoading(false);
 	};
 
+	const deletePost = async (date: string) => {
+		setLoadingMsg("Deleting post...");
+		const { error, count } = await supabase
+			.from("submissions")
+			.delete({ count: "exact" })
+			.eq("user_id", user.id)
+			.eq("created_at", date);
+		if (error || count == 0) {
+			setLoadingMsg(
+				`Failed to delete post. Try reloading first. ${
+					error ? `Error: ${error.message}` : ""
+				}`
+			);
+			return;
+		}
+		setLoadingMsg("Deleted post!");
+		setRevisions((revs) => revs.filter((rev) => rev.created_at != date));
+	};
+
 	return (
 		<>
 			<Editor
@@ -241,6 +262,7 @@ const Discussion: NextPage<{
 					</Button>
 				</div>
 			</div>
+			{loadingMsg && `Message from server: ${loadingMsg}`}
 			{error && `Error occured while saving: ${error}`}
 			<div className="flex flex-col gap-4 mt-8">
 				{revisions
@@ -277,16 +299,16 @@ const Discussion: NextPage<{
 								<div className="ml-auto">
 									<MenuSelect
 										items={[
-											{
-												content: (
-													<>
-														{" "}
-														Edit <PencilIcon className="h-5 w-5" />{" "}
-													</>
-												),
-												className: "",
-												onClick: () => {},
-											},
+											// {
+											// 	content: (
+											// 		<>
+											// 			{" "}
+											// 			Edit <PencilIcon className="h-5 w-5" />{" "}
+											// 		</>
+											// 	),
+											// 	className: "",
+											// 	onClick: () => {},
+											// },
 											{
 												content: (
 													<>
@@ -294,6 +316,7 @@ const Discussion: NextPage<{
 														Delete <TrashIcon className="h-5 w-5" />{" "}
 													</>
 												),
+												onClick: () => deletePost(v.created_at),
 											},
 										]}
 									>
