@@ -17,11 +17,15 @@ import { NextPage } from "next";
 import {
 	Dispatch,
 	SetStateAction,
+	useEffect,
 	useLayoutEffect,
 	useMemo,
 	useState,
 } from "react";
-import { AssignmentDiscussionPost } from "../../assignmentCreation/three/settings.types";
+import {
+	AssignmentDiscussionPost,
+	DiscussionPermissions,
+} from "../../assignmentCreation/three/settings.types";
 import { Submission, SubmissionText } from "../submission.types";
 import Editor from "@/components/editors/richeditor";
 import { EditorState } from "lexical";
@@ -56,9 +60,38 @@ const Discussion: NextPage<{
 }) => {
 	const [clearEditor, setClearEditor] = useState(false);
 	const [rawSubmission, setRawSubmission] = useState("");
+	// Used text accidentally, too late to fix it :/ -LS
+	const [classSubmissions, setClassSubmissions] = useState<Submission[]>();
 	const { newTab } = useTabs();
-	const posted = useMemo(() => revisions.some((rev) => rev.final), [revisions]);
+	const viewOtherSubmissions = useMemo(() => {
+		if (settings.permissions == DiscussionPermissions.ALWAYS) return true;
+
+		const posted = revisions.some((rev) => rev.final);
+	}, [revisions]);
 	const [loadingMsg, setLoadingMsg] = useState("");
+
+	useEffect(() => {
+		(async () => {
+			if (supabase && user && !classSubmissions) {
+				setError("");
+				const { data: submissions, error } = await supabase
+					.from("submissions")
+					.select(
+						"content, final, created_at, users ( id, full_name, avatar_url )"
+					)
+					.eq("assignment_id", assignmentID)
+					.neq("user_id", user.id);
+				if (submissions) {
+					setClassSubmissions(submissions as Submission[]);
+				}
+				if (error) {
+					setError(
+						"Failed to fetch your peers submissions. Error: " + error.message
+					);
+				}
+			}
+		})();
+	}, [assignmentID, classSubmissions, supabase, user, user.id]);
 
 	// Returns content and if it can be submitted, as well as the length of the text
 	const content = useMemo(() => {
@@ -331,6 +364,43 @@ const Discussion: NextPage<{
 								className=" "
 								//@ts-expect-error I promise it does exist ts
 								initialState={v.content.content}
+							/>
+						</div>
+					))}
+				{classSubmissions &&
+					classSubmissions.map((submission) => (
+						<div
+							className="bg-gray-200 px-4 py-5 rounded-xl"
+							key={submission.created_at}
+						>
+							<div className="flex items-center">
+								<Image
+									width={32}
+									height={32}
+									className="rounded-full h-8 w-8 select-none"
+									src={submission.users?.avatar_url || ""}
+									alt="user avatar"
+									draggable={false}
+								/>
+								<div className="ml-3">
+									<Link
+										href={`/profile/${submission.users?.id}`}
+										onClick={() => newTab(`/profile/${submission.users?.id}`)}
+									>
+										<h3 className="font-medium">
+											{submission.users?.full_name}
+										</h3>
+									</Link>
+									<p className="text-xs text-gray-700">
+										{formatDate(new Date())}
+									</p>
+								</div>
+							</div>
+							<Editor
+								editable={false}
+								className=" "
+								//@ts-expect-error I promise it does exist ts
+								initialState={submission.content.content}
 							/>
 						</div>
 					))}
