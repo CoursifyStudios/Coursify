@@ -32,7 +32,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment, ReactElement, useEffect, useState } from "react";
-import { AgendasModule } from "@/components/class/agendas";
+import { AgendasModule } from "@/components/complete/agendas";
 
 const Class: NextPageWithLayout = () => {
 	const router = useRouter();

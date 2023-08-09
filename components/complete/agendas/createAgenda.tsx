@@ -11,6 +11,7 @@ import { EditorState } from "lexical";
 import { useEffect, useState } from "react";
 import { CompactAssignmentUI } from "./agenda";
 import { createAgenda, editAgenda, searchDB } from "@/lib/db/agendas";
+import { Info } from "@/components/tooltips/info";
 
 export const CreateAgenda = ({
 	classID,
@@ -194,9 +195,10 @@ export const CreateAgenda = ({
 						focus={false}
 					/>
 					{/* Later, we'll need to be able to change the order of the assignments */}
-					<div className="flex justify-between">
+					<div className="flex">
 						<p>Select assignments to include in this agenda:</p>
 					</div>
+					{/* Searching */}
 					<div className="relative flex items-center mb-2">
 						<MagnifyingGlassIcon className="absolute left-3 h-4 w-4" />
 						<input
@@ -221,6 +223,10 @@ export const CreateAgenda = ({
 							}}
 							onKeyDown={(e) => e.key == "Enter" && e.preventDefault()}
 						/>
+						<Info className="ml-2" icon={<p className="text-sm">Tip!</p>}>
+							Pressing enter or the search button will load more assignments
+							that match your search
+						</Info>
 						<Button
 							type="button"
 							disabled={searching}

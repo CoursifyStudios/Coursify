@@ -62,7 +62,7 @@ export const Agenda = ({
 
 	return (
 		<>
-			{/* Couldn't get editing the agenda directly to work, so instead we just delete it and add a new in its place (literally) */}
+			{/* Couldn't get editing the agenda directly to work, so instead we just delete it and add a new one in its place */}
 			{editedAgenda ? (
 				<Agenda
 					classID={classID}
@@ -106,11 +106,6 @@ export const Agenda = ({
 					<div className="bg-gray-200 p-4 rounded-lg">
 						<div className="flex justify-between">
 							<h2>Agenda for {agenda.date}</h2>
-							{/* For the moment, I'm commenting this out because I can't remember which dropdown menu Lukas wants me using */}
-							{/* <EllipsisVerticalIcon className="h-6 w-6" tabIndex={0}/> */}
-							{/* TBH actually kind of liking the look w/ out dropdown
-                    yeah this is better */}
-							{/* AlSO LUKAS WHY CANT I OVERIDE THE PADDING ON THE <Button> ELEMENT */}
 							{isTeacher && (
 								<div className="gap-2 grid grid-cols-2">
 									<button
@@ -135,16 +130,9 @@ export const Agenda = ({
 						<Editor
 							editable={false}
 							initialState={agenda.description}
-							className="mt-0.5"
+							className="my-0.5"
 						/>
 						<div className="grid grid-cols-1 gap-2">
-							{/* temmp, TODO: */}
-							{agenda.assignments &&
-								agenda.assignments.map((a, i) => (
-									<p key={a}>
-										{i}. {a}
-									</p>
-								))}
 							{true &&
 								allAssignments
 									.filter(

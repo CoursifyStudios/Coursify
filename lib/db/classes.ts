@@ -108,7 +108,8 @@ export const getClass = async (
 		.eq("id", classid)
 		// will be improved, don't worry
 		.limit(5, { foreignTable: "assignments" })
-		.order("date", { foreignTable: "agendas", ascending: true })
+		//not sure if the line below does anything worthwhile
+		//.order("date", { foreignTable: "agendas", ascending: true })
 		.or(
 			`date.eq.${new Date().toLocaleDateString("en-CA")}, date.gte.${new Date(
 				Date.now() - 171800000
