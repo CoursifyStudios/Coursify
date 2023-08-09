@@ -222,9 +222,11 @@ const FileUpload: NextPage<{
 			}),
 		}));
 
-		const { error } = await supabase.storage
-			.from("ugc")
-			.remove([`submissions/${fileName}`]);
+		const test = await supabase.functions.invoke("delete-file", {
+			body: {
+				path: `submissions/${fileName}`,
+			},
+		});
 
 		if (error) {
 			setError("Failed to delete file!");
@@ -319,7 +321,8 @@ const FileUpload: NextPage<{
 							mediaFileExtensions.includes(
 								file.realName.split(".").pop() || ""
 							) ? (
-								<Image
+								// eslint-disable-next-line @next/next/no-img-element
+								<img
 									src={file.link}
 									alt={`ugc image of ${file.realName}`}
 									width={24}
