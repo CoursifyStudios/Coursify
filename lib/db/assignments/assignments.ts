@@ -14,10 +14,13 @@ export const getAllAssignments = async (
 		.from("class_users")
 		.select(
 			`
+			teacher,
 			classes (
 				assignments (
 				*,
-				
+				submissions ( 
+					final
+				),
 				classes (
 					name, id, color, block, schedule_type
 				),

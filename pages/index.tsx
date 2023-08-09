@@ -2,7 +2,7 @@ import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Link from "next/link";
 import { ReactElement, ReactNode, useEffect, useState } from "react";
 import HomepageClassesUI from "../components/class/homepage";
-import { sortClasses } from "../components/class/sorting";
+//import { sortClasses } from "../components/class/sorting";
 import { AssignmentPreview } from "../components/assignments/assignments";
 import ScheduleComponent from "../components/complete/schedule";
 import {

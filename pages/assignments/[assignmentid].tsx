@@ -32,7 +32,8 @@ import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { ReactElement, useEffect, useState } from "react";
+import { Fragment, ReactElement, useEffect, useState } from "react";
+import { Tab } from "@headlessui/react";
 
 const Panel = dynamic(
 	() => import("@/components/assignments/assignmentPanel"),
@@ -52,7 +53,10 @@ const Panel = dynamic(
 
 const Post: NextPageWithLayout = () => {
 	const supabase = useSupabaseClient<Database>();
-	const [allAssignments, setAllAssignments] = useState<AllAssignments>();
+	const [studentAssignments, setStudentAssignments] =
+		useState<AllAssignments>();
+	const [teacherAssignments, setTeacherAssignments] =
+		useState<AllAssignments>();
 	const [assignment, setAssignment] = useState<AssignmentResponse>();
 	//obviously we need a better solution
 	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
@@ -74,18 +78,24 @@ const Post: NextPageWithLayout = () => {
 	// Gets the data from the db
 	useEffect(() => {
 		(async () => {
-			if (user && !allAssignments) {
+			if (user && !(studentAssignments && teacherAssignments)) {
 				const rawData = await getAllAssignments(supabase, user.id);
-				let assignments: AllAssignments = [];
+				let sAssignments: AllAssignments = [];
+				let tAssignments: AllAssignments = [];
 
 				if (rawData.data) {
 					rawData.data.forEach((a) => {
 						if (!a.classes) return;
-						assignments = assignments.concat(a.classes.assignments);
+						if (a.teacher) {
+							tAssignments = tAssignments.concat(a.classes.assignments);
+						} else {
+							sAssignments = sAssignments.concat(a.classes.assignments);
+						}
 					});
 				}
 
-				setAllAssignments(assignments);
+				setTeacherAssignments(tAssignments);
+				setStudentAssignments(sAssignments);
 			}
 			// In theory, most people will have the schedule already cached. This is a band-aid solution and won't be used later on
 			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
@@ -127,7 +137,8 @@ const Post: NextPageWithLayout = () => {
 		if (router.isReady && assignmentid != "0" && window.innerWidth < 768) {
 			setFullscreen(true);
 		}
-	}, [user, supabase, router, assignmentid, allAssignments, assignment]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user, supabase, router, assignmentid, assignment]);
 
 	return (
 		// Left pane
@@ -137,7 +148,115 @@ const Post: NextPageWithLayout = () => {
 					fullscreen ? "hidden" : "flex"
 				} w-[20.5rem] shrink-0 flex-col space-y-5 overflow-y-auto p-1 pb-6 compact:space-y-3 md:h-[calc(100vh-6.5rem)] `}
 			>
-				<div className="flex flex-col">
+				<h2 className="title">Your Assignments</h2>
+				{(teacherAssignments || studentAssignments) && user && schedule ? (
+					<Tab.Group defaultIndex={studentAssignments ? 0 : 1}>
+						<Tab.List as="div" className="flex items-center">
+							<Tab as={Fragment}>
+								{({ selected }) => (
+									<div
+										className={`flex cursor-pointer items-center rounded-lg border px-2 py-1 focus:outline-none ${
+											selected
+												? "brightness-focus"
+												: "border-transparent bg-gray-200"
+										} text-sm font-medium`}
+									>
+										Student
+									</div>
+								)}
+							</Tab>
+							<Tab as={Fragment}>
+								{({ selected }) => (
+									<div
+										className={`ml-4 flex cursor-pointer items-center rounded-lg border px-2 py-1 focus:outline-none ${
+											selected
+												? "brightness-focus"
+												: "border-transparent bg-gray-200"
+										} text-sm font-medium`}
+									>
+										Teacher
+									</div>
+								)}
+							</Tab>
+						</Tab.List>
+						<Tab.Panels>
+							{studentAssignments && (
+								<Tab.Panel className="space-y-5 flex flex-col compact:space-y-2">
+									{studentAssignments.map(
+										(assignment) =>
+											assignment.classes && (
+												<AssignmentPreview
+													key={assignment.id}
+													supabase={supabase}
+													assignment={assignment}
+													userId={user.id}
+													starredAsParam={
+														assignment.starred
+															? Array.isArray(assignment.starred)
+																? assignment.starred.length > 0
+																: !!assignment.starred
+															: false
+													}
+													//obviously we need a better solution
+													schedule={schedule!}
+													scheduleT={scheduleT!}
+													showClassPill={true}
+													classes={getDataOutArray(assignment.classes)}
+													className={`${
+														assignmentid == assignment.id
+															? "brightness-focus"
+															: "brightness-hover bg-backdrop-200"
+													} border border-transparent `}
+												/>
+											)
+									)}
+								</Tab.Panel>
+							)}
+							{teacherAssignments && (
+								<Tab.Panel className="space-y-5 flex flex-col compact:space-y-2">
+									{teacherAssignments.map(
+										(assignment) =>
+											assignment.classes && (
+												<AssignmentPreview
+													key={assignment.id}
+													supabase={supabase}
+													assignment={assignment}
+													userId={user.id}
+													starredAsParam={
+														assignment.starred
+															? Array.isArray(assignment.starred)
+																? assignment.starred.length > 0
+																: !!assignment.starred
+															: false
+													}
+													//obviously we need a better solution
+													schedule={schedule!}
+													scheduleT={scheduleT!}
+													showClassPill={true}
+													classes={getDataOutArray(assignment.classes)}
+													className={`${
+														assignmentid == assignment.id
+															? "brightness-focus"
+															: "brightness-hover bg-backdrop-200"
+													} border border-transparent `}
+												/>
+											)
+									)}
+								</Tab.Panel>
+							)}
+						</Tab.Panels>
+					</Tab.Group>
+				) : (
+					<>
+						{[...Array(3)].map((_, i) => (
+							<div
+								className="h-24 animate-pulse rounded-xl bg-gray-200 "
+								key={i}
+							></div>
+						))}
+					</>
+				)}
+				{/* <div className="flex flex-col">
 					<div className="flex-col rounded-lg bg-backdrop-200 p-2">
 						<div className="mb-1 flex items-center">
 							<h1 className="mr-1 text-xl font-bold">Filters</h1>
@@ -167,48 +286,7 @@ const Post: NextPageWithLayout = () => {
 							values={options}
 						/>
 					</div>
-				</div>
-				{allAssignments ? (
-					user &&
-					schedule &&
-					allAssignments.map(
-						(assignment) =>
-							assignment.classes && (
-								<AssignmentPreview
-									key={assignment.id}
-									supabase={supabase}
-									assignment={assignment}
-									userId={user.id}
-									starredAsParam={
-										assignment.starred
-											? Array.isArray(assignment.starred)
-												? assignment.starred.length > 0
-												: !!assignment.starred
-											: false
-									}
-									//obviously we need a better solution
-									schedule={schedule!}
-									scheduleT={scheduleT!}
-									showClassPill={true}
-									classes={getDataOutArray(assignment.classes)}
-									className={`${
-										assignmentid == assignment.id
-											? "brightness-focus"
-											: "brightness-hover bg-backdrop-200"
-									} border border-transparent `}
-								/>
-							)
-					)
-				) : (
-					<>
-						{[...Array(3)].map((_, i) => (
-							<div
-								className="h-24 animate-pulse rounded-xl bg-gray-200 "
-								key={i}
-							></div>
-						))}
-					</>
-				)}
+				</div> */}
 			</div>
 			<div
 				className={`grow rounded-xl px-4 md:h-[calc(100vh-6.5rem)] ${
@@ -224,7 +302,7 @@ const Post: NextPageWithLayout = () => {
 		const [open, setOpen] = useState(false);
 		if (
 			!router.isReady ||
-			!allAssignments ||
+			!(teacherAssignments || studentAssignments) ||
 			(!assignment && assignmentid != "0")
 		) {
 			return <Loading />;
