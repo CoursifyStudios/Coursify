@@ -105,7 +105,13 @@ export const Agenda = ({
 
 					<div className="bg-gray-200 p-4 rounded-lg">
 						<div className="flex justify-between">
-							<h2>Agenda for {agenda.date}</h2>
+							<h2>
+								{new Date(agenda.date!).toLocaleDateString("en-US", {
+									weekday: "long",
+									month: "long",
+									day: "numeric",
+								})}
+							</h2>
 							{isTeacher && (
 								<div className="gap-2 grid grid-cols-2">
 									<button
