@@ -17,21 +17,26 @@ export const getAllAssignments = async (
 			teacher,
 			classes (
 				assignments (
-				*,
-				submissions ( 
-					final
-				),
-				classes (
-					name, id, color, block, schedule_type
-				),
-				starred (
-					assignment_id
-				)
+					*,
+					submissions ( 
+						final
+					),
+					classes (
+						name, id, color, block, schedule_type
+					),
+					starred (
+						assignment_id
+					)
 				)
 			)
 		`
 		)
-		.eq("user_id", userID);
+		.eq("user_id", userID)
+		.order("due_date", {
+			foreignTable: "classes.assignments",
+			ascending: false,
+			nullsFirst: false,
+		});
 };
 
 export type AllAssignmentResponse = Awaited<

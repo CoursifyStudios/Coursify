@@ -66,6 +66,7 @@ const Post: NextPageWithLayout = () => {
 	const { assignmentid } = router.query;
 	const [fullscreen, setFullscreen] = useState(false);
 	const [revisions, setRevisions] = useState<Submission[]>([]);
+	const [tab, setTab] = useState(0);
 
 	const options = [
 		{ name: "Relevance" }, //still no idea what this is supposed to do
@@ -93,9 +94,31 @@ const Post: NextPageWithLayout = () => {
 						}
 					});
 				}
-
-				setTeacherAssignments(tAssignments);
-				setStudentAssignments(sAssignments);
+				if (sAssignments.length == 0) {
+					setTab(1);
+				}
+				setTeacherAssignments(
+					tAssignments.length > 0 ? tAssignments : undefined
+				);
+				setStudentAssignments(
+					sAssignments.length > 0
+						? sAssignments //.sort((a, b) => {
+						: // 	const aScore =
+						  // 		a.submissions.length > 0
+						  // 			? a.submissions.some((s) => s.final == true)
+						  // 				? 2
+						  // 				: 1
+						  // 			: 0;
+						  // 	const bScore =
+						  // 		b.submissions.length > 0
+						  // 			? b.submissions.some((s) => s.final == true)
+						  // 				? 2
+						  // 				: 1
+						  // 			: 0;
+						  // 	return aScore - bScore;
+						  // })
+						  undefined
+				);
 			}
 			// In theory, most people will have the schedule already cached. This is a band-aid solution and won't be used later on
 			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
@@ -150,37 +173,39 @@ const Post: NextPageWithLayout = () => {
 			>
 				<h2 className="title">Your Assignments</h2>
 				{(teacherAssignments || studentAssignments) && user && schedule ? (
-					<Tab.Group defaultIndex={studentAssignments ? 0 : 1}>
-						<Tab.List as="div" className="flex items-center">
-							<Tab as={Fragment}>
-								{({ selected }) => (
-									<div
-										className={`flex cursor-pointer items-center rounded-lg border px-2 py-1 focus:outline-none ${
-											selected
-												? "brightness-focus"
-												: "border-transparent bg-gray-200"
-										} text-sm font-medium`}
-									>
-										Student
-									</div>
-								)}
-							</Tab>
-							<Tab as={Fragment}>
-								{({ selected }) => (
-									<div
-										className={`ml-4 flex cursor-pointer items-center rounded-lg border px-2 py-1 focus:outline-none ${
-											selected
-												? "brightness-focus"
-												: "border-transparent bg-gray-200"
-										} text-sm font-medium`}
-									>
-										Teacher
-									</div>
-								)}
-							</Tab>
-						</Tab.List>
+					<Tab.Group selectedIndex={tab} onChange={setTab}>
+						{!(!teacherAssignments || !studentAssignments) && (
+							<Tab.List as="div" className="flex items-center">
+								<Tab as={Fragment}>
+									{({ selected }) => (
+										<div
+											className={`flex cursor-pointer items-center rounded-lg border px-2 py-1 focus:outline-none ${
+												selected
+													? "brightness-focus"
+													: "border-transparent bg-gray-200"
+											} text-sm font-medium`}
+										>
+											Student
+										</div>
+									)}
+								</Tab>
+								<Tab as={Fragment}>
+									{({ selected }) => (
+										<div
+											className={`ml-4 flex cursor-pointer items-center rounded-lg border px-2 py-1 focus:outline-none ${
+												selected
+													? "brightness-focus"
+													: "border-transparent bg-gray-200"
+											} text-sm font-medium`}
+										>
+											Teacher
+										</div>
+									)}
+								</Tab>
+							</Tab.List>
+						)}
 						<Tab.Panels>
-							{studentAssignments && (
+							{studentAssignments ? (
 								<Tab.Panel className="space-y-5 flex flex-col compact:space-y-2">
 									{studentAssignments.map(
 										(assignment) =>
@@ -206,13 +231,15 @@ const Post: NextPageWithLayout = () => {
 														assignmentid == assignment.id
 															? "brightness-focus"
 															: "brightness-hover bg-backdrop-200"
-													} border border-transparent `}
+													} border border-transparent`}
 												/>
 											)
 									)}
 								</Tab.Panel>
+							) : (
+								<Tab.Panel></Tab.Panel>
 							)}
-							{teacherAssignments && (
+							{teacherAssignments ? (
 								<Tab.Panel className="space-y-5 flex flex-col compact:space-y-2">
 									{teacherAssignments.map(
 										(assignment) =>
@@ -243,6 +270,8 @@ const Post: NextPageWithLayout = () => {
 											)
 									)}
 								</Tab.Panel>
+							) : (
+								<Tab.Panel></Tab.Panel>
 							)}
 						</Tab.Panels>
 					</Tab.Group>
