@@ -62,6 +62,7 @@ import { NextPageWithLayout } from "../_app";
 import { getBulkUserData, getUserData } from "@/lib/db/settings";
 import { Toggle } from "@/components/misc/toggle";
 import MenuSelect from "@/components/misc/menu";
+import Avatar from "@/components/misc/avatar";
 
 /**
  * This file is not intended for long term use.
@@ -2633,17 +2634,12 @@ function UserSelector({
 					) : (
 						students.map((student) => (
 							<div key={student.id} className="flex items-center p-2">
-								{student.avatar_url ? (
-									<Image
-										src={student.avatar_url}
-										width={25}
-										height={25}
-										alt={`${student.full_name}'s profile picture`}
-										className={`rounded-full mr-4 h-8 w-8`}
-									/>
-								) : (
-									<div className="bg-gradient-to-br from-blue-500 w-8 mr-4 rounded-full h-8" />
-								)}
+								<Avatar
+									full_name={student.full_name}
+									width="8"
+									height="8"
+									avatar_url={student.avatar_url}
+								/>
 								<div className="flex flex-col max-w-[10rem]">
 									<p className="font-medium truncate">{student.full_name}</p>
 									{!student.avatar_url && (
