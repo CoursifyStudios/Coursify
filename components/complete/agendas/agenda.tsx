@@ -105,7 +105,7 @@ export const Agenda = ({
 
 					<div className="bg-gray-200 p-4 rounded-lg">
 						<div className="flex justify-between">
-							<h2>
+							<h2 className="font-bold text-lg">
 								{new Date(agenda.date!).toLocaleDateString("en-US", {
 									weekday: "long",
 									month: "long",
