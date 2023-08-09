@@ -1,5 +1,41 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database, Json } from "./database.types";
+import { getTheseAssignments } from "./assignments/assignments";
+
+export const fetchAgendasAndAssignments = async (
+	supabase: SupabaseClient<Database>,
+	classID: string,
+	agendas: string[],
+	assignments: string[], //we don't want to fetch any assignments that we don't need to
+	date: string,
+	fetchFuture: boolean
+) => {
+	const fetchedAgendas = await supabase
+		.from("agendas")
+		.select(`*`)
+		.eq("class_id", classID)
+		.filter("date", fetchFuture ? "gte" : "lte", date) // grr
+		.not("id", "in", `(${agendas as string[]})`)
+		.limit(10);
+	let fetchedAssignments;
+	if (fetchedAgendas.data) {
+		fetchedAssignments = await getTheseAssignments(
+			supabase,
+			classID,
+			fetchedAgendas.data.flatMap((agenda) =>
+				// all assignments attached to a particular agenda
+				agenda.assignments
+					? agenda.assignments.filter(
+							(assignment) =>
+								// filter to make sure that this assignment was not already fetched
+								assignments.indexOf(assignment) === -1
+					  )
+					: []
+			)
+		);
+	}
+	return { fetchedAgendas, fetchedAssignments };
+};
 
 export const fetchMoreAgendas = async (
 	supabase: SupabaseClient<Database>,
@@ -63,18 +99,22 @@ export const editAgenda = async (
 export const searchDB = async (
 	supabase: SupabaseClient<Database>,
 	query: string,
-	excludeThese?: string[]
+	classID: string,
+	excludeThese: string[] // we don't want to fetch assignments that we already fetched
 ) => {
 	return await supabase
 		.from("assignments")
-		.select()
-		.not("id", "in", `(${excludeThese as string[]})`)
-		.ilike(
-			"name",
-			`%${query
-				.replace(/"/g, '\\"')
-				.replace(/\*/g, "\\*")
-				.replace(/\%/g, "*")}%"`
+		.select(
+			`
+        id,
+        name,
+        description,
+        due_type,
+        due_date
+        `
 		)
+		.eq("class_id", classID)
+		.not("id", "in", `(${excludeThese as string[]})`)
+		.ilike("name", `%${query}%`)
 		.limit(10);
 };

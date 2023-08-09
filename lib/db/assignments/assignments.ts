@@ -76,10 +76,10 @@ export type AssignmentResponse = Awaited<ReturnType<typeof getAssignment>>;
 //Lukas is building the world's first 7D array
 export type Assignment = Database["public"]["Tables"]["assignments"]["Row"];
 
-export const getAllAssignmentsButNotThese = async (
+export const getTheseAssignments = async (
 	supabase: SupabaseClient<Database>,
 	class_id: string,
-	notThese: string[]
+	these: string[]
 ) => {
 	return await supabase
 		.from("assignments")
@@ -93,7 +93,8 @@ export const getAllAssignmentsButNotThese = async (
         `
 		)
 		.eq("class_id", class_id)
-		.not("id", "in", `(${notThese})`);
+		.in("id", these);
+	//.not("id", "in", `(${notThese})`);
 };
 export interface AssignmentData {
 	// I can't use extends here because I want to have data be undefined sometimes

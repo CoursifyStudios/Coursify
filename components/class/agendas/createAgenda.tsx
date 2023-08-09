@@ -8,7 +8,7 @@ import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { Formik, Form, Field } from "formik";
 import { EditorState } from "lexical";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { CompactAssignmentUI } from "./agenda";
 import { createAgenda, editAgenda, searchDB } from "@/lib/db/agendas";
 
@@ -18,6 +18,7 @@ export const CreateAgenda = ({
 	setOpen,
 	assignments,
 	createTempAgenda,
+	assignmentUpdater,
 	editingInfo,
 }: {
 	classID: string;
@@ -37,6 +38,15 @@ export const CreateAgenda = ({
 		description: Json;
 		assignments: string[] | null;
 	}) => void;
+	assignmentUpdater: (
+		val: {
+			name: string;
+			description: string;
+			id: string;
+			due_type: number | null;
+			due_date: string | null;
+		}[]
+	) => void;
 	// REQUIRED FOR EDITING, BUT NOT CREATING
 	editingInfo?: {
 		id: string;
@@ -59,19 +69,64 @@ export const CreateAgenda = ({
 			? editingInfo.assignments.map((assignment) => assignment.id)
 			: []
 	);
+	// Loading states
 	const [loading, setLoading] = useState(false);
-	const [search, setSearch] = useState("");
+	const [searching, setSearching] = useState(false);
+	//searching
+	const [query, setQuery] = useState("");
 	const [searchChangedSinceReq, setSearchChangedSinceReq] = useState(false);
+	const [searchErrorMessage, setSearchErrorMessage] = useState("");
+	const [results, setResults] = useState<
+		{
+			name: string;
+			description: string;
+			id: string;
+			due_type: number | null;
+			due_date: string | null;
+		}[]
+	>();
 
-	// useEffect(() => {
-	//     (async() => {
-	//         searchDB(supabase, search)
-	//     })();
-	// }, [supabase, search])
+	async function search() {
+		setSearchErrorMessage("");
+		setSearchChangedSinceReq(false);
+		setSearching(true);
+		const retrievedAssignments = await searchDB(
+			supabase,
+			query,
+			classID,
+			assignments.map((assignment) => assignment.id)
+		);
+		if (retrievedAssignments.data) {
+			setSearching(false);
+			if (retrievedAssignments.data.length == 0) {
+				setSearchErrorMessage("No assignments matched your search");
+			}
+			setResults(retrievedAssignments.data);
+			assignmentUpdater(retrievedAssignments.data);
+		} else if (retrievedAssignments.error) {
+			setSearching(false);
+			setSearchErrorMessage("Something went wrong processing your request");
+		}
+	}
+
+	useEffect(() => {
+		if (searchChangedSinceReq) {
+			setSearchErrorMessage("");
+		}
+	}, [searchChangedSinceReq]);
 
 	return (
-		<Popup closeMenu={() => setOpen(false)} open={open} size="md">
-			<h2 className="title-sm mb-2">Create a new Agenda</h2>
+		<Popup
+			closeMenu={() => {
+				setOpen(false);
+				setQuery("");
+			}}
+			open={open}
+			size="md"
+		>
+			<h2 className="title-sm mb-2">
+				{editingInfo ? "Edit your agenda" : "Create a new Agenda"}
+			</h2>
 			{/* custom datepicker later probably */}
 			<Formik
 				initialValues={{
@@ -109,6 +164,7 @@ export const CreateAgenda = ({
 							// SUCCESS STATE
 						} else if (DBreturn.data) {
 							setLoading(false);
+							setQuery("");
 							setChosenAssignments([]); //clears your selections in the case of a succesful POST
 							setOpen(false);
 							if (createTempAgenda) {
@@ -148,9 +204,8 @@ export const CreateAgenda = ({
 							className="max-w-[24rem] grow !rounded-xl py-1 placeholder:dark:text-gray-400 pl-8"
 							placeholder="Search assignments..."
 							onInput={(e) => {
-								e.preventDefault();
 								//@ts-ignore DUDE OF COURSE e.target.value exists!
-								setSearch(e.target.value);
+								setQuery(e.target.value);
 								setSearchChangedSinceReq(true);
 							}}
 							onKeyUp={(key) => {
@@ -158,26 +213,38 @@ export const CreateAgenda = ({
 									(key.key == "Enter" ||
 										key.key == " " ||
 										key.key == "Return") &&
-									search.trim().length > 0 &&
+									query.trim().length > 0 &&
 									searchChangedSinceReq
 								) {
-									setSearchChangedSinceReq(false);
-									searchDB(supabase, search);
+									search();
 								}
 							}}
+							onKeyDown={(e) => e.key == "Enter" && e.preventDefault()}
 						/>
-						<Button className="ml-auto">Search</Button>
+						<Button
+							type="button"
+							disabled={searching}
+							className="ml-auto gap-2"
+							onClick={() => {
+								search();
+							}}
+						>
+							Search{searching && "ing"}
+							{searching && <LoadingSmall></LoadingSmall>}
+						</Button>
 					</div>
-
+					<p className="text-red-500">{searchErrorMessage}</p>
 					<div className="overflow-auto max-h-80 gap-3 grid">
 						{assignments.length > 0
-							? assignments.map(
+							? Array.from(
+									new Set(assignments.concat(results ? results : []))
+							  ).map(
 									(assignment) =>
-										(search.length == 0
+										(query.length == 0
 											? true
 											: assignment.name
 													.toLowerCase()
-													.includes(search.toLowerCase())) && (
+													.includes(query.toLowerCase())) && (
 											<div key={assignment.id} className="flex justify-between">
 												<Button
 													className={`w-full ${

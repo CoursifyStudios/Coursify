@@ -1,17 +1,19 @@
 import { Button } from "@/components/misc/button";
 import { LoadingSmall } from "@/components/misc/loading";
-import { fetchMoreAgendas } from "@/lib/db/agendas";
+import { fetchAgendasAndAssignments, fetchMoreAgendas } from "@/lib/db/agendas";
 import { Json } from "@/lib/db/database.types";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { Agenda } from "./agenda";
 import { CreateAgenda } from "./createAgenda";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
-import { getAllAssignmentsButNotThese } from "@/lib/db/assignments/assignments";
+import { getTheseAssignments } from "@/lib/db/assignments/assignments";
+import { PostgrestError } from "@supabase/supabase-js";
 
 export const AgendasModule = ({
 	classID,
 	agendas,
+	updateAgendas,
 	allAssignments,
 	isTeacher,
 	assignmentUpdater,
@@ -25,6 +27,15 @@ export const AgendasModule = ({
 		description: Json;
 		assignments: string[] | null;
 	}[];
+	updateAgendas: (
+		val: {
+			class_id: string;
+			id: string;
+			date: string | null;
+			description: Json;
+			assignments: string[] | null;
+		}[]
+	) => void;
 	// Needed for editing
 	allAssignments: {
 		name: string;
@@ -46,29 +57,7 @@ export const AgendasModule = ({
 	fetchExtra: { isOK: boolean; setOK: (value: boolean) => void };
 }) => {
 	const supabase = useSupabaseClient();
-	const [allAssignmentsForAgendas, setAllAssignmentsForAgendas] = useState(
-		new Set(allAssignments)
-	);
 	const [agendaCreationOpen, setAgendaCreationOpen] = useState(false);
-	// Dynamic client update buffers (idk what to call these things)
-	const [createdAgendas, setCreatedAgendas] = useState<
-		{
-			id: string;
-			class_id: string;
-			date: string | null; //shouldn't ever be null, but too lazy to change DB
-			description: Json;
-			assignments: string[] | null; // same case as two lines above
-		}[]
-	>([]);
-	const [extraAgendas, setExtraAgendas] = useState<
-		{
-			id: string;
-			class_id: string;
-			date: string | null;
-			description: Json;
-			assignments: string[] | null;
-		}[]
-	>([]);
 	// Loading state controls
 	const [loadingPastAgendas, setLoadingPastAgendas] = useState(false);
 	const [loadingFutureAgendas, setLoadingFutureAgendas] = useState(false);
@@ -79,31 +68,38 @@ export const AgendasModule = ({
 	// To prevent against the case where the few assignments fetched from the DB
 	// do not include all of the ones that our agendas need, we will fetch the DB
 	// again (after initial load though, it's okay (I think)).
+
 	useEffect(() => {
 		(async () => {
-			// const setOfLoadedAssignments = new Set(
-			// 	agendas // from initial page load
-			// 		.concat(createdAgendas) // newly created
-			// 		.concat(extraAgendas)
-			// 		.map((agenda) => (agenda.assignments ? agenda.assignments : []))
-			// 		.flat()
-			// ); // from Load More
+			const allAssignmentIDs = allAssignments.map(
+				(assignment) => assignment.id
+			);
 			if (supabase && allAssignments && fetchExtra.isOK) {
-				const extraAssignments = await getAllAssignmentsButNotThese(
+				//console.log(await getTheseAssignments(supabase, classID, ["a7d884f5-baca-4cd8-95ea-76a139d2efb4", "7874c8bb-6244-4bd0-a892-987ab53fa1ea"]))
+				const extraAssignments = await getTheseAssignments(
 					supabase,
 					classID,
-					allAssignments.map((assignment) => assignment.id)
+					// all agendas fetched from the initial DB request
+					agendas
+						// we need to do some filtering, then flatten, so flatMap is useful here
+						.flatMap((agenda) =>
+							// all assignments attached to a particular agenda
+							agenda.assignments
+								? agenda.assignments.filter(
+										(assignment) =>
+											// filter to make sure that this assignment was not already fetched
+											allAssignmentIDs.indexOf(assignment) === -1
+								  )
+								: []
+						)
 				);
 				if (extraAssignments.data) {
 					assignmentUpdater(extraAssignments.data);
-					setAllAssignmentsForAgendas(
-						new Set([...allAssignments, ...extraAssignments.data])
-					);
 					fetchExtra.setOK(false);
 				}
 			}
 		})();
-		//finally fixed
+		// finally fixed
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [supabase, classID]);
 	return (
@@ -123,30 +119,29 @@ export const AgendasModule = ({
 					classID={classID}
 					open={agendaCreationOpen}
 					setOpen={setAgendaCreationOpen as (v: boolean) => void}
-					assignments={Array.from(allAssignmentsForAgendas)} //somehow there were duplicated assignments here
+					assignments={allAssignments}
+					assignmentUpdater={assignmentUpdater}
 					createTempAgenda={(newAgenda: {
 						id: string;
 						class_id: string;
 						date: string | null;
 						description: Json;
 						assignments: string[] | null;
-					}) => setCreatedAgendas(createdAgendas.concat(newAgenda))}
+					}) => updateAgendas([newAgenda])}
 				></CreateAgenda>
 			)}
 			<Button
 				className="mb-2 mx-auto"
 				onClick={async () => {
 					setLoadingFutureAgendas(true);
-					const allAgendas = agendas // from initial page load
-						.concat(createdAgendas) // newly created
-						.concat(extraAgendas); // from Load More
-					const moreAgendas = await fetchMoreAgendas(
+					const moreAgendasAndAssignments = await fetchAgendasAndAssignments(
 						supabase,
 						classID as string,
-						allAgendas.map((agenda) => agenda.id),
-						allAgendas.length == 0
+						agendas.map((agenda) => agenda.id),
+						allAssignments.map((assignment) => assignment.id),
+						agendas.length == 0
 							? new Date().toLocaleDateString("en-CA")
-							: allAgendas.sort(
+							: agendas.sort(
 									(a, b) =>
 										new Date(b.date!).getTime() - new Date(a.date!).getTime()
 							  )[0].date!,
@@ -154,12 +149,19 @@ export const AgendasModule = ({
 					);
 
 					setLoadingFutureAgendas(false);
-					if (moreAgendas.data?.length == 0) {
-						setNewAgendasError("All future agendas have been fetched.");
-					} else if (moreAgendas.data) {
-						setExtraAgendas(extraAgendas.concat(moreAgendas.data));
+					if (moreAgendasAndAssignments.fetchedAgendas.data) {
+						if (moreAgendasAndAssignments.fetchedAgendas.data.length == 0) {
+							setNewAgendasError("All future agendas have been fetched.");
+						} else {
+							updateAgendas(moreAgendasAndAssignments.fetchedAgendas.data);
+						}
 					} else {
 						setNewAgendasError("An error occured while fetching your agendas.");
+					}
+					if (moreAgendasAndAssignments.fetchedAssignments?.data) {
+						assignmentUpdater(
+							moreAgendasAndAssignments.fetchedAssignments?.data
+						);
 					}
 				}}
 			>
@@ -177,9 +179,7 @@ export const AgendasModule = ({
 				</p>
 			</div>
 			<div className="gap-3 grid">
-				{createdAgendas // newly created ones (client side before page refresh)
-					.concat(extraAgendas) // from "Load More" button
-					.concat(agendas) // from initial DB request
+				{agendas
 					.slice()
 					.sort(
 						(a, b) => new Date(b.date!).getTime() - new Date(a.date!).getTime()
@@ -189,7 +189,8 @@ export const AgendasModule = ({
 							key={agenda.id}
 							classID={classID}
 							agenda={agenda}
-							allAssignments={Array.from(allAssignmentsForAgendas)}
+							allAssignments={allAssignments}
+							assignmentUpdater={assignmentUpdater}
 							isTeacher={isTeacher ? true : false}
 						></Agenda>
 					))}
@@ -198,16 +199,14 @@ export const AgendasModule = ({
 				className="mt-3 mx-auto"
 				onClick={async () => {
 					setLoadingPastAgendas(true);
-					const allAgendas = agendas // from initial page load
-						.concat(createdAgendas) // newly created
-						.concat(extraAgendas); // from Load More
-					const moreAgendas = await fetchMoreAgendas(
+					const moreAgendasAndAssignments = await fetchAgendasAndAssignments(
 						supabase,
 						classID,
-						allAgendas.map((agenda) => agenda.id),
-						allAgendas.length == 0
+						agendas.map((agenda) => agenda.id),
+						allAssignments.map((assignment) => assignment.id),
+						agendas.length == 0
 							? new Date().toLocaleDateString("en-CA")
-							: allAgendas.sort(
+							: agendas.sort(
 									(a, b) =>
 										new Date(a.date!).getTime() - new Date(b.date!).getTime() // sorting in reverse order for this
 							  )[0].date!,
@@ -215,12 +214,19 @@ export const AgendasModule = ({
 					);
 
 					setLoadingPastAgendas(false);
-					if (moreAgendas.data?.length == 0) {
-						setOldAgendasError("All past agendas have been fetched.");
-					} else if (moreAgendas.data) {
-						setExtraAgendas(extraAgendas.concat(moreAgendas.data));
+					if (moreAgendasAndAssignments.fetchedAgendas.data) {
+						if (moreAgendasAndAssignments.fetchedAgendas.data.length == 0) {
+							setNewAgendasError("All future agendas have been fetched.");
+						} else {
+							updateAgendas(moreAgendasAndAssignments.fetchedAgendas.data);
+						}
 					} else {
-						setOldAgendasError("An error occured while fetching your agendas.");
+						setNewAgendasError("An error occured while fetching your agendas.");
+					}
+					if (moreAgendasAndAssignments.fetchedAssignments?.data) {
+						assignmentUpdater(
+							moreAgendasAndAssignments.fetchedAssignments?.data
+						);
 					}
 				}}
 			>

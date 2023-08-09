@@ -19,6 +19,7 @@ export const Agenda = ({
 	classID,
 	agenda,
 	allAssignments,
+	assignmentUpdater,
 	isTeacher,
 }: {
 	classID: string;
@@ -36,6 +37,16 @@ export const Agenda = ({
 		due_type: number | null;
 		due_date: string | null;
 	}[];
+	//also needed for editing
+	assignmentUpdater: (
+		val: {
+			name: string;
+			description: string;
+			id: string;
+			due_type: number | null;
+			due_date: string | null;
+		}[]
+	) => void;
 	isTeacher: boolean;
 }) => {
 	// This is a 'flag' of sorts, we'll use it to know if the agenda was actually deleted
@@ -62,6 +73,7 @@ export const Agenda = ({
 						assignments: editedAgenda.assignments,
 					}}
 					allAssignments={allAssignments}
+					assignmentUpdater={assignmentUpdater}
 					isTeacher={isTeacher}
 				></Agenda>
 			) : deleted ? null : (
@@ -80,6 +92,7 @@ export const Agenda = ({
 						setOpen={setEditing}
 						assignments={allAssignments}
 						createTempAgenda={setEditedAgenda}
+						assignmentUpdater={assignmentUpdater}
 						editingInfo={{
 							id: agenda.id,
 							date: agenda.date ? agenda.date : "No date",
@@ -124,7 +137,14 @@ export const Agenda = ({
 							initialState={agenda.description}
 							className="mt-0.5"
 						/>
-						<div className="grid gap-2">
+						<div className="grid grid-cols-1 gap-2">
+							{/* temmp, TODO: */}
+							{agenda.assignments &&
+								agenda.assignments.map((a, i) => (
+									<p key={a}>
+										{i}. {a}
+									</p>
+								))}
 							{true &&
 								allAssignments
 									.filter(

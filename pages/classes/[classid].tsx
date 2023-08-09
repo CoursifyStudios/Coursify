@@ -57,6 +57,15 @@ const Class: NextPageWithLayout = () => {
 			due_date: string | null;
 		}[]
 	>([]);
+	const [extraAgendas, setExtraAgendas] = useState<
+		{
+			id: string;
+			class_id: string;
+			date: string | null;
+			description: Json;
+			assignments: string[] | null;
+		}[]
+	>([]);
 	const [fetchedClassId, setFetchedClassId] = useState("");
 	const [searchOpen, setSearchOpen] = useState(false);
 	const [userSearch, setUserSearch] = useState("");
@@ -333,15 +342,28 @@ const Class: NextPageWithLayout = () => {
 									</div>
 								)
 							)}
+
 							{typeof classid === "string" && (
 								<AgendasModule
 									classID={classid}
-									agendas={data.data.agendas}
-									allAssignments={data.data.assignments}
+									agendas={data.data.agendas.concat(extraAgendas)}
+									updateAgendas={(
+										val: {
+											class_id: string;
+											id: string;
+											date: string | null;
+											description: Json;
+											assignments: string[] | null;
+										}[]
+									) => setExtraAgendas(extraAgendas.concat(val))}
+									allAssignments={createdAssignments.concat(
+										data.data.assignments
+									)}
 									isTeacher={isTeacher ? true : false}
 									assignmentUpdater={(val) => {
 										setCreatedAssignments(
-											Array.from(new Set([...createdAssignments, ...val]))
+											//Array.from(new Set([...createdAssignments, ...val]))
+											val.concat(createdAssignments)
 										);
 									}}
 									fetchExtra={{
