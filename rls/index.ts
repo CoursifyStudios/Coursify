@@ -1,5 +1,6 @@
 // Export with `deno task export`
 import { savePolicies } from "./ScriptQL.ts";
+import { viewAgendas, manageAgendas } from "./tables/agendas.ts";
 import {
 	assignmentManagement,
 	assignmentViewing,
@@ -32,5 +33,7 @@ savePolicies(
 	classViewing,
 	classUpdating,
 	classManagement,
-	adminModifyClassUsers
+	adminModifyClassUsers,
+	viewAgendas,
+	manageAgendas
 );
