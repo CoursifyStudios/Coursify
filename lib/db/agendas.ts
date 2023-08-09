@@ -37,22 +37,6 @@ export const fetchAgendasAndAssignments = async (
 	return { fetchedAgendas, fetchedAssignments };
 };
 
-export const fetchMoreAgendas = async (
-	supabase: SupabaseClient<Database>,
-	classID: string,
-	agendas: string[],
-	date: string,
-	fetchFuture: boolean
-) => {
-	return await supabase
-		.from("agendas")
-		.select(`*`)
-		.eq("class_id", classID)
-		.filter("date", fetchFuture ? "gte" : "lte", date) // grr
-		.not("id", "in", `(${agendas as string[]})`)
-		.limit(10);
-};
-
 export const createAgenda = async (
 	supabase: SupabaseClient<Database>,
 	class_id: string,

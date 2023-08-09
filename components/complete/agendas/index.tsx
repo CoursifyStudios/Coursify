@@ -1,6 +1,6 @@
 import { Button } from "@/components/misc/button";
 import { LoadingSmall } from "@/components/misc/loading";
-import { fetchAgendasAndAssignments, fetchMoreAgendas } from "@/lib/db/agendas";
+import { fetchAgendasAndAssignments } from "@/lib/db/agendas";
 import { Json } from "@/lib/db/database.types";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
@@ -8,7 +8,6 @@ import { Agenda } from "./agenda";
 import { CreateAgenda } from "./createAgenda";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { getTheseAssignments } from "@/lib/db/assignments/assignments";
-import { PostgrestError } from "@supabase/supabase-js";
 
 export const AgendasModule = ({
 	classID,
@@ -75,7 +74,6 @@ export const AgendasModule = ({
 				(assignment) => assignment.id
 			);
 			if (supabase && allAssignments && fetchExtra.isOK) {
-				//console.log(await getTheseAssignments(supabase, classID, ["a7d884f5-baca-4cd8-95ea-76a139d2efb4", "7874c8bb-6244-4bd0-a892-987ab53fa1ea"]))
 				const extraAssignments = await getTheseAssignments(
 					supabase,
 					classID,
