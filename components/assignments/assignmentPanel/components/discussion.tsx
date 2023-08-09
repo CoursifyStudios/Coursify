@@ -64,10 +64,13 @@ const Discussion: NextPage<{
 	const [classSubmissions, setClassSubmissions] = useState<Submission[]>();
 	const { newTab } = useTabs();
 	const viewOtherSubmissions = useMemo(() => {
-		if (settings.permissions == DiscussionPermissions.ALWAYS) return true;
-
 		const posted = revisions.some((rev) => rev.final);
-	}, [revisions]);
+
+		if (settings.permissions == DiscussionPermissions.ALWAYS) return true;
+		if (settings.permissions == DiscussionPermissions.NEVER) return false;
+		if (settings.permissions == DiscussionPermissions.AFTER_POSTING)
+			return posted;
+	}, [revisions, settings.permissions]);
 	const [loadingMsg, setLoadingMsg] = useState("");
 
 	useEffect(() => {
@@ -368,7 +371,9 @@ const Discussion: NextPage<{
 						</div>
 					))}
 				{classSubmissions &&
+					viewOtherSubmissions &&
 					classSubmissions.map((submission) => (
+						// This probably shouldn't be copy pasted but whatever
 						<div
 							className="bg-gray-200 px-4 py-5 rounded-xl"
 							key={submission.created_at}
