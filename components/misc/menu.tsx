@@ -36,6 +36,7 @@ export default function MenuSelect({
 							const menuItem = (
 								<Menu.Item
 									as="button"
+									key={i}
 									className={`${item.className} flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300`}
 									onClick={item.onClick}
 								>

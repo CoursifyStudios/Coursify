@@ -37,7 +37,7 @@ const AlignDropdown = () => {
 			</button> */}
 			<button
 				onClick={() => {
-					activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "justify");
+					activeEditor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center");
 				}}
 				className="rounded p-1 hover:bg-gray-200"
 				type="button"

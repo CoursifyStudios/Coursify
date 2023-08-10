@@ -5,7 +5,11 @@ import { NextPage } from "next";
 import { Dispatch, SetStateAction, useState } from "react";
 import { AssignmentSettingsTypes } from "../assignmentCreation/three/settings.types";
 import CheckBox from "./components/checkbox";
+import Text from "./components/text";
 import { Submission, SubmissionSettingsTypes } from "./submission.types";
+import Link from "./components/link";
+import Discussion from "./components/discussion";
+import FileUpload from "./components/file";
 
 const AssignmentPanel: NextPage<{
 	assignmentType: AssignmentTypes;
@@ -32,6 +36,21 @@ const AssignmentPanel: NextPage<{
 		case AssignmentTypes.CHECKOFF:
 			// @ts-expect-error Type conversion
 			return <CheckBox imports={imports} />;
+		case AssignmentTypes.TEXT:
+			// @ts-expect-error Type conversion
+			return <Text imports={imports} />;
+		case AssignmentTypes.LINK:
+			// @ts-expect-error Type conversion
+			return <Link imports={imports} />;
+		case AssignmentTypes.DISCUSSION_POST:
+			// @ts-expect-error Type conversion
+			return <Discussion imports={imports} />;
+		case AssignmentTypes.FILE_UPLOAD:
+			// @ts-expect-error Type conversion
+			return <FileUpload imports={imports} />;
+		case AssignmentTypes.MEDIA:
+			// @ts-expect-error Type conversion
+			return <FileUpload imports={imports} />;
 	}
 };
 

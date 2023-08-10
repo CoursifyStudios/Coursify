@@ -107,10 +107,13 @@ export default function ScheduleComponent({
 		</div>
 	);
 	function checkClassMatchesSchedule(scheduleItem: ScheduleInterface) {
-		return classes?.find(
-			(v) =>
-				v.class!.block == scheduleItem.block &&
-				v.class!.schedule_type == scheduleItem.type
+		return (
+			Array.isArray(classes) &&
+			classes?.find(
+				(v) =>
+					v.class!.block == scheduleItem.block &&
+					v.class!.schedule_type == scheduleItem.type
+			)
 		);
 	}
 }

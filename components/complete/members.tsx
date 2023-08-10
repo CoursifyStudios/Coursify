@@ -33,10 +33,14 @@ export const Member = ({
 			<div className="relative">
 				<Avatar
 					full_name={user.full_name}
-					width="10"
-					height="10"
+					size="10"
 					avatar_url={user.avatar_url}
 				/>
+				{leader && (
+					<div className="absolute -bottom-1 -right-0.5 flex rounded-full bg-yellow-100 p-0.5">
+						<IdentificationIcon className="h-4 w-4 text-yellow-600" />
+					</div>
+				)}
 			</div>
 			<div className="ml-4">
 				<h2 className="mb-1 font-medium">{user.full_name}</h2>
