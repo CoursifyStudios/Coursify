@@ -23,12 +23,13 @@ export async function middleware(req: NextRequest) {
 
 		if (onboarded != OnboardingState.Done) {
 			if (onboarded == "") {
+				console.log("uid: ", session.user.id)
 				const { data, error } = await supabase
 					.from("users")
 					.select("onboarded")
 					.eq("id", session.user.id)
 					.single();
-					console.log("db", data, error)
+				console.log("db", data, error)
 				if (data) {
 					if (data.onboarded) {
 						res.cookies.set("onboardingState", OnboardingState.Done, {
