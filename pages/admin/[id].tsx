@@ -688,8 +688,7 @@ Activities	The user's activities, as displayed on their profile
 	};
 
 	const downloadRows = async () => {
-		//brilliant
-		if (tab == 0!! && users) {
+		if (tab == 0 && users) {
 			const data = users
 				.filter((user) => selectedRows.includes(user.id))
 				.map((user) => {
