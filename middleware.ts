@@ -33,7 +33,6 @@ export async function middleware(req: NextRequest) {
 						});
 					} else {
 						if (!req.nextUrl.pathname.startsWith("/onboarding")) {
-							
 							if (data.schools.length > 0) {
 								redirectUrl.pathname = `/onboarding/${OnboardingState.FirstStage}`;
 							} else {
@@ -42,7 +41,6 @@ export async function middleware(req: NextRequest) {
 							const redirect = NextResponse.redirect(redirectUrl);
 							return redirect;
 						} else {
-							
 							if (data.schools.length > 0) {
 								res.cookies.set("onboardingState", OnboardingState.FirstStage, {
 									maxAge: Date.now() + 60 * 60 * 24 * 365,
