@@ -33,8 +33,7 @@ export const Member = ({
 			<div className="relative">
 				<Avatar
 					full_name={user.full_name}
-					width="10"
-					height="10"
+					size="10"
 					avatar_url={user.avatar_url}
 				/>
 				{leader && (

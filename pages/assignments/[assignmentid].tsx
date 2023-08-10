@@ -25,7 +25,11 @@ import { getDataOutArray } from "@/lib/misc/dataOutArray";
 import launch from "@/public/svgs/launch.svg";
 import noData from "@/public/svgs/no-data.svg";
 import { AssignmentPreview } from "@assignments/assignments";
-import { BarsArrowDownIcon, PlusIcon } from "@heroicons/react/24/outline";
+import {
+	BarsArrowDownIcon,
+	ChevronUpIcon,
+	PlusIcon,
+} from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { SerializedEditorState } from "lexical";
 import { NextPage } from "next";
@@ -33,7 +37,9 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { Fragment, ReactElement, useEffect, useState } from "react";
-import { Tab } from "@headlessui/react";
+import { Disclosure, Tab } from "@headlessui/react";
+import TeacherHeader from "@/components/assignments/assignmentPanel/teacherHeader";
+import Avatar from "@/components/misc/avatar";
 
 const Panel = dynamic(
 	() => import("@/components/assignments/assignmentPanel"),
@@ -374,6 +380,80 @@ const Post: NextPageWithLayout = () => {
 		}
 
 		if (assignment?.data) {
+			if (tab == 1) {
+				return (
+					<div className="w-full">
+						<TeacherHeader
+							assignment={assignment}
+							fullscreen={fullscreen}
+							setFullscreen={setFullscreen}
+						/>
+						<div className="flex">
+							<div className="flex w-64 my-2 mt-4 flex-col">
+								<div className="w-full ">
+									<div className=" w-full rounded-xl p-2">
+										<Disclosure>
+											{({ open }) => (
+												<>
+													<Disclosure.Button className="flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
+														<span>Ungraded</span>
+														<ChevronUpIcon
+															className={`${
+																open ? "rotate-180 transform" : ""
+															} h-5 w-5 text-purple-500`}
+														/>
+													</Disclosure.Button>
+													<Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+														If youre unhappy with your purchase for any reason,
+														email us within 90 days and well refund you in full,
+														no questions asked.
+													</Disclosure.Panel>
+												</>
+											)}
+										</Disclosure>
+										<Disclosure as="div" className="mt-2">
+											{({ open }) => (
+												<>
+													<Disclosure.Button className="flex w-full justify-between rounded-lg bg-purple-100 px-4 py-2 text-left text-sm font-medium text-purple-900 hover:bg-purple-200 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75">
+														<span>GradedÍ</span>
+														<ChevronUpIcon
+															className={`${
+																open ? "rotate-180 transform" : ""
+															} h-5 w-5 text-purple-500`}
+														/>
+													</Disclosure.Button>
+													<Disclosure.Panel className="px-4 pt-4 pb-2 text-sm text-gray-500">
+														No.
+													</Disclosure.Panel>
+												</>
+											)}
+										</Disclosure>
+									</div>
+								</div>
+							</div>
+							<div className="flex grow justify-between bg-gray-200 h-32 m-4 p-2 rounded-xl">
+								<div className="flex">
+									<Avatar
+										full_name="Jane Doe"
+										avatar_url=""
+										size="20"
+										className="ml-4"
+										text_size="xl"
+									/>
+									<div className="flex flex-col ml-3 justify-center">
+										<h1 className="title">Jane Doe</h1>
+										<p className="text-lg font-medium">0/10</p>
+									</div>
+								</div>
+								<textarea
+									placeholder="Enter a comment..."
+									className=" w-72 resize-none !rounded-xl"
+								/>
+							</div>
+						</div>
+					</div>
+				);
+			}
 			return (
 				<>
 					<div className="flex grow flex-col">
