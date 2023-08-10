@@ -58,7 +58,7 @@ export const Popup: NextPage<{
 									onClick={closeMenu}
 									className="absolute right-4 top-4 rounded p-0.5 text-gray-700 transition hover:bg-gray-300 hover:text-gray-900 focus:outline-none"
 								>
-									<XMarkIcon className="h-5 w-5" />
+									<XMarkIcon tabIndex={0} className="h-5 w-5" />
 								</button>
 							</Dialog.Panel>
 						</Transition.Child>

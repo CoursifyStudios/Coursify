@@ -13,13 +13,13 @@ export const topics = [
 	"Feature Request",
 	"Performance Feedback",
 	"Security Concerns",
-	"Keyboard Navigation/Screenreader Issues",
+	"Screen Reader / Keyboard Navigation Issues",
 ];
 export const pages = [
-	"Homepage Classes/Assignments",
+	"Homepage Classes & Assignments",
 	"Homepage Schedule",
 	"Assignments Dashboard",
-	"Class Homepage",
+	"Class Page",
 	"Profile Page",
 	"Settings",
 	"Login Page",
@@ -124,7 +124,8 @@ const FeedbackPopup = ({
 		content: string;
 		selected: number;
 	}) => (
-		<div
+		<button
+			tabIndex={0}
 			onClick={() => {
 				setContent((content) => {
 					return { ...content, [page == 0 ? "topic" : "page"]: selected };
@@ -134,7 +135,7 @@ const FeedbackPopup = ({
 			className="p-4 bg-gray-200 brightness-hover rounded-xl cursor-pointer font-medium"
 		>
 			{content}
-		</div>
+		</button>
 	);
 
 	return (
@@ -168,7 +169,9 @@ const FeedbackPopup = ({
 						</label>
 						<label>
 							<span className="label-text label-required">
-								Clear and Concise Description of the Issue Encountered
+								{/* for features, make this text different */}
+								Describe the issue in detail, the steps to reproduce it and any
+								information that you think might help us.
 							</span>
 							<textarea
 								name="title"
@@ -182,10 +185,14 @@ const FeedbackPopup = ({
 						</label>
 						<label className="cursor-pointer !flex-row text-xs items-center">
 							<input
+								tabIndex={0}
 								type="checkbox"
 								onChange={(v) => setAccecpted(v.target.checked)}
+								//show highlight when focused by keyboard nav
+								//this checkbox is actually seemingly completely incompatible with screen readers, I'll have to dig out my work around later
 							/>
 							<span className="ml-4 label-required">
+								{/* I understand why we wanted this here, but I think it could discourage people from reaching out */}
 								This submission is relevant and provides value to the Coursify
 								Team.
 							</span>
@@ -196,19 +203,24 @@ const FeedbackPopup = ({
 					<>
 						<h2 className="text-xl font-medium text-center">Thanks!</h2>
 						<p className="text-center text-sm">
-							Your feedback is truly invaluable. We appreciate hearing from
-							users like you as it helps us enhance Coursify and create a better
-							learning experience for everyone. Please note, in some cases, we
-							may email you to follow up on specific issues or feature requests.
+							Your feedback is important to us. Hearing from you is what helps
+							us continue to improve Coursify and create a better learning
+							experience for everyone. So as to better understand the issues
+							brought to our attention, we may email you to follow up on
+							specific issues or feature requests.
 						</p>
 					</>
 				)}
 			</div>
 			<div className="mt-4 flex ml-auto gap-4">
 				{page != 0 && page != 3 && (
-					<Button onClick={() => setPage((page) => page - 1)}>Back</Button>
+					//TODO show highlight when focused by keyboard nav
+					<Button tabIndex={0} onClick={() => setPage((page) => page - 1)}>
+						Back
+					</Button>
 				)}
 				{page == 2 && (
+					// screen reader compatibility
 					<Button
 						color="bg-blue-500"
 						className="text-white"

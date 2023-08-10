@@ -66,6 +66,20 @@ NEXT_PUBLIC_SUPABASE_URL=https://cdn.coursify.one
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocmVoZmZtZHJjanFvd3d2Z3FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Njc1MjEyNjgsImV4cCI6MTk4MzA5NzI2OH0.f2YZkZDHL_E81DbpgnwloXUHQ9n7aCW4DF_VNMDcuqM
 ```
 
+### Email
+
+We currently use [react email](https://react.email) and AWS SES in order to send emails. If you would like to develop create new emails; In your terminal run:
+
+```bash
+# Install dependancies
+$ yarn
+
+# Run react email
+$ yarn email
+```
+
+Then, create a new `.tsx` file in the `/emails` folder.
+
 ### Mobile (IOS/Android)
 
 In order to build and emulate this application locally on mobile platforms, you'll need the [Ionic Extension](https://git-scm.com), along with [Android Studio](https://developer.android.com/studio) and/or [Xcode](https://developer.apple.com/xcode/) depending on the architecture you would like to emulate.
