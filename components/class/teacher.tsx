@@ -9,7 +9,7 @@ import { average, median, middle50, round } from "../../lib/misc/math";
 import { useSettings } from "../../lib/stores/settings";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import exampleImage from "../../public/example-img.jpg";
-import { submissionType } from "../complete/assignments/assignmentCreation/submissionType";
+import { submissionType } from "../assignments/assignmentCreation/submissionType";
 import LineCounter from "../counters/line";
 import Dropdown from "../misc/dropdown";
 import { ColoredPill } from "../misc/pill";
@@ -131,7 +131,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 					<GradesSection name="Summative (80%)" grade={allGrades[1]} />
 					<GradesSection name="Formative (20%)" grade={allGrades[2]} />
 				</div>
-				<div className="absolute -inset-3 bg-backdrop/10 backdrop-blur-[3px] grid place-items-center font-medium">
+				<div className="absolute -inset-3 bg-backdrop/10 backdrop-blur-[3px] select-none grid place-items-center font-medium">
 					Grading is coming soon
 				</div>
 			</section>

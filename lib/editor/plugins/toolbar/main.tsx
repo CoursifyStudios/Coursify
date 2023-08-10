@@ -66,6 +66,7 @@ interface IToolbarProps {
 	defaultBgColor?: string /** The default selected background color in the toolbar */;
 	defaultFontFamily?: string /** The default selected font family in the toolbar */;
 	backdrop?: boolean;
+	className?: string;
 }
 
 const ToolbarPlugin = ({
@@ -75,6 +76,7 @@ const ToolbarPlugin = ({
 	defaultFontColor = "#000",
 	defaultBgColor = "#fff",
 	defaultFontFamily = "Arial",
+	className,
 }: IToolbarProps) => {
 	//@ts-expect-error
 	//const [insertExists, InsertComponent] = useChild(children, InsertDropdown);
@@ -282,8 +284,8 @@ const ToolbarPlugin = ({
 			}}
 		>
 			<div
-				className={`sticky top-0 z-40 rounded-b ${
-					backdrop && "bg-white/50 backdrop-blur dark:bg-neutral-900"
+				className={`sticky top-0 z-40 rounded-b rounded-t ${
+					backdrop && "bg-white/50 backdrop-blur pt-1 dark:bg-neutral-900"
 				} `}
 			>
 				<div className=" flex items-center ">

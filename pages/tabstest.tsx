@@ -19,7 +19,7 @@ const Settings: NextPageWithLayout = () => {
 				})
 				.eq("id", 1);
 		})();
-	}, []);
+	}, [supabase]);
 
 	return (
 		<div className=" flex flex-col items-start">

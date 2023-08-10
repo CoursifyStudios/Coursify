@@ -153,17 +153,24 @@ const CheckBox: NextPage<{
 					className="text-white"
 					color="bg-blue-500"
 					disabled={
-						!(
-							submission &&
-							submission.checkboxes &&
-							submission.checkboxes.length != 0
-						) ||
+						// Disabled if no submission
+						!submission ||
+						!submission.checkboxes ||
+						// Disables if no checkboxes are selected and theres no privious submissions
+						(submission.checkboxes.length == 0 && dbSubmission == undefined) ||
+						// Disables if assignment is submitted and complete
 						(finished && dbSubmission?.final) ||
+						// Disables while assignment is submitting
 						loading ||
+						// Disables if checkboxes on most recent submission match checkboxes on client
 						(dbSubmission != undefined &&
-							submission.checkboxes.length ==
-								(dbSubmission?.content as SubmissionCheckoff).checkboxes
-									?.length)
+							(dbSubmission.content as SubmissionCheckoff).checkboxes !=
+								undefined &&
+							submission.checkboxes.sort().join(",") ===
+								//@ts-expect-error huh.mp4
+								(dbSubmission.content as SubmissionCheckoff).checkboxes
+									.sort()
+									.join(","))
 					}
 					onClick={submit}
 				>
@@ -172,8 +179,8 @@ const CheckBox: NextPage<{
 							? "Submitted!"
 							: "Submit"
 						: dbSubmission?.final
-						? "Resubmit"
-						: "Save"}
+						? "Resubmit Draft"
+						: "Save Draft"}
 				</Button>
 				{loading && <Loading className="bg-gray-300" />}
 			</div>

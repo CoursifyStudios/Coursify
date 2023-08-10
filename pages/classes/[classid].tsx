@@ -28,11 +28,11 @@ import {
 } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { EditorState } from "lexical";
-import { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment, ReactElement, useEffect, useState } from "react";
+import { AgendasModule } from "@/components/complete/agendas";
 
 const Class: NextPageWithLayout = () => {
 	const router = useRouter();
@@ -48,9 +48,6 @@ const Class: NextPageWithLayout = () => {
 	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
 	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
 	const [assignmentCreationOpen, setAssignmentCreationOpen] = useState(false);
-	const [extraAnnouncements, setExtraAnnouncements] = useState<
-		TypeOfAnnouncements[]
-	>([]);
 	const [createdAssignments, setCreatedAssignments] = useState<
 		{
 			name: string;
@@ -60,9 +57,20 @@ const Class: NextPageWithLayout = () => {
 			due_date: string | null;
 		}[]
 	>([]);
+	const [extraAgendas, setExtraAgendas] = useState<
+		{
+			id: string;
+			class_id: string;
+			date: string | null;
+			description: Json;
+			assignments: string[] | null;
+		}[]
+	>([]);
 	const [fetchedClassId, setFetchedClassId] = useState("");
 	const [searchOpen, setSearchOpen] = useState(false);
 	const [userSearch, setUserSearch] = useState("");
+	//fixing stupidity
+	const [shouldFetchExtra, setShouldFetchExtra] = useState(true);
 	const {
 		data: { compact },
 	} = useSettings();
@@ -168,6 +176,7 @@ const Class: NextPageWithLayout = () => {
 
 	return (
 		<div className="mx-auto my-10 flex w-full max-w-screen-xl flex-col px-4">
+			{/* Why can't we just have one of these!!! */}
 			{data.data && typeof classid == "string" && (
 				<CreateAssignment
 					block={data.data.block}
@@ -189,7 +198,8 @@ const Class: NextPageWithLayout = () => {
 					<Image
 						src={data.data.image || ""}
 						alt="Example Image"
-						className="rounded-xl object-cover object-center"
+						className="rounded-xl select-none object-cover object-center"
+						draggable={false}
 						fill
 					/>
 					<ColoredPill className="absolute left-5 top-5 !bg-neutral-500/20 text-lg !text-gray-300 backdrop-blur-xl dark:!text-gray-100">
@@ -229,6 +239,7 @@ const Class: NextPageWithLayout = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
+									tabIndex={0}
 									className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none ${
 										selected
 											? "brightness-focus"
@@ -242,6 +253,7 @@ const Class: NextPageWithLayout = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
+									tabIndex={0}
 									className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none ${
 										selected
 											? "brightness-focus"
@@ -255,6 +267,7 @@ const Class: NextPageWithLayout = () => {
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
+									tabIndex={0}
 									className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none ${
 										selected
 											? "brightness-focus"
@@ -267,6 +280,7 @@ const Class: NextPageWithLayout = () => {
 						</Tab>
 					</Tab.List>
 					<Tab.Panels>
+						{/* HOME Tab */}
 						<Tab.Panel tabIndex={-1}>
 							<div className="mb-3 flex flex-wrap gap-2">
 								{data.data?.classpills && isTeacher != undefined && classid && (
@@ -317,7 +331,7 @@ const Class: NextPageWithLayout = () => {
 								</div>
 							) : (
 								isTeacher && (
-									<div onClick={() => setEditable(true)}>
+									<div tabIndex={0} onClick={() => setEditable(true)}>
 										<ColoredPill
 											color="gray"
 											className="mt-2 cursor-pointer"
@@ -327,6 +341,36 @@ const Class: NextPageWithLayout = () => {
 										</ColoredPill>
 									</div>
 								)
+							)}
+
+							{typeof classid === "string" && (
+								<AgendasModule
+									classID={classid}
+									agendas={data.data.agendas.concat(extraAgendas)}
+									updateAgendas={(
+										val: {
+											class_id: string;
+											id: string;
+											date: string | null;
+											description: Json;
+											assignments: string[] | null;
+										}[]
+									) => setExtraAgendas(extraAgendas.concat(val))}
+									allAssignments={createdAssignments.concat(
+										data.data.assignments
+									)}
+									isTeacher={isTeacher ? true : false}
+									assignmentUpdater={(val) => {
+										setCreatedAssignments(
+											//Array.from(new Set([...createdAssignments, ...val]))
+											val.concat(createdAssignments)
+										);
+									}}
+									fetchExtra={{
+										isOK: shouldFetchExtra,
+										setOK: setShouldFetchExtra,
+									}}
+								/>
 							)}
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1} id="Announcements">
@@ -447,6 +491,7 @@ const Class: NextPageWithLayout = () => {
 						<h2 className="title mb-6 mt-8">Assignments</h2>
 						{isTeacher && (
 							<div
+								tabIndex={0}
 								onClick={() => setAssignmentCreationOpen(true)}
 								className="group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white"
 							>
@@ -456,11 +501,15 @@ const Class: NextPageWithLayout = () => {
 								</h3>
 							</div>
 						)}
-						{data.data?.assignments &&
+						{data.data &&
+							data.data.assignments &&
 							user &&
-							createdAssignments
-								.concat(getDataInArray(data.data?.assignments))
-								.slice()
+							Array.from(
+								new Set([
+									...createdAssignments,
+									...getDataInArray(data.data?.assignments),
+								])
+							)
 								.sort(
 									(a, b) =>
 										new Date(b.due_date!).getTime() -

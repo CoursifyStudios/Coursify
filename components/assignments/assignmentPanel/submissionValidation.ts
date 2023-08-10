@@ -26,7 +26,7 @@ const submissionValidation = (object: SubmissionSettingsTypes) => {
 export default submissionValidation;
 
 export const submissionLinkValidation = Yup.object({
-	links: Yup.array().of(Yup.string().required()),
+	links: Yup.array().of(Yup.string().required()).required(),
 });
 
 export const submissionMediaValidation = Yup.object({
@@ -39,12 +39,17 @@ export const submissionMediaValidation = Yup.object({
 });
 
 export const submissionFileUploadValidation = Yup.object({
-	files: Yup.array().of(
-		Yup.object({
-			link: Yup.string().required(),
-			caption: Yup.string().optional(),
-		})
-	),
+	files: Yup.array()
+		.of(
+			Yup.object({
+				link: Yup.string().required(),
+				fileName: Yup.string().required(),
+				realName: Yup.string().required(),
+				size: Yup.number().required(),
+				uploading: Yup.boolean(),
+			})
+		)
+		.required(),
 });
 
 export const submissionCheckoffValidation = Yup.object({

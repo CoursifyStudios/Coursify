@@ -141,6 +141,7 @@ const Theming: NextPage = () => {
 			</Header>
 			<ToggleSection
 				name="Show AM/PM markers"
+				beta={true}
 				description="Displays AM and PM markings next to times"
 				enabled={settings.showAMPM}
 				setEnabled={() =>

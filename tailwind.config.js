@@ -28,6 +28,10 @@ const light = {
 			500: "#3b82f6",
 			950: "#171345",
 		},
+		brand: {
+			pink: "#ED58AC",
+			orange: "#FC8B55",
+		},
 	},
 };
 

@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import { ColoredPill, CopiedHover } from "../misc/pill";
+import Avatar from "../misc/avatar";
 
 export const Member = ({
 	user,
@@ -19,7 +20,7 @@ export const Member = ({
 	const { newTab } = useTabs();
 	return (
 		<Link
-			className="brightness-hover flex rounded-xl bg-gray-200 p-3"
+			className="brightness-hover flex items-center rounded-xl bg-gray-200 p-3"
 			key={user.id}
 			href={"/profile/" + user.id}
 			onClick={() =>
@@ -29,17 +30,14 @@ export const Member = ({
 				)
 			}
 		>
-			<div className="relative h-max">
-				<Image
-					src={user.avatar_url!}
-					alt="Profile picture"
-					referrerPolicy="no-referrer"
-					className="h-10 min-w-[2.5rem] rounded-full object-cover shadow-md shadow-black/25"
-					width={40}
-					height={40}
+			<div className="relative">
+				<Avatar
+					full_name={user.full_name}
+					size="10"
+					avatar_url={user.avatar_url}
 				/>
 				{leader && (
-					<div className="absolute -bottom-1 -right-1  flex rounded-full bg-yellow-100 p-0.5">
+					<div className="absolute -bottom-1 -right-0.5 flex rounded-full bg-yellow-100 p-0.5">
 						<IdentificationIcon className="h-4 w-4 text-yellow-600" />
 					</div>
 				)}

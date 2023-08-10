@@ -2,6 +2,7 @@ import { SupabaseClient } from "@supabase/supabase-js";
 import { NextPage } from "next";
 import { useState } from "react";
 import {
+	AnnouncementType,
 	TypeOfAnnouncements,
 	deleteAnnouncement,
 	removeAnnouncementFromCommunity,
@@ -34,7 +35,6 @@ export const Delete: NextPage<{
 			setDeleting(undefined);
 		} else setDeleted(true);
 	};
-
 	const deleteMultiple = async () => {
 		setDeleting("multiple");
 		const data = await deleteAnnouncement(supabase, {
@@ -53,8 +53,10 @@ export const Delete: NextPage<{
 		<Popup closeMenu={() => setOpen(false)} open={open} size="sm">
 			<h2 className="title-sm">Delete Announcement</h2>
 			<div className="mb-4 mt-2">
-				Are you sure you want to delete this announcement? This action cannot be
-				undone. To delete announcement from all groups, select Delete All.
+				{announcement.type == AnnouncementType.ANNOUNCEMENT ||
+				announcement.type == AnnouncementType.CROSSPOST
+					? "Are you sure you want to delete this announcement? This action cannot be undone. To delete announcement from all groups, select Delete All."
+					: "Are you sure that you want to delete this comment? This action cannot be undone"}
 			</div>
 			{error && (
 				<div className="font-medium">
@@ -69,19 +71,23 @@ export const Delete: NextPage<{
 					Cancel
 				</Button>
 				<div className="flex">
-					<Button
-						className=" focus:outline-1 focus:outline-black" //Make this UI better later
-						onClick={deleteMultiple}
-						disabled={deleting != undefined || announcement.clone_id == null}
-					>
-						{deleting == "multiple" ? (
-							<>
-								Deleting <LoadingSmall className="ml-2" />
-							</>
-						) : (
-							"Delete All"
-						)}{" "}
-					</Button>
+					{(announcement.type == AnnouncementType.ANNOUNCEMENT ||
+						announcement.type == AnnouncementType.CROSSPOST) && (
+						<Button
+							className=" focus:outline-1 focus:outline-black" //Make this UI better later
+							onClick={deleteMultiple}
+							disabled={deleting != undefined || announcement.clone_id == null}
+						>
+							{deleting == "multiple" ? (
+								<>
+									Deleting <LoadingSmall className="ml-2" />
+								</>
+							) : (
+								"Delete All"
+							)}{" "}
+						</Button>
+					)}
+
 					<Button
 						onClick={deleteSingle}
 						disabled={deleting != undefined}

@@ -40,14 +40,6 @@ export type SubmissionDiscussionPost =
 			richText: SerializedEditorState;
 			media: false;
 			assignmentType: AssignmentTypes.DISCUSSION_POST;
-	  }
-	| {
-			media: true;
-			content: {
-				link: string;
-				caption: string;
-			}[];
-			assignmentType: AssignmentTypes.DISCUSSION_POST;
 	  };
 
 export interface SubmissionGoogle
@@ -84,4 +76,9 @@ export interface Submission {
 	content: SubmissionSettingsTypes;
 	final: boolean;
 	created_at: string;
+	users?: {
+		id: string;
+		full_name: string;
+		avatar_url: string;
+	};
 }

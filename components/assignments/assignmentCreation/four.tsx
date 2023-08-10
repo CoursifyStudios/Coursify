@@ -12,12 +12,12 @@ import {
 import { NewAssignmentData } from "@/lib/db/assignments/assignments";
 import { Database, Json } from "@/lib/db/database.types";
 import { useAssignmentStore } from ".";
-import Editor from "../../../editors/richeditor";
-import { Button } from "../../../misc/button";
-import Dropdown from "../../../misc/dropdown";
-import { LoadingSmall } from "../../../misc/loading";
-import { Toggle } from "../../../misc/toggle";
-import { Info } from "../../../tooltips/info";
+import Editor from "../../editors/richeditor";
+import { Button } from "../../misc/button";
+import Dropdown from "../../misc/dropdown";
+import { LoadingSmall } from "../../misc/loading";
+import { Toggle } from "../../misc/toggle";
+import { Info } from "../../tooltips/info";
 import { DueType } from "../assignments";
 import AssignmentCalender from "./assignmentCalender";
 import { submissionType } from "./submissionType";
