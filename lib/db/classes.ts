@@ -94,6 +94,9 @@ export const getClass = async (
 		assignments (
 			name, description, id, due_type, due_date
 		),
+        agendas (
+            *
+        ),
 		class_users (
 			user_id, grade, teacher, main_teacher
 		),
@@ -103,7 +106,17 @@ export const getClass = async (
 	`
 		)
 		.eq("id", classid)
+		// will be improved, don't worry
 		.limit(5, { foreignTable: "assignments" })
+		//not sure if the line below does anything worthwhile
+		//.order("date", { foreignTable: "agendas", ascending: true })
+		.or(
+			`date.eq.${new Date().toLocaleDateString("en-CA")}, date.gte.${new Date(
+				Date.now() - 171800000
+			).toLocaleDateString("en-CA")}`,
+			{ foreignTable: "agendas" }
+		)
+		.limit(3, { foreignTable: "agendas" })
 		.order("due_date", { foreignTable: "assignments", ascending: true })
 		.single();
 };
