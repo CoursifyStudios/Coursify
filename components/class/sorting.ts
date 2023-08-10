@@ -3,10 +3,10 @@
 // import { ArrayElementType } from "../../lib/misc/elementarraytype.types";
 
 export function sortClasses() {
-// 	a: ArrayElementType<AllClassesResponse["data"]>,
-// 	b: ArrayElementType<AllClassesResponse["data"]>,
-// 	schedule: ScheduleInterface[] | undefined,
-// 	scheduleTomorrow: ScheduleInterface[] | undefined
+	// 	a: ArrayElementType<AllClassesResponse["data"]>,
+	// 	b: ArrayElementType<AllClassesResponse["data"]>,
+	// 	schedule: ScheduleInterface[] | undefined,
+	// 	scheduleTomorrow: ScheduleInterface[] | undefined
 	//return (a.class!.block < b.class!.block) ? 1 : -1
 	// if (schedule && scheduleTomorrow) {
 	// 	// Fix the schedule sometimes being undefined and breaking stuff for the first load
