@@ -159,16 +159,24 @@ export const CreateAssignment: NextPage<{
 					{submissionType.map((submission, i) => (
 						<div key={i}>
 							<div
-								className={`brightness-hover h-full cursor-pointer rounded-md bg-gray-200 p-4 dark:border dark:bg-black `}
-								onClick={() => {
-									setAssignmentData({
-										type: submission.type,
-										dueType: DueType.START_OF_CLASS,
-										publishType: DueType.START_OF_CLASS,
-										hidden: false,
-									} as NewAssignmentData);
-									setStage((stage) => stage + 1);
-								}}
+								className={` ${
+									submission.grayscale
+										? "grayscale cursor-not-allowed select-none"
+										: "brightness-hover cursor-pointer"
+								} h-full  rounded-md bg-gray-200 p-4 dark:border dark:bg-black `}
+								onClick={
+									submission.grayscale
+										? undefined
+										: () => {
+												setAssignmentData({
+													type: submission.type,
+													dueType: DueType.START_OF_CLASS,
+													publishType: DueType.START_OF_CLASS,
+													hidden: false,
+												} as NewAssignmentData);
+												setStage((stage) => stage + 1);
+										  }
+								}
 							>
 								<div className="flex items-center">
 									<div className="rounded-full bg-blue-500 p-2 text-white">

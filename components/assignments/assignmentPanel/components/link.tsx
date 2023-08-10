@@ -215,7 +215,7 @@ const Link: NextPage<{
 							disabled={false}
 							onClick={() => newLink()}
 						>
-							<PlusIcon className="h-5 w-5 text-white" />
+							<PlusIcon className="h-5 w-5 dark:text-white " />
 						</Button>
 					</div>
 				</form>
@@ -238,7 +238,7 @@ const Link: NextPage<{
 				</Button>
 				{!maxedLinks && !loading && (
 					<Button
-						className="text-white"
+						className="dark:text-white "
 						color="bg-gray-300"
 						disabled={false}
 						onClick={pasteLink}

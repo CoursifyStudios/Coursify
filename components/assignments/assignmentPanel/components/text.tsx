@@ -191,7 +191,7 @@ const Text: NextPage<{
 					Open Editor
 				</Button>
 				<Button
-					className="text-white"
+					className="dark:text-white"
 					color="bg-gray-300"
 					disabled={false}
 					onClick={handlePaste}
