@@ -150,7 +150,7 @@ export const Agenda = ({
 										<Link
 											key={assignment.id}
 											href={"/assignments/" + assignment.id}
-											className="border border-black grid rounded-md"
+											className=" grid rounded-md"
 										>
 											<CompactAssignmentUI
 												assignment={assignment}
@@ -189,7 +189,7 @@ export const CompactAssignmentUI = ({
 			onMouseEnter={(e) => setHovered(true)}
 			onMouseLeave={(e) => setHovered(false)}
 			key={assignment.id}
-			className={`flex flex-grow justify-between p-2 ${className}`}
+			className={`flex flex-grow justify-between p-2 bg-gray-300 rounded-md ${className}`}
 		>
 			<p className="font-semibold">{assignment.name}</p>
 			<div className="flex gap-2">
@@ -214,7 +214,7 @@ export const CompactAssignmentUI = ({
 				) : selected ? (
 					<CheckCircleIcon className="w-6 h-6" />
 				) : (
-					<div className="w-6"></div>
+					<div className=""></div>
 				)}
 			</div>
 		</div>

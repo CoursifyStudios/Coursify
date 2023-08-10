@@ -282,7 +282,7 @@ const ToolbarPlugin = ({
 			}}
 		>
 			<div
-				className={`sticky top-0 z-40 rounded-b ${
+				className={`sticky top-0 z-40 rounded-b rounded-t ${
 					backdrop && "bg-white/50 backdrop-blur pt-1 dark:bg-neutral-900"
 				} `}
 			>

@@ -189,7 +189,7 @@ export const CreateAgenda = ({
 					<p className="text-red-500">{errorMessage}</p>
 					<Editor
 						editable={true}
-						className="rounded-md border border-gray-300 bg-backdrop/50"
+						className="rounded border overflow-hidden border-gray-300 bg-backdrop/50"
 						updateState={setEditorState}
 						initialState={editingInfo ? editingInfo.description : ""}
 						focus={false}
@@ -251,12 +251,12 @@ export const CreateAgenda = ({
 											: assignment.name
 													.toLowerCase()
 													.includes(query.toLowerCase())) && (
-											<div key={assignment.id} className="flex justify-between">
+											<div key={assignment.id} className="">
 												<Button
 													className={`w-full ${
 														chosenAssignments.indexOf(assignment.id) == -1
 															? "bg-gray-300"
-															: "bg-white dark:bg-black border border-black dark:border-white outline-0.5"
+															: "bg-gray-300"
 													}`}
 													key={assignment.id}
 													type={"button"}
@@ -292,7 +292,7 @@ export const CreateAgenda = ({
 					</div>
 					<Button
 						// using 300 light/ 600 dark button color schema, nonstandard for us but I like it better
-						className="w-min mx-auto gap-4"
+						className="w-min mx-auto text-white gap-4"
 						color="bg-blue-500"
 						type="submit"
 					>
