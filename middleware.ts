@@ -19,17 +19,13 @@ export async function middleware(req: NextRequest) {
 			maxAge: Date.now() + 60 * 60 * 24 * 365,
 		});
 
-		console.log(1, onboarded)
-
 		if (onboarded != OnboardingState.Done) {
 			if (onboarded == "") {
-				console.log("uid: ", session.user.id)
 				const { data, error } = await supabase
 					.from("users")
 					.select("onboarded")
 					.eq("id", session.user.id)
 					.single();
-				console.log("db", data, error)
 				if (data) {
 					if (data.onboarded) {
 						res.cookies.set("onboardingState", OnboardingState.Done, {
@@ -39,14 +35,11 @@ export async function middleware(req: NextRequest) {
 						res.cookies.set("onboardingState", OnboardingState.NotStarted, {
 							maxAge: Date.now() + 60 * 60 * 24 * 365,
 						});
-						console.log(3, onboarded)
 					}
 				} else {
-					console.log("wierd edge case happened")
 					// Weird edge case that should never happen
 				}
 			} else {
-				console.log(3, onboarded)
 				if (!req.nextUrl.pathname.startsWith("/onboarding")) {
 					redirectUrl.pathname = `/onboarding/${onboarded}`;
 					const redirect = NextResponse.redirect(redirectUrl);
