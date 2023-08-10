@@ -12,6 +12,7 @@ import { ProfilesResponse, getProfile } from "@/lib/db/profiles";
 import { updateBio, updateProfile } from "@/lib/db/settings";
 import { OnboardingState } from "@/middleware";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { ReactElement, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
@@ -36,13 +37,13 @@ const Onboarding = () => {
 	const { id } = router.query;
 	const [newData, setNewData] = useState<NewUserData>(initialNewData);
 	const [error, setError] = useState("");
-	const [cookies, setCookie, removeCookie] = useCookies(["onboarding"]);
+	const [cookies, setCookie, removeCookie] = useCookies(["onboardingState"]);
 
 	const setStage = (stage: OnboardingState) => {
 		setError("");
 		router.push(`/onboarding/${stage}`);
 		setBSloading(false);
-		setCookie("onboarding", stage);
+		setCookie("onboardingState", stage);
 	};
 
 	const finish = async () => {
@@ -51,7 +52,7 @@ const Onboarding = () => {
 			.update({ onboarded: true })
 			.eq("id", user ? user.id : "");
 		setBSloading(true);
-		setCookie("onboarding", OnboardingState.Done);
+		setCookie("onboardingState", OnboardingState.Done);
 
 		setTimeout(() => {
 			router.push("/");
@@ -114,10 +115,10 @@ const Onboarding = () => {
 			if (user && supabase && !userData) {
 				// check cookies to see if it should redirect to a specific page. Probably worth using middleware too -LS
 
-				if (cookies.onboarding == OnboardingState.Done) {
+				if (cookies.onboardingState == OnboardingState.Done) {
 					router.push("/");
 				}
-				if (cookies.onboarding == OnboardingState.NoAccount) {
+				if (cookies.onboardingState == OnboardingState.NoAccount) {
 					setStage(OnboardingState.NoAccount);
 				}
 
@@ -141,11 +142,11 @@ const Onboarding = () => {
 						setClasses(classesData.data);
 					}
 
-					if (cookies.onboarding) {
+					if (cookies.onboardingState) {
 						// if the onboarding cookie isn't set, go to first stage
 						setStage(OnboardingState.FirstStage);
 						// if it is, go to the stage they're on
-						setStage(cookies.onboarding);
+						setStage(cookies.onboardingState);
 					}
 
 					return;
@@ -322,8 +323,9 @@ const Onboarding = () => {
 						<Popup closeMenu={() => setContactOpen(false)} open={contactOpen}>
 							<h3 className="title-sm mb-4">Contact</h3>
 							<p>
-								Please send an email to 24lseufert@shcp.edu and include
-								25bholland@shcp.edu in the CC. Proceed with the setup process
+								Please send us an email at <Link href="mailto:support@coursify.freshdesk.com" target="_blank">
+								support@coursify.freshdesk.com
+								</Link>. Proceed with the setup process
 								for the time being, and rest assured, we will address and
 								resolve any issues on our end. Our sincere apologies for any
 								inconvenience this may have caused.{" "}

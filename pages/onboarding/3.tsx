@@ -39,8 +39,9 @@ const Onboarding = () => {
 					/>
 					<p className="text-center text-sm mx-8 mt-6">
 						Students: It{"'"}s likely that your administrator hasn{"'"}t added
-						your account to Coursify yet. Contact your school for help getting
-						access.
+						your account to Coursify yet. Contact us at <Link href="mailto:support@coursify.freshdesk.com" target="_blank">
+								support@coursify.freshdesk.com
+								</Link>, or contact your school admin.
 					</p>
 					<p
 						className="text-center  font-semibold text-sm mt-6 hover:underline select-none cursor-pointer"
@@ -52,9 +53,9 @@ const Onboarding = () => {
 							<p>
 								Coursify LMS is currently in a closed beta. If you{"'"}re an
 								administrator interested in using Coursify, please reach out to
-								our growth team at{" "}
-								<Link href="mailto:growth@coursify.studio" target="_blank">
-									growth@coursify.studio
+								our support team at{" "}
+								<Link href="mailto:support@coursify.freshdesk.com" target="_blank">
+								support@coursify.freshdesk.com
 								</Link>
 								. If you would like demo the platform,{" "}
 								<Link href={"/demo"} className="text-blue-500">

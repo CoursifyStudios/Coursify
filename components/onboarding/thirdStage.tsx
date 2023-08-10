@@ -39,7 +39,7 @@ const OnboardingThirdStage = ({
 		return (
 			<div className="flex flex-col justify-center items-center text-gray-200 py-8">
 				<RaceBy speed={0.8} size={170} color="white" />
-				<h2 className="font-semibold text-lg dark:text-white mt-8">
+				<h2 className="font-semibold text-lg text-gray-800 dark:text-white mt-8">
 					{bsLoadingLabel}...
 				</h2>
 			</div>
