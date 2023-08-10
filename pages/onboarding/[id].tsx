@@ -51,9 +51,9 @@ const Onboarding = () => {
 			.update({ onboarded: true })
 			.eq("id", user ? user.id : "");
 		setBSloading(true);
+		setCookie("onboarding", OnboardingState.Done);
 
 		setTimeout(() => {
-			setCookie("onboarding", OnboardingState.Done);
 			router.push("/");
 		}, 4000);
 	};
