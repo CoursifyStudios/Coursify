@@ -323,12 +323,16 @@ const Onboarding = () => {
 						<Popup closeMenu={() => setContactOpen(false)} open={contactOpen}>
 							<h3 className="title-sm mb-4">Contact</h3>
 							<p>
-								Please send us an email at <Link href="mailto:support@coursify.freshdesk.com" target="_blank">
-								support@coursify.freshdesk.com
-								</Link>. Proceed with the setup process
-								for the time being, and rest assured, we will address and
-								resolve any issues on our end. Our sincere apologies for any
-								inconvenience this may have caused.{" "}
+								Please send us an email at{" "}
+								<Link
+									href="mailto:support@coursify.freshdesk.com"
+									target="_blank"
+								>
+									support@coursify.freshdesk.com
+								</Link>
+								. Proceed with the setup process for the time being, and rest
+								assured, we will address and resolve any issues on our end. Our
+								sincere apologies for any inconvenience this may have caused.{" "}
 							</p>
 						</Popup>
 						{error && (
