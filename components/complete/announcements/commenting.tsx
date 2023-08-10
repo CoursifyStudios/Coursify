@@ -18,6 +18,7 @@ import {
 	TrashIcon,
 } from "@heroicons/react/24/outline";
 import { Delete } from "./delete";
+import { LoadingSmall } from "@/components/misc/loading";
 
 export const Comment = ({
 	id,
@@ -48,6 +49,7 @@ export const Comment = ({
 	const [errorText, setErrorText] = useState("");
 	const [deleted, setDeleted] = useState(false);
 	const [showDeleting, setShowDeleting] = useState(false);
+	const [showLoading, setShowLoading] = useState(false);
 	if (!deleted) {
 		return (
 			<div className="ml-4">
@@ -68,7 +70,7 @@ export const Comment = ({
 					}}
 					classID={communityid}
 				/>
-				<div className="flex items-center pt-1 ">
+				<div className="flex items-center py-1">
 					<Link
 						href={"/profile/" + author}
 						className="inline-flex shrink-0 items-center rounded-full px-1 py-0.5 hover:bg-gray-300"
@@ -93,36 +95,38 @@ export const Comment = ({
 					</Link>
 					<p className="pl-1.5 text-gray-600 dark:text-gray-400">{time}</p>
 					{user && author == user.id && (
-						<MenuSelect
-							items={[
-								{
-									content: (
-										<>
-											{" "}
-											Edit <PencilIcon className="h-5 w-5" />{" "}
-										</>
-									),
-									onClick: () => {
-										setEditing(true);
+						<div className="ml-auto">
+							<MenuSelect
+								items={[
+									{
+										content: (
+											<>
+												{" "}
+												Edit <PencilIcon className="h-5 w-5" />{" "}
+											</>
+										),
+										onClick: () => {
+											setEditing(true);
+										},
 									},
-								},
-								{
-									content: (
-										<>
-											{" "}
-											Delete <TrashIcon className="h-5 w-5" />{" "}
-										</>
-									),
-									onClick: () => {
-										setShowDeleting(true);
+									{
+										content: (
+											<>
+												{" "}
+												Delete <TrashIcon className="h-5 w-5" />{" "}
+											</>
+										),
+										onClick: () => {
+											setShowDeleting(true);
+										},
 									},
-								},
-							]}
-						>
-							<div className=" p-2 hover:bg-gray-200">
-								<EllipsisVerticalIcon className="h-6 w-6" />
-							</div>
-						</MenuSelect>
+								]}
+							>
+								<div className=" rounded-md p-0.5 hover:bg-gray-200">
+									<EllipsisVerticalIcon className="h-6 w-6" />
+								</div>
+							</MenuSelect>
+						</div>
 					)}
 				</div>
 				{editing ? (
@@ -132,6 +136,7 @@ export const Comment = ({
 						}}
 						onSubmit={async (formData) => {
 							setErrorText("");
+							setShowLoading(true);
 							const newEditedAnnouncement = await editAnnouncement(
 								supabase,
 								//kind of confusing but a comment's content uses the title field
@@ -139,12 +144,13 @@ export const Comment = ({
 								{ title: formData.content, content: null }
 							);
 							if (newEditedAnnouncement.error) {
-								//TODO: better error handling
+								setShowLoading(false);
 								setErrorText(
 									"Something went wrong, and your comment could not be edited"
 								);
 							} else {
 								setErrorText("");
+								setShowLoading(false);
 								setEditing(false);
 								setText(formData.content);
 							}
@@ -171,14 +177,14 @@ export const Comment = ({
 										Cancel
 									</Button>
 									<button
-										className={`rounded-md bg-blue-500 px-4 py-1 font-semibold text-white ${
+										className={`flex gap-2 items-center rounded-md bg-blue-500 px-4 py-1 font-semibold text-white ${
 											values.content.length < 1
 												? "cursor-not-allowed brightness-75"
 												: "brightness-hover"
 										}`}
 										type="submit"
 									>
-										Post
+										Update{showLoading && <LoadingSmall />}
 									</button>
 								</div>
 							</Form>
@@ -187,6 +193,7 @@ export const Comment = ({
 				) : (
 					<p>{text}</p>
 				)}
+				<p>{errorText}</p>
 				{/* Replying UI is below. Replying is coming later! so uh. Yeah */}
 				{/* 
                 <button
@@ -236,7 +243,7 @@ export const Commenting = ({
 		}[]
 	>([]);
 	const [errorText, setErrorText] = useState("");
-
+	const [showLoading, setShowLoading] = useState(false);
 	return (
 		<>
 			{showCommenting ? (
@@ -248,6 +255,7 @@ export const Commenting = ({
 						}}
 						onSubmit={async (formData) => {
 							setErrorText("");
+							setShowLoading(true);
 							const dBResponse = await postCommentOrReply(
 								supabase,
 								user.id,
@@ -257,8 +265,10 @@ export const Commenting = ({
 								AnnouncementType.COMMENT
 							);
 							if (dBResponse.error) {
+								setShowLoading(false);
 								setErrorText("Error: failed to post comment");
 							} else {
+								setShowLoading(false);
 								setErrorText("");
 								setShowCommenting(false);
 
@@ -306,14 +316,14 @@ export const Commenting = ({
 											Cancel
 										</Button>
 										<button
-											className={`rounded-md bg-blue-500 px-4 py-1 font-semibold text-white ${
+											className={`flex gap-2 items-center rounded-md bg-blue-500 px-4 py-1 font-semibold text-white ${
 												values.content.length < 1
 													? "cursor-not-allowed brightness-75"
 													: "brightness-hover"
 											}`}
 											type="submit"
 										>
-											Post
+											Post{showLoading && <LoadingSmall />}
 										</button>
 									</div>
 								</div>
