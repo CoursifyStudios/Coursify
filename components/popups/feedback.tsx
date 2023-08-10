@@ -169,7 +169,7 @@ const FeedbackPopup = ({
 						</label>
 						<label>
 							<span className="label-text label-required">
-								{/* TODO: for features, make this text different */}
+								{/* for features, make this text different */}
 								Describe the issue in detail, the steps to reproduce it and any
 								information that you think might help us.
 							</span>
@@ -188,8 +188,8 @@ const FeedbackPopup = ({
 								tabIndex={0}
 								type="checkbox"
 								onChange={(v) => setAccecpted(v.target.checked)}
-								//TODO: show highlight when focused by keyboard nav
-								//TODO: this checkbox is actually seemingly completely incompatible with screen readers, I'll have to dig out my work around later
+								//show highlight when focused by keyboard nav
+								//this checkbox is actually seemingly completely incompatible with screen readers, I'll have to dig out my work around later
 							/>
 							<span className="ml-4 label-required">
 								{/* I understand why we wanted this here, but I think it could discourage people from reaching out */}
@@ -220,7 +220,7 @@ const FeedbackPopup = ({
 					</Button>
 				)}
 				{page == 2 && (
-					// TODO: screen reader compatibility
+					// screen reader compatibility
 					<Button
 						color="bg-blue-500"
 						className="text-white"
