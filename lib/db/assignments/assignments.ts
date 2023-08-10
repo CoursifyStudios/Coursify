@@ -101,6 +101,27 @@ export const getAssignment = async (
 		.single();
 };
 
+export const getTheseAssignments = async (
+	supabase: SupabaseClient<Database>,
+	class_id: string,
+	these: string[]
+) => {
+	return await supabase
+		.from("assignments")
+		.select(
+			`
+        id,
+        name,
+        description,
+        due_type,
+        due_date
+        `
+		)
+		.eq("class_id", class_id)
+		.in("id", these);
+	//.not("id", "in", `(${notThese})`);
+};
+
 export type AssignmentResponse = Awaited<ReturnType<typeof getAssignment>>;
 
 //Lukas is building the world's first 7D array
