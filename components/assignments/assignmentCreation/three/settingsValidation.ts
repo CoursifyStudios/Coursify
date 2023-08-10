@@ -39,7 +39,7 @@ export const assignmentMediaValidation = Yup.object({
 });
 
 export const assignmentFileUploadValidation = Yup.object({
-	fileTypes: Yup.array().of(Yup.string().required()),
+	fileTypes: Yup.array().of(Yup.string().required()).required(),
 	maxSize: Yup.number().min(1).max(100).required(),
 	minFiles: Yup.number().min(1).required(),
 	maxFiles: Yup.number(),

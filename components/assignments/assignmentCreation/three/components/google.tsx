@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction, useLayoutEffect } from "react";
-import { AssignmentTypes } from "../../../../../../lib/db/assignments/assignments";
-import { Info } from "../../../../../tooltips/info";
+import { AssignmentTypes } from "../../../../../lib/db/assignments/assignments";
+import { Info } from "../../../../tooltips/info";
 import { AssignmentGoogle, GoogleSubmissionTypes } from "../settings.types";
 
 const All = ({

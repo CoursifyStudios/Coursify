@@ -10,7 +10,7 @@ import {
 import { ScheduleInterface } from "../../../lib/db/schedule";
 import { Settings, useSettings } from "../../../lib/stores/settings";
 import { LoadingStudentClass } from "../loading";
-import { sortClasses } from "../sorting";
+//import { sortClasses } from "../sorting";
 
 const HomepageClassesUI: NextPage<{
 	loading: boolean;

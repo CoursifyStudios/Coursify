@@ -9,7 +9,7 @@ import { average, median, middle50, round } from "../../lib/misc/math";
 import { useSettings } from "../../lib/stores/settings";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import exampleImage from "../../public/example-img.jpg";
-import { submissionType } from "../complete/assignments/assignmentCreation/submissionType";
+import { submissionType } from "../assignments/assignmentCreation/submissionType";
 import LineCounter from "../counters/line";
 import Dropdown from "../misc/dropdown";
 import { ColoredPill } from "../misc/pill";

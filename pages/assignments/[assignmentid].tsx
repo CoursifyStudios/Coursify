@@ -1,7 +1,7 @@
 import { Loading } from "@/components/assignments/loading";
-import { AssignmentSettingsTypes } from "@/components/complete/assignments/assignmentCreation/three/settings.types";
-import AssignmentHeader from "@/components/complete/assignments/assignmentPanel/header";
-import { Submission } from "@/components/complete/assignments/assignmentPanel/submission.types";
+import { AssignmentSettingsTypes } from "@/components/assignments/assignmentCreation/three/settings.types";
+import AssignmentHeader from "@/components/assignments/assignmentPanel/header";
+import { Submission } from "@/components/assignments/assignmentPanel/submission.types";
 import Editor from "@/components/editors/richeditor";
 import { NextPageWithLayout } from "@/pages/_app";
 import Layout from "@/components/layout/layout";
@@ -9,6 +9,7 @@ import Dropdown from "@/components/misc/dropdown";
 import { Info } from "@/components/tooltips/info";
 import {
 	AllAssignmentResponse,
+	AllAssignments,
 	AssignmentResponse,
 	AssignmentTypes,
 	getAllAssignments,
@@ -24,17 +25,24 @@ import { getDataOutArray } from "@/lib/misc/dataOutArray";
 import launch from "@/public/svgs/launch.svg";
 import noData from "@/public/svgs/no-data.svg";
 import { AssignmentPreview } from "@assignments/assignments";
-import { BarsArrowDownIcon, PlusIcon } from "@heroicons/react/24/outline";
+import {
+	BarsArrowDownIcon,
+	ChevronUpIcon,
+	PlusIcon,
+} from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { SerializedEditorState } from "lexical";
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { ReactElement, useEffect, useState } from "react";
+import { Fragment, ReactElement, useEffect, useState } from "react";
+import { Disclosure, Tab } from "@headlessui/react";
+import TeacherHeader from "@/components/assignments/assignmentPanel/teacherHeader";
+import Avatar from "@/components/misc/avatar";
 
 const Panel = dynamic(
-	() => import("@/components/complete/assignments/assignmentPanel"),
+	() => import("@/components/assignments/assignmentPanel"),
 	{
 		loading: () => (
 			<div className="animate-pulse">
@@ -51,7 +59,10 @@ const Panel = dynamic(
 
 const Post: NextPageWithLayout = () => {
 	const supabase = useSupabaseClient<Database>();
-	const [allAssignments, setAllAssignments] = useState<AllAssignmentResponse>();
+	const [studentAssignments, setStudentAssignments] =
+		useState<AllAssignments>();
+	const [teacherAssignments, setTeacherAssignments] =
+		useState<AllAssignments>();
 	const [assignment, setAssignment] = useState<AssignmentResponse>();
 	//obviously we need a better solution
 	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
@@ -61,6 +72,7 @@ const Post: NextPageWithLayout = () => {
 	const { assignmentid } = router.query;
 	const [fullscreen, setFullscreen] = useState(false);
 	const [revisions, setRevisions] = useState<Submission[]>([]);
+	const [tab, setTab] = useState(0);
 
 	const options = [
 		{ name: "Relevance" }, //still no idea what this is supposed to do
@@ -73,9 +85,46 @@ const Post: NextPageWithLayout = () => {
 	// Gets the data from the db
 	useEffect(() => {
 		(async () => {
-			if (user && !allAssignments) {
-				const assignments = await getAllAssignments(supabase);
-				setAllAssignments(assignments);
+			if (user && !(studentAssignments && teacherAssignments)) {
+				const rawData = await getAllAssignments(supabase, user.id);
+				let sAssignments: AllAssignments = [];
+				let tAssignments: AllAssignments = [];
+
+				if (rawData.data) {
+					rawData.data.forEach((a) => {
+						if (!a.classes) return;
+						if (a.teacher) {
+							tAssignments = tAssignments.concat(a.classes.assignments);
+						} else {
+							sAssignments = sAssignments.concat(a.classes.assignments);
+						}
+					});
+				}
+				if (sAssignments.length == 0) {
+					setTab(1);
+				}
+				setTeacherAssignments(
+					tAssignments.length > 0 ? tAssignments : undefined
+				);
+				setStudentAssignments(
+					sAssignments.length > 0
+						? sAssignments //.sort((a, b) => {
+						: // 	const aScore =
+						  // 		a.submissions.length > 0
+						  // 			? a.submissions.some((s) => s.final == true)
+						  // 				? 2
+						  // 				: 1
+						  // 			: 0;
+						  // 	const bScore =
+						  // 		b.submissions.length > 0
+						  // 			? b.submissions.some((s) => s.final == true)
+						  // 				? 2
+						  // 				: 1
+						  // 			: 0;
+						  // 	return aScore - bScore;
+						  // })
+						  undefined
+				);
 			}
 			// In theory, most people will have the schedule already cached. This is a band-aid solution and won't be used later on
 			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
@@ -107,7 +156,7 @@ const Post: NextPageWithLayout = () => {
 					: true)
 			) {
 				setAssignment(undefined);
-				const assignment = await getAssignment(supabase, assignmentid);
+				const assignment = await getAssignment(supabase, assignmentid, user.id);
 				setAssignment(assignment);
 				if (assignment.data)
 					setRevisions(assignment.data.submissions as Submission[]);
@@ -117,7 +166,8 @@ const Post: NextPageWithLayout = () => {
 		if (router.isReady && assignmentid != "0" && window.innerWidth < 768) {
 			setFullscreen(true);
 		}
-	}, [user, supabase, router, assignmentid, allAssignments, assignment]);
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user, supabase, router, assignmentid, assignment]);
 
 	return (
 		// Left pane
@@ -127,7 +177,121 @@ const Post: NextPageWithLayout = () => {
 					fullscreen ? "hidden" : "flex"
 				} w-[20.5rem] shrink-0 flex-col space-y-5 overflow-y-auto p-1 pb-6 compact:space-y-3 md:h-[calc(100vh-6.5rem)] `}
 			>
-				<div className="flex flex-col">
+				<h2 className="title">Your Assignments</h2>
+				{(teacherAssignments || studentAssignments) && user && schedule ? (
+					<Tab.Group selectedIndex={tab} onChange={setTab}>
+						{!(!teacherAssignments || !studentAssignments) && (
+							<Tab.List as="div" className="flex items-center">
+								<Tab as={Fragment}>
+									{({ selected }) => (
+										<div
+											className={`flex cursor-pointer items-center rounded-lg border px-2 py-1 focus:outline-none ${
+												selected
+													? "brightness-focus"
+													: "border-transparent bg-gray-200"
+											} text-sm font-medium`}
+										>
+											Student
+										</div>
+									)}
+								</Tab>
+								<Tab as={Fragment}>
+									{({ selected }) => (
+										<div
+											className={`ml-4 flex cursor-pointer items-center rounded-lg border px-2 py-1 focus:outline-none ${
+												selected
+													? "brightness-focus"
+													: "border-transparent bg-gray-200"
+											} text-sm font-medium`}
+										>
+											Teacher
+										</div>
+									)}
+								</Tab>
+							</Tab.List>
+						)}
+						<Tab.Panels>
+							{studentAssignments ? (
+								<Tab.Panel className="space-y-5 flex flex-col compact:space-y-2">
+									{studentAssignments.map(
+										(assignment) =>
+											assignment.classes && (
+												<AssignmentPreview
+													key={assignment.id}
+													supabase={supabase}
+													assignment={assignment}
+													userId={user.id}
+													starredAsParam={
+														assignment.starred
+															? Array.isArray(assignment.starred)
+																? assignment.starred.length > 0
+																: !!assignment.starred
+															: false
+													}
+													//obviously we need a better solution
+													schedule={schedule!}
+													scheduleT={scheduleT!}
+													showClassPill={true}
+													classes={getDataOutArray(assignment.classes)}
+													className={`${
+														assignmentid == assignment.id
+															? "brightness-focus"
+															: "brightness-hover bg-backdrop-200"
+													} border border-transparent`}
+												/>
+											)
+									)}
+								</Tab.Panel>
+							) : (
+								<Tab.Panel></Tab.Panel>
+							)}
+							{teacherAssignments ? (
+								<Tab.Panel className="space-y-5 flex flex-col compact:space-y-2">
+									{teacherAssignments.map(
+										(assignment) =>
+											assignment.classes && (
+												<AssignmentPreview
+													key={assignment.id}
+													supabase={supabase}
+													assignment={assignment}
+													userId={user.id}
+													starredAsParam={
+														assignment.starred
+															? Array.isArray(assignment.starred)
+																? assignment.starred.length > 0
+																: !!assignment.starred
+															: false
+													}
+													//obviously we need a better solution
+													schedule={schedule!}
+													scheduleT={scheduleT!}
+													showClassPill={true}
+													classes={getDataOutArray(assignment.classes)}
+													className={`${
+														assignmentid == assignment.id
+															? "brightness-focus"
+															: "brightness-hover bg-backdrop-200"
+													} border border-transparent `}
+												/>
+											)
+									)}
+								</Tab.Panel>
+							) : (
+								<Tab.Panel></Tab.Panel>
+							)}
+						</Tab.Panels>
+					</Tab.Group>
+				) : (
+					<>
+						{[...Array(3)].map((_, i) => (
+							<div
+								className="h-24 animate-pulse rounded-xl bg-gray-200 "
+								key={i}
+							></div>
+						))}
+					</>
+				)}
+				{/* <div className="flex flex-col">
 					<div className="flex-col rounded-lg bg-backdrop-200 p-2">
 						<div className="mb-1 flex items-center">
 							<h1 className="mr-1 text-xl font-bold">Filters</h1>
@@ -157,49 +321,7 @@ const Post: NextPageWithLayout = () => {
 							values={options}
 						/>
 					</div>
-				</div>
-				{allAssignments ? (
-					!allAssignments.error &&
-					user &&
-					schedule &&
-					allAssignments.data.map(
-						(assignment) =>
-							assignment.classes && (
-								<AssignmentPreview
-									key={assignment.id}
-									supabase={supabase}
-									assignment={assignment}
-									userId={user.id}
-									starredAsParam={
-										assignment.starred
-											? Array.isArray(assignment.starred)
-												? assignment.starred.length > 0
-												: !!assignment.starred
-											: false
-									}
-									//obviously we need a better solution
-									schedule={schedule!}
-									scheduleT={scheduleT!}
-									showClassPill={true}
-									classes={getDataOutArray(assignment.classes)}
-									className={`${
-										assignmentid == assignment.id
-											? "brightness-focus"
-											: "brightness-hover bg-backdrop-200"
-									} border border-transparent `}
-								/>
-							)
-					)
-				) : (
-					<>
-						{[...Array(3)].map((_, i) => (
-							<div
-								className="h-24 animate-pulse rounded-xl bg-gray-200 "
-								key={i}
-							></div>
-						))}
-					</>
-				)}
+				</div> */}
 			</div>
 			<div
 				className={`grow rounded-xl px-4 md:h-[calc(100vh-6.5rem)] ${
@@ -215,7 +337,7 @@ const Post: NextPageWithLayout = () => {
 		const [open, setOpen] = useState(false);
 		if (
 			!router.isReady ||
-			!allAssignments ||
+			!(teacherAssignments || studentAssignments) ||
 			(!assignment && assignmentid != "0")
 		) {
 			return <Loading />;
@@ -258,6 +380,89 @@ const Post: NextPageWithLayout = () => {
 		}
 
 		if (assignment?.data) {
+			if (tab == 1) {
+				return (
+					<div className="w-full">
+						<TeacherHeader
+							assignment={assignment}
+							fullscreen={fullscreen}
+							setFullscreen={setFullscreen}
+						/>
+						<div className="flex">
+							<div className="flex w-64 my-2 mt-4 flex-col">
+								<div className="w-full ">
+									<div className=" w-full rounded-xl ">
+										<Disclosure as="div" className="">
+											{({ open }) => (
+												<>
+													<Disclosure.Button className="flex w-full justify-between rounded-lg bg-gray-200 px-4 py-2 text-left text-sm font-medium">
+														<span>Ungraded</span>
+														<ChevronUpIcon
+															className={`${
+																open ? "rotate-180 transform" : ""
+															} h-5 w-5 `}
+														/>
+													</Disclosure.Button>
+													<Disclosure.Panel className="px-4 pt-4 pb-2 text-sm"></Disclosure.Panel>
+												</>
+											)}
+										</Disclosure>
+										<Disclosure as="div" className="mt-2">
+											{({ open }) => (
+												<>
+													<Disclosure.Button className="flex w-full justify-between rounded-lg bg-gray-200 px-4 py-2 text-left text-sm font-medium">
+														<span>Not Submitted</span>
+														<ChevronUpIcon
+															className={`${
+																open ? "rotate-180 transform" : ""
+															} h-5 w-5 `}
+														/>
+													</Disclosure.Button>
+													<Disclosure.Panel className="px-4 pt-4 pb-2 text-sm"></Disclosure.Panel>
+												</>
+											)}
+										</Disclosure>
+										<Disclosure as="div" className="mt-2">
+											{({ open }) => (
+												<>
+													<Disclosure.Button className="flex w-full justify-between rounded-lg bg-gray-200 px-4 py-2 text-left text-sm font-medium">
+														<span>Graded</span>
+														<ChevronUpIcon
+															className={`${
+																open ? "rotate-180 transform" : ""
+															} h-5 w-5 `}
+														/>
+													</Disclosure.Button>
+													<Disclosure.Panel className="px-4 pt-4 pb-2 text-sm"></Disclosure.Panel>
+												</>
+											)}
+										</Disclosure>
+									</div>
+								</div>
+							</div>
+							<div className="flex grow justify-between bg-gray-200 h-32 m-4 p-2 rounded-xl">
+								<div className="flex">
+									<Avatar
+										full_name="Jane Doe"
+										avatar_url=""
+										size="20"
+										className="ml-4"
+										text_size="xl"
+									/>
+									<div className="flex flex-col ml-3 justify-center">
+										<h1 className="title">Jane Doe</h1>
+										<p className="text-lg font-medium">0/10</p>
+									</div>
+								</div>
+								<textarea
+									placeholder="Enter a comment..."
+									className=" w-72 resize-none !rounded-xl"
+								/>
+							</div>
+						</div>
+					</div>
+				);
+			}
 			return (
 				<>
 					<div className="flex grow flex-col">
@@ -274,7 +479,13 @@ const Post: NextPageWithLayout = () => {
 									: "flex-col-reverse xl:flex-row"
 							}`}
 						>
-							<div className="flex grow flex-col">
+							<div
+								className={`flex flex-col ${
+									assignment.data.type == AssignmentTypes.DISCUSSION_POST
+										? "h-max"
+										: "grow"
+								}`}
+							>
 								<h2 className="text-xl font-semibold">Details</h2>
 								{assignment.data.content &&
 								(assignment.data.content as unknown as SerializedEditorState) // @ts-expect-error lexical/shit-types
@@ -289,18 +500,18 @@ const Post: NextPageWithLayout = () => {
 									<>
 										<div className="mb-5 mt-2 grid grow place-items-center rounded-xl bg-gray-200 p-5 text-lg font-medium">
 											No assignment details
-										</div>{" "}
+										</div>
 									</>
 								)}
 							</div>
 							{assignment.data.type != AssignmentTypes.DISCUSSION_POST ? (
 								<div
-									className={`sticky mb-7 flex shrink-0 flex-col overflow-y-auto xl:top-0 xl:mb-0 xl:ml-4 xl:w-72 `}
+									className={`sticky mb-7 flex shrink-0 flex-col  xl:top-0 xl:mb-0 xl:ml-4 xl:w-72 `}
 								>
 									<h2 className="text-xl font-semibold">Submission</h2>
 									<div
-										className={`mt-2 rounded-xl bg-gray-200 ${
-											open ? "max-h-16 p-1" : "max-h-96 px-5 py-4"
+										className={`mt-2 rounded-xl overflow-y-auto scrollbar-fancy bg-gray-200 ${
+											open ? "max-h-16 p-1" : "max-h-[32rem] px-5 py-4"
 										}  overflow-hidden transition-all duration-300`}
 									>
 										{!open ? (
@@ -319,7 +530,7 @@ const Post: NextPageWithLayout = () => {
 														Submit assignment
 													</h2>
 												)}
-												<div className="mt-4 flex flex-col  space-y-4">
+												<div className="mt-4 flex flex-col space-y-4">
 													<Panel
 														assignmentType={assignment.data.type}
 														setRevisions={setRevisions}
@@ -370,8 +581,22 @@ const Post: NextPageWithLayout = () => {
 									)}
 								</div>
 							) : (
-								<div>
+								<div className="flex flex-col ">
 									<h2 className="text-xl font-semibold">Discussion Posts</h2>
+									<Panel
+										assignmentType={assignment.data.type}
+										setRevisions={setRevisions}
+										revisions={revisions}
+										settings={
+											assignment.data
+												.settings as unknown as AssignmentSettingsTypes
+										}
+										assignmentID={
+											Array.isArray(assignmentid!)
+												? assignmentid[0]
+												: assignmentid!
+										}
+									/>
 								</div>
 							)}
 						</section>

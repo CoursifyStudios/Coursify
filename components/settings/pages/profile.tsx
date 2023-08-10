@@ -94,7 +94,7 @@ const Profile: NextPage = () => {
 								{values.bio ? (
 									<p className="ml-auto text-sm">
 										<span
-											className={values.bio.length >= 55 ? "text-red-700" : ""}
+											className={values.bio.length >= 55 ? "text-red-500" : ""}
 										>
 											{values.bio.length}
 										</span>

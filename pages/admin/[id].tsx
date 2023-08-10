@@ -2636,11 +2636,10 @@ function UserSelector({
 							<div key={student.id} className="flex items-center p-2">
 								<Avatar
 									full_name={student.full_name}
-									width="8"
-									height="8"
+									size="8"
 									avatar_url={student.avatar_url}
 								/>
-								<div className="flex flex-col max-w-[10rem]">
+								<div className="ml-2.5 flex flex-col max-w-[10rem]">
 									<p className="font-medium truncate">{student.full_name}</p>
 									{!student.avatar_url && (
 										<p className="text-xs">Non-onboarded User</p>

@@ -21,7 +21,7 @@
 		],
 		"paths": {
 			"@/*": ["./*"],
-			"@assignments/*": ["./components/complete/assignments/*"]
+			"@assignments/*": ["./components/assignments/*"]
 		},
 		"allowImportingTsExtensions": true
 	},

@@ -66,6 +66,7 @@ interface IToolbarProps {
 	defaultBgColor?: string /** The default selected background color in the toolbar */;
 	defaultFontFamily?: string /** The default selected font family in the toolbar */;
 	backdrop?: boolean;
+	className?: string;
 }
 
 const ToolbarPlugin = ({
@@ -75,6 +76,7 @@ const ToolbarPlugin = ({
 	defaultFontColor = "#000",
 	defaultBgColor = "#fff",
 	defaultFontFamily = "Arial",
+	className,
 }: IToolbarProps) => {
 	//@ts-expect-error
 	//const [insertExists, InsertComponent] = useChild(children, InsertDropdown);

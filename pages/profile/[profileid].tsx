@@ -56,8 +56,7 @@ export default function Profile() {
 					{profile && profile.data ? (
 						<Avatar
 							full_name={profile.data.full_name}
-							width="36"
-							height="36"
+							size="36"
 							text_size="4xl"
 							avatar_url={profile.data.avatar_url}
 						/>
