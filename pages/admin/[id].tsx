@@ -2720,6 +2720,7 @@ export default Admin;
 // How tf is this so long - Lukas
 // Because it's not made in fresh :trojker: - Bloxs
 // :doubt: - Lukas
+// This is 2,700 lines long, and contains not one useful comment - Bill
 
 Admin.getLayout = function getLayout(page: ReactElement) {
 	return <Layout>{page}</Layout>;
