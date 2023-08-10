@@ -23,7 +23,7 @@ export async function middleware(req: NextRequest) {
 			if (onboarded == "") {
 				const { data, error } = await supabase
 					.from("users")
-					.select("onboarded")
+					.select("onboarded, schools (id)")
 					.eq("id", session.user.id)
 					.single();
 				if (data) {
@@ -32,12 +32,31 @@ export async function middleware(req: NextRequest) {
 							maxAge: Date.now() + 60 * 60 * 24 * 365,
 						});
 					} else {
-						res.cookies.set("onboardingState", OnboardingState.NotStarted, {
-							maxAge: Date.now() + 60 * 60 * 24 * 365,
-						});
+						if (!req.nextUrl.pathname.startsWith("/onboarding")) {
+							
+							if (data.schools.length > 0) {
+								redirectUrl.pathname = `/onboarding/${OnboardingState.FirstStage}`;
+							} else {
+								redirectUrl.pathname = `/onboarding/${OnboardingState.NoAccount}`;
+							}
+							const redirect = NextResponse.redirect(redirectUrl);
+							return redirect;
+						} else {
+							
+							if (data.schools.length > 0) {
+								res.cookies.set("onboardingState", OnboardingState.FirstStage, {
+									maxAge: Date.now() + 60 * 60 * 24 * 365,
+								});
+							} else {
+								res.cookies.set("onboardingState", OnboardingState.NoAccount, {
+									maxAge: Date.now() + 60 * 60 * 24 * 365,
+								});
+							}
+						}
 					}
 				} else {
-					// Weird edge case that should never happen
+					// Weird edge case that should never happen - bloxkcs
+					// It happends sometimes - LS
 				}
 			} else {
 				if (!req.nextUrl.pathname.startsWith("/onboarding")) {
