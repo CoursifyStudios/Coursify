@@ -73,7 +73,7 @@ export const submissionType: {
 		description:
 			"Submission box for Google products like docs, slides, sheets, etc.",
 		type: AssignmentTypes.GOOGLE,
-		grayscale: true
+		grayscale: true,
 	},
 	{
 		icon: <DocumentTextIcon className={className} />,
@@ -86,6 +86,6 @@ export const submissionType: {
 		name: "Free Form",
 		description: "Allows students to submit media, files, text, links, etc.",
 		type: AssignmentTypes.ALL,
-		grayscale: true
+		grayscale: true,
 	},
 ];
