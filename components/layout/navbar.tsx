@@ -19,6 +19,7 @@ import { Database } from "../../lib/db/database.types";
 import { useTabs } from "../../lib/tabs/handleTabs";
 import { ButtonIcon } from "../misc/button";
 import FeedbackPopup from "../popups/feedback";
+import { useCookies } from "react-cookie";
 
 const Navbar: NextComponentType = () => {
 	const { newTab, closeTab, tabs } = useTabs();
@@ -28,6 +29,7 @@ const Navbar: NextComponentType = () => {
 	const supabase = useSupabaseClient<Database>();
 	const [hydrated, setHydrated] = useState(false);
 	const isDemoUser = user?.id == "d62d46a3-138b-4014-852e-f32f0421213b";
+	const [cookies, setCookie, removeCookie] = useCookies(["onboarding"]);
 	const userMetadata = isDemoUser
 		? {
 				name: "Coursify Demo User",
@@ -41,6 +43,7 @@ const Navbar: NextComponentType = () => {
 	useEffect(() => setHydrated(true), []);
 
 	const logOut = async () => {
+		removeCookie("onboarding");
 		await supabase.auth.signOut();
 		router.reload();
 	};
