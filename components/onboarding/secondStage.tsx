@@ -2,7 +2,6 @@ import { ProfilesResponse } from "@/lib/db/profiles";
 import { OnboardingState } from "@/middleware";
 import { Dispatch, SetStateAction } from "react";
 import { ColoredPill } from "../misc/pill";
-import CheckBox from "../complete/assignments/assignmentPanel/components/checkbox";
 
 const OnboardingSecondStage = ({
 	id,
