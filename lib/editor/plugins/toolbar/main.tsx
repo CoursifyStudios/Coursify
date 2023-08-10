@@ -284,9 +284,9 @@ const ToolbarPlugin = ({
 			}}
 		>
 			<div
-				className={`sticky top-0 z-40 rounded-b ${
-					backdrop && "bg-white/50 backdrop-blur dark:bg-neutral-900"
-				} ${className} `}
+				className={`sticky top-0 z-40 rounded-b rounded-t ${
+					backdrop && "bg-white/50 backdrop-blur pt-1 dark:bg-neutral-900"
+				} `}
 			>
 				<div className=" flex items-center ">
 					<div className="mr-6 space-x-0.5">
