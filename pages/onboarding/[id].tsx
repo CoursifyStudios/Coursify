@@ -43,7 +43,7 @@ const Onboarding = () => {
 		setError("");
 		router.push(`/onboarding/${stage}`);
 		setBSloading(false);
-		setCookie("onboardingState", stage);
+		setCookie("onboardingState", stage, { path: "/" });
 	};
 
 	const finish = async () => {
@@ -52,18 +52,19 @@ const Onboarding = () => {
 			.update({ onboarded: true })
 			.eq("id", user ? user.id : "");
 		setBSloading(true);
-		setCookie("onboardingState", OnboardingState.Done);
+		setCookie("onboardingState", OnboardingState.Done, { path: "/" });
 
 		setTimeout(() => {
-			router.reload();
+			router.push("/");
+			//router.reload();
 		}, 3000);
 	};
 
-	useEffect(() => {
-		if (cookies.onboardingState == OnboardingState.Done) {
-			router.push("/");
-		}
-	}, [cookies.onboardingState, router]);
+	// useEffect(() => {
+	// 	if (cookies.onboardingState == OnboardingState.Done) {
+	// 		router.push("/");
+	// 	}
+	// }, [cookies.onboardingState, router]);
 
 	const saveNewData = async () => {
 		setError("");
