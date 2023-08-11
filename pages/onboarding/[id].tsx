@@ -55,7 +55,7 @@ const Onboarding = () => {
 		setCookie("onboardingState", OnboardingState.Done, { path: "/" });
 
 		setTimeout(() => {
-			router.push("/");
+			location.href = "/";
 			//router.reload();
 		}, 3000);
 	};
