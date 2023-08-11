@@ -55,9 +55,8 @@ const Onboarding = () => {
 		setCookie("onboardingState", OnboardingState.Done);
 
 		setTimeout(() => {
-			router.push("/");
 			router.reload();
-		}, 4000);
+		}, 3000);
 	};
 
 	useEffect(() => {
