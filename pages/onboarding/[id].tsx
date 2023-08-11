@@ -56,8 +56,15 @@ const Onboarding = () => {
 
 		setTimeout(() => {
 			router.push("/");
+			router.reload();
 		}, 4000);
 	};
+
+	useEffect(() => {
+		if (cookies.onboardingState == OnboardingState.Done) {
+			router.push("/");
+		}
+	}, [cookies.onboardingState, router]);
 
 	const saveNewData = async () => {
 		setError("");
