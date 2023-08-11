@@ -47,24 +47,18 @@ const Onboarding = () => {
 	};
 
 	const finish = async () => {
+		setBSloading(true);
 		const { error } = await supabase
 			.from("users")
 			.update({ onboarded: true })
 			.eq("id", user ? user.id : "");
-		setBSloading(true);
+
 		setCookie("onboardingState", OnboardingState.Done, { path: "/" });
 
 		setTimeout(() => {
 			location.href = "/";
-			//router.reload();
 		}, 3000);
 	};
-
-	// useEffect(() => {
-	// 	if (cookies.onboardingState == OnboardingState.Done) {
-	// 		router.push("/");
-	// 	}
-	// }, [cookies.onboardingState, router]);
 
 	const saveNewData = async () => {
 		setError("");
