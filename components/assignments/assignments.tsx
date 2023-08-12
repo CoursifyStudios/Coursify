@@ -62,7 +62,8 @@ export function AssignmentPreview({
 							{date ? (
 								<>
 									<div className="mr-2 font-medium">
-										{date.getMonth() + 1}/{date.getDate()}
+										{date.getMonth() + 1}/{date.getDate()}/
+										{date.getFullYear().toString().slice(2)}
 									</div>
 									<ColoredPill color={classes.color}>
 										{`${to12hourTime(date, settings.showAMPM)}`}
