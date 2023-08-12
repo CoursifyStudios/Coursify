@@ -1202,16 +1202,17 @@ Activities	The user's activities, as displayed on their profile
 										full_name: "",
 										email: "",
 										phone_number: "",
-										student_id: "",
-										year: 2000,
+										student_id: null,
+										year: null,
 									}}
 									onSubmit={(v) => {
 										addNewUsers([
 											{
 												email: v.email,
 												full_name: v.full_name,
-												grad_year: v.year ?? null,
-												student_id: v.student_id ?? null,
+												grad_year: v.year || null,
+												student_id: v.student_id || null,
+												phone_number: v.phone_number || undefined,
 											},
 										]);
 									}}
@@ -1220,7 +1221,6 @@ Activities	The user's activities, as displayed on their profile
 										email: Yup.string().email().required(),
 										phone_number: Yup.string().min(10),
 										student_id: Yup.string(),
-										year: Yup.number().min(2000),
 									})}
 								>
 									<Form className="flex flex-col gap-4">

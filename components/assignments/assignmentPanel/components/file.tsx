@@ -81,7 +81,7 @@ const FileUpload: NextPage<{
 		return undefined;
 	}, [revisions]);
 
-	let currentSubmission = useRef<SubmissionFileUpload>({
+	const currentSubmission = useRef<SubmissionFileUpload>({
 		assignmentType: AssignmentTypes.FILE_UPLOAD,
 		files:
 			dbSubmission && dbSubmission.content

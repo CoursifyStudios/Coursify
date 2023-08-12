@@ -17,6 +17,7 @@ export async function middleware(req: NextRequest) {
 
 		res.cookies.set("onboardingState", onboarded, {
 			maxAge: Date.now() + 60 * 60 * 24 * 365,
+			path: "/",
 		});
 
 		if (onboarded != OnboardingState.Done) {
@@ -30,6 +31,7 @@ export async function middleware(req: NextRequest) {
 					if (data.onboarded) {
 						res.cookies.set("onboardingState", OnboardingState.Done, {
 							maxAge: Date.now() + 60 * 60 * 24 * 365,
+							path: "/",
 						});
 					} else {
 						if (!req.nextUrl.pathname.startsWith("/onboarding")) {
@@ -44,10 +46,12 @@ export async function middleware(req: NextRequest) {
 							if (data.schools.length > 0) {
 								res.cookies.set("onboardingState", OnboardingState.FirstStage, {
 									maxAge: Date.now() + 60 * 60 * 24 * 365,
+									path: "/",
 								});
 							} else {
 								res.cookies.set("onboardingState", OnboardingState.NoAccount, {
 									maxAge: Date.now() + 60 * 60 * 24 * 365,
+									path: "/",
 								});
 							}
 						}
@@ -63,6 +67,7 @@ export async function middleware(req: NextRequest) {
 
 					redirect.cookies.set("onboardingState", onboarded, {
 						maxAge: Date.now() + 60 * 60 * 24 * 365,
+						path: "/",
 					});
 
 					return redirect;
@@ -75,6 +80,7 @@ export async function middleware(req: NextRequest) {
 
 				redirect.cookies.set("onboardingState", onboarded, {
 					maxAge: Date.now() + 60 * 60 * 24 * 365,
+					path: "/",
 				});
 
 				return redirect;

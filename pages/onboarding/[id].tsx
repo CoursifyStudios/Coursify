@@ -43,20 +43,21 @@ const Onboarding = () => {
 		setError("");
 		router.push(`/onboarding/${stage}`);
 		setBSloading(false);
-		setCookie("onboardingState", stage);
+		setCookie("onboardingState", stage, { path: "/" });
 	};
 
 	const finish = async () => {
+		setBSloading(true);
 		const { error } = await supabase
 			.from("users")
 			.update({ onboarded: true })
 			.eq("id", user ? user.id : "");
-		setBSloading(true);
-		setCookie("onboardingState", OnboardingState.Done);
+
+		setCookie("onboardingState", OnboardingState.Done, { path: "/" });
 
 		setTimeout(() => {
-			router.push("/");
-		}, 4000);
+			location.href = "/";
+		}, 3000);
 	};
 
 	const saveNewData = async () => {

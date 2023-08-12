@@ -61,9 +61,11 @@ const AssignmentCreation: NextPage<{
 	const canCreate = useMemo(() => {
 		if (
 			assignmentData &&
-			(due ? assignmentData.dueType && assignmentData.dueDate : true) &&
+			(due
+				? assignmentData.dueType !== undefined && assignmentData.dueDate
+				: true) &&
 			(publish
-				? assignmentData.publishType && assignmentData.publishDate
+				? assignmentData.publishType !== undefined && assignmentData.publishDate
 				: true)
 		) {
 			return true;
