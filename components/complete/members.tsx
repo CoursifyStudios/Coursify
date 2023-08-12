@@ -50,7 +50,10 @@ export const Member = ({
 				</div>
 			</Link>
 			<div className="absolute bottom-4 left-16 ">
-				<CopiedHover copy={user.email ?? "No email found"}>
+				<CopiedHover
+					copy={user.email ?? "No email found"}
+					customText="Copy Email"
+				>
 					<ColoredPill color="gray">
 						<div className="flex items-center lg:w-52 xl:w-44 max-w-max">
 							<EnvelopeIcon className="mr-1.5 h-4 w-4 text-gray-800" />
