@@ -1,6 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getDataInArray, getDataOutArray } from "../misc/dataOutArray";
-import { NonNullableArray } from "../misc/misc.types";
 import type { Database } from "./database.types";
 import { ScheduleInterface, getSchedulesForXDays } from "./schedule";
 

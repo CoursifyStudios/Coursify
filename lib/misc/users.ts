@@ -1,6 +1,5 @@
 import { AllClasses, ClassResponse } from "../db/classes";
 import { getDataInArray } from "./dataOutArray";
-import { ArrayElementType } from "./elementarraytype.types";
 import { NonNullableArray } from "./misc.types";
 
 export const isTeacher = (
