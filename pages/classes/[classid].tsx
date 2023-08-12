@@ -33,6 +33,7 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment, ReactElement, useEffect, useState } from "react";
 import { AgendasModule } from "@/components/complete/agendas";
+import { sortClassMembers } from "@/lib/misc/users";
 
 const Class: NextPageWithLayout = () => {
 	const router = useRouter();
@@ -448,7 +449,7 @@ const Class: NextPageWithLayout = () => {
 
 							<div className="grid gap-4 max-sm:mx-auto max-sm:w-[20.5rem] lg:grid-cols-2 xl:grid-cols-3">
 								{data.data.users ? (
-									getDataInArray(data.data.users).map(
+									sortClassMembers(data.data).map(
 										(user) =>
 											(userSearch.length == 0
 												? true
@@ -458,14 +459,10 @@ const Class: NextPageWithLayout = () => {
 												<Member
 													key={user.id}
 													user={user}
-													leader={
-														getDataInArray(data.data.class_users).find(
-															(userInUsersGroups) =>
-																user?.id == userInUsersGroups?.user_id
-														)?.teacher
-															? true
-															: false
-													}
+													teacher={getDataInArray(data.data.class_users).some(
+														(cUser) =>
+															user?.id == cUser?.user_id && cUser.teacher
+													)}
 												></Member>
 											)
 									)

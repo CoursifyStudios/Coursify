@@ -25,7 +25,8 @@ function Avatar({
 	return (
 		<div className={`flex items-center ${className}`}>
 			{avatar_url ? (
-				<Image
+				// eslint-disable-next-line @next/next/no-img-element
+				<img
 					src={avatar_url}
 					width={350}
 					height={350}
