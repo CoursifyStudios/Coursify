@@ -275,15 +275,3 @@ export const getClassesForUserBasic = async (
 export type BasicClassInfoDB = Awaited<
 	ReturnType<typeof getClassesForUserBasic>
 >;
-
-export const isTeacher = (
-	classData: NonNullableArray<AllClasses>,
-	userID: string
-) => {
-	return Boolean(
-		classData.class &&
-			getDataInArray(classData.class.class_users).find(
-				(user) => user?.user_id == userID && user?.teacher
-			)
-	);
-};

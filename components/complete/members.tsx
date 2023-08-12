@@ -7,7 +7,7 @@ import Avatar from "../misc/avatar";
 
 export const Member = ({
 	user,
-	leader,
+	teacher,
 }: {
 	user: {
 		id: string;
@@ -15,7 +15,7 @@ export const Member = ({
 		avatar_url: string;
 		email: string | null;
 	};
-	leader: boolean;
+	teacher: boolean;
 }) => {
 	const { newTab } = useTabs();
 	return (
@@ -38,7 +38,7 @@ export const Member = ({
 						avatar_url={user.avatar_url}
 						className="min-w-[2.5rem]"
 					/>
-					{leader && (
+					{teacher && (
 						<div className="absolute -bottom-1 -right-0.5 flex rounded-full bg-yellow-100 p-0.5">
 							<IdentificationIcon className="h-4 w-4 text-yellow-600" />
 						</div>

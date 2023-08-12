@@ -2,14 +2,11 @@ import { Tab } from "@headlessui/react";
 import { NextPage } from "next";
 import { Fragment, useEffect, useMemo, useState } from "react";
 import { Class } from "..";
-import {
-	AllClasses,
-	AllClassesResponse,
-	isTeacher,
-} from "../../../lib/db/classes";
+import { AllClasses } from "../../../lib/db/classes";
 import { ScheduleInterface } from "../../../lib/db/schedule";
 import { Settings, useSettings } from "../../../lib/stores/settings";
 import { LoadingStudentClass } from "../loading";
+import { isTeacher } from "@/lib/misc/users";
 //import { sortClasses } from "../sorting";
 
 const HomepageClassesUI: NextPage<{
