@@ -1210,9 +1210,9 @@ Activities	The user's activities, as displayed on their profile
 											{
 												email: v.email,
 												full_name: v.full_name,
-												grad_year: v.year ?? null,
-												student_id: v.student_id ?? null,
-												year: v.year ?? null,
+												grad_year: v.year || null,
+												student_id: v.student_id || null,
+												phone_number: v.phone_number || undefined,
 											},
 										]);
 									}}
