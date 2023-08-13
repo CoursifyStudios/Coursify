@@ -42,13 +42,13 @@ export function AssignmentPreview({
 	const { data: settings } = useSettings();
 
 	return (
-		<div className="relative">
+		<div className="w-full relative">
 			<Link
 				href={"/assignments/" + assignment.id}
 				className={`${className} flex  w-full flex-col rounded-xl bg-backdrop-200 p-2.5 `}
 			>
-				<div className="flex items-end justify-between">
-					<div className="ml-8">
+				<div className="w-full flex items-end justify-between">
+					<div className="w-full ml-8">
 						{classes && showClassPill && (
 							<Link href={"/classes/" + classes?.id}>
 								<ColoredPill color={classes.color} hoverState>
@@ -58,10 +58,10 @@ export function AssignmentPreview({
 						)}
 					</div>
 					<div>
-						<div tabIndex={-1} className="flex">
+						<div tabIndex={-1} className="w-full flex">
 							{date ? (
 								<>
-									<div className="mr-2 font-medium">
+									<div className="w-full mr-2 font-medium">
 										{date.getMonth() + 1}/{date.getDate()}/
 										{date.getFullYear().toString().slice(2)}
 									</div>
@@ -70,26 +70,29 @@ export function AssignmentPreview({
 									</ColoredPill>
 								</>
 							) : (
-								<span className="text-sm italic">No due date</span>
+								<span className="w-full text-sm italic">No due date</span>
 							)}
 						</div>
 					</div>
 				</div>
-				<div tabIndex={-1} className="mt-1 flex h-[4.5rem] justify-between">
+				<div
+					tabIndex={-1}
+					className="w-full mt-1 flex h-[4.5rem] justify-between"
+				>
 					<div>
-						<p className="line-clamp-3">
-							<a className="font-medium">{assignment.name}</a>
+						<p className="w-full line-clamp-3">
+							<a className="w-full font-medium">{assignment.name}</a>
 							<br />
-							<p className="mr-7">{assignment.description}</p>
+							<p className="w-full mr-7">{assignment.description}</p>
 						</p>
 					</div>
 				</div>
 			</Link>
-			<div className="absolute bottom-2 right-2">
-				<CheckIcon className="h-6 w-6 shrink-0" />
+			<div className="w-full absolute bottom-2 right-2">
+				<CheckIcon className="w-full h-6 w-6 shrink-0" />
 			</div>
 			<div
-				className="absolute left-2 top-3 cursor-pointer"
+				className="w-full absolute left-2 top-3 cursor-pointer"
 				tabIndex={0}
 				onClick={() => {
 					setStarred((starred) => {

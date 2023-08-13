@@ -18,7 +18,7 @@ export const Header: NextPage<{
 
 	return (
 		<div
-			className="group flex cursor-pointer items-center pb-2 [&:not(:first-child)]:mt-10"
+			className="w-full group flex cursor-pointer items-center pb-2 [&:not(:first-child)]:mt-10"
 			id={name}
 			onClick={() =>
 				router.push(
@@ -35,9 +35,9 @@ export const Header: NextPage<{
 				)
 			}
 		>
-			<h3 className="title-sm">{children}</h3>
-			<LinkIcon className="ml-1 mr-1 h-4 w-4 text-gray-600 opacity-0 transition group-hover:opacity-100 dark:text-gray-400" />
-			<div className="h-0.5 grow rounded-full bg-gray-200"></div>
+			<h3 className="w-full title-sm">{children}</h3>
+			<LinkIcon className="w-full ml-1 mr-1 h-4 w-4 text-gray-600 opacity-0 transition group-hover:opacity-100 dark:text-gray-400" />
+			<div className="w-full h-0.5 grow rounded-full bg-gray-200"></div>
 		</div>
 	);
 };

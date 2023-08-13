@@ -129,31 +129,31 @@ const Class: NextPageWithLayout = () => {
 
 	if (!data)
 		return (
-			<div className="mx-auto my-10 w-full max-w-screen-xl">
-				<div className="relative mb-6 h-48 w-full animate-pulse rounded-xl bg-gray-200 "></div>
-				<div className="flex">
-					<section className="flex grow flex-col">
-						<div className="flex w-full">
-							<div className="mx-auto mb-7 flex space-x-6">
-								<div className="h-7 w-24 animate-pulse rounded-md bg-gray-200"></div>
-								<div className="h-7 w-24 animate-pulse rounded-md bg-gray-200"></div>
-								<div className="h-7 w-24 animate-pulse rounded-md bg-gray-200"></div>
+			<div className="w-full mx-auto my-10 w-full max-w-screen-xl">
+				<div className="w-full relative mb-6 h-48 w-full animate-pulse rounded-xl bg-gray-200 "></div>
+				<div className="w-full flex">
+					<section className="w-full flex grow flex-col">
+						<div className="w-full flex w-full">
+							<div className="w-full mx-auto mb-7 flex space-x-6">
+								<div className="w-full h-7 w-24 animate-pulse rounded-md bg-gray-200"></div>
+								<div className="w-full h-7 w-24 animate-pulse rounded-md bg-gray-200"></div>
+								<div className="w-full h-7 w-24 animate-pulse rounded-md bg-gray-200"></div>
 							</div>
 						</div>
-						<div className="group">
-							<div className="flex h-36 w-full animate-pulse rounded-xl bg-gray-200"></div>
+						<div className="w-full group">
+							<div className="w-full flex h-36 w-full animate-pulse rounded-xl bg-gray-200"></div>
 						</div>
 					</section>
-					<section className="sticky top-0 ml-8 w-[20.5rem] shrink-0">
+					<section className="w-full sticky top-0 ml-8 w-[20.5rem] shrink-0">
 						<div>
-							<h2 className="title">Grade</h2>
-							<div className="mt-6 h-16 animate-pulse rounded-xl	 bg-gray-200 p-4"></div>
+							<h2 className="w-full title">Grade</h2>
+							<div className="w-full mt-6 h-16 animate-pulse rounded-xl	 bg-gray-200 p-4"></div>
 						</div>
-						<div className="space-y-4">
-							<h2 className="title mb-6 mt-4">Assignments</h2>
-							<div className="flex h-20 grow animate-pulse rounded-xl bg-gray-200"></div>
-							<div className="flex h-20 grow animate-pulse rounded-xl bg-gray-200"></div>
-							<div className="flex h-20 grow animate-pulse rounded-xl bg-gray-200"></div>
+						<div className="w-full space-y-4">
+							<h2 className="w-full title mb-6 mt-4">Assignments</h2>
+							<div className="w-full flex h-20 grow animate-pulse rounded-xl bg-gray-200"></div>
+							<div className="w-full flex h-20 grow animate-pulse rounded-xl bg-gray-200"></div>
+							<div className="w-full flex h-20 grow animate-pulse rounded-xl bg-gray-200"></div>
 						</div>
 					</section>
 				</div>
@@ -162,12 +162,12 @@ const Class: NextPageWithLayout = () => {
 
 	if (!data.data && data.error) {
 		return (
-			<div className="mx-auto my-32 flex w-full max-w-screen-xl flex-col items-center px-4">
-				<h2 className="text-3xl font-bold">
+			<div className="w-full mx-auto my-32 flex w-full max-w-screen-xl flex-col items-center px-4">
+				<h2 className="w-full text-3xl font-bold">
 					We couldn{"'"}t find this class...
 				</h2>
 				<Link href="/">
-					<Button color="bg-blue-500 text-white" className="mt-8">
+					<Button color="bg-blue-500 text-white" className="w-full mt-8">
 						Back to home!
 					</Button>
 				</Link>
@@ -176,7 +176,7 @@ const Class: NextPageWithLayout = () => {
 	}
 
 	return (
-		<div className="mx-auto my-10 flex w-full max-w-screen-xl flex-col px-4">
+		<div className="w-full mx-auto my-10 flex w-full max-w-screen-xl flex-col px-4">
 			{/* Why can't we just have one of these!!! */}
 			{data.data && typeof classid == "string" && (
 				<CreateAssignment
@@ -195,19 +195,19 @@ const Class: NextPageWithLayout = () => {
 				/>
 			)}
 			{!compact ? (
-				<div className="relative mb-6 h-48 w-full">
+				<div className="w-full relative mb-6 h-48 w-full">
 					<Image
 						src={data.data.image || ""}
 						alt="Example Image"
-						className="rounded-xl select-none object-cover object-center"
+						className="w-full rounded-xl select-none object-cover object-center"
 						draggable={false}
 						fill
 					/>
-					<ColoredPill className="absolute left-5 top-5 !bg-neutral-500/20 text-lg !text-gray-300 backdrop-blur-xl dark:!text-gray-100">
+					<ColoredPill className="w-full absolute left-5 top-5 !bg-neutral-500/20 text-lg !text-gray-300 backdrop-blur-xl dark:!text-gray-100">
 						Rm. {data.data.room}
 					</ColoredPill>
-					<div className="absolute right-5 top-5">
-						<div className="flex items-center">
+					<div className="w-full absolute right-5 top-5">
+						<div className="w-full flex items-center">
 							<h2
 								className={`text-2xl text-${data.data.color}-300 rounded-lg bg-neutral-500/20 px-2 font-bold opacity-75 backdrop-blur-xl`}
 							>
@@ -216,26 +216,26 @@ const Class: NextPageWithLayout = () => {
 						</div>
 					</div>
 
-					<h1 className="title absolute bottom-5 left-5 !text-4xl text-gray-200 dark:text-gray-100">
+					<h1 className="w-full title absolute bottom-5 left-5 !text-4xl text-gray-200 dark:text-gray-100">
 						{data.data && data.data.name}
 					</h1>
 				</div>
 			) : (
-				<div className="mx-auto mb-10 flex flex-col items-center">
-					<h1 className="title text-white-200 mb-3 !text-4xl">
+				<div className="w-full mx-auto mb-10 flex flex-col items-center">
+					<h1 className="w-full title text-white-200 mb-3 !text-4xl">
 						{data.data && data.data.name}
 					</h1>
-					<div className="flex gap-4">
+					<div className="w-full flex gap-4">
 						<ColoredPill color="gray">Rm. {data.data.room}</ColoredPill>
 						<ColoredPill color="gray">Block {data.data.block}</ColoredPill>
 					</div>
 				</div>
 			)}
-			<div className="space-x sm:grid-cols-1 md:flex">
-				<Tab.Group as="div" className="flex grow flex-col">
+			<div className="w-full space-x sm:grid-cols-1 md:flex">
+				<Tab.Group as="div" className="w-full flex grow flex-col">
 					<Tab.List
 						as="div"
-						className="mx-auto mb-6 flex max-sm:space-x-2 sm:space-x-6"
+						className="w-full mx-auto mb-6 flex max-sm:space-x-2 sm:space-x-6"
 					>
 						<Tab as={Fragment}>
 							{({ selected }) => (
@@ -283,7 +283,7 @@ const Class: NextPageWithLayout = () => {
 					<Tab.Panels>
 						{/* HOME Tab */}
 						<Tab.Panel tabIndex={-1}>
-							<div className="mb-3 flex flex-wrap gap-2">
+							<div className="w-full mb-3 flex flex-wrap gap-2">
 								{data.data?.classpills && isTeacher != undefined && classid && (
 									<InfoPills
 										allPills={data.data.classpills as unknown as InfoPill[]}
@@ -301,20 +301,20 @@ const Class: NextPageWithLayout = () => {
 							{data.data?.full_description ||
 							(editorState && edited && !data.data?.full_description) ||
 							editable ? (
-								<div className="group relative">
+								<div className="w-full group relative">
 									<Editor
 										editable={editable}
 										initialState={data.data?.full_description}
 										updatedState={edited ? editorState : undefined}
 										updateState={setEditorState}
 										focus={true}
-										//className=" "
+										//className="w-full  "
 									/>
 									{isTeacher &&
 										(!editable ? (
 											<div
 												onClick={() => setEditable(true)}
-												className="brightness-hover absolute right-2 top-2 z-10 flex cursor-pointer rounded-lg bg-gray-200 px-2.5 py-1 font-semibold opacity-0 transition group-hover:opacity-100"
+												className="w-full brightness-hover absolute right-2 top-2 z-10 flex cursor-pointer rounded-lg bg-gray-200 px-2.5 py-1 font-semibold opacity-0 transition group-hover:opacity-100"
 											>
 												Edit
 											</div>
@@ -324,7 +324,7 @@ const Class: NextPageWithLayout = () => {
 													setEditable(false);
 													updateEditorDB();
 												}}
-												className="brightness-hover absolute bottom-2 right-2 z-10 flex cursor-pointer rounded-lg bg-gray-200 px-2.5 py-1 font-semibold"
+												className="w-full brightness-hover absolute bottom-2 right-2 z-10 flex cursor-pointer rounded-lg bg-gray-200 px-2.5 py-1 font-semibold"
 											>
 												Save
 											</div>
@@ -335,7 +335,7 @@ const Class: NextPageWithLayout = () => {
 									<div tabIndex={0} onClick={() => setEditable(true)}>
 										<ColoredPill
 											color="gray"
-											className="mt-2 cursor-pointer"
+											className="w-full mt-2 cursor-pointer"
 											hoverState
 										>
 											Add a class description
@@ -375,10 +375,10 @@ const Class: NextPageWithLayout = () => {
 							)}
 						</Tab.Panel>
 						<Tab.Panel tabIndex={-1} id="Announcements">
-							<h2 className="title mb-3">Announcements</h2>
-							<div className="space-y-3">
+							<h2 className="w-full title mb-3">Announcements</h2>
+							<div className="w-full space-y-3">
 								{classid && typeof classid == "string" && (
-									<div className="space-y-4">
+									<div className="w-full space-y-4">
 										<AnnouncementsComponent
 											fetchedAnnouncements={
 												getDataInArray(
@@ -403,10 +403,10 @@ const Class: NextPageWithLayout = () => {
 										searchOpen ? "max-w-[24rem]" : "max-w-[14rem]"
 									} relative flex grow items-center pr-2 transition-all`}
 								>
-									<MagnifyingGlassIcon className="absolute left-3 h-4 w-4" />
+									<MagnifyingGlassIcon className="w-full absolute left-3 h-4 w-4" />
 									<input
 										type="text"
-										className="grow !rounded-xl py-0.5 placeholder:dark:text-gray-400 pl-8"
+										className="w-full grow !rounded-xl py-0.5 placeholder:dark:text-gray-400 pl-8"
 										placeholder="Search members..."
 										onClick={() => setSearchOpen(true)}
 										onBlur={() => setSearchOpen(false)}
@@ -415,7 +415,7 @@ const Class: NextPageWithLayout = () => {
 									/>
 								</div>
 								{isTeacher && data.data.users && (
-									<div className="flex gap-2">
+									<div className="w-full flex gap-2">
 										<span
 											onClick={() =>
 												navigator.clipboard.writeText(
@@ -426,7 +426,7 @@ const Class: NextPageWithLayout = () => {
 											}
 										>
 											<ColoredPill
-												className="brightness-hover grid h-full cursor-pointer place-items-center !rounded-lg !bg-backdrop-200"
+												className="w-full brightness-hover grid h-full cursor-pointer place-items-center !rounded-lg !bg-backdrop-200"
 												hoverState
 											>
 												Copy All Emails
@@ -438,16 +438,16 @@ const Class: NextPageWithLayout = () => {
 												.join(",")}`}
 											rel="noopener norefferer"
 											target="_blank"
-											className="brightness-hover group grid cursor-pointer place-items-center rounded-lg bg-backdrop-200 px-1.5"
+											className="w-full brightness-hover group grid cursor-pointer place-items-center rounded-lg bg-backdrop-200 px-1.5"
 										>
-											<EnvelopeIcon className="h-5 w-5 group-hover:hidden" />
-											<EnvelopeOpenIcon className="-mt-1 hidden h-5 w-5 group-hover:block" />
+											<EnvelopeIcon className="w-full h-5 w-5 group-hover:hidden" />
+											<EnvelopeOpenIcon className="w-full -mt-1 hidden h-5 w-5 group-hover:block" />
 										</a>
 									</div>
 								)}
 							</div>
 
-							<div className="grid gap-4 max-sm:mx-auto max-sm:w-[20.5rem] lg:grid-cols-2 xl:grid-cols-3">
+							<div className="w-full grid gap-4 max-sm:mx-auto max-sm:w-[20.5rem] lg:grid-cols-2 xl:grid-cols-3">
 								{data.data.users ? (
 									sortClassMembers(data.data).map(
 										(user) =>
@@ -467,7 +467,7 @@ const Class: NextPageWithLayout = () => {
 											)
 									)
 								) : (
-									<div className="rounded-xl bg-gray-200 p-4">
+									<div className="w-full rounded-xl bg-gray-200 p-4">
 										An error occurred
 									</div>
 								)}
@@ -475,25 +475,25 @@ const Class: NextPageWithLayout = () => {
 						</Tab.Panel>
 					</Tab.Panels>
 				</Tab.Group>
-				<section className="sticky top-0 mx-auto w-[20.5rem] shrink-0 sm:ml-8">
+				<section className="w-full sticky top-0 mx-auto w-[20.5rem] shrink-0 sm:ml-8">
 					{!isTeacher && (
 						<div>
-							<h2 className="title">Grade</h2>
-							<div className="mt-6 rounded-xl bg-gray-200 p-4">
+							<h2 className="w-full title">Grade</h2>
+							<div className="w-full mt-6 rounded-xl bg-gray-200 p-4">
 								<CircleCounter amount={grade} max={100} />
 							</div>
 						</div>
 					)}
-					<div className="space-y-4">
-						<h2 className="title mb-6 mt-8">Assignments</h2>
+					<div className="w-full space-y-4">
+						<h2 className="w-full title mb-6 mt-8">Assignments</h2>
 						{isTeacher && (
 							<div
 								tabIndex={0}
 								onClick={() => setAssignmentCreationOpen(true)}
-								className="group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white"
+								className="w-full group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white"
 							>
-								<PlusIcon className="-ml-4 mr-4 h-8 w-8 transition group-hover:scale-125" />{" "}
-								<h3 className="text-lg font-medium transition">
+								<PlusIcon className="w-full -ml-4 mr-4 h-8 w-8 transition group-hover:scale-125" />{" "}
+								<h3 className="w-full text-lg font-medium transition">
 									New Assignment
 								</h3>
 							</div>
@@ -515,7 +515,7 @@ const Class: NextPageWithLayout = () => {
 								.map((assignment) => (
 									<AssignmentPreview
 										key={assignment.id}
-										className="brightness-hover"
+										className="w-full brightness-hover"
 										supabase={supabase}
 										assignment={
 											Array.isArray(assignment) ? assignment[0] : assignment

@@ -19,9 +19,9 @@ export const Member = ({
 }) => {
 	const { newTab } = useTabs();
 	return (
-		<div className="relative">
+		<div className="w-full relative">
 			<Link
-				className="brightness-hover flex items-center rounded-xl bg-gray-200 p-3"
+				className="w-full brightness-hover flex items-center rounded-xl bg-gray-200 p-3"
 				key={user.id}
 				href={"/profile/" + user.id}
 				onClick={() =>
@@ -31,33 +31,33 @@ export const Member = ({
 					)
 				}
 			>
-				<div className="relative">
+				<div className="w-full relative">
 					<Avatar
 						full_name={user.full_name}
 						size="10"
 						avatar_url={user.avatar_url}
-						className="min-w-[2.5rem]"
+						className="w-full min-w-[2.5rem]"
 					/>
 					{teacher && (
-						<div className="absolute -bottom-1 -right-0.5 flex rounded-full bg-yellow-100 p-0.5">
-							<IdentificationIcon className="h-4 w-4 text-yellow-600" />
+						<div className="w-full absolute -bottom-1 -right-0.5 flex rounded-full bg-yellow-100 p-0.5">
+							<IdentificationIcon className="w-full h-4 w-4 text-yellow-600" />
 						</div>
 					)}
 				</div>
-				<div className="ml-3">
-					<h2 className="mb-1 font-medium">{user.full_name}</h2>
-					<p className="px-2.5 py-0.5 invisible">placeholder</p>
+				<div className="w-full ml-3">
+					<h2 className="w-full mb-1 font-medium">{user.full_name}</h2>
+					<p className="w-full px-2.5 py-0.5 invisible">placeholder</p>
 				</div>
 			</Link>
-			<div className="absolute bottom-4 left-16 ">
+			<div className="w-full absolute bottom-4 left-16 ">
 				<CopiedHover
 					copy={user.email ?? "No email found"}
 					customText="Copy Email"
 				>
 					<ColoredPill color="gray">
-						<div className="flex items-center lg:w-52 xl:w-44 max-w-max">
-							<EnvelopeIcon className="mr-1.5 h-4 w-4 text-gray-800" />
-							<p className="truncate">{user.email}</p>
+						<div className="w-full flex items-center lg:w-52 xl:w-44 max-w-max">
+							<EnvelopeIcon className="w-full mr-1.5 h-4 w-4 text-gray-800" />
+							<p className="w-full truncate">{user.email}</p>
 						</div>
 					</ColoredPill>
 				</CopiedHover>

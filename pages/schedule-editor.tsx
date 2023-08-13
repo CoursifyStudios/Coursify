@@ -36,15 +36,15 @@ const ScheduleEditor: NextPageWithLayout = () => {
 		})();
 	}, [supabaseClient]);
 	return (
-		<div className="font-mono">
-			<h4 className="bg-red-600 p-3 px-10">
+		<div className="w-full font-mono">
+			<h4 className="w-full bg-red-600 p-3 px-10">
 				Warning: The schedule editor is currently still in development. For the
 				time being, remember that it is only to be used when the local timezone
 				is Pacific Standard Time, 7 hours behind GMT.
 			</h4>
-			<div className="grid grid-cols-2">
-				<section className="my-6 ml-5 px-5">
-					<h2 className="mb-4 text-lg font-semibold">
+			<div className="w-full grid grid-cols-2">
+				<section className="w-full my-6 ml-5 px-5">
+					<h2 className="w-full mb-4 text-lg font-semibold">
 						New Schedule Item: {template ? templateName : ""}
 					</h2>
 					<h2>
@@ -97,7 +97,7 @@ const ScheduleEditor: NextPageWithLayout = () => {
 							}
 						}}
 					>
-						<Form className="flex flex-col [&>label]:flex [&>label]:flex-col gap-4 font-medium">
+						<Form className="w-full flex flex-col [&>label]:flex [&>label]:flex-col gap-4 font-medium">
 							<label htmlFor="itemStartTime">
 								Start time
 								<Field name="itemStartTime" type="time" step="min" />
@@ -149,31 +149,33 @@ const ScheduleEditor: NextPageWithLayout = () => {
 
 							<button
 								type="submit"
-								className="mr-auto mt-4  px-4 py-2 bg-black dark:bg-white text-white dark:text-black hover:invert transition hover:border-black border border-transparent"
+								className="w-full mr-auto mt-4  px-4 py-2 bg-black dark:bg-white text-white dark:text-black hover:invert transition hover:border-black border border-transparent"
 							>
 								Add schedule item
 							</button>
 						</Form>
 					</Formik>
 				</section>
-				<section className="mr-5 grid grid-cols-2">
-					<section className="my-6 flex-1 px-5">
-						<h2 className="mb-4 text-lg font-semibold">Schedule type 1</h2>
-						<div className="mt-6 flex flex-col">
-							<div className="mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
+				<section className="w-full mr-5 grid grid-cols-2">
+					<section className="w-full my-6 flex-1 px-5">
+						<h2 className="w-full mb-4 text-lg font-semibold">
+							Schedule type 1
+						</h2>
+						<div className="w-full mt-6 flex flex-col">
+							<div className="w-full mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
 								{tempSchedule &&
 									tempSchedule.map(
 										(scheduleItem, i) =>
 											scheduleItem.type == 1 && (
 												<div
 													key={i}
-													className="flex items-center justify-between font-semibold"
+													className="w-full flex items-center justify-between font-semibold"
 												>
 													{scheduleItem.specialEvent}
 													{!scheduleItem.specialEvent
 														? "Block " + scheduleItem.block
 														: ""}
-													<div className="flex items-center justify-between font-semibold">
+													<div className="w-full flex items-center justify-between font-semibold">
 														<ColoredPill
 															color={
 																!scheduleItem.specialEvent
@@ -194,7 +196,7 @@ const ScheduleEditor: NextPageWithLayout = () => {
 															)}{" "}
 														</ColoredPill>
 														<p
-															className="ml-3 text-red-600"
+															className="w-full ml-3 text-red-600"
 															onClick={() => {
 																tempArray = [...tempSchedule];
 																tempArray.splice(i, 1);
@@ -211,23 +213,25 @@ const ScheduleEditor: NextPageWithLayout = () => {
 							</div>
 						</div>
 					</section>
-					<section className="my-6 flex-1 px-5">
-						<h2 className="mb-4 text-lg font-semibold">Schedule type 2</h2>
-						<div className="mt-6 flex flex-col">
-							<div className="mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
+					<section className="w-full my-6 flex-1 px-5">
+						<h2 className="w-full mb-4 text-lg font-semibold">
+							Schedule type 2
+						</h2>
+						<div className="w-full mt-6 flex flex-col">
+							<div className="w-full mt-6 grid grid-cols-1 gap-5 rounded-xl bg-gray-200 p-4">
 								{tempSchedule &&
 									tempSchedule.map(
 										(scheduleItem, i) =>
 											scheduleItem.type == 2 && (
 												<div
 													key={i}
-													className="flex items-center justify-between font-semibold"
+													className="w-full flex items-center justify-between font-semibold"
 												>
 													{scheduleItem.specialEvent}
 													{!scheduleItem.specialEvent
 														? "Block " + scheduleItem.block
 														: ""}
-													<div className="flex items-center justify-between font-semibold">
+													<div className="w-full flex items-center justify-between font-semibold">
 														<ColoredPill
 															color={
 																!scheduleItem.specialEvent
@@ -248,7 +252,7 @@ const ScheduleEditor: NextPageWithLayout = () => {
 															)}{" "}
 														</ColoredPill>
 														<p
-															className="ml-3 text-red-600"
+															className="w-full ml-3 text-red-600"
 															onClick={() => {
 																tempArray = [...tempSchedule];
 																tempArray.splice(i, 1);
@@ -267,7 +271,7 @@ const ScheduleEditor: NextPageWithLayout = () => {
 					</section>
 				</section>
 			</div>
-			<div className="mx-10 grid grid-cols-2 gap-5">
+			<div className="w-full mx-10 grid grid-cols-2 gap-5">
 				<Formik
 					initialValues={{ day: new Date() }}
 					onSubmit={(v) => {
@@ -278,18 +282,18 @@ const ScheduleEditor: NextPageWithLayout = () => {
 						} else setError("Please add one or more schedule items first");
 					}}
 				>
-					<Form className="grid grid-cols-1">
+					<Form className="w-full grid grid-cols-1">
 						<label htmlFor="day">Day</label>
 						<Field
 							name="day"
 							type="date"
-							className="rounded-md border-gray-300 bg-backdrop/50 focus:ring-1 dark:placeholder:text-gray-400"
+							className="w-full rounded-md border-gray-300 bg-backdrop/50 focus:ring-1 dark:placeholder:text-gray-400"
 						></Field>
 						<ErrorMessage name="day" />
 
 						<button
 							type="submit"
-							className="mr-auto mt-4  px-4 py-2 bg-black dark:bg-white text-white dark:text-black hover:invert transition hover:border-black border border-transparent"
+							className="w-full mr-auto mt-4  px-4 py-2 bg-black dark:bg-white text-white dark:text-black hover:invert transition hover:border-black border border-transparent"
 						>
 							Add as a Schedule (send to server)
 						</button>
@@ -309,14 +313,14 @@ const ScheduleEditor: NextPageWithLayout = () => {
 								);
 						}}
 					>
-						<Form className="grid grid-cols-1">
+						<Form className="w-full grid grid-cols-1">
 							<label htmlFor="name">Name Your Template:</label>
 							<Field name="name" type="text"></Field>
 							<ErrorMessage name="name" />
 
 							<button
 								type="submit"
-								className="mr-auto mt-4  px-4 py-2 bg-black dark:bg-white text-white dark:text-black hover:invert transition hover:border-black border border-transparent"
+								className="w-full mr-auto mt-4  px-4 py-2 bg-black dark:bg-white text-white dark:text-black hover:invert transition hover:border-black border border-transparent"
 							>
 								Add a New Template
 							</button>
@@ -324,17 +328,17 @@ const ScheduleEditor: NextPageWithLayout = () => {
 					</Formik>
 				</div>
 			</div>
-			<div className="mx-10 mt-5">
+			<div className="w-full mx-10 mt-5">
 				<h2>Schedule Templates:</h2>
 				{/* this will be made DRY-er later */}
 				{/* I'd like to coin a new term "wringin" for this purpose */}
-				<div className="grid gap-5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
+				<div className="w-full grid gap-5 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4">
 					{scheduleTemplates &&
 						scheduleTemplates.data &&
 						(scheduleTemplates.data as unknown as TemplateInterface[]).map(
 							(v) => (
 								<button
-									className="rounded-md bg-gray-200 p-4"
+									className="w-full rounded-md bg-gray-200 p-4"
 									onClick={() => {
 										setTempSchedule(
 											v.schedule_items as unknown as ScheduleInterface[]
@@ -344,13 +348,16 @@ const ScheduleEditor: NextPageWithLayout = () => {
 									}}
 									key={v.id}
 								>
-									<div className="flex justify-center">{v.name}</div>
-									<div className="grid grid-cols-2 gap-5">
-										<div className="">
+									<div className="w-full flex justify-center">{v.name}</div>
+									<div className="w-full grid grid-cols-2 gap-5">
+										<div className="w-full ">
 											{(v.schedule_items as unknown as ScheduleInterface[]).map(
 												(period, iterator) =>
 													period.type == 1 && (
-														<div className="whitespace-nowrap" key={iterator}>
+														<div
+															className="w-full whitespace-nowrap"
+															key={iterator}
+														>
 															{period.timeStart.substring(0, 5)}
 															{" - "}
 															{period.timeEnd.substring(0, 5)}
@@ -362,7 +369,10 @@ const ScheduleEditor: NextPageWithLayout = () => {
 											{(v.schedule_items as unknown as ScheduleInterface[]).map(
 												(period, iterator) =>
 													period.type == 2 && (
-														<div className="whitespace-nowrap" key={iterator}>
+														<div
+															className="w-full whitespace-nowrap"
+															key={iterator}
+														>
 															{period.timeStart.substring(0, 5)}
 															{" - "}
 															{period.timeEnd.substring(0, 5)}
@@ -376,7 +386,7 @@ const ScheduleEditor: NextPageWithLayout = () => {
 						)}
 				</div>
 			</div>
-			{error && <p className="text-red-500">Error: {error}</p>}
+			{error && <p className="w-full text-red-500">Error: {error}</p>}
 		</div>
 	);
 };

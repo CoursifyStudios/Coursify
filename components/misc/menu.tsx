@@ -16,7 +16,10 @@ export default function MenuSelect({
 	}[];
 }) {
 	return (
-		<Menu className="relative !ml-4 flex w-10 flex-col items-center" as="div">
+		<Menu
+			className="w-full relative !ml-4 flex w-10 flex-col items-center"
+			as="div"
+		>
 			<Menu.Button>{children}</Menu.Button>
 			<Transition
 				as={Fragment}
@@ -27,10 +30,10 @@ export default function MenuSelect({
 				leaveFrom=" opacity-100 scale-100"
 				leaveTo=" opacity-0 scale-95 translate-x-1 -translate-y-2"
 			>
-				<div className="absolute right-0 z-50 mt-14">
+				<div className="w-full absolute right-0 z-50 mt-14">
 					<Menu.Items
 						as="div"
-						className="flex w-48 flex-col  rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-xl"
+						className="w-full flex w-48 flex-col  rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-xl"
 					>
 						{items.map((item, i) => {
 							const menuItem = (

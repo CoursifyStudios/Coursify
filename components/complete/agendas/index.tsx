@@ -106,10 +106,10 @@ export const AgendasModule = ({
 				<div
 					tabIndex={0}
 					onClick={() => setAgendaCreationOpen(true)}
-					className="mt-4 mb-2 group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white"
+					className="w-full mt-4 mb-2 group flex h-24 grow cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white"
 				>
-					<PlusIcon className="-ml-4 mr-4 h-8 w-8 transition group-hover:scale-125" />{" "}
-					<h3 className="text-lg font-medium transition">New Agenda</h3>
+					<PlusIcon className="w-full -ml-4 mr-4 h-8 w-8 transition group-hover:scale-125" />{" "}
+					<h3 className="w-full text-lg font-medium transition">New Agenda</h3>
 				</div>
 			)}
 			{isTeacher && (
@@ -129,7 +129,7 @@ export const AgendasModule = ({
 				></CreateAgenda>
 			)}
 			<Button
-				className="mb-2 mx-auto"
+				className="w-full mb-2 mx-auto"
 				onClick={async () => {
 					setLoadingFutureAgendas(true);
 					const moreAgendasAndAssignments = await fetchAgendasAndAssignments(
@@ -164,19 +164,19 @@ export const AgendasModule = ({
 				}}
 			>
 				Load Newer Agendas
-				{loadingFutureAgendas && <LoadingSmall className="ml-4" />}
+				{loadingFutureAgendas && <LoadingSmall className="w-full ml-4" />}
 			</Button>
-			<div className="flex gap-2">
-				<p className="text-red-500">{newAgendasError}</p>
+			<div className="w-full flex gap-2">
+				<p className="w-full text-red-500">{newAgendasError}</p>
 				<p
-					className="text-red-500 underline"
+					className="w-full text-red-500 underline"
 					tabIndex={0}
 					onClick={() => setNewAgendasError("")}
 				>
 					{newAgendasError.length > 0 && "Dismiss"}
 				</p>
 			</div>
-			<div className="gap-3 grid">
+			<div className="w-full gap-3 grid">
 				{agendas
 					.slice()
 					.sort(
@@ -194,7 +194,7 @@ export const AgendasModule = ({
 					))}
 			</div>
 			<Button
-				className="mt-3 mx-auto"
+				className="w-full mt-3 mx-auto"
 				onClick={async () => {
 					setLoadingPastAgendas(true);
 					const moreAgendasAndAssignments = await fetchAgendasAndAssignments(
@@ -229,13 +229,13 @@ export const AgendasModule = ({
 				}}
 			>
 				Load Past Agendas
-				{loadingPastAgendas && <LoadingSmall className="ml-4" />}
+				{loadingPastAgendas && <LoadingSmall className="w-full ml-4" />}
 			</Button>
-			<div className="flex gap-2">
-				<p className="text-red-500">{oldAgendasError}</p>
+			<div className="w-full flex gap-2">
+				<p className="w-full text-red-500">{oldAgendasError}</p>
 				<p
 					tabIndex={0}
-					className="text-red-500 underline"
+					className="w-full text-red-500 underline"
 					onClick={() => setOldAgendasError("")}
 				>
 					{oldAgendasError.length > 0 && "Dismiss"}

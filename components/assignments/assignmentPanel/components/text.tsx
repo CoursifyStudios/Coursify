@@ -160,30 +160,30 @@ const Text: NextPage<{
 
 	return (
 		<>
-			<div className="flex items-center font-medium">
+			<div className="w-full flex items-center font-medium">
 				{stage == 0 ? (
 					<>
-						<XCircleIcon className="mr-2 h-5 w-5 text-red-500" /> Nothing
+						<XCircleIcon className="w-full mr-2 h-5 w-5 text-red-500" /> Nothing
 						submitted yet
 					</>
 				) : stage == 1 ? (
 					<>
-						<MinusCircleIcon className="mr-2 h-5 w-5 text-neutral-500" /> Draft
-						Saved
+						<MinusCircleIcon className="w-full mr-2 h-5 w-5 text-neutral-500" />{" "}
+						Draft Saved
 					</>
 				) : (
 					<>
 						<CheckCircleIcon
-							className="mr-2 h-5 w-5 text-blue-600"
+							className="w-full mr-2 h-5 w-5 text-blue-600"
 							strokeWidth={2}
 						/>
 						Assignment Submitted
 					</>
 				)}
 			</div>
-			<div className="flex items-center justify-between">
+			<div className="w-full flex items-center justify-between">
 				<Button
-					className="text-white"
+					className="w-full text-white"
 					color="bg-blue-500"
 					disabled={false}
 					onClick={() => setEditorOpen(true)}
@@ -191,7 +191,7 @@ const Text: NextPage<{
 					Open Editor
 				</Button>
 				<Button
-					className="dark:text-white"
+					className="w-full dark:text-white"
 					color="bg-gray-300"
 					disabled={false}
 					onClick={handlePaste}
@@ -201,7 +201,7 @@ const Text: NextPage<{
 			</div>
 			{error && `Error occured while saving: ${error}`}
 			<Popup open={editorOpen} closeMenu={() => setEditorOpen(false)}>
-				<h2 className="title-sm">Submission Editor</h2>
+				<h2 className="w-full title-sm">Submission Editor</h2>
 				{settings.rich &&
 				(submission ? typeof submission.content != "string" : true) &&
 				!pasted ? (
@@ -216,7 +216,7 @@ const Text: NextPage<{
 							})
 						}
 						updateRaw={setRawSubmission}
-						className=" border-gray-300 mt-4 mb-2 rounded-xl p-4 shadow-lg dark:border"
+						className="w-full  border-gray-300 mt-4 mb-2 rounded-xl p-4 shadow-lg dark:border"
 						initialState={
 							(revisions &&
 								revisions.length > 0 &&
@@ -228,7 +228,7 @@ const Text: NextPage<{
 					/>
 				) : (
 					<textarea
-						className="mt-4 max-h-[80vh] min-h-[15rem]"
+						className="w-full mt-4 max-h-[80vh] min-h-[15rem]"
 						placeholder={"Start writing..."}
 						onChange={(e) =>
 							setSubmission({
@@ -246,10 +246,10 @@ const Text: NextPage<{
 						}
 					/>
 				)}
-				<div className="ml-auto flex text-sm text-gray-700">
+				<div className="w-full ml-auto flex text-sm text-gray-700">
 					{settings.minChars && content.length < settings.minChars && (
 						<p>
-							<span className="text-red-700">{content.length}</span> /{" "}
+							<span className="w-full text-red-700">{content.length}</span> /{" "}
 							{settings.minChars} min{" "}
 							{settings.trueWhenChars ? "chars" : "words"}
 						</p>
@@ -269,14 +269,14 @@ const Text: NextPage<{
 							</p>
 						)}
 				</div>
-				<div className="mt-4 flex items-center">
+				<div className="w-full mt-4 flex items-center">
 					{loading && <Loading />}
-					<div className="flex items-center ml-auto">
+					<div className="w-full flex items-center ml-auto">
 						{/* {settings.rich && submission && typeof submission.content == "string" && 
-					<p className="text-blue-500 hover:underline cursor-pointer" onClick={() => setSubmission(undefined)}>Reset to rich editor</p>
+					<p className="w-full text-blue-500 hover:underline cursor-pointer" onClick={() => setSubmission(undefined)}>Reset to rich editor</p>
 					} */}
 						<Button
-							className="text-white"
+							className="w-full text-white"
 							color="bg-gray-200 mx-4 "
 							disabled={content.length === 0}
 							onClick={() => submit(true)}
@@ -284,7 +284,7 @@ const Text: NextPage<{
 							Save Draft
 						</Button>
 						<Button
-							className="text-white"
+							className="w-full text-white"
 							color="bg-blue-500"
 							disabled={!content.finished}
 							onClick={() => submit()}

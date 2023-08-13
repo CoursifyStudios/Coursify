@@ -119,11 +119,11 @@ const Home = () => {
 
 	return (
 		<>
-			<div className="container mx-auto mb-10 flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words px-4 sm:mt-10 md:px-8 xl:px-0">
-				<div className="flex w-full flex-col">
-					<div className="mb-12 flex flex-col sm:flex-col-reverse lg:flex-row ">
+			<div className="w-full container mx-auto mb-10 flex w-full max-w-screen-xl flex-col items-start space-y-5 break-words px-4 sm:mt-10 md:px-8 xl:px-0">
+				<div className="w-full flex w-full flex-col">
+					<div className="w-full mb-12 flex flex-col sm:flex-col-reverse lg:flex-row ">
 						{/* Classes UI */}
-						<section id="Classes" className="">
+						<section id="Classes" className="w-full ">
 							<HomepageClassesUI
 								classes={classes}
 								loading={loading}
@@ -134,10 +134,10 @@ const Home = () => {
 						{/* Schedule UI */}
 						<section
 							id="Schedule"
-							className="flex grow flex-col md:flex-row lg:ml-10 lg:flex-col"
+							className="w-full flex grow flex-col md:flex-row lg:ml-10 lg:flex-col"
 						>
-							<div className="w-full md:mr-4 lg:mr-0">
-								<h2 className="title mr-2">
+							<div className="w-full w-full md:mr-4 lg:mr-0">
+								<h2 className="w-full title mr-2">
 									{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
 										dateToday
 									)}
@@ -149,8 +149,8 @@ const Home = () => {
 									loading={loading}
 								/>
 							</div>
-							<div className="w-full md:ml-4 lg:ml-0">
-								<h2 className="title mr-2">
+							<div className="w-full w-full md:ml-4 lg:ml-0">
+								<h2 className="w-full title mr-2">
 									{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
 										dateTomorrow
 									)}
@@ -172,11 +172,11 @@ const Home = () => {
 									)
 							).length == 0
 						) && (
-							<div className="flex flex-col xl:flex-row ">
+							<div className="w-full flex flex-col xl:flex-row ">
 								{/* Assignments UI */}
 								<section id="Assignments">
-									<h2 className="title mb-4">Assignments</h2>
-									<div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:w-[58.5rem] ">
+									<h2 className="w-full title mb-4">Assignments</h2>
+									<div className="w-full grid gap-4 sm:grid-cols-2 md:grid-cols-3 xl:w-[58.5rem] ">
 										{classes &&
 											Array.isArray(classes) &&
 											classes
@@ -202,18 +202,18 @@ const Home = () => {
 														<div key={aClass.id}>
 															<div>
 																<Link href={"/classes/" + aClass.id}>
-																	<h2 className="mb-2 text-xl font-semibold">
+																	<h2 className="w-full mb-2 text-xl font-semibold">
 																		{aClass.name}
 																	</h2>
 																</Link>
-																<div className="mb-5 flex-col space-y-4 first-letter:space-y-4">
+																<div className="w-full mb-5 flex-col space-y-4 first-letter:space-y-4">
 																	{Array.isArray(aClass.assignments) &&
 																		schedules &&
 																		aClass.assignments
 																			.slice(0, 3)
 																			.map((assignment) => (
 																				<AssignmentPreview
-																					className="brightness-hover"
+																					className="w-full brightness-hover"
 																					key={assignment.id}
 																					supabase={supabaseClient}
 																					assignment={
@@ -244,9 +244,9 @@ const Home = () => {
 												})}
 									</div>
 								</section>
-								<section className=" grow xl:ml-10" id="Starred">
-									<h2 className="title mb-4 mr-2">Starred</h2>
-									<div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
+								<section className="w-full  grow xl:ml-10" id="Starred">
+									<h2 className="w-full title mb-4 mr-2">Starred</h2>
+									<div className="w-full grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-1">
 										{classes &&
 											Array.isArray(classes) &&
 											classes.map((mappedClass) => {
@@ -267,7 +267,7 @@ const Home = () => {
 															assignments.push(
 																<AssignmentPreview
 																	key={assignment.id}
-																	className="brightness-hover"
+																	className="w-full brightness-hover"
 																	supabase={supabaseClient}
 																	assignment={
 																		Array.isArray(assignment)
@@ -306,14 +306,14 @@ const Home = () => {
 																: !assignment.starred)
 													)
 											) && (
-												<div className="w-full m-auto flex flex-col justify-center items-center h-full">
+												<div className="w-full w-full m-auto flex flex-col justify-center items-center h-full">
 													<Image
 														src={blankCanvas}
 														draggable={false}
 														alt="No starred assignments found"
-														className="px-20"
+														className="w-full px-20"
 													/>
-													<h1 className="mt-6 max-w-xs text-center font-semibold">
+													<h1 className="w-full mt-6 max-w-xs text-center font-semibold">
 														Star an assignment to view it here
 													</h1>
 												</div>

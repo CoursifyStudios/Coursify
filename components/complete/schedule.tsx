@@ -21,11 +21,11 @@ export default function ScheduleComponent({
 
 	if (!(schedule && classes) && loading) {
 		return (
-			<div className="my-5 flex h-36 animate-pulse flex-col justify-between rounded-xl bg-backdrop-200 p-4">
+			<div className="w-full my-5 flex h-36 animate-pulse flex-col justify-between rounded-xl bg-backdrop-200 p-4">
 				{[...Array(3)].map((_, i) => (
-					<div className="flex justify-between" key={i}>
-						<div className="h-5 w-36 animate-pulse rounded bg-gray-300"></div>
-						<div className="h-5 w-20 animate-pulse rounded bg-gray-300"></div>
+					<div className="w-full flex justify-between" key={i}>
+						<div className="w-full h-5 w-36 animate-pulse rounded bg-gray-300"></div>
+						<div className="w-full h-5 w-20 animate-pulse rounded bg-gray-300"></div>
 					</div>
 				))}
 			</div>
@@ -34,14 +34,14 @@ export default function ScheduleComponent({
 
 	if ((!loading && !schedule) || !classes) {
 		return (
-			<div className=" bg-backdrop-200 p-4 rounded-xl grid place-items-center my-4 font-medium">
+			<div className="w-full  bg-backdrop-200 p-4 rounded-xl grid place-items-center my-4 font-medium">
 				No schedule found
 			</div>
 		);
 	}
 	return (
-		<div className="flex flex-col">
-			<div className="my-4 grid max-w-md gap-5 rounded-xl bg-backdrop-200 p-4 compact:my-2 compact:gap-2">
+		<div className="w-full flex flex-col">
+			<div className="w-full my-4 grid max-w-md gap-5 rounded-xl bg-backdrop-200 p-4 compact:my-2 compact:gap-2">
 				{/* I've left some comments to clear up some stuff */}
 				{schedule && //checks if the useState that stores the schedule UI is not null
 					schedule.map(
@@ -53,7 +53,7 @@ export default function ScheduleComponent({
 								!item.specialEvent && ( //If the item is not a special event... ...fill the UI with the stuff...
 									<Link
 										key={index}
-										className="flex grow items-center justify-between font-semibold"
+										className="w-full flex grow items-center justify-between font-semibold"
 										href={
 											"/classes/" +
 											(checkClassMatchesSchedule(item)
@@ -94,7 +94,7 @@ export default function ScheduleComponent({
 									// May want to change this to be a <Link> later on so that you can link to info about special events
 
 									<div
-										className="flex grow items-center justify-between font-semibold"
+										className="w-full flex grow items-center justify-between font-semibold"
 										key={index}
 									>
 										{item.specialEvent}

@@ -125,7 +125,7 @@ export const CreateAgenda = ({
 			open={open}
 			size="md"
 		>
-			<h2 className="title-sm mb-2">
+			<h2 className="w-full title-sm mb-2">
 				{editingInfo ? "Edit your agenda" : "Create a new Agenda"}
 			</h2>
 			{/* custom datepicker later probably */}
@@ -177,33 +177,33 @@ export const CreateAgenda = ({
 					}
 				}}
 			>
-				<Form className="flex flex-col w-full gap-2">
+				<Form className="w-full flex flex-col w-full gap-2">
 					<label htmlFor="date">
 						<Field
 							name="date"
 							type="date"
-							className="bg-backdrop/50 dark:placeholder:text-gray-400"
+							className="w-full bg-backdrop/50 dark:placeholder:text-gray-400"
 						></Field>
 					</label>
 					{/* Error handling yay */}
-					<p className="text-red-500">{errorMessage}</p>
+					<p className="w-full text-red-500">{errorMessage}</p>
 					<Editor
 						editable={true}
-						className="rounded border overflow-hidden border-gray-300 bg-backdrop/50"
+						className="w-full rounded border overflow-hidden border-gray-300 bg-backdrop/50"
 						updateState={setEditorState}
 						initialState={editingInfo ? editingInfo.description : ""}
 						focus={false}
 					/>
 					{/* Later, we'll need to be able to change the order of the assignments */}
-					<div className="flex">
+					<div className="w-full flex">
 						<p>Select assignments to include in this agenda:</p>
 					</div>
 					{/* Searching */}
-					<div className="relative flex items-center mb-2">
-						<MagnifyingGlassIcon className="absolute left-3 h-4 w-4" />
+					<div className="w-full relative flex items-center mb-2">
+						<MagnifyingGlassIcon className="w-full absolute left-3 h-4 w-4" />
 						<input
 							type="text"
-							className="max-w-[24rem] grow !rounded-xl py-1 placeholder:dark:text-gray-400 pl-8"
+							className="w-full max-w-[24rem] grow !rounded-xl py-1 placeholder:dark:text-gray-400 pl-8"
 							placeholder="Search assignments..."
 							onInput={(e) => {
 								//@ts-ignore DUDE OF COURSE e.target.value exists!
@@ -223,14 +223,17 @@ export const CreateAgenda = ({
 							}}
 							onKeyDown={(e) => e.key == "Enter" && e.preventDefault()}
 						/>
-						<Info className="ml-2" icon={<p className="text-sm">Tip!</p>}>
+						<Info
+							className="w-full ml-2"
+							icon={<p className="w-full text-sm">Tip!</p>}
+						>
 							Pressing enter or the search button will load more assignments
 							that match your search
 						</Info>
 						<Button
 							type="button"
 							disabled={searching}
-							className="ml-auto gap-2"
+							className="w-full ml-auto gap-2"
 							onClick={() => {
 								search();
 							}}
@@ -239,8 +242,8 @@ export const CreateAgenda = ({
 							{searching && <LoadingSmall></LoadingSmall>}
 						</Button>
 					</div>
-					<p className="text-red-500">{searchErrorMessage}</p>
-					<div className="overflow-auto max-h-80 gap-3 grid">
+					<p className="w-full text-red-500">{searchErrorMessage}</p>
+					<div className="w-full overflow-auto max-h-80 gap-3 grid">
 						{assignments.length > 0
 							? Array.from(
 									new Set(assignments.concat(results ? results : []))
@@ -251,7 +254,7 @@ export const CreateAgenda = ({
 											: assignment.name
 													.toLowerCase()
 													.includes(query.toLowerCase())) && (
-											<div key={assignment.id} className="">
+											<div key={assignment.id} className="w-full ">
 												<Button
 													className={`w-full ${
 														chosenAssignments.indexOf(assignment.id) == -1
@@ -292,7 +295,7 @@ export const CreateAgenda = ({
 					</div>
 					<Button
 						// using 300 light/ 600 dark button color schema, nonstandard for us but I like it better
-						className="w-min mx-auto text-white gap-4"
+						className="w-full w-min mx-auto text-white gap-4"
 						color="bg-blue-500"
 						type="submit"
 					>

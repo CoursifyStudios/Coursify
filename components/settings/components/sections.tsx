@@ -11,15 +11,15 @@ export const ToggleSection: NextPage<{
 	beta?: boolean;
 }> = ({ name, description, enabled, setEnabled, beta = false }) => {
 	return (
-		<div className="mt-4 flex grow justify-between">
+		<div className="w-full mt-4 flex grow justify-between">
 			<div>
-				<div className="mb-1 flex items-center">
-					<h4 className="mr-3 font-medium">{name}</h4>
+				<div className="w-full mb-1 flex items-center">
+					<h4 className="w-full mr-3 font-medium">{name}</h4>
 					<div className={`${!beta && "invisible"} flex items-center `}>
 						<Betatag />
 					</div>
 				</div>
-				<p className="max-w-xl text-sm text-gray-700">{description}</p>
+				<p className="w-full max-w-xl text-sm text-gray-700">{description}</p>
 			</div>
 			<Toggle enabled={enabled} setEnabled={setEnabled} />
 		</div>
@@ -54,15 +54,15 @@ export function DropdownSection<T = string | number>({
 	beta?: boolean;
 }) {
 	return (
-		<div className="mt-4 flex grow  justify-between">
+		<div className="w-full mt-4 flex grow  justify-between">
 			<div>
-				<div className="mb-1 flex items-center">
-					<h4 className="mr-3 font-medium">{name}</h4>
+				<div className="w-full mb-1 flex items-center">
+					<h4 className="w-full mr-3 font-medium">{name}</h4>
 					<div className={`${!beta && "invisible"} flex items-center `}>
 						<Betatag />
 					</div>
 				</div>
-				<p className="max-w-xl text-sm text-gray-700">{description}</p>
+				<p className="w-full max-w-xl text-sm text-gray-700">{description}</p>
 			</div>
 			<Dropdown
 				onChange={onChange}
@@ -72,7 +72,7 @@ export function DropdownSection<T = string | number>({
 						: currentValue
 				}
 				values={values}
-				className="w-44"
+				className="w-full w-44"
 			/>
 		</div>
 	);

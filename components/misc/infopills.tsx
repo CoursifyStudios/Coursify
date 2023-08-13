@@ -49,22 +49,30 @@ export const InfoPills: NextPage<{
 		<>
 			{pills.length > 0 &&
 				pills.map((pill, i) => (
-					<div className="group relative" key={i}>
+					<div className="w-full group relative" key={i}>
 						{pill.link ? (
-							<a href={pill.link} target="_blank" className="" rel="noreferrer">
+							<a
+								href={pill.link}
+								target="_blank"
+								className="w-full "
+								rel="noreferrer"
+							>
 								<ColoredPill
 									color={pill.color}
-									className="h-7 items-center space-x-2"
+									className="w-full h-7 items-center space-x-2"
 									hoverState
 								>
 									<IconConverter.toIcon str={pill.icon} />
-									<span className="ml-2">{pill.name}</span>
+									<span className="w-full ml-2">{pill.name}</span>
 								</ColoredPill>
 							</a>
 						) : (
-							<ColoredPill color={pill.color} className="h-7 items-center">
+							<ColoredPill
+								color={pill.color}
+								className="w-full h-7 items-center"
+							>
 								<IconConverter.toIcon str={pill.icon} />
-								<span className="ml-2">{pill.name}</span>
+								<span className="w-full ml-2">{pill.name}</span>
 							</ColoredPill>
 						)}
 						{isTeacher && (
@@ -72,13 +80,13 @@ export const InfoPills: NextPage<{
 								onClick={() => deletePill(pill)}
 								className={`absolute bottom-1 right-2 top-1 my-auto hidden h-4 w-4 cursor-pointer place-items-center rounded bg-black/50 text-white group-hover:flex`}
 							>
-								<XMarkIcon className="h-4 w-4" />
+								<XMarkIcon className="w-full h-4 w-4" />
 							</div>
 						)}
 					</div>
 				))}
 			{isTeacher && (
-				<Popover className="relative flex items-center">
+				<Popover className="w-full relative flex items-center">
 					<Popover.Button>
 						<ColoredPill
 							color="gray"
@@ -87,8 +95,10 @@ export const InfoPills: NextPage<{
 							} h-7 cursor-pointer items-center justify-center `}
 							hoverState
 						>
-							<PlusIcon className="h-5 w-5" />{" "}
-							{pills.length == 0 && <span className="ml-2">Add InfoPill</span>}
+							<PlusIcon className="w-full h-5 w-5" />{" "}
+							{pills.length == 0 && (
+								<span className="w-full ml-2">Add InfoPill</span>
+							)}
 						</ColoredPill>
 					</Popover.Button>
 					<Transition
@@ -111,18 +121,18 @@ export const InfoPills: NextPage<{
 										value={selectedIcon}
 										onChange={setSelectedIcon}
 										as="div"
-										className="relative flex items-center"
+										className="w-full relative flex items-center"
 									>
-										<Listbox.Button className="flex items-center">
+										<Listbox.Button className="w-full flex items-center">
 											{selectedIcon}
-											<ChevronUpDownIcon className="h-4 w-4" />
+											<ChevronUpDownIcon className="w-full h-4 w-4" />
 										</Listbox.Button>
-										<Listbox.Options className="absolute bottom-8 z-20 -translate-x-2 space-y-2 rounded-lg bg-gray-300/75 p-1 backdrop-blur-xl">
+										<Listbox.Options className="w-full absolute bottom-8 z-20 -translate-x-2 space-y-2 rounded-lg bg-gray-300/75 p-1 backdrop-blur-xl">
 											{Icons.map((icon, i) => (
 												<Listbox.Option
 													key={i}
 													value={icon}
-													className=" cursor-pointer rounded-lg p-1.5 hover:bg-gray-300"
+													className="w-full  cursor-pointer rounded-lg p-1.5 hover:bg-gray-300"
 												>
 													{icon}
 												</Listbox.Option>
@@ -132,13 +142,13 @@ export const InfoPills: NextPage<{
 									<div>
 										<input
 											type="text"
-											className="mx-1.5  mb-1 w-44 rounded-lg border-none bg-gray-100 px-2 py-0.5 text-sm font-medium shadow"
+											className="w-full mx-1.5  mb-1 w-44 rounded-lg border-none bg-gray-100 px-2 py-0.5 text-sm font-medium shadow"
 											placeholder="InfoPill name"
 											onChange={(e) => setNewName(e.target.value)}
 										/>
 										<input
 											type="text"
-											className="mx-1.5 w-44 rounded-lg border-none bg-gray-100 px-2 py-0.5 text-sm font-medium shadow"
+											className="w-full mx-1.5 w-44 rounded-lg border-none bg-gray-100 px-2 py-0.5 text-sm font-medium shadow"
 											placeholder="Optional Link"
 											onChange={(e) => setLink(e.target.value)}
 										/>
@@ -147,21 +157,21 @@ export const InfoPills: NextPage<{
 										value={selectedColor}
 										onChange={setSelectedColor}
 										as="div"
-										className="relative flex items-center"
+										className="w-full relative flex items-center"
 									>
-										<Listbox.Button className="flex items-center">
+										<Listbox.Button className="w-full flex items-center">
 											<div
 												className={`h-5 w-5 bg-${selectedColor.name}-200 rounded-full`}
 											/>
-											<ChevronUpDownIcon className="h-4 w-4" />
+											<ChevronUpDownIcon className="w-full h-4 w-4" />
 										</Listbox.Button>
-										<Listbox.Options className="absolute bottom-8 z-20 -translate-x-2 space-y-2 rounded-lg bg-gray-300/75 p-1 backdrop-blur-xl">
+										<Listbox.Options className="w-full absolute bottom-8 z-20 -translate-x-2 space-y-2 rounded-lg bg-gray-300/75 p-1 backdrop-blur-xl">
 											{colors.map((color, i) => (
 												<Listbox.Option
 													key={i}
 													value={color}
 													as="div"
-													className=" cursor-pointer rounded-lg p-1.5 hover:bg-gray-300"
+													className="w-full  cursor-pointer rounded-lg p-1.5 hover:bg-gray-300"
 												>
 													<div
 														className={`h-5 w-5 bg-${color.name}-200 rounded-full`}

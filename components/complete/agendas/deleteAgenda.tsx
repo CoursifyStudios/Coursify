@@ -24,12 +24,12 @@ export const DeleteAgenda = ({
 			<p>
 				Are you sure you want to delete the agenda? This action is permanent!
 			</p>
-			<div className="flex justify-evenly mt-2">
+			<div className="w-full flex justify-evenly mt-2">
 				<Button color="bg-blue-500" onClick={() => setOpen(false)}>
 					Cancel
 				</Button>
 				<Button
-					className="gap-2"
+					className="w-full gap-2"
 					color="bg-red-500"
 					onClick={async () => {
 						setLoading(true);
@@ -50,7 +50,7 @@ export const DeleteAgenda = ({
 					Confirm {loading && <LoadingSmall />}
 				</Button>
 			</div>
-			<p className="text-red-500">{errorMessage}</p>
+			<p className="w-full text-red-500">{errorMessage}</p>
 		</Popup>
 	);
 };

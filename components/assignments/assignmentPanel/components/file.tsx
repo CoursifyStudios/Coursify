@@ -302,7 +302,7 @@ const FileUpload: NextPage<{
 	return (
 		<>
 			{(settings.minFiles > submission.files.length || settings.maxFiles) && (
-				<ColoredPill className="mx-auto text-sm " color="gray">
+				<ColoredPill className="w-full mx-auto text-sm " color="gray">
 					{settings.minFiles > submission.files.length
 						? `${submission.files.length}/${settings.minFiles} minimum files`
 						: settings.maxFiles &&
@@ -310,10 +310,10 @@ const FileUpload: NextPage<{
 				</ColoredPill>
 			)}
 			{submission.files.length > 0 && (
-				<div className="grid lg:grid-cols-2 xl:grid-cols-1 gap-2">
+				<div className="w-full grid lg:grid-cols-2 xl:grid-cols-1 gap-2">
 					{submission.files.map((file, i) => (
 						<div
-							className="rounded-lg border border-gray-300 p-3 flex items-center"
+							className="w-full rounded-lg border border-gray-300 p-3 flex items-center"
 							key={i}
 						>
 							{" "}
@@ -327,30 +327,30 @@ const FileUpload: NextPage<{
 									alt={`ugc image of ${file.realName}`}
 									width={24}
 									height={24}
-									className="rounded object-cover object-center h-6"
+									className="w-full rounded object-cover object-center h-6"
 								/>
 							) : (
-								<DocumentIcon className="min-w-[1.5rem] w-6 h-6" />
+								<DocumentIcon className="w-full min-w-[1.5rem] w-6 h-6" />
 							)}
-							<div className="truncate mx-2 ">
-								<span className="truncate max-w-xs text-sm font-medium">
+							<div className="w-full truncate mx-2 ">
+								<span className="w-full truncate max-w-xs text-sm font-medium">
 									{file.realName}
 								</span>
-								<p className="text-xs">
+								<p className="w-full text-xs">
 									.{file.realName.split(".").pop()} file,{" "}
 									{formatBytes(file.size)}
 								</p>
 							</div>
 							{file.uploading ? (
-								<div className="ml-auto">
+								<div className="w-full ml-auto">
 									<LoadingSmall />
 								</div>
 							) : (
 								<div
-									className="rounded hover:bg-gray-300 p-0.5 ml-auto cursor-pointer"
+									className="w-full rounded hover:bg-gray-300 p-0.5 ml-auto cursor-pointer"
 									onClick={() => deleteFile(file.fileName)}
 								>
-									<XMarkIcon className="h-4 w-4 text-red-500" />
+									<XMarkIcon className="w-full h-4 w-4 text-red-500" />
 								</div>
 							)}
 						</div>
@@ -361,23 +361,23 @@ const FileUpload: NextPage<{
 				? submission.files.length != settings.maxFiles
 				: true) && (
 				<label
-					className="rounded-lg bg-gray-300 p-3 flex items-center brightness-hover cursor-pointer"
+					className="w-full rounded-lg bg-gray-300 p-3 flex items-center brightness-hover cursor-pointer"
 					onChange={(e) => {
 						// @ts-expect-error idk what react is on but files will be defined
 						uploadFile([...e.target.files][0]);
 					}}
 				>
-					<DocumentArrowUpIcon className="w-6 h-6" />
-					<div className="ml-4">
-						<h4 className="font-medium text-sm">Upload File</h4>
-						<p className="text-xs">Click to select or drop file</p>
+					<DocumentArrowUpIcon className="w-full w-6 h-6" />
+					<div className="w-full ml-4">
+						<h4 className="w-full font-medium text-sm">Upload File</h4>
+						<p className="w-full text-xs">Click to select or drop file</p>
 					</div>
-					<input type="file" className="hidden" />
+					<input type="file" className="w-full hidden" />
 				</label>
 			)}
-			<div className="flex items-center gap-4 justify-between">
+			<div className="w-full flex items-center gap-4 justify-between">
 				<Button
-					className="text-white"
+					className="w-full text-white"
 					color="bg-blue-500"
 					disabled={
 						disableSubmit ||
@@ -405,10 +405,10 @@ const FileUpload: NextPage<{
 						? "Resubmit"
 						: "Submit"}
 				</Button>
-				{loading && <Loading className="bg-gray-300" />}
+				{loading && <Loading className="w-full bg-gray-300" />}
 			</div>
 			{error && (
-				<div className="text-red-500 text-sm">
+				<div className="w-full text-red-500 text-sm">
 					Error occured while uploading: {error}
 				</div>
 			)}

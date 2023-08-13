@@ -22,7 +22,7 @@ const Settings: NextPageWithLayout = () => {
 	}, [supabase]);
 
 	return (
-		<div className=" flex flex-col items-start">
+		<div className="w-full  flex flex-col items-start">
 			Testing tabs
 			<button
 			// onClick={async () =>

@@ -174,55 +174,55 @@ const Link: NextPage<{
 
 	return (
 		<>
-			<ColoredPill className="mx-auto text-sm " color="gray">
+			<ColoredPill className="w-full mx-auto text-sm " color="gray">
 				{submission.links.length}/{settings.maxUrls} maximum links
 			</ColoredPill>
 			{submission.links?.map((link) => (
 				<div
-					className="rounded-lg border border-gray-300 p-3 flex items-center"
+					className="w-full rounded-lg border border-gray-300 p-3 flex items-center"
 					key={link}
 				>
-					<div className="relative">
-						<LinkIcon className="min-w-[1.5rem] w-5 h-5" />
+					<div className="w-full relative">
+						<LinkIcon className="w-full min-w-[1.5rem] w-5 h-5" />
 						{/* <img
 							src={`https://f1.allesedv.com/16/${link}`}
-							className="inset-0 absolute h-5 w-5"
+							className="w-full inset-0 absolute h-5 w-5"
 						/> */}
 					</div>
-					<p className="truncate text-sm ml-2">{link}</p>
+					<p className="w-full truncate text-sm ml-2">{link}</p>
 					<div
-						className="rounded hover:bg-gray-300 p-0.5 ml-auto cursor-pointer"
+						className="w-full rounded hover:bg-gray-300 p-0.5 ml-auto cursor-pointer"
 						onClick={() => deleteLink(link)}
 					>
-						<XMarkIcon className="h-4 w-4 text-red-500" />
+						<XMarkIcon className="w-full h-4 w-4 text-red-500" />
 					</div>
 				</div>
 			))}
 			{!maxedLinks && (
 				<form onSubmit={(e) => e.preventDefault()}>
-					<div className="flex ">
+					<div className="w-full flex ">
 						<input
 							type="text"
 							name="link"
-							className="grow w-1"
+							className="w-full grow w-1"
 							placeholder="example.com"
 							value={link}
 							onChange={(e) => setLink(e.target.value)}
 						/>
 						<Button
-							className=" ml-2 !px-3 rounded-full"
+							className="w-full  ml-2 !px-3 rounded-full"
 							color="bg-gray-300"
 							disabled={false}
 							onClick={() => newLink()}
 						>
-							<PlusIcon className="h-5 w-5 dark:text-white " />
+							<PlusIcon className="w-full h-5 w-5 dark:text-white " />
 						</Button>
 					</div>
 				</form>
 			)}
-			<div className="flex items-center justify-between">
+			<div className="w-full flex items-center justify-between">
 				<Button
-					className="text-white"
+					className="w-full text-white"
 					color="bg-blue-500"
 					disabled={
 						submission.links.length == 0 ||
@@ -238,7 +238,7 @@ const Link: NextPage<{
 				</Button>
 				{!maxedLinks && !loading && (
 					<Button
-						className="dark:text-white "
+						className="w-full dark:text-white "
 						color="bg-gray-300"
 						disabled={false}
 						onClick={pasteLink}
@@ -246,9 +246,9 @@ const Link: NextPage<{
 						Paste Link
 					</Button>
 				)}
-				{loading && <Loading className="bg-gray-300 ml-auto" />}
+				{loading && <Loading className="w-full bg-gray-300 ml-auto" />}
 			</div>
-			{error && <p className="text-red-500 text-sm">Error: {error}</p>}
+			{error && <p className="w-full text-red-500 text-sm">Error: {error}</p>}
 		</>
 	);
 };

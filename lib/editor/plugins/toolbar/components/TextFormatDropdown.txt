@@ -12,10 +12,10 @@ const TextFormatDropdown = () => {
 	const { t } = useTranslation("toolbar");
 	return (
 		<DropDown
-			buttonClassName="toolbar-item spaced"
+			buttonclassName="w-full toolbar-item spaced"
 			buttonLabel=""
 			buttonAriaLabel={t("toolbar:textFormatDropdown.Description")}
-			buttonIconClassName="icon dropdown-more"
+			buttonIconclassName="w-full icon dropdown-more"
 		>
 			<button
 				onClick={() => {
@@ -30,8 +30,8 @@ const TextFormatDropdown = () => {
 				)}
 				type="button"
 			>
-				<i className="icon strikethrough" />
-				<span className="text">
+				<i className="w-full icon strikethrough" />
+				<span className="w-full text">
 					{t("toolbar:textFormatDropdown.Options.Strikethrough.Label")}
 				</span>
 			</button>
@@ -46,8 +46,8 @@ const TextFormatDropdown = () => {
 				)}
 				type="button"
 			>
-				<i className="icon subscript" />
-				<span className="text">
+				<i className="w-full icon subscript" />
+				<span className="w-full text">
 					{t("toolbar:textFormatDropdown.Options.Subscript.Label")}
 				</span>
 			</button>
@@ -64,8 +64,8 @@ const TextFormatDropdown = () => {
 				)}
 				type="button"
 			>
-				<i className="icon superscript" />
-				<span className="text">
+				<i className="w-full icon superscript" />
+				<span className="w-full text">
 					{t("toolbar:textFormatDropdown.Options.Superscript.Label")}
 				</span>
 			</button>

@@ -68,18 +68,18 @@ const Discussion = ({
 					})
 				}
 			/>
-			<div className="flex gap-4">
-				<label htmlFor="minChars" className="flex grow flex-col">
-					<span className="flex text-sm font-medium">
+			<div className="w-full flex gap-4">
+				<label htmlFor="minChars" className="w-full flex grow flex-col">
+					<span className="w-full flex text-sm font-medium">
 						Minimum {settings.trueWhenChars ? "Characters" : "Words"}
-						<Info className="ml-2">
+						<Info className="w-full ml-2">
 							The minimum number of characters allowed in a student
 							{"'"}s response
 						</Info>
 					</span>
 					<input
 						type="number"
-						className="grow"
+						className="w-full grow"
 						name="minChars"
 						onChange={(e) =>
 							setSettings((settings) => {
@@ -88,17 +88,17 @@ const Discussion = ({
 						}
 					/>
 				</label>
-				<label htmlFor="maxChars" className="flex grow flex-col">
-					<span className="flex text-sm font-medium">
+				<label htmlFor="maxChars" className="w-full flex grow flex-col">
+					<span className="w-full flex text-sm font-medium">
 						Maximum {settings.trueWhenChars ? "Characters" : "Words"}
-						<Info className="ml-2">
+						<Info className="w-full ml-2">
 							The maximum number of characters allowed in a student
 							{"'"}s response
 						</Info>
 					</span>
 					<input
 						type="number"
-						className="grow"
+						className="w-full grow"
 						name="maxChars"
 						onChange={(e) =>
 							setSettings((settings) => {
@@ -109,7 +109,7 @@ const Discussion = ({
 				</label>
 			</div>
 			<details>
-				<summary className="cursor-pointer text-sm font-medium">
+				<summary className="w-full cursor-pointer text-sm font-medium">
 					Advanced Settings
 				</summary>
 				<ToggleSection

@@ -31,12 +31,12 @@ const FontFamilyDropdown = ({
 	return (
 		<>
 			<Select
-				className="toolbar-item font-family"
+				className="w-full toolbar-item font-family"
 				onChange={onFontFamilySelect}
 				options={fontOptions}
 				value={fontFamily}
 			/>
-			<i className="chevron-down inside" />
+			<i className="w-full chevron-down inside" />
 		</>
 	);
 };

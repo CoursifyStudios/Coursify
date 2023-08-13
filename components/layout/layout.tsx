@@ -48,7 +48,7 @@ export default function Layout(props: { children: ReactNode }) {
 			 ${data.compact && hydrated ? "compact" : ""}`}
 		>
 			<Navbar />
-			<div className="flex flex-1 flex-col">{props.children}</div>
+			<div className="w-full flex flex-1 flex-col">{props.children}</div>
 			<Footer />
 		</div>
 	);
@@ -95,7 +95,7 @@ export function BasicLayout(props: { children: ReactNode }) {
 			className={`flex h-screen flex-col bg-backdrop text-gray-800 transition-all duration-300
 			 ${data.compact && hydrated ? "compact" : ""}`}
 		>
-			<div className="flex flex-1 flex-col">{props.children}</div>
+			<div className="w-full flex flex-1 flex-col">{props.children}</div>
 		</div>
 	);
 }

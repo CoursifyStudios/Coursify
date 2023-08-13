@@ -1,5 +1,5 @@
 <Button
-												className="mt-6 inline-flex cursor-pointer rounded-md px-4 py-1 font-semibold text-white"
+												className="w-full mt-6 inline-flex cursor-pointer rounded-md px-4 py-1 font-semibold text-white"
 												color="bg-blue-500"
 												onClick={() => setIsOpen(true)}
 											>

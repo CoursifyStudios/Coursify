@@ -1015,12 +1015,12 @@ Activities	The user's activities, as displayed on their profile
 	};
 
 	return (
-		<div className="mx-auto my-10 flex w-full max-w-screen-xl flex-col px-4">
-			<h1 className="title">Admin Dashboard - {name}</h1>
-			<div className="fixed bottom-4 right-4">
+		<div className="w-full mx-auto my-10 flex w-full max-w-screen-xl flex-col px-4">
+			<h1 className="w-full title">Admin Dashboard - {name}</h1>
+			<div className="w-full fixed bottom-4 right-4">
 				{notifications.map((v) => (
 					<p
-						className="px-4 py-2 bg-blue-500 mt-2 rounded-xl font-medium transition-opacity"
+						className="w-full px-4 py-2 bg-blue-500 mt-2 rounded-xl font-medium transition-opacity"
 						key={v.expireAt}
 					>
 						{v.name}
@@ -1041,7 +1041,7 @@ Activities	The user's activities, as displayed on their profile
 			/>
 			<Tab.Group
 				as="div"
-				className="flex grow flex-col"
+				className="w-full flex grow flex-col"
 				selectedIndex={tab}
 				onChange={(tab) => {
 					setSelectedRows([]);
@@ -1050,7 +1050,10 @@ Activities	The user's activities, as displayed on their profile
 					setTab(tab);
 				}}
 			>
-				<Tab.List as="div" className="mt-6 flex max-sm:space-x-2 sm:space-x-6">
+				<Tab.List
+					as="div"
+					className="w-full mt-6 flex max-sm:space-x-2 sm:space-x-6"
+				>
 					<Tab as={Fragment}>
 						{({ selected }) => (
 							<div
@@ -1089,19 +1092,20 @@ Activities	The user's activities, as displayed on their profile
 				</Tab.List>
 				<Tab.Panels>
 					<Tab.Panel>
-						<div className="grid grid-cols-4 gap-4">
+						<div className="w-full grid grid-cols-4 gap-4">
 							<div
-								className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center col-span-2"
+								className="w-full bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center col-span-2"
 								onClick={() => setUploadOpen(true)}
 							>
 								<Image
 									src={uploadImage}
-									className="h-20 w-20"
+									className="w-full h-20 w-20"
 									alt="Upload Files"
 								/>
-								<p className="font-medium">
+								<p className="w-full font-medium">
 									Upload User List in{" "}
-									<span className="rounded bg-gray-300 px-1">.csv</span> Format
+									<span className="w-full rounded bg-gray-300 px-1">.csv</span>{" "}
+									Format
 								</p>
 							</div>
 							<Popup closeMenu={() => setUploadOpen(false)} open={uploadOpen}>
@@ -1122,10 +1126,10 @@ Activities	The user's activities, as displayed on their profile
 										parseCSVDrop(ev as unknown as DragEvent);
 									}}
 								>
-									<h3 className="title-sm">Upload .csv Files</h3>
-									{/* <h4 className="font-medium mt-4 mb-2">File format</h4>
-									<div className=" overflow-hidden border rounded-md divide-y">
-										<div className=" [&>p]:px-2.5 [&>p]:py-2 divide-x grid grid-cols-6 font-medium">
+									<h3 className="w-full title-sm">Upload .csv Files</h3>
+									{/* <h4 className="w-full font-medium mt-4 mb-2">File format</h4>
+									<div className="w-full  overflow-hidden border rounded-md divide-y">
+										<div className="w-full  [&>p]:px-2.5 [&>p]:py-2 divide-x grid grid-cols-6 font-medium">
 											<p>First Name</p>
 											<p>Last Name</p>
 											<p>Email</p>
@@ -1136,7 +1140,7 @@ Activities	The user's activities, as displayed on their profile
 										{uploadUsers.map((u) => (
 											<div
 												key={u.email}
-												className="[&>p]:px-2.5 [&>p]:py-2 [&>p]:overflow-hidden divide-x grid grid-cols-6"
+												className="w-full [&>p]:px-2.5 [&>p]:py-2 [&>p]:overflow-hidden divide-x grid grid-cols-6"
 											>
 												<p>{u.full_name.split(" ").shift()}</p>
 												<p>{u.full_name.split(" ").pop()}</p>
@@ -1152,7 +1156,7 @@ Activities	The user's activities, as displayed on their profile
 										<>Uploaded List!</>
 									) : (
 										<>
-											<p className="text-sm italic mt-1">
+											<p className="w-full text-sm italic mt-1">
 												All other columns in uploaded file will be ignored. Each
 												Student ID should be unqiue for each student, and is
 												used to match parents to students.
@@ -1169,11 +1173,11 @@ Activities	The user's activities, as displayed on their profile
 												]}
 												onChange={(v) => setCSVParser(v.name)}
 											/>
-											<div className="group mt-8 flex h-24 grow flex-col cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white">
-												<h3 className="text-lg font-medium transition">
+											<div className="w-full group mt-8 flex h-24 grow flex-col cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white">
+												<h3 className="w-full text-lg font-medium transition">
 													Upload File
 												</h3>
-												<p className="text-sm">
+												<p className="w-full text-sm">
 													Drop a file anywhere or click here to select
 												</p>
 											</div>
@@ -1182,21 +1186,21 @@ Activities	The user's activities, as displayed on their profile
 								</div>
 							</Popup>
 							<div
-								className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center"
+								className="w-full bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center"
 								onClick={() => setCreateUserOpen(true)}
 							>
 								<Image
 									src={addUserImage}
-									className="h-20 w-20"
+									className="w-full h-20 w-20"
 									alt="Upload Files"
 								/>
-								<p className="font-medium">Create User</p>
+								<p className="w-full font-medium">Create User</p>
 							</div>
 							<Popup
 								closeMenu={() => setCreateUserOpen(false)}
 								open={createUserOpen}
 							>
-								<h2 className="title mb-4">Create User</h2>
+								<h2 className="w-full title mb-4">Create User</h2>
 								<Formik
 									initialValues={{
 										full_name: "",
@@ -1225,47 +1229,49 @@ Activities	The user's activities, as displayed on their profile
 									})}
 								>
 									{({ errors }) => (
-										<Form className="flex flex-col gap-4">
-											<label className="flex flex-col grow">
-												<span className="mb-0 5 font-medium text-sm">
-													Full Name<span className="ml-1 text-red-500">*</span>
+										<Form className="w-full flex flex-col gap-4">
+											<label className="w-full flex flex-col grow">
+												<span className="w-full mb-0 5 font-medium text-sm">
+													Full Name
+													<span className="w-full ml-1 text-red-500">*</span>
 												</span>
 												<Field type="text" name="full_name" autoFocus />
 											</label>
 
-											<label className="flex flex-col grow">
-												<span className="mb-0 5 font-medium text-sm">
-													Email<span className="ml-1 text-red-500">*</span>
+											<label className="w-full flex flex-col grow">
+												<span className="w-full mb-0 5 font-medium text-sm">
+													Email
+													<span className="w-full ml-1 text-red-500">*</span>
 												</span>
 												<Field type="text" name="email" />
 											</label>
-											<div className="flex gap-4">
-												<label className="flex flex-col grow">
-													<span className="mb-0 5 font-medium text-sm">
+											<div className="w-full flex gap-4">
+												<label className="w-full flex flex-col grow">
+													<span className="w-full mb-0 5 font-medium text-sm">
 														Phone Number
 													</span>
 													<Field type="text" name="phone_number" />
 												</label>
-												<label className="flex flex-col">
-													<span className="mb-0 5 font-medium text-sm">
+												<label className="w-full flex flex-col">
+													<span className="w-full mb-0 5 font-medium text-sm">
 														Student ID
 													</span>
 													<Field type="text" name="student_id" />
 												</label>
 
-												<label className="flex flex-col ">
-													<span className="mb-0 5 font-medium text-sm">
+												<label className="w-full flex flex-col ">
+													<span className="w-full mb-0 5 font-medium text-sm">
 														Graduation year
 													</span>
 													<Field type="number" name="year" />
 												</label>
 											</div>
-											<p className="italic text-sm">
+											<p className="w-full italic text-sm">
 												Leave the Student ID and Graduation year fields blank
 												for a non-student account
 											</p>
 											<Button
-												className="text-white ml-auto"
+												className="w-full text-white ml-auto"
 												color="bg-blue-500"
 												type="submit"
 											>
@@ -1277,32 +1283,32 @@ Activities	The user's activities, as displayed on their profile
 								</Formik>
 							</Popup>
 							<div
-								className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center"
+								className="w-full bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center"
 								onClick={() => setDBActionsOpen(true)}
 							>
 								<Image
 									src={serverImage}
-									className="h-20 w-20"
+									className="w-full h-20 w-20"
 									alt="Upload Files"
 								/>
 								{/* In case i forget what this does: allows admins to make 
 								global changes to the db, i.e. download all/specified users, delete all/specified users, etc.
 								probably other stuff too */}
-								<p className="font-medium">Database Actions</p>
+								<p className="w-full font-medium">Database Actions</p>
 							</div>
 							<Popup
 								closeMenu={() => setDBActionsOpen(false)}
 								open={dbActionsOpen}
 							>
-								<h2 className="title text-center my-10">
+								<h2 className="w-full title text-center my-10">
 									Database actions are coming soon
 								</h2>
 							</Popup>
 						</div>
 
-						<div className="flex mb-2 mt-4 justify-between">
+						<div className="w-full flex mb-2 mt-4 justify-between">
 							<form
-								className="flex grow"
+								className="w-full flex grow"
 								onSubmit={(e) => {
 									e.preventDefault();
 									search(false);
@@ -1313,31 +1319,31 @@ Activities	The user's activities, as displayed on their profile
 								>
 									<input
 										type="text"
-										className="!rounded-xl grow py-1.5 placeholder:dark:text-gray-400"
+										className="w-full !rounded-xl grow py-1.5 placeholder:dark:text-gray-400"
 										onChange={(e) => setQuery(e.target.value)}
 										placeholder="Search users..."
 									/>
-									<MagnifyingGlassIcon className="absolute right-6 h-4 w-4" />
+									<MagnifyingGlassIcon className="w-full absolute right-6 h-4 w-4" />
 								</div>
 							</form>
-							<div className="flex space-x-2">
-								{loading && <Loading className="my-auto" />}
+							<div className="w-full flex space-x-2">
+								{loading && <Loading className="w-full my-auto" />}
 								{selectedRows.length > 0 && (
 									<>
 										{selectedSquare != undefined ? (
 											<>
 												<Button
 													onClick={copyCell}
-													className="rounded-xl !px-2.5"
+													className="w-full rounded-xl !px-2.5"
 												>
-													<ClipboardDocumentListIcon className="h-5 w-5" />
+													<ClipboardDocumentListIcon className="w-full h-5 w-5" />
 												</Button>
 												{selectedSquare != 4 && (
 													<Button
 														onClick={() => setEditOpen(true)}
-														className="rounded-xl !px-2.5"
+														className="w-full rounded-xl !px-2.5"
 													>
-														<PencilSquareIcon className="h-5 w-5" />
+														<PencilSquareIcon className="w-full h-5 w-5" />
 													</Button>
 												)}
 											</>
@@ -1345,18 +1351,21 @@ Activities	The user's activities, as displayed on their profile
 											<>
 												<Button
 													onClick={copyRows}
-													className="rounded-xl !px-2.5"
+													className="w-full rounded-xl !px-2.5"
 												>
-													<ClipboardDocumentListIcon className="h-5 w-5" />
+													<ClipboardDocumentListIcon className="w-full h-5 w-5" />
 												</Button>
-												<Button onClick={copyID} className="rounded-xl !px-2.5">
-													<p className="font-medium text-lg">ID</p>
+												<Button
+													onClick={copyID}
+													className="w-full rounded-xl !px-2.5"
+												>
+													<p className="w-full font-medium text-lg">ID</p>
 												</Button>
 												<Button
 													onClick={downloadRows}
-													className="rounded-xl !px-2.5"
+													className="w-full rounded-xl !px-2.5"
 												>
-													<ArrowDownTrayIcon className="h-5 w-5" />
+													<ArrowDownTrayIcon className="w-full h-5 w-5" />
 												</Button>
 												{users &&
 												users.filter(
@@ -1365,25 +1374,25 @@ Activities	The user's activities, as displayed on their profile
 														user.enrolled[0].admin_bool
 												).length > 0 ? (
 													<Button
-														className="rounded-xl !px-2.5"
+														className="w-full rounded-xl !px-2.5"
 														onClick={() => updateAdmin(false)}
 													>
-														<UserIcon className="h-5 w-5 " />
+														<UserIcon className="w-full h-5 w-5 " />
 													</Button>
 												) : (
 													<Button
-														className="rounded-xl !px-2.5"
+														className="w-full rounded-xl !px-2.5"
 														onClick={() => updateAdmin(true)}
 													>
-														<ShieldCheckIcon className="h-5 w-5 text-blue-500" />
+														<ShieldCheckIcon className="w-full h-5 w-5 text-blue-500" />
 													</Button>
 												)}
 												<Button
 													onClick={() => setDeleteOpen(true)}
-													className="rounded-xl !px-2.5"
+													className="w-full rounded-xl !px-2.5"
 													color="bg-red-600/20 hover:bg-red-600/50"
 												>
-													<TrashIcon className="h-5 w-5" />
+													<TrashIcon className="w-full h-5 w-5" />
 												</Button>
 											</>
 										)}
@@ -1392,7 +1401,7 @@ Activities	The user's activities, as displayed on their profile
 												setSelectedRows([]);
 												setSelectedSquare(undefined);
 											}}
-											className="rounded-xl !ml-4"
+											className="w-full rounded-xl !ml-4"
 										>
 											Clear Selection
 										</Button>
@@ -1415,7 +1424,7 @@ Activities	The user's activities, as displayed on their profile
 								}`}
 							>
 								<div
-									className="grid place-items-center min-w-[3rem] max-w-[3rem]"
+									className="w-full grid place-items-center min-w-[3rem] max-w-[3rem]"
 									onClick={() => {
 										setSelectedSquare(undefined);
 										setSelectedRows((rows) =>
@@ -1466,7 +1475,7 @@ Activities	The user's activities, as displayed on their profile
 											key={mappedUser.id}
 										>
 											<div
-												className="grid place-items-center min-w-[3rem] max-w-[3rem]"
+												className="w-full grid place-items-center min-w-[3rem] max-w-[3rem]"
 												onClick={() => {
 													setSelectedSquare(undefined);
 													setSelectedRows((rows) =>
@@ -1519,7 +1528,9 @@ Activities	The user's activities, as displayed on their profile
 														}`}
 													/>
 												)}{" "}
-												<p className="truncate">{mappedUser.full_name}</p>
+												<p className="w-full truncate">
+													{mappedUser.full_name}
+												</p>
 											</div>
 											<p
 												onClick={() => {
@@ -1576,7 +1587,9 @@ Activities	The user's activities, as displayed on their profile
 														<UsersIcon
 															className={`${svgClassname} text-blue-500`}
 														/>
-														<p className="truncate">{parents.join(", ")}</p>
+														<p className="w-full truncate">
+															{parents.join(", ")}
+														</p>
 													</>
 												)}
 												{students && (
@@ -1584,7 +1597,9 @@ Activities	The user's activities, as displayed on their profile
 														<AcademicCapIcon
 															className={`${svgClassname} text-gray-300`}
 														/>
-														<p className="truncate">{students.join(", ")}</p>
+														<p className="w-full truncate">
+															{students.join(", ")}
+														</p>
 													</>
 												)}
 											</div>
@@ -1606,14 +1621,14 @@ Activities	The user's activities, as displayed on their profile
 								})
 							) : // bad way to implement searching, congrats to myself
 							users === null ? (
-								<div className="h-48 flex items-center justify-center flex-col">
+								<div className="w-full h-48 flex items-center justify-center flex-col">
 									<Image
 										src={noData}
 										alt="Nothing present icon"
 										width={100}
 										height={100}
 									/>
-									<p className="font-medium mt-6">
+									<p className="w-full font-medium mt-6">
 										No users found with that name or email
 									</p>
 								</div>
@@ -1621,43 +1636,47 @@ Activities	The user's activities, as displayed on their profile
 								<div>loading</div>
 							)}
 						</div>
-						<div className="flex justify-center gap-4 my-4 items-center">
+						<div className="w-full flex justify-center gap-4 my-4 items-center">
 							<ButtonIcon
 								disabled={page === 1}
-								icon={<ChevronLeftIcon className="w-6 h-6 -translate-x-0.5" />}
+								icon={
+									<ChevronLeftIcon className="w-full w-6 h-6 -translate-x-0.5" />
+								}
 								className={`scale-75`}
 								onClick={() => search(false, page - 1)}
 							/>
-							<div className="px-3 py-1.5 rounded-xl bg-gray-200 text-xl font-medium">
+							<div className="w-full px-3 py-1.5 rounded-xl bg-gray-200 text-xl font-medium">
 								{page}
 							</div>
 							<ButtonIcon
 								disabled={page === pages}
-								icon={<ChevronRightIcon className="w-6 h-6 translate-x-0.5" />}
+								icon={
+									<ChevronRightIcon className="w-full w-6 h-6 translate-x-0.5" />
+								}
 								className={`scale-75`}
 								onClick={() => search(false, page + 1)}
 							/>
 						</div>
 					</Tab.Panel>
 					{/* <Tab.Panel>
-						<div className="grid grid-cols-4 gap-4">
+						<div className="w-full grid grid-cols-4 gap-4">
 							<div
-								className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center col-span-2"
+								className="w-full bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center col-span-2"
 								onClick={() => setUploadOpen(true)}
 							>
 								<Image
 									src={uploadImage}
-									className="h-20 w-20"
+									className="w-full h-20 w-20"
 									alt="Upload Files"
 								/>
-								<p className="font-medium">Upload .csv file</p>
+								<p className="w-full font-medium">Upload .csv file</p>
 							</div>
 							<Popup closeMenu={() => setUploadOpen(false)} open={uploadOpen}>
 								<>
-									<h3 className="title-sm">Upload .csv Files</h3>
-									<h4 className="font-medium mt-4 mb-2">File format</h4>
-									<div className=" overflow-hidden border rounded-md divide-y">
-										<div className=" [&>p]:px-2.5 [&>p]:py-2 divide-x grid grid-cols-6 font-medium">
+									<h3 className="w-full title-sm">Upload .csv Files</h3>
+									<h4 className="w-full font-medium mt-4 mb-2">File format</h4>
+									<div className="w-full  overflow-hidden border rounded-md divide-y">
+										<div className="w-full  [&>p]:px-2.5 [&>p]:py-2 divide-x grid grid-cols-6 font-medium">
 											<p>First Name</p>
 											<p>Last Name</p>
 											<p>Email</p>
@@ -1665,7 +1684,7 @@ Activities	The user's activities, as displayed on their profile
 											<p>Parent</p>
 											<p>Student email</p>
 										</div>
-										<div className=" [&>p]:px-2.5 [&>p]:py-2 divide-x  grid grid-cols-6">
+										<div className="w-full  [&>p]:px-2.5 [&>p]:py-2 divide-x  grid grid-cols-6">
 											<p>Steve</p>
 											<p>Huffman</p>
 											<p>steve@ex.com</p>
@@ -1673,7 +1692,7 @@ Activities	The user's activities, as displayed on their profile
 											<p>false</p>
 											<p></p>
 										</div>
-										<div className=" [&>p]:px-2.5 [&>p]:py-2 divide-x  grid grid-cols-6">
+										<div className="w-full  [&>p]:px-2.5 [&>p]:py-2 divide-x  grid grid-cols-6">
 											<p>Christian</p>
 											<p>Selig</p>
 											<p>chris@ex.com</p>
@@ -1682,23 +1701,23 @@ Activities	The user's activities, as displayed on their profile
 											<p>steve@ex.com</p>
 										</div>
 									</div>
-									<p className="text-sm italic mt-1">
+									<p className="w-full text-sm italic mt-1">
 										All other columns will be ignored
 									</p>
-									<div className="group mt-8 flex h-24 grow flex-col cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white">
-										<h3 className="text-lg font-medium transition">
+									<div className="w-full group mt-8 flex h-24 grow flex-col cursor-pointer items-center justify-center rounded-xl border-2 border-dashed border-gray-300 transition hover:border-solid hover:bg-gray-50 hover:text-black dark:hover:bg-neutral-950 dark:hover:text-white">
+										<h3 className="w-full text-lg font-medium transition">
 											Upload File
 										</h3>
-										<p className="text-sm">
+										<p className="w-full text-sm">
 											Drop a file or click anywhere to select
 										</p>
 									</div>
 								</>
 							</Popup>
-							<div className="bg-gray-200 rounded-2xl h-36 mt-2 flex items-center justify-center"></div>
-							<div className="bg-gray-200 rounded-2xl h-36 mt-2 flex items-center justify-center"></div>
+							<div className="w-full bg-gray-200 rounded-2xl h-36 mt-2 flex items-center justify-center"></div>
+							<div className="w-full bg-gray-200 rounded-2xl h-36 mt-2 flex items-center justify-center"></div>
 						</div>
-						<div className="flex my-2">
+						<div className="w-full flex my-2">
 							<div
 								className={`${
 									searchOpen ? "max-w-[24rem]" : "max-w-[14rem]"
@@ -1706,50 +1725,51 @@ Activities	The user's activities, as displayed on their profile
 							>
 								<input
 									type="text"
-									className="grow !rounded-xl py-2 placeholder:dark:text-gray-400"
+									className="w-full grow !rounded-xl py-2 placeholder:dark:text-gray-400"
 									onClick={() => setSearchOpen(true)}
 									onBlur={() => setSearchOpen(false)}
 									placeholder="Search users..."
 								/>
-								<MagnifyingGlassIcon className="absolute right-6 h-4 w-4" />
+								<MagnifyingGlassIcon className="w-full absolute right-6 h-4 w-4" />
 							</div>
 						</div>
 					</Tab.Panel> */}
 					<Tab.Panel>
-						<div className="grid grid-cols-4 gap-4">
+						<div className="w-full grid grid-cols-4 gap-4">
 							<div
-								className="bg-gray-200 grayscale rounded-2xl h-36 mt-2 flex flex-col items-center justify-center col-span-2"
+								className="w-full bg-gray-200 grayscale rounded-2xl h-36 mt-2 flex flex-col items-center justify-center col-span-2"
 								//onClick={() => setUploadOpen(true)}
 							>
 								<Image
 									src={uploadImage}
-									className="h-20 w-20"
+									className="w-full h-20 w-20"
 									alt="Upload Files"
 								/>
-								<p className="font-medium">
+								<p className="w-full font-medium">
 									Upload Class List in{" "}
-									<span className="rounded bg-gray-300 px-1">.csv</span> Format
+									<span className="w-full rounded bg-gray-300 px-1">.csv</span>{" "}
+									Format
 								</p>
 							</div>
 							<Popup closeMenu={() => setUploadOpen(false)} open={uploadOpen}>
 								<div></div>
 							</Popup>
 							<div
-								className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center"
+								className="w-full bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center"
 								onClick={() => setCreateUserOpen(true)}
 							>
 								<Image
 									src={addUserImage}
-									className="h-20 w-20"
+									className="w-full h-20 w-20"
 									alt="Upload Files"
 								/>
-								<p className="font-medium">Create Class</p>
+								<p className="w-full font-medium">Create Class</p>
 							</div>
 							<Popup
 								closeMenu={() => setCreateUserOpen(false)}
 								open={createUserOpen}
 							>
-								<h2 className="title mb-4">Create Class</h2>
+								<h2 className="w-full title mb-4">Create Class</h2>
 								<Formik
 									initialValues={{
 										name: "",
@@ -1776,64 +1796,67 @@ Activities	The user's activities, as displayed on their profile
 									})}
 								>
 									{({ setValues, errors, values }) => (
-										<Form className="flex flex-col gap-4">
-											<div className="flex gap-4">
-												<label className="flex flex-col grow">
-													<span className="mb-0 5 font-medium text-sm">
-														Name<span className="ml-1 text-red-500">*</span>
+										<Form className="w-full flex flex-col gap-4">
+											<div className="w-full flex gap-4">
+												<label className="w-full flex flex-col grow">
+													<span className="w-full mb-0 5 font-medium text-sm">
+														Name
+														<span className="w-full ml-1 text-red-500">*</span>
 													</span>
 													<Field type="text" name="name" />
-													<span className=" text-red-500">
+													<span className="w-full  text-red-500">
 														<ErrorMessage name="name" />
 													</span>
 												</label>
 
-												<label className="flex flex-col ">
-													<span className="mb-0 5 font-medium text-sm">
+												<label className="w-full flex flex-col ">
+													<span className="w-full mb-0 5 font-medium text-sm">
 														Room Number
 													</span>
 													<Field type="text" name="room" />
-													<span className=" text-red-500">
+													<span className="w-full  text-red-500">
 														<ErrorMessage name="room" />
 													</span>
 												</label>
 											</div>
-											<label className="flex flex-col grow">
-												<span className="mb-0 5 font-medium text-sm">
-													Full Name<span className="ml-1 text-red-500">*</span>
+											<label className="w-full flex flex-col grow">
+												<span className="w-full mb-0 5 font-medium text-sm">
+													Full Name
+													<span className="w-full ml-1 text-red-500">*</span>
 												</span>
 												<Field type="text" name="name_full" autoFocus />
-												<span className=" text-red-500">
+												<span className="w-full  text-red-500">
 													<ErrorMessage name="name_full" />
 												</span>
 											</label>
 
-											<div className="flex gap-4">
-												<label className="flex flex-col grow">
-													<span className="mb-0 5 font-medium text-sm">
-														Block<span className="ml-1 text-red-500">*</span>
+											<div className="w-full flex gap-4">
+												<label className="w-full flex flex-col grow">
+													<span className="w-full mb-0 5 font-medium text-sm">
+														Block
+														<span className="w-full ml-1 text-red-500">*</span>
 													</span>
 													<Field type="number" name="block" />
-													<span className=" text-red-500">
+													<span className="w-full  text-red-500">
 														<ErrorMessage name="block" />
 													</span>
 												</label>
 
-												<label className="flex flex-col grow">
-													<span className="mb-0 5 font-medium text-sm">
+												<label className="w-full flex flex-col grow">
+													<span className="w-full mb-0 5 font-medium text-sm">
 														Schedule Type
-														<span className="ml-1 text-red-500">*</span>
+														<span className="w-full ml-1 text-red-500">*</span>
 													</span>
 													<Field type="number" name="schedule_type" />
-													<span className=" text-red-500">
+													<span className="w-full  text-red-500">
 														<ErrorMessage name="schedule_type" />
 													</span>
 												</label>
 											</div>
-											<label htmlFor="" className="flex flex-col">
-												<span className="mb-0 5 font-medium text-sm">
+											<label htmlFor="" className="w-full flex flex-col">
+												<span className="w-full mb-0 5 font-medium text-sm">
 													Image Picker
-													<span className="ml-1 text-red-500">*</span>
+													<span className="w-full ml-1 text-red-500">*</span>
 												</span>
 												<ImagePicker
 													setPicked={(v) =>
@@ -1842,7 +1865,7 @@ Activities	The user's activities, as displayed on their profile
 														})
 													}
 												/>
-												<span className=" text-red-500">
+												<span className="w-full  text-red-500">
 													<ErrorMessage name="image" />
 												</span>
 											</label>
@@ -1853,12 +1876,12 @@ Activities	The user's activities, as displayed on their profile
 													setValues((values) => ({ ...values, users: users }))
 												}
 											/>
-											{/* <p className="italic text-sm">
+											{/* <p className="w-full italic text-sm">
 											Leave the Student ID and Graduation year fields blank for
 											a non-student account
 										</p> */}
 											<Button
-												className="text-white ml-auto"
+												className="w-full text-white ml-auto"
 												color="bg-blue-500"
 												type="submit"
 												disabled={Boolean(
@@ -1878,31 +1901,31 @@ Activities	The user's activities, as displayed on their profile
 								</Formik>
 							</Popup>
 							<div
-								className="bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center"
+								className="w-full bg-gray-200 brightness-hover cursor-pointer rounded-2xl h-36 mt-2 flex flex-col items-center justify-center"
 								onClick={() => setDBActionsOpen(true)}
 							>
 								<Image
 									src={serverImage}
-									className="h-20 w-20"
+									className="w-full h-20 w-20"
 									alt="Upload Files"
 								/>
 								{/* In case i forget what this does: allows admins to make 
 								global changes to the db, i.e. download all/specified users, delete all/specified users, etc.
 								probably other stuff too */}
-								<p className="font-medium">Database Actions</p>
+								<p className="w-full font-medium">Database Actions</p>
 							</div>
 							<Popup
 								closeMenu={() => setDBActionsOpen(false)}
 								open={dbActionsOpen}
 							>
-								<h2 className="title text-center my-10">
+								<h2 className="w-full title text-center my-10">
 									Database actions are coming soon
 								</h2>
 							</Popup>
 						</div>
-						<div className="flex mb-2 mt-4 justify-between">
+						<div className="w-full flex mb-2 mt-4 justify-between">
 							<form
-								className="flex grow"
+								className="w-full flex grow"
 								onSubmit={(e) => {
 									e.preventDefault();
 									search(true);
@@ -1913,55 +1936,58 @@ Activities	The user's activities, as displayed on their profile
 								>
 									<input
 										type="text"
-										className="!rounded-xl grow py-1.5 placeholder:dark:text-gray-400"
+										className="w-full !rounded-xl grow py-1.5 placeholder:dark:text-gray-400"
 										onChange={(e) => setQuery(e.target.value)}
 										placeholder="Search classes..."
 									/>
-									<MagnifyingGlassIcon className="absolute right-6 h-4 w-4" />
+									<MagnifyingGlassIcon className="w-full absolute right-6 h-4 w-4" />
 								</div>
 							</form>
-							<div className="flex space-x-2">
-								{loading && <Loading className="my-auto" />}
+							<div className="w-full flex space-x-2">
+								{loading && <Loading className="w-full my-auto" />}
 								{selectedRows.length > 0 && (
 									<>
 										{selectedSquare != undefined ? (
 											<>
 												{selectedSquare == 2 && (
 													<a href={selectedClass?.image || ""} target="_blank">
-														<Button className="rounded-xl !px-2.5 h-full">
-															<ArrowTopRightOnSquareIcon className="h-5 w-5" />
+														<Button className="w-full rounded-xl !px-2.5 h-full">
+															<ArrowTopRightOnSquareIcon className="w-full h-5 w-5" />
 														</Button>
 													</a>
 												)}
 												<Button
 													onClick={copyCell}
-													className="rounded-xl !px-2.5"
+													className="w-full rounded-xl !px-2.5"
 												>
-													<ClipboardDocumentListIcon className="h-5 w-5" />
+													<ClipboardDocumentListIcon className="w-full h-5 w-5" />
 												</Button>
 												<Button
 													onClick={() => setEditOpen(true)}
-													className="rounded-xl !px-2.5"
+													className="w-full rounded-xl !px-2.5"
 												>
-													<PencilSquareIcon className="h-5 w-5" />
+													<PencilSquareIcon className="w-full h-5 w-5" />
 												</Button>
 											</>
 										) : (
 											<>
 												<Button
 													onClick={copyRows}
-													className="rounded-xl !px-2.5"
+													className="w-full rounded-xl !px-2.5"
 												>
-													<ClipboardDocumentListIcon className="h-5 w-5" />
+													<ClipboardDocumentListIcon className="w-full h-5 w-5" />
 												</Button>
-												<Button onClick={copyID} className="rounded-xl !px-2.5">
-													<p className="font-medium text-lg">ID</p>
+												<Button
+													onClick={copyID}
+													className="w-full rounded-xl !px-2.5"
+												>
+													<p className="w-full font-medium text-lg">ID</p>
 												</Button>
 												<Button
 													onClick={downloadRows}
-													className="rounded-xl !px-2.5"
+													className="w-full rounded-xl !px-2.5"
 												>
-													<ArrowDownTrayIcon className="h-5 w-5" />
+													<ArrowDownTrayIcon className="w-full h-5 w-5" />
 												</Button>
 												{selectedRows.length == 1 && selectedClass && (
 													<>
@@ -1985,14 +2011,14 @@ Activities	The user's activities, as displayed on their profile
 															}
 															setValues={updateUsers}
 															button={
-																<Button className="rounded-xl !px-2.5 h-full">
-																	<UserGroupIcon className="h-5 w-5" />
+																<Button className="w-full rounded-xl !px-2.5 h-full">
+																	<UserGroupIcon className="w-full h-5 w-5" />
 																</Button>
 															}
 														/>
 
 														<Button
-															className="rounded-xl !px-2.5"
+															className="w-full rounded-xl !px-2.5"
 															onClick={() => {}}
 														>
 															<div
@@ -2003,10 +2029,10 @@ Activities	The user's activities, as displayed on their profile
 												)}
 												<Button
 													onClick={() => setDeleteOpen(true)}
-													className="rounded-xl !px-2.5"
+													className="w-full rounded-xl !px-2.5"
 													color="bg-red-600/20 hover:bg-red-600/50"
 												>
-													<TrashIcon className="h-5 w-5" />
+													<TrashIcon className="w-full h-5 w-5" />
 												</Button>
 											</>
 										)}
@@ -2015,7 +2041,7 @@ Activities	The user's activities, as displayed on their profile
 												setSelectedRows([]);
 												setSelectedSquare(undefined);
 											}}
-											className="rounded-xl !ml-4"
+											className="w-full rounded-xl !ml-4"
 										>
 											Clear Selection
 										</Button>
@@ -2039,7 +2065,7 @@ Activities	The user's activities, as displayed on their profile
 								}`}
 							>
 								<div
-									className="grid place-items-center min-w-[3rem] max-w-[3rem]"
+									className="w-full grid place-items-center min-w-[3rem] max-w-[3rem]"
 									onClick={() => {
 										setSelectedSquare(undefined);
 										setSelectedRows((rows) =>
@@ -2083,7 +2109,7 @@ Activities	The user's activities, as displayed on their profile
 											key={mappedClass.id}
 										>
 											<div
-												className="grid place-items-center min-w-[3rem] max-w-[3rem]"
+												className="w-full grid place-items-center min-w-[3rem] max-w-[3rem]"
 												onClick={() => {
 													setSelectedSquare(undefined);
 													setSelectedRows((rows) =>
@@ -2122,7 +2148,7 @@ Activities	The user's activities, as displayed on their profile
 												<div
 													className={`h-4 w-4 rounded-full mr-2 brightness-50 saturate-[3] bg-${mappedClass.color}-200`}
 												></div>
-												<p className="truncate">{mappedClass.name}</p>
+												<p className="w-full truncate">{mappedClass.name}</p>
 											</div>
 											<p
 												onClick={() => {
@@ -2194,14 +2220,14 @@ Activities	The user's activities, as displayed on their profile
 								})
 							) : // bad way to implement searching, congrats to myself
 							classes === null ? (
-								<div className="h-48 flex items-center justify-center flex-col">
+								<div className="w-full h-48 flex items-center justify-center flex-col">
 									<Image
 										src={noData}
 										alt="Nothing present icon"
 										width={100}
 										height={100}
 									/>
-									<p className="font-medium mt-6">
+									<p className="w-full font-medium mt-6">
 										No users found with that name or email
 									</p>
 								</div>
@@ -2209,19 +2235,23 @@ Activities	The user's activities, as displayed on their profile
 								<div>loading</div>
 							)}
 						</div>
-						<div className="flex justify-center gap-4 my-4 items-center">
+						<div className="w-full flex justify-center gap-4 my-4 items-center">
 							<ButtonIcon
 								disabled={page === 1}
-								icon={<ChevronLeftIcon className="w-6 h-6 -translate-x-0.5" />}
+								icon={
+									<ChevronLeftIcon className="w-full w-6 h-6 -translate-x-0.5" />
+								}
 								className={`scale-75`}
 								onClick={() => search(true, page - 1)}
 							/>
-							<div className="px-3 py-1.5 rounded-xl bg-gray-200 text-xl font-medium">
+							<div className="w-full px-3 py-1.5 rounded-xl bg-gray-200 text-xl font-medium">
 								{page}
 							</div>
 							<ButtonIcon
 								disabled={page === pages}
-								icon={<ChevronRightIcon className="w-6 h-6 translate-x-0.5" />}
+								icon={
+									<ChevronRightIcon className="w-full w-6 h-6 translate-x-0.5" />
+								}
 								className={`scale-75`}
 								onClick={() => search(true, page + 1)}
 							/>
@@ -2230,28 +2260,29 @@ Activities	The user's activities, as displayed on their profile
 				</Tab.Panels>
 			</Tab.Group>
 
-			<div className="flex gap-8 p-4 [&>div]:flex [&>div]:gap-2 [&>div]:items-center text-gray-600 dark:text-gray-400 font-medium mx-auto">
+			<div className="w-full flex gap-8 p-4 [&>div]:flex [&>div]:gap-2 [&>div]:items-center text-gray-600 dark:text-gray-400 font-medium mx-auto">
 				<div>
-					<ShieldCheckIcon className="w-5 h-5 text-blue-500" />
+					<ShieldCheckIcon className="w-full w-5 h-5 text-blue-500" />
 					<p>Admin Account</p>
 				</div>
 				<div>
-					<UserIcon className="w-5 h-5 text-gray-300" />
+					<UserIcon className="w-full w-5 h-5 text-gray-300" />
 					<p>Standard Account</p>
 				</div>
 				<div>
-					<UserIcon className="w-5 h-5 text-red-500" />
+					<UserIcon className="w-full w-5 h-5 text-red-500" />
 					<p>Non-onboarded Account</p>
 				</div>
 				<div>
-					<UsersIcon className="w-5 h-5 text-blue-500" /> <p>Parent</p>
+					<UsersIcon className="w-full w-5 h-5 text-blue-500" /> <p>Parent</p>
 				</div>
 				<div>
-					<AcademicCapIcon className="w-5 h-5 text-gray-300" /> <p>Student</p>
+					<AcademicCapIcon className="w-full w-5 h-5 text-gray-300" />{" "}
+					<p>Student</p>
 				</div>
 			</div>
-			<div className="flex items-center mx-auto text-sm text-gray-500">
-				<p className="mr-2">Coursify Admin Dashboard</p>
+			<div className="w-full flex items-center mx-auto text-sm text-gray-500">
+				<p className="w-full mr-2">Coursify Admin Dashboard</p>
 				<Betatag />
 			</div>
 		</div>
@@ -2307,7 +2338,7 @@ function EditCellUI({
 			}}
 		>
 			<form
-				className="flex flex-col p-2"
+				className="w-full flex flex-col p-2"
 				onSubmit={(e) => {
 					e.preventDefault();
 					setOpen(false);
@@ -2317,14 +2348,16 @@ function EditCellUI({
 			>
 				{editingImage ? (
 					<>
-						<h2 className="title-sm mb-4">Choose Image</h2>
+						<h2 className="w-full title-sm mb-4">Choose Image</h2>
 						<ImagePicker setPicked={setContent} />
 					</>
 				) : (
 					<>
-						<h2 className="title-sm mb-4">Edit Field</h2>
-						<label className="flex flex-col ">
-							<span className="text-sm font-medium mb-0.5">{cell.name}</span>
+						<h2 className="w-full title-sm mb-4">Edit Field</h2>
+						<label className="w-full flex flex-col ">
+							<span className="w-full text-sm font-medium mb-0.5">
+								{cell.name}
+							</span>
 
 							<input
 								type="text"
@@ -2337,7 +2370,7 @@ function EditCellUI({
 					</>
 				)}
 				<Button
-					className="ml-auto mt-4 text-white"
+					className="w-full ml-auto mt-4 text-white"
 					type="submit"
 					color="bg-blue-500"
 				>
@@ -2368,15 +2401,15 @@ function DeleteUI({
 			}}
 		>
 			<form
-				className="flex flex-col p-2"
+				className="w-full flex flex-col p-2"
 				onSubmit={(e) => {
 					e.preventDefault();
 					setOpen(false);
 				}}
 			>
-				<h2 className="title-sm mb-4">Delete User(s)</h2>
-				<label className="flex flex-col ">
-					<span className="text-sm font-medium mb-0.5">
+				<h2 className="w-full title-sm mb-4">Delete User(s)</h2>
+				<label className="w-full flex flex-col ">
+					<span className="w-full text-sm font-medium mb-0.5">
 						Type {`"`}This action is irreversible{`"`} to confirm you wish to
 						delete the selected entries.
 					</span>
@@ -2394,7 +2427,7 @@ function DeleteUI({
 					/>
 				</label>
 				<Button
-					className="ml-auto mt-4 text-white"
+					className="w-full ml-auto mt-4 text-white"
 					type="submit"
 					color="bg-red-500"
 					disabled={!confirmed}
@@ -2546,15 +2579,15 @@ function UserSelector({
 	return (
 		<div>
 			{button ? (
-				<div className="h-full" onClick={() => setOpen(true)}>
+				<div className="w-full h-full" onClick={() => setOpen(true)}>
 					{button}
 				</div>
 			) : (
 				<>
-					<h3 className="text-sm font-medium">Users</h3>
+					<h3 className="w-full text-sm font-medium">Users</h3>
 					<Button
 						type="button"
-						className="mt-2"
+						className="w-full mt-2"
 						color={
 							students.length == 0 && teachers.length == 0
 								? "bg-blue-500"
@@ -2576,14 +2609,14 @@ function UserSelector({
 				open={open}
 				size="xs"
 			>
-				<h2 className="title-sm">Users</h2>
-				<span className="text-sm font-medium mt-4">Teachers</span>
-				<div className="grid grid-cols-2 gap-2 ">
+				<h2 className="w-full title-sm">Users</h2>
+				<span className="w-full text-sm font-medium mt-4">Teachers</span>
+				<div className="w-full grid grid-cols-2 gap-2 ">
 					{teachers.length == 0 ? (
-						<span className="italic text-sm">No Teachers Found</span>
+						<span className="w-full italic text-sm">No Teachers Found</span>
 					) : (
 						teachers.map((teacher, i) => (
-							<div key={teacher.id} className="flex items-center p-2 ">
+							<div key={teacher.id} className="w-full flex items-center p-2 ">
 								<Image
 									src={teacher.avatar_url}
 									width={25}
@@ -2591,11 +2624,15 @@ function UserSelector({
 									alt={`${teacher.full_name}'s profile picture`}
 									className={`rounded-full mr-4 h-8 w-8 ${i == 0 && "ring"}`}
 								/>
-								<div className="flex flex-col max-w-[10rem]">
-									<p className="font-medium truncate">{teacher.full_name}</p>
-									{i == 0 && <span className="text-xs">Main teacher</span>}
+								<div className="w-full flex flex-col max-w-[10rem]">
+									<p className="w-full font-medium truncate">
+										{teacher.full_name}
+									</p>
+									{i == 0 && (
+										<span className="w-full text-xs">Main teacher</span>
+									)}
 								</div>
-								<div className="ml-auto"></div>
+								<div className="w-full ml-auto"></div>
 								<MenuSelect
 									items={[
 										{
@@ -2622,33 +2659,35 @@ function UserSelector({
 											: []),
 									]}
 								>
-									<div className="ml-auto p-1 hover:bg-gray-200 cursor-pointer rounded-lg">
-										<EllipsisVerticalIcon className="w-6 h-6" />
+									<div className="w-full ml-auto p-1 hover:bg-gray-200 cursor-pointer rounded-lg">
+										<EllipsisVerticalIcon className="w-full w-6 h-6" />
 									</div>
 								</MenuSelect>
 							</div>
 						))
 					)}
 				</div>
-				<span className="text-sm font-medium mt-4">Students</span>
-				<div className="grid grid-cols-2 gap-2 ">
+				<span className="w-full text-sm font-medium mt-4">Students</span>
+				<div className="w-full grid grid-cols-2 gap-2 ">
 					{students.length == 0 ? (
-						<span className="italic text-sm">No Students Found</span>
+						<span className="w-full italic text-sm">No Students Found</span>
 					) : (
 						students.map((student) => (
-							<div key={student.id} className="flex items-center p-2">
+							<div key={student.id} className="w-full flex items-center p-2">
 								<Avatar
 									full_name={student.full_name}
 									size="8"
 									avatar_url={student.avatar_url}
 								/>
-								<div className="ml-2.5 flex flex-col max-w-[10rem]">
-									<p className="font-medium truncate">{student.full_name}</p>
+								<div className="w-full ml-2.5 flex flex-col max-w-[10rem]">
+									<p className="w-full font-medium truncate">
+										{student.full_name}
+									</p>
 									{!student.avatar_url && (
-										<p className="text-xs">Non-onboarded User</p>
+										<p className="w-full text-xs">Non-onboarded User</p>
 									)}
 								</div>
-								<div className="ml-auto"></div>
+								<div className="w-full ml-auto"></div>
 								<MenuSelect
 									items={[
 										{
@@ -2660,8 +2699,8 @@ function UserSelector({
 										},
 									]}
 								>
-									<div className="ml-auto p-1 hover:bg-gray-200 cursor-pointer rounded-lg">
-										<EllipsisVerticalIcon className="w-6 h-6" />
+									<div className="w-full ml-auto p-1 hover:bg-gray-200 cursor-pointer rounded-lg">
+										<EllipsisVerticalIcon className="w-full w-6 h-6" />
 									</div>
 								</MenuSelect>
 							</div>
@@ -2669,18 +2708,18 @@ function UserSelector({
 					)}
 				</div>
 
-				<div className="mt-4 flex items-center">
+				<div className="w-full mt-4 flex items-center">
 					<input
 						type="text"
-						className="grow mr-4"
+						className="w-full grow mr-4"
 						color="bg-blue-500"
 						onChange={(v) => setUserText(v.target.value)}
 						disabled={loading}
 						value={userText}
 						placeholder="User email or id seperate with , for multiple"
 					/>
-					<div className="flex flex-col items-center text-xs">
-						<p className="mb-1">Teacher</p>
+					<div className="w-full flex flex-col items-center text-xs">
+						<p className="w-full mb-1">Teacher</p>
 						<Toggle
 							enabled={teacher}
 							setEnabled={() => setTeacher((teacher) => !teacher)}
@@ -2688,7 +2727,7 @@ function UserSelector({
 					</div>
 					<Button
 						type="button"
-						className="ml-4"
+						className="w-full ml-4"
 						color="bg-blue-500"
 						disabled={userText.length == 0 || loading}
 						onClick={userText.includes(",") ? bulkAddUsers : addUser}
@@ -2697,7 +2736,7 @@ function UserSelector({
 						{loading && <LoadingSmall className={`ml-2 `} />}
 					</Button>
 				</div>
-				<span className="text-red-500">{error}</span>
+				<span className="w-full text-red-500">{error}</span>
 			</Popup>
 		</div>
 	);

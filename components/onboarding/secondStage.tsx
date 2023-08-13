@@ -18,23 +18,23 @@ const OnboardingSecondStage = ({
 
 	return (
 		<>
-			<h2 className="text-2xl mb-6 font-semibold max-w-[16rem] ">
+			<h2 className="w-full text-2xl mb-6 font-semibold max-w-[16rem] ">
 				Let{"'"}s get to know you better
 			</h2>
-			<div className="gap-4 flex flex-col select-none">
-				<label htmlFor="" className="flex flex-col">
-					<span className="label-text flex items-end !mb-1">
+			<div className="w-full gap-4 flex flex-col select-none">
+				<label htmlFor="" className="w-full flex flex-col">
+					<span className="w-full label-text flex items-end !mb-1">
 						Preferred First Name{" "}
 						<ColoredPill
 							color="gray"
-							className="!bg-white dark:!bg-black/10 border border-white/10 text-xs ml-1.5"
+							className="w-full !bg-white dark:!bg-black/10 border border-white/10 text-xs ml-1.5"
 						>
 							Optional
 						</ColoredPill>
 					</span>
 					<input
 						type="text"
-						className="grow noinputcss onboardingInput"
+						className="w-full grow noinputcss onboardingInput"
 						autoFocus
 						value={newData.preferred_name ?? undefined}
 						onChange={(v) =>
@@ -45,33 +45,35 @@ const OnboardingSecondStage = ({
 						}
 					/>
 				</label>
-				<label htmlFor="" className="flex flex-col">
-					<span className="label-text flex items-end !mb-1">
+				<label htmlFor="" className="w-full flex flex-col">
+					<span className="w-full label-text flex items-end !mb-1">
 						Bio{" "}
 						<ColoredPill
 							color="gray"
-							className="!bg-white dark:!bg-black/10 border border-white/10 text-xs ml-1.5"
+							className="w-full !bg-white dark:!bg-black/10 border border-white/10 text-xs ml-1.5"
 						>
 							Optional
 						</ColoredPill>
 					</span>
 					<input
 						type="text"
-						className="grow noinputcss onboardingInput"
+						className="w-full grow noinputcss onboardingInput"
 						value={newData.bio ?? undefined}
 						onChange={(v) => {
 							if (v.target.value.length <= 50)
 								setNewData((data) => ({ ...data, bio: v.target.value }));
 						}}
 					/>
-					<div className="text-xs ml-auto">{newData.bio?.length ?? 0} / 50</div>
+					<div className="w-full text-xs ml-auto">
+						{newData.bio?.length ?? 0} / 50
+					</div>
 				</label>
 
-				<label htmlFor="" className="flex flex-col -mt-4">
-					<span className="label-text">Phone Number</span>
+				<label htmlFor="" className="w-full flex flex-col -mt-4">
+					<span className="w-full label-text">Phone Number</span>
 					<input
 						type="text"
-						className="grow noinputcss onboardingInput"
+						className="w-full grow noinputcss onboardingInput"
 						value={
 							newData.phone_number
 								? convertToPhoneNumber(newData.phone_number)
@@ -87,10 +89,10 @@ const OnboardingSecondStage = ({
 					/>
 				</label>
 				{newData.phone_number && (
-					<label className="flex cursor-pointer">
+					<label className="w-full flex cursor-pointer">
 						<input
 							type="checkbox"
-							className="!bg-backdrop/25 !border dark:!border-gray-800/10"
+							className="w-full !bg-backdrop/25 !border dark:!border-gray-800/10"
 							checked={newData.approvedPhone}
 							onChange={(v) =>
 								setNewData((data) => ({
@@ -99,10 +101,10 @@ const OnboardingSecondStage = ({
 								}))
 							}
 						/>
-						<p className="text-xs font-medium ml-4 label-required">
+						<p className="w-full text-xs font-medium ml-4 label-required">
 							By providing Coursify with your phone number, you consent to
 							receiving important information and notices from your enrolled
-							schools and <a className="">Coursify</a> via SMS
+							schools and <a className="w-full ">Coursify</a> via SMS
 						</p>
 					</label>
 				)}

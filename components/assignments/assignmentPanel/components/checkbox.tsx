@@ -129,28 +129,28 @@ const CheckBox: NextPage<{
 						>
 							{checked && <CheckIcon />}
 						</div>
-						<div className="text-left">
-							<h3 className="flex items-center text-sm font-medium">
+						<div className="w-full text-left">
+							<h3 className="w-full flex items-center text-sm font-medium">
 								{checkbox.name}
 								{checkbox.teacher && (
 									<Info
 										icon={
-											<IdentificationIcon className="ml-2 h-5 w-5 text-gray-800" />
+											<IdentificationIcon className="w-full ml-2 h-5 w-5 text-gray-800" />
 										}
 										size="small"
 									>
-										<p className="text-gray-800">Teacher Only</p>
+										<p className="w-full text-gray-800">Teacher Only</p>
 									</Info>
 								)}
 							</h3>
-							<p className="text-xs">{checkbox.description}</p>
+							<p className="w-full text-xs">{checkbox.description}</p>
 						</div>
 					</button>
 				);
 			})}
-			<div className="flex items-center justify-between">
+			<div className="w-full flex items-center justify-between">
 				<Button
-					className="text-white"
+					className="w-full text-white"
 					color="bg-blue-500"
 					disabled={
 						// Disabled if no submission
@@ -182,7 +182,7 @@ const CheckBox: NextPage<{
 						? "Resubmit Draft"
 						: "Save Draft"}
 				</Button>
-				{loading && <Loading className="bg-gray-300" />}
+				{loading && <Loading className="w-full bg-gray-300" />}
 			</div>
 			{error && `Error occured while saving: ${error}`}
 		</>

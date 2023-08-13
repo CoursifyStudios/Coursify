@@ -79,8 +79,8 @@ export const CreateAssignment: NextPage<{
 	return (
 		<Popup open={open} closeMenu={() => closeMenu()}>
 			{" "}
-			<div className="flex items-center">
-				<div className="z-10 grid h-8 w-8 place-items-center rounded-full bg-blue-500  font-semibold text-white">
+			<div className="w-full flex items-center">
+				<div className="w-full z-10 grid h-8 w-8 place-items-center rounded-full bg-blue-500  font-semibold text-white">
 					1
 				</div>
 
@@ -154,8 +154,8 @@ export const CreateAssignment: NextPage<{
 
 		return (
 			<>
-				<h2 className="title mt-6">Submission Type</h2>
-				<div className="mt-4 grid grid-cols-3 gap-5">
+				<h2 className="w-full title mt-6">Submission Type</h2>
+				<div className="w-full mt-4 grid grid-cols-3 gap-5">
 					{submissionType.map((submission, i) => (
 						<div key={i}>
 							<div
@@ -178,13 +178,13 @@ export const CreateAssignment: NextPage<{
 										  }
 								}
 							>
-								<div className="flex items-center">
-									<div className="rounded-full bg-blue-500 p-2 text-white">
+								<div className="w-full flex items-center">
+									<div className="w-full rounded-full bg-blue-500 p-2 text-white">
 										{submission.icon}
 									</div>
-									<div className="ml-3">
-										<h1 className="font-semibold">{submission.name}</h1>
-										<p className="test-gray-700 text-xs">
+									<div className="w-full ml-3">
+										<h1 className="w-full font-semibold">{submission.name}</h1>
+										<p className="w-full test-gray-700 text-xs">
 											{submission.description}
 										</p>
 									</div>

@@ -46,7 +46,7 @@ export const CopiedHover: NextPage<{
 	const [copiedHover, setCopiedHover] = useState(false);
 	return (
 		<div
-			className="group relative cursor-pointer select-none "
+			className="w-full group relative cursor-pointer select-none "
 			onClick={() => (
 				navigator.clipboard.writeText(copy),
 				setCopied(true),
@@ -63,7 +63,7 @@ export const CopiedHover: NextPage<{
 			onMouseLeave={() => setCopiedHover(false)}
 		>
 			{children}
-			<div className="absolute select-none left-0 right-0 mt-2 flex justify-center brightness-105 z-30">
+			<div className="w-full absolute select-none left-0 right-0 mt-2 flex justify-center brightness-105 z-30">
 				<Transition
 					show={copiedHover}
 					enter="transition"

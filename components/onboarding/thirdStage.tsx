@@ -37,9 +37,9 @@ const OnboardingThirdStage = ({
 
 	if (bsLoading) {
 		return (
-			<div className="flex flex-col justify-center items-center text-gray-200 py-8">
+			<div className="w-full flex flex-col justify-center items-center text-gray-200 py-8">
 				<RaceBy speed={0.8} size={170} color="white" />
-				<h2 className="font-semibold text-lg text-gray-800 dark:text-white mt-8">
+				<h2 className="w-full font-semibold text-lg text-gray-800 dark:text-white mt-8">
 					{bsLoadingLabel}...
 				</h2>
 			</div>
@@ -48,10 +48,10 @@ const OnboardingThirdStage = ({
 
 	return (
 		<>
-			<h2 className="text-2xl mb-6 font-semibold max-w-[16rem] ">
+			<h2 className="w-full text-2xl mb-6 font-semibold max-w-[16rem] ">
 				Your classes
 			</h2>
-			<div className="gap-4 flex flex-col select-none">
+			<div className="w-full gap-4 flex flex-col select-none">
 				{classes
 					.sort((a, b) => (a.class?.block ?? 0) - (b.class?.block ?? 0))
 					.map((mappedClass) => {

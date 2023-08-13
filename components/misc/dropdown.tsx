@@ -18,9 +18,9 @@ const Dropdown: NextPage<{
 			as="div"
 			className={` ${className} flex flex-col items-center`}
 		>
-			<Listbox.Button className="brightness-hover flex items-center rounded-lg bg-gray-200  px-2 py-1 font-semibold">
+			<Listbox.Button className="w-full brightness-hover flex items-center rounded-lg bg-gray-200  px-2 py-1 font-semibold">
 				{selectedValue.name}
-				<ChevronUpDownIcon className="ml-2 h-5 w-5" />
+				<ChevronUpDownIcon className="w-full ml-2 h-5 w-5" />
 			</Listbox.Button>
 			<Transition
 				as={Fragment}
@@ -38,7 +38,7 @@ const Dropdown: NextPage<{
 						<Listbox.Option
 							key={i}
 							value={type}
-							className="brightness-hover cursor-pointer rounded-lg px-2 py-1 font-medium text-gray-700 transition hover:bg-gray-200 hover:text-gray-900 dark:hover:text-white"
+							className="w-full brightness-hover cursor-pointer rounded-lg px-2 py-1 font-medium text-gray-700 transition hover:bg-gray-200 hover:text-gray-900 dark:hover:text-white"
 						>
 							{type.name}
 						</Listbox.Option>

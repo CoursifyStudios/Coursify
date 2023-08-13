@@ -24,39 +24,39 @@ const StudentClass: NextPage<StudentClassType> = ({
 				className
 			}
 		>
-			<div className="relative h-32 compact:static compact:h-max">
+			<div className="w-full relative h-32 compact:static compact:h-max">
 				{!settings.compact && (
 					<Image
 						src={classData?.image ? classData.image : exampleImage}
 						loading="eager"
 						alt="Example Image"
-						className="absolute inset-0 h-32 rounded-t-xl object-cover object-center"
+						className="w-full absolute inset-0 h-32 rounded-t-xl object-cover object-center"
 						fill
 						sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
 					/>
 				)}
-				<div className="absolute left-2 right-2 top-2 flex items-center justify-between space-x-2 compact:static compact:px-2 compact:pt-2">
+				<div className="w-full absolute left-2 right-2 top-2 flex items-center justify-between space-x-2 compact:static compact:px-2 compact:pt-2">
 					{classData.room && (
 						<ColoredPill
 							//color="gray"
-							className="-mb-0.5 -mt-1 !bg-neutral-500/50 text-xs text-gray-100 backdrop-blur-xl compact:!bg-neutral-500/20 compact:text-sm compact:text-gray-800"
+							className="w-full -mb-0.5 -mt-1 !bg-neutral-500/50 text-xs text-gray-100 backdrop-blur-xl compact:!bg-neutral-500/20 compact:text-sm compact:text-gray-800"
 						>
 							Rm. {classData.room}
 						</ColoredPill>
 					)}
-					<div className="flex items-center">
+					<div className="w-full flex items-center">
 						<h2
 							className={`text-xl compact:text-sm text-${classData.color}-300 ml-2 rounded-lg bg-neutral-500/20 px-2 font-bold opacity-75 backdrop-blur-xl compact:flex compact:text-gray-800`}
 						>
-							<span className="mr-1.5 hidden compact:block">Block </span>
+							<span className="w-full mr-1.5 hidden compact:block">Block </span>
 							{classData.block}
 						</h2>
 					</div>
 				</div>
 			</div>
-			<div className="flex grow flex-col p-4 compact:p-2">
-				<div className="flex items-start justify-between">
-					<h3 className="line-clamp-2 break-words text-xl font-semibold">
+			<div className="w-full flex grow flex-col p-4 compact:p-2">
+				<div className="w-full flex items-start justify-between">
+					<h3 className="w-full line-clamp-2 break-words text-xl font-semibold">
 						{classData.name}
 					</h3>
 					<ColoredPill
@@ -76,7 +76,7 @@ const StudentClass: NextPage<StudentClassType> = ({
 							: ""}
 					</ColoredPill>
 				</div>
-				<div className="mt-2 flex flex-wrap items-center gap-0.5 compact:flex-nowrap compact:overflow-hidden">
+				<div className="w-full mt-2 flex flex-wrap items-center gap-0.5 compact:flex-nowrap compact:overflow-hidden">
 					{"class_users" in classData &&
 						"users" in classData &&
 						(Array.isArray(classData.class_users!) ? (
@@ -94,7 +94,10 @@ const StudentClass: NextPage<StudentClassType> = ({
 											  );
 										if (!user)
 											return (
-												<p className="text-sm italic text-gray-700" key={i}>
+												<p
+													className="w-full text-sm italic text-gray-700"
+													key={i}
+												>
 													No teacher found
 												</p>
 											);
@@ -103,7 +106,7 @@ const StudentClass: NextPage<StudentClassType> = ({
 											<div key={user.id}>
 												<Link
 													href={`/profile/${user.id}`}
-													className=" flex flex-col items-center"
+													className="w-full  flex flex-col items-center"
 													onClick={(e) => {
 														e.stopPropagation();
 														newTab(
@@ -112,26 +115,30 @@ const StudentClass: NextPage<StudentClassType> = ({
 														);
 													}}
 												>
-													<div className="peer flex items-center rounded-full py-0.5 pl-1 pr-2 hover:bg-gray-300">
+													<div className="w-full peer flex items-center rounded-full py-0.5 pl-1 pr-2 hover:bg-gray-300">
 														<Image
 															src={user.avatar_url}
 															alt="Profile picture"
 															referrerPolicy="no-referrer"
-															className="h-5 w-5 mr-1 rounded-full object-cover shadow shadow-black/25"
+															className="w-full h-5 w-5 mr-1 rounded-full object-cover shadow shadow-black/25"
 															height={20}
 															width={20}
 														/>
-														<div className="font-semibold compact:truncate ">
+														<div className="w-full font-semibold compact:truncate ">
 															{user.full_name}
 														</div>
 													</div>
 												</Link>
-												<p className="-ml-0.5 mr-2 [&:last-child]:hidden">,</p>
+												<p className="w-full -ml-0.5 mr-2 [&:last-child]:hidden">
+													,
+												</p>
 											</div>
 										);
 									})
 							) : (
-								<p className="text-sm italic text-gray-700">No teacher found</p>
+								<p className="w-full text-sm italic text-gray-700">
+									No teacher found
+								</p>
 							)
 						) : (
 							<p>An unknown error occurred</p>

@@ -15,10 +15,10 @@ export const UndoButton = () => {
 			onClick={() => {
 				activeEditor.dispatchCommand(UNDO_COMMAND, undefined);
 			}}
-			className="rounded p-1 hover:bg-gray-200 disabled:cursor-not-allowed disabled:text-gray-500"
+			className="w-full rounded p-1 hover:bg-gray-200 disabled:cursor-not-allowed disabled:text-gray-500"
 			aria-label="undo button"
 		>
-			<ArrowUturnLeftIcon className="h-5 w-5" />
+			<ArrowUturnLeftIcon className="w-full h-5 w-5" />
 		</button>
 	);
 };
@@ -32,10 +32,10 @@ export const RedoButton = () => {
 			onClick={() => {
 				activeEditor.dispatchCommand(REDO_COMMAND, undefined);
 			}}
-			className="rounded p-1 hover:bg-gray-200 disabled:cursor-not-allowed disabled:text-gray-500"
+			className="w-full rounded p-1 hover:bg-gray-200 disabled:cursor-not-allowed disabled:text-gray-500"
 			aria-label="redo button"
 		>
-			<ArrowUturnRightIcon className="h-5 w-5" />
+			<ArrowUturnRightIcon className="w-full h-5 w-5" />
 		</button>
 	);
 };

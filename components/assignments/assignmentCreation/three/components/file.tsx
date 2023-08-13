@@ -37,11 +37,11 @@ const File = ({
 
 	return (
 		<>
-			<div className="flex gap-4">
-				<label htmlFor="maxSize" className="relative flex grow flex-col">
-					<span className="flex text-sm font-medium">
-						Maximum File Size<span className="text-red-600">*</span>
-						<Info className="ml-2">
+			<div className="w-full flex gap-4">
+				<label htmlFor="maxSize" className="w-full relative flex grow flex-col">
+					<span className="w-full flex text-sm font-medium">
+						Maximum File Size<span className="w-full text-red-600">*</span>
+						<Info className="w-full ml-2">
 							Set a maximum file size, per file, in megabytes, up to 5000. For
 							reference: a 4K image RAW is just over 24 megabytes, and 10
 							minutes of 1080p 60fps video can be several gigabytes in size.
@@ -53,7 +53,7 @@ const File = ({
 					<input
 						type="number"
 						defaultValue={settings.maxSize}
-						className="grow"
+						className="w-full grow"
 						name="maxSize"
 						onChange={(e) =>
 							setSettings((settings) => {
@@ -61,16 +61,18 @@ const File = ({
 							})
 						}
 					/>
-					<p className="absolute bottom-2 right-3 z-10 font-medium">MB</p>
+					<p className="w-full absolute bottom-2 right-3 z-10 font-medium">
+						MB
+					</p>
 				</label>
-				<label htmlFor="minFiles" className="flex grow flex-col">
-					<span className="flex text-sm font-medium">
-						Minimum Files Required<span className="text-red-600">*</span>
+				<label htmlFor="minFiles" className="w-full flex grow flex-col">
+					<span className="w-full flex text-sm font-medium">
+						Minimum Files Required<span className="w-full text-red-600">*</span>
 					</span>
 					<input
 						type="number"
 						defaultValue={settings.minFiles}
-						className="grow"
+						className="w-full grow"
 						name="minFiles"
 						onChange={(e) =>
 							setSettings((settings) => {
@@ -79,14 +81,14 @@ const File = ({
 						}
 					/>
 				</label>
-				<label htmlFor="maxFiles" className="flex grow flex-col">
-					<span className="flex text-sm font-medium">
+				<label htmlFor="maxFiles" className="w-full flex grow flex-col">
+					<span className="w-full flex text-sm font-medium">
 						Maximum Files Allowed
 					</span>
 					<input
 						type="number"
 						defaultValue={settings.maxFiles}
-						className="grow"
+						className="w-full grow"
 						name="maxFiles"
 						onChange={(e) =>
 							setSettings((settings) => {
@@ -96,10 +98,10 @@ const File = ({
 					/>
 				</label>
 			</div>
-			<label htmlFor="fileTypes" className="flex grow flex-col">
-				<div className="flex text-sm font-medium">
+			<label htmlFor="fileTypes" className="w-full flex grow flex-col">
+				<div className="w-full flex text-sm font-medium">
 					Allowed file formats
-					<Info className="ml-2">
+					<Info className="w-full ml-2">
 						Specify which file extensions (the last part of a file name, such as
 						.jpg, .pdf, .mp4 or .gif) that students can submit.
 					</Info>
@@ -118,8 +120,8 @@ const File = ({
 							/^\.[A-z]{1,4}$/g.test(tag)
 						}
 						addOnPaste={true}
-						className="inputcss form-input cursor-text [&>span]:flex [&>span]:flex-wrap [&>span]:gap-3"
-						focusedClassName="ring-1 ring-blue-600"
+						className="w-full inputcss form-input cursor-text [&>span]:flex [&>span]:flex-wrap [&>span]:gap-3"
+						focusedclassName="w-full ring-1 ring-blue-600"
 						inputProps={{
 							className: "noinputcss react-tagsinput-input",
 							placeholder:
@@ -142,10 +144,10 @@ const File = ({
 									{getTagDisplayValue(tag)}
 									{!disabled && (
 										<div
-											className="ml-1 cursor-pointer rounded-full p-0.5 hover:bg-gray-300"
+											className="w-full ml-1 cursor-pointer rounded-full p-0.5 hover:bg-gray-300"
 											onClick={(e) => onRemove(key)}
 										>
-											<XMarkIcon className="h-5 w-5" />
+											<XMarkIcon className="w-full h-5 w-5" />
 										</div>
 									)}
 								</span>
@@ -153,7 +155,7 @@ const File = ({
 						}}
 					/>
 				</div>
-				<p className="mt-0.5 text-xs text-gray-600 dark:text-gray-400">
+				<p className="w-full mt-0.5 text-xs text-gray-600 dark:text-gray-400">
 					Students can only add media content in the formats listed above. Leave
 					the field blank to allow all file formats.
 				</p>

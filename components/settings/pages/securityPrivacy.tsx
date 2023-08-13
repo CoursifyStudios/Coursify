@@ -34,7 +34,7 @@ const Securityandprivacy: NextPage = () => {
 				simply send an email to{" "}
 				<a
 					href="mailto:privacy@coursify.studio?subject=Coursify+Data+Request"
-					className="font-semibold text-blue-500"
+					className="w-full font-semibold text-blue-500"
 				>
 					privacy@coursify.studio
 				</a>{" "}

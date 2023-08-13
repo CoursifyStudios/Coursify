@@ -52,7 +52,7 @@ export const Comment = ({
 	const [showLoading, setShowLoading] = useState(false);
 	if (!deleted) {
 		return (
-			<div className="ml-4">
+			<div className="w-full ml-4">
 				<Delete
 					open={showDeleting}
 					setOpen={setShowDeleting}
@@ -70,10 +70,10 @@ export const Comment = ({
 					}}
 					classID={communityid}
 				/>
-				<div className="flex items-center py-1">
+				<div className="w-full flex items-center py-1">
 					<Link
 						href={"/profile/" + author}
-						className="inline-flex shrink-0 items-center rounded-full px-1 py-0.5 hover:bg-gray-300"
+						className="w-full inline-flex shrink-0 items-center rounded-full px-1 py-0.5 hover:bg-gray-300"
 						onClick={() =>
 							newTab(
 								"/profile/" + author,
@@ -84,25 +84,27 @@ export const Comment = ({
 						<Image
 							src={users.avatar_url}
 							alt="User image"
-							className="h-5 w-5 rounded-full object-cover"
+							className="w-full h-5 w-5 rounded-full object-cover"
 							referrerPolicy="no-referrer"
 							width={20}
 							height={20}
 						/>
-						<p className="ml-1.5 mr-1 font-semibold text-gray-700">
+						<p className="w-full ml-1.5 mr-1 font-semibold text-gray-700">
 							{users.full_name}
 						</p>
 					</Link>
-					<p className="pl-1.5 text-gray-600 dark:text-gray-400">{time}</p>
+					<p className="w-full pl-1.5 text-gray-600 dark:text-gray-400">
+						{time}
+					</p>
 					{user && author == user.id && (
-						<div className="ml-auto">
+						<div className="w-full ml-auto">
 							<MenuSelect
 								items={[
 									{
 										content: (
 											<>
 												{" "}
-												Edit <PencilIcon className="h-5 w-5" />{" "}
+												Edit <PencilIcon className="w-full h-5 w-5" />{" "}
 											</>
 										),
 										onClick: () => {
@@ -113,7 +115,7 @@ export const Comment = ({
 										content: (
 											<>
 												{" "}
-												Delete <TrashIcon className="h-5 w-5" />{" "}
+												Delete <TrashIcon className="w-full h-5 w-5" />{" "}
 											</>
 										),
 										onClick: () => {
@@ -122,8 +124,8 @@ export const Comment = ({
 									},
 								]}
 							>
-								<div className=" rounded-md p-0.5 hover:bg-gray-200">
-									<EllipsisVerticalIcon className="h-6 w-6" />
+								<div className="w-full  rounded-md p-0.5 hover:bg-gray-200">
+									<EllipsisVerticalIcon className="w-full h-6 w-6" />
 								</div>
 							</MenuSelect>
 						</div>
@@ -157,21 +159,21 @@ export const Comment = ({
 						}}
 					>
 						{({ values }) => (
-							<Form className="focus:outline-none">
+							<Form className="w-full focus:outline-none">
 								<label htmlFor="content">
 									<Field
 										component="textarea"
 										name="content"
 										type="text"
-										className="min-h-[2.5rem] w-full resize-y border-none bg-gray-300 px-4 py-2.5 !ring-0 dark:placeholder:text-gray-400"
+										className="w-full min-h-[2.5rem] w-full resize-y border-none bg-gray-300 px-4 py-2.5 !ring-0 dark:placeholder:text-gray-400"
 										placeholder="Enter your revised comment here"
 										autoFocus
 									></Field>
 								</label>
 								<ErrorMessage name="content" />
-								<div className="m-1 flex justify-end gap-2">
+								<div className="w-full m-1 flex justify-end gap-2">
 									<Button
-										className="brightness-hover transition hover:bg-red-300"
+										className="w-full brightness-hover transition hover:bg-red-300"
 										onClick={() => setEditing(false)}
 									>
 										Cancel
@@ -197,7 +199,7 @@ export const Comment = ({
 				{/* Replying UI is below. Replying is coming later! so uh. Yeah */}
 				{/* 
                 <button
-                    className="ml-2"
+                    className="w-full ml-2"
                     onClick={() => {
                         setShowReplying(true);
                     }}
@@ -291,23 +293,23 @@ export const Commenting = ({
 						}}
 					>
 						{({ values }) => (
-							<Form className="focus:outline-none">
+							<Form className="w-full focus:outline-none">
 								<label htmlFor="content">
 									<Field
 										component="textarea"
 										name="content"
 										type="text"
-										className="mt-2 min-h-[2.5rem] w-full resize-y rounded-3xl border-none bg-gray-300 px-4 py-2 !ring-0 dark:placeholder:text-gray-400"
+										className="w-full mt-2 min-h-[2.5rem] w-full resize-y rounded-3xl border-none bg-gray-300 px-4 py-2 !ring-0 dark:placeholder:text-gray-400"
 										placeholder="Add a comment..."
 										autoFocus
 									></Field>
 								</label>
 								<ErrorMessage name="content" />
-								<div className="m-1 flex gap-2">
-									<p className="text-red-500">{errorText}</p>
-									<div className="flex ml-auto">
+								<div className="w-full m-1 flex gap-2">
+									<p className="w-full text-red-500">{errorText}</p>
+									<div className="w-full flex ml-auto">
 										<Button
-											className="brightness-hover transition hover:bg-red-300"
+											className="w-full brightness-hover transition hover:bg-red-300"
 											onClick={() => {
 												setShowCommenting(false);
 												if (showMe) showMe(false);
@@ -332,13 +334,13 @@ export const Commenting = ({
 					</Formik>
 				)
 			) : (
-				<div className="my-2 flex">
+				<div className="w-full my-2 flex">
 					<div
-						className=" h-10 flex-grow items-center rounded-full bg-gray-300 p-2"
+						className="w-full  h-10 flex-grow items-center rounded-full bg-gray-300 p-2"
 						tabIndex={0}
 						onClick={() => setShowCommenting(true)}
 					>
-						<p className="ml-1.5 text-gray-400">Add a comment...</p>
+						<p className="w-full ml-1.5 text-gray-400">Add a comment...</p>
 					</div>
 				</div>
 			)}

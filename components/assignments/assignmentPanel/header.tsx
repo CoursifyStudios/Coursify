@@ -23,19 +23,19 @@ const AssignmentHeader: NextPage<{
 		(type) => type.type == assignment.data.type
 	)!;
 	return (
-		<section className="flex items-start justify-between">
-			<div className="mr-4 grow lg:max-w-lg xl:max-w-xl">
+		<section className="w-full flex items-start justify-between">
+			<div className="w-full mr-4 grow lg:max-w-lg xl:max-w-xl">
 				<Link
-					className=" md:hidden"
+					className="w-full  md:hidden"
 					href="/assignments/0"
 					onClick={() => setFullscreen(false)}
 				>
 					<ButtonIcon
-						icon={<ChevronLeftIcon className="h-5 w-5" />}
-						className="mb-4"
+						icon={<ChevronLeftIcon className="w-full h-5 w-5" />}
+						className="w-full mb-4"
 					/>
 				</Link>
-				<div className="flex gap-2">
+				<div className="w-full flex gap-2">
 					<Link
 						href={
 							"/classes/" +
@@ -61,32 +61,34 @@ const AssignmentHeader: NextPage<{
 								: "Error fetching class"}
 						</ColoredPill>
 					</Link>
-					<ColoredPill color="gray" className="flex gap-2">
+					<ColoredPill color="gray" className="w-full flex gap-2">
 						{type.icon}
 						{type.name}
 					</ColoredPill>
 				</div>
-				<div className="mt-4 w-full rounded-xl bg-gray-200 p-4">
-					<h1 className="title mb-2 line-clamp-2">{assignment.data.name}</h1>
-					<p className="line-clamp-2 text-gray-700">
+				<div className="w-full mt-4 w-full rounded-xl bg-gray-200 p-4">
+					<h1 className="w-full title mb-2 line-clamp-2">
+						{assignment.data.name}
+					</h1>
+					<p className="w-full line-clamp-2 text-gray-700">
 						{assignment.data.description}
 					</p>
 				</div>
 			</div>
-			<div className="flex md:space-x-4">
+			<div className="w-full flex md:space-x-4">
 				<CopiedHover copy={window.location.href}>
-					<ButtonIcon icon={<LinkIcon className="h-5 w-5" />} />
+					<ButtonIcon icon={<LinkIcon className="w-full h-5 w-5" />} />
 				</CopiedHover>
 				<div onClick={() => setFullscreen(!fullscreen)}>
 					<ButtonIcon
 						icon={
 							fullscreen ? (
-								<ArrowsPointingInIcon className="h-5 w-5" />
+								<ArrowsPointingInIcon className="w-full h-5 w-5" />
 							) : (
-								<ArrowsPointingOutIcon className="h-5 w-5" />
+								<ArrowsPointingOutIcon className="w-full h-5 w-5" />
 							)
 						}
-						className="hidden items-center justify-center md:flex"
+						className="w-full hidden items-center justify-center md:flex"
 					/>
 				</div>
 			</div>

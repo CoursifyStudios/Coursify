@@ -16,9 +16,9 @@ const TextColorPicker = () => {
 
 	return (
 		<ColorPicker
-			buttonClassName="toolbar-item color-picker"
+			buttonclassName="w-full toolbar-item color-picker"
 			buttonAriaLabel={t("toolbar:textColorPicker.Description")}
-			buttonIconClassName="icon font-color"
+			buttonIconclassName="w-full icon font-color"
 			color={fontColor}
 			onChange={onFontColorSelect}
 			title="text color"

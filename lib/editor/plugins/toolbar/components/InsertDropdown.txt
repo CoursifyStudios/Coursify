@@ -55,7 +55,7 @@ function InsertImageDialog({
 	return (
 		<>
 			{!mode && (
-				<div className="ToolbarPlugin__dialogButtonsList">
+				<div className="w-full ToolbarPlugin__dialogButtonsList">
 					<Button
 						data-test-id="image-modal-option-sample"
 						onClick={() =>
@@ -107,7 +107,7 @@ function InsertTableDialog({
 			<TextInput label="No of rows" onChange={setRows} value={rows} />
 			<TextInput label="No of columns" onChange={setColumns} value={columns} />
 			<div
-				className="ToolbarPlugin__dialogActions"
+				className="w-full ToolbarPlugin__dialogActions"
 				data-test-id="table-model-confirm-insert"
 			>
 				<Button onClick={onClick}>Confirm</Button>
@@ -133,7 +133,7 @@ function InsertPollDialog({
 	return (
 		<>
 			<TextInput label="Question" onChange={setQuestion} value={question} />
-			<div className="ToolbarPlugin__dialogActions">
+			<div className="w-full ToolbarPlugin__dialogActions">
 				<Button disabled={question.trim() === ""} onClick={onClick}>
 					Confirm
 				</Button>
@@ -169,7 +169,7 @@ function InsertTweetDialog({
 				onChange={setText}
 				value={text}
 			/>
-			<div className="ToolbarPlugin__dialogActions">
+			<div className="w-full ToolbarPlugin__dialogActions">
 				<Button disabled={isDisabled} onClick={onClick}>
 					Confirm
 				</Button>
@@ -204,7 +204,7 @@ function InsertImageUriDialogBody({
 				value={altText}
 				data-test-id="image-modal-alt-text-input"
 			/>
-			<div className="ToolbarPlugin__dialogActions">
+			<div className="w-full ToolbarPlugin__dialogActions">
 				<Button
 					data-test-id="image-modal-confirm-btn"
 					disabled={isDisabled}
@@ -253,7 +253,7 @@ function InsertImageUploadedDialogBody({
 				value={altText}
 				data-test-id="image-modal-alt-text-input"
 			/>
-			<div className="ToolbarPlugin__dialogActions">
+			<div className="w-full ToolbarPlugin__dialogActions">
 				<Button
 					data-test-id="image-modal-file-upload-btn"
 					disabled={isDisabled}
@@ -294,7 +294,7 @@ function InsertYouTubeDialog({
 				onChange={setText}
 				value={text}
 			/>
-			<div className="ToolbarPlugin__dialogActions">
+			<div className="w-full ToolbarPlugin__dialogActions">
 				<Button
 					data-test-id="youtube-embed-modal-submit-btn"
 					disabled={isDisabled}
@@ -374,10 +374,10 @@ const InsertDropdown: React.FC<IInsertDropdownProps> = ({
 			{enableHorizontalRule && <HorizontalRulePlugin />}
 
 			<DropDown
-				buttonClassName="toolbar-item spaced"
+				buttonclassName="w-full toolbar-item spaced"
 				buttonLabel="Insert"
 				buttonAriaLabel="Insert specialized editor node"
-				buttonIconClassName="icon plus"
+				buttonIconclassName="w-full icon plus"
 			>
 				{enableHorizontalRule && (
 					<button
@@ -387,11 +387,11 @@ const InsertDropdown: React.FC<IInsertDropdownProps> = ({
 								undefined
 							);
 						}}
-						className="item"
+						className="w-full item"
 						type="button"
 					>
-						<i className="icon horizontal-rule" />
-						<span className="text">Horizontal Rule</span>
+						<i className="w-full icon horizontal-rule" />
+						<span className="w-full text">Horizontal Rule</span>
 					</button>
 				)}
 				{enableImage && (
@@ -404,11 +404,11 @@ const InsertDropdown: React.FC<IInsertDropdownProps> = ({
 								/>
 							));
 						}}
-						className="item"
+						className="w-full item"
 						type="button"
 					>
-						<i className="icon image" />
-						<span className="text">Image</span>
+						<i className="w-full icon image" />
+						<span className="w-full text">Image</span>
 					</button>
 				)}
 				{enableExcalidraw && (
@@ -419,11 +419,11 @@ const InsertDropdown: React.FC<IInsertDropdownProps> = ({
 								undefined
 							);
 						}}
-						className="item"
+						className="w-full item"
 						type="button"
 					>
-						<i className="icon diagram-2" />
-						<span className="text">Excalidraw</span>
+						<i className="w-full icon diagram-2" />
+						<span className="w-full text">Excalidraw</span>
 					</button>
 				)}
 				{enableTable && (
@@ -437,11 +437,11 @@ const InsertDropdown: React.FC<IInsertDropdownProps> = ({
 									/>
 								));
 							}}
-							className="item"
+							className="w-full item"
 							type="button"
 						>
-							<i className="icon table" />
-							<span className="text">Table</span>
+							<i className="w-full icon table" />
+							<span className="w-full text">Table</span>
 						</button>
 					</div>
 				)}
@@ -455,11 +455,11 @@ const InsertDropdown: React.FC<IInsertDropdownProps> = ({
 								/>
 							));
 						}}
-						className="item"
+						className="w-full item"
 						type="button"
 					>
-						<i className="icon poll" />
-						<span className="text">Poll</span>
+						<i className="w-full icon poll" />
+						<span className="w-full text">Poll</span>
 					</button>
 				)}
 				{enableTwitter && (
@@ -472,11 +472,11 @@ const InsertDropdown: React.FC<IInsertDropdownProps> = ({
 								/>
 							));
 						}}
-						className="item"
+						className="w-full item"
 						type="button"
 					>
-						<i className="icon tweet" />
-						<span className="text">Tweet</span>
+						<i className="w-full icon tweet" />
+						<span className="w-full text">Tweet</span>
 					</button>
 				)}
 				{enableYoutube && (
@@ -489,11 +489,11 @@ const InsertDropdown: React.FC<IInsertDropdownProps> = ({
 								/>
 							));
 						}}
-						className="item"
+						className="w-full item"
 						type="button"
 					>
-						<i className="icon youtube" />
-						<span className="text">YouTube Video</span>
+						<i className="w-full icon youtube" />
+						<span className="w-full text">YouTube Video</span>
 					</button>
 				)}
 				{enableEquations && (
@@ -506,11 +506,11 @@ const InsertDropdown: React.FC<IInsertDropdownProps> = ({
 								/>
 							));
 						}}
-						className="item"
+						className="w-full item"
 						type="button"
 					>
-						<i className="icon equation" />
-						<span className="text">Equation</span>
+						<i className="w-full icon equation" />
+						<span className="w-full text">Equation</span>
 					</button>
 				)}
 				{enableStickyNote && (
@@ -522,11 +522,11 @@ const InsertDropdown: React.FC<IInsertDropdownProps> = ({
 								root.append(stickyNode);
 							});
 						}}
-						className="item"
+						className="w-full item"
 						type="button"
 					>
-						<i className="icon sticky" />
-						<span className="text">Sticky Note</span>
+						<i className="w-full icon sticky" />
+						<span className="w-full text">Sticky Note</span>
 					</button>
 				)}
 			</DropDown>

@@ -19,8 +19,8 @@ const Custom404: NextPageWithLayout = () => {
 	];
 
 	return (
-		<div className="flex flex-grow flex-col items-center justify-center">
-			<div className="flex-row items-center justify-center rounded-md">
+		<div className="w-full flex flex-grow flex-col items-center justify-center">
+			<div className="w-full flex-row items-center justify-center rounded-md">
 				{showCat ? (
 					<>
 						<Image
@@ -47,20 +47,20 @@ const Custom404: NextPageWithLayout = () => {
 								setShowCat(true);
 								setCatCode(404);
 							}}
-							className="pb-10 text-7xl font-extrabold sm:text-9xl"
+							className="w-full pb-10 text-7xl font-extrabold sm:text-9xl"
 						>
 							Whoops...
 						</h1>
 					</>
 				)}
-				<h2 className="mb-5 text-center text-xl">
+				<h2 className="w-full mb-5 text-center text-xl">
 					That page could not be found
 				</h2>
 			</div>
 
 			<div
 				onClick={() => router.push("/")}
-				className="mt-8 cursor-pointer rounded-md bg-blue-500 px-5 py-2 font-medium text-gray-100 duration-500 hover:bg-blue-700"
+				className="w-full mt-8 cursor-pointer rounded-md bg-blue-500 px-5 py-2 font-medium text-gray-100 duration-500 hover:bg-blue-700"
 			>
 				Go back home
 			</div>

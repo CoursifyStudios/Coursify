@@ -52,31 +52,33 @@ const Profile: NextPage = () => {
 
 	return (
 		<div>
-			<div className="flex justify-between">
-				<div className="flex items-center ">
+			<div className="w-full flex justify-between">
+				<div className="w-full flex items-center ">
 					<Image
 						src={userData.data.avatar_url}
 						alt="Profile picture"
 						referrerPolicy="no-referrer"
-						className="h-40 w-40 rounded-full object-cover shadow-md shadow-black/25"
+						className="w-full h-40 w-40 rounded-full object-cover shadow-md shadow-black/25"
 						height={90}
 						width={90}
 					/>
-					<div className="ml-5">
-						<p className="text-2xl font-bold">{userData.data.full_name}</p>
-						<p className="text-xl">{userData.data.year}</p>
+					<div className="w-full ml-5">
+						<p className="w-full text-2xl font-bold">
+							{userData.data.full_name}
+						</p>
+						<p className="w-full text-xl">{userData.data.year}</p>
 					</div>
 				</div>
 			</div>
-			<div className="mt-3 flex space-x-8">
+			<div className="w-full mt-3 flex space-x-8">
 				<div>
-					<h2 className="mb-1 text-xl font-medium">Email</h2>
-					<div className="select-none rounded-md bg-backdrop-200 px-3 py-1.5 font-semibold">
+					<h2 className="w-full mb-1 text-xl font-medium">Email</h2>
+					<div className="w-full select-none rounded-md bg-backdrop-200 px-3 py-1.5 font-semibold">
 						{userData.data.email}
 					</div>
 				</div>
 			</div>
-			<div className="mt-3">
+			<div className="w-full mt-3">
 				<Formik
 					initialValues={{
 						bio: userData.data.bio,
@@ -88,11 +90,11 @@ const Profile: NextPage = () => {
 				>
 					{({ values, errors }) => (
 						<Form>
-							<label htmlFor="bio" className="flex flex-col">
-								<h1 className="mb-1 text-xl font-medium">Bio</h1>
-								<Field type="text" name="bio" className="w-full mb-1" />
+							<label htmlFor="bio" className="w-full flex flex-col">
+								<h1 className="w-full mb-1 text-xl font-medium">Bio</h1>
+								<Field type="text" name="bio" className="w-full w-full mb-1" />
 								{values.bio ? (
-									<p className="ml-auto text-sm">
+									<p className="w-full ml-auto text-sm">
 										<span
 											className={values.bio.length >= 55 ? "text-red-500" : ""}
 										>
@@ -101,13 +103,13 @@ const Profile: NextPage = () => {
 										/55
 									</p>
 								) : (
-									<p className="ml-auto text-sm">0/55</p>
+									<p className="w-full ml-auto text-sm">0/55</p>
 								)}
 							</label>
-							<div className="justify-between items-center flex">
+							<div className="w-full justify-between items-center flex">
 								<Button
 									type="submit"
-									className="mt-4 text-white"
+									className="w-full mt-4 text-white"
 									color="bg-blue-500"
 									disabled={
 										!values.bio ||
@@ -119,12 +121,12 @@ const Profile: NextPage = () => {
 									Save
 								</Button>
 
-								{loading && <Loading className="bg-gray-300" />}
+								{loading && <Loading className="w-full bg-gray-300" />}
 							</div>
 						</Form>
 					)}
 				</Formik>
-				<p className="text-red-700">{error}</p>
+				<p className="w-full text-red-700">{error}</p>
 			</div>
 		</div>
 	);

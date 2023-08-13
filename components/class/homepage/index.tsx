@@ -89,7 +89,7 @@ const HomepageClassesUI: NextPage<{
 									showTimeLoading={loading}
 									teacher={teacher}
 									key={mappedClass.class.id}
-									className="h-full !w-full lg:!w-[18.5rem]"
+									className="w-full h-full !w-full lg:!w-[18.5rem]"
 									isLink={true}
 									time={schedules[0]?.find(
 										(s) =>
@@ -106,7 +106,10 @@ const HomepageClassesUI: NextPage<{
 		return (
 			<>
 				{[...Array(6)].map((_, i) => (
-					<LoadingStudentClass key={i} className="!w-full xl:!w-[18.5rem]" />
+					<LoadingStudentClass
+						key={i}
+						className="w-full !w-full xl:!w-[18.5rem]"
+					/>
 				))}
 			</>
 		);
@@ -114,10 +117,10 @@ const HomepageClassesUI: NextPage<{
 
 	return (
 		<Tab.Group selectedIndex={tab} onChange={setTab}>
-			<div className="flex items-center justify-between md:mt-8 lg:mt-0">
-				<h2 className="title">Classes</h2>
+			<div className="w-full flex items-center justify-between md:mt-8 lg:mt-0">
+				<h2 className="w-full title">Classes</h2>
 				{(view == "tabbed" || view == "tabbedStudent") && (
-					<Tab.List as="div" className="flex items-center">
+					<Tab.List as="div" className="w-full flex items-center">
 						<Tab as={Fragment}>
 							{({ selected }) => (
 								<div
@@ -150,7 +153,7 @@ const HomepageClassesUI: NextPage<{
 			<Tab.Panels>
 				<Tab.Panel
 					as="div"
-					className="mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 "
+					className="w-full mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 "
 				>
 					{view == "student" ? (
 						// Temporary fix for student classes not showing if a student isn't a teacher of any classes
@@ -161,7 +164,7 @@ const HomepageClassesUI: NextPage<{
 				</Tab.Panel>
 				<Tab.Panel
 					as="div"
-					className="mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 "
+					className="w-full mt-5 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 "
 				>
 					<Classes teaching={false} />
 				</Tab.Panel>

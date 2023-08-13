@@ -16,7 +16,7 @@ export function Toggle({
 					enabled ? "bg-blue-500 dark:bg-blue-800" : "bg-gray-200"
 				} relative inline-flex h-6 w-11 items-center rounded-full transition`}
 			>
-				<span className="sr-only">Enable this feature</span>
+				<span className="w-full sr-only">Enable this feature</span>
 
 				<span
 					className={`${

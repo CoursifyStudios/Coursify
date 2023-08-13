@@ -48,28 +48,28 @@ const Navbar: NextComponentType = () => {
 	return (
 		<>
 			<FeedbackPopup setOpen={setFeedbackOpen} open={feedbackOpen} />
-			<nav className="flex h-14 items-center justify-between bg-gray-200 px-8 compact:h-12 select-none">
-				<div className="scrollbar-fancy flex shrink items-center space-x-4 overflow-x-auto">
+			<nav className="w-full flex h-14 items-center justify-between bg-gray-200 px-8 compact:h-12 select-none">
+				<div className="w-full scrollbar-fancy flex shrink items-center space-x-4 overflow-x-auto">
 					{defaultTabs.map((v, i) => (
 						<TabUI key={i} canClose={false} tab={v} />
 					))}
-					<div className="graydient h-10 w-[0.07rem] "></div>
+					<div className="w-full graydient h-10 w-[0.07rem] "></div>
 					{tabs.map(
 						(v, i) => hydrated && <TabUI key={i} canClose={true} tab={v} />
 					)}
 				</div>
-				<div className="ml-4 flex flex-grow-0 items-center space-x-4">
-					{/* <ButtonIcon icon={<MagnifyingGlassIcon className=" h-5 w-5" />} />
+				<div className="w-full ml-4 flex flex-grow-0 items-center space-x-4">
+					{/* <ButtonIcon icon={<MagnifyingGlassIcon className="w-full  h-5 w-5" />} />
 					<ButtonIcon
-						icon={<CalendarDaysIcon className="h-5 w-5" />}
+						icon={<CalendarDaysIcon className="w-full h-5 w-5" />}
 						to="/calendar"
 					/>
 					<ButtonIcon
-						icon={<MegaphoneIcon className="h-5 w-5" />}
+						icon={<MegaphoneIcon className="w-full h-5 w-5" />}
 						to="/announcements"
 					/> */}
 					<Menu
-						className="relative !ml-4 flex w-10 flex-col items-center"
+						className="w-full relative !ml-4 flex w-10 flex-col items-center"
 						as="div"
 					>
 						<Menu.Button>
@@ -78,12 +78,12 @@ const Navbar: NextComponentType = () => {
 									src={userMetadata.picture}
 									alt="Profile picture"
 									referrerPolicy="no-referrer"
-									className="h-10 w-10 rounded-full object-cover shadow-md shadow-black/25 compact:h-9 compact:w-9"
+									className="w-full h-10 w-10 rounded-full object-cover shadow-md shadow-black/25 compact:h-9 compact:w-9"
 									height={40}
 									width={40}
 								/>
 							) : (
-								<div className="!ml-2 h-10 w-10 rounded-full bg-gray-300"></div>
+								<div className="w-full !ml-2 h-10 w-10 rounded-full bg-gray-300"></div>
 							)}
 						</Menu.Button>
 						<Transition
@@ -95,10 +95,10 @@ const Navbar: NextComponentType = () => {
 							leaveFrom=" opacity-100 scale-100"
 							leaveTo=" opacity-0 scale-95 translate-x-1 -translate-y-2"
 						>
-							<div className="absolute right-0 z-50 mt-14">
+							<div className="w-full absolute right-0 z-50 mt-14">
 								<Menu.Items
 									as="div"
-									className="flex w-48 flex-col  rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-xl"
+									className="w-full flex w-48 flex-col  rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-xl"
 								>
 									<Link
 										href={`/profile/${user?.id}`}
@@ -109,14 +109,16 @@ const Navbar: NextComponentType = () => {
 											)
 										}
 									>
-										<Menu.Item as="div" className="mx-2 flex flex-col">
-											<h3 className="line-clamp-2 font-medium">
+										<Menu.Item as="div" className="w-full mx-2 flex flex-col">
+											<h3 className="w-full line-clamp-2 font-medium">
 												{userMetadata.full_name}
 											</h3>
-											<p className="truncate text-xs">{userMetadata.email}</p>
+											<p className="w-full truncate text-xs">
+												{userMetadata.email}
+											</p>
 										</Menu.Item>
 									</Link>
-									<div className="graydient-90deg my-3 h-0.5 w-full"></div>
+									<div className="w-full graydient-90deg my-3 h-0.5 w-full"></div>
 									<Link
 										href={`/profile/${user?.id}`}
 										onClick={() =>
@@ -128,39 +130,40 @@ const Navbar: NextComponentType = () => {
 									>
 										<Menu.Item
 											as="div"
-											className="flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300"
+											className="w-full flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300"
 										>
-											Profile <UserIcon className="h-5 w-5" />
+											Profile <UserIcon className="w-full h-5 w-5" />
 										</Menu.Item>
 									</Link>
 
 									<Menu.Item
 										as="button"
-										className="flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300 mt-1 "
+										className="w-full flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300 mt-1 "
 										onClick={() => setFeedbackOpen(true)}
 									>
 										Feedback{" "}
-										<ChatBubbleBottomCenterTextIcon className="h-5 w-5" />
+										<ChatBubbleBottomCenterTextIcon className="w-full h-5 w-5" />
 									</Menu.Item>
 
 									<Link
 										href={`/settings`}
-										className="mt-1"
+										className="w-full mt-1"
 										onClick={() => newTab("/settings")}
 									>
 										<Menu.Item
 											as="div"
-											className="flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300"
+											className="w-full flex items-center justify-between rounded-lg px-2 py-1 font-medium transition hover:bg-gray-300"
 										>
-											Settings <Cog6ToothIcon className="h-5 w-5" />
+											Settings <Cog6ToothIcon className="w-full h-5 w-5" />
 										</Menu.Item>
 									</Link>
 									<Menu.Item
 										as="div"
-										className="mt-1 flex cursor-pointer items-center justify-between rounded-lg bg-red-500/25 px-2 py-1 font-medium transition hover:bg-red-400/50"
+										className="w-full mt-1 flex cursor-pointer items-center justify-between rounded-lg bg-red-500/25 px-2 py-1 font-medium transition hover:bg-red-400/50"
 										onClick={() => logOut()}
 									>
-										Logout <ArrowLeftOnRectangleIcon className="h-5 w-5" />
+										Logout{" "}
+										<ArrowLeftOnRectangleIcon className="w-full h-5 w-5" />
 									</Menu.Item>
 								</Menu.Items>
 							</div>

@@ -33,17 +33,19 @@ export const TempAnnouncement = ({
 	const { newTab } = useTabs();
 
 	return (
-		<div className="brightness-hover mt-2 w-full rounded-xl bg-gray-300 p-4 dark:bg-gray-200">
+		<div className="w-full brightness-hover mt-2 w-full rounded-xl bg-gray-300 p-4 dark:bg-gray-200">
 			<div
 				className={announcement.time ? "" : "flex items-center justify-between"}
 			>
-				<h2 className="text-xl font-semibold">{announcement.title}</h2>
-				{!announcement.time && <EllipsisVerticalIcon className="h-6 w-6" />}
+				<h2 className="w-full text-xl font-semibold">{announcement.title}</h2>
+				{!announcement.time && (
+					<EllipsisVerticalIcon className="w-full h-6 w-6" />
+				)}
 			</div>
-			<div className="flex items-center pt-1">
+			<div className="w-full flex items-center pt-1">
 				<Link
 					href={"/profile/" + announcement.author}
-					className="inline-flex shrink-0 items-center rounded-full px-1 py-0.5 hover:bg-gray-300"
+					className="w-full inline-flex shrink-0 items-center rounded-full px-1 py-0.5 hover:bg-gray-300"
 					onClick={() =>
 						newTab(
 							"/profile/" + announcement.author,
@@ -61,18 +63,18 @@ export const TempAnnouncement = ({
 								: user?.user_metadata.picture
 						}
 						alt="Profile picture"
-						className="h-5 w-5 rounded-full"
+						className="w-full h-5 w-5 rounded-full"
 						referrerPolicy="no-referrer"
 						width={20}
 						height={20}
 					/>
-					<p className="ml-1.5 mr-1 font-semibold text-neutral-700">
+					<p className="w-full ml-1.5 mr-1 font-semibold text-neutral-700">
 						{announcement.users
 							? getDataOutArray(announcement.users!).full_name
 							: user?.user_metadata.name}
 					</p>
 				</Link>
-				<p className="pl-1.5 text-gray-600">
+				<p className="w-full pl-1.5 text-gray-600">
 					{announcement.time
 						? howLongAgo(announcement.time)
 						: "Posted just now"}
@@ -81,7 +83,7 @@ export const TempAnnouncement = ({
 			<Editor
 				editable={false}
 				initialState={announcement.content}
-				className="mt-0.5"
+				className="w-full mt-0.5"
 			/>
 		</div>
 	);

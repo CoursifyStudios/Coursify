@@ -79,7 +79,7 @@ const AssignmentCalender: NextPage<{
 						<>
 							{(i == 0 || date.getDate() == 1) && (
 								<h2
-									className="sticky top-0 z-10 w-full bg-[#f2f2f2] text-lg font-medium dark:bg-[#070707]"
+									className="w-full sticky top-0 z-10 w-full bg-[#f2f2f2] text-lg font-medium dark:bg-[#070707]"
 									key={i + "title"}
 								>
 									{date.toLocaleString("default", { month: "long" })}
@@ -111,7 +111,7 @@ const AssignmentCalender: NextPage<{
 				  ))
 				: [...new Array(28)].map((_, i) => (
 						<div
-							className="h-10 w-10 animate-pulse rounded bg-gray-200"
+							className="w-full h-10 w-10 animate-pulse rounded bg-gray-200"
 							key={i}
 						></div>
 				  ))}

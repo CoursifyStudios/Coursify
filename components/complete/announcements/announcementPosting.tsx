@@ -122,9 +122,9 @@ export const AnnouncementPostingUI = ({
 	return (
 		<div>
 			{showPosting ? (
-				<div className="flex flex-col rounded-xl border-2 border-gray-300 bg-gray-50 p-4 dark:bg-zinc-950">
+				<div className="w-full flex flex-col rounded-xl border-2 border-gray-300 bg-gray-50 p-4 dark:bg-zinc-950">
 					{!editingInfo && !sharingInfo && (
-						<h3 className="mb-4 font-semibold">New Announcement</h3>
+						<h3 className="w-full mb-4 font-semibold">New Announcement</h3>
 					)}
 					<Formik
 						initialValues={{
@@ -132,15 +132,15 @@ export const AnnouncementPostingUI = ({
 						}}
 						onSubmit={() => {}}
 					>
-						<Form className="flex flex-col">
+						<Form className="w-full flex flex-col">
 							<label
 								htmlFor="title"
-								className="flex flex-col text-sm font-medium"
+								className="w-full flex flex-col text-sm font-medium"
 							>
 								<Field
 									name="title"
 									type="text"
-									className="h-10 py-1.5 pl-3 text-lg font-normal placeholder:text-gray-600 focus:ring-1 dark:placeholder:text-neutral-500"
+									className="w-full h-10 py-1.5 pl-3 text-lg font-normal placeholder:text-gray-600 focus:ring-1 dark:placeholder:text-neutral-500"
 									autoFocus
 									placeholder="Enter a title..."
 								></Field>
@@ -151,7 +151,7 @@ export const AnnouncementPostingUI = ({
 					</Formik>
 					<Editor
 						editable={true}
-						className="mt-4 rounded-md border border-gray-300 bg-backdrop/50 p-2 "
+						className="w-full mt-4 rounded-md border border-gray-300 bg-backdrop/50 p-2 "
 						backdrop={false}
 						updateState={setEditorState}
 						initialState={editingInfo && editingInfo.content}
@@ -170,7 +170,7 @@ export const AnnouncementPostingUI = ({
 					)}
 
 					{/* Displays which communities are being posted or shared to */}
-					<div className="my-3 flex flex-wrap gap-4">
+					<div className="w-full my-3 flex flex-wrap gap-4">
 						{chosenCommunities &&
 							chosenCommunities.length > 0 &&
 							chosenCommunities.map(
@@ -185,10 +185,10 @@ export const AnnouncementPostingUI = ({
 					</div>
 
 					<div className={"flex justify-between space-x-4"}>
-						<div className="flex items-center space-x-4">
+						<div className="w-full flex items-center space-x-4">
 							{!editingInfo && (
 								<Button
-									className="mr-auto"
+									className="w-full mr-auto"
 									onClick={async () => {
 										setShowCrossPosting(true);
 									}}
@@ -196,13 +196,13 @@ export const AnnouncementPostingUI = ({
 									{sharingInfo ? "Share to..." : "Post to other groups..."}
 								</Button>
 							)}
-							<p className="text-red-500 mr-auto">{errorText}</p>
+							<p className="w-full text-red-500 mr-auto">{errorText}</p>
 						</div>
 
-						<div className="flex space-x-4">
+						<div className="w-full flex space-x-4">
 							{/* Cancel Button */}
 							<Button
-								className="brightness-hover transition hover:bg-red-300 dark:hover:bg-red-900"
+								className="w-full brightness-hover transition hover:bg-red-300 dark:hover:bg-red-900"
 								onClick={() => {
 									!sharingInfo &&
 										setChosenCommunities([
@@ -225,7 +225,7 @@ export const AnnouncementPostingUI = ({
 							</Button>
 							{/* Save (editing) / Posting button */}
 							<Button
-								className="text-white"
+								className="w-full text-white"
 								color="bg-blue-500"
 								onClick={async () => {
 									if (user) {
@@ -353,7 +353,7 @@ export const AnnouncementPostingUI = ({
 							communityid={communityid}
 						/>
 					) : (
-						<p className="text-red-500">
+						<p className="w-full text-red-500">
 							Error: Failed to fetch communities from server
 						</p>
 					)}
@@ -372,15 +372,15 @@ export const AnnouncementPostingUI = ({
 	function TempUI() {
 		return (
 			<div
-				className="cursor-pointer rounded-xl border-2 border-dashed border-gray-300 p-4 transition hover:border-solid hover:bg-gray-50 dark:hover:bg-zinc-950"
+				className="w-full cursor-pointer rounded-xl border-2 border-dashed border-gray-300 p-4 transition hover:border-solid hover:bg-gray-50 dark:hover:bg-zinc-950"
 				onClick={() => setShowPosting(true)}
 			>
-				<h3 className="mb-4 font-semibold">New Announcement</h3>
+				<h3 className="w-full mb-4 font-semibold">New Announcement</h3>
 
-				<div className="h-10 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium text-gray-700">
+				<div className="w-full h-10 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium text-gray-700">
 					Enter a title...
 				</div>
-				<div className="mt-4 h-10 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium text-gray-700">
+				<div className="w-full mt-4 h-10 rounded border-none bg-gray-200 py-1.5 pl-3 text-lg font-medium text-gray-700">
 					Description...
 				</div>
 			</div>

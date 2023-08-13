@@ -35,10 +35,10 @@ const Link = ({
 
 	return (
 		<>
-			<label htmlFor="maxUrls" className="flex grow flex-col">
-				<span className="flex text-sm font-medium">
-					Maximum Links Allowed<span className="text-red-600">*</span>
-					<Info className="ml-2">
+			<label htmlFor="maxUrls" className="w-full flex grow flex-col">
+				<span className="w-full flex text-sm font-medium">
+					Maximum Links Allowed<span className="w-full text-red-600">*</span>
+					<Info className="w-full ml-2">
 						Set a limit on the number of links a student is allowed to submit
 						for this assigment
 					</Info>
@@ -46,7 +46,7 @@ const Link = ({
 				<input
 					type="number"
 					defaultValue={settings.maxUrls}
-					className="w-64"
+					className="w-full w-64"
 					name="maxUrls"
 					onChange={(e) =>
 						setSettings((settings) => {
@@ -55,10 +55,10 @@ const Link = ({
 					}
 				/>
 			</label>
-			<label htmlFor="maxUrls" className="flex grow flex-col">
-				<div className="flex text-sm font-medium">
+			<label htmlFor="maxUrls" className="w-full flex grow flex-col">
+				<div className="w-full flex text-sm font-medium">
 					Domain Whitelist
-					<Info className="ml-2">
+					<Info className="w-full ml-2">
 						Specify sites (using the first part of a URL, like like google.com
 						or https://www.loc.gov) that students can submit. By default,
 						students can submit links to any website.
@@ -80,8 +80,8 @@ const Link = ({
 							)
 						}
 						addOnPaste={true}
-						className="inputcss form-input cursor-text [&>span]:flex [&>span]:flex-wrap [&>span]:gap-3"
-						focusedClassName="ring-1 ring-blue-600"
+						className="w-full inputcss form-input cursor-text [&>span]:flex [&>span]:flex-wrap [&>span]:gap-3"
+						focusedclassName="w-full ring-1 ring-blue-600"
 						inputProps={{
 							className: "noinputcss react-tagsinput-input",
 							placeholder:
@@ -104,10 +104,10 @@ const Link = ({
 									{getTagDisplayValue(tag)}
 									{!disabled && (
 										<div
-											className="ml-1 cursor-pointer rounded-full p-0.5 hover:bg-gray-300"
+											className="w-full ml-1 cursor-pointer rounded-full p-0.5 hover:bg-gray-300"
 											onClick={(e) => onRemove(key)}
 										>
-											<XMarkIcon className="h-5 w-5" />
+											<XMarkIcon className="w-full h-5 w-5" />
 										</div>
 									)}
 								</span>
@@ -115,14 +115,14 @@ const Link = ({
 						}}
 					/>
 				</div>
-				<p className="mt-0.5 text-xs text-gray-600 dark:text-gray-400">
+				<p className="w-full mt-0.5 text-xs text-gray-600 dark:text-gray-400">
 					{settings.urls?.length == 0
 						? "Students can add links from anywhere to this assignment"
 						: "Students can only add links based on the sites above"}
 				</p>
 			</label>
 			<details>
-				<summary className="cursor-pointer text-sm font-medium">
+				<summary className="w-full cursor-pointer text-sm font-medium">
 					Advanced Settings
 				</summary>
 				<ToggleSection

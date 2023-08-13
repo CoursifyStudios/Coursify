@@ -23,7 +23,7 @@ const AssignmentSettings: NextPage<{
 	if (stage != 3) return null;
 	return (
 		<>
-			<h2 className="mt-6 text-xl font-bold">
+			<h2 className="w-full mt-6 text-xl font-bold">
 				{
 					submissionType.find(
 						(submission) => submission.type == assignmentData?.type
@@ -31,7 +31,7 @@ const AssignmentSettings: NextPage<{
 				}{" "}
 				- Submission Settings
 			</h2>
-			<div className="mt-10 flex flex-col space-y-4 @container">
+			<div className="w-full mt-10 flex flex-col space-y-4 @container">
 				{assignmentData && (
 					<GetAssignmentSettings
 						assignmentType={assignmentData.type}
@@ -39,12 +39,12 @@ const AssignmentSettings: NextPage<{
 						settings={settings}
 					/>
 				)}
-				<div className="font-medium text-red-500">
+				<div className="w-full font-medium text-red-500">
 					{error && `Error: ${error}`}
 				</div>
 			</div>
-			<div className="mt-10 flex flex-col space-y-3 ">
-				<div className="ml-auto flex space-x-4">
+			<div className="w-full mt-10 flex flex-col space-y-3 ">
+				<div className="w-full ml-auto flex space-x-4">
 					<span
 						onClick={() => {
 							setAssignmentData({ settings } as NewAssignmentData);
@@ -66,7 +66,7 @@ const AssignmentSettings: NextPage<{
 							}
 						}}
 					>
-						<Button color="bg-blue-500" className="text-white">
+						<Button color="bg-blue-500" className="w-full text-white">
 							Next
 						</Button>
 					</span>

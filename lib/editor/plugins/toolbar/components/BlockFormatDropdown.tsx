@@ -173,11 +173,11 @@ const BlockFormatDropdown = () => {
 			value={selectedBlock}
 			onChange={setBlock}
 			as="div"
-			className="z-50 flex flex-col"
+			className="w-full z-50 flex flex-col"
 		>
-			<Listbox.Button className=" flex items-center rounded px-2 py-1 text-sm font-medium text-gray-600 transition hover:bg-gray-200 hover:text-gray-800 dark:text-neutral-500">
+			<Listbox.Button className="w-full  flex items-center rounded px-2 py-1 text-sm font-medium text-gray-600 transition hover:bg-gray-200 hover:text-gray-800 dark:text-neutral-500">
 				{selectedBlock.name}
-				<ChevronUpDownIcon className="ml-1 h-5 w-5" />
+				<ChevronUpDownIcon className="w-full ml-1 h-5 w-5" />
 			</Listbox.Button>
 			<Transition
 				as={Fragment}
@@ -188,12 +188,12 @@ const BlockFormatDropdown = () => {
 				leaveFrom=" opacity-100 scale-100"
 				leaveTo=" opacity-0 scale-95 -translate-y-2"
 			>
-				<Listbox.Options className="absolute mt-10 space-y-2 rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-3xl">
+				<Listbox.Options className="w-full absolute mt-10 space-y-2 rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-3xl">
 					{blocks.map((block, i) => (
 						<Listbox.Option
 							key={i}
 							value={block}
-							className="cursor-pointer rounded px-2 py-1 text-sm font-medium hover:bg-gray-300/75 disabled:text-gray-500 disabled:hover:bg-transparent"
+							className="w-full cursor-pointer rounded px-2 py-1 text-sm font-medium hover:bg-gray-300/75 disabled:text-gray-500 disabled:hover:bg-transparent"
 						>
 							{block.name}
 						</Listbox.Option>

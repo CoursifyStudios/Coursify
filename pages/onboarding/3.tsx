@@ -21,23 +21,23 @@ const Onboarding = () => {
 
 	return (
 		<>
-			<h1 className="text-3xl md:text-4xl mb-10 font-bold truncate w-[calc(100vw-2rem)] text-center">
+			<h1 className="w-full text-3xl md:text-4xl mb-10 font-bold truncate w-[calc(100vw-2rem)] text-center">
 				Welcome{user && `, ${user.user_metadata.full_name.split(" ")[0]}`}
 			</h1>
-			<div className="px-4 my-auto max-w-2xl w-full">
+			<div className="w-full px-4 my-auto max-w-2xl w-full">
 				<div
 					className={`bg-backdrop-200/25 items-center flex flex-col dark:bg-backdrop-200/10 backdrop-blur-3xl border border-white/10 p-8 rounded-xl shadow-xl transition-all duration-300`}
 				>
-					<div className="text-2xl mb-6 text-center font-semibold">
+					<div className="w-full text-2xl mb-6 text-center font-semibold">
 						Coursify can{"'"}t find your account
 					</div>
 					<Image
 						src={notFound}
 						alt="Not Found"
-						className="h-56 w-56 translate-x-4"
+						className="w-full h-56 w-56 translate-x-4"
 						draggable={false}
 					/>
-					<p className="text-center text-sm mx-8 mt-6">
+					<p className="w-full text-center text-sm mx-8 mt-6">
 						Students: It{"'"}s likely that your administrator hasn{"'"}t added
 						your account to Coursify yet. Contact us at{" "}
 						<Link href="mailto:support@coursify.freshdesk.com" target="_blank">
@@ -46,12 +46,12 @@ const Onboarding = () => {
 						, or contact your school admin.
 					</p>
 					<p
-						className="text-center  font-semibold text-sm mt-6 hover:underline select-none cursor-pointer"
+						className="w-full text-center  font-semibold text-sm mt-6 hover:underline select-none cursor-pointer"
 						onClick={() => setContactOpen(true)}
 					>
 						I want to create a new school
 						<Popup closeMenu={() => setContactOpen(false)} open={contactOpen}>
-							<h3 className="title-sm mb-4">Contact</h3>
+							<h3 className="w-full title-sm mb-4">Contact</h3>
 							<p>
 								Coursify LMS is currently in a closed beta. If you{"'"}re an
 								administrator interested in using Coursify, please reach out to
@@ -63,7 +63,7 @@ const Onboarding = () => {
 									support@coursify.freshdesk.com
 								</Link>
 								. If you would like demo the platform,{" "}
-								<Link href={"/demo"} className="text-blue-500">
+								<Link href={"/demo"} className="w-full text-blue-500">
 									click here
 								</Link>
 								.
@@ -71,10 +71,10 @@ const Onboarding = () => {
 						</Popup>
 					</p>
 				</div>
-				{/* <div className="flex flex-col items-center ">
-					<Button className="onboardingButton mt-8">I{"'"}m a parent</Button>
+				{/* <div className="w-full flex flex-col items-center ">
+					<Button className="w-full onboardingButton mt-8">I{"'"}m a parent</Button>
 					<Popup closeMenu={() => setContactOpen(false)} open={contactOpen}>
-						<h3 className="title-sm mb-4">Contact</h3>
+						<h3 className="w-full title-sm mb-4">Contact</h3>
 						<p>
 							Please send an email to 24lseufert@shcp.edu and include
 							25bholland@shcp.edu in the CC. Proceed with the setup process for

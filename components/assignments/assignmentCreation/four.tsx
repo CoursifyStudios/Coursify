@@ -123,11 +123,11 @@ const AssignmentCreation: NextPage<{
 
 	return (
 		<>
-			<section className="mt-6 flex flex-col">
+			<section className="w-full mt-6 flex flex-col">
 				{assignmentData && (
 					<>
-						<h2 className="text-xl font-bold">{assignmentData.name}</h2>
-						<p className="text-xs text-gray-700">
+						<h2 className="w-full text-xl font-bold">{assignmentData.name}</h2>
+						<p className="w-full text-xs text-gray-700">
 							{
 								submissionType.find(
 									(submission) => submission.type == assignmentData?.type
@@ -137,15 +137,15 @@ const AssignmentCreation: NextPage<{
 							{assignmentData.maxGrade &&
 								`- ${assignmentData.maxGrade} Points Maximum`}
 						</p>
-						<p className="mt-2 text-gray-700">
-							<span className="font-medium text-gray-800">
+						<p className="w-full mt-2 text-gray-700">
+							<span className="w-full font-medium text-gray-800">
 								Short description:{" "}
 							</span>
 							{assignmentData.description}
 						</p>
 						{assignmentData.submissionInstructions && (
-							<p className="mt-3 text-gray-700">
-								<span className="font-medium text-gray-800">
+							<p className="w-full mt-3 text-gray-700">
+								<span className="w-full font-medium text-gray-800">
 									Submission Instructions:{" "}
 								</span>
 								{assignmentData.submissionInstructions}
@@ -158,45 +158,49 @@ const AssignmentCreation: NextPage<{
 					/* @ts-expect-error lexical-bad-typings */
 					assignmentData?.content?.root.children[0].children.length > 0 && (
 						<>
-							<span className="mt-3 font-medium text-gray-800">
+							<span className="w-full mt-3 font-medium text-gray-800">
 								Full Length Description:{" "}
 							</span>
 
 							<Editor
 								editable={false}
 								initialState={assignmentData.content}
-								className="scrollbar-fancy max-h-[30vh] overflow-y-auto"
+								className="w-full scrollbar-fancy max-h-[30vh] overflow-y-auto"
 							/>
 						</>
 					)}
 			</section>
 
-			<hr className="my-4" />
+			<hr className="w-full my-4" />
 
-			<section className="grid grid-cols-2 gap-4">
-				<div className="flex flex-col">
-					<div className="flex justify-between">
-						<p className="mb-2 font-medium text-gray-800">Set a Publish Date</p>
+			<section className="w-full grid grid-cols-2 gap-4">
+				<div className="w-full flex flex-col">
+					<div className="w-full flex justify-between">
+						<p className="w-full mb-2 font-medium text-gray-800">
+							Set a Publish Date
+						</p>
 						<Toggle enabled={publish} setEnabled={setPublished} />
 					</div>
 					{publish ? (
 						<WhenDue type="publish" />
 					) : (
-						<div className="text-sm text-gray-700">
+						<div className="w-full text-sm text-gray-700">
 							Auto publishing is disabled. This assignment will be available to
 							your students immediately.
 						</div>
 					)}
 				</div>
-				<div className="flex flex-col">
-					<div className="flex justify-between">
-						<p className="mb-2 font-medium text-gray-800 ">Set a Due Date</p>
+				<div className="w-full flex flex-col">
+					<div className="w-full flex justify-between">
+						<p className="w-full mb-2 font-medium text-gray-800 ">
+							Set a Due Date
+						</p>
 						<Toggle enabled={due} setEnabled={setDue} />
 					</div>
 					{due ? (
 						<WhenDue type="due" />
 					) : (
-						<div className="text-sm text-gray-700">
+						<div className="w-full text-sm text-gray-700">
 							This assignment does not have a due date. It will be available to
 							students, and they{"'"}ll be able to submit assignments like
 							normal. Coursify recommends adding a due date so we can better
@@ -207,15 +211,15 @@ const AssignmentCreation: NextPage<{
 			</section>
 
 			{error && (
-				<section className="mt-2 font-semibold">
-					Error: <span className="text-red-700">{error}</span>
+				<section className="w-full mt-2 font-semibold">
+					Error: <span className="w-full text-red-700">{error}</span>
 				</section>
 			)}
 
-			<section className="mt-6 flex items-center justify-between space-x-4">
-				<div className="flex items-center font-medium">
-					<span className="mr-2 text-gray-800">Hidden</span>
-					<Info className=" mr-4">
+			<section className="w-full mt-6 flex items-center justify-between space-x-4">
+				<div className="w-full flex items-center font-medium">
+					<span className="w-full mr-2 text-gray-800">Hidden</span>
+					<Info className="w-full  mr-4">
 						Hide this assignment from students. We recommend setting a publish
 						date rather than enabling this option, since you can automagically
 						make it available to students at a time of your choice.
@@ -229,7 +233,7 @@ const AssignmentCreation: NextPage<{
 						/>
 					)}
 				</div>
-				<div className="flex space-x-4">
+				<div className="w-full flex space-x-4">
 					<span onClick={() => setStage((stage) => stage - 1)}>
 						<Button>Back</Button>
 					</span>
@@ -237,12 +241,12 @@ const AssignmentCreation: NextPage<{
 					<span onClick={createAssignment}>
 						<Button
 							color="bg-blue-500"
-							className="text-white "
+							className="w-full text-white "
 							disabled={!canCreate || submitting || submitting == false}
 						>
 							{submitting ? (
 								<>
-									Creating <LoadingSmall className="ml-2" />
+									Creating <LoadingSmall className="w-full ml-2" />
 								</>
 							) : submitting == false ? (
 								"Created!"
@@ -282,13 +286,13 @@ const AssignmentCreation: NextPage<{
 					onChange={(value) => setType(value, type == "due")}
 					selectedValue={type == "due" ? selectedDueType : selectedPublishType}
 					values={types}
-					className="mr-auto"
+					className="w-full mr-auto"
 				/>
 				{type == "due" &&
 					(selectedDueType.type == DueType.DATE ? (
 						<input
 							type="datetime-local"
-							className="mt-4 rounded-md border-gray-300 bg-white/50 focus:ring-1 dark:bg-backdrop"
+							className="w-full mt-4 rounded-md border-gray-300 bg-white/50 focus:ring-1 dark:bg-backdrop"
 							onChange={onDateChange}
 							value={
 								assignmentData?.dueDate != undefined
@@ -304,7 +308,7 @@ const AssignmentCreation: NextPage<{
 					(selectedPublishType.type == DueType.DATE ? (
 						<input
 							type="datetime-local"
-							className="mt-4 rounded-md border-gray-300 bg-white/50 focus:ring-1 dark:bg-backdrop"
+							className="w-full mt-4 rounded-md border-gray-300 bg-white/50 focus:ring-1 dark:bg-backdrop"
 							onChange={onDateChangePublish}
 							value={
 								assignmentData?.publishDate != undefined

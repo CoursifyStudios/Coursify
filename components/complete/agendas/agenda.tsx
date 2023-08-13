@@ -103,9 +103,9 @@ export const Agenda = ({
 						}}
 					></CreateAgenda>
 
-					<div className="bg-gray-200 p-4 rounded-lg">
-						<div className="flex justify-between">
-							<h2 className="font-bold text-lg">
+					<div className="w-full bg-gray-200 p-4 rounded-lg">
+						<div className="w-full flex justify-between">
+							<h2 className="w-full font-bold text-lg">
 								{new Date(agenda.date!).toLocaleDateString("en-US", {
 									weekday: "long",
 									month: "long",
@@ -113,22 +113,22 @@ export const Agenda = ({
 								})}
 							</h2>
 							{isTeacher && (
-								<div className="gap-2 grid grid-cols-2">
+								<div className="w-full gap-2 grid grid-cols-2">
 									<button
-										className="hover:text-green-500"
+										className="w-full hover:text-green-500"
 										onClick={() => {
 											setEditing(true);
 										}}
 									>
-										<PencilIcon className="w-6 h-6" />
+										<PencilIcon className="w-full w-6 h-6" />
 									</button>
 									<button
-										className="hover:text-red-600"
+										className="w-full hover:text-red-600"
 										onClick={() => {
 											setDeleting(true);
 										}}
 									>
-										<TrashIcon className="w-6 h-6" />
+										<TrashIcon className="w-full w-6 h-6" />
 									</button>
 								</div>
 							)}
@@ -136,9 +136,9 @@ export const Agenda = ({
 						<Editor
 							editable={false}
 							initialState={agenda.description}
-							className="my-0.5"
+							className="w-full my-0.5"
 						/>
-						<div className="grid grid-cols-1 gap-2">
+						<div className="w-full grid grid-cols-1 gap-2">
 							{true &&
 								allAssignments
 									.filter(
@@ -150,7 +150,7 @@ export const Agenda = ({
 										<Link
 											key={assignment.id}
 											href={"/assignments/" + assignment.id}
-											className=" grid rounded-md"
+											className="w-full  grid rounded-md"
 										>
 											<CompactAssignmentUI
 												assignment={assignment}
@@ -191,11 +191,11 @@ export const CompactAssignmentUI = ({
 			key={assignment.id}
 			className={`flex flex-grow justify-between p-2 bg-gray-300 rounded-md ${className}`}
 		>
-			<p className="font-semibold">{assignment.name}</p>
-			<div className="flex gap-2">
+			<p className="w-full font-semibold">{assignment.name}</p>
+			<div className="w-full flex gap-2">
 				{date ? (
-					<div className="grid grid-cols-2">
-						<div className=" font-medium">
+					<div className="w-full grid grid-cols-2">
+						<div className="w-full  font-medium">
 							{date.getMonth() + 1}/{date.getDate()}
 						</div>
 						<ColoredPill color={"gray"}>
@@ -203,18 +203,18 @@ export const CompactAssignmentUI = ({
 						</ColoredPill>
 					</div>
 				) : (
-					<span className="text-sm italic">No due date</span>
+					<span className="w-full text-sm italic">No due date</span>
 				)}
 				{picker && hovered ? (
 					selected ? (
-						<MinusCircleIcon className="w-6 h-6 stroke-red-500" />
+						<MinusCircleIcon className="w-full w-6 h-6 stroke-red-500" />
 					) : (
-						<PlusCircleIcon className="w-6 h-6 stroke-green-500" />
+						<PlusCircleIcon className="w-full w-6 h-6 stroke-green-500" />
 					)
 				) : selected ? (
-					<CheckCircleIcon className="w-6 h-6" />
+					<CheckCircleIcon className="w-full w-6 h-6" />
 				) : (
-					<div className=""></div>
+					<div className="w-full "></div>
 				)}
 			</div>
 		</div>

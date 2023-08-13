@@ -24,7 +24,7 @@ export default function AssignmentDetails({
 
 	return (
 		<>
-			<h2 className="mt-6 text-xl font-bold">
+			<h2 className="w-full mt-6 text-xl font-bold">
 				Create Assignment -{" "}
 				{
 					submissionType.find(
@@ -53,78 +53,84 @@ export default function AssignmentDetails({
 				}}
 			>
 				{({ submitForm, values, errors }) => (
-					<Form className="mt-10 flex flex-col space-y-3 ">
-						<div className="flex w-full gap-3">
-							<label htmlFor="name" className="flex grow flex-col">
-								<span className="text-sm font-medium">
-									Assignment Name <span className="text-red-600">*</span>
+					<Form className="w-full mt-10 flex flex-col space-y-3 ">
+						<div className="w-full flex w-full gap-3">
+							<label htmlFor="name" className="w-full flex grow flex-col">
+								<span className="w-full text-sm font-medium">
+									Assignment Name <span className="w-full text-red-600">*</span>
 								</span>
 								<Field
-									className="mt-1"
+									className="w-full mt-1"
 									type="text"
 									name="name"
 									autoFocus
 									autocomplete="off"
 								/>
-								<div className="text-sm text-red-600">
+								<div className="w-full text-sm text-red-600">
 									<ErrorMessage name="name" />
 								</div>
 							</label>
-							<label htmlFor="maxGrade" className="flex w-[7.5rem] flex-col">
-								<div className="flex w-full items-center justify-between">
-									<span className="text-sm font-medium">Max Points</span>
+							<label
+								htmlFor="maxGrade"
+								className="w-full flex w-[7.5rem] flex-col"
+							>
+								<div className="w-full flex w-full items-center justify-between">
+									<span className="w-full text-sm font-medium">Max Points</span>
 									<Info size="large">
 										The max amount of points that a student can earn on the
 										assignment. Going over the set value will be extra credit.
 									</Info>
 								</div>
 
-								<Field className="mt-1" type="number" name="maxGrade" />
-								<div className="text-sm text-red-600">
+								<Field className="w-full mt-1" type="number" name="maxGrade" />
+								<div className="w-full text-sm text-red-600">
 									<ErrorMessage name="maxGrade" />
 								</div>
 							</label>
 						</div>
 
-						<label htmlFor="description" className="flex flex-col">
-							<span className="text-sm font-medium">
-								Short Description <span className="text-red-600">*</span>
+						<label htmlFor="description" className="w-full flex flex-col">
+							<span className="w-full text-sm font-medium">
+								Short Description <span className="w-full text-red-600">*</span>
 							</span>
 							<Field
-								className="mt-1"
+								className="w-full mt-1"
 								type="text"
 								name="description"
 								autocomplete="off"
 							/>
-							<div className="text-sm text-red-600">
+							<div className="w-full text-sm text-red-600">
 								<ErrorMessage name="description" />
 							</div>
 						</label>
-						<label htmlFor="submissionInstructions" className="flex flex-col">
-							<span className="text-sm font-medium">
+						<label
+							htmlFor="submissionInstructions"
+							className="w-full flex flex-col"
+						>
+							<span className="w-full text-sm font-medium">
 								Submission Instructions
 							</span>
 							<Field
-								className="mt-1"
+								className="w-full mt-1"
 								type="text"
 								name="submissionInstructions"
 								autocomplete="off"
 							/>
-							<div className="text-sm text-red-600">
+							<div className="w-full text-sm text-red-600">
 								<ErrorMessage name="submissionInstructions" />
 							</div>
 						</label>
-						<span className="translate-y-2 text-sm font-medium">
+						<span className="w-full translate-y-2 text-sm font-medium">
 							Full Length Description
 						</span>
 						<Editor
 							editable
 							updateState={setEditorState}
 							initialState={assignmentData?.content}
-							className="scrollbar-fancy mb-6 max-h-[30vh] min-h-[6rem] overflow-y-auto overflow-x-hidden rounded-md border border-gray-300 bg-backdrop/50 pb-2 focus:ring-1"
+							className="w-full scrollbar-fancy mb-6 max-h-[30vh] min-h-[6rem] overflow-y-auto overflow-x-hidden rounded-md border border-gray-300 bg-backdrop/50 pb-2 focus:ring-1"
 							focus={false}
 						/>
-						<div className="ml-auto flex space-x-4">
+						<div className="w-full ml-auto flex space-x-4">
 							<span onClick={() => setStage((stage) => stage - 1)}>
 								<Button>Back</Button>
 							</span>
@@ -137,7 +143,7 @@ export default function AssignmentDetails({
 							>
 								<Button
 									color="bg-blue-500"
-									className="text-white "
+									className="w-full text-white "
 									disabled={
 										!(
 											Object.keys(errors).length == 0 &&

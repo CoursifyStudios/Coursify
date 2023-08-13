@@ -163,21 +163,23 @@ const Onboarding = () => {
 		}
 		return (
 			<>
-				<h1 className="text-3xl md:text-4xl mb-10 font-bold truncate w-[calc(100vw-2rem)] text-center">
+				<h1 className="w-full text-3xl md:text-4xl mb-10 font-bold truncate w-[calc(100vw-2rem)] text-center">
 					Welcome, {user.user_metadata.full_name.split(" ")[0]}
 				</h1>
-				<div className="px-4 my-auto max-w-2xl w-full">
-					<div className="bg-backdrop-200/25 overflow-hidden dark:bg-backdrop-200/10 backdrop-blur-3xl border border-white/10 opacity-0 rounded-xl shadow-xl transition-all duration-300 "></div>
-					<div className="flex flex-col items-center opacity-0 transition duration-300">
+				<div className="w-full px-4 my-auto max-w-2xl w-full">
+					<div className="w-full bg-backdrop-200/25 overflow-hidden dark:bg-backdrop-200/10 backdrop-blur-3xl border border-white/10 opacity-0 rounded-xl shadow-xl transition-all duration-300 "></div>
+					<div className="w-full flex flex-col items-center opacity-0 transition duration-300">
 						<Button
-							className="onboardingButton mt-8"
+							className="w-full onboardingButton mt-8"
 							onClick={() => setStage(OnboardingState.SecondStage)}
 						>
 							Looks Good
 						</Button>
-						<p className="mt-1 text-sm  text-gray-600 dark:text-gray-400">or</p>
+						<p className="w-full mt-1 text-sm  text-gray-600 dark:text-gray-400">
+							or
+						</p>
 						<button
-							className=" text-sm text-gray-700 font-semibold hover:underline cursor-pointer select-none"
+							className="w-full  text-sm text-gray-700 font-semibold hover:underline cursor-pointer select-none"
 							onClick={() => setContactOpen(true)}
 						>
 							Contact Admins
@@ -194,10 +196,10 @@ const Onboarding = () => {
 
 	return (
 		<>
-			<h1 className="text-3xl md:text-4xl mb-10 font-bold truncate w-[calc(100vw-2rem)] text-center">
+			<h1 className="w-full text-3xl md:text-4xl mb-10 font-bold truncate w-[calc(100vw-2rem)] text-center">
 				Welcome, {userData.full_name.split(" ")[0]}
 			</h1>
-			<div className="px-4 my-auto max-w-2xl w-full">
+			<div className="w-full px-4 my-auto max-w-2xl w-full">
 				<>
 					<div
 						className={`bg-backdrop-200/25 overflow-hidden dark:bg-backdrop-200/10 backdrop-blur-3xl border border-white/10 p-8 opacity-100 rounded-xl shadow-xl transition-all duration-300 ${
@@ -245,20 +247,20 @@ const Onboarding = () => {
 							bsLoading={bsLoading}
 						/>
 					</div>
-					<div className="flex flex-col items-center opacity-100 transition duration-300">
+					<div className="w-full flex flex-col items-center opacity-100 transition duration-300">
 						{id == OnboardingState.FirstStage && (
 							<>
 								<Button
-									className="onboardingButton mt-8"
+									className="w-full onboardingButton mt-8"
 									onClick={() => setStage(OnboardingState.SecondStage)}
 								>
 									Looks Good
 								</Button>
-								<p className="mt-1 text-sm  text-gray-600 dark:text-gray-400">
+								<p className="w-full mt-1 text-sm  text-gray-600 dark:text-gray-400">
 									or
 								</p>
 								<button
-									className=" text-sm text-gray-700 font-semibold hover:underline cursor-pointer select-none"
+									className="w-full  text-sm text-gray-700 font-semibold hover:underline cursor-pointer select-none"
 									onClick={() => setContactOpen(true)}
 								>
 									Contact Admins
@@ -267,27 +269,27 @@ const Onboarding = () => {
 						)}
 						{id == OnboardingState.SecondStage && (
 							<>
-								<div className="flex gap-6">
+								<div className="w-full flex gap-6">
 									<Button
-										className="secondaryOnboardingButton mt-8"
+										className="w-full secondaryOnboardingButton mt-8"
 										onClick={() => setStage(OnboardingState.FirstStage)}
 									>
 										Back
 									</Button>
 									<Button
-										className="onboardingButton mt-8"
+										className="w-full onboardingButton mt-8"
 										onClick={saveNewData}
 									>
-										Next {loading && <LoadingSmall className="ml-2" />}
+										Next {loading && <LoadingSmall className="w-full ml-2" />}
 									</Button>
 								</div>
 								{/* TThis is a really stupid hack to prevent wierd cls transitions */}
-								<div className="invisible">
-									<p className="mt-1 text-sm  text-gray-600 dark:text-gray-400">
+								<div className="w-full invisible">
+									<p className="w-full mt-1 text-sm  text-gray-600 dark:text-gray-400">
 										or
 									</p>
 									<button
-										className=" text-sm text-gray-700 font-semibold hover:underline cursor-pointer select-none"
+										className="w-full  text-sm text-gray-700 font-semibold hover:underline cursor-pointer select-none"
 										onClick={() => setContactOpen(true)}
 									>
 										Contact Admins
@@ -297,23 +299,26 @@ const Onboarding = () => {
 						)}
 						{id == OnboardingState.ThirdStage && (
 							<>
-								<div className="flex gap-6">
+								<div className="w-full flex gap-6">
 									<Button
-										className="secondaryOnboardingButton mt-8"
+										className="w-full secondaryOnboardingButton mt-8"
 										onClick={() => setStage(OnboardingState.SecondStage)}
 									>
 										Back
 									</Button>
-									<Button className="onboardingButton mt-8" onClick={finish}>
+									<Button
+										className="w-full onboardingButton mt-8"
+										onClick={finish}
+									>
 										Finish
 									</Button>
 								</div>
-								<div className="invisible">
-									<p className="mt-1 text-sm  text-gray-600 dark:text-gray-400">
+								<div className="w-full invisible">
+									<p className="w-full mt-1 text-sm  text-gray-600 dark:text-gray-400">
 										or
 									</p>
 									<button
-										className=" text-sm text-gray-700 font-semibold hover:underline cursor-pointer select-none"
+										className="w-full  text-sm text-gray-700 font-semibold hover:underline cursor-pointer select-none"
 										onClick={() => setContactOpen(true)}
 									>
 										Contact Admins
@@ -322,7 +327,7 @@ const Onboarding = () => {
 							</>
 						)}
 						<Popup closeMenu={() => setContactOpen(false)} open={contactOpen}>
-							<h3 className="title-sm mb-4">Contact</h3>
+							<h3 className="w-full title-sm mb-4">Contact</h3>
 							<p>
 								Please send us an email at{" "}
 								<Link
@@ -337,7 +342,7 @@ const Onboarding = () => {
 							</p>
 						</Popup>
 						{error && (
-							<div className="text-red-500 text-sm">Error: {error}</div>
+							<div className="w-full text-red-500 text-sm">Error: {error}</div>
 						)}
 					</div>
 				</>

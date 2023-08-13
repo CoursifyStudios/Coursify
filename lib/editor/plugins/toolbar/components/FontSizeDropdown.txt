@@ -36,12 +36,12 @@ const FontSizeDropdown = ({
 	return (
 		<>
 			<Select
-				className="toolbar-item font-size"
+				className="w-full toolbar-item font-size"
 				onChange={onFontSizeSelect}
 				options={fontSizeOptions}
 				value={fontSize}
 			/>
-			<i className="chevron-down inside" />
+			<i className="w-full chevron-down inside" />
 		</>
 	);
 };

@@ -132,7 +132,7 @@ const FeedbackPopup = ({
 				});
 				setPage((page) => page + 1);
 			}}
-			className="p-4 bg-gray-200 brightness-hover rounded-xl cursor-pointer font-medium"
+			className="w-full p-4 bg-gray-200 brightness-hover rounded-xl cursor-pointer font-medium"
 		>
 			{content}
 		</button>
@@ -140,8 +140,8 @@ const FeedbackPopup = ({
 
 	return (
 		<Popup open={open} closeMenu={closeMenu} size="xs">
-			<h2 className="title-sm">Coursify feedback</h2>
-			<div className="gap-4 flex flex-col mt-4 [&>label]:flex [&>label]:flex-col">
+			<h2 className="w-full title-sm">Coursify feedback</h2>
+			<div className="w-full gap-4 flex flex-col mt-4 [&>label]:flex [&>label]:flex-col">
 				{page == 0 &&
 					topics.map((topic, i) => (
 						<Selector content={topic} key={i} selected={i} />
@@ -153,7 +153,7 @@ const FeedbackPopup = ({
 				{page == 2 && (
 					<>
 						<label>
-							<span className="label-text label-required">
+							<span className="w-full label-text label-required">
 								Descriptive Title
 							</span>
 							<input
@@ -168,7 +168,7 @@ const FeedbackPopup = ({
 							/>
 						</label>
 						<label>
-							<span className="label-text label-required">
+							<span className="w-full label-text label-required">
 								{/* for features, make this text different */}
 								Describe the issue in detail, the steps to reproduce it and any
 								information that you think might help us.
@@ -183,7 +183,7 @@ const FeedbackPopup = ({
 								}
 							/>
 						</label>
-						<label className="cursor-pointer !flex-row text-xs items-center">
+						<label className="w-full cursor-pointer !flex-row text-xs items-center">
 							<input
 								tabIndex={0}
 								type="checkbox"
@@ -191,7 +191,7 @@ const FeedbackPopup = ({
 								//show highlight when focused by keyboard nav
 								//this checkbox is actually seemingly completely incompatible with screen readers, I'll have to dig out my work around later
 							/>
-							<span className="ml-4 label-required">
+							<span className="w-full ml-4 label-required">
 								{/* I understand why we wanted this here, but I think it could discourage people from reaching out */}
 								This submission is relevant and provides value to the Coursify
 								Team.
@@ -201,8 +201,8 @@ const FeedbackPopup = ({
 				)}
 				{page == 3 && (
 					<>
-						<h2 className="text-xl font-medium text-center">Thanks!</h2>
-						<p className="text-center text-sm">
+						<h2 className="w-full text-xl font-medium text-center">Thanks!</h2>
+						<p className="w-full text-center text-sm">
 							Your feedback is important to us. Hearing from you is what helps
 							us continue to improve Coursify and create a better learning
 							experience for everyone. So as to better understand the issues
@@ -212,7 +212,7 @@ const FeedbackPopup = ({
 					</>
 				)}
 			</div>
-			<div className="mt-4 flex ml-auto gap-4">
+			<div className="w-full mt-4 flex ml-auto gap-4">
 				{page != 0 && page != 3 && (
 					//TODO show highlight when focused by keyboard nav
 					<Button tabIndex={0} onClick={() => setPage((page) => page - 1)}>
@@ -223,7 +223,7 @@ const FeedbackPopup = ({
 					// screen reader compatibility
 					<Button
 						color="bg-blue-500"
-						className="text-white"
+						className="w-full text-white"
 						onClick={submitFeedback}
 						disabled={
 							!accepted ||
@@ -231,7 +231,7 @@ const FeedbackPopup = ({
 							content.content.length == 0
 						}
 					>
-						Submit {loading && <LoadingSmall className="ml-2" />}
+						Submit {loading && <LoadingSmall className="w-full ml-2" />}
 					</Button>
 				)}
 			</div>
@@ -239,12 +239,12 @@ const FeedbackPopup = ({
 				<Button
 					onClick={closeMenu}
 					color="bg-blue-500"
-					className="text-white mx-auto"
+					className="w-full text-white mx-auto"
 				>
 					Close
 				</Button>
 			)}
-			<span className="text-red-700">{error && `Error: ${error}`}</span>
+			<span className="w-full text-red-700">{error && `Error: ${error}`}</span>
 		</Popup>
 	);
 };

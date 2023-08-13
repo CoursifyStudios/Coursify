@@ -46,22 +46,22 @@ const Admin: NextPageWithLayout = () => {
 	}, [user, supabase]);
 
 	return (
-		<div className="mx-auto mt-10 flex w-full max-w-screen-xl flex-col px-4 grow">
-			<h1 className="title">Admin Dashboard</h1>
-			<h2 className="mt-4 font-medium mb-2 text-lg">
+		<div className="w-full mx-auto mt-10 flex w-full max-w-screen-xl flex-col px-4 grow">
+			<h1 className="w-full title">Admin Dashboard</h1>
+			<h2 className="w-full mt-4 font-medium mb-2 text-lg">
 				Please choose a school to login to:
 			</h2>
-			<div className="grid md:grid-cols-2 xl:grid-cols-4 gap-4 font-medium">
+			<div className="w-full grid md:grid-cols-2 xl:grid-cols-4 gap-4 font-medium">
 				{schools.length > 0 ? (
 					schools.map((school, id) => (
 						<Fragment key={id}>
 							<a
 								key={id}
 								href={`/admin/${school.id}`}
-								className="flex rounded-xl bg-backdrop-200 brightness-hover p-4 items-center"
+								className="w-full flex rounded-xl bg-backdrop-200 brightness-hover p-4 items-center"
 							>
-								<BuildingOffice2Icon className="mr-2 min-w-[1.25rem] h-5 text-gray-500" />
-								<p className="truncate">{school.name}</p>
+								<BuildingOffice2Icon className="w-full mr-2 min-w-[1.25rem] h-5 text-gray-500" />
+								<p className="w-full truncate">{school.name}</p>
 							</a>
 						</Fragment>
 					))
@@ -78,11 +78,11 @@ const Admin: NextPageWithLayout = () => {
 							"face: :sad: :f:",
 						].map((t, i) => (
 							<div
-								className="bg-backdrop-200 rounded-xl animate-pulse p-4 flex items-center"
+								className="w-full bg-backdrop-200 rounded-xl animate-pulse p-4 flex items-center"
 								key={i}
 							>
-								<BuildingOffice2Icon className="mr-2 min-w-[1.25rem] h-5 text-transparent bg-gray-300 rounded" />
-								<p className="truncate text-transparent bg-gray-300 rounded">
+								<BuildingOffice2Icon className="w-full mr-2 min-w-[1.25rem] h-5 text-transparent bg-gray-300 rounded" />
+								<p className="w-full truncate text-transparent bg-gray-300 rounded">
 									{t}
 								</p>
 							</div>
@@ -90,8 +90,8 @@ const Admin: NextPageWithLayout = () => {
 					</>
 				)}
 			</div>
-			<div className="flex items-center mx-auto text-sm text-gray-500 mt-auto pt-10">
-				<p className="mr-2">Coursify Admin Dashboard</p>
+			<div className="w-full flex items-center mx-auto text-sm text-gray-500 mt-auto pt-10">
+				<p className="w-full mr-2">Coursify Admin Dashboard</p>
 				<Betatag />
 			</div>
 		</div>

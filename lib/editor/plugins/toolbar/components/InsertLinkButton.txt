@@ -20,7 +20,7 @@ const InsertLinkButton = () => {
 				title={t("toolbar:insertLinkButton.Description")}
 				type="button"
 			>
-				<i className="format link" />
+				<i className="w-full format link" />
 			</button>
 			{isLink &&
 				createPortal(

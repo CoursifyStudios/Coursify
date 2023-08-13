@@ -15,13 +15,13 @@ export default function ColorPicker() {
 
 	return (
 		<>
-			<div className="flex flex-col bg-backdrop-200 h-fill p-5">
-				<div className="flex flex-row">
+			<div className="w-full flex flex-col bg-backdrop-200 h-fill p-5">
+				<div className="w-full flex flex-row">
 					<span>Selected color: </span>
 					<div className={`h-5 w-5 bg-${selectedColor.name}-200`} />
 				</div>
 
-				<div className="grid gap-3 grid-cols-3 w-20">
+				<div className="w-full grid gap-3 grid-cols-3 w-20">
 					{colors.map((color, i) => (
 						<Fragment key={i}>
 							<div

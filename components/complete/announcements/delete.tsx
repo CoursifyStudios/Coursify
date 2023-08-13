@@ -51,36 +51,36 @@ export const Delete: NextPage<{
 
 	return (
 		<Popup closeMenu={() => setOpen(false)} open={open} size="sm">
-			<h2 className="title-sm">Delete Announcement</h2>
-			<div className="mb-4 mt-2">
+			<h2 className="w-full title-sm">Delete Announcement</h2>
+			<div className="w-full mb-4 mt-2">
 				{announcement.type == AnnouncementType.ANNOUNCEMENT ||
 				announcement.type == AnnouncementType.CROSSPOST
 					? "Are you sure you want to delete this announcement? This action cannot be undone. To delete announcement from all groups, select Delete All."
 					: "Are you sure that you want to delete this comment? This action cannot be undone"}
 			</div>
 			{error && (
-				<div className="font-medium">
-					Error: <span className="text-red-700">{error}</span>
+				<div className="w-full font-medium">
+					Error: <span className="w-full text-red-700">{error}</span>
 				</div>
 			)}
-			<div className="mt-2 flex justify-between">
+			<div className="w-full mt-2 flex justify-between">
 				<Button
 					onClick={() => setOpen(false)}
-					className=" focus:outline-1 focus:outline-black" //Make this UI better later
+					className="w-full  focus:outline-1 focus:outline-black" //Make this UI better later
 				>
 					Cancel
 				</Button>
-				<div className="flex">
+				<div className="w-full flex">
 					{(announcement.type == AnnouncementType.ANNOUNCEMENT ||
 						announcement.type == AnnouncementType.CROSSPOST) && (
 						<Button
-							className=" focus:outline-1 focus:outline-black" //Make this UI better later
+							className="w-full  focus:outline-1 focus:outline-black" //Make this UI better later
 							onClick={deleteMultiple}
 							disabled={deleting != undefined || announcement.clone_id == null}
 						>
 							{deleting == "multiple" ? (
 								<>
-									Deleting <LoadingSmall className="ml-2" />
+									Deleting <LoadingSmall className="w-full ml-2" />
 								</>
 							) : (
 								"Delete All"
@@ -91,12 +91,12 @@ export const Delete: NextPage<{
 					<Button
 						onClick={deleteSingle}
 						disabled={deleting != undefined}
-						className="ml-4 focus:outline-1 focus:outline-black" //Make this UI better later
+						className="w-full ml-4 focus:outline-1 focus:outline-black" //Make this UI better later
 						color="bg-red-700 text-white"
 					>
 						{deleting == "single" ? (
 							<>
-								Deleting <LoadingSmall className="ml-2" />
+								Deleting <LoadingSmall className="w-full ml-2" />
 							</>
 						) : (
 							"Delete"

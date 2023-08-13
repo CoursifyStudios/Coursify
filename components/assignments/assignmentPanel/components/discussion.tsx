@@ -226,7 +226,7 @@ const Discussion: NextPage<{
 			<Editor
 				editable={true}
 				backdrop={false}
-				toolbarClassName="bg-backdrop"
+				toolbarclassName="w-full bg-backdrop"
 				focus={true}
 				updateState={(state: EditorState) =>
 					setSubmission({
@@ -236,7 +236,7 @@ const Discussion: NextPage<{
 				}
 				clearEditor={clearEditor}
 				updateRaw={setRawSubmission}
-				className=" border-gray-300 mt-4 mb-2 rounded-xl p-4 shadow-lg dark:border"
+				className="w-full  border-gray-300 mt-4 mb-2 rounded-xl p-4 shadow-lg dark:border"
 				initialState={
 					(revisions &&
 						revisions.length > 0 &&
@@ -248,10 +248,10 @@ const Discussion: NextPage<{
 				}
 			/>
 
-			<div className="ml-auto flex text-sm text-gray-700">
+			<div className="w-full ml-auto flex text-sm text-gray-700">
 				{settings.minChars && content.length < settings.minChars && (
 					<p>
-						<span className="text-red-700">{content.length}</span> /{" "}
+						<span className="w-full text-red-700">{content.length}</span> /{" "}
 						{settings.minChars} min {settings.trueWhenChars ? "chars" : "words"}
 					</p>
 				)}{" "}
@@ -270,14 +270,14 @@ const Discussion: NextPage<{
 						</p>
 					)}
 			</div>
-			<div className="mt-4 flex items-center">
+			<div className="w-full mt-4 flex items-center">
 				{loading && <Loading />}
-				<div className="flex items-center ml-auto">
+				<div className="w-full flex items-center ml-auto">
 					{/* {settings.rich && submission && typeof submission.content == "string" && 
-					<p className="text-blue-500 hover:underline cursor-pointer" onClick={() => setSubmission(undefined)}>Reset to rich editor</p>
+					<p className="w-full text-blue-500 hover:underline cursor-pointer" onClick={() => setSubmission(undefined)}>Reset to rich editor</p>
 					} */}
 					<Button
-						className="dark:text-white"
+						className="w-full dark:text-white"
 						color="bg-gray-200 mx-4 "
 						disabled={content.length === 0}
 						onClick={() => submit(true)}
@@ -285,7 +285,7 @@ const Discussion: NextPage<{
 						Save Draft
 					</Button>
 					<Button
-						className="text-white"
+						className="w-full text-white"
 						color="bg-blue-500"
 						disabled={!content.finished}
 						onClick={() => {
@@ -300,46 +300,46 @@ const Discussion: NextPage<{
 			</div>
 			{loadingMsg && `Message from server: ${loadingMsg}`}
 			{error && `Error occured while saving: ${error}`}
-			<div className="flex flex-col gap-4 mt-8">
+			<div className="w-full flex flex-col gap-4 mt-8">
 				{revisions
 					.filter((revision) => revision.final == true)
 					.map((v) => (
 						<div
-							className="bg-gray-200 px-4 py-5 rounded-xl"
+							className="w-full bg-gray-200 px-4 py-5 rounded-xl"
 							key={v.created_at}
 						>
-							<div className="flex items-center">
+							<div className="w-full flex items-center">
 								<Image
 									width={32}
 									height={32}
-									className="rounded-full h-8 w-8 select-none"
+									className="w-full rounded-full h-8 w-8 select-none"
 									src={v.users?.avatar_url || user.user_metadata.avatar_url}
 									alt="user avatar"
 									draggable={false}
 								/>
-								<div className="ml-3">
+								<div className="w-full ml-3">
 									<Link
 										href={`/profile/${
 											v.users?.id || user.user_metadata.full_name
 										}`}
 										onClick={() => newTab(`/profile/${v.users?.id || user.id}`)}
 									>
-										<h3 className="font-medium">
+										<h3 className="w-full font-medium">
 											{v.users?.full_name || user.user_metadata.full_name}
 										</h3>
 									</Link>
-									<p className="text-xs text-gray-700">
+									<p className="w-full text-xs text-gray-700">
 										{formatDate(new Date())}
 									</p>
 								</div>
-								<div className="ml-auto">
+								<div className="w-full ml-auto">
 									<MenuSelect
 										items={[
 											// {
 											// 	content: (
 											// 		<>
 											// 			{" "}
-											// 			Edit <PencilIcon className="h-5 w-5" />{" "}
+											// 			Edit <PencilIcon className="w-full h-5 w-5" />{" "}
 											// 		</>
 											// 	),
 											// 	className: "",
@@ -349,22 +349,22 @@ const Discussion: NextPage<{
 												content: (
 													<>
 														{" "}
-														Delete <TrashIcon className="h-5 w-5" />{" "}
+														Delete <TrashIcon className="w-full h-5 w-5" />{" "}
 													</>
 												),
 												onClick: () => deletePost(v.created_at),
 											},
 										]}
 									>
-										<div className=" p-2 hover:bg-gray-200">
-											<EllipsisVerticalIcon className="h-6 w-6" />
+										<div className="w-full  p-2 hover:bg-gray-200">
+											<EllipsisVerticalIcon className="w-full h-6 w-6" />
 										</div>
 									</MenuSelect>
 								</div>
 							</div>
 							<Editor
 								editable={false}
-								className=" "
+								className="w-full  "
 								//@ts-expect-error I promise it does exist ts
 								initialState={v.content.content}
 							/>
@@ -375,35 +375,35 @@ const Discussion: NextPage<{
 					classSubmissions.map((submission) => (
 						// This probably shouldn't be copy pasted but whatever
 						<div
-							className="bg-gray-200 px-4 py-5 rounded-xl"
+							className="w-full bg-gray-200 px-4 py-5 rounded-xl"
 							key={submission.created_at}
 						>
-							<div className="flex items-center">
+							<div className="w-full flex items-center">
 								<Image
 									width={32}
 									height={32}
-									className="rounded-full h-8 w-8 select-none"
+									className="w-full rounded-full h-8 w-8 select-none"
 									src={submission.users?.avatar_url || ""}
 									alt="user avatar"
 									draggable={false}
 								/>
-								<div className="ml-3">
+								<div className="w-full ml-3">
 									<Link
 										href={`/profile/${submission.users?.id}`}
 										onClick={() => newTab(`/profile/${submission.users?.id}`)}
 									>
-										<h3 className="font-medium">
+										<h3 className="w-full font-medium">
 											{submission.users?.full_name}
 										</h3>
 									</Link>
-									<p className="text-xs text-gray-700">
+									<p className="w-full text-xs text-gray-700">
 										{formatDate(new Date())}
 									</p>
 								</div>
 							</div>
 							<Editor
 								editable={false}
-								className=" "
+								className="w-full  "
 								//@ts-expect-error I promise it does exist ts
 								initialState={submission.content.content}
 							/>

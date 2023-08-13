@@ -14,9 +14,9 @@ const BackgroundColorPicker = () => {
 
 	return (
 		// <ColorPicker
-		//   buttonClassName="toolbar-item color-picker"
+		//   buttonclassName="w-full toolbar-item color-picker"
 		//   buttonAriaLabel={t('toolbar:backgroundColorPicker.Description')}
-		//   buttonIconClassName="icon bg-color"
+		//   buttonIconclassName="w-full icon bg-color"
 		//   color={bgColor}
 		//   onChange={onBgColorSelect}
 		//   title="bg color"

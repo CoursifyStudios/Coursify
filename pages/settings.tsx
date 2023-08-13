@@ -37,24 +37,28 @@ const Settings: NextPageWithLayout = () => {
 	};
 
 	return (
-		<div className="container mx-auto mb-10 flex w-full max-w-screen-xl flex-col space-y-5 break-words px-4 sm:mt-10 md:px-8 xl:px-0">
-			<div className="">
+		<div className="w-full container mx-auto mb-10 flex w-full max-w-screen-xl flex-col space-y-5 break-words px-4 sm:mt-10 md:px-8 xl:px-0">
+			<div className="w-full ">
 				<Tab.Group
 					as="div"
-					className="relative flex w-full grow flex-row"
+					className="w-full relative flex w-full grow flex-row"
 					vertical
 					selectedIndex={currentTab}
 					onChange={setTab}
 				>
 					<div>
-						<h1 className="title sticky top-4 h-16">Settings</h1>
+						<h1 className="w-full title sticky top-4 h-16">Settings</h1>
 
 						<Tab.List
 							as="div"
-							className="sticky top-20 flex w-56 flex-col gap-4"
+							className="w-full sticky top-20 flex w-56 flex-col gap-4"
 						>
 							{settingsPages.map((page) => (
-								<Tab key={page.name} as="button" className="focus:outline-none">
+								<Tab
+									key={page.name}
+									as="button"
+									className="w-full focus:outline-none"
+								>
 									{({ selected }) => (
 										<div
 											className={`flex items-center justify-between rounded-lg border bg-backdrop-200  px-3 py-1.5 font-medium ${
@@ -71,11 +75,11 @@ const Settings: NextPageWithLayout = () => {
 							))}
 						</Tab.List>
 					</div>
-					<Tab.Panels className="mt-16 w-full grow">
+					<Tab.Panels className="w-full mt-16 w-full grow">
 						{settingsPages.map((page) => (
 							<Tab.Panel
 								as="div"
-								className="ml-10 flex grow flex-col"
+								className="w-full ml-10 flex grow flex-col"
 								key={page.name}
 							>
 								{page.content}

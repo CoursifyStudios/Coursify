@@ -288,13 +288,13 @@ const ToolbarPlugin = ({
 					backdrop && "bg-white/50 backdrop-blur pt-1 dark:bg-neutral-900"
 				} `}
 			>
-				<div className=" flex items-center ">
-					<div className="mr-6 space-x-0.5">
+				<div className="w-full  flex items-center ">
+					<div className="w-full mr-6 space-x-0.5">
 						<BoldButton />
 						<ItalicButton />
 						<UnderlineButton />
 					</div>
-					<div className="mr-6  space-x-0.5 ">
+					<div className="w-full mr-6  space-x-0.5 ">
 						<AlignDropdown />
 					</div>
 					{supportedBlockTypes.has(blockType) &&
@@ -306,19 +306,19 @@ const ToolbarPlugin = ({
 					{/* {blockType === "code" ? ( removed because it was annoying to add
 					<>
 						{/* <CodeLanguageDropdown /> code
-						<div className="h-10 w-1 bg-gray-800"></div>
+						<div className="w-full h-10 w-1 bg-gray-800"></div>
 						{alignExists && AlignComponent}
 					</>
 				) : (
 					<>{children}</>
 				)} */}
 					{children}
-					<div className="ml-auto space-x-2">
+					<div className="w-full ml-auto space-x-2">
 						<UndoButton />
 						<RedoButton />
 					</div>
 				</div>
-				<div className="mt-1 h-0.5 w-full rounded-full bg-gray-100 dark:bg-gray-300"></div>
+				<div className="w-full mt-1 h-0.5 w-full rounded-full bg-gray-100 dark:bg-gray-300"></div>
 			</div>
 		</ToolbarContext.Provider>
 	);

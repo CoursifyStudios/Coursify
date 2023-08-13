@@ -100,18 +100,18 @@ export const Announcement = ({
 					announcement={announcement}
 					classID={classID}
 				/>
-				<div className="rounded-xl bg-backdrop-200 p-4 pb-3">
-					<div className="flex items-center justify-between">
-						<h2 className="text-xl font-semibold">{info.title}</h2>
+				<div className="w-full rounded-xl bg-backdrop-200 p-4 pb-3">
+					<div className="w-full flex items-center justify-between">
+						<h2 className="w-full text-xl font-semibold">{info.title}</h2>
 						<Listbox
 							value={selected}
 							onChange={setSelected}
 							as="div"
-							className="font-semibold"
+							className="w-full font-semibold"
 						>
-							<div className="relative">
-								<Listbox.Button className="flex rounded-md px-0.5 py-0.5 transition hover:bg-gray-300">
-									<EllipsisVerticalIcon className="h-6 w-6" />
+							<div className="w-full relative">
+								<Listbox.Button className="w-full flex rounded-md px-0.5 py-0.5 transition hover:bg-gray-300">
+									<EllipsisVerticalIcon className="w-full h-6 w-6" />
 								</Listbox.Button>
 								<Transition
 									as={Fragment}
@@ -122,7 +122,7 @@ export const Announcement = ({
 									leaveFrom="opacity-100"
 									leaveTo="opacity-0"
 								>
-									<Listbox.Options className="absolute right-0 top-6 z-10 mt-2 flex w-28 flex-col overflow-auto rounded-xl bg-backdrop/75  p-1.5 text-sm shadow-xl backdrop-blur-xl transition">
+									<Listbox.Options className="w-full absolute right-0 top-6 z-10 mt-2 flex w-28 flex-col overflow-auto rounded-xl bg-backdrop/75  p-1.5 text-sm shadow-xl backdrop-blur-xl transition">
 										{options.map(
 											(options, optionID) =>
 												user &&
@@ -169,10 +169,10 @@ export const Announcement = ({
 							</div>
 						</Listbox>
 					</div>
-					<div className="flex items-center pt-1">
+					<div className="w-full flex items-center pt-1">
 						<Link
 							href={"/profile/" + announcement.author}
-							className="inline-flex shrink-0 items-center rounded-full px-1 py-0.5 hover:bg-gray-300"
+							className="w-full inline-flex shrink-0 items-center rounded-full px-1 py-0.5 hover:bg-gray-300"
 							onClick={() =>
 								newTab(
 									"/profile/" + announcement.author,
@@ -184,33 +184,33 @@ export const Announcement = ({
 							<Image
 								src={getDataOutArray(announcement.users!).avatar_url}
 								alt="User image"
-								className="h-5 w-5 rounded-full"
+								className="w-full h-5 w-5 rounded-full"
 								referrerPolicy="no-referrer"
 								width={20}
 								height={20}
 							/>
-							<p className="ml-1.5 mr-1 font-semibold text-gray-700">
+							<p className="w-full ml-1.5 mr-1 font-semibold text-gray-700">
 								{getDataOutArray(announcement.users!).full_name}
 							</p>
 						</Link>
-						<p className="pl-1.5 text-gray-600 dark:text-gray-400">
+						<p className="w-full pl-1.5 text-gray-600 dark:text-gray-400">
 							{howLongAgo(announcement.time!)}
 						</p>
 					</div>
 					<Editor
 						editable={false}
 						initialState={info.content}
-						className="mt-0.5"
+						className="w-full mt-0.5"
 					/>
 					{announcement.parent && (
-						<div className="flex">
-							<div className=""></div>
+						<div className="w-full flex">
+							<div className="w-full "></div>
 							<TempAnnouncement
 								announcement={announcement.parent}
 							></TempAnnouncement>
 						</div>
 					)}
-					<div className="space-y-4">
+					<div className="w-full space-y-4">
 						<Commenting communityid={classID} parentID={announcement.id} />
 
 						{comments &&

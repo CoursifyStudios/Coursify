@@ -133,10 +133,10 @@ export default function Editor({
 					{editable && (
 						<ToolbarPlugin backdrop={backdrop} className={toolbarClassName} />
 					)}
-					<div className="relative">
+					<div className="w-full relative">
 						<RichTextPlugin
 							contentEditable={
-								<ContentEditable className="prose h-full !max-w-full p-1 dark:prose-invert focus:outline-none dark:!text-neutral-200 [&>h1:first-child]:mt-0" />
+								<ContentEditable className="w-full prose h-full !max-w-full p-1 dark:prose-invert focus:outline-none dark:!text-neutral-200 [&>h1:first-child]:mt-0" />
 							}
 							placeholder={editable ? <Placeholder /> : <></>}
 							ErrorBoundary={LexicalErrorBoundary}
@@ -232,7 +232,7 @@ function EditorContextProvider({
 
 function Placeholder() {
 	return (
-		<div className="absolute left-1 top-2 -z-10 text-gray-600">
+		<div className="w-full absolute left-1 top-2 -z-10 text-gray-600">
 			Enter some rich text...
 		</div>
 	);

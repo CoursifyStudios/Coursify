@@ -138,11 +138,11 @@ function FloatingLinkEditor({
 	}, [isEditMode]);
 
 	return (
-		<div ref={editorRef} className="link-editor">
+		<div ref={editorRef} className="w-full link-editor">
 			{isEditMode ? (
 				<input
 					ref={inputRef}
-					className="link-input"
+					className="w-full link-input"
 					value={linkUrl}
 					onChange={(event) => {
 						setLinkUrl(event.target.value);
@@ -164,12 +164,12 @@ function FloatingLinkEditor({
 				/>
 			) : (
 				<>
-					<div className="link-input">
+					<div className="w-full link-input">
 						<a href={linkUrl} target="_blank" rel="noopener noreferrer">
 							{linkUrl}
 						</a>
 						<div
-							className="link-edit"
+							className="w-full link-edit"
 							role="button"
 							tabIndex={0}
 							onMouseDown={(event) => event.preventDefault()}

@@ -49,10 +49,10 @@ export default function Profile() {
 	}, [router, supabase, profileid]);
 
 	return (
-		<div className="mx-auto flex w-full flex-col px-4 py-2 sm:py-4 md:px-8 md:py-8 lg:flex-row lg:space-x-8 xl:px-0 2xl:max-w-screen-xl">
+		<div className="w-full mx-auto flex w-full flex-col px-4 py-2 sm:py-4 md:px-8 md:py-8 lg:flex-row lg:space-x-8 xl:px-0 2xl:max-w-screen-xl">
 			{/* Left sidebar, main info */}
-			<div className="flex shrink-0 flex-col items-center md:flex-row lg:h-max lg:max-h-[calc(100vh-8rem)] lg:w-72 lg:flex-col">
-				<div className="flex w-full flex-col items-center rounded-xl bg-backdrop-200 p-6">
+			<div className="w-full flex shrink-0 flex-col items-center md:flex-row lg:h-max lg:max-h-[calc(100vh-8rem)] lg:w-72 lg:flex-col">
+				<div className="w-full flex w-full flex-col items-center rounded-xl bg-backdrop-200 p-6">
 					{profile && profile.data ? (
 						<Avatar
 							full_name={profile.data.full_name}
@@ -61,22 +61,22 @@ export default function Profile() {
 							avatar_url={profile.data.avatar_url}
 						/>
 					) : (
-						<div className="!ml-2 h-36 w-36 animate-pulse rounded-full bg-gray-300"></div>
+						<div className="w-full !ml-2 h-36 w-36 animate-pulse rounded-full bg-gray-300"></div>
 					)}
-					<h1 className="relative mt-5 break-words text-center text-3xl font-bold">
+					<h1 className="w-full relative mt-5 break-words text-center text-3xl font-bold">
 						{profile?.data ? (
 							profile.data.full_name
 						) : (
 							<>
-								<p className="invisible">Rick Astley</p>
-								<div className="absolute inset-0 animate-pulse rounded-md bg-gray-300 "></div>
+								<p className="w-full invisible">Rick Astley</p>
+								<div className="w-full absolute inset-0 animate-pulse rounded-md bg-gray-300 "></div>
 							</>
 						)}
 					</h1>
 					{profile && profile.data ? (
-						<h2 className="mb-4 text-xl">{profile?.data?.year}</h2>
+						<h2 className="w-full mb-4 text-xl">{profile?.data?.year}</h2>
 					) : (
-						<div className="mb-5 mt-3 h-8 w-16 animate-pulse rounded-md bg-gray-300"></div>
+						<div className="w-full mb-5 mt-3 h-8 w-16 animate-pulse rounded-md bg-gray-300"></div>
 					)}
 
 					<CopiedHover
@@ -84,8 +84,8 @@ export default function Profile() {
 						customText="Copy Email"
 					>
 						<ColoredPill color="gray">
-							<div className="flex items-center">
-								<EnvelopeIcon className="mr-1.5 h-4 w-4 text-gray-800" />
+							<div className="w-full flex items-center">
+								<EnvelopeIcon className="w-full mr-1.5 h-4 w-4 text-gray-800" />
 								{profile && profile.data && profile.data.email
 									? profile.data.email.slice(0, 26) +
 									  (profile.data.email.length > 26 ? "..." : "")
@@ -93,7 +93,7 @@ export default function Profile() {
 							</div>
 						</ColoredPill>
 					</CopiedHover>
-					<p className="mt-3 text-center text-sm break-words max-w-[15rem] line-clamp-3">
+					<p className="w-full mt-3 text-center text-sm break-words max-w-[15rem] line-clamp-3">
 						{profile?.data?.bio}
 					</p>
 				</div>
@@ -101,9 +101,9 @@ export default function Profile() {
 					profile?.data &&
 					getDataInArray(profile?.data?.user_achievements).length == 0
 				) && (
-					<div className="scrollbar-fancy scrollbar-fancy-darker mx-0 flex w-full flex-col items-center overflow-y-auto rounded-xl bg-backdrop-200 p-6 md:mx-auto lg:mx-0 lg:mt-8 ">
-						<h1 className="title mb-5">Achievements</h1>
-						<div className=" grid w-full grid-cols-1 gap-6 md:grid-cols-2">
+					<div className="w-full scrollbar-fancy scrollbar-fancy-darker mx-0 flex w-full flex-col items-center overflow-y-auto rounded-xl bg-backdrop-200 p-6 md:mx-auto lg:mx-0 lg:mt-8 ">
+						<h1 className="w-full title mb-5">Achievements</h1>
+						<div className="w-full  grid w-full grid-cols-1 gap-6 md:grid-cols-2">
 							{profile?.data?.user_achievements
 								? getDataInArray(profile?.data?.user_achievements).map(
 										(achievement) => (
@@ -116,11 +116,11 @@ export default function Profile() {
 								  )
 								: [...new Array(4)].map((_, i) => (
 										<div
-											className="flex cursor-pointer select-none flex-col items-center rounded-xl"
+											className="w-full flex cursor-pointer select-none flex-col items-center rounded-xl"
 											key={i}
 										>
-											<div className="relative h-16 w-16 animate-pulse rounded-full bg-gray-300"></div>
-											<div className="mb-2 mt-3 h-6 w-16 animate-pulse rounded bg-gray-300"></div>
+											<div className="w-full relative h-16 w-16 animate-pulse rounded-full bg-gray-300"></div>
+											<div className="w-full mb-2 mt-3 h-6 w-16 animate-pulse rounded bg-gray-300"></div>
 										</div>
 								  ))}
 						</div>
@@ -128,13 +128,13 @@ export default function Profile() {
 				)}
 				{profileIsUser && (
 					<Link href="/settings">
-						<Button className="mt-2">Edit Profile</Button>
+						<Button className="w-full mt-2">Edit Profile</Button>
 					</Link>
 				)}
 			</div>
 			{/* Centerpiece, list of classes */}
-			<div className=" mx-auto mt-8 shrink-0 flex-col rounded-xl lg:mt-0 lg:h-[calc(100vh-8rem)] xl:flex">
-				<h2 className="title mb-4">Classes</h2>
+			<div className="w-full  mx-auto mt-8 shrink-0 flex-col rounded-xl lg:mt-0 lg:h-[calc(100vh-8rem)] xl:flex">
+				<h2 className="w-full title mb-4">Classes</h2>
 				<div
 					className={`scrollbar-fancy grid snap-y snap-proximity gap-8 ${
 						communities && communities.data
@@ -147,7 +147,7 @@ export default function Profile() {
 								(currentClass) =>
 									currentClass.type == CommunityType.CLASS && (
 										<Class
-											className="snap-start"
+											className="w-full snap-start"
 											classData={currentClass}
 											key={currentClass.id}
 											isLink={true}
@@ -157,20 +157,20 @@ export default function Profile() {
 						: [...new Array(6)].map((_, i) => (
 								<div
 									key={i}
-									className="h-48 w-[19rem] animate-pulse rounded-xl bg-gray-200"
+									className="w-full h-48 w-[19rem] animate-pulse rounded-xl bg-gray-200"
 								></div>
 						  ))}
 				</div>
 			</div>
 			{/* Right sidepanel, list of groups */}
 
-			<div className="flex-col rounded-xl flex">
-				<h2 className="title mb-4">Groups</h2>{" "}
-				<div className="relative">
-					<div className="absolute inset-0 select-none grid place-items-center font-medium z-10">
+			<div className="w-full flex-col rounded-xl flex">
+				<h2 className="w-full title mb-4">Groups</h2>{" "}
+				<div className="w-full relative">
+					<div className="w-full absolute inset-0 select-none grid place-items-center font-medium z-10">
 						Groups are coming soon
 					</div>
-					<div className="flex flex-col space-y-5 blur-sm">
+					<div className="w-full flex flex-col space-y-5 blur-sm">
 						{/*
 						{communities && communities.data
 							? communities.data.map(
@@ -188,14 +188,14 @@ export default function Profile() {
 							: [...new Array(4)].map((_, i) => (
 									<div
 										key={i}
-										className="h-24 w-[16rem] animate-pulse rounded-xl bg-gray-200"
+										className="w-full h-24 w-[16rem] animate-pulse rounded-xl bg-gray-200"
 									></div>
 							  ))}*/}
-						<div className="h-28 w-[16rem] rounded-xl bg-gray-200"></div>
-						<div className="h-28 w-[16rem] rounded-xl bg-gray-200"></div>
-						<div className="h-28 w-[16rem] rounded-xl bg-gray-200"></div>
-						<div className="h-28 w-[16rem] rounded-xl bg-gray-200"></div>
-						<div className="h-28 w-[16rem] rounded-xl bg-gray-200"></div>
+						<div className="w-full h-28 w-[16rem] rounded-xl bg-gray-200"></div>
+						<div className="w-full h-28 w-[16rem] rounded-xl bg-gray-200"></div>
+						<div className="w-full h-28 w-[16rem] rounded-xl bg-gray-200"></div>
+						<div className="w-full h-28 w-[16rem] rounded-xl bg-gray-200"></div>
+						<div className="w-full h-28 w-[16rem] rounded-xl bg-gray-200"></div>
 					</div>
 				</div>
 			</div>

@@ -25,8 +25,8 @@ export const CommunityPicker = ({
 			open={showCrossPosting}
 			size="xs"
 		>
-			<h2 className="mb-5 text-lg font-medium">Select Communities...</h2>
-			<div className="h- grid grid-cols-2 gap-2">
+			<h2 className="w-full mb-5 text-lg font-medium">Select Communities...</h2>
+			<div className="w-full h- grid grid-cols-2 gap-2">
 				{communities.length != 0
 					? communities.map((community) => {
 							const isChosen = Boolean(
@@ -45,11 +45,11 @@ export const CommunityPicker = ({
 										addOrRemoveCommunity(community, !isChosen);
 									}}
 								>
-									<p className="truncate">{community.name}</p>
+									<p className="w-full truncate">{community.name}</p>
 									{isChosen ? (
-										<CheckCircleIcon className="ml-2 h-5 w-5 min-w-[1.25rem] text-gray-700" />
+										<CheckCircleIcon className="w-full ml-2 h-5 w-5 min-w-[1.25rem] text-gray-700" />
 									) : (
-										<div className="w-7" />
+										<div className="w-full w-7" />
 									)}
 								</button>
 							);
@@ -57,7 +57,7 @@ export const CommunityPicker = ({
 					: [...new Array(6)].map((_, i) => (
 							<div
 								key={i}
-								className="h-12 animate-pulse rounded-lg bg-gray-200"
+								className="w-full h-12 animate-pulse rounded-lg bg-gray-200"
 							/>
 					  ))}
 			</div>
