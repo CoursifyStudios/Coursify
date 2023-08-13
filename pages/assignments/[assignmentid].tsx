@@ -16,11 +16,7 @@ import {
 	getAssignment,
 } from "@/lib/db/assignments/assignments";
 import { Database } from "@/lib/db/database.types";
-import {
-	ScheduleInterface,
-	getSchedule,
-	setThisSchedule,
-} from "@/lib/db/schedule";
+
 import { getDataOutArray } from "@/lib/misc/dataOutArray";
 import launch from "@/public/svgs/launch.svg";
 import noData from "@/public/svgs/no-data.svg";
@@ -65,8 +61,6 @@ const Post: NextPageWithLayout = () => {
 		useState<AllAssignments>();
 	const [assignment, setAssignment] = useState<AssignmentResponse>();
 	//obviously we need a better solution
-	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
-	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
 	const router = useRouter();
 	const user = useUser();
 	const { assignmentid } = router.query;
@@ -126,23 +120,6 @@ const Post: NextPageWithLayout = () => {
 						  undefined
 				);
 			}
-			// In theory, most people will have the schedule already cached. This is a band-aid solution and won't be used later on
-			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
-				JSON.parse(sessionStorage.getItem("schedule")!);
-			if (allSchedules && allSchedules.length != 0) {
-				setSchedule(allSchedules[0].schedule);
-				setScheduleT(allSchedules[1].schedule);
-			} else {
-				const today = new Date();
-				const tomorrow = new Date();
-				tomorrow.setDate(today.getDate() + 1);
-				const [scheduleToday, scheduleTomorrow] = await Promise.all([
-					getSchedule(supabase, today),
-					getSchedule(supabase, tomorrow),
-				]);
-				setThisSchedule(scheduleToday, setSchedule);
-				setThisSchedule(scheduleTomorrow, setScheduleT);
-			}
 		})();
 
 		(async () => {
@@ -178,7 +155,7 @@ const Post: NextPageWithLayout = () => {
 				} w-[20.5rem] shrink-0 flex-col space-y-5 overflow-y-auto p-1 pb-6 compact:space-y-3 md:h-[calc(100vh-6.5rem)] `}
 			>
 				<h2 className="title">Your Assignments</h2>
-				{(teacherAssignments || studentAssignments) && user && schedule ? (
+				{(teacherAssignments || studentAssignments) && user ? (
 					<Tab.Group selectedIndex={tab} onChange={setTab}>
 						{!(!teacherAssignments || !studentAssignments) && (
 							<Tab.List as="div" className="flex items-center">
@@ -228,9 +205,6 @@ const Post: NextPageWithLayout = () => {
 																: !!assignment.starred
 															: false
 													}
-													//obviously we need a better solution
-													schedule={schedule!}
-													scheduleT={scheduleT!}
 													showClassPill={true}
 													classes={getDataOutArray(assignment.classes)}
 													className={`${
@@ -262,9 +236,6 @@ const Post: NextPageWithLayout = () => {
 																: !!assignment.starred
 															: false
 													}
-													//obviously we need a better solution
-													schedule={schedule!}
-													scheduleT={scheduleT!}
 													showClassPill={true}
 													classes={getDataOutArray(assignment.classes)}
 													className={`${

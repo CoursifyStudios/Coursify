@@ -22,8 +22,6 @@ export const ColoredPill: NextPage<{
 		text-blue-300  text-green-300  text-purple-300 text-red-300 text-yellow-300 text-orange-300 text-blue-300 |||| text-blue-500 text-green-500 text-purple-500 text-red-500 text-yellow-500 text-orange-500 
 		text-blue-500 text-green-500 text-purple-500 text-red-500 text-yellow-500 text-orange-500 ||| border-blue-500 border-green-500 border-purple-500 border-red-500 border-yellow-500 border-orange-500 border-blue-500 
 		border-green-500 border-purple-500 border-red-500 border-yellow-500 border-orange-500
-
-
 		`;
 
 	return (
