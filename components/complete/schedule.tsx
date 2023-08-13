@@ -32,7 +32,7 @@ export default function ScheduleComponent({
 		);
 	}
 
-	if (!loading && !schedule) {
+	if ((!loading && !schedule) || !classes) {
 		return (
 			<div className=" bg-backdrop-200 p-4 rounded-xl grid place-items-center my-4 font-medium">
 				No schedule found
