@@ -104,9 +104,9 @@ const Home = () => {
 					});
 				}
 
-				setLoading(false);
 				const tempFullSchedule = fullSchedule.map(({ schedule }) => schedule);
 				setSchedules(tempFullSchedule);
+				setLoading(false);
 				sessionStorage.setItem("classes", JSON.stringify(classes));
 				sessionStorage.setItem("schedule", JSON.stringify(fullSchedule));
 			}
@@ -143,7 +143,11 @@ const Home = () => {
 									)}
 								</h2>
 
-								<ScheduleComponent classes={classes} schedule={schedules[0]} />
+								<ScheduleComponent
+									classes={classes}
+									schedule={schedules[0]}
+									loading={loading}
+								/>
 							</div>
 							<div className="w-full md:ml-4 lg:ml-0">
 								<h2 className="title mr-2">
@@ -151,7 +155,11 @@ const Home = () => {
 										dateTomorrow
 									)}
 								</h2>
-								<ScheduleComponent classes={classes} schedule={schedules[1]} />
+								<ScheduleComponent
+									classes={classes}
+									schedule={schedules[1]}
+									loading={loading}
+								/>
 							</div>
 						</section>
 					</div>
