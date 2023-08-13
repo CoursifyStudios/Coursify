@@ -10,10 +10,11 @@ import { Info } from "@/components/tooltips/info";
 import {
 	AllAssignmentResponse,
 	AllAssignments,
-	AssignmentResponse,
 	AssignmentTypes,
+	StudentAssignmentResponse,
+	TeacherAssignmentResponse,
 	getAllAssignments,
-	getAssignment,
+	getStudentAssignment,
 } from "@/lib/db/assignments/assignments";
 import { Database } from "@/lib/db/database.types";
 
@@ -59,8 +60,9 @@ const Post: NextPageWithLayout = () => {
 		useState<AllAssignments>();
 	const [teacherAssignments, setTeacherAssignments] =
 		useState<AllAssignments>();
-	const [assignment, setAssignment] = useState<AssignmentResponse>();
-	//obviously we need a better solution
+	const [assignment, setAssignment] = useState<
+		StudentAssignmentResponse | TeacherAssignmentResponse
+	>();
 	const router = useRouter();
 	const user = useUser();
 	const { assignmentid } = router.query;
@@ -76,7 +78,6 @@ const Post: NextPageWithLayout = () => {
 	];
 
 	const [selected, setSelected] = useState(options[0]);
-	// Gets the data from the db
 	useEffect(() => {
 		(async () => {
 			if (user && !(studentAssignments && teacherAssignments)) {
@@ -122,6 +123,10 @@ const Post: NextPageWithLayout = () => {
 			}
 		})();
 
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user, supabase, router, assignmentid, assignment]);
+
+	useEffect(() => {
 		(async () => {
 			if (
 				user &&
@@ -130,10 +135,16 @@ const Post: NextPageWithLayout = () => {
 				assignmentid != "0" &&
 				(assignment
 					? assignment?.data && assignment?.data.id != assignmentid
-					: true)
+					: true) &&
+				studentAssignments &&
+				teacherAssignments
 			) {
 				setAssignment(undefined);
-				const assignment = await getAssignment(supabase, assignmentid, user.id);
+				const assignment = await getStudentAssignment(
+					supabase,
+					assignmentid,
+					user.id
+				);
 				setAssignment(assignment);
 				if (assignment.data)
 					setRevisions(assignment.data.submissions as Submission[]);
@@ -144,7 +155,15 @@ const Post: NextPageWithLayout = () => {
 			setFullscreen(true);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user, supabase, router, assignmentid, assignment]);
+	}, [
+		user,
+		supabase,
+		router,
+		assignmentid,
+		assignment,
+		studentAssignments,
+		teacherAssignments,
+	]);
 
 	return (
 		// Left pane
@@ -314,7 +333,15 @@ const Post: NextPageWithLayout = () => {
 			return <Loading />;
 		}
 
-		if (assignmentid == "0") {
+		if (
+			assignmentid == "0" ||
+			(tab == 0 &&
+				teacherAssignments &&
+				teacherAssignments.some((ta) => assignmentid == ta.id)) ||
+			(tab == 1 &&
+				studentAssignments &&
+				studentAssignments.some((ta) => assignmentid == ta.id))
+		) {
 			// 0 is a placeholder for when the user hasn't selected an assignment yet
 			return (
 				<div className="m-auto flex flex-col items-center">
@@ -353,8 +380,8 @@ const Post: NextPageWithLayout = () => {
 		if (assignment?.data) {
 			if (tab == 1) {
 				return (
-					<div className="w-full">
-						<TeacherHeader
+					<div className="flex grow flex-col">
+						<AssignmentHeader
 							assignment={assignment}
 							fullscreen={fullscreen}
 							setFullscreen={setFullscreen}

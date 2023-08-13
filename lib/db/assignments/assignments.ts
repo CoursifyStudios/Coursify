@@ -73,7 +73,7 @@ export const handleStarred = async (
 	}
 };
 
-export const getAssignment = async (
+export const getStudentAssignment = async (
 	supabase: SupabaseClient<Database>,
 	assignmentuuid: string,
 	userID: string
@@ -101,6 +101,43 @@ export const getAssignment = async (
 		.single();
 };
 
+export type StudentAssignmentResponse = Awaited<
+	ReturnType<typeof getStudentAssignment>
+>;
+
+export const getTeacherAssignment = async (
+	supabase: SupabaseClient<Database>,
+	assignmentuuid: string,
+	userID: string
+) => {
+	return await supabase
+		.from("assignments")
+		.select(
+			`
+		*, class:classes (
+			name, id, color,
+			users (
+				id, full_name, avatar_url,
+				submissions (
+					content,
+					final,
+					created_at
+					
+				)
+			)
+		)
+		`
+		)
+		.order("created_at", { foreignTable: "submissions", ascending: false })
+		.eq("submissions.user_id", userID)
+		.eq("id", assignmentuuid)
+		.single();
+};
+
+export type TeacherAssignmentResponse = Awaited<
+	ReturnType<typeof getTeacherAssignment>
+>;
+
 export const getTheseAssignments = async (
 	supabase: SupabaseClient<Database>,
 	class_id: string,
@@ -121,8 +158,6 @@ export const getTheseAssignments = async (
 		.in("id", these);
 	//.not("id", "in", `(${notThese})`);
 };
-
-export type AssignmentResponse = Awaited<ReturnType<typeof getAssignment>>;
 
 //Lukas is building the world's first 7D array
 export type Assignment = Database["public"]["Tables"]["assignments"]["Row"];
