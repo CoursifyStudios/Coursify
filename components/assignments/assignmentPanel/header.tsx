@@ -1,6 +1,5 @@
 import { ButtonIcon } from "@/components/misc/button";
 import { ColoredPill, CopiedHover } from "@/components/misc/pill";
-import { AssignmentResponse } from "@/lib/db/assignments/assignments";
 import {
 	ArrowsPointingInIcon,
 	ArrowsPointingOutIcon,
@@ -11,9 +10,13 @@ import { NextPage } from "next";
 import Link from "next/link";
 import { Dispatch, SetStateAction } from "react";
 import { submissionType } from "../assignmentCreation/submissionType";
+import {
+	StudentAssignmentResponse,
+	TeacherAssignmentResponse,
+} from "@/lib/db/assignments/assignments";
 
 const AssignmentHeader: NextPage<{
-	assignment: AssignmentResponse;
+	assignment: StudentAssignmentResponse | TeacherAssignmentResponse;
 	fullscreen: boolean;
 	setFullscreen: Dispatch<SetStateAction<boolean>>;
 }> = ({ assignment, fullscreen, setFullscreen }) => {

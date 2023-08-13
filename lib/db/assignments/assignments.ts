@@ -114,7 +114,7 @@ export const getTeacherAssignment = async (
 		.from("assignments")
 		.select(
 			`
-		*, class:classes (
+		*, classes (
 			name, id, color,
 			users (
 				id, full_name, avatar_url,
@@ -123,19 +123,30 @@ export const getTeacherAssignment = async (
 					final,
 					created_at
 					
-				)
+				),
+				class_users(teacher)
 			)
 		)
 		`
 		)
-		.order("created_at", { foreignTable: "submissions", ascending: false })
-		.eq("submissions.user_id", userID)
 		.eq("id", assignmentuuid)
+		// no clue why this doesn't work - LS
+		//.eq("classes.users.class_users.teacher", false)
+		.order("created_at", { foreignTable: "classes.users.submissions" })
+		.limit(1, { foreignTable: "classes.users.submissions" })
 		.single();
 };
 
 export type TeacherAssignmentResponse = Awaited<
 	ReturnType<typeof getTeacherAssignment>
+>;
+
+export type TeacherAssignment = Exclude<
+	Exclude<
+		Awaited<ReturnType<typeof getTeacherAssignment>>["data"],
+		null
+	>["classes"],
+	null
 >;
 
 export const getTheseAssignments = async (

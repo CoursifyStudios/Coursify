@@ -15,6 +15,7 @@ import {
 	TeacherAssignmentResponse,
 	getAllAssignments,
 	getStudentAssignment,
+	getTeacherAssignment,
 } from "@/lib/db/assignments/assignments";
 import { Database } from "@/lib/db/database.types";
 
@@ -37,6 +38,7 @@ import { Fragment, ReactElement, useEffect, useState } from "react";
 import { Disclosure, Tab } from "@headlessui/react";
 import TeacherHeader from "@/components/assignments/assignmentPanel/teacherHeader";
 import Avatar from "@/components/misc/avatar";
+import AssignmentGradingUI from "@/components/assignments/assignmentGrading";
 
 const Panel = dynamic(
 	() => import("@/components/assignments/assignmentPanel"),
@@ -140,13 +142,16 @@ const Post: NextPageWithLayout = () => {
 				teacherAssignments
 			) {
 				setAssignment(undefined);
-				const assignment = await getStudentAssignment(
-					supabase,
-					assignmentid,
-					user.id
+				const isTeacher = teacherAssignments.some(
+					(ta) => ta.id == assignmentid
 				);
+
+				const assignment = await (isTeacher
+					? getTeacherAssignment(supabase, assignmentid, user.id)
+					: getStudentAssignment(supabase, assignmentid, user.id));
+
 				setAssignment(assignment);
-				if (assignment.data)
+				if (assignment.data && "submissions" in assignment.data)
 					setRevisions(assignment.data.submissions as Submission[]);
 			}
 		})();
@@ -378,87 +383,19 @@ const Post: NextPageWithLayout = () => {
 		}
 
 		if (assignment?.data) {
-			if (tab == 1) {
+			if (
+				tab == 1 &&
+				!("submissions" in assignment) &&
+				typeof assignmentid == "string"
+			) {
 				return (
-					<div className="flex grow flex-col">
-						<AssignmentHeader
-							assignment={assignment}
-							fullscreen={fullscreen}
-							setFullscreen={setFullscreen}
-						/>
-						<div className="flex">
-							<div className="flex w-64 my-2 mt-4 flex-col">
-								<div className="w-full ">
-									<div className=" w-full rounded-xl ">
-										<Disclosure as="div" className="">
-											{({ open }) => (
-												<>
-													<Disclosure.Button className="flex w-full justify-between rounded-lg bg-gray-200 px-4 py-2 text-left text-sm font-medium">
-														<span>Ungraded</span>
-														<ChevronUpIcon
-															className={`${
-																open ? "rotate-180 transform" : ""
-															} h-5 w-5 `}
-														/>
-													</Disclosure.Button>
-													<Disclosure.Panel className="px-4 pt-4 pb-2 text-sm"></Disclosure.Panel>
-												</>
-											)}
-										</Disclosure>
-										<Disclosure as="div" className="mt-2">
-											{({ open }) => (
-												<>
-													<Disclosure.Button className="flex w-full justify-between rounded-lg bg-gray-200 px-4 py-2 text-left text-sm font-medium">
-														<span>Not Submitted</span>
-														<ChevronUpIcon
-															className={`${
-																open ? "rotate-180 transform" : ""
-															} h-5 w-5 `}
-														/>
-													</Disclosure.Button>
-													<Disclosure.Panel className="px-4 pt-4 pb-2 text-sm"></Disclosure.Panel>
-												</>
-											)}
-										</Disclosure>
-										<Disclosure as="div" className="mt-2">
-											{({ open }) => (
-												<>
-													<Disclosure.Button className="flex w-full justify-between rounded-lg bg-gray-200 px-4 py-2 text-left text-sm font-medium">
-														<span>Graded</span>
-														<ChevronUpIcon
-															className={`${
-																open ? "rotate-180 transform" : ""
-															} h-5 w-5 `}
-														/>
-													</Disclosure.Button>
-													<Disclosure.Panel className="px-4 pt-4 pb-2 text-sm"></Disclosure.Panel>
-												</>
-											)}
-										</Disclosure>
-									</div>
-								</div>
-							</div>
-							<div className="flex grow justify-between bg-gray-200 h-32 m-4 p-2 rounded-xl">
-								<div className="flex">
-									<Avatar
-										full_name="Jane Doe"
-										avatar_url=""
-										size="20"
-										className="ml-4"
-										text_size="xl"
-									/>
-									<div className="flex flex-col ml-3 justify-center">
-										<h1 className="title">Jane Doe</h1>
-										<p className="text-lg font-medium">0/10</p>
-									</div>
-								</div>
-								<textarea
-									placeholder="Enter a comment..."
-									className=" w-72 resize-none !rounded-xl"
-								/>
-							</div>
-						</div>
-					</div>
+					<AssignmentGradingUI
+						allAssignmentData={assignment as TeacherAssignmentResponse}
+						assignmentID={assignmentid}
+						fullscreen={fullscreen}
+						setFullscreen={setFullscreen}
+						supabase={supabase}
+					/>
 				);
 			}
 			return (
