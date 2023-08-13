@@ -131,10 +131,12 @@ const Link: NextPage<{
 			return;
 		}
 
-		setSubmission((submission) => ({
-			...submission,
-			links: [...submission.links, scopedLink],
-		}));
+		if (!submission.links.includes(scopedLink)) {
+			setSubmission((submission) => ({
+				...submission,
+				links: [...submission.links, scopedLink],
+			}));
+		}
 		setLink("");
 	};
 

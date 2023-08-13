@@ -116,15 +116,16 @@ export const getTeacherAssignment = async (
 			`
 		*, classes (
 			name, id, color,
+			class_users(teacher, user_id),
 			users (
 				id, full_name, avatar_url,
 				submissions (
 					content,
 					final,
-					created_at
-					
-				),
-				class_users(teacher)
+					created_at,
+					assignment_id,
+					grade
+				)
 			)
 		)
 		`
@@ -132,8 +133,12 @@ export const getTeacherAssignment = async (
 		.eq("id", assignmentuuid)
 		// no clue why this doesn't work - LS
 		//.eq("classes.users.class_users.teacher", false)
-		.order("created_at", { foreignTable: "classes.users.submissions" })
-		.limit(1, { foreignTable: "classes.users.submissions" })
+		.eq("classes.users.submissions.assignment_id", assignmentuuid)
+		.order("created_at", {
+			foreignTable: "classes.users.submissions",
+			ascending: false,
+		})
+		//.limit(1, { foreignTable: "classes.users.submissions" })
 		.single();
 };
 
