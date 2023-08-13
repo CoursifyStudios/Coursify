@@ -11,13 +11,15 @@ import { useSettings } from "@/lib/stores/settings";
 export default function ScheduleComponent({
 	schedule,
 	classes,
+	loading,
 }: {
 	schedule: ScheduleInterface[] | undefined;
 	classes: AllClasses | undefined;
+	loading: boolean;
 }) {
 	const { data: settings } = useSettings();
 
-	if (!(schedule && classes))
+	if (!(schedule && classes) && loading) {
 		return (
 			<div className="my-5 flex h-36 animate-pulse flex-col justify-between rounded-xl bg-backdrop-200 p-4">
 				{[...Array(3)].map((_, i) => (
@@ -28,6 +30,15 @@ export default function ScheduleComponent({
 				))}
 			</div>
 		);
+	}
+
+	if ((!loading && !schedule) || !classes) {
+		return (
+			<div className=" bg-backdrop-200 p-4 rounded-xl grid place-items-center my-4 font-medium">
+				No schedule found
+			</div>
+		);
+	}
 	return (
 		<div className="flex flex-col">
 			<div className="my-4 grid max-w-md gap-5 rounded-xl bg-backdrop-200 p-4 compact:my-2 compact:gap-2">

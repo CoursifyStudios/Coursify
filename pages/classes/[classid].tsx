@@ -75,7 +75,6 @@ const Class: NextPageWithLayout = () => {
 	const {
 		data: { compact },
 	} = useSettings();
-
 	const updateEditorDB = async () => {
 		setEdited(true);
 
@@ -88,6 +87,7 @@ const Class: NextPageWithLayout = () => {
 	};
 
 	useEffect(() => {
+		const today = new Date();
 		(async () => {
 			if (
 				user &&
@@ -110,13 +110,13 @@ const Class: NextPageWithLayout = () => {
 			}
 			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
 				JSON.parse(sessionStorage.getItem("schedule")!);
-			if (allSchedules && allSchedules.length != 0) {
+			if (allSchedules && allSchedules.length > 1) {
 				setSchedule(allSchedules[0].schedule);
 				setScheduleT(allSchedules[1].schedule);
 			} else {
 				const [scheduleToday, scheduleTomorrow] = await Promise.all([
-					getSchedule(supabase, new Date("2023-03-03")),
-					getSchedule(supabase, new Date("2023-03-04")), //change these
+					getSchedule(supabase, today),
+					getSchedule(supabase, new Date(today.getDate() + 1)),
 				]);
 				setThisSchedule(scheduleToday, setSchedule);
 				setThisSchedule(scheduleTomorrow, setScheduleT);
@@ -523,7 +523,7 @@ const Class: NextPageWithLayout = () => {
 										showClassPill={false}
 										starredAsParam={false}
 										schedule={schedule!}
-										scheduleT={scheduleT!}
+										scheduleT={scheduleT!} //patch this so that we can have only schedule (no scheduleT) and we use only that one. V2 feature if
 										userId={user.id}
 										classes={data.data}
 									/>
