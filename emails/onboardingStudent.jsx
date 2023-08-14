@@ -14,17 +14,17 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-interface VercelInviteUserEmailProps {
-	name: string;
-	schoolName: string;
-	classCount: number;
-}
+// interface CoursifyInviteStudentEmailProps {
+// 	name: string;
+// 	schoolName: string;
+// 	classCount: number;
+// }
 
-export const VercelInviteUserEmail = ({
+const CoursifyInviteStudentEmail = ({
 	name = "Lukas",
 	schoolName = "Sacred Heart Cathedral Preparatory",
 	classCount = 2,
-}: VercelInviteUserEmailProps) => {
+}) => {
 	const previewText = `Join ${schoolName} on Coursify`;
 	const classesString = classCount === 1 ? "class" : "classes";
 	return (
@@ -90,4 +90,4 @@ export const VercelInviteUserEmail = ({
 	);
 };
 
-export default VercelInviteUserEmail;
+export default CoursifyInviteStudentEmail;

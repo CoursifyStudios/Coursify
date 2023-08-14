@@ -26,8 +26,8 @@ const AssignmentHeader: NextPage<{
 		(type) => type.type == assignment.data.type
 	)!;
 	return (
-		<section className="flex items-start justify-between">
-			<div className="mr-4 grow lg:max-w-lg xl:max-w-xl">
+		<section className="">
+			<div className="grow">
 				<Link
 					className=" md:hidden"
 					href="/assignments/0"
@@ -38,59 +38,61 @@ const AssignmentHeader: NextPage<{
 						className="mb-4"
 					/>
 				</Link>
-				<div className="flex gap-2">
-					<Link
-						href={
-							"/classes/" +
-							(Array.isArray(assignment.data.classes)
-								? assignment.data.classes[0].id
-								: assignment.data.classes?.id)
-						}
-					>
-						<ColoredPill
-							color={
-								assignment.data.classes
-									? Array.isArray(assignment.data.classes)
-										? assignment.data.classes[0].color
-										: assignment.data.classes?.color
-									: "blue"
+				<div className="flex gap-2 justify-between items-center">
+					<div className="flex justify-between gap-3 items-center">
+						<Link
+							href={
+								"/classes/" +
+								(Array.isArray(assignment.data.classes)
+									? assignment.data.classes[0].id
+									: assignment.data.classes?.id)
 							}
-							hoverState
 						>
-							{assignment.data.classes
-								? Array.isArray(assignment.data.classes)
-									? assignment.data.classes[0].name
-									: assignment.data.classes.name
-								: "Error fetching class"}
+							<ColoredPill
+								color={
+									assignment.data.classes
+										? Array.isArray(assignment.data.classes)
+											? assignment.data.classes[0].color
+											: assignment.data.classes?.color
+										: "blue"
+								}
+								hoverState
+							>
+								{assignment.data.classes
+									? Array.isArray(assignment.data.classes)
+										? assignment.data.classes[0].name
+										: assignment.data.classes.name
+									: "Error fetching class"}
+							</ColoredPill>
+						</Link>
+						<ColoredPill color="gray" className="flex gap-2">
+							{type.icon}
+							{type.name}
 						</ColoredPill>
-					</Link>
-					<ColoredPill color="gray" className="flex gap-2">
-						{type.icon}
-						{type.name}
-					</ColoredPill>
+					</div>
+					<div className="flex md:space-x-4">
+						<CopiedHover copy={window.location.href}>
+							<ButtonIcon icon={<LinkIcon className="h-5 w-5" />} />
+						</CopiedHover>
+						<div onClick={() => setFullscreen(!fullscreen)}>
+							<ButtonIcon
+								icon={
+									fullscreen ? (
+										<ArrowsPointingInIcon className="h-5 w-5" />
+									) : (
+										<ArrowsPointingOutIcon className="h-5 w-5" />
+									)
+								}
+								className="hidden items-center justify-center md:flex"
+							/>
+						</div>
+					</div>
 				</div>
-				<div className="mt-4 w-full rounded-xl bg-gray-200 p-4">
+				<div className="mt-4 rounded-xl bg-gray-200 p-4">
 					<h1 className="title mb-2 line-clamp-2">{assignment.data.name}</h1>
 					<p className="line-clamp-2 text-gray-700">
 						{assignment.data.description}
 					</p>
-				</div>
-			</div>
-			<div className="flex md:space-x-4">
-				<CopiedHover copy={window.location.href}>
-					<ButtonIcon icon={<LinkIcon className="h-5 w-5" />} />
-				</CopiedHover>
-				<div onClick={() => setFullscreen(!fullscreen)}>
-					<ButtonIcon
-						icon={
-							fullscreen ? (
-								<ArrowsPointingInIcon className="h-5 w-5" />
-							) : (
-								<ArrowsPointingOutIcon className="h-5 w-5" />
-							)
-						}
-						className="hidden items-center justify-center md:flex"
-					/>
 				</div>
 			</div>
 		</section>

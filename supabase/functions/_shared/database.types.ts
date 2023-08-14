@@ -510,6 +510,7 @@ export interface Database {
       submissions: {
         Row: {
           assignment_id: string
+          comment: string | null
           content: Json | null
           created_at: string
           final: boolean
@@ -521,6 +522,7 @@ export interface Database {
         }
         Insert: {
           assignment_id: string
+          comment?: string | null
           content?: Json | null
           created_at?: string
           final: boolean
@@ -532,6 +534,7 @@ export interface Database {
         }
         Update: {
           assignment_id?: string
+          comment?: string | null
           content?: Json | null
           created_at?: string
           final?: boolean
@@ -607,7 +610,7 @@ export interface Database {
           created?: string
           email: string
           full_name: string
-          id: string
+          id?: string
           onboarded?: boolean
           phone_number?: string | null
           preferred_name?: string | null

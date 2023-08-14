@@ -12,6 +12,8 @@ import AssignmentHeader from "../assignmentPanel/header";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
 import { ColoredPill } from "@/components/misc/pill";
 import { Button } from "@/components/misc/button";
+import AssignmentGradingComponents from "./components";
+import { SubmissionSettingsTypes } from "../assignmentPanel/submission.types";
 
 const AssignmentGradingUI = ({
 	allAssignmentData,
@@ -27,6 +29,7 @@ const AssignmentGradingUI = ({
 	setFullscreen: Dispatch<SetStateAction<boolean>>;
 }) => {
 	const [selectedID, setSelectedID] = useState<string>();
+	const [comment, setComment] = useState<string>("");
 
 	const classData: TeacherAssignment = allAssignmentData.data!.classes!;
 	const maxGrade = allAssignmentData.data?.max_grade ?? null;
@@ -50,7 +53,7 @@ const AssignmentGradingUI = ({
 			selectedID == "" ? undefined : students.find((s) => s.id == selectedID),
 		[selectedID, students]
 	);
-	const totalStudents = students.length - 1;
+	const totalStudents = students.length;
 
 	const isGraded = (is: boolean) =>
 		students.filter((student) =>
@@ -75,6 +78,16 @@ const AssignmentGradingUI = ({
 		return <div>No students found in this class.</div>;
 	}
 
+	const setReviewed = async () => {
+		await supabase
+			.from("submissions")
+			.update({
+				grade: 0,
+				comment: comment,
+			})
+			.eq("id", selectedStudent!.submissions[0].id);
+	};
+
 	return (
 		<div className="flex grow flex-col">
 			<AssignmentHeader
@@ -84,7 +97,7 @@ const AssignmentGradingUI = ({
 			/>
 			<div className="flex">
 				<div className="flex w-64 my-2 mt-4 flex-col">
-					<div className=" rounded-xl flex flex-col">
+					<div className=" rounded-xl flex space-y-2 flex-col">
 						<Disclosure defaultOpen>
 							{({ open }) => (
 								<>
@@ -99,7 +112,7 @@ const AssignmentGradingUI = ({
 											} h-5 w-5 ml-auto`}
 										/> */}
 									</Disclosure.Button>
-									<Disclosure.Panel className=" pt-2 pb-4 text-sm flex flex-col  gap-4">
+									<Disclosure.Panel className=" pt-2 pb-4 text-sm flex flex-col  gap-2">
 										{ungraded.length != 0 ? (
 											ungraded.map((student) => (
 												<button
@@ -154,7 +167,7 @@ const AssignmentGradingUI = ({
 											} h-5 w-5 ml-auto`}
 										/> */}
 									</Disclosure.Button>
-									<Disclosure.Panel className=" pt-2 pb-4 text-sm flex flex-col gap-4">
+									<Disclosure.Panel className=" pt-2 pb-4 text-sm flex flex-col gap-2">
 										{notSubmitted.length != 0 ? (
 											notSubmitted.map((student) => (
 												<button
@@ -194,7 +207,7 @@ const AssignmentGradingUI = ({
 									<Disclosure.Button className="flex rounded-lg items-center bg-gray-200 px-4 py-1.5 text-left text-sm font-medium">
 										<span>{maxGrade == null ? "Reviewed" : "Graded"} </span>
 										<ColoredPill color="gray" className="ml-auto">
-											{graded.length}/{totalStudents + 1}
+											{graded.length}/{totalStudents}
 										</ColoredPill>
 										{/* <ChevronUpIcon
 											className={`${
@@ -202,7 +215,7 @@ const AssignmentGradingUI = ({
 											} h-5 w-5 ml-auto`}
 										/> */}
 									</Disclosure.Button>
-									<Disclosure.Panel className=" pt-2 pb-4 text-sm flex flex-col  gap-4">
+									<Disclosure.Panel className=" pt-2 pb-4 text-sm flex flex-col  gap-2">
 										{graded.length != 0 ? (
 											graded.map((student) => (
 												<button
@@ -246,53 +259,70 @@ const AssignmentGradingUI = ({
 						Select an student to get started
 					</div>
 				) : (
-					<div className="flex grow justify-between bg-gray-200 h-32 m-4 p-2 rounded-xl">
-						<div className="flex">
-							<Avatar
-								full_name={selectedStudent!.full_name}
-								avatar_url={selectedStudent!.avatar_url}
-								size="20"
-								className="ml-4 w-20"
-								text_size="xl"
-							/>
-							<div className="flex flex-col ml-4 justify-center">
-								<h1 className="title">{selectedStudent.full_name}</h1>
-								{maxGrade ? (
-									<p className="text-lg font-medium flex items-end mt-2">
-										<input
-											type="text"
-											className="w-24 py-1 px-2"
-											placeholder={
-												selectedStudent.submissions
-													.find((s) => s.final)
-													?.grade?.toString() || ""
-											}
-										/>
-										<span className="ml-2 text-xl">/{maxGrade}</span>
-									</p>
-								) : (
-									<p className="text-xs">
-										Grading is disabled for this assignment
-									</p>
-								)}
+					<div className="flex grow flex-col ml-4 mt-4">
+						<div className="flex justify-between bg-gray-200 h-32  p-3 rounded-xl">
+							<div className="flex">
+								<Avatar
+									full_name={selectedStudent!.full_name}
+									avatar_url={selectedStudent!.avatar_url}
+									size="20"
+									className="ml-2 min-w-[5rem]"
+									text_size="xl"
+								/>
+								<div className="flex flex-col ml-4 justify-center">
+									<h1 className="title">{selectedStudent.full_name}</h1>
+									{maxGrade ? (
+										<p className="text-lg font-medium flex items-end mt-2">
+											<input
+												type="text"
+												className="w-24 py-1 px-2"
+												placeholder={
+													selectedStudent.submissions
+														.find((s) => s.final)
+														?.grade?.toString() || ""
+												}
+												value={comment}
+												onChange={(e) => setComment(e.target.value)}
+											/>
+											<span className="ml-2 text-xl">/{maxGrade}</span>
+										</p>
+									) : (
+										<p className="text-xs">
+											Grading is disabled for this assignment
+										</p>
+									)}
+								</div>
 							</div>
-						</div>
-						<div className="flex flex-col justify-between">
-							<textarea
-								placeholder="Enter a comment..."
-								className=" w-72 resize-none !rounded-xl"
-							/>
-							<div className="ml-auto gap-4 flex">
-								{/* <Button color="bg-gray-300" className="text-white">
+							<div className="flex flex-col justify-between">
+								<textarea
+									placeholder="Enter a comment..."
+									className=" w-72 resize-none !rounded-xl"
+								/>
+								<div className="ml-auto gap-4 flex">
+									{/* <Button color="bg-gray-300" className="text-white">
 									Back
 								</Button>
 								<Button color="bg-blue-500" className="text-white">
 									Next
 								</Button> */}
-								<Button color="bg-blue-500" className="text-white">
-									Reviewed
-								</Button>
+									<Button
+										color="bg-blue-500"
+										className="text-white"
+										onClick={setReviewed}
+									>
+										Reviewed
+									</Button>
+								</div>
 							</div>
+						</div>
+						<div className="flex flex-col rounded-xl mt-4">
+							<AssignmentGradingComponents
+								assignmentData={allAssignmentData}
+								submission={
+									selectedStudent.submissions.find((s) => s.final)
+										?.content as SubmissionSettingsTypes
+								}
+							/>
 						</div>
 					</div>
 				)}

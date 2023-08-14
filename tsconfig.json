@@ -25,6 +25,13 @@
 		},
 		"allowImportingTsExtensions": true
 	},
-	"include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+	"include": [
+		"next-env.d.ts",
+		"**/*.ts",
+		"**/*.tsx",
+		".next/types/**/*.ts",
+		"emails/index.jsx",
+		"emails/onboardingStudent.jsx"
+	],
 	"exclude": ["node_modules", "supabase"]
 }

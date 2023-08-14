@@ -12,7 +12,7 @@
 		"next-lint": "next lint",
 		"prepare": "husky install",
 		"fmt": "yarn prettier --write .",
-		"types": "npm run types:next && npm run types:deno",
+		"types": "npm run types:next && npm run types:deno && npm run fmt",
 		"types:next": "supabase gen types typescript --project-id hhrehffmdrcjqowwvgqg > lib/db/database.types.ts",
 		"types:deno": "supabase gen types typescript --project-id hhrehffmdrcjqowwvgqg > supabase/functions/_shared/database.types.ts",
 		"slink": "supabase link --project-ref hhrehffmdrcjqowwvgqg",
@@ -21,6 +21,7 @@
 		"ionic:serve": "npm run start"
 	},
 	"dependencies": {
+		"@aws-sdk/client-ses": "^3.390.0",
 		"@capacitor/android": "5.2.3",
 		"@capacitor/app": "5.0.6",
 		"@capacitor/cli": "5.2.3",
