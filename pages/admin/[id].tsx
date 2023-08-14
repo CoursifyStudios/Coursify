@@ -1202,7 +1202,7 @@ Activities	The user's activities, as displayed on their profile
 										full_name: "",
 										email: "",
 										phone_number: "",
-										student_id: null,
+										student_id: "",
 										year: null,
 									}}
 									onSubmit={(v) => {
@@ -1212,64 +1212,68 @@ Activities	The user's activities, as displayed on their profile
 												full_name: v.full_name,
 												grad_year: v.year || null,
 												student_id: v.student_id || null,
-												phone_number: v.phone_number || undefined,
+												phone_number: v.phone_number,
 											},
 										]);
 									}}
 									validationSchema={Yup.object({
 										full_name: Yup.string().required(),
 										email: Yup.string().email().required(),
-										phone_number: Yup.string().min(10),
+										phone_number: Yup.string(),
 										student_id: Yup.string(),
+										grad_year: Yup.number(),
 									})}
 								>
-									<Form className="flex flex-col gap-4">
-										<label className="flex flex-col grow">
-											<span className="mb-0 5 font-medium text-sm">
-												Full Name<span className="ml-1 text-red-500">*</span>
-											</span>
-											<Field type="text" name="full_name" autoFocus />
-										</label>
-
-										<label className="flex flex-col grow">
-											<span className="mb-0 5 font-medium text-sm">
-												Email<span className="ml-1 text-red-500">*</span>
-											</span>
-											<Field type="text" name="email" />
-										</label>
-										<div className="flex gap-4">
+									{({ errors }) => (
+										<Form className="flex flex-col gap-4">
 											<label className="flex flex-col grow">
 												<span className="mb-0 5 font-medium text-sm">
-													Phone Number
+													Full Name<span className="ml-1 text-red-500">*</span>
 												</span>
-												<Field type="text" name="phone_number" />
-											</label>
-											<label className="flex flex-col">
-												<span className="mb-0 5 font-medium text-sm">
-													Student ID
-												</span>
-												<Field type="text" name="student_id" />
+												<Field type="text" name="full_name" autoFocus />
 											</label>
 
-											<label className="flex flex-col ">
+											<label className="flex flex-col grow">
 												<span className="mb-0 5 font-medium text-sm">
-													Graduation year
+													Email<span className="ml-1 text-red-500">*</span>
 												</span>
-												<Field type="number" name="year" />
+												<Field type="text" name="email" />
 											</label>
-										</div>
-										<p className="italic text-sm">
-											Leave the Student ID and Graduation year fields blank for
-											a non-student account
-										</p>
-										<Button
-											className="text-white ml-auto"
-											color="bg-blue-500"
-											type="submit"
-										>
-											Create
-										</Button>
-									</Form>
+											<div className="flex gap-4">
+												<label className="flex flex-col grow">
+													<span className="mb-0 5 font-medium text-sm">
+														Phone Number
+													</span>
+													<Field type="text" name="phone_number" />
+												</label>
+												<label className="flex flex-col">
+													<span className="mb-0 5 font-medium text-sm">
+														Student ID
+													</span>
+													<Field type="text" name="student_id" />
+												</label>
+
+												<label className="flex flex-col ">
+													<span className="mb-0 5 font-medium text-sm">
+														Graduation year
+													</span>
+													<Field type="number" name="year" />
+												</label>
+											</div>
+											<p className="italic text-sm">
+												Leave the Student ID and Graduation year fields blank
+												for a non-student account
+											</p>
+											<Button
+												className="text-white ml-auto"
+												color="bg-blue-500"
+												type="submit"
+											>
+												Create
+											</Button>
+											<div>{JSON.stringify(errors)}</div>
+										</Form>
+									)}
 								</Formik>
 							</Popup>
 							<div
