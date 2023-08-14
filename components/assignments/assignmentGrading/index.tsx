@@ -57,7 +57,8 @@ const AssignmentGradingUI = ({
 
 	const isGraded = (is: boolean) =>
 		students.filter((student) =>
-			student.submissions.length == 0
+			student.submissions.length == 0 ||
+			student.submissions.filter((s) => s.final).length == 0
 				? false
 				: !is
 				? student.submissions.filter((s) => s.final)[0].grade == null
@@ -96,7 +97,7 @@ const AssignmentGradingUI = ({
 				setFullscreen={setFullscreen}
 			/>
 			<div className="flex">
-				<div className="flex w-64 my-2 mt-4 flex-col">
+				<div className="flex w-64 min-w-[16rem] my-2 mt-4 flex-col">
 					<div className=" rounded-xl flex space-y-2 flex-col">
 						<Disclosure defaultOpen>
 							{({ open }) => (
@@ -117,7 +118,9 @@ const AssignmentGradingUI = ({
 											ungraded.map((student) => (
 												<button
 													key={student.id}
-													className="p-3 bg-backdrop-200 rounded-xl flex items-center brightness-hover text-left"
+													className={`p-3 bg-backdrop-200 rounded-xl flex items-center brightness-hover text-left ${
+														selectedID == student.id && "brightness-focus"
+													}`}
 													onClick={() => setSelectedID(student.id)}
 												>
 													<img
@@ -176,7 +179,7 @@ const AssignmentGradingUI = ({
 													className={`p-3 bg-backdrop-200 rounded-xl flex items-center text-left ${
 														student.submissions.length != 0 &&
 														"brightness-hover"
-													}`}
+													} ${selectedID == student.id && "brightness-focus"}`}
 													onClick={() => setSelectedID(student.id)}
 												>
 													<img
@@ -221,7 +224,9 @@ const AssignmentGradingUI = ({
 												<button
 													key={student.id}
 													onClick={() => setSelectedID(student.id)}
-													className={`p-3 bg-backdrop-200 rounded-xl flex items-center text-left brightness-hover`}
+													className={`p-3 bg-backdrop-200 rounded-xl flex items-center text-left brightness-hover ${
+														selectedID == student.id && "brightness-focus"
+													}`}
 												>
 													<img
 														src={student.avatar_url}

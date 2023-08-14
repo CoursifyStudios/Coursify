@@ -5,9 +5,12 @@ import {
 import LinkGrading from "./link";
 import {
 	Submission,
+	SubmissionFileUpload,
 	SubmissionLink,
+	SubmissionMedia,
 	SubmissionSettingsTypes,
 } from "../../assignmentPanel/submission.types";
+import MediaGrading from "./media";
 
 const AssignmentGradingComponents = ({
 	assignmentData,
@@ -18,13 +21,21 @@ const AssignmentGradingComponents = ({
 }) => {
 	if (!assignmentData.data) return null;
 
-	if (assignmentData.data.type == AssignmentTypes.LINK) {
-		return (
-			<LinkGrading
-				assignmentData={assignmentData}
-				submission={submission as SubmissionLink}
-			/>
-		);
+	switch (assignmentData.data.type) {
+		case AssignmentTypes.LINK:
+			return (
+				<LinkGrading
+					assignmentData={assignmentData}
+					submission={submission as SubmissionLink}
+				/>
+			);
+		case AssignmentTypes.MEDIA:
+			return (
+				<MediaGrading
+					assignmentData={assignmentData}
+					submission={submission as SubmissionFileUpload}
+				/>
+			);
 	}
 };
 

@@ -170,11 +170,11 @@ const Post: NextPageWithLayout = () => {
 
 	return (
 		// Left pane
-		<div className="mx-auto flex w-full max-w-screen-xl px-4 pb-6 pt-6 md:px-8 xl:px-0">
+		<div className="mx-auto flex w-full max-w-screen-xl px-4 pb-6 pt-6 md:px-8 xl:px-0 ">
 			<div
-				className={`scrollbar-fancy mr-4 grow items-stretch overflow-x-clip md:grow-0 ${
+				className={`scrollbar-fancy mr-4 grow items-stretch overflow-x-clip md:grow-0 sticky top-8 ${
 					fullscreen ? "hidden" : "flex"
-				} w-[20.5rem] shrink-0 flex-col space-y-5 overflow-y-auto p-1 pb-6 compact:space-y-3 md:h-[calc(100vh-6.5rem)] `}
+				} w-[20.5rem] shrink-0 flex-col space-y-5 overflow-y-scroll p-1 pb-6 compact:space-y-3 md:h-[calc(100vh-6.5rem)] `}
 			>
 				<h2 className="title">Your Assignments</h2>
 				{(teacherAssignments || studentAssignments) && user ? (
@@ -317,9 +317,11 @@ const Post: NextPageWithLayout = () => {
 				</div> */}
 			</div>
 			<div
-				className={`grow rounded-xl px-4 md:h-[calc(100vh-6.5rem)] ${
+				className={`grow rounded-xl px-4  ${
 					fullscreen ? "flex" : "hidden md:flex"
-				}`}
+				} 
+				${tab == 0 && "md:h-[calc(100vh-6.5rem)]"}
+				`}
 			>
 				<AssignmentPane />
 			</div>
