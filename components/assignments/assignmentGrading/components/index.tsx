@@ -11,6 +11,7 @@ import {
 	SubmissionSettingsTypes,
 } from "../../assignmentPanel/submission.types";
 import MediaGrading from "./media";
+import FileGrading from "./file";
 
 const AssignmentGradingComponents = ({
 	assignmentData,
@@ -32,6 +33,13 @@ const AssignmentGradingComponents = ({
 		case AssignmentTypes.MEDIA:
 			return (
 				<MediaGrading
+					assignmentData={assignmentData}
+					submission={submission as SubmissionFileUpload}
+				/>
+			);
+		case AssignmentTypes.FILE_UPLOAD:
+			return (
+				<FileGrading
 					assignmentData={assignmentData}
 					submission={submission as SubmissionFileUpload}
 				/>
