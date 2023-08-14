@@ -14,19 +14,17 @@ import {
 } from "@react-email/components";
 import * as React from "react";
 
-// interface CoursifyInviteStudentEmailProps {
-// 	name: string;
-// 	schoolName: string;
-// 	classCount: number;
-// }
+interface CoursifyInviteStudentEmailProps {
+	name: string;
+	schoolName: string;
+	classCount: number;
+}
 
 const CoursifyInviteStudentEmail = ({
 	name = "Lukas",
 	schoolName = "Sacred Heart Cathedral Preparatory",
-	classCount = 2,
-}) => {
+}: CoursifyInviteStudentEmailProps) => {
 	const previewText = `Join ${schoolName} on Coursify`;
-	const classesString = classCount === 1 ? "class" : "classes";
 	return (
 		<Html>
 			<Preview>{previewText}</Preview>
@@ -49,18 +47,15 @@ const CoursifyInviteStudentEmail = ({
 							Hello {name},
 						</Text>
 						<Text className="text-black text-[14px] leading-[24px]">
-							<strong>{schoolName}</strong> has invited you to{" "}
-							<strong>
-								{classCount} {classesString}
-							</strong>{" "}
-							on Coursify.
+							<strong>{schoolName}</strong> has invited you to your classes on
+							Coursify.
 						</Text>
 
 						<Section className="text-center mt-[32px] mb-[32px]">
 							<Button
 								pX={20}
 								pY={12}
-								className="bg-blue-500 rounded text-white text-[12px] font-semibold no-underline text-center"
+								className="bg-blue-500 rounded-lg text-white text-[16px] font-semibold no-underline text-center"
 								href="https://app.coursify.one/login"
 							>
 								Log into Coursify
@@ -74,14 +69,6 @@ const CoursifyInviteStudentEmail = ({
 							>
 								https://app.coursify.one/login
 							</Link>
-						</Text>
-						<Hr className="border border-solid border-[#000000] my-[26px] mx-0 w-full" />
-						<Text className="text-[#666666] text-[12px] leading-[24px]">
-							This invitation was intended for{" "}
-							<span className="text-black">{name} </span>. This invite was sent
-							from <span className="text-black">1055, Ellis St. </span>
-							in <span className="text-black">San Francisco, CA</span>. If you
-							were not expecting this invitation, you can ignore this email.
 						</Text>
 					</Container>
 				</Body>

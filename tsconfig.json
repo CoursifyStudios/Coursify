@@ -30,8 +30,8 @@
 		"**/*.ts",
 		"**/*.tsx",
 		".next/types/**/*.ts",
-		"emails/index.jsx",
-		"emails/onboardingStudent.jsx"
+		"emails/index.tsx",
+		"emails/onboardingStudent.tsx"
 	],
 	"exclude": ["node_modules", "supabase"]
 }
