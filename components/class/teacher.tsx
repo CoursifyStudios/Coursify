@@ -123,7 +123,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 						onChange={(value) => setSelectedSort(value)}
 						values={sortTypes}
 						className="w-full my-2 text-sm"
-						optionsclassName="w-full w-36 "
+						optionsClassName="w-full w-36 "
 					/>
 				</div>
 				<div className="w-full mt-3 flex flex-col gap-2 text-sm font-medium leading-3">

@@ -226,7 +226,7 @@ const Discussion: NextPage<{
 			<Editor
 				editable={true}
 				backdrop={false}
-				toolbarclassName="w-full bg-backdrop"
+				toolbarClassName="w-full bg-backdrop"
 				focus={true}
 				updateState={(state: EditorState) =>
 					setSubmission({

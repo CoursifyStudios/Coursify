@@ -121,7 +121,7 @@ const File = ({
 						}
 						addOnPaste={true}
 						className="w-full inputcss form-input cursor-text [&>span]:flex [&>span]:flex-wrap [&>span]:gap-3"
-						focusedclassName="w-full ring-1 ring-blue-600"
+						focusedClassName="w-full ring-1 ring-blue-600"
 						inputProps={{
 							className: "noinputcss react-tagsinput-input",
 							placeholder:

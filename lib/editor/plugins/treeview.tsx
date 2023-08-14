@@ -5,12 +5,12 @@ export default function TreeViewPlugin() {
 	const [editor] = useLexicalComposerContext();
 	return (
 		<TreeView
-			viewclassName="w-full tree-view-output"
-			timeTravelPanelclassName="w-full debug-timetravel-panel"
-			timeTravelButtonclassName="w-full debug-timetravel-button"
-			timeTravelPanelSliderclassName="w-full debug-timetravel-panel-slider"
-			timeTravelPanelButtonclassName="w-full debug-timetravel-panel-button"
-			treeTypeButtonclassName="w-full "
+			viewClassName="w-full tree-view-output"
+			timeTravelPanelClassName="w-full debug-timetravel-panel"
+			timeTravelButtonClassName="w-full debug-timetravel-button"
+			timeTravelPanelSliderClassName="w-full debug-timetravel-panel-slider"
+			timeTravelPanelButtonClassName="w-full debug-timetravel-panel-button"
+			treeTypeButtonClassName="w-full "
 			editor={editor}
 		/>
 	);
