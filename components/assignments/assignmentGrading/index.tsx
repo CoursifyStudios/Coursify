@@ -119,7 +119,7 @@ const AssignmentGradingUI = ({
 		setTeacherAssignments((data) => {
 			if (!data) return undefined;
 
-			return data.filter((assignment) => assignment.id == assignmentID);
+			return data.filter((assignment) => assignment.id !== assignmentID);
 		});
 
 		router.push("/assignments/0");
