@@ -14,6 +14,7 @@ import { ColoredPill } from "@/components/misc/pill";
 import { Button } from "@/components/misc/button";
 import AssignmentGradingComponents from "./components";
 import { SubmissionSettingsTypes } from "../assignmentPanel/submission.types";
+import { useRouter } from "next/router";
 
 const AssignmentGradingUI = ({
 	allAssignmentData,
@@ -24,12 +25,17 @@ const AssignmentGradingUI = ({
 }: {
 	supabase: SupabaseClient<Database>;
 	allAssignmentData: TeacherAssignmentResponse;
+	setAllAssignmentData: Dispatch<SetStateAction<TeacherAssignmentResponse>>,
 	assignmentID: string;
 	fullscreen: boolean;
 	setFullscreen: Dispatch<SetStateAction<boolean>>;
 }) => {
 	const [selectedID, setSelectedID] = useState<string>();
 	const [comment, setComment] = useState<string>("");
+	const [deleting, setDeleting] = useState(false);
+	const [error, setError] = useState("");
+
+	const router = useRouter()
 
 	const classData: TeacherAssignment = allAssignmentData.data!.classes!;
 	const maxGrade = allAssignmentData.data?.max_grade ?? null;
@@ -89,12 +95,33 @@ const AssignmentGradingUI = ({
 			.eq("id", selectedStudent!.submissions[0].id);
 	};
 
+	const deleteAssignment = async () => {
+		setDeleting(true);
+		const [assignment, submission] = await Promise.all([
+			await supabase.from("assignments").delete().eq("id", assignmentID),
+			await supabase
+				.from("submissions")
+				.delete()
+				.eq("assignment_id", assignmentID),
+		]);
+		if (assignment.error || submission.error) {
+			setError("An error occured while deleting this assignment");
+			setDeleting(false);
+			return;
+		}
+		
+		
+		setDeleting(false);
+	};
+
 	return (
 		<div className="flex grow flex-col">
 			<AssignmentHeader
+				teacher={true}
 				assignment={allAssignmentData}
 				fullscreen={fullscreen}
 				setFullscreen={setFullscreen}
+				deleteAssignment={deleteAssignment}
 			/>
 			<div className="flex">
 				<div className="flex w-64 min-w-[16rem] my-2 mt-4 flex-col">

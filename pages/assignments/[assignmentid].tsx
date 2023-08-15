@@ -34,7 +34,7 @@ import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { Fragment, ReactElement, useEffect, useState } from "react";
+import { Dispatch, Fragment, ReactElement, SetStateAction, useEffect, useState } from "react";
 import { Tab } from "@headlessui/react";
 import AssignmentGradingUI from "@/components/assignments/assignmentGrading";
 
@@ -391,6 +391,7 @@ const Post: NextPageWithLayout = () => {
 				return (
 					<AssignmentGradingUI
 						allAssignmentData={assignment as TeacherAssignmentResponse}
+						setAllAssignmentData={setAssignment as Dispatch<SetStateAction<TeacherAssignmentResponse>>}
 						assignmentID={assignmentid}
 						fullscreen={fullscreen}
 						setFullscreen={setFullscreen}

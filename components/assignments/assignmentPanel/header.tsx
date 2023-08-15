@@ -4,7 +4,10 @@ import {
 	ArrowsPointingInIcon,
 	ArrowsPointingOutIcon,
 	ChevronLeftIcon,
+	CogIcon,
 	LinkIcon,
+	PencilIcon,
+	TrashIcon,
 } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
 import Link from "next/link";
@@ -14,12 +17,15 @@ import {
 	StudentAssignmentResponse,
 	TeacherAssignmentResponse,
 } from "@/lib/db/assignments/assignments";
+import MenuSelect from "@/components/misc/menu";
 
 const AssignmentHeader: NextPage<{
 	assignment: StudentAssignmentResponse | TeacherAssignmentResponse;
 	fullscreen: boolean;
 	setFullscreen: Dispatch<SetStateAction<boolean>>;
-}> = ({ assignment, fullscreen, setFullscreen }) => {
+	teacher?: boolean;
+	deleteAssignment?: () => void
+}> = ({ assignment, fullscreen, setFullscreen, teacher, deleteAssignment }) => {
 	if (!assignment.data) return null;
 
 	const type = submissionType.find(
@@ -71,6 +77,33 @@ const AssignmentHeader: NextPage<{
 						</ColoredPill>
 					</div>
 					<div className="flex md:space-x-4">
+						{teacher && (
+						<MenuSelect
+						
+							items={[
+								// {
+								// 	content: (
+								// 		<>
+								// 			Edit
+								// 			<PencilIcon className="w-5 h-5 ml-auto"/>
+								// 		</>
+								// 	),
+									
+								// },
+								{
+									content: (
+										<>
+											Delete
+											<TrashIcon className="w-5 h-5 ml-auto"/>
+										</>
+									),
+									className: "flex grow bg-red-500/25 hover:bg-red-500/40",
+									onClick: deleteAssignment
+								},
+							]}
+						>
+							<ButtonIcon icon={<CogIcon className="h-5 w-5" />} />
+						</MenuSelect>)}
 						<CopiedHover copy={window.location.href}>
 							<ButtonIcon icon={<LinkIcon className="h-5 w-5" />} />
 						</CopiedHover>
