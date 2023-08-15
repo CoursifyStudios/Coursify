@@ -194,8 +194,8 @@ export const getSchedulesForXDays = async (
 		)
 		`
 		)
-		.gte("date", startDate.toISOString().slice(0, 10))
-		.lte("date", endDate.toISOString().slice(0, 10));
+		.gte("date", startDate.toLocaleDateString("en-CA").slice(0, 10))
+		.lte("date", endDate.toLocaleDateString("en-CA").slice(0, 10));
 };
 
 export type ManySchedules = Awaited<ReturnType<typeof getSchedulesForXDays>>;

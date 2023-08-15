@@ -80,28 +80,32 @@ const Home = () => {
 					[];
 
 				if (scheduleDB.data) {
-					scheduleDB.data?.forEach((scheduleDay) => {
-						if (
-							scheduleDay.schedule_templates &&
-							!Array.isArray(scheduleDay.schedule_templates) &&
-							scheduleDay.schedule_templates.schedule_items
-						) {
-							fullSchedule.push({
-								date: new Date(scheduleDay.date),
-								schedule: scheduleDay.schedule_templates
-									?.schedule_items as unknown as ScheduleInterface[],
-							});
-						} else if (
-							!scheduleDay.schedule_templates &&
-							scheduleDay.schedule_items
-						) {
-							fullSchedule.push({
-								date: new Date(scheduleDay.date),
-								schedule:
-									scheduleDay.schedule_items as unknown as ScheduleInterface[],
-							});
-						}
-					});
+					scheduleDB.data
+						?.sort(
+							(a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+						)
+						.forEach((scheduleDay) => {
+							if (
+								scheduleDay.schedule_templates &&
+								!Array.isArray(scheduleDay.schedule_templates) &&
+								scheduleDay.schedule_templates.schedule_items
+							) {
+								fullSchedule.push({
+									date: new Date(scheduleDay.date),
+									schedule: scheduleDay.schedule_templates
+										?.schedule_items as unknown as ScheduleInterface[],
+								});
+							} else if (
+								!scheduleDay.schedule_templates &&
+								scheduleDay.schedule_items
+							) {
+								fullSchedule.push({
+									date: new Date(scheduleDay.date),
+									schedule:
+										scheduleDay.schedule_items as unknown as ScheduleInterface[],
+								});
+							}
+						});
 				}
 
 				const tempFullSchedule = fullSchedule.map(({ schedule }) => schedule);
