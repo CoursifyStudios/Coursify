@@ -9,7 +9,10 @@ Coursify
 <h4 align="center">A next generation <a href="https://en.wikipedia.org/wiki/Learning_management_system">learning management system</a></h4>
 
 <p align="center" >
+  <img src="https://raw.githubusercontent.com/BraveUX/for-the-badge/master/src/images/badges/it-works-why.svg">
+  <img src="https://raw.githubusercontent.com/BraveUX/for-the-badge/master/src/images/badges/built-with-grammas-recipe.svg" height=35 >
   <img src="https://hhrehffmdrcjqowwvgqg.supabase.co/storage/v1/object/public/cdn/assets/Coursify/for-students-by-students.svg">
+  <img src="https://raw.githubusercontent.com/BraveUX/for-the-badge/master/src/images/badges/works-on-my-machine.svg" height=35>
 </p>
 
 <p align="center">
