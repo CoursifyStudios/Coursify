@@ -18,14 +18,25 @@ import {
 	TeacherAssignmentResponse,
 } from "@/lib/db/assignments/assignments";
 import MenuSelect from "@/components/misc/menu";
+import Loading from "@/components/misc/loading";
 
 const AssignmentHeader: NextPage<{
+	loading?: boolean;
+	error?: string;
 	assignment: StudentAssignmentResponse | TeacherAssignmentResponse;
 	fullscreen: boolean;
 	setFullscreen: Dispatch<SetStateAction<boolean>>;
 	teacher?: boolean;
-	deleteAssignment?: () => void
-}> = ({ assignment, fullscreen, setFullscreen, teacher, deleteAssignment }) => {
+	deleteAssignment?: () => void;
+}> = ({
+	assignment,
+	fullscreen,
+	setFullscreen,
+	teacher,
+	deleteAssignment,
+	error,
+	loading = false,
+}) => {
 	if (!assignment.data) return null;
 
 	const type = submissionType.find(
@@ -44,7 +55,7 @@ const AssignmentHeader: NextPage<{
 						className="mb-4"
 					/>
 				</Link>
-				<div className="flex gap-2 justify-between items-center">
+				<div className="flex gap-2  items-center">
 					<div className="flex justify-between gap-3 items-center">
 						<Link
 							href={
@@ -76,34 +87,38 @@ const AssignmentHeader: NextPage<{
 							{type.name}
 						</ColoredPill>
 					</div>
+					<div className="ml-auto flex items-center">
+						{loading && <Loading />}
+						{error && <p className="text-red-500">Error: {error}</p>}
+					</div>
 					<div className="flex md:space-x-4">
 						{teacher && (
-						<MenuSelect
-						
-							items={[
-								// {
-								// 	content: (
-								// 		<>
-								// 			Edit
-								// 			<PencilIcon className="w-5 h-5 ml-auto"/>
-								// 		</>
-								// 	),
-									
-								// },
-								{
-									content: (
-										<>
-											Delete
-											<TrashIcon className="w-5 h-5 ml-auto"/>
-										</>
-									),
-									className: "flex grow bg-red-500/25 hover:bg-red-500/40",
-									onClick: deleteAssignment
-								},
-							]}
-						>
-							<ButtonIcon icon={<CogIcon className="h-5 w-5" />} />
-						</MenuSelect>)}
+							<MenuSelect
+								items={[
+									// {
+									// 	content: (
+									// 		<>
+									// 			Edit
+									// 			<PencilIcon className="w-5 h-5 ml-auto"/>
+									// 		</>
+									// 	),
+
+									// },
+									{
+										content: (
+											<>
+												Delete
+												<TrashIcon className="w-5 h-5 ml-auto" />
+											</>
+										),
+										className: "flex grow bg-red-500/25 hover:bg-red-500/40",
+										onClick: deleteAssignment,
+									},
+								]}
+							>
+								<ButtonIcon icon={<CogIcon className="h-5 w-5" />} />
+							</MenuSelect>
+						)}
 						<CopiedHover copy={window.location.href}>
 							<ButtonIcon icon={<LinkIcon className="h-5 w-5" />} />
 						</CopiedHover>

@@ -1,6 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
 import Avatar from "@/components/misc/avatar";
 import {
+	AllAssignments,
 	TeacherAssignment,
 	TeacherAssignmentResponse,
 } from "@/lib/db/assignments/assignments";
@@ -22,20 +23,21 @@ const AssignmentGradingUI = ({
 	supabase,
 	fullscreen,
 	setFullscreen,
+	setTeacherAssignments,
 }: {
 	supabase: SupabaseClient<Database>;
 	allAssignmentData: TeacherAssignmentResponse;
-	setAllAssignmentData: Dispatch<SetStateAction<TeacherAssignmentResponse>>,
+	setTeacherAssignments: Dispatch<SetStateAction<AllAssignments | undefined>>;
 	assignmentID: string;
 	fullscreen: boolean;
 	setFullscreen: Dispatch<SetStateAction<boolean>>;
 }) => {
 	const [selectedID, setSelectedID] = useState<string>();
 	const [comment, setComment] = useState<string>("");
-	const [deleting, setDeleting] = useState(false);
+	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 
-	const router = useRouter()
+	const router = useRouter();
 
 	const classData: TeacherAssignment = allAssignmentData.data!.classes!;
 	const maxGrade = allAssignmentData.data?.max_grade ?? null;
@@ -96,7 +98,8 @@ const AssignmentGradingUI = ({
 	};
 
 	const deleteAssignment = async () => {
-		setDeleting(true);
+		setLoading(true);
+
 		const [assignment, submission] = await Promise.all([
 			await supabase.from("assignments").delete().eq("id", assignmentID),
 			await supabase
@@ -106,12 +109,20 @@ const AssignmentGradingUI = ({
 		]);
 		if (assignment.error || submission.error) {
 			setError("An error occured while deleting this assignment");
-			setDeleting(false);
+			setLoading(false);
 			return;
 		}
-		
-		
-		setDeleting(false);
+
+		setLoading(false);
+
+		// Update UI to reflect deletion -LS
+		setTeacherAssignments((data) => {
+			if (!data) return undefined;
+
+			return data.filter((assignment) => assignment.id == assignmentID);
+		});
+
+		router.push("/assignments/0");
 	};
 
 	return (
@@ -122,6 +133,8 @@ const AssignmentGradingUI = ({
 				fullscreen={fullscreen}
 				setFullscreen={setFullscreen}
 				deleteAssignment={deleteAssignment}
+				error={error}
+				loading={loading}
 			/>
 			<div className="flex">
 				<div className="flex w-64 min-w-[16rem] my-2 mt-4 flex-col">
