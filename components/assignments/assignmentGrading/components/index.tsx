@@ -5,13 +5,17 @@ import {
 import LinkGrading from "./link";
 import {
 	Submission,
+	SubmissionCheckoff,
 	SubmissionFileUpload,
 	SubmissionLink,
 	SubmissionMedia,
 	SubmissionSettingsTypes,
+	SubmissionText,
 } from "../../assignmentPanel/submission.types";
 import MediaGrading from "./media";
 import FileGrading from "./file";
+import CheckboxGrading from "./checkbox";
+import TextGrading from "./text";
 
 const AssignmentGradingComponents = ({
 	assignmentData,
@@ -42,6 +46,20 @@ const AssignmentGradingComponents = ({
 				<FileGrading
 					assignmentData={assignmentData}
 					submission={submission as SubmissionFileUpload}
+				/>
+			);
+		case AssignmentTypes.CHECKOFF:
+			return (
+				<CheckboxGrading
+					assignmentData={assignmentData}
+					submission={submission as SubmissionCheckoff}
+				/>
+			);
+		case AssignmentTypes.TEXT:
+			return (
+				<TextGrading
+					assignmentData={assignmentData}
+					submission={submission as SubmissionText}
 				/>
 			);
 	}
