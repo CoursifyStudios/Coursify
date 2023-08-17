@@ -101,11 +101,11 @@ const AssignmentGradingUI = ({
 		setLoading(true);
 
 		const [assignment, submission] = await Promise.all([
-			await supabase.from("assignments").delete().eq("id", assignmentID),
 			await supabase
 				.from("submissions")
 				.delete()
 				.eq("assignment_id", assignmentID),
+			await supabase.from("assignments").delete().eq("id", assignmentID),
 		]);
 		if (assignment.error || submission.error) {
 			setError("An error occured while deleting this assignment");
@@ -147,11 +147,6 @@ const AssignmentGradingUI = ({
 										<ColoredPill color="gray" className="ml-auto">
 											{ungraded.length}
 										</ColoredPill>
-										{/* <ChevronUpIcon
-											className={`${
-												open ? "rotate-180 transform" : ""
-											} h-5 w-5 ml-auto`}
-										/> */}
 									</Disclosure.Button>
 									<Disclosure.Panel className=" pt-2 pb-4 text-sm flex flex-col  gap-2">
 										{ungraded.length != 0 ? (
