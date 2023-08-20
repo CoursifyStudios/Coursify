@@ -56,8 +56,7 @@ export default function Profile() {
 					{profile && profile.data ? (
 						<Avatar
 							full_name={profile.data.full_name}
-							width="36"
-							height="36"
+							size="36"
 							text_size="4xl"
 							avatar_url={profile.data.avatar_url}
 						/>
@@ -80,7 +79,10 @@ export default function Profile() {
 						<div className="mb-5 mt-3 h-8 w-16 animate-pulse rounded-md bg-gray-300"></div>
 					)}
 
-					<CopiedHover copy={profile?.data?.email || "No email found"}>
+					<CopiedHover
+						copy={profile?.data?.email || "No email found"}
+						customText="Copy Email"
+					>
 						<ColoredPill color="gray">
 							<div className="flex items-center">
 								<EnvelopeIcon className="mr-1.5 h-4 w-4 text-gray-800" />

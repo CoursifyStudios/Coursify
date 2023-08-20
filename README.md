@@ -9,11 +9,10 @@ Coursify
 <h4 align="center">A next generation <a href="https://en.wikipedia.org/wiki/Learning_management_system">learning management system</a></h4>
 
 <p align="center" >
-  <img src="https://forthebadge.com/images/badges/it-works-why.svg">
-  <img src="https://forthebadge.com/images/badges/built-with-grammas-recipe.svg" height=35 >
+  <img src="https://raw.githubusercontent.com/BraveUX/for-the-badge/master/src/images/badges/it-works-why.svg">
+  <img src="https://raw.githubusercontent.com/BraveUX/for-the-badge/master/src/images/badges/built-with-grammas-recipe.svg" height=35 >
   <img src="https://hhrehffmdrcjqowwvgqg.supabase.co/storage/v1/object/public/cdn/assets/Coursify/for-students-by-students.svg">
-  <img src="https://forthebadge.com/images/badges/works-on-my-machine.svg" height=35>
-
+  <img src="https://raw.githubusercontent.com/BraveUX/for-the-badge/master/src/images/badges/works-on-my-machine.svg" height=35>
 </p>
 
 <p align="center">
@@ -65,6 +64,20 @@ Next, create a `.env.local` file and populate it with the following variables
 NEXT_PUBLIC_SUPABASE_URL=https://cdn.coursify.one
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhocmVoZmZtZHJjanFvd3d2Z3FnIiwicm9sZSI6ImFub24iLCJpYXQiOjE2Njc1MjEyNjgsImV4cCI6MTk4MzA5NzI2OH0.f2YZkZDHL_E81DbpgnwloXUHQ9n7aCW4DF_VNMDcuqM
 ```
+
+### Email
+
+We currently use [react email](https://react.email) and AWS SES in order to send emails. If you would like to develop create new emails; In your terminal run:
+
+```bash
+# Install dependancies
+$ yarn
+
+# Run react email
+$ yarn email
+```
+
+Then, create a new `.tsx` file in the `/emails` folder.
 
 ### Mobile (IOS/Android)
 

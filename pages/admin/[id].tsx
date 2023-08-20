@@ -688,8 +688,7 @@ Activities	The user's activities, as displayed on their profile
 	};
 
 	const downloadRows = async () => {
-		//brilliant
-		if (tab == 0!! && users) {
+		if (tab == 0 && users) {
 			const data = users
 				.filter((user) => selectedRows.includes(user.id))
 				.map((user) => {
@@ -1204,73 +1203,77 @@ Activities	The user's activities, as displayed on their profile
 										email: "",
 										phone_number: "",
 										student_id: "",
-										year: 2000,
+										year: null,
 									}}
 									onSubmit={(v) => {
 										addNewUsers([
 											{
 												email: v.email,
 												full_name: v.full_name,
-												grad_year: v.year ?? null,
-												student_id: v.student_id ?? null,
+												grad_year: v.year || null,
+												student_id: v.student_id || null,
+												phone_number: v.phone_number,
 											},
 										]);
 									}}
 									validationSchema={Yup.object({
 										full_name: Yup.string().required(),
 										email: Yup.string().email().required(),
-										phone_number: Yup.string().min(10),
+										phone_number: Yup.string(),
 										student_id: Yup.string(),
-										year: Yup.number().min(2000),
+										grad_year: Yup.number(),
 									})}
 								>
-									<Form className="flex flex-col gap-4">
-										<label className="flex flex-col grow">
-											<span className="mb-0 5 font-medium text-sm">
-												Full Name<span className="ml-1 text-red-500">*</span>
-											</span>
-											<Field type="text" name="full_name" autoFocus />
-										</label>
-
-										<label className="flex flex-col grow">
-											<span className="mb-0 5 font-medium text-sm">
-												Email<span className="ml-1 text-red-500">*</span>
-											</span>
-											<Field type="text" name="email" />
-										</label>
-										<div className="flex gap-4">
+									{({ errors }) => (
+										<Form className="flex flex-col gap-4">
 											<label className="flex flex-col grow">
 												<span className="mb-0 5 font-medium text-sm">
-													Phone Number
+													Full Name<span className="ml-1 text-red-500">*</span>
 												</span>
-												<Field type="text" name="phone_number" />
-											</label>
-											<label className="flex flex-col">
-												<span className="mb-0 5 font-medium text-sm">
-													Student ID
-												</span>
-												<Field type="text" name="student_id" />
+												<Field type="text" name="full_name" autoFocus />
 											</label>
 
-											<label className="flex flex-col ">
+											<label className="flex flex-col grow">
 												<span className="mb-0 5 font-medium text-sm">
-													Graduation year
+													Email<span className="ml-1 text-red-500">*</span>
 												</span>
-												<Field type="number" name="year" />
+												<Field type="text" name="email" />
 											</label>
-										</div>
-										<p className="italic text-sm">
-											Leave the Student ID and Graduation year fields blank for
-											a non-student account
-										</p>
-										<Button
-											className="text-white ml-auto"
-											color="bg-blue-500"
-											type="submit"
-										>
-											Create
-										</Button>
-									</Form>
+											<div className="flex gap-4">
+												<label className="flex flex-col grow">
+													<span className="mb-0 5 font-medium text-sm">
+														Phone Number
+													</span>
+													<Field type="text" name="phone_number" />
+												</label>
+												<label className="flex flex-col">
+													<span className="mb-0 5 font-medium text-sm">
+														Student ID
+													</span>
+													<Field type="text" name="student_id" />
+												</label>
+
+												<label className="flex flex-col ">
+													<span className="mb-0 5 font-medium text-sm">
+														Graduation year
+													</span>
+													<Field type="number" name="year" />
+												</label>
+											</div>
+											<p className="italic text-sm">
+												Leave the Student ID and Graduation year fields blank
+												for a non-student account
+											</p>
+											<Button
+												className="text-white ml-auto"
+												color="bg-blue-500"
+												type="submit"
+											>
+												Create
+											</Button>
+											<div>{JSON.stringify(errors)}</div>
+										</Form>
+									)}
 								</Formik>
 							</Popup>
 							<div
@@ -2636,11 +2639,10 @@ function UserSelector({
 							<div key={student.id} className="flex items-center p-2">
 								<Avatar
 									full_name={student.full_name}
-									width="8"
-									height="8"
+									size="8"
 									avatar_url={student.avatar_url}
 								/>
-								<div className="flex flex-col max-w-[10rem]">
+								<div className="ml-2.5 flex flex-col max-w-[10rem]">
 									<p className="font-medium truncate">{student.full_name}</p>
 									{!student.avatar_url && (
 										<p className="text-xs">Non-onboarded User</p>
@@ -2721,6 +2723,7 @@ export default Admin;
 // How tf is this so long - Lukas
 // Because it's not made in fresh :trojker: - Bloxs
 // :doubt: - Lukas
+// This is 2,700 lines long, and contains not one useful comment - Bill
 
 Admin.getLayout = function getLayout(page: ReactElement) {
 	return <Layout>{page}</Layout>;

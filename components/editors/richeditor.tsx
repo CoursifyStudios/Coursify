@@ -30,6 +30,7 @@ import { Json } from "../../lib/db/database.types";
 import CodeHighlightPlugin from "../../lib/editor/plugins/codehighlightplugin";
 import { EditorContext } from "../../lib/editor/plugins/toolbar/contextProviders";
 import ToolbarPlugin from "../../lib/editor/plugins/toolbar/main";
+import { $getRoot } from "lexical";
 
 const editorConfig = {
 	// The editor theme
@@ -94,6 +95,9 @@ export default function Editor({
 	updatedState,
 	focus,
 	backdrop,
+	updateRaw,
+	toolbarClassName,
+	clearEditor,
 }: {
 	editable: boolean;
 	updateState?:
@@ -105,6 +109,9 @@ export default function Editor({
 	updatedState?: EditorState;
 	focus?: boolean;
 	backdrop?: boolean;
+	updateRaw?: Dispatch<SetStateAction<string>>;
+	toolbarClassName?: string;
+	clearEditor?: boolean;
 }) {
 	return (
 		<LexicalComposer initialConfig={editorConfig}>
@@ -113,13 +120,19 @@ export default function Editor({
 				initialState={initialState}
 				updatedState={updatedState}
 				initialStateEditor={initialStateEditor}
+				updateRaw={updateRaw}
+				clearEditor={clearEditor}
 			>
 				<div
 					className={`relative ${
-						className ? className : "mb-2 rounded-xl p-4 shadow-lg dark:border"
+						className
+							? className
+							: "mb-2 rounded-xl p-4 shadow-lg dark:border border-gray-300"
 					}`}
 				>
-					{editable && <ToolbarPlugin backdrop={backdrop} />}
+					{editable && (
+						<ToolbarPlugin backdrop={backdrop} className={toolbarClassName} />
+					)}
 					<div className="relative">
 						<RichTextPlugin
 							contentEditable={
@@ -155,12 +168,16 @@ function EditorContextProvider({
 	initialState,
 	updatedState,
 	initialStateEditor,
+	updateRaw,
+	clearEditor,
 }: {
 	children: ReactNode;
 	editable: boolean;
 	initialState?: Json | SerializedEditorState;
 	initialStateEditor?: EditorState;
 	updatedState?: EditorState;
+	updateRaw?: Dispatch<SetStateAction<string>>;
+	clearEditor?: boolean;
 }) {
 	const [editor] = useLexicalComposerContext();
 
@@ -184,8 +201,25 @@ function EditorContextProvider({
 						)
 				);
 		}
+
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [editable, initialState, updatedState, initialStateEditor]);
+
+	useEffect(() => {
+		if (clearEditor) {
+			editor.update(() => {
+				$getRoot().clear();
+			});
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [clearEditor]);
+
+	useEffect(() => {
+		if (updateRaw) {
+			updateRaw(editor._rootElement?.textContent || "");
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [editor._rootElement?.textContent]);
 
 	return (
 		<EditorContext.Provider

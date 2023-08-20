@@ -1,6 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getDataInArray, getDataOutArray } from "../misc/dataOutArray";
-import { NonNullableArray } from "../misc/misc.types";
 import type { Database } from "./database.types";
 import { ScheduleInterface, getSchedulesForXDays } from "./schedule";
 
@@ -94,6 +93,9 @@ export const getClass = async (
 		assignments (
 			name, description, id, due_type, due_date
 		),
+        agendas (
+            *
+        ),
 		class_users (
 			user_id, grade, teacher, main_teacher
 		),
@@ -103,7 +105,17 @@ export const getClass = async (
 	`
 		)
 		.eq("id", classid)
+		// will be improved, don't worry
 		.limit(5, { foreignTable: "assignments" })
+		//not sure if the line below does anything worthwhile
+		//.order("date", { foreignTable: "agendas", ascending: true })
+		.or(
+			`date.eq.${new Date().toLocaleDateString("en-CA")}, date.gte.${new Date(
+				Date.now() - 171800000
+			).toLocaleDateString("en-CA")}`,
+			{ foreignTable: "agendas" }
+		)
+		.limit(3, { foreignTable: "agendas" })
 		.order("due_date", { foreignTable: "assignments", ascending: true })
 		.single();
 };
@@ -262,15 +274,3 @@ export const getClassesForUserBasic = async (
 export type BasicClassInfoDB = Awaited<
 	ReturnType<typeof getClassesForUserBasic>
 >;
-
-export const isTeacher = (
-	classData: NonNullableArray<AllClasses>,
-	userID: string
-) => {
-	return Boolean(
-		classData.class &&
-			getDataInArray(classData.class.class_users).find(
-				(user) => user?.user_id == userID && user?.teacher
-			)
-	);
-};

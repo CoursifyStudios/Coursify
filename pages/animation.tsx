@@ -5,6 +5,7 @@ import { ReactElement } from "react";
 
 const Animation: NextPageWithLayout = () => {
 	// This is just proof of concept, lukas will make it look good later
+	// Uhh proof?
 	return (
 		<>
 			<div className={styles.container}>

@@ -48,12 +48,19 @@ input[type="number"] {
 	width: 16px;
 }
 
-.scrollbar-fancy::-webkit-scrollbar-thumb {
+.scrollbar-fancy:not(.scrollbar-fancy-glass)::-webkit-scrollbar-thumb {
 	@apply dark:bg-neutral-900;
 	border: 4px solid rgba(0, 0, 0, 0);
 	background-clip: padding-box;
 	border-radius: 9999px;
 	background-color: #d1d5db;
+}
+
+.scrollbar-fancy-glass::-webkit-scrollbar-thumb {
+	@apply bg-[rgba(255,255,255,0.5)] dark:bg-[rgba(0,0,0,0.2)];
+	border: 4px solid rgba(0, 0, 0, 0);
+	background-clip: padding-box;
+	border-radius: 9999px;
 }
 
 .scrollbar-fancy-darker::-webkit-scrollbar-thumb {
@@ -76,8 +83,20 @@ textarea:not(.noinputcss),
 	@apply rounded-md border-gray-300 bg-backdrop/50 focus:ring-1 dark:placeholder:text-gray-400;
 }
 
+.onboardingInput {
+	@apply rounded-md border-gray-300 bg-backdrop/50 dark:bg-black/10 dark:border-gray-800/10 focus:ring-1 dark:placeholder:text-gray-400;
+}
+
+.onboardingButton {
+	@apply bg-gray-800 text-white hover:bg-opacity-90 dark:bg-white/5 backdrop-blur-3xl hover:dark:bg-opacity-25 dark:border dark:!border-gray-800/10 shadow-md;
+}
+
+.secondaryOnboardingButton {
+	@apply dark:bg-opacity-10 backdrop-blur-3xl hover:dark:bg-opacity-25 dark:border dark:!border-gray-800/10 shadow-md;
+}
+
 input[type="checkbox"]:not(.noinputcss) {
-	@apply rounded border-2 border-gray-300 h-5 w-5 dark:bg-neutral-950 checked:dark:bg-gray-300 checked:bg-gray-800 checked:border-gray-300 ring-0 ring-offset-0 cursor-pointer;
+	@apply rounded border-2 border-gray-300 text-gray-900 h-5 w-5 dark:bg-neutral-950 checked:dark:!bg-gray-100/10 checked:!bg-gray-900  checked:border-gray-300 ring-0 ring-offset-0 cursor-pointer;
 }
 
 .label-text {

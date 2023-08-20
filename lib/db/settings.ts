@@ -35,3 +35,11 @@ export const updateBio = async (
 ) => {
 	return await supabase.from("users").update({ bio: bio }).eq("id", profileid);
 };
+
+export const updateProfile = async (
+	supabase: SupabaseClient<Database>,
+	profileid: string,
+	data: Partial<NewUserData>
+) => {
+	return await supabase.from("users").update(data).eq("id", profileid);
+};

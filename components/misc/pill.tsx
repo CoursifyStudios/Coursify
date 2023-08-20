@@ -1,3 +1,4 @@
+import { Transition } from "@headlessui/react";
 import { NextPage } from "next";
 import { ReactNode, useState } from "react";
 
@@ -36,10 +37,11 @@ export const ColoredPill: NextPage<{
 	);
 };
 
-export const CopiedHover: NextPage<{ children: ReactNode; copy: string }> = ({
-	children,
-	copy,
-}) => {
+export const CopiedHover: NextPage<{
+	children: ReactNode;
+	copy: string;
+	customText?: string;
+}> = ({ children, copy, customText }) => {
 	const [copied, setCopied] = useState(false);
 	const [copiedHover, setCopiedHover] = useState(false);
 	return (
@@ -61,16 +63,25 @@ export const CopiedHover: NextPage<{ children: ReactNode; copy: string }> = ({
 			onMouseLeave={() => setCopiedHover(false)}
 		>
 			{children}
-			<div className="absolute select-none left-0 right-0 mt-2 flex justify-center brightness-105">
-				<div
-					className={`min-w-[6rem] scale-0 rounded transition-all ${
-						copied ? "bg-gray-300" : "bg-gray-300"
-					} px-2 py-0.5 text-center text-sm font-medium shadow-lg transition ${
-						copiedHover && "scale-100"
-					}`}
+			<div className="absolute select-none left-0 right-0 mt-2 flex justify-center brightness-105 z-30">
+				<Transition
+					show={copiedHover}
+					enter="transition"
+					enterFrom="scale-75 opacity-0"
+					enterTo="scale-100 opacity-100"
+					leave="transition"
+					leaveFrom="scale-100 opacity-100"
+					leaveTo="scale-95 opacity-0"
 				>
-					{copied ? "Copied!" : "Copy Link"}
-				</div>
+					<div
+						className={`min-w-[8.5rem] rounded transition-all ${
+							copied ? "bg-gray-300" : "bg-gray-300"
+						} px-2 py-1 text-center text-sm font-medium shadow-lg transition`}
+					>
+						{!copied && "Tap to "}
+						{copied ? "Copied!" : customText ?? "Copy Link"}
+					</div>
+				</Transition>
 			</div>
 		</div>
 	);
