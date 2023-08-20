@@ -42,6 +42,7 @@ export const AnnouncementsComponent = ({
 								author: announcement.author,
 								title: announcement.title,
 								content: announcement.content,
+								files: announcement.files,
 								time: announcement.time,
 								type: announcement.type,
 								clone_id: announcement.clone_id,

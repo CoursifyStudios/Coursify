@@ -69,6 +69,7 @@ export const Announcement = ({
 						id: announcement.id, //does not change
 						title: info.title!, //can be edited
 						content: info.content, //editable too
+						files: announcement.files, //these can also change
 						clone_id: announcement.clone_id,
 						setEditing: setShowEditing,
 					}}

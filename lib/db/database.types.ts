@@ -83,6 +83,7 @@ export interface Database {
 					class_id: string | null;
 					clone_id: string | null;
 					content: Json | null;
+					files: Json[] | null;
 					id: string;
 					parent: string | null;
 					time: string | null;
@@ -94,6 +95,7 @@ export interface Database {
 					class_id?: string | null;
 					clone_id?: string | null;
 					content?: Json | null;
+					files?: Json[] | null;
 					id?: string;
 					parent?: string | null;
 					time?: string | null;
@@ -105,6 +107,7 @@ export interface Database {
 					class_id?: string | null;
 					clone_id?: string | null;
 					content?: Json | null;
+					files?: Json[] | null;
 					id?: string;
 					parent?: string | null;
 					time?: string | null;

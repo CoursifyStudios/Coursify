@@ -17,6 +17,7 @@ import { LoadingSmall } from "../../misc/loading";
 import { ColoredPill } from "../../misc/pill";
 import { CommunityPicker } from "./communityPicker";
 import { TempAnnouncement } from "./tempAnnouncement";
+import { CoursifyFile } from "@/components/files/genericFileUpload";
 export const AnnouncementPostingUI = ({
 	communityid,
 	announcements,
@@ -32,6 +33,7 @@ export const AnnouncementPostingUI = ({
 		announcement: {
 			author: string;
 			content: Json;
+			files: CoursifyFile[] | null;
 			id: string;
 			time: string | null;
 			title: string | null;
@@ -53,10 +55,15 @@ export const AnnouncementPostingUI = ({
 		id: string;
 		title: string;
 		content: Json;
+		files: CoursifyFile[] | null;
 		clone_id: string | null;
 		setEditing?: (value: boolean) => void;
 	};
-	setNewInfo?: (value: { title: string; content: Json }) => void;
+	setNewInfo?: (value: {
+		title: string;
+		content: Json;
+		files: CoursifyFile[] | null;
+	}) => void;
 	setEditing?: (value: boolean) => void;
 }) => {
 	const supabase = useSupabaseClient<Database>();
@@ -79,6 +86,9 @@ export const AnnouncementPostingUI = ({
 						name: "",
 					},
 			  ]
+	);
+	const [files, setFiles] = useState<CoursifyFile[]>(
+		editingInfo ? editingInfo.files ?? [] : []
 	);
 	const [showCrossPosting, setShowCrossPosting] = useState(false);
 	const [sending, setSending] = useState(false); // controls like a loading state thing
@@ -241,6 +251,7 @@ export const AnnouncementPostingUI = ({
 													author: user.id,
 													title: title,
 													content: editorState?.toJSON() as unknown as Json,
+													files: files,
 												},
 												chosenCommunities.map(({ id }) => id)
 											);
@@ -268,11 +279,13 @@ export const AnnouncementPostingUI = ({
 													id: editingInfo.id,
 													author: user.id,
 													title: editingInfo.title,
+													files: files,
 													clone_id: editingInfo.clone_id,
 												},
 												{
 													title: title,
 													content: editorState?.toJSON() as unknown as Json,
+													files: files,
 												}
 											);
 											//and sets the announcement with its new data
@@ -283,6 +296,7 @@ export const AnnouncementPostingUI = ({
 													setNewInfo({
 														title: title,
 														content: editorState?.toJSON() as unknown as Json,
+														files: files,
 													});
 
 												editingInfo.setEditing(false);
@@ -297,6 +311,7 @@ export const AnnouncementPostingUI = ({
 													user?.id!,
 													title,
 													editorState?.toJSON() as unknown as Json,
+													files,
 													chosenCommunities.map(({ id }) => id)
 												);
 

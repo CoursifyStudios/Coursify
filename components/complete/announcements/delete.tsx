@@ -41,6 +41,9 @@ export const Delete: NextPage<{
 			id: announcement.id,
 			author: announcement.author,
 			title: announcement.title!,
+			files: announcement.files
+				? announcement.files.map((file) => `agendas/${file.fileName}`)
+				: [],
 			clone_id: announcement.clone_id,
 		});
 		if (data.error) {

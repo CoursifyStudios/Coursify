@@ -63,6 +63,7 @@ export const Comment = ({
 						author: author,
 						title: content,
 						content: null,
+						files: null,
 						time: time,
 						type: type,
 						clone_id: null,
@@ -140,8 +141,14 @@ export const Comment = ({
 							const newEditedAnnouncement = await editAnnouncement(
 								supabase,
 								//kind of confusing but a comment's content uses the title field
-								{ id: id, author: user!.id, title: content, clone_id: null },
-								{ title: formData.content, content: null }
+								{
+									id: id,
+									author: user!.id,
+									title: content,
+									clone_id: null,
+									files: null,
+								},
+								{ title: formData.content, content: null, files: null }
 							);
 							if (newEditedAnnouncement.error) {
 								setShowLoading(false);
