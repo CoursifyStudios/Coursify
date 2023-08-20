@@ -7,6 +7,7 @@ import { ColoredPill } from "../../misc/pill";
 import { useSettings } from "@/lib/stores/settings";
 import {
 	CheckCircleIcon,
+	DocumentIcon,
 	MinusCircleIcon,
 	PencilIcon,
 	PlusCircleIcon,
@@ -14,6 +15,15 @@ import {
 } from "@heroicons/react/24/outline";
 import { DeleteAgenda } from "./deleteAgenda";
 import { CreateAgenda } from "./createAgenda";
+import { CoursifyFile } from "@/components/files/genericFileUpload";
+import {
+	FileView,
+	mediaFileExtensions,
+} from "@/components/files/genericFileView";
+import Image from "next/image";
+import { BigImagePreview } from "@/components/files/imagePopup";
+import { ImagePreview } from "@/components/files/imagePreview";
+import { DownloadableFile } from "@/components/files/downloadableFile";
 
 export const Agenda = ({
 	classID,
@@ -28,6 +38,7 @@ export const Agenda = ({
 		date: string | null;
 		description: Json;
 		assignments: string[] | null;
+		files: CoursifyFile[] | null;
 	};
 	// Needed for editing
 	allAssignments: {
@@ -58,6 +69,7 @@ export const Agenda = ({
 		date: string | null;
 		description: Json;
 		assignments: string[] | null;
+		files: CoursifyFile[] | null;
 	} | null>(null);
 
 	return (
@@ -71,6 +83,7 @@ export const Agenda = ({
 						date: editedAgenda.date,
 						description: editedAgenda.description,
 						assignments: editedAgenda.assignments,
+						files: editedAgenda.files,
 					}}
 					allAssignments={allAssignments}
 					assignmentUpdater={assignmentUpdater}
@@ -100,6 +113,7 @@ export const Agenda = ({
 							assignments: allAssignments.filter((assignment) =>
 								agenda.assignments!.includes(assignment.id)
 							),
+							files: agenda.files ?? [],
 						}}
 					></CreateAgenda>
 
@@ -119,6 +133,7 @@ export const Agenda = ({
 										onClick={() => {
 											setEditing(true);
 										}}
+										title="Edit this agenda"
 									>
 										<PencilIcon className="w-6 h-6" />
 									</button>
@@ -127,6 +142,7 @@ export const Agenda = ({
 										onClick={() => {
 											setDeleting(true);
 										}}
+										title="Delete this agenda"
 									>
 										<TrashIcon className="w-6 h-6" />
 									</button>
@@ -138,6 +154,22 @@ export const Agenda = ({
 							initialState={agenda.description}
 							className="my-0.5"
 						/>
+						<div className="flex mb-2">
+							{agenda.files?.map(
+								(file, index) =>
+									!mediaFileExtensions.includes(
+										file.realName.split(".").pop() || ""
+									) && <DownloadableFile key={index} file={file} />
+							)}
+						</div>
+						<div className="flex gap-4 overflow-x-auto">
+							{agenda.files?.map(
+								(file, index) =>
+									mediaFileExtensions.includes(
+										file.realName.split(".").pop() || ""
+									) && <ImagePreview key={index} file={file} />
+							)}
+						</div>
 						<div className="grid grid-cols-1 gap-2">
 							{true &&
 								allAssignments

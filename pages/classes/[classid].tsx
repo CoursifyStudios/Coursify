@@ -34,6 +34,7 @@ import { useRouter } from "next/router";
 import { Fragment, ReactElement, useEffect, useState } from "react";
 import { AgendasModule } from "@/components/complete/agendas";
 import { sortClassMembers } from "@/lib/misc/users";
+import { CoursifyFile } from "@/components/files/genericFileUpload";
 
 const Class: NextPageWithLayout = () => {
 	const router = useRouter();
@@ -65,6 +66,7 @@ const Class: NextPageWithLayout = () => {
 			date: string | null;
 			description: Json;
 			assignments: string[] | null;
+			files: CoursifyFile[] | null;
 		}[]
 	>([]);
 	const [fetchedClassId, setFetchedClassId] = useState("");
@@ -347,7 +349,19 @@ const Class: NextPageWithLayout = () => {
 							{typeof classid === "string" && (
 								<AgendasModule
 									classID={classid}
-									agendas={data.data.agendas.concat(extraAgendas)}
+									agendas={data.data.agendas
+										.map((agenda) => {
+											return {
+												...agenda,
+												files: agenda.files
+													? (agenda.files as unknown as CoursifyFile[])
+													: null,
+												//using null instead of [] or doing nothing makes an error go away.
+												//it ensures that the type of files in this array is CoursifyFile[] | null
+												//instead of only CoursifyFile[]. This is needed for concat to work.
+											};
+										})
+										.concat(extraAgendas)}
 									updateAgendas={(
 										val: {
 											class_id: string;
@@ -355,6 +369,7 @@ const Class: NextPageWithLayout = () => {
 											date: string | null;
 											description: Json;
 											assignments: string[] | null;
+											files: CoursifyFile[] | null;
 										}[]
 									) => setExtraAgendas(extraAgendas.concat(val))}
 									allAssignments={createdAssignments.concat(

@@ -12,6 +12,9 @@ import { useEffect, useState } from "react";
 import { CompactAssignmentUI } from "./agenda";
 import { createAgenda, editAgenda, searchDB } from "@/lib/db/agendas";
 import { Info } from "@/components/tooltips/info";
+import GenericFileUpload, {
+	CoursifyFile,
+} from "@/components/files/genericFileUpload";
 
 export const CreateAgenda = ({
 	classID,
@@ -38,6 +41,7 @@ export const CreateAgenda = ({
 		date: string | null;
 		description: Json;
 		assignments: string[] | null;
+		files: CoursifyFile[] | null;
 	}) => void;
 	assignmentUpdater: (
 		val: {
@@ -60,6 +64,7 @@ export const CreateAgenda = ({
 			due_type: number | null;
 			due_date: string | null;
 		}[];
+		files: CoursifyFile[];
 	};
 }) => {
 	const supabase = useSupabaseClient();
@@ -69,6 +74,9 @@ export const CreateAgenda = ({
 		editingInfo
 			? editingInfo.assignments.map((assignment) => assignment.id)
 			: []
+	);
+	const [files, setFiles] = useState<CoursifyFile[]>(
+		editingInfo ? editingInfo.files : []
 	);
 	// Loading states
 	const [loading, setLoading] = useState(false);
@@ -128,6 +136,7 @@ export const CreateAgenda = ({
 			<h2 className="title-sm mb-2">
 				{editingInfo ? "Edit your agenda" : "Create a new Agenda"}
 			</h2>
+			{/* //TODO: <button onClick={() => console.log(files)}>TEST NE</button> */}
 			{/* custom datepicker later probably */}
 			<Formik
 				initialValues={{
@@ -150,13 +159,15 @@ export const CreateAgenda = ({
 									date: values.date,
 									description: editorState?.toJSON() as unknown as Json,
 									assignments: chosenAssignments,
+									files: JSON.parse(JSON.stringify(files)),
 							  })
 							: await createAgenda(
 									supabase,
 									classID,
 									values.date,
 									editorState?.toJSON() as unknown as Json,
-									chosenAssignments
+									chosenAssignments,
+									JSON.parse(JSON.stringify(files))
 							  );
 						// FAILURE STATE
 						if (DBreturn.error) {
@@ -169,7 +180,15 @@ export const CreateAgenda = ({
 							setChosenAssignments([]); //clears your selections in the case of a succesful POST
 							setOpen(false);
 							if (createTempAgenda) {
-								createTempAgenda(getDataOutArray(DBreturn.data));
+								const actualData = getDataOutArray(DBreturn.data);
+								createTempAgenda({
+									id: actualData.id,
+									class_id: actualData.class_id,
+									date: actualData.date,
+									description: actualData.description,
+									assignments: actualData.assignments,
+									files: actualData.files as unknown as CoursifyFile[],
+								});
 							}
 						}
 					} else {
@@ -194,6 +213,7 @@ export const CreateAgenda = ({
 						initialState={editingInfo ? editingInfo.description : ""}
 						focus={false}
 					/>
+					<GenericFileUpload setFiles={setFiles} files={files} />
 					{/* Later, we'll need to be able to change the order of the assignments */}
 					<div className="flex">
 						<p>Select assignments to include in this agenda:</p>
