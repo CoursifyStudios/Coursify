@@ -19,6 +19,7 @@ import { AnnouncementPostingUI } from "./announcementPosting";
 import { Comment, Commenting } from "./commenting";
 import { Delete } from "./delete";
 import { TempAnnouncement } from "./tempAnnouncement";
+import { FileCarousel } from "@/components/files/genericFileView";
 
 /**
  * --editing announcements--
@@ -53,6 +54,7 @@ export const Announcement = ({
 	const [info, setInfo] = useState({
 		title: announcement.title,
 		content: announcement.content,
+		files: announcement.files,
 	});
 	const [selected, setSelected] = useState(options[0]);
 	const [showEditing, setShowEditing] = useState(false);
@@ -69,7 +71,7 @@ export const Announcement = ({
 						id: announcement.id, //does not change
 						title: info.title!, //can be edited
 						content: info.content, //editable too
-						files: announcement.files, //these can also change
+						files: info.files, //these can also change
 						clone_id: announcement.clone_id,
 						setEditing: setShowEditing,
 					}}
@@ -203,6 +205,7 @@ export const Announcement = ({
 						initialState={info.content}
 						className="mt-0.5"
 					/>
+					<FileCarousel files={info.files ?? []} />
 					{announcement.parent && (
 						<div className="flex">
 							<div className=""></div>

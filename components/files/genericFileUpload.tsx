@@ -12,7 +12,8 @@ import { FileView } from "./genericFileView";
 const GenericFileUpload: NextPage<{
 	files: CoursifyFile[];
 	setFiles: Dispatch<SetStateAction<CoursifyFile[]>>;
-}> = ({ files, setFiles }) => {
+	destination: string;
+}> = ({ files, setFiles, destination }) => {
 	const user = useUser();
 	const supabase = useSupabaseClient();
 
@@ -29,7 +30,7 @@ const GenericFileUpload: NextPage<{
 
 		const UUID = window.crypto.randomUUID();
 		const name = `${UUID}--${user!.id}`;
-		const path = `agendas/${name}`;
+		const path = `${destination}/${name}`;
 
 		setFiles(
 			files.concat({
@@ -71,7 +72,7 @@ const GenericFileUpload: NextPage<{
 
 		const test = await supabase.functions.invoke("delete-file", {
 			body: {
-				path: [`agendas/${fileName}`],
+				path: [`${destination}/${fileName}`],
 			},
 		});
 

@@ -223,7 +223,11 @@ export const CreateAgenda = ({
 						initialState={editingInfo ? editingInfo.description : ""}
 						focus={false}
 					/>
-					<GenericFileUpload setFiles={setFiles} files={files} />
+					<GenericFileUpload
+						setFiles={setFiles}
+						files={files}
+						destination="agendas"
+					/>
 					{/* Later, we'll need to be able to change the order of the assignments */}
 					<div className="flex">
 						<p>Select assignments to include in this agenda:</p>

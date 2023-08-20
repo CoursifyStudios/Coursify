@@ -2,16 +2,17 @@ import { formatBytes } from "@/lib/misc/convertBytes";
 import { LoadingSmall } from "../misc/loading";
 import { CoursifyFile } from "./genericFileUpload";
 import { DocumentIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { DownloadableFile } from "./downloadableFile";
+import { ImagePreview } from "./imagePreview";
 
-export const mediaFileExtensions = [
+export const viewableFileExtensions = [
 	"png",
 	"jpg",
 	"jpeg",
-	"dng",
 	"gif",
-	"mp4",
 	"webp",
 	"JPG",
+	"avif",
 ];
 
 export const FileView = ({
@@ -27,7 +28,7 @@ export const FileView = ({
 		<div className="rounded-lg border border-gray-300 p-3 flex items-center">
 			{" "}
 			{!file.uploading &&
-			mediaFileExtensions.includes(file.realName.split(".").pop() || "") ? (
+			viewableFileExtensions.includes(file.realName.split(".").pop() || "") ? (
 				// eslint-disable-next-line @next/next/no-img-element
 				<img
 					src={file.link}
@@ -62,5 +63,28 @@ export const FileView = ({
 				</div>
 			)}
 		</div>
+	);
+};
+
+export const FileCarousel = ({ files }: { files: CoursifyFile[] }) => {
+	return (
+		<>
+			<div className="flex mb-2">
+				{files?.map(
+					(file, index) =>
+						!viewableFileExtensions.includes(
+							file.realName.split(".").pop() || ""
+						) && <DownloadableFile key={index} file={file} />
+				)}
+			</div>
+			<div className="flex gap-4 overflow-x-auto">
+				{files?.map(
+					(file, index) =>
+						viewableFileExtensions.includes(
+							file.realName.split(".").pop() || ""
+						) && <ImagePreview key={index} file={file} />
+				)}
+			</div>
+		</>
 	);
 };

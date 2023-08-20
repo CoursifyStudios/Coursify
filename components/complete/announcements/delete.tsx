@@ -28,7 +28,15 @@ export const Delete: NextPage<{
 		const data = await removeAnnouncementFromCommunity(
 			supabase,
 			announcement.id,
-			classID
+			classID,
+			//only delete the files if this is a lone announcement.
+			//This strategy sort of falls apart if you post announcements to
+			//many groups and then delete them individually, but other than
+			//an SQL function I see no easy way to do this
+			// the sql function would just check that nothing references the file
+			announcement.clone_id == null && announcement.files
+				? announcement.files.map((file) => `announcements/${file.fileName}`)
+				: []
 		);
 		if (data.error) {
 			setError(data.error.message);
@@ -42,7 +50,7 @@ export const Delete: NextPage<{
 			author: announcement.author,
 			title: announcement.title!,
 			files: announcement.files
-				? announcement.files.map((file) => `agendas/${file.fileName}`)
+				? announcement.files.map((file) => `announcements/${file.fileName}`)
 				: [],
 			clone_id: announcement.clone_id,
 		});

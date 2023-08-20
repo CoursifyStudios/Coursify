@@ -92,7 +92,7 @@ export const editAnnouncement = async (
 		id: string;
 		author: string;
 		title: string;
-		files: CoursifyFile[] | null;
+		files: string[] | null;
 		clone_id: string | null;
 	},
 	newAnnouncement: {
@@ -101,12 +101,13 @@ export const editAnnouncement = async (
 		files: CoursifyFile[] | null;
 	}
 ) => {
+	const newFileLinks = newAnnouncement.files?.map((file) => file.fileName);
 	//removing any no longer wanted files
 	if (oldAnnouncement.files) {
 		await supabase.functions.invoke("delete-file", {
 			body: {
 				path: oldAnnouncement.files.filter(
-					(oldFile) => !newAnnouncement.files?.includes(oldFile)
+					(oldFile) => newFileLinks?.includes(oldFile)
 				),
 			},
 		});

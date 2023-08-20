@@ -7,6 +7,8 @@ import { howLongAgo } from "../../../lib/misc/dates";
 import { useTabs } from "../../../lib/tabs/handleTabs";
 import Editor from "../../editors/richeditor";
 import Image from "next/image";
+import { CoursifyFile } from "@/components/files/genericFileUpload";
+import { FileCarousel } from "@/components/files/genericFileView";
 
 export const TempAnnouncement = ({
 	announcement,
@@ -14,6 +16,7 @@ export const TempAnnouncement = ({
 	announcement: {
 		author: string;
 		content: Json;
+		files: CoursifyFile[] | null;
 		title: string | null;
 		id?: string;
 		time?: string | null;
@@ -66,13 +69,13 @@ export const TempAnnouncement = ({
 						width={20}
 						height={20}
 					/>
-					<p className="ml-1.5 mr-1 font-semibold text-neutral-700">
+					<p className="ml-1.5 mr-1 font-semibold text-gray-700">
 						{announcement.users
 							? getDataOutArray(announcement.users!).full_name
 							: user?.user_metadata.name}
 					</p>
 				</Link>
-				<p className="pl-1.5 text-gray-600">
+				<p className="pl-1.5 text-gray-600  dark:text-gray-400">
 					{announcement.time
 						? howLongAgo(announcement.time)
 						: "Posted just now"}
@@ -83,6 +86,7 @@ export const TempAnnouncement = ({
 				initialState={announcement.content}
 				className="mt-0.5"
 			/>
+			<FileCarousel files={announcement.files ?? []} />
 		</div>
 	);
 };

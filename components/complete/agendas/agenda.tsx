@@ -15,7 +15,10 @@ import {
 import { DeleteAgenda } from "./deleteAgenda";
 import { CreateAgenda } from "./createAgenda";
 import { CoursifyFile } from "@/components/files/genericFileUpload";
-import { mediaFileExtensions } from "@/components/files/genericFileView";
+import {
+	FileCarousel,
+	viewableFileExtensions,
+} from "@/components/files/genericFileView";
 import { ImagePreview } from "@/components/files/imagePreview";
 import { DownloadableFile } from "@/components/files/downloadableFile";
 
@@ -152,22 +155,7 @@ export const Agenda = ({
 							initialState={agenda.description}
 							className="my-0.5"
 						/>
-						<div className="flex mb-2">
-							{agenda.files?.map(
-								(file, index) =>
-									!mediaFileExtensions.includes(
-										file.realName.split(".").pop() || ""
-									) && <DownloadableFile key={index} file={file} />
-							)}
-						</div>
-						<div className="flex gap-4 overflow-x-auto">
-							{agenda.files?.map(
-								(file, index) =>
-									mediaFileExtensions.includes(
-										file.realName.split(".").pop() || ""
-									) && <ImagePreview key={index} file={file} />
-							)}
-						</div>
+						<FileCarousel files={agenda.files ?? []} />
 						<div className="grid grid-cols-1 gap-2">
 							{true &&
 								allAssignments
