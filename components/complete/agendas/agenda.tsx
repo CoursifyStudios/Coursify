@@ -65,7 +65,12 @@ export const Agenda = ({
 		assignments: string[] | null;
 		files: CoursifyFile[] | null;
 	} | null>(null);
-
+	const dateFormat = new Intl.DateTimeFormat("en-US", {
+		weekday: "long",
+		month: "long",
+		day: "numeric",
+		timeZone: "Europe/London",
+	});
 	return (
 		<>
 			{/* Couldn't get editing the agenda directly to work, so instead we just delete it and add a new one in its place */}
@@ -114,11 +119,7 @@ export const Agenda = ({
 					<div className="bg-gray-200 p-4 rounded-lg">
 						<div className="flex justify-between">
 							<h2 className="font-bold text-lg">
-								{new Date(agenda.date!).toLocaleDateString("en-US", {
-									weekday: "long",
-									month: "long",
-									day: "numeric",
-								})}
+								{dateFormat.format(new Date(agenda.date!))}
 							</h2>
 							{isTeacher && (
 								<div className="gap-2 grid grid-cols-2">
