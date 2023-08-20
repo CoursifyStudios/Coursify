@@ -7,7 +7,6 @@ import { ColoredPill } from "../../misc/pill";
 import { useSettings } from "@/lib/stores/settings";
 import {
 	CheckCircleIcon,
-	DocumentIcon,
 	MinusCircleIcon,
 	PencilIcon,
 	PlusCircleIcon,
@@ -16,12 +15,7 @@ import {
 import { DeleteAgenda } from "./deleteAgenda";
 import { CreateAgenda } from "./createAgenda";
 import { CoursifyFile } from "@/components/files/genericFileUpload";
-import {
-	FileView,
-	mediaFileExtensions,
-} from "@/components/files/genericFileView";
-import Image from "next/image";
-import { BigImagePreview } from "@/components/files/imagePopup";
+import { mediaFileExtensions } from "@/components/files/genericFileView";
 import { ImagePreview } from "@/components/files/imagePreview";
 import { DownloadableFile } from "@/components/files/downloadableFile";
 
