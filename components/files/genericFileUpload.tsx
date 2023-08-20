@@ -1,8 +1,6 @@
-import { LoadingSmall } from "@/components/misc/loading";
-import { DocumentArrowUpIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { DocumentArrowUpIcon } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
 import { Dispatch, SetStateAction, useState } from "react";
-import { formatBytes } from "@/lib/misc/convertBytes";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { FileView } from "./genericFileView";
 
@@ -19,7 +17,6 @@ const GenericFileUpload: NextPage<{
 	const supabase = useSupabaseClient();
 
 	const [error, setError] = useState("");
-	const [loading, setLoading] = useState(false);
 
 	const uploadFile = async (file: File) => {
 		if (!file) return;
@@ -31,8 +28,8 @@ const GenericFileUpload: NextPage<{
 		}
 
 		const UUID = window.crypto.randomUUID();
-		const name = `${UUID}--${user!.id}`; //uh
-		const path = `submissions/${name}`;
+		const name = `${UUID}--${user!.id}`;
+		const path = `agendas/${name}`;
 
 		setFiles(
 			files.concat({
@@ -71,51 +68,34 @@ const GenericFileUpload: NextPage<{
 				return { ...f, uploading: true };
 			})
 		);
+
 		const test = await supabase.functions.invoke("delete-file", {
 			body: {
-				path: `submissions/${fileName}`,
+				path: [`agendas/${fileName}`],
 			},
 		});
 
 		if (error) {
 			setError("Failed to delete file!");
+			setFiles((files) =>
+				files.map((f) => {
+					if (f.fileName != fileName) return f;
+					const { uploading: _, ...newFile } = f;
+					return newFile;
+				})
+			);
 			return;
+		} else {
+			setFiles((files) => files.filter((file) => file.fileName != fileName));
 		}
 	};
 
 	return (
 		<>
 			{files.length > 0 && (
-				<div className="grid lg:grid-cols-2 xl:grid-cols-1 gap-2">
+				<div className="grid lg:grid-cols-2 gap-2">
 					{files.map((file, i) => (
-						<div
-							className="rounded-lg border border-gray-300 p-3 flex items-center"
-							key={i}
-						>
-							{" "}
-							{!file.uploading && <FileView file={file} size={48} />}
-							<div className="truncate mx-2 ">
-								<span className="truncate max-w-xs text-sm font-medium">
-									{file.realName}
-								</span>
-								<p className="text-xs">
-									.{file.realName.split(".").pop()} file,{" "}
-									{formatBytes(file.size)}
-								</p>
-							</div>
-							{file.uploading ? (
-								<div className="ml-auto">
-									<LoadingSmall />
-								</div>
-							) : (
-								<div
-									className="rounded hover:bg-gray-300 p-0.5 ml-auto cursor-pointer"
-									onClick={() => deleteFile(file.fileName)}
-								>
-									<XMarkIcon className="h-4 w-4 text-red-500" />
-								</div>
-							)}
-						</div>
+						<FileView key={i} file={file} deleteFile={deleteFile} size={48} />
 					))}
 				</div>
 			)}

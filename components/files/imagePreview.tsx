@@ -15,7 +15,7 @@ export const ImagePreview = ({ file }: { file: CoursifyFile }) => {
 				/>
 			) : (
 				<div
-					className="relative shrink-0"
+					className="relative shrink-0 group"
 					title={file.realName}
 					onClick={() => setShowBigPicture(true)}
 				>
@@ -26,7 +26,7 @@ export const ImagePreview = ({ file }: { file: CoursifyFile }) => {
 						height={192}
 						className="rounded object-cover object-center !min-w-48 h-48"
 					/>
-					<p className="text-white pl-1 text-sm absolute bottom-0 w-full backdrop-brightness-50">
+					<p className="hidden group-hover:block text-white pl-1 text-sm absolute bottom-0 w-full backdrop-brightness-50">
 						{file.realName}
 					</p>
 				</div>
