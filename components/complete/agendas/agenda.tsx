@@ -93,6 +93,9 @@ export const Agenda = ({
 					{/* For Deleting Agendas */}
 					<DeleteAgenda
 						agendaID={agenda.id}
+						agendaFiles={agenda.files?.map(
+							(file) => `agendas/${file.fileName}`
+						)}
 						open={deleting}
 						setOpen={setDeleting}
 						completed={setDeleted}

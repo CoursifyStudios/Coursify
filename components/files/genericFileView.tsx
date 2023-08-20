@@ -10,6 +10,7 @@ export const mediaFileExtensions = [
 	"gif",
 	"mp4",
 	"webp",
+	"JPG",
 ];
 
 export const FileView = ({

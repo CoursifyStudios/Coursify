@@ -1,6 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database, Json } from "./database.types";
 import { getTheseAssignments } from "./assignments/assignments";
+import { CoursifyFile } from "@/components/files/genericFileUpload";
 
 export const fetchAgendasAndAssignments = async (
 	supabase: SupabaseClient<Database>,
@@ -60,8 +61,16 @@ export const createAgenda = async (
 
 export const deleteAgenda = async (
 	supabase: SupabaseClient<Database>,
-	id: string
+	id: string,
+	associatedFiles: string[] | undefined
 ) => {
+	if (associatedFiles) {
+		await supabase.functions.invoke("delete-file", {
+			body: {
+				path: associatedFiles,
+			},
+		});
+	}
 	return await supabase.from(`agendas`).delete().eq("id", id).select().single();
 };
 

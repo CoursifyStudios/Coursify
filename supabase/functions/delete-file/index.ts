@@ -16,11 +16,10 @@ serve(async (req: Request) => {
 			Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
 		);
 
-    const { path }: { path: string} = await req.json()
-		
-    await serversideSupabaseClient.storage.from("ugc").remove([path])
+	const { path }: { path: string[]} = await req.json();
 
-		return new Response(JSON.stringify({ message: "ok" }), {
+    await serversideSupabaseClient.storage.from("ugc").remove(path)
+		return new Response(JSON.stringify({ message: "ok"}), {
 			headers: { "Content-Type": "application/json", ...corsHeaders },
 			status: 200,
 		});

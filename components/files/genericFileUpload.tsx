@@ -70,9 +70,10 @@ const GenericFileUpload: NextPage<{
 				return { ...f, uploading: true };
 			})
 		);
+
 		const test = await supabase.functions.invoke("delete-file", {
 			body: {
-				path: `agendas/${fileName}`,
+				path: [`agendas/${fileName}`],
 			},
 		});
 

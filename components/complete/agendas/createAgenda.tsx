@@ -129,6 +129,17 @@ export const CreateAgenda = ({
 			closeMenu={() => {
 				setOpen(false);
 				setQuery("");
+				if (!editingInfo && files.length > 0) {
+					(async () => {
+						const deletion = await supabase.functions.invoke("delete-file", {
+							body: {
+								path: files.map((file) => `agendas/${file.fileName}`),
+							},
+						});
+						//tbh no idea how we would even approach error handling for this... -Bill
+					})();
+					setFiles([]);
+				}
 			}}
 			open={open}
 			size="md"
@@ -139,7 +150,7 @@ export const CreateAgenda = ({
 			<Formik
 				initialValues={{
 					date: editingInfo
-						? editingInfo.date
+						? new Date(editingInfo.date).toLocaleDateString("en-CA")
 						: // I couldn't get this working until I used this.
 						  // I've found the first (and only) reason for Canada to exist!
 						  new Date().toLocaleDateString("en-CA"),
@@ -176,6 +187,7 @@ export const CreateAgenda = ({
 							setLoading(false);
 							setQuery("");
 							setChosenAssignments([]); //clears your selections in the case of a succesful POST
+							setFiles([]);
 							setOpen(false);
 							if (createTempAgenda) {
 								const actualData = getDataOutArray(DBreturn.data);
