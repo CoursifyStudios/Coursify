@@ -9,9 +9,7 @@ export const mediaFileExtensions = [
 	"dng",
 	"gif",
 	"mp4",
-	"mov",
 	"webp",
-	"svg",
 ];
 
 export const FileView = ({
@@ -25,7 +23,7 @@ export const FileView = ({
 		<>
 			{mediaFileExtensions.includes(file.realName.split(".").pop() || "") ? (
 				// eslint-disable-next-line @next/next/no-img-element
-				<Image
+				<img
 					src={file.link}
 					alt={`ugc image of ${file.realName}`}
 					width={size}

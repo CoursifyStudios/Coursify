@@ -136,8 +136,6 @@ export const CreateAgenda = ({
 			<h2 className="title-sm mb-2">
 				{editingInfo ? "Edit your agenda" : "Create a new Agenda"}
 			</h2>
-			{/* //TODO: <button onClick={() => console.log(files)}>TEST NE</button> */}
-			{/* custom datepicker later probably */}
 			<Formik
 				initialValues={{
 					date: editingInfo
@@ -159,7 +157,7 @@ export const CreateAgenda = ({
 									date: values.date,
 									description: editorState?.toJSON() as unknown as Json,
 									assignments: chosenAssignments,
-									files: JSON.parse(JSON.stringify(files)),
+									files: files as unknown as Json[],
 							  })
 							: await createAgenda(
 									supabase,
@@ -167,7 +165,7 @@ export const CreateAgenda = ({
 									values.date,
 									editorState?.toJSON() as unknown as Json,
 									chosenAssignments,
-									JSON.parse(JSON.stringify(files))
+									files as unknown as Json[]
 							  );
 						// FAILURE STATE
 						if (DBreturn.error) {

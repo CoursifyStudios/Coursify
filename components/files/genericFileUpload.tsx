@@ -19,7 +19,6 @@ const GenericFileUpload: NextPage<{
 	const supabase = useSupabaseClient();
 
 	const [error, setError] = useState("");
-	const [loading, setLoading] = useState(false);
 
 	const uploadFile = async (file: File) => {
 		if (!file) return;
@@ -31,8 +30,8 @@ const GenericFileUpload: NextPage<{
 		}
 
 		const UUID = window.crypto.randomUUID();
-		const name = `${UUID}--${user!.id}`; //uh
-		const path = `submissions/${name}`;
+		const name = `${UUID}--${user!.id}`;
+		const path = `agendas/${name}`;
 
 		setFiles(
 			files.concat({
@@ -73,20 +72,29 @@ const GenericFileUpload: NextPage<{
 		);
 		const test = await supabase.functions.invoke("delete-file", {
 			body: {
-				path: `submissions/${fileName}`,
+				path: `agendas/${fileName}`,
 			},
 		});
 
 		if (error) {
 			setError("Failed to delete file!");
+			setFiles((files) =>
+				files.map((f) => {
+					if (f.fileName != fileName) return f;
+					const { uploading: _, ...newFile } = f;
+					return newFile;
+				})
+			);
 			return;
+		} else {
+			setFiles((files) => files.filter((file) => file.fileName != fileName));
 		}
 	};
 
 	return (
 		<>
 			{files.length > 0 && (
-				<div className="grid lg:grid-cols-2 xl:grid-cols-1 gap-2">
+				<div className="grid lg:grid-cols-2 gap-2">
 					{files.map((file, i) => (
 						<div
 							className="rounded-lg border border-gray-300 p-3 flex items-center"
