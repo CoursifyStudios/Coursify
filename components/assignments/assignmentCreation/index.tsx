@@ -4,7 +4,6 @@ import { create } from "zustand";
 
 import { Popup } from "@/components/misc/popup";
 import { NewAssignmentData } from "@/lib/db/assignments/assignments";
-import { useSettings } from "@/lib/stores/settings";
 import { DueType } from "../assignments";
 import AssignmentCreation from "./four";
 import { submissionType } from "./submissionType";
@@ -49,7 +48,6 @@ export const CreateAssignment: NextPage<{
 	classid,
 	createTempAssignment,
 }) => {
-	const { data: settings } = useSettings();
 	const [stage, setStage] = useState(1);
 	const { data: assignmentData, set: setAssignmentData } = useAssignmentStore();
 	const supabase = useSupabaseClient();

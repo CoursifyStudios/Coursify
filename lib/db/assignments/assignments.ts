@@ -5,6 +5,7 @@ import { SerializedEditorState } from "lexical";
 import { Database, Json } from "../database.types";
 import { SubmissionDiscussionPost } from "@/components/assignments/assignmentPanel/submission.types";
 import { ArrayElementType } from "@/lib/misc/elementarraytype.types";
+import { CoursifyFile } from "@/components/files/genericFileUpload";
 
 export const getAllAssignments = async (
 	supabaseClient: SupabaseClient<Database>,
@@ -165,6 +166,7 @@ export type NewAssignmentData = {
 	content: SerializedEditorState;
 	type: AssignmentTypes;
 	submissionInstructions?: string;
+	files: CoursifyFile[] | null;
 	dueType?: DueType;
 	dueDate?: Date;
 	dueDay?: number;

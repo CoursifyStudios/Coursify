@@ -143,6 +143,7 @@ export interface Database {
 					description: string;
 					due_date: string | null;
 					due_type: number | null;
+					files: Json[] | null;
 					group_id: string | null;
 					hidden: boolean;
 					id: string;
@@ -162,6 +163,7 @@ export interface Database {
 					description: string;
 					due_date?: string | null;
 					due_type?: number | null;
+					files?: Json[] | null;
 					group_id?: string | null;
 					hidden?: boolean;
 					id?: string;
@@ -181,6 +183,7 @@ export interface Database {
 					description?: string;
 					due_date?: string | null;
 					due_type?: number | null;
+					files?: Json[] | null;
 					group_id?: string | null;
 					hidden?: boolean;
 					id?: string;

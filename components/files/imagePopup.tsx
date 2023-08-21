@@ -20,7 +20,7 @@ export const BigImagePreview = ({
 				alt={`ugc image of ${file.realName}`}
 				width={1024}
 				height={768}
-				className="rounded object-scale-down object-center shrink-0 mt-1"
+				className="rounded object-cover object-center shrink-0 mt-1"
 			/>
 		</Popup>
 	);

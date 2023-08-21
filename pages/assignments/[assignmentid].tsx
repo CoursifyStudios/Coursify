@@ -40,6 +40,8 @@ import { Fragment, ReactElement, useEffect, useState } from "react";
 import { Disclosure, Tab } from "@headlessui/react";
 import TeacherHeader from "@/components/assignments/assignmentPanel/teacherHeader";
 import Avatar from "@/components/misc/avatar";
+import { FileCarousel } from "@/components/files/genericFileView";
+import { CoursifyFile } from "@/components/files/genericFileUpload";
 
 const Panel = dynamic(
 	() => import("@/components/assignments/assignmentPanel"),
@@ -496,6 +498,12 @@ const Post: NextPageWithLayout = () => {
 										className=" scrollbar-fancy mb-5 mt-2 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-5"
 										focus={false}
 									/>
+								) : assignment.data.files ? (
+									<div className="rounded-xl bg-gray-200 p-4">
+										<FileCarousel
+											files={assignment.data.files as unknown as CoursifyFile[]}
+										/>
+									</div>
 								) : (
 									<>
 										<div className="mb-5 mt-2 grid grow place-items-center rounded-xl bg-gray-200 p-5 text-lg font-medium">
