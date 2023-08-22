@@ -5,10 +5,7 @@ import { Submission } from "@/components/assignments/assignmentPanel/submission.
 import Editor from "@/components/editors/richeditor";
 import { NextPageWithLayout } from "@/pages/_app";
 import Layout from "@/components/layout/layout";
-import Dropdown from "@/components/misc/dropdown";
-import { Info } from "@/components/tooltips/info";
 import {
-	AllAssignmentResponse,
 	AllAssignments,
 	AssignmentTypes,
 	StudentAssignmentResponse,
@@ -23,25 +20,14 @@ import { getDataOutArray } from "@/lib/misc/dataOutArray";
 import launch from "@/public/svgs/launch.svg";
 import noData from "@/public/svgs/no-data.svg";
 import { AssignmentPreview } from "@assignments/assignments";
-import {
-	BarsArrowDownIcon,
-	ChevronUpIcon,
-	PlusIcon,
-} from "@heroicons/react/24/outline";
+import { BarsArrowDownIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { SerializedEditorState } from "lexical";
 import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import {
-	Dispatch,
-	Fragment,
-	ReactElement,
-	SetStateAction,
-	useEffect,
-	useState,
-} from "react";
+import { Fragment, ReactElement, useEffect, useState } from "react";
 import { Tab } from "@headlessui/react";
 import AssignmentGradingUI from "@/components/assignments/assignmentGrading";
 
@@ -152,7 +138,7 @@ const Post: NextPageWithLayout = () => {
 				);
 
 				const assignment = await (isTeacher
-					? getTeacherAssignment(supabase, assignmentid, user.id)
+					? getTeacherAssignment(supabase, assignmentid)
 					: getStudentAssignment(supabase, assignmentid, user.id));
 
 				setAssignment(assignment);

@@ -7,7 +7,6 @@ import {
 } from "@/lib/db/assignments/assignments";
 import { Database } from "@/lib/db/database.types";
 import { Disclosure } from "@headlessui/react";
-import { ChevronUpIcon } from "@heroicons/react/24/outline";
 import { SupabaseClient } from "@supabase/supabase-js";
 import AssignmentHeader from "../assignmentPanel/header";
 import { Dispatch, SetStateAction, useMemo, useState } from "react";
@@ -199,11 +198,6 @@ const AssignmentGradingUI = ({
 										<ColoredPill color="gray" className="ml-auto">
 											{notSubmitted.length}
 										</ColoredPill>
-										{/* <ChevronUpIcon
-											className={`${
-												open ? "rotate-180 transform" : ""
-											} h-5 w-5 ml-auto`}
-										/> */}
 									</Disclosure.Button>
 									<Disclosure.Panel className=" pt-2 pb-4 text-sm flex flex-col gap-2">
 										{notSubmitted.length != 0 ? (
@@ -366,6 +360,7 @@ const AssignmentGradingUI = ({
 									selectedStudent.submissions[0]
 										.content as SubmissionSettingsTypes
 								}
+								selectedStudent={selectedStudent}
 							/>
 						</div>
 					</div>

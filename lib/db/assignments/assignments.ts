@@ -107,8 +107,7 @@ export type StudentAssignmentResponse = Awaited<
 
 export const getTeacherAssignment = async (
 	supabase: SupabaseClient<Database>,
-	assignmentuuid: string,
-	userID: string
+	assignmentuuid: string
 ) => {
 	return await supabase
 		.from("assignments")

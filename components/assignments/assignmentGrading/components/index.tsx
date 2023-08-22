@@ -6,6 +6,7 @@ import LinkGrading from "./link";
 import {
 	Submission,
 	SubmissionCheckoff,
+	SubmissionDiscussionPost,
 	SubmissionFileUpload,
 	SubmissionLink,
 	SubmissionMedia,
@@ -16,15 +17,19 @@ import MediaGrading from "./media";
 import FileGrading from "./file";
 import CheckboxGrading from "./checkbox";
 import TextGrading from "./text";
+import { Json } from "@/lib/db/database.types";
+import DiscussionGrading from "./discussionPost";
 
 const AssignmentGradingComponents = ({
 	assignmentData,
 	submission: latetestSubmitted,
 	latestSubmission,
+	selectedStudent,
 }: {
 	assignmentData: TeacherAssignmentResponse;
 	submission: SubmissionSettingsTypes;
 	latestSubmission: SubmissionSettingsTypes;
+	selectedStudent: SelectedStudent;
 }) => {
 	if (!assignmentData.data) return null;
 
@@ -66,7 +71,29 @@ const AssignmentGradingComponents = ({
 					submission={submission as SubmissionText}
 				/>
 			);
+		case AssignmentTypes.DISCUSSION_POST:
+			return (
+				<DiscussionGrading
+					assignmentData={assignmentData}
+					submission={submission as SubmissionDiscussionPost}
+					selectedStudent={selectedStudent}
+				/>
+			);
 	}
 };
 
 export default AssignmentGradingComponents;
+
+export interface SelectedStudent {
+	submissions: {
+		content: Json;
+		final: boolean;
+		created_at: string;
+		assignment_id: string;
+		grade: number | null;
+		id: string;
+	}[];
+	id: string;
+	full_name: string;
+	avatar_url: string;
+}
