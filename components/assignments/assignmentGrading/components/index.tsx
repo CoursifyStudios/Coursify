@@ -19,12 +19,16 @@ import TextGrading from "./text";
 
 const AssignmentGradingComponents = ({
 	assignmentData,
-	submission,
+	submission: latetestSubmitted,
+	latestSubmission,
 }: {
 	assignmentData: TeacherAssignmentResponse;
 	submission: SubmissionSettingsTypes;
+	latestSubmission: SubmissionSettingsTypes;
 }) => {
 	if (!assignmentData.data) return null;
+
+	const submission = latetestSubmitted ?? latestSubmission;
 
 	switch (assignmentData.data.type) {
 		case AssignmentTypes.LINK:

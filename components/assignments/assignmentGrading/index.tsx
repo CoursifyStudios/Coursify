@@ -362,6 +362,10 @@ const AssignmentGradingUI = ({
 									selectedStudent.submissions.find((s) => s.final)
 										?.content as SubmissionSettingsTypes
 								}
+								latestSubmission={
+									selectedStudent.submissions[0]
+										.content as SubmissionSettingsTypes
+								}
 							/>
 						</div>
 					</div>

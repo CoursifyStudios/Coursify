@@ -275,14 +275,16 @@ const Text: NextPage<{
 						{/* {settings.rich && submission && typeof submission.content == "string" && 
 					<p className="text-blue-500 hover:underline cursor-pointer" onClick={() => setSubmission(undefined)}>Reset to rich editor</p>
 					} */}
-						<Button
-							className="text-white"
-							color="bg-gray-200 mx-4 "
-							disabled={content.length === 0}
-							onClick={() => submit(true)}
-						>
-							Save Draft
-						</Button>
+						{!(dbSubmission && dbSubmission.final) && (
+							<Button
+								className="text-white"
+								color="bg-gray-200 mx-4 "
+								disabled={content.length === 0}
+								onClick={() => submit(true)}
+							>
+								Save Draft
+							</Button>
+						)}
 						<Button
 							className="text-white"
 							color="bg-blue-500"
