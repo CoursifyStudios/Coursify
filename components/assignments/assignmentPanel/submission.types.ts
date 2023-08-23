@@ -70,8 +70,8 @@ export interface Submission {
 	content: SubmissionSettingsTypes;
 	final: boolean;
 	created_at: string;
-	grade: number | null;
-	comment: string | null;
+	grade?: number | null;
+	comment?: string | null;
 	users?: {
 		id: string;
 		full_name: string;
