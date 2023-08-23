@@ -399,7 +399,8 @@ const AssignmentGradingUI = ({
 										className="text-white"
 										onClick={setReviewed}
 										disabled={
-											selectedStudent
+											selectedStudent &&
+											selectedStudent.submissions.find((s) => s.final)
 												? selectedStudent.submissions.find((s) => s.final)!
 														.comment == comment &&
 												  graded.some((student) => student.id == selectedID)

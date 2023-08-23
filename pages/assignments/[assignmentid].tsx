@@ -175,9 +175,11 @@ const Post: NextPageWithLayout = () => {
 				} w-[20.5rem] shrink-0 flex-col space-y-5 overflow-y-scroll p-1 pb-6 compact:space-y-3 md:h-[calc(100vh-6.5rem)] `}
 			>
 				<h2 className="title">Your Assignments</h2>
-				{(teacherAssignments || studentAssignments) && user ? (
+				{(Array.isArray(teacherAssignments) ||
+					Array.isArray(studentAssignments)) &&
+				user ? (
 					<Tab.Group selectedIndex={tab} onChange={setTab}>
-						{!(!teacherAssignments || !studentAssignments) && (
+						{teacherAssignments?.length && studentAssignments?.length ? (
 							<Tab.List as="div" className="flex items-center">
 								<Tab as={Fragment}>
 									{({ selected }) => (
@@ -206,9 +208,9 @@ const Post: NextPageWithLayout = () => {
 									)}
 								</Tab>
 							</Tab.List>
-						)}
+						) : null}
 						<Tab.Panels>
-							{studentAssignments ? (
+							{Array.isArray(studentAssignments) ? (
 								<Tab.Panel className="space-y-5 flex flex-col compact:space-y-2">
 									{studentAssignments.map(
 										(assignment) =>
@@ -239,7 +241,7 @@ const Post: NextPageWithLayout = () => {
 							) : (
 								<Tab.Panel></Tab.Panel>
 							)}
-							{teacherAssignments ? (
+							{Array.isArray(teacherAssignments) ? (
 								<Tab.Panel className="space-y-5 flex flex-col compact:space-y-2">
 									{teacherAssignments.map(
 										(assignment) =>
