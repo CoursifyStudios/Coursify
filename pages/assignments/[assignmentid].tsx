@@ -37,6 +37,7 @@ import {
 } from "react";
 import { Tab } from "@headlessui/react";
 import AssignmentGradingUI from "@/components/assignments/assignmentGrading";
+import { ColoredPill } from "@/components/misc/pill";
 
 const Panel = dynamic(
 	() => import("@/components/assignments/assignmentPanel"),
@@ -148,7 +149,13 @@ const Post: NextPageWithLayout = () => {
 
 				setAssignment(assignment);
 				if (assignment.data && "submissions" in assignment.data)
-					setRevisions(assignment.data.submissions as Submission[]);
+					setRevisions(
+						assignment.data.submissions.sort(
+							(a, b) =>
+								new Date(a.created_at).getTime() -
+								new Date(b.created_at).getTime()
+						) as Submission[]
+					);
 			}
 		})();
 		// Mobile support makes it sorta like using gmail on mobile, optimized for assignments
@@ -447,11 +454,36 @@ const Post: NextPageWithLayout = () => {
 							</div>
 							{assignment.data.type != AssignmentTypes.DISCUSSION_POST ? (
 								<div
-									className={`sticky mb-7 flex shrink-0 flex-col  xl:top-0 xl:mb-0 xl:ml-4 xl:w-72 `}
+									className={`sticky mb-7 flex shrink-0 flex-col space-y-4 xl:top-0 xl:mb-0 xl:ml-4 xl:w-72 `}
 								>
-									<h2 className="text-xl font-semibold">Submission</h2>
+									<div className="flex justify-between items-center !-mb-2">
+										<h2 className="text-xl font-semibold">Submission</h2>
+										{revisions.find((r) => r.grade != null) && (
+											<ColoredPill color="gray">
+												{assignment.data.max_grade ? (
+													<>
+														Grade:{" "}
+														{revisions.find((r) => r.grade != null)!.grade} /{" "}
+														{assignment.data.max_grade}
+													</>
+												) : (
+													"Teacher Reviewed"
+												)}
+											</ColoredPill>
+										)}
+									</div>
+									{revisions.find((r) => r.comment != null) && (
+										<div
+											className={` flex flex-col rounded-xl bg-gray-200  px-5 py-4`}
+										>
+											<h2 className="text-lg font-semibold ">
+												Teacher Comment
+											</h2>
+											<p>{revisions.find((r) => r.comment != null)!.comment}</p>
+										</div>
+									)}
 									<div
-										className={`mt-2 rounded-xl overflow-y-auto scrollbar-fancy bg-gray-200 ${
+										className={` rounded-xl overflow-y-auto scrollbar-fancy bg-gray-200 ${
 											open ? "max-h-16 p-1" : "max-h-[32rem] px-5 py-4"
 										}  overflow-hidden transition-all duration-300`}
 									>
@@ -498,9 +530,7 @@ const Post: NextPageWithLayout = () => {
 										)}
 									</div>
 									{revisions.length > 0 && (
-										<div
-											className={`mt-4  flex flex-col rounded-xl bg-gray-200 `}
-										>
+										<div className={`flex flex-col rounded-xl bg-gray-200 `}>
 											<button
 												className="flex items-center px-5 py-4"
 												onClick={() => setOpen((open) => !open)}

@@ -89,6 +89,8 @@ export const getStudentAssignment = async (
 			content,
 			final,
 			created_at,
+			grade,
+			comment,
 			users (
 				id, full_name, avatar_url
 			)
