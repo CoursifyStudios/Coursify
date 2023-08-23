@@ -17,6 +17,7 @@ import { SubmissionSettingsTypes } from "../assignmentPanel/submission.types";
 import { useRouter } from "next/router";
 
 const AssignmentGradingUI = ({
+	setAllAssignmentData,
 	allAssignmentData,
 	assignmentID,
 	supabase,
@@ -24,6 +25,7 @@ const AssignmentGradingUI = ({
 	setFullscreen,
 	setTeacherAssignments,
 }: {
+	setAllAssignmentData: Dispatch<SetStateAction<TeacherAssignmentResponse>>;
 	supabase: SupabaseClient<Database>;
 	allAssignmentData: TeacherAssignmentResponse;
 	setTeacherAssignments: Dispatch<SetStateAction<AllAssignments | undefined>>;
@@ -32,7 +34,6 @@ const AssignmentGradingUI = ({
 	setFullscreen: Dispatch<SetStateAction<boolean>>;
 }) => {
 	const [selectedID, setSelectedID] = useState<string>();
-	const [comment, setComment] = useState<string>("");
 	const [grade, setGrade] = useState<number | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
@@ -56,11 +57,22 @@ const AssignmentGradingUI = ({
 			),
 		}));
 
+	const [comment, setComment] = useState<string>("");
+
 	const selectedStudent = useMemo(
-		() =>
-			selectedID == "" ? undefined : students.find((s) => s.id == selectedID),
-		[selectedID, students]
+		() => {
+			const selectedStudent =
+				selectedID == "" ? undefined : students.find((s) => s.id == selectedID);
+			const recentSubmission = selectedStudent
+				? selectedStudent.submissions.find((s) => s.final)
+				: undefined;
+			if (recentSubmission) setComment(recentSubmission.comment || "");
+			return selectedStudent;
+		},
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+		[selectedID]
 	);
+
 	const totalStudents = students.length;
 
 	const isGraded = (is: boolean) =>
@@ -88,6 +100,7 @@ const AssignmentGradingUI = ({
 	}
 
 	const setReviewed = async () => {
+		// update supabase
 		await supabase
 			.from("submissions")
 			.update({
@@ -97,6 +110,35 @@ const AssignmentGradingUI = ({
 			// Lukas was complaining that this isn't edge case supported so there you go lukas - Bloxs
 			// MLH - Bill
 			.eq("id", selectedStudent!.submissions.filter((s) => s.final)[0].id);
+
+		// update UI
+		// this is a cluckerfk - LS
+		// 	setAllAssignmentData((data) => {
+		// 		if (!data.data || !data.data.classes) return data;
+		// 		return {
+		// 			...data,
+		// 			data: {
+		// 				...data.data,
+		// 				classes: {
+		// 					...data.data.classes,
+		// 					users: [
+		// 						...data.data.classes.users.filter(u => u.id != selectedID),
+		// 						{
+		// 							...data.data.classes.users.find(u => u.id == selectedID),
+		// 						submissions: [
+		// 							...data.data.classes.users.find(u => u.id == selectedID)!.submissions.filter(s => s.id == selectedStudent!.submissions.find((s) => s.final)!.id),
+		// 							{
+		// 								...selectedStudent!.submissions.find((s) => s.final)!,
+		// 								comment: comment || null,
+		// 								grade: grade ?? 0
+		// 							}
+		// 						]
+		// 						}
+		// 					]
+		// 				}
+		// 			}
+		// 		};
+		// 	});
 	};
 
 	const deleteAssignment = async () => {
@@ -297,7 +339,7 @@ const AssignmentGradingUI = ({
 					</div>
 				) : (
 					<div className="flex grow flex-col ml-4 mt-4">
-						<div className="flex justify-between bg-gray-200 h-32  p-3 rounded-xl">
+						<div className="flex justify-between bg-gray-200 h-36  p-3 rounded-xl">
 							<div className="flex">
 								<Avatar
 									full_name={selectedStudent!.full_name}
@@ -307,7 +349,9 @@ const AssignmentGradingUI = ({
 									text_size="xl"
 								/>
 								<div className="flex flex-col ml-4 justify-center">
-									<h1 className="title">{selectedStudent.full_name}</h1>
+									<h1 className="title truncate max-w-[12rem]">
+										{selectedStudent.full_name}
+									</h1>
 									{maxGrade ? (
 										<p className="text-lg font-medium flex items-end mt-2">
 											<input
@@ -338,8 +382,8 @@ const AssignmentGradingUI = ({
 							</div>
 							<div className="flex flex-col justify-between">
 								<textarea
-									placeholder="Enter a comment..."
-									className=" w-72 resize-none !rounded-xl"
+									placeholder="Enter an optional comment..."
+									className="h-20 w-72 resize-none !rounded-xl scrollbar-fancy"
 									value={comment}
 									onChange={(e) => setComment(e.target.value)}
 								/>
@@ -354,8 +398,17 @@ const AssignmentGradingUI = ({
 										color="bg-blue-500"
 										className="text-white"
 										onClick={setReviewed}
+										disabled={
+											selectedStudent
+												? selectedStudent.submissions.find((s) => s.final)!
+														.comment == comment &&
+												  graded.some((student) => student.id == selectedID)
+												: false
+										}
 									>
-										Reviewed
+										{graded.some((student) => student.id == selectedID)
+											? "Update Review"
+											: "Set Reviewed"}
 									</Button>
 								</div>
 							</div>

@@ -124,7 +124,8 @@ export const getTeacherAssignment = async (
 					created_at,
 					assignment_id,
 					grade,
-					id
+					id,
+					comment
 				)
 			)
 		)
