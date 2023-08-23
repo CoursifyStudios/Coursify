@@ -26,7 +26,7 @@ export const ColoredPill: NextPage<{
 
 	return (
 		<div
-			className={`inline-flex shrink-0 select-none rounded-full px-2.5 py-0.5 text-sm font-semibold transition duration-300 bg-${color}-200 border-opacity-20 dark:bg-opacity-10 text-${color}-600 ${
+			className={`inline-flex backdrop-blur shrink-0 select-none rounded-full px-2.5 py-0.5 text-sm font-semibold transition duration-300 bg-${color}-200 border-opacity-20 dark:bg-opacity-10 text-${color}-600 ${
 				color == "gray" && "!bg-gray-300 !text-gray-700 "
 			} ${hoverState && "hover:brightness-95"} ${className}`}
 		>

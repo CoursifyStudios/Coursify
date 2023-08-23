@@ -43,11 +43,17 @@ const LinkGrading = ({
 					</ColoredPill>
 				</a>
 			</div>
-			<iframe
-				src={submission.links[selectedLink]}
-				allow="fullscreen"
-				className="h-96 rounded-b-xl bg-backdrop-200"
-			></iframe>
+			<div className="relative w-full">
+				<iframe
+					src={submission.links[selectedLink]}
+					allow="fullscreen"
+					className="h-96 rounded-b-xl bg-backdrop-200 w-full"
+				/>
+
+				<ColoredPill className="absolute bottom-5 right-5 z-10" color="yellow">
+					Some websites don{"'"}t allow previews
+				</ColoredPill>
+			</div>
 		</>
 	);
 };

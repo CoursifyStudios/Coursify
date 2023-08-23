@@ -33,6 +33,7 @@ const AssignmentGradingUI = ({
 }) => {
 	const [selectedID, setSelectedID] = useState<string>();
 	const [comment, setComment] = useState<string>("");
+	const [grade, setGrade] = useState<number | null>(null);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 
@@ -93,7 +94,9 @@ const AssignmentGradingUI = ({
 				grade: 0,
 				comment: comment,
 			})
-			.eq("id", selectedStudent!.submissions[0].id);
+			// Lukas was complaining that this isn't edge case supported so there you go lukas - Bloxs
+			// MLH - Bill
+			.eq("id", selectedStudent!.submissions.filter((s) => s.final)[0].id);
 	};
 
 	const deleteAssignment = async () => {
@@ -315,13 +318,19 @@ const AssignmentGradingUI = ({
 														.find((s) => s.final)
 														?.grade?.toString() || ""
 												}
-												value={comment}
-												onChange={(e) => setComment(e.target.value)}
+												value={grade ?? ""}
+												onChange={(e) =>
+													setGrade(
+														e.target.value == ""
+															? null
+															: parseInt(e.target.value)
+													)
+												}
 											/>
 											<span className="ml-2 text-xl">/{maxGrade}</span>
 										</p>
 									) : (
-										<p className="text-xs">
+										<p className="text-xs max-w-[10rem]">
 											Grading is disabled for this assignment
 										</p>
 									)}
@@ -331,6 +340,8 @@ const AssignmentGradingUI = ({
 								<textarea
 									placeholder="Enter a comment..."
 									className=" w-72 resize-none !rounded-xl"
+									value={comment}
+									onChange={(e) => setComment(e.target.value)}
 								/>
 								<div className="ml-auto gap-4 flex">
 									{/* <Button color="bg-gray-300" className="text-white">
