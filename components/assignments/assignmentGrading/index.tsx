@@ -34,7 +34,7 @@ const AssignmentGradingUI = ({
 	setFullscreen: Dispatch<SetStateAction<boolean>>;
 }) => {
 	const [selectedID, setSelectedID] = useState<string>();
-	const [grade, setGrade] = useState<number | null>(null);
+	const [grade, setGrade] = useState<number | null>(0);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 
@@ -66,7 +66,10 @@ const AssignmentGradingUI = ({
 			const recentSubmission = selectedStudent
 				? selectedStudent.submissions.find((s) => s.final)
 				: undefined;
-			if (recentSubmission) setComment(recentSubmission.comment || "");
+			if (recentSubmission) {
+				setComment(recentSubmission.comment || "");
+				setGrade(recentSubmission.grade);
+			}
 			return selectedStudent;
 		},
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -100,16 +103,23 @@ const AssignmentGradingUI = ({
 	}
 
 	const setReviewed = async () => {
+		const finalSubmission = selectedStudent!.submissions.find((s) => s.final);
 		// update supabase
 		await supabase
 			.from("submissions")
 			.update({
 				grade: 0,
 				comment: comment,
+				final: true,
 			})
 			// Lukas was complaining that this isn't edge case supported so there you go lukas - Bloxs
 			// MLH - Bill
-			.eq("id", selectedStudent!.submissions.filter((s) => s.final)[0].id);
+			.eq(
+				"id",
+				finalSubmission
+					? finalSubmission.id
+					: selectedStudent!.submissions[0].id
+			);
 
 		// update UI
 		// this is a cluckerf- -LS
@@ -408,7 +418,11 @@ const AssignmentGradingUI = ({
 										}
 									>
 										{graded.some((student) => student.id == selectedID)
-											? "Update Review"
+											? maxGrade
+												? "Update Grade"
+												: "Update Review"
+											: maxGrade
+											? "Grade Assignment"
 											: "Set Reviewed"}
 									</Button>
 								</div>
