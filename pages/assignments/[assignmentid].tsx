@@ -98,9 +98,7 @@ const Post: NextPageWithLayout = () => {
 				if (sAssignments.length == 0) {
 					setTab(1);
 				}
-				setTeacherAssignments(
-					tAssignments.length > 0 ? tAssignments : undefined
-				);
+				setTeacherAssignments(tAssignments.length > 0 ? tAssignments : []);
 				setStudentAssignments(
 					sAssignments.length > 0
 						? sAssignments //.sort((a, b) => {
@@ -118,7 +116,7 @@ const Post: NextPageWithLayout = () => {
 						  // 			: 0;
 						  // 	return aScore - bScore;
 						  // })
-						  undefined
+						  []
 				);
 			}
 		})();
@@ -136,8 +134,8 @@ const Post: NextPageWithLayout = () => {
 				(assignment
 					? assignment?.data && assignment?.data.id != assignmentid
 					: true) &&
-				studentAssignments &&
-				teacherAssignments
+				Array.isArray(studentAssignments) &&
+				Array.isArray(teacherAssignments)
 			) {
 				setAssignment(undefined);
 				const isTeacher = teacherAssignments.some(

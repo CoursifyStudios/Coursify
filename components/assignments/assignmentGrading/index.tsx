@@ -112,7 +112,7 @@ const AssignmentGradingUI = ({
 			.eq("id", selectedStudent!.submissions.filter((s) => s.final)[0].id);
 
 		// update UI
-		// this is a cluckerfk - LS
+		// this is a cluckerf- -LS
 		// 	setAllAssignmentData((data) => {
 		// 		if (!data.data || !data.data.classes) return data;
 		// 		return {
