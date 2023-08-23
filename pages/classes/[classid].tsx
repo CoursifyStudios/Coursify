@@ -347,6 +347,7 @@ const Class: NextPageWithLayout = () => {
 							{typeof classid === "string" && (
 								<AgendasModule
 									classID={classid}
+									// @ts-expect-error
 									agendas={data.data.agendas.concat(extraAgendas)}
 									updateAgendas={(
 										val: {
