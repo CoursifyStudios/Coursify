@@ -34,7 +34,7 @@ const AssignmentGradingUI = ({
 	setFullscreen: Dispatch<SetStateAction<boolean>>;
 }) => {
 	const [selectedID, setSelectedID] = useState<string>();
-	const [grade, setGrade] = useState<number | null>(0);
+	const [grade, setGrade] = useState(0);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
 
@@ -68,7 +68,7 @@ const AssignmentGradingUI = ({
 				: undefined;
 			if (recentSubmission) {
 				setComment(recentSubmission.comment || "");
-				setGrade(recentSubmission.grade);
+				setGrade(recentSubmission.grade ?? 0);
 			}
 			return selectedStudent;
 		},
@@ -108,7 +108,7 @@ const AssignmentGradingUI = ({
 		await supabase
 			.from("submissions")
 			.update({
-				grade: 0,
+				grade: grade,
 				comment: comment,
 				final: true,
 			})
@@ -372,12 +372,10 @@ const AssignmentGradingUI = ({
 														.find((s) => s.final)
 														?.grade?.toString() || ""
 												}
-												value={grade ?? ""}
+												value={grade}
 												onChange={(e) =>
 													setGrade(
-														e.target.value == ""
-															? null
-															: parseInt(e.target.value)
+														e.target.value == "" ? 0 : parseInt(e.target.value)
 													)
 												}
 											/>
@@ -413,6 +411,8 @@ const AssignmentGradingUI = ({
 											selectedStudent.submissions.find((s) => s.final)
 												? selectedStudent.submissions.find((s) => s.final)!
 														.comment == comment &&
+												  selectedStudent.submissions.find((s) => s.final)!
+														.grade == grade &&
 												  graded.some((student) => student.id == selectedID)
 												: false
 										}
