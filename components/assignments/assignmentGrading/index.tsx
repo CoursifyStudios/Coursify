@@ -122,6 +122,7 @@ const AssignmentGradingUI = ({
 			);
 
 		// Update ui
+		// @ts-expect-error
 		setAllAssignmentData((data) => {
 			if (!data.data || !data.data.classes) return data;
 			return {

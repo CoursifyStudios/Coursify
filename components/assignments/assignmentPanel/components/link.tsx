@@ -191,7 +191,7 @@ const Link: NextPage<{
 							className="inset-0 absolute h-5 w-5"
 						/> */}
 					</div>
-					<p className="truncate text-sm ml-2">{link}</p>
+					<p className="truncate text-sm ml-2 max-w-sm">{link}</p>
 					<div
 						className="rounded hover:bg-gray-300 p-0.5 ml-auto cursor-pointer"
 						onClick={() => deleteLink(link)}

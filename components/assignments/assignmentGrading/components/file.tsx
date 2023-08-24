@@ -18,23 +18,44 @@ const FileGrading = ({
 	assignmentData: TeacherAssignmentResponse;
 	submission: SubmissionFileUpload;
 }) => {
+	const [loadedFiles, setLoadedFiles] = useState<string[]>([]);
+
 	return (
 		<>
 			<div className="grid grid-cols-2 gap-4">
-				{submission.files.map((content) => (
-					<a
-						className="bg-backdrop-200 rounded-xl px-4 py-2 w-full flex items-center brightness-hover"
-						key={content.fileName}
-						href={`https://cdn.coursify.one/storage/v1/object/public/ugc/submissions/${content.fileName}`}
-						target="_blank"
-					>
-						<DocumentIcon className="w-6 h-6 mr-2" />
-						<div>
-							<h3 className="font-medium line-clamp-2">{content.realName}</h3>
-							<p className="text-sm">{formatBytes(content.size)}</p>
+				{submission.files.map((file) =>
+					file.realName.toLowerCase().endsWith(".pdf") ? (
+						<div
+							key={file.fileName}
+							className="relative col-span-2 rounded-xl overflow-hidden"
+						>
+							<div className=" bg-gray-800 absolute inset z-10" />
+							<iframe
+								src={file.link}
+								className="h-96 w-full bg-backdrop-200 "
+								onLoad={() => {
+									setLoadedFiles((loadedFiles) => [
+										...loadedFiles,
+										file.fileName,
+									]);
+								}}
+							/>
 						</div>
-					</a>
-				))}
+					) : (
+						<a
+							className="bg-backdrop-200 rounded-xl px-4 py-2 w-full flex items-center brightness-hover"
+							key={file.fileName}
+							href={file.link}
+							target="_blank"
+						>
+							<DocumentIcon className="w-6 h-6 mr-2" />
+							<div>
+								<h3 className="font-medium line-clamp-2">{file.realName}</h3>
+								<p className="text-sm">{formatBytes(file.size)}</p>
+							</div>
+						</a>
+					)
+				)}
 			</div>
 		</>
 	);

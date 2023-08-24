@@ -23,7 +23,6 @@ import { AssignmentPreview } from "@assignments/assignments";
 import { BarsArrowDownIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { SerializedEditorState } from "lexical";
-import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
@@ -152,8 +151,8 @@ const Post: NextPageWithLayout = () => {
 					setRevisions(
 						assignment.data.submissions.sort(
 							(a, b) =>
-								new Date(a.created_at).getTime() -
-								new Date(b.created_at).getTime()
+								new Date(b.created_at).getTime() -
+								new Date(a.created_at).getTime()
 						) as Submission[]
 					);
 			}
