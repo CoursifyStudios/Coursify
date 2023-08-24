@@ -121,34 +121,38 @@ const AssignmentGradingUI = ({
 					: selectedStudent!.submissions[0].id
 			);
 
-		// update UI
-		// this is a cluckerf- -LS
-		// 	setAllAssignmentData((data) => {
-		// 		if (!data.data || !data.data.classes) return data;
-		// 		return {
-		// 			...data,
-		// 			data: {
-		// 				...data.data,
-		// 				classes: {
-		// 					...data.data.classes,
-		// 					users: [
-		// 						...data.data.classes.users.filter(u => u.id != selectedID),
-		// 						{
-		// 							...data.data.classes.users.find(u => u.id == selectedID),
-		// 						submissions: [
-		// 							...data.data.classes.users.find(u => u.id == selectedID)!.submissions.filter(s => s.id == selectedStudent!.submissions.find((s) => s.final)!.id),
-		// 							{
-		// 								...selectedStudent!.submissions.find((s) => s.final)!,
-		// 								comment: comment || null,
-		// 								grade: grade ?? 0
-		// 							}
-		// 						]
-		// 						}
-		// 					]
-		// 				}
-		// 			}
-		// 		};
-		// 	});
+		// Update ui
+		setAllAssignmentData((data) => {
+			if (!data.data || !data.data.classes) return data;
+			return {
+				...data,
+				data: {
+					...data.data,
+					classes: {
+						...data.data.classes,
+						users: [
+							...data.data.classes.users.filter((u) => u.id != selectedID),
+							{
+								...data.data.classes.users.find((u) => u.id == selectedID),
+								submissions: [
+									...data.data.classes.users
+										.find((u) => u.id == selectedID)!
+										.submissions.filter(
+											(s) => s.id != selectedStudent!.submissions[0].id
+										),
+									{
+										...selectedStudent!.submissions[0],
+										comment: comment || null,
+										grade: grade ?? 0,
+										final: true,
+									},
+								],
+							},
+						],
+					},
+				},
+			};
+		});
 	};
 
 	const deleteAssignment = async () => {

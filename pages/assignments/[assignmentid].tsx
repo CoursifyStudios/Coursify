@@ -436,7 +436,7 @@ const Post: NextPageWithLayout = () => {
 							>
 								<h2 className="text-xl font-semibold">Details</h2>
 								{assignment.data.content &&
-								(assignment.data.content as unknown as SerializedEditorState) // @ts-expect-error lexical/shit-types
+								(assignment.data.content as unknown as SerializedEditorState) // @ts-expect-error lexical/bad-types
 									.root.children[0].children.length != 0 ? (
 									<Editor
 										editable={false}

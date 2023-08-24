@@ -854,7 +854,8 @@ Activities	The user's activities, as displayed on their profile
 						.map((uid) => `and(${uid}.eq.user_id,${id}.eq.school_id)`)
 						.join(",")
 				),
-			// uhhhhhh how the FUCK do I do this- Bloxs
+			// uhhhhhh how the FRICK do I do this- Bloxs
+			// Fun police, no swearing - Lukas
 			// Delete from submissions, assignment comments (Waiting on ), starred for assignments in school
 			// Honestly skill issue - Lukas
 		]);
@@ -938,7 +939,8 @@ Activities	The user's activities, as displayed on their profile
 					.eq("id", data.id)
 					.single();
 
-				// @ts-ignore Fuck supabase - Bloxs			:skull:, also btw you coded this wrong, had to fix - Lukas
+				// @ts-ignore F supabase - Bloxs
+				// Fun police 2: Electric Boogaloo - Lukas		:skull:, also btw you coded this wrong, had to fix - Lukas
 				setClasses((classes) => [...(classes ?? []), classData]);
 			}
 		}
