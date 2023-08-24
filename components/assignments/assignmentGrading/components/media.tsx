@@ -63,12 +63,25 @@ const MediaGrading = ({
 					</div>
 				</div>
 				<Popup open={open} closeMenu={() => setOpen(false)}>
-					<img
-						src={`https://cdn.coursify.one/storage/v1/object/public/ugc/submissions/${media.fileName}`}
-						alt=""
-						className={`
+					<div className="relative">
+						<img
+							src={`https://cdn.coursify.one/storage/v1/object/public/ugc/submissions/${media.fileName}`}
+							alt=""
+							className={`
 						max-h-[90vh] w-full object-cover rounded-xl`}
-					/>
+						/>
+						<a
+							href={`https://cdn.coursify.one/storage/v1/object/public/ugc/submissions/${media.fileName}`}
+							target="_blank"
+						>
+							<ColoredPill
+								className="absolute top-3 left-3 !bg-opacity-60"
+								color="gray"
+							>
+								Open in new tab
+							</ColoredPill>
+						</a>
+					</div>
 				</Popup>
 			</>
 		);
