@@ -10,6 +10,7 @@ import {
 	ArrowTopRightOnSquareIcon,
 	DocumentIcon,
 } from "@heroicons/react/24/outline";
+import { RaceBy } from "@uiball/loaders";
 
 const FileGrading = ({
 	assignmentData,
@@ -27,12 +28,17 @@ const FileGrading = ({
 					file.realName.toLowerCase().endsWith(".pdf") ? (
 						<div
 							key={file.fileName}
-							className="relative col-span-2 rounded-xl overflow-hidden"
+							className="relative col-span-2 rounded-xl overflow-hidden "
 						>
-							<div className=" bg-gray-800 absolute inset z-10" />
+							{!loadedFiles.includes(file.fileName) && (
+								<div className=" bg-backdrop-200 absolute inset-0 z-10 rounded-xl flex flex-col items-center justify-center ">
+									<RaceBy speed={0.8} size={170} color="white" />
+									<h3 className="font-medium mt-4">Loading PDF...</h3>
+								</div>
+							)}
 							<iframe
 								src={file.link}
-								className="h-96 w-full bg-backdrop-200 "
+								className="h-[30rem] w-full bg-backdrop-200 rounded-2xl overflow-hidden "
 								onLoad={() => {
 									setLoadedFiles((loadedFiles) => [
 										...loadedFiles,
