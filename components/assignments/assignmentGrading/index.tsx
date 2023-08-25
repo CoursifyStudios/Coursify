@@ -349,8 +349,8 @@ const AssignmentGradingUI = ({
 					</div>
 				</div>
 				{selectedStudent == undefined ? (
-					<div className="flex grow items-center justify-center font-medium">
-						Select an student to get started
+					<div className="flex grow items-center justify-center font-medium h-96">
+						Select a student to get started
 					</div>
 				) : (
 					<div className="flex grow flex-col ml-4 mt-4">
