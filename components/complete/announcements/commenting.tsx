@@ -312,7 +312,7 @@ export const Commenting = ({
 								<ErrorMessage name="content" />
 								<div className="m-1 flex gap-2">
 									<p className="text-red-500">{errorText}</p>
-									<div className="flex ml-auto">
+									<div className="flex space-x-2 ml-auto">
 										<Button
 											className="brightness-hover transition hover:bg-red-300"
 											onClick={() => {

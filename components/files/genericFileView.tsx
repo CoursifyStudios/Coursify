@@ -68,8 +68,8 @@ export const FileView = ({
 
 export const FileCarousel = ({ files }: { files: CoursifyFile[] }) => {
 	return (
-		<>
-			<div className="flex mb-2">
+		<div className="my-3">
+			<div className="flex space-x-3 mb-2">
 				{files?.map(
 					(file, index) =>
 						!viewableFileExtensions.includes(
@@ -77,7 +77,7 @@ export const FileCarousel = ({ files }: { files: CoursifyFile[] }) => {
 						) && <DownloadableFile key={index} file={file} />
 				)}
 			</div>
-			<div className="flex gap-4 overflow-x-auto">
+			<div className="flex space-x-3 scrollbar-fancy overflow-x-auto">
 				{files?.map(
 					(file, index) =>
 						viewableFileExtensions.includes(
@@ -85,6 +85,6 @@ export const FileCarousel = ({ files }: { files: CoursifyFile[] }) => {
 						) && <ImagePreview key={index} file={file} />
 				)}
 			</div>
-		</>
+		</div>
 	);
 };

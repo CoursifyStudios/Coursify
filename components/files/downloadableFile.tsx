@@ -8,7 +8,7 @@ export const DownloadableFile = ({ file }: { file: CoursifyFile }) => {
 			href={file.link}
 			download
 			title={"Download " + file.realName}
-			className="group m-1 p-2 pr-3 gap-1 flex rounded-2xl items-center bg-gray-300"
+			className="group p-2 pr-3 gap-1 flex rounded items-center bg-gray-300"
 		>
 			<ArrowDownTrayIcon className="hidden group-hover:block min-w-[1.5rem] w-6 h-6" />
 

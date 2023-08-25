@@ -26,7 +26,7 @@ export const ImagePreview = ({ file }: { file: CoursifyFile }) => {
 						height={192}
 						className="rounded object-cover object-center !min-w-48 h-48"
 					/>
-					<p className="hidden group-hover:block text-white pl-1 text-sm absolute bottom-0 w-full backdrop-brightness-50">
+					<p className="hidden group-hover:block text-white text-sm absolute bottom-0 w-full backdrop-brightness-50">
 						{file.realName}
 					</p>
 				</div>
