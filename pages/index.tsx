@@ -236,8 +236,6 @@ const Home = () => {
 																							: false
 																					}
 																					showClassPill={false}
-																					schedule={schedules[0]!}
-																					scheduleT={schedules[1]!}
 																					classes={aClass}
 																				/>
 																			))}
@@ -287,8 +285,6 @@ const Home = () => {
 																			: false
 																	}
 																	showClassPill={true}
-																	schedule={schedules[0]!}
-																	scheduleT={schedules[1]!}
 																	classes={aClass}
 																/>
 															)

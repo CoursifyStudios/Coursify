@@ -37,7 +37,7 @@ const File = ({
 
 	return (
 		<>
-			<div className="flex gap-4">
+			<div className="grid grid-cols-3 gap-4">
 				<label htmlFor="maxSize" className="relative flex grow flex-col">
 					<span className="flex text-sm font-medium">
 						Maximum File Size<span className="text-red-600">*</span>
@@ -108,14 +108,17 @@ const File = ({
 					<TagsInput
 						onChange={(tags) =>
 							setSettings((settings) => {
-								return { ...settings, fileTypes: tags };
+								return {
+									...settings,
+									fileTypes: tags.map((t) => (t.startsWith(".") ? t : `.${t}`)),
+								};
 							})
 						}
 						value={settings.fileTypes!}
 						//prevents duplicates and checks if it's a link
 						validate={(tag) =>
 							!settings.fileTypes!.find((url) => tag == url) &&
-							/^\.[A-z]{1,4}$/g.test(tag)
+							/^\.?[A-z0-9]{1,}$/g.test(tag)
 						}
 						addOnPaste={true}
 						className="inputcss form-input cursor-text [&>span]:flex [&>span]:flex-wrap [&>span]:gap-3"

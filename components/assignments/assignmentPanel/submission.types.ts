@@ -30,17 +30,11 @@ export interface SubmissionCheckoff
 	assignmentType: AssignmentTypes.CHECKOFF;
 }
 
-export type SubmissionDiscussionPost =
-	| {
-			text: string;
-			media: false;
-			assignmentType: AssignmentTypes.DISCUSSION_POST;
-	  }
-	| {
-			richText: SerializedEditorState;
-			media: false;
-			assignmentType: AssignmentTypes.DISCUSSION_POST;
-	  };
+export type SubmissionDiscussionPost = {
+	richText: SerializedEditorState;
+	media: false;
+	assignmentType: AssignmentTypes.DISCUSSION_POST;
+};
 
 export interface SubmissionGoogle
 	extends Yup.InferType<typeof submissionGoogleValidation> {
@@ -76,6 +70,8 @@ export interface Submission {
 	content: SubmissionSettingsTypes;
 	final: boolean;
 	created_at: string;
+	grade?: number | null;
+	comment?: string | null;
 	users?: {
 		id: string;
 		full_name: string;
