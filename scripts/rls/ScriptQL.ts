@@ -141,10 +141,11 @@ export const savePolicies = async (file: string, ...policies: Policy[]) => {
 	const deno = ((globalThis as { [key: string]: unknown }).Deno as {
 		writeTextFile: (file: string, content: string) => Promise<void>;
 	}) ?? {
-		writeTextFile: async (file: string, content: string) => {
+		// deno-lint-ignore require-await
+		writeTextFile: async (_file: string, _content: string) => {
 			// eslint-disable-next-line no-console
 			console.log("Why are you running this in node?");
-			throw new Error("Run this with `Deno task export`");
+			throw new Error("Run this script in deno (deno task)");
 		},
 	};
 

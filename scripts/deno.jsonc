@@ -1,0 +1,6 @@
+{
+	"tasks": {
+		"export-rls": "deno run --allow-write ./rls/index.ts",
+		"export-licenses": "deno run --allow-read --allow-write ./licenses/index.ts"
+	}
+}
