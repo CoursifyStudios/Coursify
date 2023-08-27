@@ -127,7 +127,7 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
 	matcher:
-		"/((?!api|_next/static|favicon.ico|login|demo|txt|svg|privacypolicy.txt|termsandconditions.txt|brand-logos).*)",
+		"/((?!api|_next/static|favicon.ico|login|demo|txt|svg|privacypolicy.txt|termsandconditions.txt|brand-logos|acknowledgements).*)",
 };
 
 export enum OnboardingState {

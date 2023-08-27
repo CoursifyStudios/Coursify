@@ -77,22 +77,3 @@ Login.getLayout = function getLayout(page: ReactElement) {
 		</BasicLayout>
 	);
 };
-
-/*<button
-	className="mt-8 flex content-center rounded-md bg-gray-200 px-4 py-3 text-[1.05rem] font-medium hover:bg-gray-300"
-	onClick={() =>
-		supabaseClient.auth.signInWithPassword({
-			email: "demo@coursify.one",
-			password: "demo",
-		})
-	}
-	>
-	<Image
-		src="/brand-logos/coursify.svg"
-		alt="Microsoft Logo"
-		width={25}
-		height={25}
-		className="mr-4"
-	/>
-	Demo Coursify LMS
-</button>*/
