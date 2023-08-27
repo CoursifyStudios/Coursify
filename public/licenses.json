@@ -729,5 +729,5 @@
 	"BlueOak-1.0.0": ["path-scurry"],
 	"CC-BY-3.0": ["spdx-exceptions"],
 	"(BSD-2-Clause OR MIT OR Apache-2.0)": ["rc"],
-	"unknown": ["buffers"]
+	"Unknown": ["buffers"]
 }

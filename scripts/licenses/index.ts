@@ -120,7 +120,7 @@ await walkFolder("../node_modules");
 
 await deno.writeTextFile(
 	"../public/licenses.json",
-	JSON.stringify(licenses, null, 2)
+	JSON.stringify(licenses, null, 4)
 );
 
 // Made node happy or whatever
