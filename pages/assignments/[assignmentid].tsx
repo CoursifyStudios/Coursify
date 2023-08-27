@@ -5,41 +5,38 @@ import { Submission } from "@/components/assignments/assignmentPanel/submission.
 import Editor from "@/components/editors/richeditor";
 import { NextPageWithLayout } from "@/pages/_app";
 import Layout from "@/components/layout/layout";
-import Dropdown from "@/components/misc/dropdown";
-import { Info } from "@/components/tooltips/info";
 import {
-	AllAssignmentResponse,
 	AllAssignments,
-	AssignmentResponse,
 	AssignmentTypes,
+	StudentAssignmentResponse,
+	TeacherAssignmentResponse,
 	getAllAssignments,
-	getAssignment,
+	getStudentAssignment,
+	getTeacherAssignment,
 } from "@/lib/db/assignments/assignments";
 import { Database } from "@/lib/db/database.types";
-import {
-	ScheduleInterface,
-	getSchedule,
-	setThisSchedule,
-} from "@/lib/db/schedule";
+
 import { getDataOutArray } from "@/lib/misc/dataOutArray";
 import launch from "@/public/svgs/launch.svg";
 import noData from "@/public/svgs/no-data.svg";
 import { AssignmentPreview } from "@assignments/assignments";
-import {
-	BarsArrowDownIcon,
-	ChevronUpIcon,
-	PlusIcon,
-} from "@heroicons/react/24/outline";
+import { BarsArrowDownIcon } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { SerializedEditorState } from "lexical";
-import { NextPage } from "next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import { Fragment, ReactElement, useEffect, useState } from "react";
-import { Disclosure, Tab } from "@headlessui/react";
-import TeacherHeader from "@/components/assignments/assignmentPanel/teacherHeader";
-import Avatar from "@/components/misc/avatar";
+import {
+	Dispatch,
+	Fragment,
+	ReactElement,
+	SetStateAction,
+	useEffect,
+	useState,
+} from "react";
+import { Tab } from "@headlessui/react";
+import AssignmentGradingUI from "@/components/assignments/assignmentGrading";
+import { ColoredPill } from "@/components/misc/pill";
 
 const Panel = dynamic(
 	() => import("@/components/assignments/assignmentPanel"),
@@ -63,10 +60,9 @@ const Post: NextPageWithLayout = () => {
 		useState<AllAssignments>();
 	const [teacherAssignments, setTeacherAssignments] =
 		useState<AllAssignments>();
-	const [assignment, setAssignment] = useState<AssignmentResponse>();
-	//obviously we need a better solution
-	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
-	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
+	const [assignment, setAssignment] = useState<
+		StudentAssignmentResponse | TeacherAssignmentResponse
+	>();
 	const router = useRouter();
 	const user = useUser();
 	const { assignmentid } = router.query;
@@ -82,7 +78,6 @@ const Post: NextPageWithLayout = () => {
 	];
 
 	const [selected, setSelected] = useState(options[0]);
-	// Gets the data from the db
 	useEffect(() => {
 		(async () => {
 			if (user && !(studentAssignments && teacherAssignments)) {
@@ -103,9 +98,7 @@ const Post: NextPageWithLayout = () => {
 				if (sAssignments.length == 0) {
 					setTab(1);
 				}
-				setTeacherAssignments(
-					tAssignments.length > 0 ? tAssignments : undefined
-				);
+				setTeacherAssignments(tAssignments.length > 0 ? tAssignments : []);
 				setStudentAssignments(
 					sAssignments.length > 0
 						? sAssignments //.sort((a, b) => {
@@ -123,28 +116,15 @@ const Post: NextPageWithLayout = () => {
 						  // 			: 0;
 						  // 	return aScore - bScore;
 						  // })
-						  undefined
+						  []
 				);
-			}
-			// In theory, most people will have the schedule already cached. This is a band-aid solution and won't be used later on
-			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
-				JSON.parse(sessionStorage.getItem("schedule")!);
-			if (allSchedules && allSchedules.length != 0) {
-				setSchedule(allSchedules[0].schedule);
-				setScheduleT(allSchedules[1].schedule);
-			} else {
-				const today = new Date();
-				const tomorrow = new Date();
-				tomorrow.setDate(today.getDate() + 1);
-				const [scheduleToday, scheduleTomorrow] = await Promise.all([
-					getSchedule(supabase, today),
-					getSchedule(supabase, tomorrow),
-				]);
-				setThisSchedule(scheduleToday, setSchedule);
-				setThisSchedule(scheduleTomorrow, setScheduleT);
 			}
 		})();
 
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [user, supabase, router, assignmentid, assignment]);
+
+	useEffect(() => {
 		(async () => {
 			if (
 				user &&
@@ -153,13 +133,28 @@ const Post: NextPageWithLayout = () => {
 				assignmentid != "0" &&
 				(assignment
 					? assignment?.data && assignment?.data.id != assignmentid
-					: true)
+					: true) &&
+				Array.isArray(studentAssignments) &&
+				Array.isArray(teacherAssignments)
 			) {
 				setAssignment(undefined);
-				const assignment = await getAssignment(supabase, assignmentid, user.id);
+				const isTeacher = teacherAssignments.some(
+					(ta) => ta.id == assignmentid
+				);
+
+				const assignment = await (isTeacher
+					? getTeacherAssignment(supabase, assignmentid)
+					: getStudentAssignment(supabase, assignmentid, user.id));
+
 				setAssignment(assignment);
-				if (assignment.data)
-					setRevisions(assignment.data.submissions as Submission[]);
+				if (assignment.data && "submissions" in assignment.data)
+					setRevisions(
+						assignment.data.submissions.sort(
+							(a, b) =>
+								new Date(b.created_at).getTime() -
+								new Date(a.created_at).getTime()
+						) as Submission[]
+					);
 			}
 		})();
 		// Mobile support makes it sorta like using gmail on mobile, optimized for assignments
@@ -167,20 +162,30 @@ const Post: NextPageWithLayout = () => {
 			setFullscreen(true);
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [user, supabase, router, assignmentid, assignment]);
+	}, [
+		user,
+		supabase,
+		router,
+		assignmentid,
+		assignment,
+		studentAssignments,
+		teacherAssignments,
+	]);
 
 	return (
 		// Left pane
-		<div className="mx-auto flex w-full max-w-screen-xl px-4 pb-6 pt-6 md:px-8 xl:px-0">
+		<div className="mx-auto flex w-full max-w-screen-xl px-4 pb-6 pt-6 md:px-8 xl:px-0 ">
 			<div
-				className={`scrollbar-fancy mr-4 grow items-stretch overflow-x-clip md:grow-0 ${
+				className={`scrollbar-fancy mr-4 grow items-stretch overflow-x-clip md:grow-0 sticky top-8 ${
 					fullscreen ? "hidden" : "flex"
-				} w-[20.5rem] shrink-0 flex-col space-y-5 overflow-y-auto p-1 pb-6 compact:space-y-3 md:h-[calc(100vh-6.5rem)] `}
+				} w-[20.5rem] shrink-0 flex-col space-y-5 overflow-y-scroll p-1 pb-6 compact:space-y-3 md:h-[calc(100vh-6.5rem)] `}
 			>
 				<h2 className="title">Your Assignments</h2>
-				{(teacherAssignments || studentAssignments) && user && schedule ? (
+				{(Array.isArray(teacherAssignments) ||
+					Array.isArray(studentAssignments)) &&
+				user ? (
 					<Tab.Group selectedIndex={tab} onChange={setTab}>
-						{!(!teacherAssignments || !studentAssignments) && (
+						{teacherAssignments?.length && studentAssignments?.length ? (
 							<Tab.List as="div" className="flex items-center">
 								<Tab as={Fragment}>
 									{({ selected }) => (
@@ -209,9 +214,9 @@ const Post: NextPageWithLayout = () => {
 									)}
 								</Tab>
 							</Tab.List>
-						)}
+						) : null}
 						<Tab.Panels>
-							{studentAssignments ? (
+							{Array.isArray(studentAssignments) ? (
 								<Tab.Panel className="space-y-5 flex flex-col compact:space-y-2">
 									{studentAssignments.map(
 										(assignment) =>
@@ -228,9 +233,6 @@ const Post: NextPageWithLayout = () => {
 																: !!assignment.starred
 															: false
 													}
-													//obviously we need a better solution
-													schedule={schedule!}
-													scheduleT={scheduleT!}
 													showClassPill={true}
 													classes={getDataOutArray(assignment.classes)}
 													className={`${
@@ -245,7 +247,7 @@ const Post: NextPageWithLayout = () => {
 							) : (
 								<Tab.Panel></Tab.Panel>
 							)}
-							{teacherAssignments ? (
+							{Array.isArray(teacherAssignments) ? (
 								<Tab.Panel className="space-y-5 flex flex-col compact:space-y-2">
 									{teacherAssignments.map(
 										(assignment) =>
@@ -262,9 +264,6 @@ const Post: NextPageWithLayout = () => {
 																: !!assignment.starred
 															: false
 													}
-													//obviously we need a better solution
-													schedule={schedule!}
-													scheduleT={scheduleT!}
 													showClassPill={true}
 													classes={getDataOutArray(assignment.classes)}
 													className={`${
@@ -324,9 +323,11 @@ const Post: NextPageWithLayout = () => {
 				</div> */}
 			</div>
 			<div
-				className={`grow rounded-xl px-4 md:h-[calc(100vh-6.5rem)] ${
+				className={`grow rounded-xl px-4  ${
 					fullscreen ? "flex" : "hidden md:flex"
-				}`}
+				} 
+				${tab == 0 && "md:h-[calc(100vh-6.5rem)]"}
+				`}
 			>
 				<AssignmentPane />
 			</div>
@@ -343,7 +344,15 @@ const Post: NextPageWithLayout = () => {
 			return <Loading />;
 		}
 
-		if (assignmentid == "0") {
+		if (
+			assignmentid == "0" ||
+			(tab == 0 &&
+				teacherAssignments &&
+				teacherAssignments.some((ta) => assignmentid == ta.id)) ||
+			(tab == 1 &&
+				studentAssignments &&
+				studentAssignments.some((ta) => assignmentid == ta.id))
+		) {
 			// 0 is a placeholder for when the user hasn't selected an assignment yet
 			return (
 				<div className="m-auto flex flex-col items-center">
@@ -380,87 +389,25 @@ const Post: NextPageWithLayout = () => {
 		}
 
 		if (assignment?.data) {
-			if (tab == 1) {
+			if (
+				tab == 1 &&
+				!("submissions" in assignment) &&
+				typeof assignmentid == "string"
+			) {
 				return (
-					<div className="w-full">
-						<TeacherHeader
-							assignment={assignment}
-							fullscreen={fullscreen}
-							setFullscreen={setFullscreen}
-						/>
-						<div className="flex">
-							<div className="flex w-64 my-2 mt-4 flex-col">
-								<div className="w-full ">
-									<div className=" w-full rounded-xl ">
-										<Disclosure as="div" className="">
-											{({ open }) => (
-												<>
-													<Disclosure.Button className="flex w-full justify-between rounded-lg bg-gray-200 px-4 py-2 text-left text-sm font-medium">
-														<span>Ungraded</span>
-														<ChevronUpIcon
-															className={`${
-																open ? "rotate-180 transform" : ""
-															} h-5 w-5 `}
-														/>
-													</Disclosure.Button>
-													<Disclosure.Panel className="px-4 pt-4 pb-2 text-sm"></Disclosure.Panel>
-												</>
-											)}
-										</Disclosure>
-										<Disclosure as="div" className="mt-2">
-											{({ open }) => (
-												<>
-													<Disclosure.Button className="flex w-full justify-between rounded-lg bg-gray-200 px-4 py-2 text-left text-sm font-medium">
-														<span>Not Submitted</span>
-														<ChevronUpIcon
-															className={`${
-																open ? "rotate-180 transform" : ""
-															} h-5 w-5 `}
-														/>
-													</Disclosure.Button>
-													<Disclosure.Panel className="px-4 pt-4 pb-2 text-sm"></Disclosure.Panel>
-												</>
-											)}
-										</Disclosure>
-										<Disclosure as="div" className="mt-2">
-											{({ open }) => (
-												<>
-													<Disclosure.Button className="flex w-full justify-between rounded-lg bg-gray-200 px-4 py-2 text-left text-sm font-medium">
-														<span>Graded</span>
-														<ChevronUpIcon
-															className={`${
-																open ? "rotate-180 transform" : ""
-															} h-5 w-5 `}
-														/>
-													</Disclosure.Button>
-													<Disclosure.Panel className="px-4 pt-4 pb-2 text-sm"></Disclosure.Panel>
-												</>
-											)}
-										</Disclosure>
-									</div>
-								</div>
-							</div>
-							<div className="flex grow justify-between bg-gray-200 h-32 m-4 p-2 rounded-xl">
-								<div className="flex">
-									<Avatar
-										full_name="Jane Doe"
-										avatar_url=""
-										size="20"
-										className="ml-4"
-										text_size="xl"
-									/>
-									<div className="flex flex-col ml-3 justify-center">
-										<h1 className="title">Jane Doe</h1>
-										<p className="text-lg font-medium">0/10</p>
-									</div>
-								</div>
-								<textarea
-									placeholder="Enter a comment..."
-									className=" w-72 resize-none !rounded-xl"
-								/>
-							</div>
-						</div>
-					</div>
+					<AssignmentGradingUI
+						setAllAssignmentData={
+							setAssignment as Dispatch<
+								SetStateAction<TeacherAssignmentResponse>
+							>
+						}
+						allAssignmentData={assignment as TeacherAssignmentResponse}
+						setTeacherAssignments={setTeacherAssignments}
+						assignmentID={assignmentid}
+						fullscreen={fullscreen}
+						setFullscreen={setFullscreen}
+						supabase={supabase}
+					/>
 				);
 			}
 			return (
@@ -488,7 +435,7 @@ const Post: NextPageWithLayout = () => {
 							>
 								<h2 className="text-xl font-semibold">Details</h2>
 								{assignment.data.content &&
-								(assignment.data.content as unknown as SerializedEditorState) // @ts-expect-error lexical/shit-types
+								(assignment.data.content as unknown as SerializedEditorState) // @ts-expect-error lexical/bad-types
 									.root.children[0].children.length != 0 ? (
 									<Editor
 										editable={false}
@@ -506,11 +453,36 @@ const Post: NextPageWithLayout = () => {
 							</div>
 							{assignment.data.type != AssignmentTypes.DISCUSSION_POST ? (
 								<div
-									className={`sticky mb-7 flex shrink-0 flex-col  xl:top-0 xl:mb-0 xl:ml-4 xl:w-72 `}
+									className={`sticky mb-7 flex shrink-0 flex-col space-y-4 xl:top-0 xl:mb-0 xl:ml-4 xl:w-72 `}
 								>
-									<h2 className="text-xl font-semibold">Submission</h2>
+									<div className="flex justify-between items-center !-mb-2">
+										<h2 className="text-xl font-semibold">Submission</h2>
+										{revisions.find((r) => r.grade != null) && (
+											<ColoredPill color="gray">
+												{assignment.data.max_grade ? (
+													<>
+														Grade:{" "}
+														{revisions.find((r) => r.grade != null)!.grade} /{" "}
+														{assignment.data.max_grade}
+													</>
+												) : (
+													"Teacher Reviewed"
+												)}
+											</ColoredPill>
+										)}
+									</div>
+									{revisions.find((r) => r.comment != null) && (
+										<div
+											className={` flex flex-col rounded-xl bg-gray-200  px-5 py-4`}
+										>
+											<h2 className="text-lg font-semibold ">
+												Teacher Comment
+											</h2>
+											<p>{revisions.find((r) => r.comment != null)!.comment}</p>
+										</div>
+									)}
 									<div
-										className={`mt-2 rounded-xl overflow-y-auto scrollbar-fancy bg-gray-200 ${
+										className={` rounded-xl overflow-y-auto scrollbar-fancy bg-gray-200 ${
 											open ? "max-h-16 p-1" : "max-h-[32rem] px-5 py-4"
 										}  overflow-hidden transition-all duration-300`}
 									>
@@ -557,9 +529,7 @@ const Post: NextPageWithLayout = () => {
 										)}
 									</div>
 									{revisions.length > 0 && (
-										<div
-											className={`mt-4  flex flex-col rounded-xl bg-gray-200 `}
-										>
+										<div className={`flex flex-col rounded-xl bg-gray-200 `}>
 											<button
 												className="flex items-center px-5 py-4"
 												onClick={() => setOpen((open) => !open)}
