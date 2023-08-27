@@ -78,6 +78,7 @@ export const CreateAgenda = ({
 	const [files, setFiles] = useState<CoursifyFile[]>(
 		editingInfo ? editingInfo.files : []
 	);
+	const [uploadFiles, setUploadFiles] = useState<boolean>(false);
 	// Loading states
 	const [loading, setLoading] = useState(false);
 	const [searching, setSearching] = useState(false);
@@ -133,7 +134,7 @@ export const CreateAgenda = ({
 					(async () => {
 						const deletion = await supabase.functions.invoke("delete-file", {
 							body: {
-								path: files.map((file) => `agendas/${file.fileName}`),
+								path: files.map((file) => `agendas/${file.dbName}`),
 							},
 						});
 						//tbh no idea how we would even approach error handling for this... -Bill

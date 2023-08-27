@@ -234,9 +234,7 @@ export const AnnouncementPostingUI = ({
 									}
 									await supabase.functions.invoke("delete-file", {
 										body: {
-											path: files.map(
-												(file) => `announcements/${file.fileName}`
-											),
+											path: files.map((file) => `announcements/${file.dbName}`),
 										},
 									});
 									setFiles([]);
@@ -299,7 +297,7 @@ export const AnnouncementPostingUI = ({
 													author: user.id,
 													title: editingInfo.title,
 													files: editingInfo.files
-														? editingInfo.files.map((file) => file.fileName)
+														? editingInfo.files.map((file) => file.dbName)
 														: [],
 													clone_id: editingInfo.clone_id,
 												},

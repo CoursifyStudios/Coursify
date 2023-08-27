@@ -92,6 +92,7 @@ const AssignmentCreation: NextPage<{
 				hidden: assignmentData.hidden,
 				settings: assignmentSettings as unknown as Json,
 				files: assignmentData.files as unknown as Json[],
+				max_grade: assignmentData.maxGrade ?? null,
 			};
 		if (due) {
 			dataToUpload.due_date = assignmentData.dueDate?.toISOString();

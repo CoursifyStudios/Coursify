@@ -101,7 +101,7 @@ export const editAnnouncement = async (
 		files: CoursifyFile[] | null;
 	}
 ) => {
-	const newFileLinks = newAnnouncement.files?.map((file) => file.fileName);
+	const newFileLinks = newAnnouncement.files?.map((file) => file.dbName);
 	//removing any no longer wanted files
 	if (oldAnnouncement.files) {
 		await supabase.functions.invoke("delete-file", {

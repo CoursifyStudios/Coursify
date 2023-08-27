@@ -15,16 +15,12 @@ export function AssignmentPreview({
 	classes,
 	className,
 	starredAsParam,
-	schedule,
-	scheduleT,
 	userId,
 	showClassPill,
 }: {
 	supabase: SupabaseClient<Database>;
 	assignment: Database["public"]["Tables"]["assignments"]["Row"];
 	starredAsParam: boolean;
-	schedule: ScheduleInterface[];
-	scheduleT: ScheduleInterface[];
 	userId: string;
 	classes: {
 		id: string;
@@ -47,21 +43,25 @@ export function AssignmentPreview({
 				href={"/assignments/" + assignment.id}
 				className={`${className} flex  w-full flex-col rounded-xl bg-backdrop-200 p-2.5 `}
 			>
-				<div className="flex items-end justify-between">
-					<div className="ml-8">
+				<div className="flex items-center justify-between">
+					<div className="ml-8 flex">
 						{classes && showClassPill && (
 							<Link href={"/classes/" + classes?.id}>
-								<ColoredPill color={classes.color} hoverState>
-									{classes.name}
+								<ColoredPill
+									color={classes.color}
+									hoverState
+									className="w-32 max-w-max !text-xs my-auto"
+								>
+									<p className="truncate">{classes.name}</p>
 								</ColoredPill>
 							</Link>
 						)}
 					</div>
 					<div>
-						<div tabIndex={-1} className="flex">
+						<div tabIndex={-1} className="flex items-center">
 							{date ? (
 								<>
-									<div className="mr-2 font-medium">
+									<div className="mr-2 text-sm">
 										{date.getMonth() + 1}/{date.getDate()}/
 										{date.getFullYear().toString().slice(2)}
 									</div>

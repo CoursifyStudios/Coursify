@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { Popup } from "../misc/popup";
 import { CoursifyFile } from "./genericFileUpload";
+import Image from "next/image";
 
 export const BigImagePreview = ({
 	file,
@@ -13,14 +13,14 @@ export const BigImagePreview = ({
 }) => {
 	return (
 		<Popup closeMenu={() => setOpen(false)} open={open} size="lg">
-			<p>{file.realName}</p>
+			<p>{file.name}</p>
 			<Image
-				title={file.realName}
 				src={file.link}
-				alt={`ugc image of ${file.realName}`}
+				alt={`ugc image of ${file.name}`}
 				width={1024}
 				height={768}
 				className="rounded object-cover object-center shrink-0 mt-1"
+				unoptimized
 			/>
 		</Popup>
 	);

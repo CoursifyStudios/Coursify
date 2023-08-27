@@ -74,7 +74,7 @@ export const handleStarred = async (
 	}
 };
 
-export const getAssignment = async (
+export const getStudentAssignment = async (
 	supabase: SupabaseClient<Database>,
 	assignmentuuid: string,
 	userID: string
@@ -90,6 +90,8 @@ export const getAssignment = async (
 			content,
 			final,
 			created_at,
+			grade,
+			comment,
 			users (
 				id, full_name, avatar_url
 			)
@@ -101,6 +103,60 @@ export const getAssignment = async (
 		.eq("id", assignmentuuid)
 		.single();
 };
+
+export type StudentAssignmentResponse = Awaited<
+	ReturnType<typeof getStudentAssignment>
+>;
+
+export const getTeacherAssignment = async (
+	supabase: SupabaseClient<Database>,
+	assignmentuuid: string
+) => {
+	return await supabase
+		.from("assignments")
+		.select(
+			`
+		*, classes (
+			name, id, color,
+			class_users(teacher, user_id),
+			users (
+				id, full_name, avatar_url,
+				submissions (
+					content,
+					final,
+					created_at,
+					assignment_id,
+					grade,
+					id,
+					comment
+				)
+			)
+		)
+		`
+		)
+		.eq("id", assignmentuuid)
+		// no clue why this doesn't work - LS
+		//.eq("classes.users.class_users.teacher", false)
+		.eq("classes.users.submissions.assignment_id", assignmentuuid)
+		.order("created_at", {
+			foreignTable: "classes.users.submissions",
+			ascending: false,
+		})
+		//.limit(1, { foreignTable: "classes.users.submissions" })
+		.single();
+};
+
+export type TeacherAssignmentResponse = Awaited<
+	ReturnType<typeof getTeacherAssignment>
+>;
+
+export type TeacherAssignment = Exclude<
+	Exclude<
+		Awaited<ReturnType<typeof getTeacherAssignment>>["data"],
+		null
+	>["classes"],
+	null
+>;
 
 export const getTheseAssignments = async (
 	supabase: SupabaseClient<Database>,
@@ -122,8 +178,6 @@ export const getTheseAssignments = async (
 		.in("id", these);
 	//.not("id", "in", `(${notThese})`);
 };
-
-export type AssignmentResponse = Awaited<ReturnType<typeof getAssignment>>;
 
 //Lukas is building the world's first 7D array
 export type Assignment = Database["public"]["Tables"]["assignments"]["Row"];

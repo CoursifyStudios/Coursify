@@ -537,8 +537,6 @@ const Class: NextPageWithLayout = () => {
 										}
 										showClassPill={false}
 										starredAsParam={false}
-										schedule={schedule!}
-										scheduleT={scheduleT!} //patch this so that we can have only schedule (no scheduleT) and we use only that one. V2 feature if
 										userId={user.id}
 										classes={data.data}
 									/>

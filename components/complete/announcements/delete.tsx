@@ -35,7 +35,7 @@ export const Delete: NextPage<{
 			//an SQL function I see no easy way to do this
 			// the sql function would just check that nothing references the file
 			announcement.clone_id == null && announcement.files
-				? announcement.files.map((file) => `announcements/${file.fileName}`)
+				? announcement.files.map((file) => `announcements/${file.dbName}`)
 				: []
 		);
 		if (data.error) {
@@ -50,7 +50,7 @@ export const Delete: NextPage<{
 			author: announcement.author,
 			title: announcement.title!,
 			files: announcement.files
-				? announcement.files.map((file) => `announcements/${file.fileName}`)
+				? announcement.files.map((file) => `announcements/${file.dbName}`)
 				: [],
 			clone_id: announcement.clone_id,
 		});

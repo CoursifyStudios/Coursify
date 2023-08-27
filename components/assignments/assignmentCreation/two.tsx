@@ -42,7 +42,7 @@ export default function AssignmentDetails({
 					name: Yup.string().min(3).max(40).required(),
 					description: Yup.string().min(3).max(60).required(),
 					submissionType: Yup.string().min(3).max(100),
-					maxGrade: Yup.number().min(0, "Cannot be negitive"),
+					maxGrade: Yup.number().min(0, "Grade cannot be negative"),
 				})}
 				initialValues={{
 					name: assignmentData?.name || "",
