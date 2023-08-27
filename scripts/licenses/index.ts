@@ -101,8 +101,8 @@ const walkFolder = async (folder: string, packageRoot?: string) => {
 						directory.name
 					} has no license`
 				);
-				licenses["unknown"] ??= [];
-				licenses["unknown"].push(
+				licenses["Unknown"] ??= [];
+				licenses["Unknown"].push(
 					`${packageRoot != undefined ? `${packageRoot}/` : ""}${
 						directory.name
 					}`
@@ -122,3 +122,6 @@ await deno.writeTextFile(
 	"../public/licenses.json",
 	JSON.stringify(licenses, null, 2)
 );
+
+// Made node happy or whatever
+export {};

@@ -19,8 +19,8 @@
 		"static": "next export",
 		"ionic:build": "yarn build && yarn static",
 		"ionic:serve": "npm run start",
-		"postinstall": "echo \"Updating licenses\" && cd ./scripts/ && deno task export-licenses",
-		"uninstall": "npm run postinstall"
+		"license": "echo \"Updating licenses\" && cd ./scripts/ && deno task export-licenses",
+		"postinstall": "echo \"Make sure to run `yarn run license` to update licenses on install/uninstall!\""
 	},
 	"dependencies": {
 		"@aws-sdk/client-ses": "^3.390.0",
