@@ -35,6 +35,3 @@ next-env.d.ts
 
 #sql
 /supabase
-
-# takes-740-ms-when-other-files-take-2
-/pages/acknowledgements.tsx
