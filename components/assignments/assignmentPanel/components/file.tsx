@@ -224,7 +224,7 @@ const FileUpload: NextPage<{
 
 		const test = await supabase.functions.invoke("delete-file", {
 			body: {
-				path: `submissions/${fileName}`,
+				path: [`submissions/${fileName}`],
 			},
 		});
 

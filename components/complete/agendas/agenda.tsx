@@ -14,6 +14,8 @@ import {
 } from "@heroicons/react/24/outline";
 import { DeleteAgenda } from "./deleteAgenda";
 import { CreateAgenda } from "./createAgenda";
+import { CoursifyFile } from "@/components/files/genericFileUpload";
+import { FileCarousel } from "@/components/files/genericFileView";
 
 export const Agenda = ({
 	classID,
@@ -28,6 +30,7 @@ export const Agenda = ({
 		date: string | null;
 		description: Json;
 		assignments: string[] | null;
+		files: CoursifyFile[] | null;
 	};
 	// Needed for editing
 	allAssignments: {
@@ -58,8 +61,14 @@ export const Agenda = ({
 		date: string | null;
 		description: Json;
 		assignments: string[] | null;
+		files: CoursifyFile[] | null;
 	} | null>(null);
-
+	const dateFormat = new Intl.DateTimeFormat("en-US", {
+		weekday: "long",
+		month: "long",
+		day: "numeric",
+		timeZone: "Europe/London",
+	});
 	return (
 		<>
 			{/* Couldn't get editing the agenda directly to work, so instead we just delete it and add a new one in its place */}
@@ -71,6 +80,7 @@ export const Agenda = ({
 						date: editedAgenda.date,
 						description: editedAgenda.description,
 						assignments: editedAgenda.assignments,
+						files: editedAgenda.files,
 					}}
 					allAssignments={allAssignments}
 					assignmentUpdater={assignmentUpdater}
@@ -81,6 +91,9 @@ export const Agenda = ({
 					{/* For Deleting Agendas */}
 					<DeleteAgenda
 						agendaID={agenda.id}
+						agendaFiles={agenda.files?.map(
+							(file) => file && `agendas/${file.dbName}`
+						)}
 						open={deleting}
 						setOpen={setDeleting}
 						completed={setDeleted}
@@ -100,17 +113,14 @@ export const Agenda = ({
 							assignments: allAssignments.filter((assignment) =>
 								agenda.assignments!.includes(assignment.id)
 							),
+							files: agenda.files ?? [],
 						}}
 					></CreateAgenda>
 
 					<div className="bg-gray-200 p-4 rounded-lg">
 						<div className="flex justify-between">
 							<h2 className="font-bold text-lg">
-								{new Date(agenda.date!).toLocaleDateString("en-US", {
-									weekday: "long",
-									month: "long",
-									day: "numeric",
-								})}
+								{dateFormat.format(new Date(agenda.date!))}
 							</h2>
 							{isTeacher && (
 								<div className="gap-2 grid grid-cols-2">
@@ -119,6 +129,7 @@ export const Agenda = ({
 										onClick={() => {
 											setEditing(true);
 										}}
+										title="Edit this agenda"
 									>
 										<PencilIcon className="w-6 h-6" />
 									</button>
@@ -127,6 +138,7 @@ export const Agenda = ({
 										onClick={() => {
 											setDeleting(true);
 										}}
+										title="Delete this agenda"
 									>
 										<TrashIcon className="w-6 h-6" />
 									</button>
@@ -138,6 +150,7 @@ export const Agenda = ({
 							initialState={agenda.description}
 							className="my-0.5"
 						/>
+						<FileCarousel files={agenda.files ?? []} />
 						<div className="grid grid-cols-1 gap-2">
 							{true &&
 								allAssignments

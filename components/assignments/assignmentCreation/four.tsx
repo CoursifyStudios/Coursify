@@ -79,6 +79,26 @@ const AssignmentCreation: NextPage<{
 			return;
 		}
 		setSubmitting(true);
+		const newFiles = assignmentData.files
+			? await Promise.all(
+					assignmentData.files.map(async (coursifyFile) => {
+						if (coursifyFile.file) {
+							await supabase.storage
+								.from("ugc")
+								.upload(
+									`assignments/${coursifyFile.dbName}`,
+									coursifyFile.file
+								);
+							const withLink = {
+								...coursifyFile,
+								link: `https://cdn.coursify.one/storage/v1/object/public/ugc/assignments/${coursifyFile.dbName}`,
+							};
+							const { file: _, ...withoutFile } = withLink;
+							return withoutFile;
+						}
+					})
+			  )
+			: [];
 		const { assignmentType: _, ...assignmentSettings } =
 			assignmentData.settings;
 		const dataToUpload: Database["public"]["Tables"]["assignments"]["Insert"] =
@@ -91,6 +111,7 @@ const AssignmentCreation: NextPage<{
 				type: assignmentData.type,
 				hidden: assignmentData.hidden,
 				settings: assignmentSettings as unknown as Json,
+				files: newFiles as unknown as Json[],
 				max_grade: assignmentData.maxGrade ?? null,
 			};
 		if (due) {

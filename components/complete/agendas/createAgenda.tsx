@@ -12,6 +12,9 @@ import { useEffect, useState } from "react";
 import { CompactAssignmentUI } from "./agenda";
 import { createAgenda, editAgenda, searchDB } from "@/lib/db/agendas";
 import { Info } from "@/components/tooltips/info";
+import GenericFileUpload, {
+	CoursifyFile,
+} from "@/components/files/genericFileUpload";
 
 export const CreateAgenda = ({
 	classID,
@@ -38,6 +41,7 @@ export const CreateAgenda = ({
 		date: string | null;
 		description: Json;
 		assignments: string[] | null;
+		files: CoursifyFile[] | null;
 	}) => void;
 	assignmentUpdater: (
 		val: {
@@ -60,6 +64,7 @@ export const CreateAgenda = ({
 			due_type: number | null;
 			due_date: string | null;
 		}[];
+		files: CoursifyFile[];
 	};
 }) => {
 	const supabase = useSupabaseClient();
@@ -70,6 +75,10 @@ export const CreateAgenda = ({
 			? editingInfo.assignments.map((assignment) => assignment.id)
 			: []
 	);
+	const [files, setFiles] = useState<CoursifyFile[]>(
+		editingInfo ? editingInfo.files : []
+	);
+	const [actualFiles, setActualFiles] = useState<File[]>([]);
 	// Loading states
 	const [loading, setLoading] = useState(false);
 	const [searching, setSearching] = useState(false);
@@ -121,6 +130,17 @@ export const CreateAgenda = ({
 			closeMenu={() => {
 				setOpen(false);
 				setQuery("");
+				if (!editingInfo && files.length > 0) {
+					(async () => {
+						const deletion = await supabase.functions.invoke("delete-file", {
+							body: {
+								path: files.map((file) => `agendas/${file.dbName}`),
+							},
+						});
+						//tbh no idea how we would even approach error handling for this... -Bill
+					})();
+					setFiles([]);
+				}
 			}}
 			open={open}
 			size="md"
@@ -128,11 +148,10 @@ export const CreateAgenda = ({
 			<h2 className="title-sm mb-2">
 				{editingInfo ? "Edit your agenda" : "Create a new Agenda"}
 			</h2>
-			{/* custom datepicker later probably */}
 			<Formik
 				initialValues={{
 					date: editingInfo
-						? editingInfo.date
+						? new Date(editingInfo.date).toLocaleDateString("en-CA")
 						: // I couldn't get this working until I used this.
 						  // I've found the first (and only) reason for Canada to exist!
 						  new Date().toLocaleDateString("en-CA"),
@@ -150,13 +169,15 @@ export const CreateAgenda = ({
 									date: values.date,
 									description: editorState?.toJSON() as unknown as Json,
 									assignments: chosenAssignments,
+									files: files ?? [],
 							  })
 							: await createAgenda(
 									supabase,
 									classID,
 									values.date,
 									editorState?.toJSON() as unknown as Json,
-									chosenAssignments
+									chosenAssignments,
+									files ?? []
 							  );
 						// FAILURE STATE
 						if (DBreturn.error) {
@@ -167,9 +188,18 @@ export const CreateAgenda = ({
 							setLoading(false);
 							setQuery("");
 							setChosenAssignments([]); //clears your selections in the case of a succesful POST
+							setFiles([]);
 							setOpen(false);
 							if (createTempAgenda) {
-								createTempAgenda(getDataOutArray(DBreturn.data));
+								const actualData = getDataOutArray(DBreturn.data);
+								createTempAgenda({
+									id: actualData.id,
+									class_id: actualData.class_id,
+									date: actualData.date,
+									description: actualData.description,
+									assignments: actualData.assignments,
+									files: actualData.files as unknown as CoursifyFile[],
+								});
 							}
 						}
 					} else {
@@ -193,6 +223,11 @@ export const CreateAgenda = ({
 						updateState={setEditorState}
 						initialState={editingInfo ? editingInfo.description : ""}
 						focus={false}
+					/>
+					<GenericFileUpload
+						setFiles={setFiles}
+						files={files}
+						destination="agendas"
 					/>
 					{/* Later, we'll need to be able to change the order of the assignments */}
 					<div className="flex">
