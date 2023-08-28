@@ -49,6 +49,7 @@ export interface Database {
           class_id: string
           date: string | null
           description: Json | null
+          files: Json[] | null
           id: string
         }
         Insert: {
@@ -56,6 +57,7 @@ export interface Database {
           class_id: string
           date?: string | null
           description?: Json | null
+          files?: Json[] | null
           id?: string
         }
         Update: {
@@ -63,6 +65,7 @@ export interface Database {
           class_id?: string
           date?: string | null
           description?: Json | null
+          files?: Json[] | null
           id?: string
         }
         Relationships: [
@@ -80,6 +83,7 @@ export interface Database {
           class_id: string | null
           clone_id: string | null
           content: Json | null
+          files: Json[] | null
           id: string
           parent: string | null
           time: string | null
@@ -91,6 +95,7 @@ export interface Database {
           class_id?: string | null
           clone_id?: string | null
           content?: Json | null
+          files?: Json[] | null
           id?: string
           parent?: string | null
           time?: string | null
@@ -102,6 +107,7 @@ export interface Database {
           class_id?: string | null
           clone_id?: string | null
           content?: Json | null
+          files?: Json[] | null
           id?: string
           parent?: string | null
           time?: string | null
@@ -137,6 +143,7 @@ export interface Database {
           description: string
           due_date: string | null
           due_type: number | null
+          files: Json[] | null
           group_id: string | null
           hidden: boolean
           id: string
@@ -156,6 +163,7 @@ export interface Database {
           description: string
           due_date?: string | null
           due_type?: number | null
+          files?: Json[] | null
           group_id?: string | null
           hidden?: boolean
           id?: string
@@ -175,6 +183,7 @@ export interface Database {
           description?: string
           due_date?: string | null
           due_type?: number | null
+          files?: Json[] | null
           group_id?: string | null
           hidden?: boolean
           id?: string
@@ -510,6 +519,7 @@ export interface Database {
       submissions: {
         Row: {
           assignment_id: string
+          comment: string | null
           content: Json | null
           created_at: string
           final: boolean
@@ -521,6 +531,7 @@ export interface Database {
         }
         Insert: {
           assignment_id: string
+          comment?: string | null
           content?: Json | null
           created_at?: string
           final: boolean
@@ -532,6 +543,7 @@ export interface Database {
         }
         Update: {
           assignment_id?: string
+          comment?: string | null
           content?: Json | null
           created_at?: string
           final?: boolean
@@ -607,7 +619,7 @@ export interface Database {
           created?: string
           email: string
           full_name: string
-          id: string
+          id?: string
           onboarded?: boolean
           phone_number?: string | null
           preferred_name?: string | null
