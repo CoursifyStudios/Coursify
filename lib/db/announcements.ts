@@ -1,11 +1,13 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database, Json } from "./database.types";
+import { CoursifyFile } from "@/components/files/genericFileUpload";
 
 export const postAnnouncements = async (
 	supabase: SupabaseClient<Database>,
 	announcementAuthor: string,
 	announcementTitle: string,
 	announcementContent: Json,
+	announcementFiles: CoursifyFile[] | null,
 	communities: string[]
 ) => {
 	let cloneID: string | null = null;
@@ -13,17 +15,39 @@ export const postAnnouncements = async (
 		author: string;
 		class_id: string | null;
 		content: Json | null;
+		files: Json[] | null;
 		title: string | null;
 		clone_id: string | null;
 	}[] = [];
 	if (communities.length > 1) {
 		cloneID = crypto.randomUUID();
 	}
+	const newFiles = announcementFiles
+		? await Promise.all(
+				announcementFiles.map(async (coursifyFile) => {
+					if (coursifyFile.file) {
+						await supabase.storage
+							.from("ugc")
+							.upload(
+								`announcements/${coursifyFile.dbName}`,
+								coursifyFile.file
+							);
+						const withLink = {
+							...coursifyFile,
+							link: `https://cdn.coursify.one/storage/v1/object/public/ugc/announcements/${coursifyFile.dbName}`,
+						};
+						const { file: _, ...withoutFile } = withLink;
+						return withoutFile;
+					}
+				})
+		  )
+		: [];
 	communities.forEach((community) => {
 		announcements.push({
 			author: announcementAuthor,
 			title: announcementTitle,
 			content: announcementContent,
+			files: newFiles as unknown as Json[],
 			class_id: community,
 			clone_id: cloneID,
 		});
@@ -59,9 +83,17 @@ export const deleteAnnouncement = async (
 		id: string;
 		author: string;
 		title: string;
+		files: string[]; //for deleting them
 		clone_id: string | null;
 	}
 ) => {
+	if (announcement.files.length > 0) {
+		await supabase.functions.invoke("delete-file", {
+			body: {
+				path: announcement.files,
+			},
+		});
+	}
 	return await supabase
 		.from("announcements")
 		.delete()
@@ -80,16 +112,55 @@ export const editAnnouncement = async (
 		id: string;
 		author: string;
 		title: string;
+		files: string[] | null;
 		clone_id: string | null;
 	},
-	newAnnouncement: { title: string; content: Json | null }
+	newAnnouncement: {
+		title: string;
+		content: Json | null;
+		files: CoursifyFile[] | null;
+	}
 ) => {
+	const newFileLinks = newAnnouncement.files?.map((file) => file.dbName);
+	//removing any no longer wanted files
+	if (oldAnnouncement.files) {
+		await supabase.functions.invoke("delete-file", {
+			body: {
+				path: oldAnnouncement.files.filter(
+					(oldFile) => newFileLinks?.includes(oldFile)
+				),
+			},
+		});
+	}
+	const newFiles = newAnnouncement.files
+		? await Promise.all(
+				newAnnouncement.files.map(async (coursifyFile) => {
+					if (coursifyFile.file) {
+						await supabase.storage
+							.from("ugc")
+							.upload(
+								`announcements/${coursifyFile.dbName}`,
+								coursifyFile.file
+							);
+						const withLink = {
+							...coursifyFile,
+							link: `https://cdn.coursify.one/storage/v1/object/public/ugc/announcements/${coursifyFile.dbName}`,
+						};
+						const { file: _, ...withoutFile } = withLink;
+						return withoutFile;
+					} else {
+						return coursifyFile;
+					}
+				})
+		  )
+		: [];
 	//not the most elegant, sure, but it works an only uses one request. Until we get an SQL function, we use this. I'm Bill, this is my pr,
 	return await supabase
 		.from("announcements")
 		.update({
 			title: newAnnouncement.title,
 			content: newAnnouncement.content,
+			files: newFiles as unknown as Json[],
 		})
 		// Because teachers can now edit & delete other people's posts,
 		// these checks no longer are helpful. This does mean though that
@@ -126,8 +197,17 @@ export const editAnnouncement = async (
 export const removeAnnouncementFromCommunity = async (
 	supabase: SupabaseClient<Database>,
 	announcementID: string,
-	communityID: string
+	communityID: string,
+	files?: string[] //only delete files when we know that this is the only one...?
 ) => {
+	if (files) {
+		await supabase.functions.invoke("delete-file", {
+			body: {
+				path: files,
+			},
+		});
+	}
+
 	return await supabase
 		.from("announcements")
 		.delete()
@@ -139,13 +219,19 @@ export const removeAnnouncementFromCommunity = async (
 export const shareAnnouncement = async (
 	supabase: SupabaseClient<Database>,
 	announcementID: string,
-	newAnnouncement: { author: string; title: string; content: Json },
+	newAnnouncement: {
+		author: string;
+		title: string;
+		content: Json;
+		files: CoursifyFile[] | null;
+	},
 	communities: string[]
 ) => {
 	const announcements: {
 		author: string;
 		title: string | null;
 		content: Json;
+		files: Json[] | null;
 		class_id: string | null;
 		parent: string;
 		type: number;
@@ -155,6 +241,7 @@ export const shareAnnouncement = async (
 			author: newAnnouncement.author,
 			title: newAnnouncement.title,
 			content: newAnnouncement.content,
+			files: newAnnouncement.files as unknown as Json[],
 			class_id: community,
 			parent: announcementID,
 			type: AnnouncementType.CROSSPOST,
@@ -214,6 +301,7 @@ export type BasicAnnouncement = {
 	author: string;
 	class_id: string | null;
 	content: Json;
+	files: CoursifyFile[] | null;
 	id: string;
 	parent: string | null;
 	time: string | null;
@@ -238,6 +326,7 @@ export type TypeOfAnnouncements = {
 	author: string;
 	title: string | null;
 	content: Json;
+	files: CoursifyFile[] | null;
 	time: string | null;
 	type: number;
 	clone_id: string | null;
@@ -254,6 +343,7 @@ export type TypeOfAnnouncements = {
 	parent?: {
 		author: string;
 		content: Json;
+		files: CoursifyFile[] | null;
 		id: string;
 		time: string | null;
 		title: string | null;

@@ -9,6 +9,10 @@ import { Button } from "@/components/misc/button";
 import { Info } from "@/components/tooltips/info";
 import { NewAssignmentData } from "@/lib/db/assignments/assignments";
 import { submissionType } from "./submissionType";
+import GenericFileUpload, {
+	CoursifyFile,
+} from "@/components/files/genericFileUpload";
+import { Json } from "@/lib/db/database.types";
 
 export default function AssignmentDetails({
 	stage,
@@ -17,6 +21,7 @@ export default function AssignmentDetails({
 	stage: number;
 	setStage: Dispatch<SetStateAction<number>>;
 }) {
+	const [files, setFiles] = useState<CoursifyFile[]>([]);
 	const [editorState, setEditorState] = useState<EditorState>();
 	const { data: assignmentData, set: setAssignmentData } = useAssignmentStore();
 
@@ -49,6 +54,7 @@ export default function AssignmentDetails({
 					setAssignmentData({
 						...values,
 						content: editorState?.toJSON(),
+						files: files,
 					} as NewAssignmentData);
 				}}
 			>
@@ -74,8 +80,8 @@ export default function AssignmentDetails({
 								<div className="flex w-full items-center justify-between">
 									<span className="text-sm font-medium">Max Points</span>
 									<Info size="large">
-										The max amount of points that a student can earn on the
-										assignment. Going over the set value will be extra credit.
+										The highest number of points that a student can earn on the
+										assignment. Going over this value will be extra credit.
 									</Info>
 								</div>
 
@@ -123,6 +129,11 @@ export default function AssignmentDetails({
 							initialState={assignmentData?.content}
 							className="scrollbar-fancy mb-6 max-h-[30vh] min-h-[6rem] overflow-y-auto overflow-x-hidden rounded-md border border-gray-300 bg-backdrop/50 pb-2 focus:ring-1"
 							focus={false}
+						/>
+						<GenericFileUpload
+							files={files}
+							setFiles={setFiles}
+							destination={"assignments"}
 						/>
 						<div className="ml-auto flex space-x-4">
 							<span onClick={() => setStage((stage) => stage - 1)}>

@@ -9,11 +9,13 @@ export const DeleteAgenda = ({
 	open,
 	setOpen,
 	agendaID,
+	agendaFiles,
 	completed,
 }: {
 	open: boolean;
 	setOpen: (value: boolean) => void;
 	agendaID: string;
+	agendaFiles: string[] | undefined;
 	completed: (value: boolean) => void;
 }) => {
 	const supabase = useSupabaseClient();
@@ -33,7 +35,11 @@ export const DeleteAgenda = ({
 					color="bg-red-500"
 					onClick={async () => {
 						setLoading(true);
-						const DBreturn = await deleteAgenda(supabase, agendaID);
+						const DBreturn = await deleteAgenda(
+							supabase,
+							agendaID,
+							agendaFiles
+						);
 						if (DBreturn.error) {
 							setLoading(false);
 							setErrorMessage(
