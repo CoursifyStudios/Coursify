@@ -1,12 +1,13 @@
 import { DocumentArrowUpIcon } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
-import { Dispatch, SetStateAction, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { useUser } from "@supabase/auth-helpers-react";
 import { FileView } from "./genericFileView";
+import Betatag from "../misc/betatag";
 
 // note that many bits of this we might want to componenet-ize so we can reuse them in
 // components/assignments/assignmentPanel/components/file.tsx
-// this copies some stuff from there but serves as a simpler file uploader that is only a file uploader (not involved in submission)
+// this copies some stuff from there but serves as a simpler file uploader this is only a file uploader (not involved in submission)
 // I haven't exchanged bits of that file for these componenzts because I don't want merge conflicts as submissions is being worked on right now
 
 const GenericFileUpload: NextPage<{
@@ -16,7 +17,7 @@ const GenericFileUpload: NextPage<{
 }> = ({ files, setFiles, destination }) => {
 	const user = useUser();
 	const [error, setError] = useState("");
-	const converter = useRef(null);
+	const converter = useRef<HTMLCanvasElement>(null);
 
 	const addFile = async (file: File) => {
 		if (!file) return;
@@ -30,40 +31,17 @@ const GenericFileUpload: NextPage<{
 		const UUID = window.crypto.randomUUID();
 		const name = `${UUID}--${user!.id}`;
 		const path = `${destination}/${name}`;
+
 		setFiles(
 			files.concat({
 				link: "",
 				name: file.name,
 				dbName: name,
 				size: file.size,
+				file: file,
 			})
 		);
-		// setFiles(
-		// 	files.concat({
-		// 		link: `https://cdn.coursify.one/storage/v1/object/public/ugc/${path}`,
-		// 		name: file.name,
-		// 		dbName: name,
-		// 		size: file.size,
-		// 	})
-		// );
-		// const { data, error } = await supabase.storage
-		// 	.from("ugc")
-		// 	.upload(path, file);
-
-		// if (error) {
-		// 	setError(error.message);
-		// 	return;
-		// } else {
-		// 	setFiles((files) =>
-		// 		files.map((f) => {
-		// 			if (f.fileName != name) return f;
-		// 			const { uploading: _, ...newFile } = f;
-		// 			return newFile;
-		// 		})
-		// 	);
-		// }
 	};
-	// Handles File Upload
 
 	const removeFile = async (fileName: string) => {
 		setFiles((files) => files.filter((file) => file.name != fileName));
@@ -90,7 +68,7 @@ const GenericFileUpload: NextPage<{
 
 	return (
 		<>
-			<canvas ref={converter} hidden></canvas>
+			<canvas ref={converter} hidden width={720} height={720}></canvas>
 			{files.length > 0 && (
 				<div className="grid lg:grid-cols-2 gap-2">
 					{files.map((file, i) => (
@@ -109,9 +87,11 @@ const GenericFileUpload: NextPage<{
 				<DocumentArrowUpIcon className="w-6 h-6" />
 				<div className="ml-4">
 					<h4 className="font-medium text-sm">Upload File</h4>
-					<p className="text-xs">Click to select or drop file</p>
+					<p className="text-xs">Click to select a file</p>
 				</div>
 				<input type="file" className="hidden" />
+				<div className="mr-auto"></div>
+				<Betatag />
 			</label>
 			{error && (
 				<div className="text-red-500 text-sm">
@@ -129,4 +109,5 @@ export interface CoursifyFile {
 	dbName: string;
 	name: string;
 	size: number;
+	file?: File;
 }

@@ -315,7 +315,8 @@ export const AnnouncementPostingUI = ({
 													setNewInfo({
 														title: title,
 														content: editorState?.toJSON() as unknown as Json,
-														files: files,
+														files: getDataOutArray(newAnnouncement.data)
+															.files as unknown as CoursifyFile[],
 													});
 
 												editingInfo.setEditing(false);

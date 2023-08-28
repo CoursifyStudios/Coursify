@@ -78,7 +78,7 @@ export const CreateAgenda = ({
 	const [files, setFiles] = useState<CoursifyFile[]>(
 		editingInfo ? editingInfo.files : []
 	);
-	const [uploadFiles, setUploadFiles] = useState<boolean>(false);
+	const [actualFiles, setActualFiles] = useState<File[]>([]);
 	// Loading states
 	const [loading, setLoading] = useState(false);
 	const [searching, setSearching] = useState(false);
@@ -169,7 +169,7 @@ export const CreateAgenda = ({
 									date: values.date,
 									description: editorState?.toJSON() as unknown as Json,
 									assignments: chosenAssignments,
-									files: files as unknown as Json[],
+									files: files ?? [],
 							  })
 							: await createAgenda(
 									supabase,
@@ -177,7 +177,7 @@ export const CreateAgenda = ({
 									values.date,
 									editorState?.toJSON() as unknown as Json,
 									chosenAssignments,
-									files as unknown as Json[]
+									files ?? []
 							  );
 						// FAILURE STATE
 						if (DBreturn.error) {

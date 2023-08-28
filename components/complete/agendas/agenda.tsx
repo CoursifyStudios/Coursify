@@ -15,12 +15,7 @@ import {
 import { DeleteAgenda } from "./deleteAgenda";
 import { CreateAgenda } from "./createAgenda";
 import { CoursifyFile } from "@/components/files/genericFileUpload";
-import {
-	FileCarousel,
-	viewableFileExtensions,
-} from "@/components/files/genericFileView";
-import { ImagePreview } from "@/components/files/imagePreview";
-import { DownloadableFile } from "@/components/files/downloadableFile";
+import { FileCarousel } from "@/components/files/genericFileView";
 
 export const Agenda = ({
 	classID,
@@ -96,7 +91,9 @@ export const Agenda = ({
 					{/* For Deleting Agendas */}
 					<DeleteAgenda
 						agendaID={agenda.id}
-						agendaFiles={agenda.files?.map((file) => `agendas/${file.dbName}`)}
+						agendaFiles={agenda.files?.map(
+							(file) => file && `agendas/${file.dbName}`
+						)}
 						open={deleting}
 						setOpen={setDeleting}
 						completed={setDeleted}

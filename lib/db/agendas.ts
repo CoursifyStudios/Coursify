@@ -1,6 +1,7 @@
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database, Json } from "./database.types";
 import { getTheseAssignments } from "./assignments/assignments";
+import { CoursifyFile } from "@/components/files/genericFileUpload";
 
 export const fetchAgendasAndAssignments = async (
 	supabase: SupabaseClient<Database>,
@@ -43,8 +44,24 @@ export const createAgenda = async (
 	date: string,
 	description: Json,
 	assignments: string[],
-	files: Json[]
+	files: CoursifyFile[]
 ) => {
+	const newFiles = await Promise.all(
+		files.map(async (coursifyFile) => {
+			if (coursifyFile.file) {
+				await supabase.storage
+					.from("ugc")
+					.upload(`agendas/${coursifyFile.dbName}`, coursifyFile.file);
+				const withLink = {
+					...coursifyFile,
+					link: `https://cdn.coursify.one/storage/v1/object/public/ugc/agendas/${coursifyFile.dbName}`,
+				};
+				const { file: _, ...withoutFile } = withLink;
+				return withoutFile;
+			}
+		})
+	);
+
 	return await supabase
 		.from("agendas")
 		.insert({
@@ -52,7 +69,7 @@ export const createAgenda = async (
 			description,
 			date,
 			assignments,
-			files,
+			files: newFiles as unknown as Json[],
 		})
 		.select()
 		.single();
@@ -80,12 +97,34 @@ export const editAgenda = async (
 		date: string;
 		description: Json;
 		assignments: string[];
-		files: Json[];
+		files: CoursifyFile[];
 	}
 ) => {
+	const newFiles = await Promise.all(
+		newData.files.map(async (coursifyFile) => {
+			if (coursifyFile.file) {
+				await supabase.storage
+					.from("ugc")
+					.upload(`agendas/${coursifyFile.dbName}`, coursifyFile.file);
+				const withLink = {
+					...coursifyFile,
+					link: `https://cdn.coursify.one/storage/v1/object/public/ugc/agendas/${coursifyFile.dbName}`,
+				};
+				const { file: _, ...withoutFile } = withLink;
+				return withoutFile;
+			} else {
+				return coursifyFile;
+			}
+		})
+	);
 	return await supabase
 		.from("agendas")
-		.update(newData)
+		.update({
+			date: newData.date,
+			description: newData.description,
+			assignments: newData.assignments,
+			files: newFiles as unknown as Json[],
+		})
 		.eq("id", id)
 		.select()
 		.single();

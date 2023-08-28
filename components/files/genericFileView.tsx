@@ -24,10 +24,11 @@ export const FileView = ({
 	deleteFile: (value: string) => void;
 	size?: number;
 }) => {
-	if (file.link == "")
+	if (file)
 		return (
 			<div className="rounded-lg border border-gray-300 p-3 flex items-center">
-				{viewableFileExtensions.includes(file.name.split(".").pop() || "") ? (
+				{file.link != "" &&
+				viewableFileExtensions.includes(file.name.split(".").pop() || "") ? (
 					// eslint-disable-next-line @next/next/no-img-element
 					<img
 						src={file.link}
@@ -57,6 +58,7 @@ export const FileView = ({
 				</div>
 			</div>
 		);
+	return;
 };
 
 export const FileCarousel = ({ files }: { files: CoursifyFile[] }) => {
@@ -65,6 +67,7 @@ export const FileCarousel = ({ files }: { files: CoursifyFile[] }) => {
 			<div className=" mb-2">
 				{files?.map(
 					(file, index) =>
+						file &&
 						!viewableFileExtensions.includes(
 							file.name.split(".").pop() || ""
 						) && <DownloadableFile key={index} file={file} />
@@ -73,6 +76,7 @@ export const FileCarousel = ({ files }: { files: CoursifyFile[] }) => {
 			<div className="flex gap-4 overflow-x-auto">
 				{files?.map(
 					(file, index) =>
+						file &&
 						viewableFileExtensions.includes(
 							file.name.split(".").pop() || ""
 						) && <ImagePreview key={index} file={file} />

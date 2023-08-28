@@ -16,12 +16,12 @@ export const ImagePreview = ({ file }: { file: CoursifyFile }) => {
 			) : (
 				<div
 					className="relative shrink-0 group"
-					title={file.dbName}
+					title={file.name}
 					onClick={() => setShowBigPicture(true)}
 				>
 					<Image
 						src={file.link}
-						alt={`ugc image of ${file.dbName}`}
+						alt={`ugc image of ${file.name}`}
 						width={192}
 						height={192}
 						className="rounded object-cover object-center !min-w-48 h-48"

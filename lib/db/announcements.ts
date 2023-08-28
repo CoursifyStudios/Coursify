@@ -22,12 +22,32 @@ export const postAnnouncements = async (
 	if (communities.length > 1) {
 		cloneID = crypto.randomUUID();
 	}
+	const newFiles = announcementFiles
+		? await Promise.all(
+				announcementFiles.map(async (coursifyFile) => {
+					if (coursifyFile.file) {
+						await supabase.storage
+							.from("ugc")
+							.upload(
+								`announcements/${coursifyFile.dbName}`,
+								coursifyFile.file
+							);
+						const withLink = {
+							...coursifyFile,
+							link: `https://cdn.coursify.one/storage/v1/object/public/ugc/announcements/${coursifyFile.dbName}`,
+						};
+						const { file: _, ...withoutFile } = withLink;
+						return withoutFile;
+					}
+				})
+		  )
+		: [];
 	communities.forEach((community) => {
 		announcements.push({
 			author: announcementAuthor,
 			title: announcementTitle,
 			content: announcementContent,
-			files: announcementFiles as unknown as Json[],
+			files: newFiles as unknown as Json[],
 			class_id: community,
 			clone_id: cloneID,
 		});
@@ -112,14 +132,35 @@ export const editAnnouncement = async (
 			},
 		});
 	}
-
+	const newFiles = newAnnouncement.files
+		? await Promise.all(
+				newAnnouncement.files.map(async (coursifyFile) => {
+					if (coursifyFile.file) {
+						await supabase.storage
+							.from("ugc")
+							.upload(
+								`announcements/${coursifyFile.dbName}`,
+								coursifyFile.file
+							);
+						const withLink = {
+							...coursifyFile,
+							link: `https://cdn.coursify.one/storage/v1/object/public/ugc/announcements/${coursifyFile.dbName}`,
+						};
+						const { file: _, ...withoutFile } = withLink;
+						return withoutFile;
+					} else {
+						return coursifyFile;
+					}
+				})
+		  )
+		: [];
 	//not the most elegant, sure, but it works an only uses one request. Until we get an SQL function, we use this. I'm Bill, this is my pr,
 	return await supabase
 		.from("announcements")
 		.update({
 			title: newAnnouncement.title,
 			content: newAnnouncement.content,
-			files: newAnnouncement.files as unknown as Json[],
+			files: newFiles as unknown as Json[],
 		})
 		// Because teachers can now edit & delete other people's posts,
 		// these checks no longer are helpful. This does mean though that
