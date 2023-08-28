@@ -147,10 +147,10 @@ const Class: NextPageWithLayout = () => {
 						</div>
 					</section>
 					<section className="sticky top-0 ml-8 w-[20.5rem] shrink-0">
-						<div>
+						{/* <div>
 							<h2 className="title">Grade</h2>
 							<div className="mt-6 h-16 animate-pulse rounded-xl	 bg-gray-200 p-4"></div>
-						</div>
+						</div> */}
 						<div className="space-y-4">
 							<h2 className="title mb-6 mt-4">Assignments</h2>
 							<div className="flex h-20 grow animate-pulse rounded-xl bg-gray-200"></div>
@@ -491,14 +491,14 @@ const Class: NextPageWithLayout = () => {
 					</Tab.Panels>
 				</Tab.Group>
 				<section className="sticky top-0 mx-auto w-[20.5rem] shrink-0 sm:ml-8">
-					{!isTeacher && (
+					{/* {!isTeacher && (
 						<div>
 							<h2 className="title">Grade</h2>
 							<div className="mt-6 rounded-xl bg-gray-200 p-4">
 								<CircleCounter amount={grade} max={100} />
 							</div>
 						</div>
-					)}
+					)} */}
 					<div className="space-y-4">
 						<h2 className="title mb-6 mt-8">Assignments</h2>
 						{isTeacher && (
