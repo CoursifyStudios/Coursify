@@ -54,8 +54,8 @@ const CheckBox = ({
 						const checks = s.checkboxes;
 
 						checks.unshift({
-							name: "New Checkbox",
-							description: "Checkbox Description",
+							name: "",
+							description: "",
 							teacher: false,
 							step: checks.length,
 						});
@@ -141,10 +141,11 @@ const CheckBox = ({
 					<input
 						type="text"
 						defaultValue={checkbox.name}
+						placeholder="New Checkbox"
 						className={`${
 							titleSelected
 								? "px-2"
-								: "noinputcss mx-2 !rounded-none border-dashed border-neutral-400 !border-l-transparent !border-r-transparent !border-t-transparent bg-transparent px-0 dark:border-neutral-600"
+								: "noinputcss mx-2 !rounded-none border-dashed border-neutral-400 !border-l-transparent !border-r-transparent !border-t-transparent bg-transparent px-0 dark:border-neutral-600 placeholder:text-gray-600 dark:placeholder:text-gray-400"
 						}  py-0.5 font-medium focus:select-all`}
 						onFocus={() => {
 							setTitleSelected(true);
@@ -165,10 +166,11 @@ const CheckBox = ({
 					<input
 						type="text"
 						defaultValue={checkbox.description}
+						placeholder="New Checkbox Description"
 						className={`${
 							descSelected
 								? "px-2"
-								: "noinputcss mx-2 !rounded-none border-dashed border-neutral-400 !border-l-transparent !border-r-transparent !border-t-transparent bg-transparent px-0 dark:border-neutral-600"
+								: "noinputcss mx-2 !rounded-none border-dashed border-neutral-400 !border-l-transparent !border-r-transparent !border-t-transparent bg-transparent px-0 dark:border-neutral-600 placeholder:text-gray-600 dark:placeholder:text-gray-400"
 						} mt-2  py-0.5 text-sm focus:select-all`}
 						onFocus={() => {
 							setDescSelected(true);
