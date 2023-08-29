@@ -50,7 +50,7 @@ export const assignmentCheckoffValidation = Yup.object({
 		.of(
 			Yup.object({
 				name: Yup.string().required(),
-				description: Yup.string().required(),
+				description: Yup.string(),
 				step: Yup.number().required(),
 				teacher: Yup.boolean().required(),
 			})
