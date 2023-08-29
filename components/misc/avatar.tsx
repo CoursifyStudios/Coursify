@@ -32,6 +32,7 @@ function Avatar({
 					height={350}
 					alt={`${full_name}'s profile picture`}
 					className={`rounded-full h-${size} w-${size} object-cover`}
+					referrerPolicy="no-referrer"
 				/>
 			) : (
 				<div
