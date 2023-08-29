@@ -500,7 +500,7 @@ const Class: NextPageWithLayout = () => {
 						</div>
 					)} */}
 					<div className="space-y-4">
-						<h2 className="title mb-6 mt-8">Assignments</h2>
+						<h2 className="title mb-6">Assignments</h2>
 						{isTeacher && (
 							<div
 								tabIndex={0}
