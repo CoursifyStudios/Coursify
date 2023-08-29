@@ -1052,38 +1052,52 @@ Activities	The user's activities, as displayed on their profile
 					setTab(tab);
 				}}
 			>
-				<Tab.List as="div" className="mt-6 flex max-sm:space-x-2 sm:space-x-6">
-					<Tab as={Fragment}>
-						{({ selected }) => (
-							<div
-								className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none ${
-									selected
-										? "brightness-focus"
-										: "border-transparent bg-gray-200"
-								} text-lg font-semibold`}
-							>
-								Users
-							</div>
-						)}
-					</Tab>
-					<Tab as={Fragment}>
-						{({ selected }) => (
-							<div
-								className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none ${
-									selected
-										? "brightness-focus"
-										: "border-transparent bg-gray-200"
-								} text-lg font-semibold `}
-							>
-								Classes
-							</div>
-						)}
-					</Tab>
-
+				<Tab.List as="div" className="mt-6 flex justify-between">
+					<div className="flex space-x-3">
+						<Tab as={Fragment}>
+							{({ selected }) => (
+								<div
+									className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none ${
+										selected
+											? "brightness-focus"
+											: "border-transparent bg-gray-200"
+									} text-lg font-semibold`}
+								>
+									Users
+								</div>
+							)}
+						</Tab>
+						<Tab as={Fragment}>
+							{({ selected }) => (
+								<div
+									className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none ${
+										selected
+											? "brightness-focus"
+											: "border-transparent bg-gray-200"
+									} text-lg font-semibold `}
+								>
+									Classes
+								</div>
+							)}
+						</Tab>
+						<Tab as={Fragment}>
+							{({ selected }) => (
+								<div
+									className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none ${
+										selected
+											? "brightness-focus"
+											: "border-transparent bg-gray-200"
+									} text-lg font-semibold `}
+								>
+									Settings
+								</div>
+							)}
+						</Tab>
+					</div>
 					<Link
 						href="/schedule-editor"
 						className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none
-									 border-transparent bg-gray-200
+									 border-transparent bg-red-300 font-mono
 								 text-lg font-semibold `}
 					>
 						Schedule Editor
@@ -2239,6 +2253,21 @@ Activities	The user's activities, as displayed on their profile
 								className={`scale-75`}
 								onClick={() => search(true, page + 1)}
 							/>
+						</div>
+					</Tab.Panel>
+					<Tab.Panel>
+						<div className="h-64 w-full">
+							<div className="mt-4">
+								<h2 className="font-semibold text-lg">School Name</h2>
+								<input
+									type="text"
+									className="w-1/4"
+									color="bg-blue-500"
+									disabled
+									value={name}
+									placeholder={name}
+								/>
+							</div>
 						</div>
 					</Tab.Panel>
 				</Tab.Panels>
