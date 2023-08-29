@@ -65,57 +65,109 @@ serve(async (req: Request) => {
 			});
 		}
 
+		const registeredUsers = await serversideSupabaseClient
+			.from("users")
+			.select("id,email")
+			.in(
+				"email",
+				studentsToEnroll.map((user) => user.email)
+			);
+
+		if (registeredUsers.error) {
+			return new Response(
+				JSON.stringify({ error: "Internal Server Error: Fetching" }),
+				{
+					headers: { "Content-Type": "application/json", ...corsHeaders },
+					status: 500,
+				}
+			);
+		}
+
 		const newUsers = await serversideSupabaseClient
 			.from("users")
-			.upsert(
-				[
-					...studentsToEnroll.map((student) => ({
-						...student,
+			.insert([
+				...studentsToEnroll
+					.filter(
+						(s) =>
+							registeredUsers.data.find((u) => u.email === s.email) == undefined
+					)
+					.map((u) => ({
+						...u,
 						avatar_url: "",
 						id: crypto.randomUUID(),
 					})),
-				],
-				{
-					ignoreDuplicates: true,
-				}
-			)
+			])
 			.select("id");
 
 		if (newUsers.error) {
-			if (
-				newUsers.error.message.includes(
-					"duplicate key value violates unique constraint"
-				)
-			) {
-				return new Response(JSON.stringify({ error: "Duplicate email" }), {
+			return new Response(
+				JSON.stringify({ error: "Internal Server Error: Creation" }),
+				{
 					headers: { "Content-Type": "application/json", ...corsHeaders },
-					// This should be 400 but supabase function invoke doesn't return the response when it is
-					status: 200,
-				});
-			}
-
-			return new Response(JSON.stringify({ error: newUsers.error.message }), {
-				headers: { "Content-Type": "application/json", ...corsHeaders },
-				status: 500,
-			});
+					status: 500,
+				}
+			);
 		}
 
-		if (newUsers.data == undefined) {
-			return new Response(JSON.stringify({ error: "Internal Server Error" }), {
-				headers: { "Content-Type": "application/json", ...corsHeaders },
-				status: 500,
-			});
-		}
-
-		const newEnrollments = await serversideSupabaseClient
+		const alreadyEnrolled = await serversideSupabaseClient
 			.from("enrolled")
-			.insert([
-				...newUsers.data.map((user) => ({
-					admin_bool: false,
-					school_id: schoolId,
-					user_id: user.id,
-				})),
-			]);
+			.select("user_id")
+			.eq("school_id", schoolId)
+			.in(
+				"user_id",
+				[...registeredUsers.data, ...newUsers.data].map((user) => user.id)
+			);
+
+		if (alreadyEnrolled.error) {
+			return new Response(
+				JSON.stringify({ error: "Internal Server Error: Adding" }),
+				{
+					headers: { "Content-Type": "application/json", ...corsHeaders },
+					status: 500,
+				}
+			);
+		}
+
+		const toEnroll = [...registeredUsers.data, ...newUsers.data]
+			.filter(
+				(user) =>
+					alreadyEnrolled.data.find((u) => u.user_id == user.id) == undefined
+			)
+			.map((user) => ({
+				admin_bool: false,
+				school_id: schoolId,
+				user_id: user.id,
+			}));
+
+		if (toEnroll.length > 0) {
+			const newEnrollments = await serversideSupabaseClient
+				.from("enrolled")
+				.insert([
+					[...registeredUsers.data, ...newUsers.data]
+						.filter(
+							(user) =>
+								alreadyEnrolled.data.find((u) => u.user_id == user.id) ==
+								undefined
+						)
+						.map((user) => ({
+							admin_bool: false,
+							school_id: schoolId,
+							user_id: user.id,
+						})),
+				]);
+
+			if (newEnrollments.error) {
+				return new Response(
+					JSON.stringify({
+						error: "Internal Server Error: Enrolling",
+					}),
+					{
+						headers: { "Content-Type": "application/json", ...corsHeaders },
+						status: 500,
+					}
+				);
+			}
+		}
 
 		return new Response(JSON.stringify({ message: "ok" }), {
 			headers: { "Content-Type": "application/json", ...corsHeaders },

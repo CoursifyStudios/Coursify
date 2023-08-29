@@ -217,10 +217,10 @@ const AssignmentGradingUI = ({
 													}`}
 													onClick={() => setSelectedID(student.id)}
 												>
-													<img
-														src={student.avatar_url}
-														className="rounded-full h-10 w-10"
-														alt="user profile picture"
+													<Avatar
+														full_name={student.full_name}
+														avatar_url={student.avatar_url}
+														size="10"
 													/>
 													<div className="ml-3">
 														<p className="font-medium">{student.full_name}</p>
@@ -271,10 +271,10 @@ const AssignmentGradingUI = ({
 													} ${selectedID == student.id && "brightness-focus"}`}
 													onClick={() => setSelectedID(student.id)}
 												>
-													<img
-														src={student.avatar_url}
-														className="rounded-full h-10 w-10"
-														alt="user profile picture"
+													<Avatar
+														full_name={student.full_name}
+														avatar_url={student.avatar_url}
+														size="10"
 													/>
 													<div className="ml-3">
 														<p className="font-medium">{student.full_name}</p>
@@ -317,10 +317,10 @@ const AssignmentGradingUI = ({
 														selectedID == student.id && "brightness-focus"
 													}`}
 												>
-													<img
-														src={student.avatar_url}
-														className="rounded-full h-10 w-10"
-														alt="user profile picture"
+													<Avatar
+														full_name={student.full_name}
+														avatar_url={student.avatar_url}
+														size="10"
 													/>
 													<div className="ml-3">
 														<p className="font-medium">{student.full_name}</p>

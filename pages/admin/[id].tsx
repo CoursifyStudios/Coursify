@@ -1506,6 +1506,11 @@ Activities	The user's activities, as displayed on their profile
 											>
 												{mappedUser.enrolled[0].admin_bool ? (
 													<ShieldCheckIcon
+														title={
+															mappedUser.onboarded
+																? "Admin"
+																: "Non-Onboarded Admin"
+														}
 														className={`${svgClassname} ${
 															mappedUser.onboarded
 																? "text-blue-500"
@@ -1514,6 +1519,11 @@ Activities	The user's activities, as displayed on their profile
 													/>
 												) : (
 													<UserIcon
+														title={
+															mappedUser.onboarded
+																? "Student"
+																: "Non-Onboarded Student"
+														}
 														className={`${svgClassname} ${
 															mappedUser.onboarded
 																? "text-gray-300"
@@ -1576,6 +1586,7 @@ Activities	The user's activities, as displayed on their profile
 												{parents && (
 													<>
 														<UsersIcon
+															title="Parent"
 															className={`${svgClassname} text-blue-500`}
 														/>
 														<p className="truncate">{parents.join(", ")}</p>
@@ -1584,6 +1595,7 @@ Activities	The user's activities, as displayed on their profile
 												{students && (
 													<>
 														<AcademicCapIcon
+															title="Student"
 															className={`${svgClassname} text-gray-300`}
 														/>
 														<p className="truncate">{students.join(", ")}</p>
