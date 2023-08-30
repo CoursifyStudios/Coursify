@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 // Follow this setup guide to integrate the Deno language server with your editor:
 // https://deno.land/manual/getting_started/setup_your_environment
 // This enables autocomplete, go to definition, etc.
@@ -74,6 +75,7 @@ serve(async (req: Request) => {
 			);
 
 		if (registeredUsers.error) {
+			console.log(registeredUsers.error);
 			return new Response(
 				JSON.stringify({ error: "Internal Server Error: Fetching" }),
 				{
@@ -100,6 +102,7 @@ serve(async (req: Request) => {
 			.select("id");
 
 		if (newUsers.error) {
+			console.log(newUsers.error);
 			return new Response(
 				JSON.stringify({ error: "Internal Server Error: Creation" }),
 				{
@@ -119,6 +122,7 @@ serve(async (req: Request) => {
 			);
 
 		if (alreadyEnrolled.error) {
+			console.log(alreadyEnrolled.error)
 			return new Response(
 				JSON.stringify({ error: "Internal Server Error: Adding" }),
 				{
@@ -143,7 +147,7 @@ serve(async (req: Request) => {
 			const newEnrollments = await serversideSupabaseClient
 				.from("enrolled")
 				.insert([
-					[...registeredUsers.data, ...newUsers.data]
+					...[...registeredUsers.data, ...newUsers.data]
 						.filter(
 							(user) =>
 								alreadyEnrolled.data.find((u) => u.user_id == user.id) ==
@@ -157,9 +161,10 @@ serve(async (req: Request) => {
 				]);
 
 			if (newEnrollments.error) {
+				console.log(newEnrollments.error)
 				return new Response(
 					JSON.stringify({
-						error: "Internal Server Error: Enrolling",
+						error: "Internal Server Error: Enrolling"
 					}),
 					{
 						headers: { "Content-Type": "application/json", ...corsHeaders },
