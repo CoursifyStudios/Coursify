@@ -51,7 +51,7 @@ const Text = ({
 				<>
 					<ToggleSection
 						name={`Limiting ${settings.trueWhenChars ? "Characters" : "Words"}`}
-						description="Toggle between setting a character or a word limit. Leave the below fields blank for no word/character limit"
+						description="Toggle between setting a character or a word limit."
 						enabled={settings.trueWhenChars}
 						setEnabled={(value) =>
 							setSettings((settings) => {
