@@ -21,6 +21,21 @@ export const Achievement = ({
 	earned?: Date;
 }) => {
 	const [open, setOpen] = useState(false);
+	if (!data) {
+		return (
+			<div
+				className="flex cursor-not-allowed flex-col rounded-lg py-2 text-center transition"
+				onClick={() => setOpen(true)}
+			>
+				<div className="mx-auto rounded-full bg-backdrop p-4 text-white">
+					<XMarkIcon className="h-5 w-5 text-red-500" />
+				</div>
+				<h3 className="mt-2 line-clamp-2 font-bold ">Badge Hidden</h3>
+				<h4 className="line-clamp-2 text-sm">Earned at another school</h4>
+			</div>
+		);
+	}
+
 	return (
 		<>
 			<Popup closeMenu={() => setOpen(false)} open={open} size="sm">
@@ -82,6 +97,7 @@ export const getIcon = (icon: string | null) => {
 			alt="icon"
 			width={20}
 			height={20}
+			unoptimized
 		/>
 	);
 };
