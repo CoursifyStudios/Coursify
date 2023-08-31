@@ -11,7 +11,9 @@ import assignmentValidation from "./settingsValidation";
 const AssignmentSettings: NextPage<{
 	stage: number;
 	setStage: Dispatch<SetStateAction<number>>;
-}> = ({ setStage, stage }) => {
+	useCustomSettings?: boolean;
+	save?: (assignment: AssignmentSettingsTypes) => void;
+}> = ({ setStage, stage, useCustomSettings = false, save }) => {
 	const { data: assignmentData, set: setAssignmentData } = useAssignmentStore();
 	const [settings, setSettings] = useState<AssignmentSettingsTypes>();
 	const [error, setError] = useState("");
@@ -44,33 +46,57 @@ const AssignmentSettings: NextPage<{
 				</div>
 			</div>
 			<div className="mt-10 flex flex-col space-y-3 ">
-				<div className="ml-auto flex space-x-4">
-					<span
-						onClick={() => {
-							setAssignmentData({ settings } as NewAssignmentData);
-							setStage((stage) => stage - 1);
-						}}
-					>
-						<Button>Back</Button>
-					</span>
-					<span
+				{useCustomSettings && save ? (
+					<Button
 						onClick={() => {
 							try {
 								assignmentValidation(settings!);
 								setError("");
-								setAssignmentData({ settings } as NewAssignmentData);
-								setStage((stage) => stage + 1);
+								save(settings!);
 							} catch (e) {
 								if (typeof e == "object")
 									setError(e!.toString().match(/ValidationError: (.+)/)![1]);
 							}
 						}}
+						color="bg-blue-500"
+						className="text-white"
 					>
-						<Button color="bg-blue-500" className="text-white">
-							Next
+						Save
+					</Button>
+				) : (
+					<div className="ml-auto flex space-x-4">
+						<Button
+							onClick={() => {
+								setAssignmentData({ settings } as NewAssignmentData);
+								setStage((stage) => stage - 1);
+							}}
+						>
+							Back
 						</Button>
-					</span>
-				</div>
+
+						<span>
+							<Button
+								onClick={() => {
+									try {
+										assignmentValidation(settings!);
+										setError("");
+										setAssignmentData({ settings } as NewAssignmentData);
+										setStage((stage) => stage + 1);
+									} catch (e) {
+										if (typeof e == "object")
+											setError(
+												e!.toString().match(/ValidationError: (.+)/)![1]
+											);
+									}
+								}}
+								color="bg-blue-500"
+								className="text-white"
+							>
+								Next
+							</Button>
+						</span>
+					</div>
+				)}
 			</div>
 		</>
 	);
