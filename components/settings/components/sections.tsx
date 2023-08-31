@@ -4,7 +4,7 @@ import Dropdown from "../../misc/dropdown";
 import { Toggle } from "../../misc/toggle";
 
 export const ToggleSection: NextPage<{
-	description: string;
+	description?: string;
 	name: string;
 	enabled: boolean;
 	setEnabled: (value: boolean) => void;
