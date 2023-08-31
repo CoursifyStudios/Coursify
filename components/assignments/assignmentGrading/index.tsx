@@ -15,6 +15,7 @@ import { Button } from "@/components/misc/button";
 import AssignmentGradingComponents from "./components";
 import { SubmissionSettingsTypes } from "../assignmentPanel/submission.types";
 import { useRouter } from "next/router";
+import StudentSelector, { Student } from "./studentSelector";
 
 const AssignmentGradingUI = ({
 	setAllAssignmentData,
@@ -43,7 +44,7 @@ const AssignmentGradingUI = ({
 	const classData: TeacherAssignment = allAssignmentData.data!.classes!;
 	const maxGrade = allAssignmentData.data?.max_grade ?? null;
 
-	const students = (classData.users ? classData.users : [])
+	const students: Student[] = (classData.users ? classData.users : [])
 		.filter(
 			(user) =>
 				classData.class_users.find((cu) => cu.user_id == user.id)?.teacher ==
@@ -78,7 +79,7 @@ const AssignmentGradingUI = ({
 
 	const totalStudents = students.length;
 
-	const isGraded = (is: boolean) =>
+	const isGraded = (is: boolean): Student[] =>
 		students.filter((student) =>
 			student.submissions.length == 0 ||
 			student.submissions.filter((s) => s.final).length == 0
@@ -196,158 +197,16 @@ const AssignmentGradingUI = ({
 				loading={loading}
 			/>
 			<div className="flex">
-				<div className="flex w-64 min-w-[16rem] my-2 mt-4 flex-col">
-					<div className=" rounded-xl flex space-y-2 flex-col">
-						<Disclosure defaultOpen>
-							{({ open }) => (
-								<>
-									<Disclosure.Button className="flex rounded-lg items-center bg-gray-200 px-4 py-1.5 text-left text-sm font-medium">
-										<span>Ungraded</span>
-										<ColoredPill color="gray" className="ml-auto">
-											{ungraded.length}
-										</ColoredPill>
-									</Disclosure.Button>
-									<Disclosure.Panel className=" pt-2 pb-4 text-sm flex flex-col  gap-2">
-										{ungraded.length != 0 ? (
-											ungraded.map((student) => (
-												<button
-													key={student.id}
-													className={`p-3 bg-backdrop-200 rounded-xl flex items-center brightness-hover text-left ${
-														selectedID == student.id && "brightness-focus"
-													}`}
-													onClick={() => setSelectedID(student.id)}
-												>
-													<Avatar
-														full_name={student.full_name}
-														avatar_url={student.avatar_url}
-														size="10"
-													/>
-													<div className="ml-3">
-														<p className="font-medium">{student.full_name}</p>
-														<p className="text-xs">
-															{new Intl.DateTimeFormat("en-US", {
-																month: "2-digit",
-																day: "2-digit",
-																year: "numeric",
-																hour: "numeric",
-																minute: "numeric",
-															}).format(
-																new Date(
-																	student.submissions.find((s) => s.final)
-																		?.created_at || ""
-																)
-															)}{" "}
-														</p>
-													</div>
-												</button>
-											))
-										) : (
-											<p className="font-medium text-center">
-												You{"'"}ve graded all submissions!
-											</p>
-										)}
-									</Disclosure.Panel>
-								</>
-							)}
-						</Disclosure>
-						<Disclosure defaultOpen>
-							{({ open }) => (
-								<>
-									<Disclosure.Button className="flex rounded-lg items-center bg-gray-200 px-4 py-1.5 text-left text-sm font-medium">
-										<span>Not Submitted</span>
-										<ColoredPill color="gray" className="ml-auto">
-											{notSubmitted.length}
-										</ColoredPill>
-									</Disclosure.Button>
-									<Disclosure.Panel className=" pt-2 pb-4 text-sm flex flex-col gap-2">
-										{notSubmitted.length != 0 ? (
-											notSubmitted.map((student) => (
-												<button
-													key={student.id}
-													disabled={student.submissions.length == 0}
-													className={`p-3 bg-backdrop-200 rounded-xl flex items-center text-left ${
-														student.submissions.length != 0 &&
-														"brightness-hover"
-													} ${selectedID == student.id && "brightness-focus"}`}
-													onClick={() => setSelectedID(student.id)}
-												>
-													<Avatar
-														full_name={student.full_name}
-														avatar_url={student.avatar_url}
-														size="10"
-													/>
-													<div className="ml-3">
-														<p className="font-medium">{student.full_name}</p>
-														{student.submissions.length != 0 && (
-															<p className="text-xs">Draft submitted</p>
-														)}
-													</div>
-												</button>
-											))
-										) : (
-											<p className="font-medium text-center">
-												All students have submitted!
-											</p>
-										)}
-									</Disclosure.Panel>
-								</>
-							)}
-						</Disclosure>
-						<Disclosure defaultOpen>
-							{({ open }) => (
-								<>
-									<Disclosure.Button className="flex rounded-lg items-center bg-gray-200 px-4 py-1.5 text-left text-sm font-medium">
-										<span>{maxGrade == null ? "Reviewed" : "Graded"} </span>
-										<ColoredPill color="gray" className="ml-auto">
-											{graded.length}/{totalStudents}
-										</ColoredPill>
-										{/* <ChevronUpIcon
-											className={`${
-												open ? "rotate-180 transform" : ""
-											} h-5 w-5 ml-auto`}
-										/> */}
-									</Disclosure.Button>
-									<Disclosure.Panel className=" pt-2 pb-4 text-sm flex flex-col  gap-2">
-										{graded.length != 0 ? (
-											graded.map((student) => (
-												<button
-													key={student.id}
-													onClick={() => setSelectedID(student.id)}
-													className={`p-3 bg-backdrop-200 rounded-xl flex items-center text-left brightness-hover ${
-														selectedID == student.id && "brightness-focus"
-													}`}
-												>
-													<Avatar
-														full_name={student.full_name}
-														avatar_url={student.avatar_url}
-														size="10"
-													/>
-													<div className="ml-3">
-														<p className="font-medium">{student.full_name}</p>
-														{maxGrade != null && (
-															<p className="text-xs">
-																Grade:{" "}
-																{
-																	student.submissions.find((s) => s.final)
-																		?.grade
-																}
-																/{maxGrade}
-															</p>
-														)}
-													</div>
-												</button>
-											))
-										) : (
-											<p className="font-medium text-center">
-												You haven{"'"}t graded any submissions yet!
-											</p>
-										)}
-									</Disclosure.Panel>
-								</>
-							)}
-						</Disclosure>
-					</div>
-				</div>
+				{/* prop drilling ftw -LS */}
+				<StudentSelector
+					graded={graded}
+					maxGrade={maxGrade}
+					notSubmitted={notSubmitted}
+					selectedID={selectedID}
+					setSelectedID={setSelectedID}
+					totalStudents={totalStudents}
+					ungraded={ungraded}
+				/>
 				{selectedStudent == undefined ? (
 					<div className="flex grow items-center justify-center font-medium h-96">
 						Select a student to get started
@@ -401,12 +260,6 @@ const AssignmentGradingUI = ({
 									onChange={(e) => setComment(e.target.value)}
 								/>
 								<div className="ml-auto gap-4 flex">
-									{/* <Button color="bg-gray-300" className="text-white">
-									Back
-								</Button>
-								<Button color="bg-blue-500" className="text-white">
-									Next
-								</Button> */}
 									<Button
 										color="bg-blue-500"
 										className="text-white"
