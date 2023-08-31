@@ -108,7 +108,7 @@ const Text = ({
 				</summary>
 				<ToggleSection
 					name="Rich text"
-					description="Aloow students to submit rich text; e.g. bold, italicized or underlined text"
+					description="Allow students to submit rich text; e.g. bold, italicized or underlined text"
 					enabled={settings.rich}
 					setEnabled={(value) =>
 						setSettings((settings) => {
