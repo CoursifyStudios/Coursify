@@ -70,6 +70,7 @@ const MATCHERS = [
 				length: match[0].length,
 				text: match[0],
 				url: match[0],
+				attributes: { rel: "noopener", target: "_blank" },
 			}
 		);
 	},
@@ -81,6 +82,7 @@ const MATCHERS = [
 				length: match[0].length,
 				text: match[0],
 				url: `mailto:${match[0]}`,
+				attributes: { rel: "noopener", target: "_blank" },
 			}
 		);
 	},
