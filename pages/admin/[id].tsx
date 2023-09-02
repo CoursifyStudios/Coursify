@@ -63,7 +63,7 @@ import { getBulkUserData, getUserData } from "@/lib/db/settings";
 import { Toggle } from "@/components/misc/toggle";
 import MenuSelect from "@/components/misc/menu";
 import Avatar from "@/components/misc/avatar";
-
+import { WeightingUI } from "@/components/admin/weights";
 /**
  * This file is not intended for long term use.
  * It's a quickly made stopgap measure that probably shouldn't exist.
@@ -1097,7 +1097,7 @@ Activities	The user's activities, as displayed on their profile
 					<Link
 						href="/schedule-editor"
 						className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none
-									 border-transparent bg-red-300 font-mono
+									 border-transparent dark:bg-red-500 bg-red-300 font-mono
 								 text-lg font-semibold `}
 					>
 						Schedule Editor
@@ -2267,6 +2267,10 @@ Activities	The user's activities, as displayed on their profile
 									value={name}
 									placeholder={name}
 								/>
+							</div>
+							<div className="mt-4">
+								<h2 className="font-semibold text-lg">Weights</h2>
+								<WeightingUI />
 							</div>
 						</div>
 					</Tab.Panel>

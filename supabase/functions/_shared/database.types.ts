@@ -155,6 +155,7 @@ export interface Database {
           submission_instructions: string | null
           term: string | null
           type: number
+          weight: string | null
         }
         Insert: {
           class_id: string
@@ -175,6 +176,7 @@ export interface Database {
           submission_instructions?: string | null
           term?: string | null
           type?: number
+          weight?: string | null
         }
         Update: {
           class_id?: string
@@ -195,12 +197,19 @@ export interface Database {
           submission_instructions?: string | null
           term?: string | null
           type?: number
+          weight?: string | null
         }
         Relationships: [
           {
             foreignKeyName: "assignments_class_id_fkey"
             columns: ["class_id"]
             referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "assignments_weight_fkey"
+            columns: ["weight"]
+            referencedRelation: "weights"
             referencedColumns: ["id"]
           }
         ]
@@ -366,6 +375,7 @@ export interface Database {
           content: string
           created_at: string
           id: string
+          resolved: boolean
           route: string | null
           title: string
           topic: string
@@ -377,6 +387,7 @@ export interface Database {
           content: string
           created_at?: string
           id?: string
+          resolved?: boolean
           route?: string | null
           title: string
           topic: string
@@ -388,6 +399,7 @@ export interface Database {
           content?: string
           created_at?: string
           id?: string
+          resolved?: boolean
           route?: string | null
           title?: string
           topic?: string
@@ -398,6 +410,49 @@ export interface Database {
             foreignKeyName: "feedback_user_id_fkey"
             columns: ["user_id"]
             referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      grading_periods: {
+        Row: {
+          end_date: string | null
+          id: string
+          name: string | null
+          parent: string | null
+          school: string | null
+          start_date: string
+          weight: number | null
+        }
+        Insert: {
+          end_date?: string | null
+          id?: string
+          name?: string | null
+          parent?: string | null
+          school?: string | null
+          start_date: string
+          weight?: number | null
+        }
+        Update: {
+          end_date?: string | null
+          id?: string
+          name?: string | null
+          parent?: string | null
+          school?: string | null
+          start_date?: string
+          weight?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "grading_periods_parent_fkey"
+            columns: ["parent"]
+            referencedRelation: "grading_periods"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "grading_periods_school_fkey"
+            columns: ["school"]
+            referencedRelation: "schools"
             referencedColumns: ["id"]
           }
         ]
@@ -450,19 +505,16 @@ export interface Database {
           created_at: string | null
           id: string
           name: string
-          schedule: Json[] | null
         }
         Insert: {
           created_at?: string | null
           id?: string
           name: string
-          schedule?: Json[] | null
         }
         Update: {
           created_at?: string | null
           id?: string
           name?: string
-          schedule?: Json[] | null
         }
         Relationships: []
       }
@@ -643,21 +695,40 @@ export interface Database {
       }
       weights: {
         Row: {
+          classid: string | null
           id: string
           name: string
+          school: string | null
           weight: number | null
         }
         Insert: {
+          classid?: string | null
           id?: string
           name: string
+          school?: string | null
           weight?: number | null
         }
         Update: {
+          classid?: string | null
           id?: string
           name?: string
+          school?: string | null
           weight?: number | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "weights_classid_fkey"
+            columns: ["classid"]
+            referencedRelation: "classes"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "weights_school_fkey"
+            columns: ["school"]
+            referencedRelation: "schools"
+            referencedColumns: ["id"]
+          }
+        ]
       }
     }
     Views: {
