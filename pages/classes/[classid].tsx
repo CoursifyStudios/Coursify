@@ -110,19 +110,6 @@ const Class: NextPageWithLayout = () => {
 					);
 				}
 			}
-			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
-				JSON.parse(sessionStorage.getItem("schedule")!);
-			if (allSchedules && allSchedules.length > 1) {
-				setSchedule(allSchedules[0].schedule);
-				setScheduleT(allSchedules[1].schedule);
-			} else {
-				const [scheduleToday, scheduleTomorrow] = await Promise.all([
-					getSchedule(supabase, today),
-					getSchedule(supabase, new Date(today.getDate() + 1)),
-				]);
-				setThisSchedule(scheduleToday, setSchedule);
-				setThisSchedule(scheduleTomorrow, setScheduleT);
-			}
 		})();
 		setEdited(false);
 		setEditorState(undefined);
