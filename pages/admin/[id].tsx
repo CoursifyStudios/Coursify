@@ -2256,7 +2256,7 @@ Activities	The user's activities, as displayed on their profile
 						</div>
 					</Tab.Panel>
 					<Tab.Panel>
-						<div className="h-64 w-full">
+						<div className="w-full">
 							<div className="mt-4">
 								<h2 className="font-semibold text-lg">School Name</h2>
 								<input

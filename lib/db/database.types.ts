@@ -206,12 +206,6 @@ export interface Database {
 						referencedRelation: "classes";
 						referencedColumns: ["id"];
 					},
-					{
-						foreignKeyName: "assignments_weight_fkey";
-						columns: ["weight"];
-						referencedRelation: "weights";
-						referencedColumns: ["id"];
-					},
 				];
 			};
 			class_users: {
@@ -699,21 +693,21 @@ export interface Database {
 					id: string;
 					name: string;
 					school: string | null;
-					weight: number | null;
+					value: number | null;
 				};
 				Insert: {
 					classid?: string | null;
 					id?: string;
 					name: string;
 					school?: string | null;
-					weight?: number | null;
+					value?: number | null;
 				};
 				Update: {
 					classid?: string | null;
 					id?: string;
 					name?: string;
 					school?: string | null;
-					weight?: number | null;
+					value?: number | null;
 				};
 				Relationships: [
 					{
