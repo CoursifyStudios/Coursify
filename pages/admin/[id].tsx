@@ -18,7 +18,6 @@ import {
 	UsersIcon,
 } from "@heroicons/react/24/outline";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
-import { NextPage } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import {
@@ -64,6 +63,9 @@ import { Toggle } from "@/components/misc/toggle";
 import MenuSelect from "@/components/misc/menu";
 import Avatar from "@/components/misc/avatar";
 import { WeightingUI } from "@/components/admin/weights";
+import { getWeights } from "@/lib/db/admin/weights";
+import { GradingPeriodUI } from "@/components/admin/semesters";
+import { getPeriods } from "@/lib/db/admin/periods";
 /**
  * This file is not intended for long term use.
  * It's a quickly made stopgap measure that probably shouldn't exist.
@@ -79,6 +81,8 @@ import { WeightingUI } from "@/components/admin/weights";
  *
  * https://media.discordapp.net/attachments/1125697548401782867/1133178315453255791/5A664F27-A31B-4A1F-AB66-AD888508A09E.gif - Lukas
  * https://cdn.discordapp.com/attachments/722942034549407775/1133916386574467122/dox.mp4 - Bloxs
+ *
+ * Me still wondering why it does not look like https://en.cppreference.com/w/ - Bill
  */
 
 type ImportedUsers = {
@@ -130,6 +134,20 @@ const Admin: NextPageWithLayout = () => {
 	const [createUserOpen, setCreateUserOpen] = useState(false);
 	const [dbActionsOpen, setDBActionsOpen] = useState(false);
 	const [page, setPage] = useState(1);
+	const [weights, setWeights] = useState<
+		{ id: string; name: string; value: number }[]
+	>([]);
+	const [periods, setPeriods] = useState<
+		{
+			end_date: string;
+			id: string;
+			name: string;
+			parent?: string;
+			school: string;
+			start_date: string;
+			weight: number;
+		}[]
+	>([]);
 	const [users, setUsers] = useState<
 		| {
 				id: string;
@@ -321,12 +339,16 @@ const Admin: NextPageWithLayout = () => {
 		(async () => {
 			if (!user || !id || !supabase || users) return;
 			const sid = typeof id == "string" ? id : "";
-			const [data, pages, classesData, classesPages] = await Promise.all([
-				getUsers(supabase, 1, 50, sid),
-				getUsersPages(supabase, 50, sid),
-				getClasses(supabase, 1, 50, sid),
-				getClassesPages(supabase, 50, sid),
-			]);
+			//wow this is terrible
+			const [data, pages, classesData, classesPages, weights, periods] =
+				await Promise.all([
+					getUsers(supabase, 1, 50, sid),
+					getUsersPages(supabase, 50, sid),
+					getClasses(supabase, 1, 50, sid),
+					getClassesPages(supabase, 50, sid),
+					getWeights(supabase, sid),
+					getPeriods(supabase, sid),
+				]);
 
 			if (data.data && pages && classesData.data) {
 				// @ts-expect-error relationships will never be an array
@@ -335,6 +357,20 @@ const Admin: NextPageWithLayout = () => {
 				setPages(pages);
 				setClasses(classesData.data.classes);
 				setClassesPages(classesPages);
+				setWeights(
+					weights.data?.map((weight) => {
+						return {
+							id: weight.id,
+							name: weight.name,
+							value: weight.value ?? 0,
+						};
+					}) ?? []
+				);
+				setPeriods(
+					periods.data?.map((period) => {
+						return { ...period, parent: period.parent ?? undefined };
+					}) ?? []
+				);
 			}
 		})();
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -2256,9 +2292,9 @@ Activities	The user's activities, as displayed on their profile
 						</div>
 					</Tab.Panel>
 					<Tab.Panel>
-						<div className="w-full">
+						<div className="w-full grid gap-4">
 							<div className="mt-4">
-								<h2 className="font-semibold text-lg">School Name</h2>
+								<h2 className="font-semibold text-lg mb-2">School Name</h2>
 								<input
 									type="text"
 									className="w-1/4"
@@ -2268,10 +2304,14 @@ Activities	The user's activities, as displayed on their profile
 									placeholder={name}
 								/>
 							</div>
-							<div className="mt-4">
-								<h2 className="font-semibold text-lg">Weights</h2>
-								<WeightingUI />
-							</div>
+							<WeightingUI
+								school={typeof id === "string" ? id : ""}
+								previousWeights={weights}
+							/>
+							<GradingPeriodUI
+								school={typeof id === "string" ? id : ""}
+								previousPeriods={periods}
+							/>
 						</div>
 					</Tab.Panel>
 				</Tab.Panels>

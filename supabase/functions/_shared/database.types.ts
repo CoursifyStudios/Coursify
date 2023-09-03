@@ -410,31 +410,31 @@ export interface Database {
       }
       grading_periods: {
         Row: {
-          end_date: string | null
+          end_date: string
           id: string
-          name: string | null
+          name: string
           parent: string | null
-          school: string | null
+          school: string
           start_date: string
-          weight: number | null
+          weight: number
         }
         Insert: {
-          end_date?: string | null
+          end_date: string
           id?: string
-          name?: string | null
+          name: string
           parent?: string | null
-          school?: string | null
+          school: string
           start_date: string
-          weight?: number | null
+          weight: number
         }
         Update: {
-          end_date?: string | null
+          end_date?: string
           id?: string
-          name?: string | null
+          name?: string
           parent?: string | null
-          school?: string | null
+          school?: string
           start_date?: string
-          weight?: number | null
+          weight?: number
         }
         Relationships: [
           {
