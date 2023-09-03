@@ -6,6 +6,9 @@ import { TeacherAssignmentResponse } from "@/lib/db/assignments/assignments";
 import { AssignmentSettingsTypes } from "../../assignmentCreation/three/settings.types";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { Database, Json } from "@/lib/db/database.types";
+import AssignmentDetails, {
+	AssignmentSaveData,
+} from "../../assignmentCreation/two";
 
 const EditAssignment = ({
 	close,
@@ -25,6 +28,10 @@ const EditAssignment = ({
 	setError: Dispatch<SetStateAction<string>>;
 }) => {
 	const editSettings = async (settings: AssignmentSettingsTypes) => {
+		if (JSON.stringify(assignment.data?.settings) == JSON.stringify(settings)) {
+			close();
+			return;
+		}
 		setLoading(true);
 		setError("");
 		const { error } = await supabase
@@ -45,8 +52,51 @@ const EditAssignment = ({
 					},
 				};
 			});
-			close();
 		}
+		close();
+		setLoading(false);
+	};
+
+	const editAssignment = async (assign: AssignmentSaveData) => {
+		let updatedDetails = false;
+		const {
+			submissionInstructions: _,
+			content: c,
+			...scopedAssignment
+		} = assign;
+
+		// try to reduce the vast majority of the data transfer since the lexical json is massive
+		if (JSON.stringify(c) != JSON.stringify(assignment.data?.content)) {
+			updatedDetails = true;
+		}
+		setLoading(true);
+		setError("");
+		const { error } = await supabase
+			.from("assignments")
+			.update({
+				...scopedAssignment,
+				submission_instructions: assign.submissionInstructions || null,
+				...(updatedDetails ? { content: c } : {}),
+			})
+			.eq("id", assignment.data?.id);
+
+		if (error) {
+			setError(error.message);
+		} else {
+			setAssignment((a) => {
+				if (!a.data) return a;
+				return {
+					...a,
+					data: {
+						...a.data,
+						...scopedAssignment,
+						submission_instructions: assign.submissionInstructions || null,
+						content: c,
+					},
+				};
+			});
+		}
+		close();
 		setLoading(false);
 	};
 
@@ -64,7 +114,7 @@ const EditAssignment = ({
 										: "border-transparent bg-gray-200"
 								} text-lg font-semibold`}
 							>
-								Basics
+								Assignment Details
 							</div>
 						)}
 					</Tab>
@@ -76,15 +126,21 @@ const EditAssignment = ({
 									selected
 										? "brightness-focus"
 										: "border-transparent bg-gray-200"
-								} text-lg font-semibold `}
+								} text-lg font-semibold`}
 							>
-								Settings
+								Submission Settings
 							</div>
 						)}
 					</Tab>
 				</Tab.List>
 				<Tab.Panels>
-					<Tab.Panel>srstggresd</Tab.Panel>
+					<Tab.Panel>
+						<AssignmentDetails
+							stage={2}
+							customAssignment={assignment.data}
+							save={editAssignment}
+						/>
+					</Tab.Panel>
 					<Tab.Panel>
 						<AssignmentSettings
 							stage={3}

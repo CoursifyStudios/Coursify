@@ -139,7 +139,7 @@ const AssignmentHeader: NextPage<{
 									{
 										content: (
 											<>
-												Modify Dates
+												Update Dates
 												<CalendarDaysIcon className="w-5 h-5 ml-auto" />
 											</>
 										),

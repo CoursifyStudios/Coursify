@@ -23,6 +23,7 @@ import {
 	EyeSlashIcon,
 } from "@heroicons/react/24/outline";
 import { DueType } from "../assignments";
+import EditDates from "./settings/editDates";
 
 const AssignmentGradingUI = ({
 	setAllAssignmentData,
@@ -274,6 +275,7 @@ const AssignmentGradingUI = ({
 				setLoading={setLoading}
 				setError={setError}
 			/>
+			<EditDates close={() => setDatesOpen(false)} open={datesOpen} />
 			<div className="flex grow flex-col">
 				{/* prop drilling ftw -LS */}
 				<AssignmentHeader
