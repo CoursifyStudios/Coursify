@@ -28,11 +28,11 @@ export const FileView = ({
 		return (
 			<div className="rounded-lg border border-gray-300 p-3 flex items-center">
 				{file.link != "" &&
-				viewableFileExtensions.includes(file.name.split(".").pop() || "") ? (
+				viewableFileExtensions.includes(file.name?.split(".").pop() || "") ? (
 					// eslint-disable-next-line @next/next/no-img-element
 					<img
 						src={file.link}
-						alt={`ugc image of ${file.name}`}
+						alt={`ugc image of ${file.name!}`}
 						width={size}
 						height={size}
 						className={`rounded object-cover object-center h-${size / 4}`}
@@ -52,7 +52,7 @@ export const FileView = ({
 				</div>
 				<div
 					className="rounded hover:bg-gray-300 p-0.5 ml-auto cursor-pointer"
-					onClick={() => deleteFile(file.name)}
+					onClick={() => deleteFile(file.name!)}
 				>
 					<XMarkIcon className="h-4 w-4 text-red-500" />
 				</div>
@@ -69,7 +69,7 @@ export const FileCarousel = ({ files }: { files: CoursifyFile[] }) => {
 					(file, index) =>
 						file &&
 						!viewableFileExtensions.includes(
-							file.name.split(".").pop() || ""
+							file.name?.split(".").pop() || ""
 						) && <DownloadableFile key={index} file={file} />
 				)}
 			</div>
@@ -78,7 +78,7 @@ export const FileCarousel = ({ files }: { files: CoursifyFile[] }) => {
 					(file, index) =>
 						file &&
 						viewableFileExtensions.includes(
-							file.name.split(".").pop() || ""
+							file.name?.split(".").pop() || ""
 						) && <ImagePreview key={index} file={file} />
 				)}
 			</div>

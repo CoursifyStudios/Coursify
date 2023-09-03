@@ -12,9 +12,8 @@ import { isTeacher } from "@/lib/misc/users";
 const HomepageClassesUI: NextPage<{
 	loading: boolean;
 	classes?: AllClasses;
-	schedules?: ScheduleInterface[][];
 	userID: string;
-}> = ({ classes, loading, schedules, userID }) => {
+}> = ({ classes, loading, userID }) => {
 	const { data: settings } = useSettings();
 
 	const view: Settings["homepageView"] | "loading" | "tabbedStudent" =
@@ -68,7 +67,7 @@ const HomepageClassesUI: NextPage<{
 	}, [view]);
 
 	const Classes = ({ teaching }: { teaching: boolean }) => {
-		if (classes && Array.isArray(classes) && schedules)
+		if (classes && Array.isArray(classes))
 			return (
 				<>
 					{classes
@@ -91,13 +90,6 @@ const HomepageClassesUI: NextPage<{
 									key={mappedClass.class.id}
 									className="h-full !w-full lg:!w-[18.5rem]"
 									isLink={true}
-									time={schedules[0]?.find(
-										(s) =>
-											s.specialEvent == undefined &&
-											mappedClass.class &&
-											mappedClass.class.block == s.block &&
-											mappedClass.class.schedule_type == s.type
-									)}
 								/>
 							);
 						})}
