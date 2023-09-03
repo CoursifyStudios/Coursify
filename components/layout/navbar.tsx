@@ -79,6 +79,7 @@ const Navbar: NextComponentType = () => {
 									alt="Profile picture"
 									referrerPolicy="no-referrer"
 									className="h-10 w-10 rounded-full object-cover shadow-md shadow-black/25 compact:h-9 compact:w-9"
+									draggable={false}
 									height={40}
 									width={40}
 								/>

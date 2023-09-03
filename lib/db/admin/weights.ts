@@ -19,7 +19,10 @@ export const createOrEditDefaultWeights = async (
 			0
 		) == 100
 	) {
-		return await supabase.from("weights").upsert(
+		//IS DUMB
+		//but works so who cares
+		await supabase.from("weights").delete(`*`).eq("school", school);
+		return await supabase.from("weights").insert(
 			weights.map((weight) => {
 				if (weight.id) {
 					return {

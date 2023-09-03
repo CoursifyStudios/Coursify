@@ -101,7 +101,7 @@ export default function Profile() {
 					profile?.data &&
 					getDataInArray(profile?.data?.user_achievements).length == 0
 				) && (
-					<div className="scrollbar-fancy scrollbar-fancy-darker mx-0 flex w-full flex-col items-center overflow-y-auto rounded-xl bg-backdrop-200 p-6 md:mx-auto lg:mx-0">
+					<div className="scrollbar-fancy scrollbar-fancy-darker mx-0 flex w-full flex-col items-center rounded-xl bg-backdrop-200 p-6 md:mx-auto lg:mx-0">
 						<h1 className="title mb-5">Achievements</h1>
 						<div className=" grid w-full grid-cols-1 gap-6 md:grid-cols-2">
 							{profile?.data?.user_achievements

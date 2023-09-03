@@ -69,6 +69,7 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 					alt="Example Image"
 					className=" absolute inset-0 h-16 w-full object-cover object-center brightness-75 transition duration-300 group-hover:brightness-90"
 					fill
+					draggable={false}
 					sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, (max-width: 1536px) 25vw, 20vw"
 				/>
 			)}

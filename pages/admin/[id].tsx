@@ -2292,7 +2292,7 @@ Activities	The user's activities, as displayed on their profile
 						</div>
 					</Tab.Panel>
 					<Tab.Panel>
-						<div className="w-full grid gap-4">
+						<div className="w-full flex flex-col">
 							<div className="mt-4">
 								<h2 className="font-semibold text-lg mb-2">School Name</h2>
 								<input

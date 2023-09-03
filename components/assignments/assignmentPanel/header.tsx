@@ -4,6 +4,7 @@ import {
 	ArrowsPointingInIcon,
 	ArrowsPointingOutIcon,
 	ChevronLeftIcon,
+	Cog6ToothIcon,
 	CogIcon,
 	LinkIcon,
 	PencilIcon,
@@ -116,7 +117,7 @@ const AssignmentHeader: NextPage<{
 									},
 								]}
 							>
-								<ButtonIcon icon={<CogIcon className="h-5 w-5" />} />
+								<ButtonIcon icon={<Cog6ToothIcon className="h-5 w-5" />} />
 							</MenuSelect>
 						)}
 						<CopiedHover copy={window.location.href}>

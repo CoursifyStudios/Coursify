@@ -32,6 +32,7 @@ const StudentClass: NextPage<StudentClassType> = ({
 						alt="Example Image"
 						className="absolute inset-0 h-32 rounded-t-xl object-cover object-center"
 						fill
+						draggable={false}
 						sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
 					/>
 				)}
