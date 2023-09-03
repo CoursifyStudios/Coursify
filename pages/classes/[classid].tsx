@@ -47,8 +47,6 @@ const Class: NextPageWithLayout = () => {
 	const [editable, setEditable] = useState(false);
 	const [editorState, setEditorState] = useState<EditorState>();
 	const [edited, setEdited] = useState(false);
-	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
-	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
 	const [assignmentCreationOpen, setAssignmentCreationOpen] = useState(false);
 	const [createdAssignments, setCreatedAssignments] = useState<
 		{
@@ -91,11 +89,7 @@ const Class: NextPageWithLayout = () => {
 	useEffect(() => {
 		const today = new Date();
 		(async () => {
-			if (
-				user &&
-				typeof classid == "string" &&
-				(!data || fetchedClassId != classid)
-			) {
+			if (user && typeof classid == "string" && fetchedClassId != classid) {
 				setData(undefined);
 				setFetchedClassId(classid);
 				const data = await getClass(supabase, classid);
@@ -109,19 +103,6 @@ const Class: NextPageWithLayout = () => {
 						data.data.class_users.find((v) => v.user_id == user.id)?.teacher
 					);
 				}
-			}
-			const allSchedules: { date: string; schedule: ScheduleInterface[] }[] =
-				JSON.parse(sessionStorage.getItem("schedule")!);
-			if (allSchedules && allSchedules.length > 1) {
-				setSchedule(allSchedules[0].schedule);
-				setScheduleT(allSchedules[1].schedule);
-			} else {
-				const [scheduleToday, scheduleTomorrow] = await Promise.all([
-					getSchedule(supabase, today),
-					getSchedule(supabase, new Date(today.getDate() + 1)),
-				]);
-				setThisSchedule(scheduleToday, setSchedule);
-				setThisSchedule(scheduleTomorrow, setScheduleT);
 			}
 		})();
 		setEdited(false);
