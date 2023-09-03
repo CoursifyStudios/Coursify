@@ -1,19 +1,55 @@
 import { Popup } from "@/components/misc/popup";
 import { Tab } from "@headlessui/react";
-import { Fragment } from "react";
+import { Dispatch, Fragment, SetStateAction } from "react";
 import AssignmentSettings from "../../assignmentCreation/three";
 import { TeacherAssignmentResponse } from "@/lib/db/assignments/assignments";
 import { AssignmentSettingsTypes } from "../../assignmentCreation/three/settings.types";
+import { SupabaseClient } from "@supabase/supabase-js";
+import { Database, Json } from "@/lib/db/database.types";
 
 const EditAssignment = ({
 	close,
 	open,
 	assignment,
+	setAssignment,
+	supabase,
+	setLoading,
+	setError,
 }: {
 	open: boolean;
 	close: () => void;
 	assignment: TeacherAssignmentResponse;
+	setAssignment: Dispatch<SetStateAction<TeacherAssignmentResponse>>;
+	supabase: SupabaseClient<Database>;
+	setLoading: Dispatch<SetStateAction<boolean>>;
+	setError: Dispatch<SetStateAction<string>>;
 }) => {
+	const editSettings = async (settings: AssignmentSettingsTypes) => {
+		setLoading(true);
+		setError("");
+		const { error } = await supabase
+			.from("assignments")
+			.update({ settings: settings as unknown as Json })
+			.eq("id", assignment.data?.id);
+
+		if (error) {
+			setError(error.message);
+		} else {
+			setAssignment((a) => {
+				if (!a.data) return a;
+				return {
+					...a,
+					data: {
+						...a.data,
+						settings: settings as unknown as Json,
+					},
+				};
+			});
+			close();
+		}
+		setLoading(false);
+	};
+
 	return (
 		<Popup open={open} closeMenu={close}>
 			<Tab.Group as="div" className="flex grow flex-col">
@@ -53,9 +89,7 @@ const EditAssignment = ({
 						<AssignmentSettings
 							stage={3}
 							useCustomSettings={true}
-							save={() => {
-								close();
-							}}
+							save={editSettings}
 							customSettings={
 								assignment.data?.settings as unknown as AssignmentSettingsTypes
 							}

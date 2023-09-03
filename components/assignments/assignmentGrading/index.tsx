@@ -235,6 +235,10 @@ const AssignmentGradingUI = ({
 				close={() => setEditOpen(false)}
 				open={editOpen}
 				assignment={allAssignmentData}
+				setAssignment={setAllAssignmentData}
+				supabase={supabase}
+				setLoading={setLoading}
+				setError={setError}
 			/>
 			<div className="flex grow flex-col">
 				<AssignmentHeader

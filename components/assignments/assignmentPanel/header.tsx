@@ -74,7 +74,7 @@ const AssignmentHeader: NextPage<{
 					/>
 				</Link>
 				<div className="flex gap-2  items-center">
-					<div className="flex justify-between gap-3 items-center">
+					<div className="flex justify-between gap-3 items-center ">
 						<Link
 							href={
 								"/classes/" +
@@ -92,6 +92,7 @@ const AssignmentHeader: NextPage<{
 										: "blue"
 								}
 								hoverState
+								className="max-w-[15rem] truncate"
 							>
 								{assignment.data.classes
 									? Array.isArray(assignment.data.classes)
