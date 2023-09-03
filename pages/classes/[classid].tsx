@@ -47,8 +47,6 @@ const Class: NextPageWithLayout = () => {
 	const [editable, setEditable] = useState(false);
 	const [editorState, setEditorState] = useState<EditorState>();
 	const [edited, setEdited] = useState(false);
-	const [schedule, setSchedule] = useState<ScheduleInterface[]>();
-	const [scheduleT, setScheduleT] = useState<ScheduleInterface[]>();
 	const [assignmentCreationOpen, setAssignmentCreationOpen] = useState(false);
 	const [createdAssignments, setCreatedAssignments] = useState<
 		{
@@ -91,11 +89,7 @@ const Class: NextPageWithLayout = () => {
 	useEffect(() => {
 		const today = new Date();
 		(async () => {
-			if (
-				user &&
-				typeof classid == "string" &&
-				(!data || fetchedClassId != classid)
-			) {
+			if (user && typeof classid == "string" && fetchedClassId != classid) {
 				setData(undefined);
 				setFetchedClassId(classid);
 				const data = await getClass(supabase, classid);
