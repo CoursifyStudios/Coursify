@@ -14,7 +14,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
 import Link from "next/link";
-import { Dispatch, ReactNode, SetStateAction } from "react";
+import { Dispatch, ReactNode, SetStateAction, useMemo } from "react";
 import { submissionType } from "../assignmentCreation/submissionType";
 import {
 	StudentAssignmentResponse,
@@ -23,6 +23,7 @@ import {
 import MenuSelect from "@/components/misc/menu";
 import Loading from "@/components/misc/loading";
 import dynamic from "next/dynamic";
+import { formatDate } from "@/lib/misc/dates";
 
 const Editor = dynamic(() => import("../../editors/richeditor"));
 
@@ -103,6 +104,18 @@ const AssignmentHeader: NextPage<{
 							{type.icon}
 							{type.name}
 						</ColoredPill>
+						{teacher && (
+							<ColoredPill color="gray" className="flex gap-2">
+								{assignment.data.hidden
+									? "Hidden from students"
+									: new Date(assignment.data.publish_date!).getTime() >
+											new Date().getTime() || !assignment.data.due_date
+									? `Publishes on ${formatDate(
+											new Date(assignment.data.publish_date)
+									  )}`
+									: `Due ${formatDate(new Date(assignment.data.due_date))}`}
+							</ColoredPill>
+						)}
 					</div>
 					<div className="ml-auto flex items-center">
 						{loading && <Loading />}

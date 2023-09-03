@@ -17,7 +17,7 @@ import { SubmissionSettingsTypes } from "../assignmentPanel/submission.types";
 import { useRouter } from "next/router";
 import StudentSelector, { Student } from "./studentSelector";
 import EditAssignment from "./settings/editAssignment";
-import { EyeSlashIcon } from "@heroicons/react/24/outline";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
 
 const AssignmentGradingUI = ({
 	setAllAssignmentData,
@@ -192,10 +192,41 @@ const AssignmentGradingUI = ({
 	const hideAssignment = {
 		content: (
 			<>
-				Hide Assignment
-				<EyeSlashIcon className="w-5 h-5 ml-auto" />
+				{allAssignmentData.data?.hidden ? "Show" : "Hide"} Assignment
+				{allAssignmentData.data?.hidden ? (
+					<EyeIcon className="w-5 h-5 ml-auto" />
+				) : (
+					<EyeSlashIcon className="w-5 h-5 ml-auto" />
+				)}
 			</>
 		),
+		onClick: async () => {
+			setError("");
+			if (loading) {
+				setError("Cannot hide assignment while another action is taking place");
+				return;
+			}
+			setLoading(true);
+			const { error } = await supabase
+				.from("assignments")
+				.update({ hidden: !allAssignmentData.data?.hidden })
+				.eq("id", assignmentID);
+			if (error) {
+				setError(error.message);
+			} else {
+				setAllAssignmentData((a) => {
+					if (!a.data) return a;
+					return {
+						...a,
+						data: {
+							...a.data,
+							hidden: !allAssignmentData.data?.hidden,
+						},
+					};
+				});
+			}
+			setLoading(false);
+		},
 	};
 
 	return (
