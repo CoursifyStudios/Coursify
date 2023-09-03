@@ -3,10 +3,13 @@ import { ColoredPill, CopiedHover } from "@/components/misc/pill";
 import {
 	ArrowsPointingInIcon,
 	ArrowsPointingOutIcon,
+	CalendarDaysIcon,
+	ChevronDownIcon,
 	ChevronLeftIcon,
 	CogIcon,
+	EyeSlashIcon,
 	LinkIcon,
-	PencilIcon,
+	PencilSquareIcon,
 	TrashIcon,
 } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
@@ -19,6 +22,9 @@ import {
 } from "@/lib/db/assignments/assignments";
 import MenuSelect from "@/components/misc/menu";
 import Loading from "@/components/misc/loading";
+import dynamic from "next/dynamic";
+
+const Editor = dynamic(() => import("../../editors/richeditor"));
 
 const AssignmentHeader: NextPage<{
 	loading?: boolean;
@@ -95,15 +101,30 @@ const AssignmentHeader: NextPage<{
 						{teacher && (
 							<MenuSelect
 								items={[
-									// {
-									// 	content: (
-									// 		<>
-									// 			Edit
-									// 			<PencilIcon className="w-5 h-5 ml-auto"/>
-									// 		</>
-									// 	),
-
-									// },
+									{
+										content: (
+											<>
+												Edit
+												<PencilSquareIcon className="w-5 h-5 ml-auto" />
+											</>
+										),
+									},
+									{
+										content: (
+											<>
+												Modify Dates
+												<CalendarDaysIcon className="w-5 h-5 ml-auto" />
+											</>
+										),
+									},
+									{
+										content: (
+											<>
+												Hide Assignment
+												<EyeSlashIcon className="w-5 h-5 ml-auto" />
+											</>
+										),
+									},
 									{
 										content: (
 											<>
@@ -136,11 +157,25 @@ const AssignmentHeader: NextPage<{
 						</div>
 					</div>
 				</div>
-				<div className="mt-4 rounded-xl bg-gray-200 p-4">
-					<h1 className="title mb-2 line-clamp-2">{assignment.data.name}</h1>
-					<p className="line-clamp-2 text-gray-700">
+				<div className="mt-4 rounded-xl bg-gray-200 p-4 ">
+					<h1 className="title mb-0.5 line-clamp-2">{assignment.data.name}</h1>
+					<p className="truncate text-gray-700 text-sm">
 						{assignment.data.description}
 					</p>
+					{assignment.data.content && teacher && (
+						<button className="group w-full relative p-1">
+							<div className="inset-0 absolute bg-gradient-to-b from-transparent to-gray-200 z-20 flex flex-col justify-end font-medium items-center backdrop-blur-[2px] group-focus:hidden">
+								Tap to see Assignment Details
+								<ChevronDownIcon className="w-5 h-5" />
+							</div>
+							<div className="overflow-hidden max-h-10 group-focus:max-h-none">
+								<Editor
+									editable={false}
+									initialState={assignment.data.content}
+								/>
+							</div>
+						</button>
+					)}
 				</div>
 			</div>
 		</section>

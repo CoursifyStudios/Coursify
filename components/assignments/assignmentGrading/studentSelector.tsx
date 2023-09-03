@@ -110,10 +110,11 @@ const StudentSelector = ({
 		return (
 			<button
 				key={student.id}
-				className={`p-3 bg-backdrop-200 rounded-xl flex items-center brightness-hover text-left ${
+				className={`p-3 bg-backdrop-200 rounded-xl flex items-center text-left ${
 					selectedID == student.id && "brightness-focus"
-				}`}
+				} ${type != UserType.NORMAL && "brightness-hover"}`}
 				onClick={() => setSelectedID(student.id)}
+				disabled={type == UserType.NORMAL}
 			>
 				<Avatar
 					full_name={student.full_name}
