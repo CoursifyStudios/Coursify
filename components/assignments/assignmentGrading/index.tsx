@@ -16,6 +16,8 @@ import AssignmentGradingComponents from "./components";
 import { SubmissionSettingsTypes } from "../assignmentPanel/submission.types";
 import { useRouter } from "next/router";
 import StudentSelector, { Student } from "./studentSelector";
+import EditAssignment from "./settings/editAssignment";
+import { EyeSlashIcon } from "@heroicons/react/24/outline";
 
 const AssignmentGradingUI = ({
 	setAllAssignmentData,
@@ -38,6 +40,8 @@ const AssignmentGradingUI = ({
 	const [grade, setGrade] = useState(0);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
+	const [editOpen, setEditOpen] = useState(false);
+	const [datesOpen, setDatesOpen] = useState(false);
 
 	const router = useRouter();
 
@@ -185,125 +189,146 @@ const AssignmentGradingUI = ({
 		router.push("/assignments/0");
 	};
 
+	const hideAssignment = {
+		content: (
+			<>
+				Hide Assignment
+				<EyeSlashIcon className="w-5 h-5 ml-auto" />
+			</>
+		),
+	};
+
 	return (
-		<div className="flex grow flex-col">
-			<AssignmentHeader
-				teacher={true}
+		<>
+			<EditAssignment
+				close={() => setEditOpen(false)}
+				open={editOpen}
 				assignment={allAssignmentData}
-				fullscreen={fullscreen}
-				setFullscreen={setFullscreen}
-				deleteAssignment={deleteAssignment}
-				error={error}
-				loading={loading}
 			/>
-			<div className="flex">
-				{/* prop drilling ftw -LS */}
-				<StudentSelector
-					graded={graded}
-					maxGrade={maxGrade}
-					notSubmitted={notSubmitted}
-					selectedID={selectedID}
-					setSelectedID={setSelectedID}
-					totalStudents={totalStudents}
-					ungraded={ungraded}
+			<div className="flex grow flex-col">
+				<AssignmentHeader
+					setEditOpen={setEditOpen}
+					setDatesOpen={setDatesOpen}
+					teacher={true}
+					assignment={allAssignmentData}
+					fullscreen={fullscreen}
+					setFullscreen={setFullscreen}
+					deleteAssignment={deleteAssignment}
+					error={error}
+					loading={loading}
+					hideAssignment={hideAssignment}
 				/>
-				{selectedStudent == undefined ? (
-					<div className="flex grow items-center justify-center font-medium h-96">
-						Select a student to get started
-					</div>
-				) : (
-					<div className="flex grow flex-col ml-4 mt-4">
-						<div className="flex justify-between bg-gray-200 h-36  p-3 rounded-xl">
-							<div className="flex">
-								<Avatar
-									full_name={selectedStudent!.full_name}
-									avatar_url={selectedStudent!.avatar_url}
-									size="20"
-									className="ml-2 min-w-[5rem]"
-									text_size="xl"
-								/>
-								<div className="flex flex-col ml-4 justify-center">
-									<h1 className="title truncate max-w-[12rem]">
-										{selectedStudent.full_name}
-									</h1>
-									{maxGrade ? (
-										<p className="text-lg font-medium flex items-end mt-2">
-											<input
-												type="text"
-												className="w-24 py-1 px-2"
-												placeholder={
-													selectedStudent.submissions
-														.find((s) => s.final)
-														?.grade?.toString() || ""
-												}
-												value={grade}
-												onChange={(e) =>
-													setGrade(
-														e.target.value == "" ? 0 : parseInt(e.target.value)
-													)
-												}
-											/>
-											<span className="ml-2 text-xl">/{maxGrade}</span>
-										</p>
-									) : (
-										<p className="text-xs max-w-[10rem]">
-											Grading is disabled for this assignment
-										</p>
-									)}
+				<div className="flex">
+					{/* prop drilling ftw -LS */}
+					<StudentSelector
+						graded={graded}
+						maxGrade={maxGrade}
+						notSubmitted={notSubmitted}
+						selectedID={selectedID}
+						setSelectedID={setSelectedID}
+						totalStudents={totalStudents}
+						ungraded={ungraded}
+					/>
+					{selectedStudent == undefined ? (
+						<div className="flex grow items-center justify-center font-medium h-96">
+							Select a student to get started
+						</div>
+					) : (
+						<div className="flex grow flex-col ml-4 mt-4">
+							<div className="flex justify-between bg-gray-200 h-36  p-3 rounded-xl">
+								<div className="flex">
+									<Avatar
+										full_name={selectedStudent!.full_name}
+										avatar_url={selectedStudent!.avatar_url}
+										size="20"
+										className="ml-2 min-w-[5rem]"
+										text_size="xl"
+									/>
+									<div className="flex flex-col ml-4 justify-center">
+										<h1 className="title truncate max-w-[12rem]">
+											{selectedStudent.full_name}
+										</h1>
+										{maxGrade ? (
+											<p className="text-lg font-medium flex items-end mt-2">
+												<input
+													type="text"
+													className="w-24 py-1 px-2"
+													placeholder={
+														selectedStudent.submissions
+															.find((s) => s.final)
+															?.grade?.toString() || ""
+													}
+													value={grade}
+													onChange={(e) =>
+														setGrade(
+															e.target.value == ""
+																? 0
+																: parseInt(e.target.value)
+														)
+													}
+												/>
+												<span className="ml-2 text-xl">/{maxGrade}</span>
+											</p>
+										) : (
+											<p className="text-xs max-w-[10rem]">
+												Grading is disabled for this assignment
+											</p>
+										)}
+									</div>
+								</div>
+								<div className="flex flex-col justify-between">
+									<textarea
+										placeholder="Enter an optional comment..."
+										className="h-20 w-72 resize-none !rounded-xl scrollbar-fancy"
+										value={comment}
+										onChange={(e) => setComment(e.target.value)}
+									/>
+									<div className="ml-auto gap-4 flex">
+										<Button
+											color="bg-blue-500"
+											className="text-white"
+											onClick={setReviewed}
+											disabled={
+												selectedStudent &&
+												selectedStudent.submissions.find((s) => s.final)
+													? selectedStudent.submissions.find((s) => s.final)!
+															.comment == comment &&
+													  selectedStudent.submissions.find((s) => s.final)!
+															.grade == grade &&
+													  graded.some((student) => student.id == selectedID)
+													: false
+											}
+										>
+											{graded.some((student) => student.id == selectedID)
+												? maxGrade
+													? "Update Grade"
+													: "Update Review"
+												: maxGrade
+												? "Grade Assignment"
+												: "Set Reviewed"}
+										</Button>
+									</div>
 								</div>
 							</div>
-							<div className="flex flex-col justify-between">
-								<textarea
-									placeholder="Enter an optional comment..."
-									className="h-20 w-72 resize-none !rounded-xl scrollbar-fancy"
-									value={comment}
-									onChange={(e) => setComment(e.target.value)}
+							<div className="flex flex-col rounded-xl mt-4">
+								<AssignmentGradingComponents
+									assignmentData={allAssignmentData}
+									submission={
+										selectedStudent.submissions.find((s) => s.final)
+											?.content as SubmissionSettingsTypes
+									}
+									latestSubmission={
+										selectedStudent.submissions[0]
+											.content as SubmissionSettingsTypes
+									}
+									selectedStudent={selectedStudent}
 								/>
-								<div className="ml-auto gap-4 flex">
-									<Button
-										color="bg-blue-500"
-										className="text-white"
-										onClick={setReviewed}
-										disabled={
-											selectedStudent &&
-											selectedStudent.submissions.find((s) => s.final)
-												? selectedStudent.submissions.find((s) => s.final)!
-														.comment == comment &&
-												  selectedStudent.submissions.find((s) => s.final)!
-														.grade == grade &&
-												  graded.some((student) => student.id == selectedID)
-												: false
-										}
-									>
-										{graded.some((student) => student.id == selectedID)
-											? maxGrade
-												? "Update Grade"
-												: "Update Review"
-											: maxGrade
-											? "Grade Assignment"
-											: "Set Reviewed"}
-									</Button>
-								</div>
 							</div>
 						</div>
-						<div className="flex flex-col rounded-xl mt-4">
-							<AssignmentGradingComponents
-								assignmentData={allAssignmentData}
-								submission={
-									selectedStudent.submissions.find((s) => s.final)
-										?.content as SubmissionSettingsTypes
-								}
-								latestSubmission={
-									selectedStudent.submissions[0]
-										.content as SubmissionSettingsTypes
-								}
-								selectedStudent={selectedStudent}
-							/>
-						</div>
-					</div>
-				)}
+					)}
+				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 

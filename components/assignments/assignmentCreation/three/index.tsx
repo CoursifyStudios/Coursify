@@ -1,5 +1,8 @@
 import { Button } from "@/components/misc/button";
-import { NewAssignmentData } from "@/lib/db/assignments/assignments";
+import {
+	AssignmentTypes,
+	NewAssignmentData,
+} from "@/lib/db/assignments/assignments";
 import { NextPage } from "next";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { useAssignmentStore } from "..";
@@ -10,12 +13,23 @@ import assignmentValidation from "./settingsValidation";
 
 const AssignmentSettings: NextPage<{
 	stage: number;
-	setStage: Dispatch<SetStateAction<number>>;
+	setStage?: Dispatch<SetStateAction<number>>;
 	useCustomSettings?: boolean;
 	save?: (assignment: AssignmentSettingsTypes) => void;
-}> = ({ setStage, stage, useCustomSettings = false, save }) => {
+	customSettings?: AssignmentSettingsTypes;
+	assignmentType?: AssignmentTypes;
+}> = ({
+	setStage,
+	stage,
+	useCustomSettings = false,
+	save,
+	customSettings,
+	assignmentType,
+}) => {
 	const { data: assignmentData, set: setAssignmentData } = useAssignmentStore();
-	const [settings, setSettings] = useState<AssignmentSettingsTypes>();
+	const [settings, setSettings] = useState<AssignmentSettingsTypes | undefined>(
+		customSettings || undefined
+	);
 	const [error, setError] = useState("");
 
 	useEffect(() => {
@@ -25,18 +39,20 @@ const AssignmentSettings: NextPage<{
 	if (stage != 3) return null;
 	return (
 		<>
-			<h2 className="mt-6 text-xl font-bold">
-				{
-					submissionType.find(
-						(submission) => submission.type == assignmentData?.type
-					)?.name
-				}{" "}
-				- Submission Settings
-			</h2>
+			{!useCustomSettings && (
+				<h2 className="mt-6 text-xl font-bold">
+					{
+						submissionType.find(
+							(submission) => submission.type == assignmentData?.type
+						)?.name
+					}{" "}
+					- Submission Settings
+				</h2>
+			)}
 			<div className="mt-10 flex flex-col space-y-4 @container">
-				{assignmentData && (
+				{(assignmentData || assignmentType != undefined) && (
 					<GetAssignmentSettings
-						assignmentType={assignmentData.type}
+						assignmentType={assignmentType ?? assignmentData!.type}
 						setSettings={setSettings}
 						settings={settings}
 					/>
@@ -46,7 +62,7 @@ const AssignmentSettings: NextPage<{
 				</div>
 			</div>
 			<div className="mt-10 flex flex-col space-y-3 ">
-				{useCustomSettings && save ? (
+				{useCustomSettings && save && !setStage ? (
 					<Button
 						onClick={() => {
 							try {
@@ -59,7 +75,7 @@ const AssignmentSettings: NextPage<{
 							}
 						}}
 						color="bg-blue-500"
-						className="text-white"
+						className="text-white ml-auto"
 					>
 						Save
 					</Button>
@@ -68,7 +84,7 @@ const AssignmentSettings: NextPage<{
 						<Button
 							onClick={() => {
 								setAssignmentData({ settings } as NewAssignmentData);
-								setStage((stage) => stage - 1);
+								setStage!((stage) => stage - 1);
 							}}
 						>
 							Back
@@ -81,7 +97,7 @@ const AssignmentSettings: NextPage<{
 										assignmentValidation(settings!);
 										setError("");
 										setAssignmentData({ settings } as NewAssignmentData);
-										setStage((stage) => stage + 1);
+										setStage!((stage) => stage + 1);
 									} catch (e) {
 										if (typeof e == "object")
 											setError(

@@ -14,7 +14,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
 import Link from "next/link";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 import { submissionType } from "../assignmentCreation/submissionType";
 import {
 	StudentAssignmentResponse,
@@ -27,6 +27,8 @@ import dynamic from "next/dynamic";
 const Editor = dynamic(() => import("../../editors/richeditor"));
 
 const AssignmentHeader: NextPage<{
+	setEditOpen?: Dispatch<SetStateAction<boolean>>;
+	setDatesOpen?: Dispatch<SetStateAction<boolean>>;
 	loading?: boolean;
 	error?: string;
 	assignment: StudentAssignmentResponse | TeacherAssignmentResponse;
@@ -34,6 +36,12 @@ const AssignmentHeader: NextPage<{
 	setFullscreen: Dispatch<SetStateAction<boolean>>;
 	teacher?: boolean;
 	deleteAssignment?: () => void;
+	hideAssignment?: {
+		content: ReactNode;
+		onClick?: (() => void) | undefined;
+		link?: string | undefined;
+		className?: string | undefined;
+	};
 }> = ({
 	assignment,
 	fullscreen,
@@ -42,6 +50,9 @@ const AssignmentHeader: NextPage<{
 	deleteAssignment,
 	error,
 	loading = false,
+	setDatesOpen,
+	setEditOpen,
+	hideAssignment,
 }) => {
 	if (!assignment.data) return null;
 
@@ -98,7 +109,7 @@ const AssignmentHeader: NextPage<{
 						{error && <p className="text-red-500">Error: {error}</p>}
 					</div>
 					<div className="flex md:space-x-4">
-						{teacher && (
+						{teacher && setEditOpen && setDatesOpen && hideAssignment && (
 							<MenuSelect
 								items={[
 									{
@@ -108,6 +119,7 @@ const AssignmentHeader: NextPage<{
 												<PencilSquareIcon className="w-5 h-5 ml-auto" />
 											</>
 										),
+										onClick: () => setEditOpen(true),
 									},
 									{
 										content: (
@@ -116,15 +128,9 @@ const AssignmentHeader: NextPage<{
 												<CalendarDaysIcon className="w-5 h-5 ml-auto" />
 											</>
 										),
+										onClick: () => setDatesOpen(true),
 									},
-									{
-										content: (
-											<>
-												Hide Assignment
-												<EyeSlashIcon className="w-5 h-5 ml-auto" />
-											</>
-										),
-									},
+									hideAssignment,
 									{
 										content: (
 											<>
@@ -165,7 +171,7 @@ const AssignmentHeader: NextPage<{
 					{assignment.data.content && teacher && (
 						<button className="group w-full relative p-1">
 							<div className="inset-0 absolute bg-gradient-to-b from-transparent to-gray-200 z-20 flex flex-col justify-end font-medium items-center backdrop-blur-[2px] group-focus:hidden">
-								Tap to see Assignment Details
+								Tap to see assignment details
 								<ChevronDownIcon className="w-5 h-5" />
 							</div>
 							<div className="overflow-hidden max-h-10 group-focus:max-h-none">
