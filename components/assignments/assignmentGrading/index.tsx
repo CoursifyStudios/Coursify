@@ -17,7 +17,12 @@ import { SubmissionSettingsTypes } from "../assignmentPanel/submission.types";
 import { useRouter } from "next/router";
 import StudentSelector, { Student } from "./studentSelector";
 import EditAssignment from "./settings/editAssignment";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/outline";
+import {
+	ArrowUpOnSquareStackIcon,
+	EyeIcon,
+	EyeSlashIcon,
+} from "@heroicons/react/24/outline";
+import { DueType } from "../assignments";
 
 const AssignmentGradingUI = ({
 	setAllAssignmentData,
@@ -189,6 +194,39 @@ const AssignmentGradingUI = ({
 		router.push("/assignments/0");
 	};
 
+	const updateDB = async (
+		update: Database["public"]["Tables"]["assignments"]["Update"],
+		toUpdate: string
+	) => {
+		setError("");
+		if (loading) {
+			setError(
+				`Cannot ${toUpdate} assignment while another action is taking place`
+			);
+			return;
+		}
+		setLoading(true);
+		const { error } = await supabase
+			.from("assignments")
+			.update(update)
+			.eq("id", assignmentID);
+		if (error) {
+			setError(error.message);
+		} else {
+			setAllAssignmentData((a) => {
+				if (!a.data) return a;
+				return {
+					...a,
+					data: {
+						...a.data,
+						...update,
+					},
+				};
+			});
+		}
+		setLoading(false);
+	};
+
 	const hideAssignment = {
 		content: (
 			<>
@@ -200,34 +238,30 @@ const AssignmentGradingUI = ({
 				)}
 			</>
 		),
-		onClick: async () => {
-			setError("");
-			if (loading) {
-				setError("Cannot hide assignment while another action is taking place");
-				return;
-			}
-			setLoading(true);
-			const { error } = await supabase
-				.from("assignments")
-				.update({ hidden: !allAssignmentData.data?.hidden })
-				.eq("id", assignmentID);
-			if (error) {
-				setError(error.message);
-			} else {
-				setAllAssignmentData((a) => {
-					if (!a.data) return a;
-					return {
-						...a,
-						data: {
-							...a.data,
-							hidden: !allAssignmentData.data?.hidden,
-						},
-					};
-				});
-			}
-			setLoading(false);
-		},
+		onClick: () =>
+			updateDB({ hidden: !allAssignmentData.data?.hidden }, "hide"),
 	};
+
+	const publishAssignment =
+		new Date(allAssignmentData.data!.publish_date).getTime() >
+		new Date().getTime()
+			? {
+					content: (
+						<>
+							Publish Now
+							<ArrowUpOnSquareStackIcon className="w-5 h-5 ml-auto" />
+						</>
+					),
+					onClick: () =>
+						updateDB(
+							{
+								publish_date: new Date().toISOString(),
+								publish_type: DueType.DATE,
+							},
+							"publish"
+						),
+			  }
+			: undefined;
 
 	return (
 		<>
@@ -241,6 +275,7 @@ const AssignmentGradingUI = ({
 				setError={setError}
 			/>
 			<div className="flex grow flex-col">
+				{/* prop drilling ftw -LS */}
 				<AssignmentHeader
 					setEditOpen={setEditOpen}
 					setDatesOpen={setDatesOpen}
@@ -252,9 +287,9 @@ const AssignmentGradingUI = ({
 					error={error}
 					loading={loading}
 					hideAssignment={hideAssignment}
+					publishAssignment={publishAssignment}
 				/>
 				<div className="flex">
-					{/* prop drilling ftw -LS */}
 					<StudentSelector
 						graded={graded}
 						maxGrade={maxGrade}

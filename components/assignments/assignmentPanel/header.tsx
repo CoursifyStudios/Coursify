@@ -37,12 +37,8 @@ const AssignmentHeader: NextPage<{
 	setFullscreen: Dispatch<SetStateAction<boolean>>;
 	teacher?: boolean;
 	deleteAssignment?: () => void;
-	hideAssignment?: {
-		content: ReactNode;
-		onClick?: (() => void) | undefined;
-		link?: string | undefined;
-		className?: string | undefined;
-	};
+	hideAssignment?: MenuElement;
+	publishAssignment?: MenuElement;
 }> = ({
 	assignment,
 	fullscreen,
@@ -54,6 +50,7 @@ const AssignmentHeader: NextPage<{
 	setDatesOpen,
 	setEditOpen,
 	hideAssignment,
+	publishAssignment,
 }) => {
 	if (!assignment.data) return null;
 
@@ -110,11 +107,15 @@ const AssignmentHeader: NextPage<{
 								{assignment.data.hidden
 									? "Hidden from students"
 									: new Date(assignment.data.publish_date!).getTime() >
-											new Date().getTime() || !assignment.data.due_date
+									  new Date().getTime()
 									? `Publishes on ${formatDate(
 											new Date(assignment.data.publish_date)
 									  )}`
-									: `Due ${formatDate(new Date(assignment.data.due_date))}`}
+									: assignment.data.due_date
+									? `Due ${formatDate(new Date(assignment.data.due_date))}`
+									: `Published on ${formatDate(
+											new Date(assignment.data.publish_date)
+									  )}`}
 							</ColoredPill>
 						)}
 					</div>
@@ -145,6 +146,7 @@ const AssignmentHeader: NextPage<{
 										onClick: () => setDatesOpen(true),
 									},
 									hideAssignment,
+									publishAssignment,
 									{
 										content: (
 											<>
@@ -203,3 +205,12 @@ const AssignmentHeader: NextPage<{
 };
 
 export default AssignmentHeader;
+
+type MenuElement =
+	| {
+			content: ReactNode;
+			onClick?: (() => void) | undefined;
+			link?: string | undefined;
+			className?: string | undefined;
+	  }
+	| undefined;
