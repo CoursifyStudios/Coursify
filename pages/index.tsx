@@ -31,6 +31,9 @@ const Home = () => {
 		day: "numeric",
 		timeZone: "Europe/London",
 	});
+	const {
+		data: { schedulesToShow },
+	} = useSettings();
 
 	useEffect(() => {
 		const [classes, schedule] = [
@@ -71,7 +74,11 @@ const Home = () => {
 					getAllClasses(supabaseClient, user.id),
 					// read comment in above useEffect as to why I'm fetching 3 dates -Lukas
 					// I'm going to fetch like 5 because weekends or some excuse - Bill
-					getSchedulesForXDays(supabaseClient, new Date(), 1),
+					getSchedulesForXDays(
+						supabaseClient,
+						new Date(),
+						parseInt(schedulesToShow) - 1
+					),
 				]);
 
 				if (classes.data && classes.data[0]) {
