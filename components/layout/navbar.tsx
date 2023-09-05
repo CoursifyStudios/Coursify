@@ -213,7 +213,7 @@ const Navbar: NextComponentType = () => {
 						// I decided to instead just make the text the link. It not great but is just works:tm:
 						// - Lukas
 						className={`ml-2 h-5 w-5 cursor-pointer rounded-sm text-gray-500 transition hover:text-gray-800 dark:text-gray-100
-									 ${selected ? "hover:bg-gray-100" : "hover:bg-gray-400/20"}`}
+									 ${selected ? "hover:bg-gray-200" : "hover:bg-gray-400/20"}`}
 					/>
 				)}
 			</div>
