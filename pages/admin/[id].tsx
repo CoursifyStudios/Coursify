@@ -63,6 +63,7 @@ import { getBulkUserData, getUserData } from "@/lib/db/settings";
 import { Toggle } from "@/components/misc/toggle";
 import MenuSelect from "@/components/misc/menu";
 import Avatar from "@/components/misc/avatar";
+import { useTabs } from "@/lib/tabs/handleTabs";
 
 /**
  * This file is not intended for long term use.
@@ -117,6 +118,7 @@ const Admin: NextPageWithLayout = () => {
 	const router = useRouter();
 	const { id } = router.query;
 	const user = useUser();
+	const { newTab } = useTabs();
 	const [query, setQuery] = useState("");
 	const [uploadOpen, setUploadOpen] = useState(false);
 	const [hovering, setHovering] = useState(false);
@@ -1085,6 +1087,8 @@ Activities	The user's activities, as displayed on their profile
 						className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none
 									 border-transparent bg-gray-200
 								 text-lg font-semibold `}
+						//the schedule editor is its own page
+						onClick={() => newTab("/schedule-editor", "Schedule Editor")}
 					>
 						Schedule Editor
 					</Link>

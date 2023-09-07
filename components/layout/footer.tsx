@@ -2,12 +2,14 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { ColoredPill } from "../misc/pill";
+import { useTabs } from "@/lib/tabs/handleTabs";
 
 export default function Footer() {
 	//const [path, setPath] = useState("")
 	const router = useRouter();
 	const [hydrated, setHydrated] = useState(false);
 	const isAdminPage = router.asPath.startsWith("/admin");
+	const { newTab } = useTabs();
 
 	useEffect(() => setHydrated(true), []);
 
@@ -29,7 +31,10 @@ export default function Footer() {
 					</p>
 				</div>
 				<div className="mt-4 space-x-4 md:mt-0">
-					<Link href="/admin">
+					<Link
+						href="/admin"
+						onClick={() => newTab("/admin", "Admin Dashboard")}
+					>
 						<ColoredPill color="gray" hoverState>
 							Admin Dashboard
 						</ColoredPill>
