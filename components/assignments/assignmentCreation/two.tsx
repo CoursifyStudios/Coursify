@@ -30,7 +30,13 @@ export default function AssignmentDetails({
 	save?: (assignment: AssignmentSaveData) => void;
 	customAssignment?: TeacherAssignmentResponse["data"];
 }) {
-	const [files, setFiles] = useState<CoursifyFile[]>([]);
+	const [files, setFiles] = useState<CoursifyFile[]>(
+		customAssignment
+			? customAssignment.files
+				? (customAssignment.files as unknown as CoursifyFile[])
+				: []
+			: []
+	);
 	const [editorState, setEditorState] = useState<EditorState>();
 	const { data: assignmentData, set: setAssignmentData } = useAssignmentStore();
 
@@ -77,6 +83,7 @@ export default function AssignmentDetails({
 							JSON.stringify(defaultEditorState)
 								? undefined
 								: serializedEditor) as unknown as Json,
+							files,
 						});
 					}
 					setAssignmentData({
@@ -228,6 +235,7 @@ export interface AssignmentSaveData {
 	submissionInstructions: string;
 	maxGrade: number | undefined;
 	content: Json;
+	files: CoursifyFile[];
 }
 
 const defaultEditorState = {

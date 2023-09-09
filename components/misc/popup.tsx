@@ -51,12 +51,12 @@ export const Popup: NextPage<{
 										: size == "lg"
 										? "max-w-screen-lg"
 										: "max-w-xl"
-								} flex-col rounded-xl bg-white/75 py-4 pl-4 shadow-md max-h-[95vh] scrollbar-fancy  overflow-y-auto [scrollbar-gutter:stable] backdrop-blur-xl dark:bg-neutral-950/75 dark:text-gray-100`}
+								} flex-col rounded-xl bg-white/75 py-4 pl-4 shadow-md max-h-[95vh] scrollbar-fancy overflow-y-auto [scrollbar-gutter:stable] backdrop-blur-xl dark:bg-neutral-950/75 dark:text-gray-100`}
 							>
 								{children}
 								<button
 									onClick={closeMenu}
-									className="absolute right-4 top-4 rounded p-0.5 text-gray-700 transition hover:bg-gray-300 hover:text-gray-900 focus:outline-none dark:hover:text-gray-100"
+									className="absolute right-0 top-4 rounded p-0.5 text-gray-700 transition hover:bg-gray-300 hover:text-gray-900 focus:outline-none dark:hover:text-gray-100"
 								>
 									<XMarkIcon tabIndex={0} className="h-5 w-5" />
 								</button>

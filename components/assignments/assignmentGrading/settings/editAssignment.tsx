@@ -9,6 +9,7 @@ import { Database, Json } from "@/lib/db/database.types";
 import AssignmentDetails, {
 	AssignmentSaveData,
 } from "../../assignmentCreation/two";
+import { CoursifyFile } from "@/components/files/genericFileUpload";
 
 const EditAssignment = ({
 	close,
@@ -61,24 +62,61 @@ const EditAssignment = ({
 		let updatedDetails = false;
 		const {
 			submissionInstructions: _,
-			content: c,
+			content: content,
+			files: f,
 			...scopedAssignment
 		} = assign;
 
 		// try to reduce the vast majority of the data transfer since the lexical json is massive
-		if (JSON.stringify(c) != JSON.stringify(assignment.data?.content)) {
+		if (JSON.stringify(content) != JSON.stringify(assignment.data?.content)) {
 			updatedDetails = true;
 		}
 		setLoading(true);
 		setError("");
-		const { error } = await supabase
-			.from("assignments")
-			.update({
-				...scopedAssignment,
-				submission_instructions: assign.submissionInstructions || null,
-				...(updatedDetails ? { content: c } : {}),
-			})
-			.eq("id", assignment.data?.id);
+
+		const toUpload: CoursifyFile[] = [];
+		const toDelete: CoursifyFile[] = (
+			assignment.data!.files as unknown as CoursifyFile[]
+		).filter((file) => {
+			!f.some((f) => f.dbName == file.dbName);
+		});
+
+		const files = f.forEach((file) => {
+			if (
+				assignment.data!.files &&
+				!assignment.data!.files?.some(
+					(f) => (f as unknown as CoursifyFile).dbName == file.dbName
+				)
+			) {
+				toUpload.push(file);
+			}
+
+			return delete file.file;
+		});
+		// reyturning undefined, preumably the delete returniong doesn't work (copied from stack overflow)
+		//console.log(files)
+
+		const [{ error }] = await Promise.all([
+			await supabase
+				.from("assignments")
+				.update({
+					...scopedAssignment,
+					submission_instructions: assign.submissionInstructions || null,
+					...(updatedDetails ? { content } : {}),
+				})
+				.eq("id", assignment.data?.id),
+			toUpload.map(
+				async (file) =>
+					await supabase.storage
+						.from("ugc")
+						.upload(`assignments/${file.dbName}`, file.file!)
+			),
+			supabase.functions.invoke("delete-file", {
+				body: {
+					path: toDelete.map((file) => `assignments/${file.dbName}`),
+				},
+			}),
+		]);
 
 		if (error) {
 			setError(error.message);
@@ -91,7 +129,8 @@ const EditAssignment = ({
 						...a.data,
 						...scopedAssignment,
 						submission_instructions: assign.submissionInstructions || null,
-						content: c,
+						files: files as unknown as Json[],
+						content,
 					},
 				};
 			});
