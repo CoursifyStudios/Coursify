@@ -69,15 +69,23 @@ export default function AssignmentDetails({
 						undefined,
 				}}
 				onSubmit={(values) => {
+					const serializedEditor = editorState?.toJSON();
 					if (save) {
 						save({
 							...values,
-							content: editorState?.toJSON() as unknown as Json,
+							content: (JSON.stringify(serializedEditor) ==
+							JSON.stringify(defaultEditorState)
+								? undefined
+								: serializedEditor) as unknown as Json,
 						});
 					}
 					setAssignmentData({
 						...values,
-						content: editorState?.toJSON(),
+						content:
+							JSON.stringify(serializedEditor) ==
+							JSON.stringify(defaultEditorState)
+								? undefined
+								: serializedEditor,
 						files: files,
 					} as NewAssignmentData);
 				}}
@@ -166,6 +174,7 @@ export default function AssignmentDetails({
 								onClick={() => {
 									submitForm();
 								}}
+								type="submit"
 								color="bg-blue-500"
 								className="text-white ml-auto"
 								disabled={
@@ -220,3 +229,23 @@ export interface AssignmentSaveData {
 	maxGrade: number | undefined;
 	content: Json;
 }
+
+const defaultEditorState = {
+	root: {
+		children: [
+			{
+				children: [],
+				direction: null,
+				format: "",
+				indent: 0,
+				type: "paragraph",
+				version: 1,
+			},
+		],
+		direction: null,
+		format: "",
+		indent: 0,
+		type: "root",
+		version: 1,
+	},
+};
