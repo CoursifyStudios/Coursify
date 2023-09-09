@@ -161,7 +161,7 @@ export default function AssignmentDetails({
 							initialState={
 								customAssignment?.content || assignmentData?.content
 							}
-							className="scrollbar-fancy mb-6 max-h-[30vh] min-h-[6rem] overflow-y-auto overflow-x-hidden rounded-md border border-gray-300 bg-backdrop/50 pb-2 focus:ring-1"
+							className="scrollbar-fancy mb-6 rounded-md border border-gray-300 bg-backdrop/50 pb-2 focus:ring-1 min-h-[6rem] "
 							focus={false}
 						/>
 						<GenericFileUpload

@@ -193,6 +193,7 @@ const AssignmentHeader: NextPage<{
 								<Editor
 									editable={false}
 									initialState={assignment.data.content}
+									className="border border-gray-300 group-focus:border-transparent rounded-xl px-1"
 								/>
 							</div>
 						</button>
