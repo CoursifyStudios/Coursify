@@ -177,153 +177,7 @@ const Post: NextPageWithLayout = () => {
 	return (
 		// Left pane
 		<div className="mx-auto flex w-full max-w-screen-xl px-4 pb-6 pt-6 md:px-8 xl:px-0 ">
-			<div
-				className={`scrollbar-fancy mr-4 grow items-stretch overflow-x-clip md:grow-0 sticky top-8 ${
-					fullscreen ? "hidden" : "flex"
-				} w-[20.5rem] shrink-0 flex-col space-y-5 overflow-y-scroll p-1 pb-6 compact:space-y-3 md:h-[calc(100vh-6.5rem)] `}
-			>
-				<h2 className="title">Your Assignments</h2>
-				{(Array.isArray(teacherAssignments) ||
-					Array.isArray(studentAssignments)) &&
-				user ? (
-					<Tab.Group selectedIndex={tab} onChange={setTab}>
-						{teacherAssignments?.length && studentAssignments?.length ? (
-							<Tab.List as="div" className="flex items-center">
-								<Tab as={Fragment}>
-									{({ selected }) => (
-										<div
-											className={`flex cursor-pointer items-center rounded-lg border px-2 py-1 focus:outline-none ${
-												selected
-													? "brightness-focus"
-													: "border-transparent bg-gray-200"
-											} text-sm font-medium`}
-										>
-											Student
-										</div>
-									)}
-								</Tab>
-								<Tab as={Fragment}>
-									{({ selected }) => (
-										<div
-											className={`ml-4 flex cursor-pointer items-center rounded-lg border px-2 py-1 focus:outline-none ${
-												selected
-													? "brightness-focus"
-													: "border-transparent bg-gray-200"
-											} text-sm font-medium`}
-										>
-											Teacher
-										</div>
-									)}
-								</Tab>
-							</Tab.List>
-						) : null}
-						<Tab.Panels>
-							{Array.isArray(studentAssignments) ? (
-								<Tab.Panel className="space-y-5 flex flex-col compact:space-y-2">
-									{studentAssignments.map(
-										(assignment) =>
-											assignment.classes && (
-												<AssignmentPreview
-													key={assignment.id}
-													supabase={supabase}
-													assignment={assignment}
-													userId={user.id}
-													starredAsParam={
-														assignment.starred
-															? Array.isArray(assignment.starred)
-																? assignment.starred.length > 0
-																: !!assignment.starred
-															: false
-													}
-													showClassPill={true}
-													classes={getDataOutArray(assignment.classes)}
-													className={`${
-														assignmentid == assignment.id
-															? "brightness-focus"
-															: "brightness-hover bg-backdrop-200"
-													} border border-transparent`}
-												/>
-											)
-									)}
-								</Tab.Panel>
-							) : (
-								<Tab.Panel></Tab.Panel>
-							)}
-							{Array.isArray(teacherAssignments) ? (
-								<Tab.Panel className="space-y-5 flex flex-col compact:space-y-2">
-									{teacherAssignments.map(
-										(assignment) =>
-											assignment.classes && (
-												<AssignmentPreview
-													key={assignment.id}
-													supabase={supabase}
-													assignment={assignment}
-													userId={user.id}
-													starredAsParam={
-														assignment.starred
-															? Array.isArray(assignment.starred)
-																? assignment.starred.length > 0
-																: !!assignment.starred
-															: false
-													}
-													showClassPill={true}
-													classes={getDataOutArray(assignment.classes)}
-													className={`${
-														assignmentid == assignment.id
-															? "brightness-focus"
-															: "brightness-hover bg-backdrop-200"
-													} border border-transparent `}
-												/>
-											)
-									)}
-								</Tab.Panel>
-							) : (
-								<Tab.Panel></Tab.Panel>
-							)}
-						</Tab.Panels>
-					</Tab.Group>
-				) : (
-					<>
-						{[...Array(3)].map((_, i) => (
-							<div
-								className="h-24 animate-pulse rounded-xl bg-gray-200 "
-								key={i}
-							></div>
-						))}
-					</>
-				)}
-				{/* <div className="flex flex-col">
-					<div className="flex-col rounded-lg bg-backdrop-200 p-2">
-						<div className="mb-1 flex items-center">
-							<h1 className="mr-1 text-xl font-bold">Filters</h1>
-							<Info
-								size="small"
-								className="my-auto ml-2 shadow shadow-black/25"
-							>
-								Add filters to specify which types of assignments you see.
-							</Info>
-						</div>
-						<div className="flex flex-wrap">
-							<div className="mt-2 items-center justify-center rounded-lg bg-gray-300 p-1">
-								<PlusIcon className=" h-6 w-6" />
-							</div>
-						</div>
-					</div>
-					<div className="mt-3 flex items-center justify-between">
-						<div className="flex items-center">
-							<h2 className="mr-1 text-xl font-bold">Sort</h2>
-							<Info size="small" className="my-auto ml-2">
-								Sort by different attributes of assignments
-							</Info>
-						</div>
-						<Dropdown
-							onChange={setSelected}
-							selectedValue={selected}
-							values={options}
-						/>
-					</div>
-				</div> */}
-			</div>
+			<YourAssignments />
 			<div
 				className={`grow rounded-xl px-4  ${
 					fullscreen ? "flex" : "hidden md:flex"
@@ -412,6 +266,7 @@ const Post: NextPageWithLayout = () => {
 					/>
 				);
 			}
+			//console.log("wait i figuyre")
 			return (
 				<>
 					<div className="flex grow flex-col">
@@ -584,6 +439,158 @@ const Post: NextPageWithLayout = () => {
 		}
 		// Typescript wanted me to do this. The user shouldn't ever encounter this state
 		return <div>An unknown error occurred. Assignment id: {assignmentid}</div>;
+	}
+
+	function YourAssignments() {
+		return (
+			<div
+				className={`scrollbar-fancy mr-4 grow items-stretch overflow-x-clip md:grow-0 sticky top-8 ${
+					fullscreen ? "hidden" : "flex"
+				} w-[20.5rem] shrink-0 flex-col space-y-5 overflow-y-scroll p-1 pb-6 compact:space-y-3 md:h-[calc(100vh-6.5rem)] `}
+			>
+				<h2 className="title">Your Assignments</h2>
+				{(Array.isArray(teacherAssignments) ||
+					Array.isArray(studentAssignments)) &&
+				user ? (
+					<Tab.Group selectedIndex={tab} onChange={setTab}>
+						{teacherAssignments?.length && studentAssignments?.length ? (
+							<Tab.List as="div" className="flex items-center">
+								<Tab as={Fragment}>
+									{({ selected }) => (
+										<div
+											className={`flex cursor-pointer items-center rounded-lg border px-2 py-1 focus:outline-none ${
+												selected
+													? "brightness-focus"
+													: "border-transparent bg-gray-200"
+											} text-sm font-medium`}
+										>
+											Student
+										</div>
+									)}
+								</Tab>
+								<Tab as={Fragment}>
+									{({ selected }) => (
+										<div
+											className={`ml-4 flex cursor-pointer items-center rounded-lg border px-2 py-1 focus:outline-none ${
+												selected
+													? "brightness-focus"
+													: "border-transparent bg-gray-200"
+											} text-sm font-medium`}
+										>
+											Teacher
+										</div>
+									)}
+								</Tab>
+							</Tab.List>
+						) : null}
+						<Tab.Panels>
+							{Array.isArray(studentAssignments) ? (
+								<Tab.Panel className="space-y-5 flex flex-col compact:space-y-2">
+									{studentAssignments.map(
+										(assignment) =>
+											assignment.classes && (
+												<AssignmentPreview
+													key={assignment.id}
+													supabase={supabase}
+													assignment={assignment}
+													userId={user.id}
+													starredAsParam={
+														assignment.starred
+															? Array.isArray(assignment.starred)
+																? assignment.starred.length > 0
+																: !!assignment.starred
+															: false
+													}
+													showClassPill={true}
+													classes={getDataOutArray(assignment.classes)}
+													className={`${
+														assignmentid == assignment.id
+															? "brightness-focus"
+															: "brightness-hover bg-backdrop-200"
+													} border border-transparent`}
+												/>
+											)
+									)}
+								</Tab.Panel>
+							) : (
+								<Tab.Panel></Tab.Panel>
+							)}
+							{Array.isArray(teacherAssignments) ? (
+								<Tab.Panel className="space-y-5 flex flex-col compact:space-y-2">
+									{teacherAssignments.map(
+										(assignment) =>
+											assignment.classes && (
+												<AssignmentPreview
+													key={assignment.id}
+													supabase={supabase}
+													assignment={assignment}
+													userId={user.id}
+													starredAsParam={
+														assignment.starred
+															? Array.isArray(assignment.starred)
+																? assignment.starred.length > 0
+																: !!assignment.starred
+															: false
+													}
+													showClassPill={true}
+													classes={getDataOutArray(assignment.classes)}
+													className={`${
+														assignmentid == assignment.id
+															? "brightness-focus"
+															: "brightness-hover bg-backdrop-200"
+													} border border-transparent `}
+												/>
+											)
+									)}
+								</Tab.Panel>
+							) : (
+								<Tab.Panel></Tab.Panel>
+							)}
+						</Tab.Panels>
+					</Tab.Group>
+				) : (
+					<>
+						{[...Array(3)].map((_, i) => (
+							<div
+								className="h-24 animate-pulse rounded-xl bg-gray-200 "
+								key={i}
+							></div>
+						))}
+					</>
+				)}
+				{/* <div className="flex flex-col">
+					<div className="flex-col rounded-lg bg-backdrop-200 p-2">
+						<div className="mb-1 flex items-center">
+							<h1 className="mr-1 text-xl font-bold">Filters</h1>
+							<Info
+								size="small"
+								className="my-auto ml-2 shadow shadow-black/25"
+							>
+								Add filters to specify which types of assignments you see.
+							</Info>
+						</div>
+						<div className="flex flex-wrap">
+							<div className="mt-2 items-center justify-center rounded-lg bg-gray-300 p-1">
+								<PlusIcon className=" h-6 w-6" />
+							</div>
+						</div>
+					</div>
+					<div className="mt-3 flex items-center justify-between">
+						<div className="flex items-center">
+							<h2 className="mr-1 text-xl font-bold">Sort</h2>
+							<Info size="small" className="my-auto ml-2">
+								Sort by different attributes of assignments
+							</Info>
+						</div>
+						<Dropdown
+							onChange={setSelected}
+							selectedValue={selected}
+							values={options}
+						/>
+					</div>
+				</div> */}
+			</div>
+		);
 	}
 };
 

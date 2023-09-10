@@ -9,7 +9,7 @@ import { Database } from "@/lib/db/database.types";
 import { Disclosure } from "@headlessui/react";
 import { SupabaseClient } from "@supabase/supabase-js";
 import AssignmentHeader from "../assignmentPanel/header";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { ColoredPill } from "@/components/misc/pill";
 import { Button } from "@/components/misc/button";
 import AssignmentGradingComponents from "./components";

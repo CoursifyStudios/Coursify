@@ -178,9 +178,6 @@ export default function AssignmentDetails({
 						/>
 						{!setStage ? (
 							<Button
-								onClick={() => {
-									submitForm();
-								}}
 								type="submit"
 								color="bg-blue-500"
 								className="text-white ml-auto"
@@ -238,7 +235,7 @@ export interface AssignmentSaveData {
 	files: CoursifyFile[];
 }
 
-const defaultEditorState = {
+export const defaultEditorState = {
 	root: {
 		children: [
 			{

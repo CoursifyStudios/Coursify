@@ -1,6 +1,6 @@
 import { Popup } from "@/components/misc/popup";
 import { Tab } from "@headlessui/react";
-import { Dispatch, Fragment, SetStateAction } from "react";
+import { Dispatch, Fragment, SetStateAction, useEffect } from "react";
 import AssignmentSettings from "../../assignmentCreation/three";
 import { TeacherAssignmentResponse } from "@/lib/db/assignments/assignments";
 import { AssignmentSettingsTypes } from "../../assignmentCreation/three/settings.types";
@@ -75,13 +75,13 @@ const EditAssignment = ({
 		setError("");
 
 		const toUpload: CoursifyFile[] = [];
-		const toDelete: CoursifyFile[] = (
-			assignment.data!.files as unknown as CoursifyFile[]
-		).filter((file) => {
-			!f.some((f) => f.dbName == file.dbName);
-		});
+		const toDelete: CoursifyFile[] = assignment.data!.files
+			? (assignment.data!.files as unknown as CoursifyFile[]).filter((file) => {
+					!f.some((f) => f.dbName == file.dbName);
+			  })
+			: [];
 
-		const files = f.forEach((file) => {
+		const files = f.map((file) => {
 			if (
 				assignment.data!.files &&
 				!assignment.data!.files?.some(
@@ -90,36 +90,56 @@ const EditAssignment = ({
 			) {
 				toUpload.push(file);
 			}
+			const { file: _, ...returnF } = file;
 
-			return delete file.file;
+			return {
+				...returnF,
+				link: `https://cdn.coursify.one/storage/v1/object/public/ugc/assignments/${file.dbName}`,
+			};
 		});
 		// reyturning undefined, preumably the delete returniong doesn't work (copied from stack overflow)
 		//console.log(files)
 
-		const [{ error }] = await Promise.all([
-			await supabase
-				.from("assignments")
-				.update({
-					...scopedAssignment,
-					submission_instructions: assign.submissionInstructions || null,
-					...(updatedDetails ? { content } : {}),
-				})
-				.eq("id", assignment.data?.id),
-			toUpload.map(
-				async (file) =>
-					await supabase.storage
-						.from("ugc")
-						.upload(`assignments/${file.dbName}`, file.file!)
-			),
-			supabase.functions.invoke("delete-file", {
-				body: {
-					path: toDelete.map((file) => `assignments/${file.dbName}`),
-				},
-			}),
-		]);
+		const data = await Promise.all(
+			(
+				[
+					supabase
+						.from("assignments")
+						.update({
+							...scopedAssignment,
+							submission_instructions: assign.submissionInstructions || null,
+							...(updatedDetails ? { content } : {}),
+							files,
+						})
+						.eq("id", assignment.data?.id),
+				] as unknown as Promise<Partial<{ error: unknown }>>[]
+			)
+				.concat(
+					toUpload.map(
+						async (file) =>
+							await supabase.storage
+								.from("ugc")
+								.upload(`assignments/${file.dbName}`, file.file!)
+					)
+				)
 
-		if (error) {
-			setError(error.message);
+				.concat(
+					toDelete.length > 0
+						? [
+								supabase.functions.invoke("delete-file", {
+									body: {
+										path: toDelete.map((file) => `assignments/${file.dbName}`),
+									},
+								}),
+						  ]
+						: []
+				)
+		);
+
+		const errors = data.filter((d) => d.error);
+
+		if (errors.length > 0) {
+			setError("An error occurred");
 		} else {
 			setAssignment((a) => {
 				if (!a.data) return a;
