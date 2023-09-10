@@ -568,9 +568,7 @@ Activities	The user's activities, as displayed on their profile
 	};
 
 	const newNotification = (name: string) => {
-		setNotifications((v) =>
-			v.concat([{ name, expireAt: Date.now() + 100000 }])
-		);
+		setNotifications((v) => v.concat([{ name, expireAt: Date.now() + 5000 }]));
 	};
 
 	const copyID = async () => {
@@ -1021,10 +1019,10 @@ Activities	The user's activities, as displayed on their profile
 	return (
 		<div className="mx-auto my-10 flex w-full max-w-screen-xl flex-col px-4">
 			<h1 className="title">Admin Dashboard - {name}</h1>
-			<div className="fixed bottom-4 right-4">
+			<div className="fixed bottom-4 right-4 z-20">
 				{notifications.map((v) => (
 					<p
-						className="px-4 py-2 bg-blue-500 mt-2 rounded-xl font-medium transition-opacity"
+						className="px-4 py-2 bg-blue-500/75 backdrop-blur mt-2 rounded-xl font-medium transition-opacity"
 						key={v.expireAt}
 					>
 						{v.name}
