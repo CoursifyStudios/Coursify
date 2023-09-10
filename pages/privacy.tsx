@@ -4,7 +4,7 @@ import { NextPageWithLayout } from "./_app";
 
 const Privacy: NextPageWithLayout = () => {
 	return (
-		<div className="prose mt-10 mx-auto prose-lg dark:text-white">
+		<div className="prose my-10 mx-auto prose-lg dark:text-white">
 			<p>
 				<strong className="text-4xl dark:text-white">PRIVACY POLICY</strong>
 			</p>
@@ -144,7 +144,10 @@ const Privacy: NextPageWithLayout = () => {
 				Depending on where you are located geographically, the applicable
 				privacy law may mean you have certain rights regarding your personal
 				information. Learn more about{" "}
-				<a href="#privacyrights">your privacy rights</a>.
+				<a href="#privacyrights" className="dark:text-white">
+					your privacy rights
+				</a>
+				.
 			</p>
 			<p>
 				<strong className="dark:text-white">
@@ -987,7 +990,10 @@ const Privacy: NextPageWithLayout = () => {
 				request access to the personal information we collect from you, change
 				that information, or delete it. To request to review, update, or delete
 				your personal information, please visit:
-				<a href="https://app.coursify.one/settings?page=4&amp;category=data+request">
+				<a
+					href="https://app.coursify.one/settings?page=4&amp;category=data+request"
+					className="dark:text-white"
+				>
 					app.coursify.one/settings?page=4&amp;category=data+request
 				</a>
 				.
