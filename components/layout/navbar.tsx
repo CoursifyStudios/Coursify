@@ -181,7 +181,7 @@ const Navbar: NextComponentType = () => {
 										className="mt-1 flex cursor-pointer items-center justify-between rounded-lg bg-red-500/25 px-2 py-1 font-medium transition hover:bg-red-400/50"
 										onClick={() => logOut()}
 									>
-										Logout <ArrowLeftOnRectangleIcon className="h-5 w-5" />
+										Log out <ArrowLeftOnRectangleIcon className="h-5 w-5" />
 									</Menu.Item>
 								</Menu.Items>
 							</div>

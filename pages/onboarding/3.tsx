@@ -10,14 +10,32 @@ import { getUserData } from "@/lib/db/settings";
 import { OnboardingState } from "@/middleware";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 import { ReactElement, useEffect, useState } from "react";
 import notFound from "@/public/svgs/not-found.svg";
 import Link from "next/link";
+import supabase from "@/lib/supabase";
+import { useCookies } from "react-cookie";
 
 const Onboarding = () => {
 	const user = useUser();
-	const [contactOpen, setContactOpen] = useState(false);
+	const [cookies, setCookie, removeCookie] = useCookies(["onboardingState"]);
+
+	const logOut = async () => {
+		const cookiesToDelete = document.cookie
+			.split(";")
+			.map((c) => c.trim().split("=")[0]);
+
+		// Fuck manipulating cookies
+		// all my homies hate cookies
+		// That's why we should use Fresh :trojker: - Bloxs
+		for (const cookie of cookiesToDelete) {
+			document.cookie = `${cookie}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+			document.cookie = `${cookie}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+		}
+
+		router.reload();
+	};
 
 	return (
 		<>
@@ -29,7 +47,7 @@ const Onboarding = () => {
 					className={`bg-backdrop-200/25 items-center flex flex-col dark:bg-backdrop-200/10 backdrop-blur-3xl border border-white/10 p-8 rounded-xl shadow-xl transition-all duration-300`}
 				>
 					<div className="text-2xl mb-6 text-center font-semibold">
-						Coursify can{"'"}t find your account
+						Coursify couldn{"'"}t find your account
 					</div>
 					<Image
 						src={notFound}
@@ -45,31 +63,12 @@ const Onboarding = () => {
 						</Link>
 						, or contact your school admin.
 					</p>
-					<p
-						className="text-center  font-semibold text-sm mt-6 hover:underline select-none cursor-pointer"
-						onClick={() => setContactOpen(true)}
+					<Button
+						className="onboardingButton !hover:bg-red-400/50 !bg-red-500/25 mt-8"
+						onClick={() => logOut()}
 					>
-						I want to create a new school
-						<Popup closeMenu={() => setContactOpen(false)} open={contactOpen}>
-							<h3 className="title-sm mb-4">Contact</h3>
-							<p>
-								Coursify LMS is currently in a closed beta. If you{"'"}re an
-								administrator interested in using Coursify, please reach out to
-								our support team at{" "}
-								<Link
-									href="mailto:support@coursify.freshdesk.com"
-									target="_blank"
-								>
-									support@coursify.freshdesk.com
-								</Link>
-								. If you would like demo the platform,{" "}
-								<Link href={"/demo"} className="text-blue-500">
-									click here
-								</Link>
-								.
-							</p>
-						</Popup>
-					</p>
+						Log Out
+					</Button>
 				</div>
 				{/* <div className="flex flex-col items-center ">
 					<Button className="onboardingButton mt-8">I{"'"}m a parent</Button>
@@ -83,7 +82,32 @@ const Onboarding = () => {
 							this may have caused.{" "}
 						</p>
 					</Popup>
-				</div> */}
+				</div> */}{" "}
+				{/* 				<p
+					className="text-center  text-sm mt-6 hover:underline select-none cursor-pointer"
+					onClick={() => setContactOpen(true)}
+				>
+					I{"'"}d like to create a new school
+					<Popup closeMenu={() => setContactOpen(false)} open={contactOpen}>
+						<h3 className="title-sm mb-4">Contact</h3>
+						<p>
+							Coursify LMS is currently in a technical preview. If you{"'"}re an
+							administrator interested in using Coursify, please reach out to
+							our support team at{" "}
+							<Link
+								href="mailto:support@coursify.freshdesk.com"
+								target="_blank"
+							>
+								support@coursify.freshdesk.com
+							</Link>
+							. If you would like demo the platform,{" "}
+							<Link href={"/demo"} className="text-blue-500">
+								click here
+							</Link>
+							.
+						</p>
+					</Popup>
+				</p> */}
 			</div>
 		</>
 	);
