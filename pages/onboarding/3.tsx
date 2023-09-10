@@ -10,14 +10,23 @@ import { getUserData } from "@/lib/db/settings";
 import { OnboardingState } from "@/middleware";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import router, { useRouter } from "next/router";
 import { ReactElement, useEffect, useState } from "react";
 import notFound from "@/public/svgs/not-found.svg";
 import Link from "next/link";
+import supabase from "@/lib/supabase";
+import { useCookies } from "react-cookie";
 
 const Onboarding = () => {
 	const user = useUser();
 	const [contactOpen, setContactOpen] = useState(false);
+	const [cookies, setCookie, removeCookie] = useCookies(["onboarding"]);
+
+	const logOut = async () => {
+		removeCookie("onboarding");
+		await supabase.auth.signOut();
+		router.reload();
+	};
 
 	return (
 		<>
@@ -29,7 +38,7 @@ const Onboarding = () => {
 					className={`bg-backdrop-200/25 items-center flex flex-col dark:bg-backdrop-200/10 backdrop-blur-3xl border border-white/10 p-8 rounded-xl shadow-xl transition-all duration-300`}
 				>
 					<div className="text-2xl mb-6 text-center font-semibold">
-						Coursify can{"'"}t find your account
+						Coursify couldn{"'"}t find your account
 					</div>
 					<Image
 						src={notFound}
@@ -45,17 +54,23 @@ const Onboarding = () => {
 						</Link>
 						, or contact your school admin.
 					</p>
+					<Button
+						className="onboardingButton !hover:bg-red-400/50 !bg-red-500/25 mt-8"
+						onClick={() => logOut()}
+					>
+						Log Out
+					</Button>
 					<p
-						className="text-center  font-semibold text-sm mt-6 hover:underline select-none cursor-pointer"
+						className="text-center  font-semibold text-sm mt-4 hover:underline select-none cursor-pointer"
 						onClick={() => setContactOpen(true)}
 					>
-						I want to create a new school
+						I{"'"}d like to create a new school
 						<Popup closeMenu={() => setContactOpen(false)} open={contactOpen}>
 							<h3 className="title-sm mb-4">Contact</h3>
 							<p>
-								Coursify LMS is currently in a closed beta. If you{"'"}re an
-								administrator interested in using Coursify, please reach out to
-								our support team at{" "}
+								Coursify LMS is currently in a technical preview. If you{"'"}re
+								an administrator interested in using Coursify, please reach out
+								to our support team at{" "}
 								<Link
 									href="mailto:support@coursify.freshdesk.com"
 									target="_blank"
