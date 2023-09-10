@@ -1,27 +1,28 @@
-import { EditorState } from "lexical/LexicalEditorState";
-import { NextPage } from "next";
-import { ReactElement, useState } from "react";
-import Editor from "../components/editors/richeditor";
+import { ReactElement } from "react";
 import Layout from "@/components/layout/layout";
 import { NextPageWithLayout } from "./_app";
 
-const EditorPage: NextPageWithLayout = () => {
-	const [editorState, setEditorState] = useState<EditorState>();
-
+const Privacy: NextPageWithLayout = () => {
 	return (
-		<div className="prose mt-10 mx-auto">
+		<div className="prose mt-10 mx-auto prose-lg dark:text-white">
 			<p>
-				<strong className="text-4xl">PRIVACY POLICY</strong>
+				<strong className="text-4xl dark:text-white">PRIVACY POLICY</strong>
 			</p>
 			<p>
-				<strong>Last updated September 08, 2023</strong>
+				<strong className="dark:text-white">
+					Last updated September 08, 2023
+				</strong>
 			</p>
 			<p>
-				This privacy notice for Coursify (&quot;<strong>we</strong>,&quot;
-				&quot;<strong>us</strong>,&quot; or &quot;<strong>our</strong>&quot;),
-				describes how and why we might collect, store, use, and/or share (&quot;
-				<strong>process</strong>&quot;) your information when you use our
-				services (&quot;<strong>Services</strong>&quot;), such as when you:
+				This privacy notice for Coursify (&quot;
+				<strong className="dark:text-white">we</strong>,&quot; &quot;
+				<strong className="dark:text-white">us</strong>,&quot; or &quot;
+				<strong className="dark:text-white">our</strong>&quot;), describes how
+				and why we might collect, store, use, and/or share (&quot;
+				<strong className="dark:text-white">process</strong>&quot;) your
+				information when you use our services (&quot;
+				<strong className="dark:text-white">Services</strong>&quot;), such as
+				when you:
 			</p>
 			<ul>
 				<li>
@@ -38,17 +39,17 @@ const EditorPage: NextPageWithLayout = () => {
 				</li>
 			</ul>
 			<p>
-				<strong>Questions or concerns?</strong> Reading this privacy notice will
-				help you understand your privacy rights and choices. If you do not agree
-				with our policies and practices, please do not use our Services. If you
-				still have any questions or concerns, please contact us at
-				privacy@coursify.studio.
+				<strong className="dark:text-white">Questions or concerns?</strong>{" "}
+				Reading this privacy notice will help you understand your privacy rights
+				and choices. If you do not agree with our policies and practices, please
+				do not use our Services. If you still have any questions or concerns,
+				please contact us at privacy@coursify.studio.
 			</p>
 			<p>
-				<strong>SUMMARY OF KEY POINTS</strong>
+				<strong className="dark:text-white">SUMMARY OF KEY POINTS</strong>
 			</p>
 			<p>
-				<strong>
+				<strong className="dark:text-white">
 					<em>
 						This summary provides key points from our privacy notice, but you
 						can find out more details about any of these topics by clicking the
@@ -56,143 +57,197 @@ const EditorPage: NextPageWithLayout = () => {
 					</em>
 				</strong>{" "}
 				<a href="#toc">
-					<strong>
+					<strong className="dark:text-white">
 						<em>table of contents</em>
 					</strong>
 				</a>{" "}
 				<strong>
-					<em>below to find the section you are looking for.</em>
+					<em className="dark:text-white">
+						below to find the section you are looking for.
+					</em>
 				</strong>
 			</p>
 			<p>
-				<strong>What personal information do we process?</strong> When you
-				visit, use, or navigate our Services, we may process personal
+				<strong className="dark:text-white">
+					What personal information do we process?
+				</strong>{" "}
+				When you visit, use, or navigate our Services, we may process personal
 				information depending on how you interact with us and the Services, the
 				choices you make, and the products and features you use. Learn more
 				about{" "}
-				<a href="#personalinfo">personal information you disclose to us</a>.
+				<a href="#personalinfo" className="dark:text-white">
+					personal information you disclose to us
+				</a>
+				.
 			</p>
 			<p>
-				<strong>Do we process any sensitive personal information?</strong> We
-				may process sensitive personal information when necessary with your
+				<strong className="dark:text-white">
+					Do we process any sensitive personal information?
+				</strong>{" "}
+				We may process sensitive personal information when necessary with your
 				consent or as otherwise permitted by applicable law. Learn more about{" "}
-				<a href="#sensitiveinfo">sensitive information we process</a>.
+				<a href="#sensitiveinfo" className="dark:text-white">
+					sensitive information we process
+				</a>
+				.
 			</p>
 			<p>
-				<strong>Do we receive any information from third parties?</strong> We do
-				not receive any information from third parties.
+				<strong className="dark:text-white">
+					Do we receive any information from third parties?
+				</strong>{" "}
+				We do not receive any information from third parties.
 			</p>
 			<p>
-				<strong>How do we process your information?</strong> We process your
-				information to provide, improve, and administer our Services,
-				communicate with you, for security and fraud prevention, and to comply
-				with law. We may also process your information for other purposes with
-				your consent. We process your information only when we have a valid
-				legal reason to do so. Learn more about{" "}
-				<a href="#infouse">how we process your information</a>.
+				<strong className="dark:text-white">
+					How do we process your information?
+				</strong>{" "}
+				We process your information to provide, improve, and administer our
+				Services, communicate with you, for security and fraud prevention, and
+				to comply with law. We may also process your information for other
+				purposes with your consent. We process your information only when we
+				have a valid legal reason to do so. Learn more about{" "}
+				<a href="#infouse" className="dark:text-white">
+					how we process your information
+				</a>
+				.
 			</p>
 			<p>
-				<strong>
+				<strong className="dark:text-white">
 					In what situations and with which parties do we share personal
 					information?
 				</strong>{" "}
 				We may share information in specific situations and with specific third
 				parties. Learn more about{" "}
-				<a href="#whoshare">
+				<a href="#whoshare" className="dark:text-white">
 					when and with whom we share your personal information
 				</a>
 				.
 			</p>
 			<p>
-				<strong>How do we keep your information safe?</strong> We have
-				organizational and technical processes and procedures in place to
-				protect your personal information. However, no electronic transmission
-				over the internet or information storage technology can be guaranteed to
-				be 100% secure, so we cannot promise or guarantee that hackers,
-				cybercriminals, or other unauthorized third parties will not be able to
-				defeat our security and improperly collect, access, steal, or modify
-				your information. Learn more about{" "}
-				<a href="#infosafe">how we keep your information safe</a>.
+				<strong className="dark:text-white">
+					How do we keep your information safe?
+				</strong>{" "}
+				We have organizational and technical processes and procedures in place
+				to protect your personal information. However, no electronic
+				transmission over the internet or information storage technology can be
+				guaranteed to be 100% secure, so we cannot promise or guarantee that
+				hackers, cybercriminals, or other unauthorized third parties will not be
+				able to defeat our security and improperly collect, access, steal, or
+				modify your information. Learn more about{" "}
+				<a href="#infosafe" className="dark:text-white">
+					how we keep your information safe
+				</a>
+				.
 			</p>
 			<p>
-				<strong>What are your rights?</strong> Depending on where you are
-				located geographically, the applicable privacy law may mean you have
-				certain rights regarding your personal information. Learn more about{" "}
+				<strong className="dark:text-white">What are your rights?</strong>{" "}
+				Depending on where you are located geographically, the applicable
+				privacy law may mean you have certain rights regarding your personal
+				information. Learn more about{" "}
 				<a href="#privacyrights">your privacy rights</a>.
 			</p>
 			<p>
-				<strong>How do you exercise your rights?</strong> The easiest way to
-				exercise your rights is by visiting
+				<strong className="dark:text-white">
+					How do you exercise your rights?
+				</strong>{" "}
+				The easiest way to exercise your rights is by visiting
 				app.coursify.one/settings?page=4&amp;category=data+request, or by
 				contacting us. We will consider and act upon any request in accordance
 				with applicable data protection laws.
 			</p>
 			<p>
 				Want to learn more about what we do with any information we collect?{" "}
-				<a href="#toc">Review the privacy notice in full</a>.
+				<a href="#toc" className="dark:text-white">
+					Review the privacy notice in full
+				</a>
+				.
 			</p>
 			<p>
-				<strong>TABLE OF CONTENTS</strong>
+				<strong className="dark:text-white">TABLE OF CONTENTS</strong>
 			</p>
 			<p>
-				<a href="#infocollect">1. WHAT INFORMATION DO WE COLLECT?</a>
+				<a href="#infocollect" className="dark:text-white">
+					1. WHAT INFORMATION DO WE COLLECT?
+				</a>
 			</p>
 			<p>
-				<a href="#infouse">2. HOW DO WE PROCESS YOUR INFORMATION?</a>
+				<a href="#infouse" className="dark:text-white">
+					2. HOW DO WE PROCESS YOUR INFORMATION?
+				</a>
 			</p>
 			<p>
-				<a href="#whoshare">
+				<a href="#whoshare" className="dark:text-white">
 					3. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?
 				</a>
 			</p>
 			<p>
-				<a href="#cookies">
+				<a href="#cookies" className="dark:text-white">
 					4. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?
 				</a>
 			</p>
 			<p>
-				<a href="#sociallogins">5. HOW DO WE HANDLE YOUR SOCIAL LOGINS?</a>
+				<a href="#sociallogins" className="dark:text-white">
+					5. HOW DO WE HANDLE YOUR SOCIAL LOGINS?
+				</a>
 			</p>
 			<p>
-				<a href="#inforetain">6. HOW LONG DO WE KEEP YOUR INFORMATION?</a>
+				<a href="#inforetain" className="dark:text-white">
+					6. HOW LONG DO WE KEEP YOUR INFORMATION?
+				</a>
 			</p>
 			<p>
-				<a href="#infosafe">7. HOW DO WE KEEP YOUR INFORMATION SAFE?</a>
+				<a href="#infosafe" className="dark:text-white">
+					7. HOW DO WE KEEP YOUR INFORMATION SAFE?
+				</a>
 			</p>
 			<p>
-				<a href="#privacyrights">8. WHAT ARE YOUR PRIVACY RIGHTS?</a>
+				<a href="#privacyrights" className="dark:text-white">
+					8. WHAT ARE YOUR PRIVACY RIGHTS?
+				</a>
 			</p>
 			<p>
-				<a href="#DNT">9. CONTROLS FOR DO-NOT-TRACK FEATURES</a>
+				<a href="#DNT" className="dark:text-white">
+					9. CONTROLS FOR DO-NOT-TRACK FEATURES
+				</a>
 			</p>
 			<p>
-				<a href="#caresidents">
+				<a href="#caresidents" className="dark:text-white">
 					10. DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?
 				</a>
 			</p>
 			<p>
-				<a href="#policyupdates">11. DO WE MAKE UPDATES TO THIS NOTICE?</a>
+				<a href="#policyupdates" className="dark:text-white">
+					11. DO WE MAKE UPDATES TO THIS NOTICE?
+				</a>
 			</p>
 			<p>
-				<a href="#contact">12. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?</a>
+				<a href="#contact" className="dark:text-white">
+					12. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?
+				</a>
 			</p>
 			<p>
-				<a href="#request">
+				<a href="#request" className="dark:text-white">
 					13. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM
 					YOU?
 				</a>
 			</p>
 			<p>
-				<strong>1. WHAT INFORMATION DO WE COLLECT?</strong>
+				<strong className="dark:text-white">
+					1. WHAT INFORMATION DO WE COLLECT?
+				</strong>
 			</p>
 			<p>
-				<strong>Personal information you disclose to us</strong>
+				<strong className="dark:text-white">
+					Personal information you disclose to us
+				</strong>
 			</p>
 			<p>
-				<strong>
+				<strong className="dark:text-white">
 					<em>In Short:</em>
 				</strong>{" "}
-				<em>We collect personal information that you provide to us.</em>
+				<em className="dark:text-white">
+					We collect personal information that you provide to us.
+				</em>
 			</p>
 			<p>
 				We collect personal information that you voluntarily provide to us when
@@ -201,11 +256,13 @@ const EditorPage: NextPageWithLayout = () => {
 				in activities on the Services, or otherwise when you contact us.
 			</p>
 			<p>
-				<strong>Personal Information Provided by You.</strong> The personal
-				information that we collect depends on the context of your interactions
-				with us and the Services, the choices you make, and the products and
-				features you use. The personal information we collect may include the
-				following:
+				<strong className="dark:text-white">
+					Personal Information Provided by You.
+				</strong>{" "}
+				The personal information that we collect depends on the context of your
+				interactions with us and the Services, the choices you make, and the
+				products and features you use. The personal information we collect may
+				include the following:
 			</p>
 			<ul>
 				<li>
@@ -219,21 +276,23 @@ const EditorPage: NextPageWithLayout = () => {
 				</li>
 			</ul>
 			<p>
-				<strong>Sensitive Information.</strong> When necessary, with your
-				consent or as otherwise permitted by applicable law, we process the
-				following categories of sensitive information:
+				<strong className="dark:text-white">Sensitive Information.</strong> When
+				necessary, with your consent or as otherwise permitted by applicable
+				law, we process the following categories of sensitive information:
 			</p>
 			<ul>
 				<li>student data</li>
 			</ul>
 			<p>
-				<strong>Social Media Login Data.</strong> We may provide you with the
-				option to register with us using your existing social media account
-				details, like your Facebook, Twitter, or other social media account. If
-				you choose to register in this way, we will collect the information
-				described in the section called &quot;
-				<a href="#sociallogins">HOW DO WE HANDLE YOUR SOCIAL LOGINS?</a>&quot;
-				below.
+				<strong className="dark:text-white">Social Media Login Data.</strong> We
+				may provide you with the option to register with us using your existing
+				social media account details, like your Facebook, Twitter, or other
+				social media account. If you choose to register in this way, we will
+				collect the information described in the section called &quot;
+				<a href="#sociallogins" className="dark:text-white">
+					HOW DO WE HANDLE YOUR SOCIAL LOGINS?
+				</a>
+				&quot; below.
 			</p>
 			<p>
 				All personal information that you provide to us must be true, complete,
@@ -241,10 +300,12 @@ const EditorPage: NextPageWithLayout = () => {
 				information.
 			</p>
 			<p>
-				<strong>2. HOW DO WE PROCESS YOUR INFORMATION?</strong>
+				<strong className="dark:text-white">
+					2. HOW DO WE PROCESS YOUR INFORMATION?
+				</strong>
 			</p>
 			<p>
-				<strong>
+				<strong className="dark:text-white">
 					<em>In Short:</em>
 				</strong>{" "}
 				<em>
@@ -255,7 +316,7 @@ const EditorPage: NextPageWithLayout = () => {
 				</em>
 			</p>
 			<p>
-				<strong>
+				<strong className="dark:text-white">
 					We process your personal information for a variety of reasons,
 					depending on how you interact with our Services, including:
 				</strong>
@@ -263,7 +324,7 @@ const EditorPage: NextPageWithLayout = () => {
 			<ul>
 				<li>
 					<p>
-						<strong>
+						<strong className="dark:text-white">
 							To facilitate account creation and authentication and otherwise
 							manage user accounts.
 						</strong>{" "}
@@ -273,7 +334,7 @@ const EditorPage: NextPageWithLayout = () => {
 				</li>
 				<li>
 					<p>
-						<strong>
+						<strong className="dark:text-white">
 							To deliver and facilitate delivery of services to the user.
 						</strong>{" "}
 						We may process your information to provide you with the requested
@@ -282,7 +343,7 @@ const EditorPage: NextPageWithLayout = () => {
 				</li>
 				<li>
 					<p>
-						<strong>
+						<strong className="dark:text-white">
 							To respond to user inquiries/offer support to users.
 						</strong>{" "}
 						We may process your information to respond to your inquiries and
@@ -292,19 +353,21 @@ const EditorPage: NextPageWithLayout = () => {
 				</li>
 				<li>
 					<p>
-						<strong>To enable user-to-user communications.</strong> We may
-						process your information if you choose to use any of our offerings
-						that allow for communication with another user.
+						<strong className="dark:text-white">
+							To enable user-to-user communications.
+						</strong>{" "}
+						We may process your information if you choose to use any of our
+						offerings that allow for communication with another user.
 					</p>
 				</li>
 			</ul>
 			<p>
-				<strong>
+				<strong className="dark:text-white">
 					3. WHEN AND WITH WHOM DO WE SHARE YOUR PERSONAL INFORMATION?
 				</strong>
 			</p>
 			<p>
-				<strong>
+				<strong className="dark:text-white">
 					<em>In Short:</em>
 				</strong>{" "}
 				<em>
@@ -319,33 +382,36 @@ const EditorPage: NextPageWithLayout = () => {
 			<ul>
 				<li>
 					<p>
-						<strong>Business Transfers.</strong> We may share or transfer your
-						information in connection with, or during negotiations of, any
-						merger, sale of company assets, financing, or acquisition of all or
-						a portion of our business to another company.
+						<strong className="dark:text-white">Business Transfers.</strong> We
+						may share or transfer your information in connection with, or during
+						negotiations of, any merger, sale of company assets, financing, or
+						acquisition of all or a portion of our business to another company.
 					</p>
 				</li>
 				<li>
 					<p>
-						<strong>Other Users.</strong> When you share personal information
-						(for example, by posting comments, contributions, or other content
-						to the Services) or otherwise interact with public areas of the
-						Services, such personal information may be viewed by all users and
-						may be publicly made available outside the Services in perpetuity.
-						If you interact with other users of our Services and register for
-						our Services through a social network (such as Facebook), your
-						contacts on the social network will see your name, profile photo,
-						and descriptions of your activity. Similarly, other users will be
-						able to view descriptions of your activity, communicate with you
-						within our Services, and view your profile.
+						<strong className="dark:text-white">Other Users.</strong> When you
+						share personal information (for example, by posting comments,
+						contributions, or other content to the Services) or otherwise
+						interact with public areas of the Services, such personal
+						information may be viewed by all users and may be publicly made
+						available outside the Services in perpetuity. If you interact with
+						other users of our Services and register for our Services through a
+						social network (such as Facebook), your contacts on the social
+						network will see your name, profile photo, and descriptions of your
+						activity. Similarly, other users will be able to view descriptions
+						of your activity, communicate with you within our Services, and view
+						your profile.
 					</p>
 				</li>
 			</ul>
 			<p>
-				<strong>4. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?</strong>
+				<strong className="dark:text-white">
+					4. DO WE USE COOKIES AND OTHER TRACKING TECHNOLOGIES?
+				</strong>
 			</p>
 			<p>
-				<strong>
+				<strong className="dark:text-white">
 					<em>In Short:</em>
 				</strong>{" "}
 				<em>
@@ -360,10 +426,12 @@ const EditorPage: NextPageWithLayout = () => {
 				set out in our Cookie Notice.
 			</p>
 			<p>
-				<strong>5. HOW DO WE HANDLE YOUR SOCIAL LOGINS?</strong>
+				<strong className="dark:text-white">
+					5. HOW DO WE HANDLE YOUR SOCIAL LOGINS?
+				</strong>
 			</p>
 			<p>
-				<strong>
+				<strong className="dark:text-white">
 					<em>In Short:</em>
 				</strong>{" "}
 				<em>
@@ -392,10 +460,12 @@ const EditorPage: NextPageWithLayout = () => {
 				their sites and apps.
 			</p>
 			<p>
-				<strong>6. HOW LONG DO WE KEEP YOUR INFORMATION?</strong>
+				<strong className="dark:text-white">
+					6. HOW LONG DO WE KEEP YOUR INFORMATION?
+				</strong>
 			</p>
 			<p>
-				<strong>
+				<strong className="dark:text-white">
 					<em>In Short:</em>
 				</strong>{" "}
 				<em>
@@ -421,10 +491,12 @@ const EditorPage: NextPageWithLayout = () => {
 				processing until deletion is possible.
 			</p>
 			<p>
-				<strong>7. HOW DO WE KEEP YOUR INFORMATION SAFE?</strong>
+				<strong className="dark:text-white">
+					7. HOW DO WE KEEP YOUR INFORMATION SAFE?
+				</strong>
 			</p>
 			<p>
-				<strong>
+				<strong className="dark:text-white">
 					<em>In Short:</em>
 				</strong>{" "}
 				<em>
@@ -447,23 +519,27 @@ const EditorPage: NextPageWithLayout = () => {
 				a secure environment.
 			</p>
 			<p>
-				<strong>8. WHAT ARE YOUR PRIVACY RIGHTS?</strong>
+				<strong className="dark:text-white">
+					8. WHAT ARE YOUR PRIVACY RIGHTS?
+				</strong>
 			</p>
 			<p>
-				<strong>
+				<strong className="dark:text-white">
 					<em>In Short:</em>
 				</strong>{" "}
 				<em>You may review, change, or terminate your account at any time.</em>
 			</p>
 			<p>
-				<strong>Withdrawing your consent:</strong> If we are relying on your
-				consent to process your personal information, which may be express
-				and/or implied consent depending on the applicable law, you have the
-				right to withdraw your consent at any time. You can withdraw your
-				consent at any time by contacting us by using the contact details
-				provided in the section &quot;
-				<a href="#contact">HOW CAN YOU CONTACT US ABOUT THIS NOTICE?</a>&quot;
-				below.
+				<strong className="dark:text-white">Withdrawing your consent:</strong>{" "}
+				If we are relying on your consent to process your personal information,
+				which may be express and/or implied consent depending on the applicable
+				law, you have the right to withdraw your consent at any time. You can
+				withdraw your consent at any time by contacting us by using the contact
+				details provided in the section &quot;
+				<a href="#contact" className="dark:text-white">
+					HOW CAN YOU CONTACT US ABOUT THIS NOTICE?
+				</a>
+				&quot; below.
 			</p>
 			<p>
 				However, please note that this will not affect the lawfulness of the
@@ -472,7 +548,7 @@ const EditorPage: NextPageWithLayout = () => {
 				reliance on lawful processing grounds other than consent.
 			</p>
 			<p>
-				<strong>Account Information</strong>
+				<strong className="dark:text-white">Account Information</strong>
 			</p>
 			<p>
 				If you would at any time like to review or change the information in
@@ -489,12 +565,14 @@ const EditorPage: NextPageWithLayout = () => {
 				terms and/or comply with applicable legal requirements.
 			</p>
 			<p>
-				<strong>Cookies and similar technologies:</strong> Most Web browsers are
-				set to accept cookies by default. If you prefer, you can usually choose
-				to set your browser to remove cookies and to reject cookies. If you
-				choose to remove cookies or reject cookies, this could affect certain
-				features or services of our Services. You may also{" "}
-				<a href="http://www.aboutads.info/choices/">
+				<strong className="dark:text-white">
+					Cookies and similar technologies:
+				</strong>{" "}
+				Most Web browsers are set to accept cookies by default. If you prefer,
+				you can usually choose to set your browser to remove cookies and to
+				reject cookies. If you choose to remove cookies or reject cookies, this
+				could affect certain features or services of our Services. You may also{" "}
+				<a href="http://www.aboutads.info/choices/" className="dark:text-white">
 					opt out of interest-based advertising by advertisers
 				</a>{" "}
 				on our Services.
@@ -504,7 +582,9 @@ const EditorPage: NextPageWithLayout = () => {
 				email us at privacy@coursify.studio.
 			</p>
 			<p>
-				<strong>9. CONTROLS FOR DO-NOT-TRACK FEATURES</strong>
+				<strong className="dark:text-white">
+					9. CONTROLS FOR DO-NOT-TRACK FEATURES
+				</strong>
 			</p>
 			<p>
 				Most web browsers and some mobile operating systems and mobile
@@ -520,14 +600,14 @@ const EditorPage: NextPageWithLayout = () => {
 				notice.
 			</p>
 			<p>
-				<strong>
+				<strong className="dark:text-white">
 					10. DO CALIFORNIA RESIDENTS HAVE SPECIFIC PRIVACY RIGHTS?
 				</strong>
 			</p>
 			<p>
-				<strong>
+				<strong className="dark:text-white">
 					<em>In Short:</em>
-				</strong>{" "}
+				</strong>
 				<em>
 					Yes, if you are a resident of California, you are granted specific
 					rights regarding access to your personal information.
@@ -556,7 +636,7 @@ const EditorPage: NextPageWithLayout = () => {
 				our systems (e.g., backups, etc.).
 			</p>
 			<p>
-				<strong>CCPA Privacy Notice</strong>
+				<strong className="dark:text-white">CCPA Privacy Notice</strong>
 			</p>
 			<p>
 				The California Code of Regulations defines a &quot;resident&quot; as:
@@ -576,20 +656,22 @@ const EditorPage: NextPageWithLayout = () => {
 				information.
 			</p>
 			<p>
-				<strong>What categories of personal information do we collect?</strong>
+				<strong className="dark:text-white">
+					What categories of personal information do we collect?
+				</strong>
 			</p>
 			<p>
 				We have collected the following categories of personal information in
 				the past twelve (12) months:
 			</p>
 			<p>
-				<strong>Category</strong>
+				<strong className="dark:text-white">Category</strong>
 			</p>
 			<p>
-				<strong>Examples</strong>
+				<strong className="dark:text-white">Examples</strong>
 			</p>
 			<p>
-				<strong>Collected</strong>
+				<strong className="dark:text-white">Collected</strong>
 			</p>
 			<p>A. Identifiers</p>
 			<p>
@@ -694,7 +776,9 @@ const EditorPage: NextPageWithLayout = () => {
 				</li>
 			</ul>
 			<p>
-				<strong>How do we use and share your personal information?</strong>
+				<strong className="dark:text-white">
+					How do we use and share your personal information?
+				</strong>
 			</p>
 			<p>
 				More information about our data collection and sharing practices can be
@@ -710,7 +794,9 @@ const EditorPage: NextPageWithLayout = () => {
 				they have been validly authorized to act on your behalf.
 			</p>
 			<p>
-				<strong>Will your information be shared with anyone else?</strong>
+				<strong className="dark:text-white">
+					Will your information be shared with anyone else?
+				</strong>
 			</p>
 			<p>
 				We may disclose your personal information with our service providers
@@ -732,7 +818,9 @@ const EditorPage: NextPageWithLayout = () => {
 				future belonging to website visitors, users, and other consumers.
 			</p>
 			<p>
-				<strong>Your rights with respect to your personal data</strong>
+				<strong className="dark:text-white">
+					Your rights with respect to your personal data
+				</strong>
 			</p>
 			<p>Right to request deletion of the data — Request to delete</p>
 			<p>
@@ -862,12 +950,14 @@ const EditorPage: NextPageWithLayout = () => {
 				your data, we would like to hear from you.
 			</p>
 			<p>
-				<strong>11. DO WE MAKE UPDATES TO THIS NOTICE?</strong>
+				<strong className="dark:text-white">
+					11. DO WE MAKE UPDATES TO THIS NOTICE?
+				</strong>
 			</p>
 			<p>
 				<em>
-					<strong>In Short:</strong> Yes, we will update this notice as
-					necessary to stay compliant with relevant laws.
+					<strong className="dark:text-white">In Short:</strong> Yes, we will
+					update this notice as necessary to stay compliant with relevant laws.
 				</em>
 			</p>
 			<p>
@@ -880,14 +970,16 @@ const EditorPage: NextPageWithLayout = () => {
 				frequently to be informed of how we are protecting your information.
 			</p>
 			<p>
-				<strong>12. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?</strong>
+				<strong className="dark:text-white">
+					12. HOW CAN YOU CONTACT US ABOUT THIS NOTICE?
+				</strong>
 			</p>
 			<p>
 				If you have questions or comments about this notice, you may contact our
 				Data Protection Officer (DPO), Brandon Holland, by email at
 				brandon@coursify.studio.
 			</p>{" "}
-			<strong>
+			<strong className="dark:text-white">
 				13. HOW CAN YOU REVIEW, UPDATE, OR DELETE THE DATA WE COLLECT FROM YOU?
 			</strong>
 			<p>
@@ -904,8 +996,8 @@ const EditorPage: NextPageWithLayout = () => {
 	);
 };
 
-export default EditorPage;
+export default Privacy;
 
-EditorPage.getLayout = function getLayout(page: ReactElement) {
+Privacy.getLayout = function getLayout(page: ReactElement) {
 	return <Layout>{page}</Layout>;
 };
