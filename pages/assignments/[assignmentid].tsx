@@ -36,7 +36,10 @@ import {
 } from "react";
 import { Tab } from "@headlessui/react";
 import AssignmentGradingUI from "@/components/assignments/assignmentGrading";
-import { FileCarousel } from "@/components/files/genericFileView";
+import {
+	BetterFileCarousel,
+	FileCarousel,
+} from "@/components/files/genericFileView";
 import { CoursifyFile } from "@/components/files/genericFileUpload";
 import { ColoredPill } from "@/components/misc/pill";
 
@@ -266,7 +269,7 @@ const Post: NextPageWithLayout = () => {
 					/>
 				);
 			}
-			//console.log("wait i figuyre")
+
 			return (
 				<>
 					<div className="flex grow flex-col">
@@ -277,7 +280,7 @@ const Post: NextPageWithLayout = () => {
 							setFullscreen={setFullscreen}
 						/>
 						<section
-							className={`scrollbar-fancy relative mt-5 flex flex-1  overflow-y-auto overflow-x-hidden whitespace-pre-line md:pr-2 ${
+							className={`scrollbar-fancy relative mt-5 flex flex-1 overflow-x-hidden whitespace-pre-line md:pr-2 ${
 								assignment.data.type == AssignmentTypes.DISCUSSION_POST
 									? "flex-col"
 									: "flex-col-reverse xl:flex-row"
@@ -291,29 +294,36 @@ const Post: NextPageWithLayout = () => {
 								}`}
 							>
 								<h2 className="text-xl font-semibold">Details</h2>
-								{assignment.data.content &&
-								(assignment.data.content as unknown as SerializedEditorState) // @ts-expect-error lexical/bad-types
-									.root.children[0].children.length != 0 ? (
-									<Editor
-										editable={false}
-										initialState={assignment.data.content}
-										className=" scrollbar-fancy mb-5 mt-2 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-5"
-										focus={false}
-									/>
-								) : assignment.data.files ? (
-									<div className="rounded-xl bg-gray-200 p-4">
-										<FileCarousel
-											files={assignment.data.files as unknown as CoursifyFile[]}
-										/>
+								{(assignment.data.content &&
+									(assignment.data.content as unknown as SerializedEditorState) // @ts-expect-error lexical/bad-types
+										.root.children[0].children.length) ||
+								assignment.data.files ? (
+									<div className="mb-5 mt-2 flex grow flex-col gap-4">
+										{assignment.data.content &&
+											(assignment.data.content as any).root.children[0].children
+												.length != 0 && (
+												<Editor
+													editable={false}
+													initialState={assignment.data.content}
+													className="rounded-xl bg-gray-200 p-5"
+													focus={false}
+												/>
+											)}
+										{assignment.data.files && (
+											<BetterFileCarousel
+												allFiles={
+													assignment.data.files as unknown as CoursifyFile[]
+												}
+											/>
+										)}
 									</div>
 								) : (
-									<>
-										<div className="mb-5 mt-2 grid grow place-items-center rounded-xl bg-gray-200 p-5 text-lg font-medium">
-											No assignment details
-										</div>
-									</>
+									<div className="mb-5 mt-2 grid grow place-items-center rounded-xl bg-gray-200 p-5 text-lg font-medium">
+										No assignment details
+									</div>
 								)}
 							</div>
+							{/* Submission side panel */}
 							{assignment.data.type != AssignmentTypes.DISCUSSION_POST ? (
 								<div
 									className={`sticky mb-7 flex shrink-0 flex-col space-y-4 xl:top-0 xl:mb-0 xl:ml-4 xl:w-72 `}
