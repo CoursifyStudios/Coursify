@@ -19,11 +19,10 @@ import { useCookies } from "react-cookie";
 
 const Onboarding = () => {
 	const user = useUser();
-	const [contactOpen, setContactOpen] = useState(false);
-	const [cookies, setCookie, removeCookie] = useCookies(["onboarding"]);
+	const [cookies, setCookie, removeCookie] = useCookies(["onboardingState"]);
 
 	const logOut = async () => {
-		removeCookie("onboarding");
+		removeCookie("onboardingState");
 		await supabase.auth.signOut();
 		router.reload();
 	};
@@ -60,31 +59,6 @@ const Onboarding = () => {
 					>
 						Log Out
 					</Button>
-					<p
-						className="text-center  font-semibold text-sm mt-4 hover:underline select-none cursor-pointer"
-						onClick={() => setContactOpen(true)}
-					>
-						I{"'"}d like to create a new school
-						<Popup closeMenu={() => setContactOpen(false)} open={contactOpen}>
-							<h3 className="title-sm mb-4">Contact</h3>
-							<p>
-								Coursify LMS is currently in a technical preview. If you{"'"}re
-								an administrator interested in using Coursify, please reach out
-								to our support team at{" "}
-								<Link
-									href="mailto:support@coursify.freshdesk.com"
-									target="_blank"
-								>
-									support@coursify.freshdesk.com
-								</Link>
-								. If you would like demo the platform,{" "}
-								<Link href={"/demo"} className="text-blue-500">
-									click here
-								</Link>
-								.
-							</p>
-						</Popup>
-					</p>
 				</div>
 				{/* <div className="flex flex-col items-center ">
 					<Button className="onboardingButton mt-8">I{"'"}m a parent</Button>
@@ -98,7 +72,32 @@ const Onboarding = () => {
 							this may have caused.{" "}
 						</p>
 					</Popup>
-				</div> */}
+				</div> */}{" "}
+				{/* 				<p
+					className="text-center  text-sm mt-6 hover:underline select-none cursor-pointer"
+					onClick={() => setContactOpen(true)}
+				>
+					I{"'"}d like to create a new school
+					<Popup closeMenu={() => setContactOpen(false)} open={contactOpen}>
+						<h3 className="title-sm mb-4">Contact</h3>
+						<p>
+							Coursify LMS is currently in a technical preview. If you{"'"}re an
+							administrator interested in using Coursify, please reach out to
+							our support team at{" "}
+							<Link
+								href="mailto:support@coursify.freshdesk.com"
+								target="_blank"
+							>
+								support@coursify.freshdesk.com
+							</Link>
+							. If you would like demo the platform,{" "}
+							<Link href={"/demo"} className="text-blue-500">
+								click here
+							</Link>
+							.
+						</p>
+					</Popup>
+				</p> */}
 			</div>
 		</>
 	);
