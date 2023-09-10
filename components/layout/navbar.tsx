@@ -36,8 +36,29 @@ const Navbar: NextComponentType = () => {
 				full_name: "Coursify Demo User",
 		  }
 		: user?.user_metadata ?? {};
+	const [username, setUsername] = useState<string>();
+	const [fullname, setFullName] = useState<string>();
 
 	useEffect(() => setHydrated(true), []);
+
+	useEffect(() => {
+		if (username != undefined && fullname != undefined) return;
+		if (user?.id == undefined) return;
+		(async () => {
+			const { data } = await supabase
+				.from("users")
+				.select("full_name")
+				.eq("id", user.id)
+				.single();
+
+			if (data == undefined) {
+				// Some sort of weird edge case that should never happen - Bloxs
+				return;
+			}
+			setUsername(data.full_name);
+			setFullName(data.full_name);
+		})();
+	}, [username, fullname, supabase, user?.id]);
 
 	const logOut = async () => {
 		removeCookie("onboardingState");
@@ -105,13 +126,13 @@ const Navbar: NextComponentType = () => {
 										onClick={() =>
 											newTab(
 												"/profile/1e5024f5-d493-4e32-9822-87f080ad5516",
-												`${userMetadata.name}'s Profile`
+												`${username ?? userMetadata.name}'s Profile`
 											)
 										}
 									>
 										<Menu.Item as="div" className="mx-2 flex flex-col">
 											<h3 className="line-clamp-2 font-medium">
-												{userMetadata.full_name}
+												{fullname ?? userMetadata.full_name}
 											</h3>
 											<p className="truncate text-xs">{userMetadata.email}</p>
 										</Menu.Item>
@@ -122,7 +143,7 @@ const Navbar: NextComponentType = () => {
 										onClick={() =>
 											newTab(
 												`/profile/${user?.id}`,
-												`${userMetadata.name}'s Profile`
+												`${username ?? userMetadata.name}'s Profile`
 											)
 										}
 									>
