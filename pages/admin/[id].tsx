@@ -51,7 +51,7 @@ import noData from "@/public/svgs/no-data.svg";
 import { Button, ButtonIcon } from "@/components/misc/button";
 import Dropdown from "@/components/misc/dropdown";
 import Betatag from "@/components/misc/betatag";
-import { ExportToCsv, download, generateCsv } from "export-to-csv";
+import { download, generateCsv } from "export-to-csv";
 import Loading, { LoadingSmall } from "@/components/misc/loading";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
