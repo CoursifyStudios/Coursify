@@ -22,8 +22,18 @@ const Onboarding = () => {
 	const [cookies, setCookie, removeCookie] = useCookies(["onboardingState"]);
 
 	const logOut = async () => {
-		removeCookie("onboardingState");
-		await supabase.auth.signOut();
+		const cookiesToDelete = document.cookie
+			.split(";")
+			.map((c) => c.trim().split("=")[0]);
+
+		// Fuck manipulating cookies
+		// all my homies hate cookies
+		// That's why we should use Fresh :trojker: - Bloxs
+		for (const cookie of cookiesToDelete) {
+			document.cookie = `${cookie}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+			document.cookie = `${cookie}=; expires=Thu, 01 Jan 1970 00:00:00 UTC;`;
+		}
+
 		router.reload();
 	};
 
