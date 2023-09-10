@@ -148,7 +148,7 @@ export const updateUser = async (
 ) => {
 	return await supabase
 		.from("users")
-		.update({ [modify]: content })
+		.update({ [modify]: content || null })
 		.eq("id", id);
 };
 
@@ -164,7 +164,7 @@ export const updateClass = async (
 			[modify]:
 				modify == "block" || modify == "schedule_type"
 					? parseInt(content)
-					: content,
+					: content || null,
 		})
 		.eq("id", id);
 };
