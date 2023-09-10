@@ -7,7 +7,12 @@ import { useAssignmentStore } from ".";
 import Editor from "@/components/editors/richeditor";
 import { Button } from "@/components/misc/button";
 import { Info } from "@/components/tooltips/info";
-import { NewAssignmentData } from "@/lib/db/assignments/assignments";
+import {
+	AssignmentTypes,
+	NewAssignmentData,
+	TeacherAssignment,
+	TeacherAssignmentResponse,
+} from "@/lib/db/assignments/assignments";
 import { submissionType } from "./submissionType";
 import GenericFileUpload, {
 	CoursifyFile,
@@ -17,11 +22,21 @@ import { Json } from "@/lib/db/database.types";
 export default function AssignmentDetails({
 	stage,
 	setStage,
+	customAssignment,
+	save,
 }: {
 	stage: number;
-	setStage: Dispatch<SetStateAction<number>>;
+	setStage?: Dispatch<SetStateAction<number>>;
+	save?: (assignment: AssignmentSaveData) => void;
+	customAssignment?: TeacherAssignmentResponse["data"];
 }) {
-	const [files, setFiles] = useState<CoursifyFile[]>([]);
+	const [files, setFiles] = useState<CoursifyFile[]>(
+		customAssignment
+			? customAssignment.files
+				? (customAssignment.files as unknown as CoursifyFile[])
+				: []
+			: []
+	);
 	const [editorState, setEditorState] = useState<EditorState>();
 	const { data: assignmentData, set: setAssignmentData } = useAssignmentStore();
 
@@ -29,31 +44,55 @@ export default function AssignmentDetails({
 
 	return (
 		<>
-			<h2 className="mt-6 text-xl font-bold">
-				Create Assignment -{" "}
-				{
-					submissionType.find(
-						(submission) => submission.type == assignmentData?.type
-					)?.name
-				}
-			</h2>
+			{setStage && (
+				<h2 className="mt-6 text-xl font-bold">
+					Create Assignment -{" "}
+					{
+						submissionType.find(
+							(submission) => submission.type == assignmentData?.type
+						)?.name
+					}
+				</h2>
+			)}
 			<Formik
 				validationSchema={Yup.object({
 					name: Yup.string().min(3).max(40).required(),
 					description: Yup.string().min(3).max(60).required(),
-					submissionType: Yup.string().min(3).max(100),
+					submissionInstructions: Yup.string().min(3).max(100),
 					maxGrade: Yup.number().min(0, "Grade cannot be negative"),
 				})}
 				initialValues={{
-					name: assignmentData?.name || "",
-					description: assignmentData?.description || "",
-					submissionInstructions: assignmentData?.submissionInstructions || "",
-					maxGrade: assignmentData?.maxGrade || undefined,
+					name: customAssignment?.name || assignmentData?.name || "",
+					description:
+						customAssignment?.description || assignmentData?.description || "",
+					submissionInstructions:
+						customAssignment?.submission_instructions ||
+						assignmentData?.submissionInstructions ||
+						"",
+					maxGrade:
+						customAssignment?.max_grade ||
+						assignmentData?.maxGrade ||
+						undefined,
 				}}
 				onSubmit={(values) => {
+					const serializedEditor = editorState?.toJSON();
+					if (save) {
+						save({
+							...values,
+							content: (JSON.stringify(serializedEditor) ==
+							JSON.stringify(defaultEditorState)
+								? undefined
+								: serializedEditor) as unknown as Json,
+							files,
+						});
+					}
 					setAssignmentData({
 						...values,
-						content: editorState?.toJSON(),
+						content:
+							JSON.stringify(serializedEditor) ==
+							JSON.stringify(defaultEditorState)
+								? undefined
+								: serializedEditor,
 						files: files,
 					} as NewAssignmentData);
 				}}
@@ -126,8 +165,10 @@ export default function AssignmentDetails({
 						<Editor
 							editable
 							updateState={setEditorState}
-							initialState={assignmentData?.content}
-							className="scrollbar-fancy mb-6 max-h-[30vh] min-h-[6rem] overflow-y-auto overflow-x-hidden rounded-md border border-gray-300 bg-backdrop/50 pb-2 focus:ring-1"
+							initialState={
+								customAssignment?.content || assignmentData?.content
+							}
+							className="scrollbar-fancy mb-6 rounded-md border border-gray-300 bg-backdrop/50 pb-2 focus:ring-1 min-h-[6rem] "
 							focus={false}
 						/>
 						<GenericFileUpload
@@ -135,35 +176,81 @@ export default function AssignmentDetails({
 							setFiles={setFiles}
 							destination={"assignments"}
 						/>
-						<div className="ml-auto flex space-x-4">
-							<span onClick={() => setStage((stage) => stage - 1)}>
-								<Button>Back</Button>
-							</span>
-
-							<span
-								onClick={() => {
-									submitForm();
-									setStage((stage) => stage + 1);
-								}}
+						{!setStage ? (
+							<Button
+								type="submit"
+								color="bg-blue-500"
+								className="text-white ml-auto"
+								disabled={
+									!(
+										Object.keys(errors).length == 0 &&
+										values.name &&
+										values.description
+									)
+								}
 							>
-								<Button
-									color="bg-blue-500"
-									className="text-white "
-									disabled={
-										!(
-											Object.keys(errors).length == 0 &&
-											values.name &&
-											values.description
-										)
-									}
+								Save
+							</Button>
+						) : (
+							<div className="ml-auto flex space-x-4">
+								<span onClick={() => setStage((stage) => stage - 1)}>
+									<Button>Back</Button>
+								</span>
+
+								<span
+									onClick={() => {
+										submitForm();
+										setStage((stage) => stage + 1);
+									}}
 								>
-									Next
-								</Button>
-							</span>
-						</div>
+									<Button
+										color="bg-blue-500"
+										className="text-white "
+										disabled={
+											!(
+												Object.keys(errors).length == 0 &&
+												values.name &&
+												values.description
+											)
+										}
+									>
+										Next
+									</Button>
+								</span>
+							</div>
+						)}
 					</Form>
 				)}
 			</Formik>
 		</>
 	);
 }
+
+export interface AssignmentSaveData {
+	name: string;
+	description: string;
+	submissionInstructions: string;
+	maxGrade: number | undefined;
+	content: Json;
+	files: CoursifyFile[];
+}
+
+export const defaultEditorState = {
+	root: {
+		children: [
+			{
+				children: [],
+				direction: null,
+				format: "",
+				indent: 0,
+				type: "paragraph",
+				version: 1,
+			},
+		],
+		direction: null,
+		format: "",
+		indent: 0,
+		type: "root",
+		version: 1,
+	},
+};

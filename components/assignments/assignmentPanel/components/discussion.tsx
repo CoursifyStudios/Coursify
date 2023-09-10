@@ -228,12 +228,14 @@ const Discussion: NextPage<{
 				backdrop={false}
 				toolbarClassName="bg-backdrop"
 				focus={true}
-				updateState={(state: EditorState) =>
-					setSubmission({
-						assignmentType: AssignmentTypes.TEXT,
-						content: state.toJSON(),
-					})
-				}
+				updateState={(state: EditorState | undefined) => {
+					if (state != undefined) {
+						setSubmission({
+							assignmentType: AssignmentTypes.TEXT,
+							content: state.toJSON(),
+						});
+					}
+				}}
 				clearEditor={clearEditor}
 				updateRaw={setRawSubmission}
 				className=" border-gray-300 mt-4 mb-2 rounded-xl p-4 shadow-lg dark:border"

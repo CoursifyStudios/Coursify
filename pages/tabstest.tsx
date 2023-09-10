@@ -1,7 +1,7 @@
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { NextPage } from "next";
 import { useTabs } from "../lib/tabs/handleTabs";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { NextPageWithLayout } from "./_app";
 import Layout from "@/components/layout/layout";
 import { ReactElement } from "react";
@@ -9,17 +9,11 @@ import { ReactElement } from "react";
 const Settings: NextPageWithLayout = () => {
 	const tabs = useTabs((state) => state.tabs);
 	const supabase = useSupabaseClient();
+	const [test, setTest] = useState(false);
 
 	useEffect(() => {
-		(async () => {
-			await supabase
-				.from("test1")
-				.update({
-					test: crypto.randomUUID(),
-				})
-				.eq("id", 1);
-		})();
-	}, [supabase]);
+		//console.log("rerender")
+	});
 
 	return (
 		<div className=" flex flex-col items-start">
@@ -33,6 +27,7 @@ const Settings: NextPageWithLayout = () => {
 			>
 				PRESS ME{" "}
 			</button>
+			<Testing test={test} setTest={setTest} />
 		</div>
 	);
 };
@@ -42,3 +37,13 @@ export default Settings;
 Settings.getLayout = function getLayout(page: ReactElement) {
 	return <Layout>{page}</Layout>;
 };
+
+function Testing({
+	setTest,
+	test,
+}: {
+	test: boolean;
+	setTest: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+	return <div onClick={() => setTest(true)}>click {test && "among"}</div>;
+}

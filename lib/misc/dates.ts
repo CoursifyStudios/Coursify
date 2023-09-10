@@ -4,6 +4,7 @@ export const formatDate = (date: Date) => {
 		day: "numeric",
 		year: "numeric",
 		hour: "numeric",
+		minute: "numeric",
 	}).format(date);
 };
 
