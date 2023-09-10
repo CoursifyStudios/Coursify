@@ -3,15 +3,17 @@ import { ColoredPill, CopiedHover } from "@/components/misc/pill";
 import {
 	ArrowsPointingInIcon,
 	ArrowsPointingOutIcon,
+	CalendarDaysIcon,
+	ChevronDownIcon,
 	ChevronLeftIcon,
-	CogIcon,
+	Cog6ToothIcon,
 	LinkIcon,
-	PencilIcon,
+	PencilSquareIcon,
 	TrashIcon,
 } from "@heroicons/react/24/outline";
 import { NextPage } from "next";
 import Link from "next/link";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, ReactNode, SetStateAction, useMemo } from "react";
 import { submissionType } from "../assignmentCreation/submissionType";
 import {
 	StudentAssignmentResponse,
@@ -19,8 +21,14 @@ import {
 } from "@/lib/db/assignments/assignments";
 import MenuSelect from "@/components/misc/menu";
 import Loading from "@/components/misc/loading";
+import dynamic from "next/dynamic";
+import { formatDate } from "@/lib/misc/dates";
+
+const Editor = dynamic(() => import("../../editors/richeditor"));
 
 const AssignmentHeader: NextPage<{
+	setEditOpen?: Dispatch<SetStateAction<boolean>>;
+	setDatesOpen?: Dispatch<SetStateAction<boolean>>;
 	loading?: boolean;
 	error?: string;
 	assignment: StudentAssignmentResponse | TeacherAssignmentResponse;
@@ -28,6 +36,8 @@ const AssignmentHeader: NextPage<{
 	setFullscreen: Dispatch<SetStateAction<boolean>>;
 	teacher?: boolean;
 	deleteAssignment?: () => void;
+	hideAssignment?: MenuElement;
+	publishAssignment?: MenuElement;
 }> = ({
 	assignment,
 	fullscreen,
@@ -36,6 +46,10 @@ const AssignmentHeader: NextPage<{
 	deleteAssignment,
 	error,
 	loading = false,
+	setDatesOpen,
+	setEditOpen,
+	hideAssignment,
+	publishAssignment,
 }) => {
 	if (!assignment.data) return null;
 
@@ -56,7 +70,7 @@ const AssignmentHeader: NextPage<{
 					/>
 				</Link>
 				<div className="flex gap-2  items-center">
-					<div className="flex justify-between gap-3 items-center">
+					<div className="flex justify-between gap-3 items-center ">
 						<Link
 							href={
 								"/classes/" +
@@ -74,6 +88,7 @@ const AssignmentHeader: NextPage<{
 										: "blue"
 								}
 								hoverState
+								className="max-w-[15rem] truncate"
 							>
 								{assignment.data.classes
 									? Array.isArray(assignment.data.classes)
@@ -86,24 +101,51 @@ const AssignmentHeader: NextPage<{
 							{type.icon}
 							{type.name}
 						</ColoredPill>
+						{teacher && (
+							<ColoredPill color="gray" className="flex gap-2">
+								{assignment.data.hidden
+									? "Hidden from students"
+									: new Date(assignment.data.publish_date!).getTime() >
+									  new Date().getTime()
+									? `Publishes on ${formatDate(
+											new Date(assignment.data.publish_date)
+									  )}`
+									: assignment.data.due_date
+									? `Due ${formatDate(new Date(assignment.data.due_date))}`
+									: `Published on ${formatDate(
+											new Date(assignment.data.publish_date)
+									  )}`}
+							</ColoredPill>
+						)}
 					</div>
 					<div className="ml-auto flex items-center">
 						{loading && <Loading />}
 						{error && <p className="text-red-500">Error: {error}</p>}
 					</div>
 					<div className="flex md:space-x-4">
-						{teacher && (
+						{teacher && setEditOpen && setDatesOpen && hideAssignment && (
 							<MenuSelect
 								items={[
-									// {
-									// 	content: (
-									// 		<>
-									// 			Edit
-									// 			<PencilIcon className="w-5 h-5 ml-auto"/>
-									// 		</>
-									// 	),
-
-									// },
+									{
+										content: (
+											<>
+												Edit
+												<PencilSquareIcon className="w-5 h-5 ml-auto" />
+											</>
+										),
+										onClick: () => setEditOpen(true),
+									},
+									{
+										content: (
+											<>
+												Update Dates
+												<CalendarDaysIcon className="w-5 h-5 ml-auto" />
+											</>
+										),
+										onClick: () => setDatesOpen(true),
+									},
+									hideAssignment,
+									publishAssignment,
 									{
 										content: (
 											<>
@@ -116,7 +158,7 @@ const AssignmentHeader: NextPage<{
 									},
 								]}
 							>
-								<ButtonIcon icon={<CogIcon className="h-5 w-5" />} />
+								<ButtonIcon icon={<Cog6ToothIcon className="h-5 w-5" />} />
 							</MenuSelect>
 						)}
 						<CopiedHover copy={window.location.href}>
@@ -136,11 +178,26 @@ const AssignmentHeader: NextPage<{
 						</div>
 					</div>
 				</div>
-				<div className="mt-4 rounded-xl bg-gray-200 p-4">
-					<h1 className="title mb-2 line-clamp-2">{assignment.data.name}</h1>
-					<p className="line-clamp-2 text-gray-700">
+				<div className="mt-4 rounded-xl bg-gray-200 p-4 ">
+					<h1 className="title mb-0.5 line-clamp-2">{assignment.data.name}</h1>
+					<p className="truncate text-gray-700 text-sm">
 						{assignment.data.description}
 					</p>
+					{assignment.data.content && teacher && (
+						<button className="group w-full relative p-1">
+							<div className="inset-0 absolute bg-gradient-to-b from-transparent to-gray-200 z-20 flex flex-col justify-end font-medium items-center backdrop-blur-[2px] group-focus:hidden">
+								Tap to see assignment details
+								<ChevronDownIcon className="w-5 h-5" />
+							</div>
+							<div className="overflow-hidden max-h-10 group-focus:max-h-none">
+								<Editor
+									editable={false}
+									initialState={assignment.data.content}
+									className="border border-gray-300 group-focus:border-transparent rounded-xl px-1"
+								/>
+							</div>
+						</button>
+					)}
 				</div>
 			</div>
 		</section>
@@ -148,3 +205,12 @@ const AssignmentHeader: NextPage<{
 };
 
 export default AssignmentHeader;
+
+type MenuElement =
+	| {
+			content: ReactNode;
+			onClick?: (() => void) | undefined;
+			link?: string | undefined;
+			className?: string | undefined;
+	  }
+	| undefined;

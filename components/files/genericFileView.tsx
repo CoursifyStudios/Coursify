@@ -4,6 +4,7 @@ import { CoursifyFile } from "./genericFileUpload";
 import { DocumentIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { DownloadableFile } from "./downloadableFile";
 import { ImagePreview } from "./imagePreview";
+import { Media } from "../assignments/assignmentGrading/components/media";
 
 export const viewableFileExtensions = [
 	"png",
@@ -66,21 +67,61 @@ export const FileCarousel = ({ files }: { files: CoursifyFile[] }) => {
 		<>
 			<div className=" mb-2">
 				{files?.map(
-					(file, index) =>
+					(file, i) =>
 						file &&
 						!viewableFileExtensions.includes(
 							file.name?.split(".").pop() || ""
-						) && <DownloadableFile key={index} file={file} />
+						) && <DownloadableFile key={i} file={file} />
 				)}
 			</div>
 			<div className="flex gap-4 overflow-x-auto">
 				{files?.map(
-					(file, index) =>
+					(file, i) =>
 						file &&
 						viewableFileExtensions.includes(
 							file.name?.split(".").pop() || ""
-						) && <ImagePreview key={index} file={file} />
+						) && <ImagePreview key={i} file={file} />
 				)}
+			</div>
+		</>
+	);
+};
+
+export const BetterFileCarousel = ({
+	allFiles,
+}: {
+	allFiles: CoursifyFile[];
+}) => {
+	const files = allFiles.filter(
+		(file) => !viewableFileExtensions.includes(file.name.split(".").pop()!)
+	);
+	const media = allFiles.filter((file) =>
+		viewableFileExtensions.includes(file.name.split(".").pop()!)
+	);
+	return (
+		<>
+			<div className="grid grid-cols-2 gap-4 h-max">
+				{media.map((file, i) => (
+					<Media
+						key={i}
+						media={{
+							fileName: file.dbName,
+							realName: file.name,
+							link: file.link,
+							size: file.size,
+						}}
+						tall={false}
+					/>
+				))}
+			</div>
+			<div className="grid grid-cols-2 gap-4 h-max">
+				{files.map((file, i) => (
+					<DownloadableFile
+						key={i}
+						file={file}
+						className="!bg-backdrop-200 brightness-hover"
+					/>
+				))}
 			</div>
 		</>
 	);

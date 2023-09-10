@@ -51,7 +51,7 @@ import noData from "@/public/svgs/no-data.svg";
 import { Button, ButtonIcon } from "@/components/misc/button";
 import Dropdown from "@/components/misc/dropdown";
 import Betatag from "@/components/misc/betatag";
-import { ExportToCsv } from "export-to-csv";
+import { download, generateCsv } from "export-to-csv";
 import Loading, { LoadingSmall } from "@/components/misc/loading";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
@@ -717,7 +717,7 @@ Activities	The user's activities, as displayed on their profile
 				useKeysAsHeaders: true,
 				filename: "exported_coursify_user_data",
 			};
-			new ExportToCsv(options).generateCsv(data);
+			download(options)(generateCsv(options)(data));
 			//blunder
 		} else if ((classes ?? false) && classes && tab == 1) {
 			const data = classes
@@ -742,7 +742,7 @@ Activities	The user's activities, as displayed on their profile
 				useKeysAsHeaders: true,
 				filename: "exported_coursify_class_data",
 			};
-			new ExportToCsv(options).generateCsv(data);
+			download(options)(generateCsv(options)(data));
 		}
 		newNotification("Downloaded selected row(s)");
 	};
