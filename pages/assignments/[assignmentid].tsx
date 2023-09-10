@@ -300,7 +300,8 @@ const Post: NextPageWithLayout = () => {
 								assignment.data.files ? (
 									<div className="mb-5 mt-2 flex grow flex-col gap-4">
 										{assignment.data.content &&
-											(assignment.data.content as any).root.children[0].children
+											// @ts-expect-error
+											assignment.data.content.root.children[0].children
 												.length != 0 && (
 												<Editor
 													editable={false}
