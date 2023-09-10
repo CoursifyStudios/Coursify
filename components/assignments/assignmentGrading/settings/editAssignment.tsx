@@ -38,7 +38,7 @@ const EditAssignment = ({
 		const { error } = await supabase
 			.from("assignments")
 			.update({ settings: settings as unknown as Json })
-			.eq("id", assignment.data?.id);
+			.eq("id", assignment.data?.id ?? "");
 
 		if (error) {
 			setError(error.message);
@@ -111,7 +111,7 @@ const EditAssignment = ({
 							...(updatedDetails ? { content } : {}),
 							files,
 						})
-						.eq("id", assignment.data?.id),
+						.eq("id", assignment.data?.id ?? ""),
 				] as unknown as Promise<Partial<{ error: unknown }>>[]
 			)
 				.concat(
