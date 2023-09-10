@@ -64,6 +64,7 @@ const EditAssignment = ({
 			submissionInstructions: _,
 			content: content,
 			files: f,
+			maxGrade,
 			...scopedAssignment
 		} = assign;
 
@@ -109,6 +110,7 @@ const EditAssignment = ({
 							...scopedAssignment,
 							submission_instructions: assign.submissionInstructions || null,
 							...(updatedDetails ? { content } : {}),
+							max_grade: maxGrade ?? null,
 							files,
 						})
 						.eq("id", assignment.data?.id ?? ""),
@@ -150,6 +152,7 @@ const EditAssignment = ({
 						...scopedAssignment,
 						submission_instructions: assign.submissionInstructions || null,
 						files: files as unknown as Json[],
+						max_grade: maxGrade ?? null,
 						content,
 					},
 				};
