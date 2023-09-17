@@ -132,7 +132,6 @@ const Home = () => {
 							<HomepageClassesUI
 								classes={classes}
 								loading={loading}
-								schedules={schedules.map((schedule) => schedule.schedule)}
 								userID={user.id}
 							/>
 						</section>

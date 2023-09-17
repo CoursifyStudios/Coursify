@@ -7,6 +7,7 @@ import {
 } from "../../lib/db/schedule";
 import { ColoredPill } from "../misc/pill";
 import { useSettings } from "@/lib/stores/settings";
+import { useTabs } from "@/lib/tabs/handleTabs";
 
 export default function ScheduleComponent({
 	schedule,
@@ -18,6 +19,7 @@ export default function ScheduleComponent({
 	loading: boolean;
 }) {
 	const { data: settings } = useSettings();
+	const { newTab } = useTabs();
 
 	if (!(schedule && classes) && loading) {
 		return (
@@ -61,6 +63,15 @@ export default function ScheduleComponent({
 												  checkClassMatchesSchedule(item).class!.id
 												: "") //link to the correct class
 										}
+										onClick={() => {
+											newTab(
+												"/classes/" +
+													//@ts-expect-error
+													checkClassMatchesSchedule(item).class!.id,
+												//@ts-expect-error I hate this
+												checkClassMatchesSchedule(item).class!.name
+											);
+										}}
 									>
 										{
 											classes.find(
@@ -120,7 +131,8 @@ export default function ScheduleComponent({
 	function checkClassMatchesSchedule(scheduleItem: ScheduleInterface) {
 		return (
 			Array.isArray(classes) &&
-			classes?.find(
+			classes &&
+			classes.find(
 				(v) =>
 					v.class!.block == scheduleItem.block &&
 					v.class!.schedule_type == scheduleItem.type

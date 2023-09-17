@@ -51,7 +51,7 @@ import noData from "@/public/svgs/no-data.svg";
 import { Button, ButtonIcon } from "@/components/misc/button";
 import Dropdown from "@/components/misc/dropdown";
 import Betatag from "@/components/misc/betatag";
-import { ExportToCsv } from "export-to-csv";
+import { download, generateCsv } from "export-to-csv";
 import Loading, { LoadingSmall } from "@/components/misc/loading";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import * as Yup from "yup";
@@ -63,6 +63,7 @@ import { getBulkUserData, getUserData } from "@/lib/db/settings";
 import { Toggle } from "@/components/misc/toggle";
 import MenuSelect from "@/components/misc/menu";
 import Avatar from "@/components/misc/avatar";
+import { useTabs } from "@/lib/tabs/handleTabs";
 
 /**
  * This file is not intended for long term use.
@@ -117,6 +118,7 @@ const Admin: NextPageWithLayout = () => {
 	const router = useRouter();
 	const { id } = router.query;
 	const user = useUser();
+	const { newTab } = useTabs();
 	const [query, setQuery] = useState("");
 	const [uploadOpen, setUploadOpen] = useState(false);
 	const [hovering, setHovering] = useState(false);
@@ -566,9 +568,7 @@ Activities	The user's activities, as displayed on their profile
 	};
 
 	const newNotification = (name: string) => {
-		setNotifications((v) =>
-			v.concat([{ name, expireAt: Date.now() + 100000 }])
-		);
+		setNotifications((v) => v.concat([{ name, expireAt: Date.now() + 5000 }]));
 	};
 
 	const copyID = async () => {
@@ -717,7 +717,7 @@ Activities	The user's activities, as displayed on their profile
 				useKeysAsHeaders: true,
 				filename: "exported_coursify_user_data",
 			};
-			new ExportToCsv(options).generateCsv(data);
+			download(options)(generateCsv(options)(data));
 			//blunder
 		} else if ((classes ?? false) && classes && tab == 1) {
 			const data = classes
@@ -742,7 +742,7 @@ Activities	The user's activities, as displayed on their profile
 				useKeysAsHeaders: true,
 				filename: "exported_coursify_class_data",
 			};
-			new ExportToCsv(options).generateCsv(data);
+			download(options)(generateCsv(options)(data));
 		}
 		newNotification("Downloaded selected row(s)");
 	};
@@ -1019,10 +1019,10 @@ Activities	The user's activities, as displayed on their profile
 	return (
 		<div className="mx-auto my-10 flex w-full max-w-screen-xl flex-col px-4">
 			<h1 className="title">Admin Dashboard - {name}</h1>
-			<div className="fixed bottom-4 right-4">
+			<div className="fixed bottom-4 right-4 z-20">
 				{notifications.map((v) => (
 					<p
-						className="px-4 py-2 bg-blue-500 mt-2 rounded-xl font-medium transition-opacity"
+						className="px-4 py-2 bg-blue-500/75 backdrop-blur mt-2 rounded-xl font-medium transition-opacity"
 						key={v.expireAt}
 					>
 						{v.name}
@@ -1085,6 +1085,8 @@ Activities	The user's activities, as displayed on their profile
 						className={`flex cursor-pointer items-center rounded-lg border px-2.5 py-0.5 focus:outline-none
 									 border-transparent bg-gray-200
 								 text-lg font-semibold `}
+						//the schedule editor is its own page
+						onClick={() => newTab("/schedule-editor", "Schedule Editor")}
 					>
 						Schedule Editor
 					</Link>
