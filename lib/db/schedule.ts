@@ -199,3 +199,27 @@ export const getSchedulesForXDays = async (
 };
 
 export type ManySchedules = Awaited<ReturnType<typeof getSchedulesForXDays>>;
+
+export const getXSchedulesPastToday = async (
+	supabase: SupabaseClient<Database>,
+	startDate: Date,
+	numSchedules: number
+) => {
+	return await supabase
+		.from("days_schedule")
+		.select(
+			`
+		date,
+		schedule_items,
+		schedule_templates (
+			*
+		)
+		`
+		)
+		.gte("date", startDate.toLocaleDateString("en-CA").slice(0, 10))
+		.limit(numSchedules);
+};
+
+export type XSchedulesPastToday = Awaited<
+	ReturnType<typeof getXSchedulesPastToday>
+>;

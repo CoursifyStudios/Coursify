@@ -5,13 +5,9 @@ import HomepageClassesUI from "../components/class/homepage";
 //import { sortClasses } from "../components/class/sorting";
 import { AssignmentPreview } from "../components/assignments/assignments";
 import ScheduleComponent from "../components/complete/schedule";
-import {
-	AllClasses,
-	AllClassesResponse,
-	getAllClasses,
-} from "../lib/db/classes";
+import { AllClasses, getAllClasses } from "../lib/db/classes";
 import { Database } from "../lib/db/database.types";
-import { ScheduleInterface, getSchedulesForXDays } from "../lib/db/schedule";
+import { ScheduleInterface, getXSchedulesPastToday } from "../lib/db/schedule";
 import { useSettings } from "../lib/stores/settings";
 import blankCanvas from "@/public/svgs/blank-canvas.svg";
 import Layout from "@/components/layout/layout";
@@ -71,7 +67,7 @@ const Home = () => {
 					getAllClasses(supabaseClient, user.id),
 					// read comment in above useEffect as to why I'm fetching 3 dates -Lukas
 					// I'm going to fetch like 5 because weekends or some excuse - Bill
-					getSchedulesForXDays(supabaseClient, new Date(), 1),
+					getXSchedulesPastToday(supabaseClient, new Date(), 2),
 				]);
 
 				if (classes.data && classes.data[0]) {
