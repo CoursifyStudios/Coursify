@@ -21,12 +21,17 @@ const Home = () => {
 	const [schedules, setSchedules] = useState<
 		{ schedule: ScheduleInterface[]; date: Date }[]
 	>([]);
-	const dateFormat = new Intl.DateTimeFormat("en-US", {
-		weekday: "long",
-		month: "long",
-		day: "numeric",
-		timeZone: "Europe/London",
-	});
+	const dateFormat = {
+		weekday: new Intl.DateTimeFormat("en-US", {
+			weekday: "long",
+			timeZone: "Europe/London",
+		}),
+		monthDay: new Intl.DateTimeFormat("en-US", {
+			month: "long",
+			day: "numeric",
+			timeZone: "Europe/London",
+		}),
+	};
 
 	useEffect(() => {
 		const [classes, schedule] = [
@@ -139,8 +144,11 @@ const Home = () => {
 							{schedules.map((schedule, index) => (
 								<div key={index} className="w-full md:mr-4 lg:mr-0">
 									<h2 className="title mr-2">
-										{dateFormat.format(schedule.date)}
+										{dateFormat.weekday.format(schedule.date)}
 									</h2>
+									<p className="-my-1">
+										{dateFormat.monthDay.format(schedule.date)}
+									</p>
 
 									<ScheduleComponent
 										classes={classes}
