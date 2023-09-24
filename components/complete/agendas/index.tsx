@@ -8,6 +8,7 @@ import { Agenda } from "./agenda";
 import { CreateAgenda } from "./createAgenda";
 import { useSupabaseClient } from "@supabase/auth-helpers-react";
 import { getTheseAssignments } from "@/lib/db/assignments/assignments";
+import { CoursifyFile } from "@/components/files/genericFileUpload";
 
 export const AgendasModule = ({
 	classID,
@@ -25,6 +26,7 @@ export const AgendasModule = ({
 		date: string | null;
 		description: Json;
 		assignments: string[] | null;
+		files: CoursifyFile[] | null;
 	}[];
 	updateAgendas: (
 		val: {
@@ -33,6 +35,7 @@ export const AgendasModule = ({
 			date: string | null;
 			description: Json;
 			assignments: string[] | null;
+			files: CoursifyFile[] | null;
 		}[]
 	) => void;
 	// Needed for editing
@@ -125,6 +128,7 @@ export const AgendasModule = ({
 						date: string | null;
 						description: Json;
 						assignments: string[] | null;
+						files: CoursifyFile[] | null;
 					}) => updateAgendas([newAgenda])}
 				></CreateAgenda>
 			)}
@@ -151,7 +155,14 @@ export const AgendasModule = ({
 						if (moreAgendasAndAssignments.fetchedAgendas.data.length == 0) {
 							setNewAgendasError("All future agendas have been fetched.");
 						} else {
-							updateAgendas(moreAgendasAndAssignments.fetchedAgendas.data);
+							updateAgendas(
+								moreAgendasAndAssignments.fetchedAgendas.data.map((agenda) => {
+									return {
+										...agenda,
+										files: agenda.files as unknown as CoursifyFile[],
+									};
+								})
+							);
 						}
 					} else {
 						setNewAgendasError("An error occured while fetching your agendas.");
@@ -216,7 +227,14 @@ export const AgendasModule = ({
 						if (moreAgendasAndAssignments.fetchedAgendas.data.length == 0) {
 							setNewAgendasError("All future agendas have been fetched.");
 						} else {
-							updateAgendas(moreAgendasAndAssignments.fetchedAgendas.data);
+							updateAgendas(
+								moreAgendasAndAssignments.fetchedAgendas.data.map((agenda) => {
+									return {
+										...agenda,
+										files: agenda.files as unknown as CoursifyFile[],
+									};
+								})
+							);
 						}
 					} else {
 						setNewAgendasError("An error occured while fetching your agendas.");

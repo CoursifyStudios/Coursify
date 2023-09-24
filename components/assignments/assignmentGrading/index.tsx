@@ -9,12 +9,21 @@ import { Database } from "@/lib/db/database.types";
 import { Disclosure } from "@headlessui/react";
 import { SupabaseClient } from "@supabase/supabase-js";
 import AssignmentHeader from "../assignmentPanel/header";
-import { Dispatch, SetStateAction, useMemo, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useMemo, useState } from "react";
 import { ColoredPill } from "@/components/misc/pill";
 import { Button } from "@/components/misc/button";
 import AssignmentGradingComponents from "./components";
 import { SubmissionSettingsTypes } from "../assignmentPanel/submission.types";
 import { useRouter } from "next/router";
+import StudentSelector, { Student } from "./studentSelector";
+import EditAssignment from "./settings/editAssignment";
+import {
+	ArrowUpOnSquareStackIcon,
+	EyeIcon,
+	EyeSlashIcon,
+} from "@heroicons/react/24/outline";
+import { DueType } from "../assignments";
+import EditDates from "./settings/editDates";
 
 const AssignmentGradingUI = ({
 	setAllAssignmentData,
@@ -37,13 +46,15 @@ const AssignmentGradingUI = ({
 	const [grade, setGrade] = useState(0);
 	const [loading, setLoading] = useState(false);
 	const [error, setError] = useState("");
+	const [editOpen, setEditOpen] = useState(false);
+	const [datesOpen, setDatesOpen] = useState(false);
 
 	const router = useRouter();
 
 	const classData: TeacherAssignment = allAssignmentData.data!.classes!;
 	const maxGrade = allAssignmentData.data?.max_grade ?? null;
 
-	const students = (classData.users ? classData.users : [])
+	const students: Student[] = (classData.users ? classData.users : [])
 		.filter(
 			(user) =>
 				classData.class_users.find((cu) => cu.user_id == user.id)?.teacher ==
@@ -78,7 +89,7 @@ const AssignmentGradingUI = ({
 
 	const totalStudents = students.length;
 
-	const isGraded = (is: boolean) =>
+	const isGraded = (is: boolean): Student[] =>
 		students.filter((student) =>
 			student.submissions.length == 0 ||
 			student.submissions.filter((s) => s.final).length == 0
@@ -184,273 +195,212 @@ const AssignmentGradingUI = ({
 		router.push("/assignments/0");
 	};
 
-	return (
-		<div className="flex grow flex-col">
-			<AssignmentHeader
-				teacher={true}
-				assignment={allAssignmentData}
-				fullscreen={fullscreen}
-				setFullscreen={setFullscreen}
-				deleteAssignment={deleteAssignment}
-				error={error}
-				loading={loading}
-			/>
-			<div className="flex">
-				<div className="flex w-64 min-w-[16rem] my-2 mt-4 flex-col">
-					<div className=" rounded-xl flex space-y-2 flex-col">
-						<Disclosure defaultOpen>
-							{({ open }) => (
-								<>
-									<Disclosure.Button className="flex rounded-lg items-center bg-gray-200 px-4 py-1.5 text-left text-sm font-medium">
-										<span>Ungraded</span>
-										<ColoredPill color="gray" className="ml-auto">
-											{ungraded.length}
-										</ColoredPill>
-									</Disclosure.Button>
-									<Disclosure.Panel className=" pt-2 pb-4 text-sm flex flex-col  gap-2">
-										{ungraded.length != 0 ? (
-											ungraded.map((student) => (
-												<button
-													key={student.id}
-													className={`p-3 bg-backdrop-200 rounded-xl flex items-center brightness-hover text-left ${
-														selectedID == student.id && "brightness-focus"
-													}`}
-													onClick={() => setSelectedID(student.id)}
-												>
-													<img
-														src={student.avatar_url}
-														className="rounded-full h-10 w-10"
-														alt="user profile picture"
-													/>
-													<div className="ml-3">
-														<p className="font-medium">{student.full_name}</p>
-														<p className="text-xs">
-															{new Intl.DateTimeFormat("en-US", {
-																month: "2-digit",
-																day: "2-digit",
-																year: "numeric",
-																hour: "numeric",
-																minute: "numeric",
-															}).format(
-																new Date(
-																	student.submissions.find((s) => s.final)
-																		?.created_at || ""
-																)
-															)}{" "}
-														</p>
-													</div>
-												</button>
-											))
-										) : (
-											<p className="font-medium text-center">
-												You{"'"}ve graded all submissions!
-											</p>
-										)}
-									</Disclosure.Panel>
-								</>
-							)}
-						</Disclosure>
-						<Disclosure defaultOpen>
-							{({ open }) => (
-								<>
-									<Disclosure.Button className="flex rounded-lg items-center bg-gray-200 px-4 py-1.5 text-left text-sm font-medium">
-										<span>Not Submitted</span>
-										<ColoredPill color="gray" className="ml-auto">
-											{notSubmitted.length}
-										</ColoredPill>
-									</Disclosure.Button>
-									<Disclosure.Panel className=" pt-2 pb-4 text-sm flex flex-col gap-2">
-										{notSubmitted.length != 0 ? (
-											notSubmitted.map((student) => (
-												<button
-													key={student.id}
-													disabled={student.submissions.length == 0}
-													className={`p-3 bg-backdrop-200 rounded-xl flex items-center text-left ${
-														student.submissions.length != 0 &&
-														"brightness-hover"
-													} ${selectedID == student.id && "brightness-focus"}`}
-													onClick={() => setSelectedID(student.id)}
-												>
-													<img
-														src={student.avatar_url}
-														className="rounded-full h-10 w-10"
-														alt="user profile picture"
-													/>
-													<div className="ml-3">
-														<p className="font-medium">{student.full_name}</p>
-														{student.submissions.length != 0 && (
-															<p className="text-xs">Draft submitted</p>
-														)}
-													</div>
-												</button>
-											))
-										) : (
-											<p className="font-medium text-center">
-												All students have submitted!
-											</p>
-										)}
-									</Disclosure.Panel>
-								</>
-							)}
-						</Disclosure>
-						<Disclosure defaultOpen>
-							{({ open }) => (
-								<>
-									<Disclosure.Button className="flex rounded-lg items-center bg-gray-200 px-4 py-1.5 text-left text-sm font-medium">
-										<span>{maxGrade == null ? "Reviewed" : "Graded"} </span>
-										<ColoredPill color="gray" className="ml-auto">
-											{graded.length}/{totalStudents}
-										</ColoredPill>
-										{/* <ChevronUpIcon
-											className={`${
-												open ? "rotate-180 transform" : ""
-											} h-5 w-5 ml-auto`}
-										/> */}
-									</Disclosure.Button>
-									<Disclosure.Panel className=" pt-2 pb-4 text-sm flex flex-col  gap-2">
-										{graded.length != 0 ? (
-											graded.map((student) => (
-												<button
-													key={student.id}
-													onClick={() => setSelectedID(student.id)}
-													className={`p-3 bg-backdrop-200 rounded-xl flex items-center text-left brightness-hover ${
-														selectedID == student.id && "brightness-focus"
-													}`}
-												>
-													<img
-														src={student.avatar_url}
-														className="rounded-full h-10 w-10"
-														alt="user profile picture"
-													/>
-													<div className="ml-3">
-														<p className="font-medium">{student.full_name}</p>
-														{maxGrade != null && (
-															<p className="text-xs">
-																Grade:{" "}
-																{
-																	student.submissions.find((s) => s.final)
-																		?.grade
-																}
-																/{maxGrade}
-															</p>
-														)}
-													</div>
-												</button>
-											))
-										) : (
-											<p className="font-medium text-center">
-												You haven{"'"}t graded any submissions yet!
-											</p>
-										)}
-									</Disclosure.Panel>
-								</>
-							)}
-						</Disclosure>
-					</div>
-				</div>
-				{selectedStudent == undefined ? (
-					<div className="flex grow items-center justify-center font-medium h-96">
-						Select a student to get started
-					</div>
+	const updateDB = async (
+		update: Database["public"]["Tables"]["assignments"]["Update"],
+		toUpdate: string
+	) => {
+		setError("");
+		if (loading) {
+			setError(
+				`Cannot ${toUpdate} assignment while another action is taking place`
+			);
+			return;
+		}
+		setLoading(true);
+		const { error } = await supabase
+			.from("assignments")
+			.update(update)
+			.eq("id", assignmentID);
+		if (error) {
+			setError(error.message);
+		} else {
+			setAllAssignmentData((a) => {
+				if (!a.data) return a;
+				return {
+					...a,
+					data: {
+						...a.data,
+						...update,
+					},
+				};
+			});
+		}
+		setLoading(false);
+	};
+
+	const hideAssignment = {
+		content: (
+			<>
+				{allAssignmentData.data?.hidden ? "Show" : "Hide"} Assignment
+				{allAssignmentData.data?.hidden ? (
+					<EyeIcon className="w-5 h-5 ml-auto" />
 				) : (
-					<div className="flex grow flex-col ml-4 mt-4">
-						<div className="flex justify-between bg-gray-200 h-36  p-3 rounded-xl">
-							<div className="flex">
-								<Avatar
-									full_name={selectedStudent!.full_name}
-									avatar_url={selectedStudent!.avatar_url}
-									size="20"
-									className="ml-2 min-w-[5rem]"
-									text_size="xl"
-								/>
-								<div className="flex flex-col ml-4 justify-center">
-									<h1 className="title truncate max-w-[12rem]">
-										{selectedStudent.full_name}
-									</h1>
-									{maxGrade ? (
-										<p className="text-lg font-medium flex items-end mt-2">
-											<input
-												type="text"
-												className="w-24 py-1 px-2"
-												placeholder={
-													selectedStudent.submissions
-														.find((s) => s.final)
-														?.grade?.toString() || ""
-												}
-												value={grade}
-												onChange={(e) =>
-													setGrade(
-														e.target.value == "" ? 0 : parseInt(e.target.value)
-													)
-												}
-											/>
-											<span className="ml-2 text-xl">/{maxGrade}</span>
-										</p>
-									) : (
-										<p className="text-xs max-w-[10rem]">
-											Grading is disabled for this assignment
-										</p>
-									)}
-								</div>
-							</div>
-							<div className="flex flex-col justify-between">
-								<textarea
-									placeholder="Enter an optional comment..."
-									className="h-20 w-72 resize-none !rounded-xl scrollbar-fancy"
-									value={comment}
-									onChange={(e) => setComment(e.target.value)}
-								/>
-								<div className="ml-auto gap-4 flex">
-									{/* <Button color="bg-gray-300" className="text-white">
-									Back
-								</Button>
-								<Button color="bg-blue-500" className="text-white">
-									Next
-								</Button> */}
-									<Button
-										color="bg-blue-500"
-										className="text-white"
-										onClick={setReviewed}
-										disabled={
-											selectedStudent &&
-											selectedStudent.submissions.find((s) => s.final)
-												? selectedStudent.submissions.find((s) => s.final)!
-														.comment == comment &&
-												  selectedStudent.submissions.find((s) => s.final)!
-														.grade == grade &&
-												  graded.some((student) => student.id == selectedID)
-												: false
-										}
-									>
-										{graded.some((student) => student.id == selectedID)
-											? maxGrade
-												? "Update Grade"
-												: "Update Review"
-											: maxGrade
-											? "Grade Assignment"
-											: "Set Reviewed"}
-									</Button>
-								</div>
-							</div>
-						</div>
-						<div className="flex flex-col rounded-xl mt-4">
-							<AssignmentGradingComponents
-								assignmentData={allAssignmentData}
-								submission={
-									selectedStudent.submissions.find((s) => s.final)
-										?.content as SubmissionSettingsTypes
-								}
-								latestSubmission={
-									selectedStudent.submissions[0]
-										.content as SubmissionSettingsTypes
-								}
-								selectedStudent={selectedStudent}
-							/>
-						</div>
-					</div>
+					<EyeSlashIcon className="w-5 h-5 ml-auto" />
 				)}
+			</>
+		),
+		onClick: () =>
+			updateDB({ hidden: !allAssignmentData.data?.hidden }, "hide"),
+	};
+
+	const publishAssignment =
+		new Date(allAssignmentData.data!.publish_date).getTime() >
+		new Date().getTime()
+			? {
+					content: (
+						<>
+							Publish Now
+							<ArrowUpOnSquareStackIcon className="w-5 h-5 ml-auto" />
+						</>
+					),
+					onClick: () =>
+						updateDB(
+							{
+								publish_date: new Date().toISOString(),
+								publish_type: DueType.DATE,
+							},
+							"publish"
+						),
+			  }
+			: undefined;
+
+	return (
+		<>
+			<EditAssignment
+				close={() => setEditOpen(false)}
+				open={editOpen}
+				assignment={allAssignmentData}
+				setAssignment={setAllAssignmentData}
+				supabase={supabase}
+				setLoading={setLoading}
+				setError={setError}
+			/>
+			<EditDates close={() => setDatesOpen(false)} open={datesOpen} />
+			<div className="flex grow flex-col">
+				{/* prop drilling ftw -LS */}
+				<AssignmentHeader
+					setEditOpen={setEditOpen}
+					setDatesOpen={setDatesOpen}
+					teacher={true}
+					assignment={allAssignmentData}
+					fullscreen={fullscreen}
+					setFullscreen={setFullscreen}
+					deleteAssignment={deleteAssignment}
+					error={error}
+					loading={loading}
+					hideAssignment={hideAssignment}
+					publishAssignment={publishAssignment}
+				/>
+				<div className="flex">
+					<StudentSelector
+						graded={graded}
+						maxGrade={maxGrade}
+						notSubmitted={notSubmitted}
+						selectedID={selectedID}
+						setSelectedID={setSelectedID}
+						totalStudents={totalStudents}
+						ungraded={ungraded}
+					/>
+					{selectedStudent == undefined ? (
+						<div className="flex grow items-center justify-center font-medium h-96">
+							Select a student to get started
+						</div>
+					) : (
+						<div className="flex grow flex-col ml-4 mt-4">
+							<div className="flex justify-between bg-gray-200 h-36  p-3 rounded-xl">
+								<div className="flex">
+									<Avatar
+										full_name={selectedStudent!.full_name}
+										avatar_url={selectedStudent!.avatar_url}
+										size="20"
+										className="ml-2 min-w-[5rem]"
+										text_size="xl"
+									/>
+									<div className="flex flex-col ml-4 justify-center">
+										<h1 className="title truncate max-w-[12rem]">
+											{selectedStudent.full_name}
+										</h1>
+										{maxGrade ? (
+											<p className="text-lg font-medium flex items-end mt-2">
+												<input
+													type="text"
+													className="w-24 py-1 px-2"
+													placeholder={
+														selectedStudent.submissions
+															.find((s) => s.final)
+															?.grade?.toString() || ""
+													}
+													value={grade}
+													onChange={(e) =>
+														setGrade(
+															e.target.value == ""
+																? 0
+																: parseInt(e.target.value)
+														)
+													}
+												/>
+												<span className="ml-2 text-xl">/{maxGrade}</span>
+											</p>
+										) : (
+											<p className="text-xs max-w-[10rem]">
+												Grading is disabled for this assignment
+											</p>
+										)}
+									</div>
+								</div>
+								<div className="flex flex-col justify-between">
+									<textarea
+										placeholder="Enter an optional comment..."
+										className="h-20 w-72 resize-none !rounded-xl scrollbar-fancy"
+										value={comment}
+										onChange={(e) => setComment(e.target.value)}
+									/>
+									<div className="ml-auto gap-4 flex">
+										<Button
+											color="bg-blue-500"
+											className="text-white"
+											onClick={setReviewed}
+											disabled={
+												selectedStudent &&
+												selectedStudent.submissions.find((s) => s.final)
+													? selectedStudent.submissions.find((s) => s.final)!
+															.comment == comment &&
+													  selectedStudent.submissions.find((s) => s.final)!
+															.grade == grade &&
+													  graded.some((student) => student.id == selectedID)
+													: false
+											}
+										>
+											{graded.some((student) => student.id == selectedID)
+												? maxGrade
+													? "Update Grade"
+													: "Update Review"
+												: maxGrade
+												? "Grade Assignment"
+												: "Set Reviewed"}
+										</Button>
+									</div>
+								</div>
+							</div>
+							<div className="flex flex-col rounded-xl mt-4">
+								<AssignmentGradingComponents
+									assignmentData={allAssignmentData}
+									submission={
+										selectedStudent.submissions.find((s) => s.final)
+											?.content as SubmissionSettingsTypes
+									}
+									latestSubmission={
+										selectedStudent.submissions[0]
+											.content as SubmissionSettingsTypes
+									}
+									selectedStudent={selectedStudent}
+								/>
+							</div>
+						</div>
+					)}
+				</div>
 			</div>
-		</div>
+		</>
 	);
 };
 

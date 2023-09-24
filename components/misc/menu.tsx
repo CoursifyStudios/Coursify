@@ -8,12 +8,15 @@ export default function MenuSelect({
 	items,
 }: {
 	children: ReactNode;
-	items: {
-		content: ReactNode;
-		onClick?: () => void;
-		link?: string;
-		className?: string;
-	}[];
+	items: (
+		| {
+				content: ReactNode;
+				onClick?: () => void;
+				link?: string;
+				className?: string;
+		  }
+		| undefined
+	)[];
 }) {
 	return (
 		<Menu className="relative !ml-4 flex w-10 flex-col items-center" as="div">
@@ -30,9 +33,10 @@ export default function MenuSelect({
 				<div className="absolute right-0 z-50 mt-14">
 					<Menu.Items
 						as="div"
-						className="flex w-48 flex-col gap-4 rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-xl"
+						className="flex w-48 flex-col gap-1 rounded-xl bg-gray-200/75 px-2 py-2 shadow-xl backdrop-blur-xl"
 					>
 						{items.map((item, i) => {
+							if (!item) return null;
 							const menuItem = (
 								<Menu.Item
 									as="button"

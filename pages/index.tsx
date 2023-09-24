@@ -22,15 +22,15 @@ const Home = () => {
 	const user = useUser();
 	const [classes, setClasses] = useState<AllClasses>();
 	const [loading, setLoading] = useState(true);
-	const [schedules, setSchedules] = useState<ScheduleInterface[][]>([]);
-	const { data: settings } = useSettings();
-
-	//because Lukas left this a mess, until i get around to fixing it
-	const dateToday = new Date();
-	const dateTomorrow = new Date();
-	dateTomorrow.setDate(dateToday.getDate() + 1);
-	const dayAfter = new Date();
-	dayAfter.setDate(dateToday.getDate() + 2);
+	const [schedules, setSchedules] = useState<
+		{ schedule: ScheduleInterface[]; date: Date }[]
+	>([]);
+	const dateFormat = new Intl.DateTimeFormat("en-US", {
+		weekday: "long",
+		month: "long",
+		day: "numeric",
+		timeZone: "Europe/London",
+	});
 
 	useEffect(() => {
 		const [classes, schedule] = [
@@ -53,7 +53,10 @@ const Home = () => {
 				 *      ...sounds like a skill issue -Bill
 				 */
 				const temp = schedules;
-				temp[index] = parsedSchedule.schedule;
+				temp[index] = {
+					schedule: parsedSchedule.schedule,
+					date: new Date(parsedSchedule.date),
+				};
 				setSchedules(temp);
 			});
 		}
@@ -68,7 +71,7 @@ const Home = () => {
 					getAllClasses(supabaseClient, user.id),
 					// read comment in above useEffect as to why I'm fetching 3 dates -Lukas
 					// I'm going to fetch like 5 because weekends or some excuse - Bill
-					getSchedulesForXDays(supabaseClient, new Date(), 5),
+					getSchedulesForXDays(supabaseClient, new Date(), 1),
 				]);
 
 				if (classes.data && classes.data[0]) {
@@ -107,9 +110,7 @@ const Home = () => {
 							}
 						});
 				}
-
-				const tempFullSchedule = fullSchedule.map(({ schedule }) => schedule);
-				setSchedules(tempFullSchedule);
+				setSchedules(fullSchedule);
 				setLoading(false);
 				sessionStorage.setItem("classes", JSON.stringify(classes));
 				sessionStorage.setItem("schedule", JSON.stringify(fullSchedule));
@@ -131,7 +132,6 @@ const Home = () => {
 							<HomepageClassesUI
 								classes={classes}
 								loading={loading}
-								schedules={schedules}
 								userID={user.id}
 							/>
 						</section>
@@ -140,31 +140,19 @@ const Home = () => {
 							id="Schedule"
 							className="flex grow flex-col md:flex-row lg:ml-10 lg:flex-col"
 						>
-							<div className="w-full md:mr-4 lg:mr-0">
-								<h2 className="title mr-2">
-									{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
-										dateToday
-									)}
-								</h2>
+							{schedules.map((schedule, index) => (
+								<div key={index} className="w-full md:mr-4 lg:mr-0">
+									<h2 className="title mr-2">
+										{dateFormat.format(schedule.date)}
+									</h2>
 
-								<ScheduleComponent
-									classes={classes}
-									schedule={schedules[0]}
-									loading={loading}
-								/>
-							</div>
-							<div className="w-full md:ml-4 lg:ml-0">
-								<h2 className="title mr-2">
-									{new Intl.DateTimeFormat("en-US", { weekday: "long" }).format(
-										dateTomorrow
-									)}
-								</h2>
-								<ScheduleComponent
-									classes={classes}
-									schedule={schedules[1]}
-									loading={loading}
-								/>
-							</div>
+									<ScheduleComponent
+										classes={classes}
+										schedule={schedule.schedule}
+										loading={loading}
+									/>
+								</div>
+							))}
 						</section>
 					</div>
 					{Array.isArray(classes) &&

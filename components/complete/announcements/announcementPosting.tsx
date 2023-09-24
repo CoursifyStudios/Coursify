@@ -17,6 +17,9 @@ import { LoadingSmall } from "../../misc/loading";
 import { ColoredPill } from "../../misc/pill";
 import { CommunityPicker } from "./communityPicker";
 import { TempAnnouncement } from "./tempAnnouncement";
+import GenericFileUpload, {
+	CoursifyFile,
+} from "@/components/files/genericFileUpload";
 export const AnnouncementPostingUI = ({
 	communityid,
 	announcements,
@@ -32,6 +35,7 @@ export const AnnouncementPostingUI = ({
 		announcement: {
 			author: string;
 			content: Json;
+			files: CoursifyFile[] | null;
 			id: string;
 			time: string | null;
 			title: string | null;
@@ -53,10 +57,15 @@ export const AnnouncementPostingUI = ({
 		id: string;
 		title: string;
 		content: Json;
+		files: CoursifyFile[] | null;
 		clone_id: string | null;
 		setEditing?: (value: boolean) => void;
 	};
-	setNewInfo?: (value: { title: string; content: Json }) => void;
+	setNewInfo?: (value: {
+		title: string;
+		content: Json;
+		files: CoursifyFile[] | null;
+	}) => void;
 	setEditing?: (value: boolean) => void;
 }) => {
 	const supabase = useSupabaseClient<Database>();
@@ -79,6 +88,9 @@ export const AnnouncementPostingUI = ({
 						name: "",
 					},
 			  ]
+	);
+	const [files, setFiles] = useState<CoursifyFile[]>(
+		editingInfo ? editingInfo.files ?? [] : []
 	);
 	const [showCrossPosting, setShowCrossPosting] = useState(false);
 	const [sending, setSending] = useState(false); // controls like a loading state thing
@@ -122,9 +134,9 @@ export const AnnouncementPostingUI = ({
 	return (
 		<div>
 			{showPosting ? (
-				<div className="flex flex-col rounded-xl border-2 border-gray-300 bg-gray-50 p-4 dark:bg-zinc-950">
+				<div className="flex flex-col rounded-xl border-2 border-gray-300 bg-gray-50 p-4 dark:bg-zinc-950 gap-4">
 					{!editingInfo && !sharingInfo && (
-						<h3 className="mb-4 font-semibold">New Announcement</h3>
+						<h3 className="font-semibold">New Announcement</h3>
 					)}
 					<Formik
 						initialValues={{
@@ -151,17 +163,25 @@ export const AnnouncementPostingUI = ({
 					</Formik>
 					<Editor
 						editable={true}
-						className="mt-4 rounded-md border border-gray-300 bg-backdrop/50 p-2 "
+						className="rounded-md border border-gray-300 bg-backdrop/50 p-2 "
 						backdrop={false}
 						updateState={setEditorState}
 						initialState={editingInfo && editingInfo.content}
 						focus={false}
 					/>
+
+					<GenericFileUpload
+						files={files}
+						setFiles={setFiles}
+						destination="announcements"
+					/>
+
 					{sharingInfo?.announcement && (
 						<TempAnnouncement
 							announcement={{
 								author: sharingInfo.announcement.author,
 								content: sharingInfo.announcement.content,
+								files: sharingInfo.announcement.files,
 								title: sharingInfo.announcement.title as string,
 								time: sharingInfo.announcement.time as string,
 								users: sharingInfo.announcement.users,
@@ -170,7 +190,7 @@ export const AnnouncementPostingUI = ({
 					)}
 
 					{/* Displays which communities are being posted or shared to */}
-					<div className="my-3 flex flex-wrap gap-4">
+					<div className="flex flex-wrap gap-4">
 						{chosenCommunities &&
 							chosenCommunities.length > 0 &&
 							chosenCommunities.map(
@@ -203,14 +223,21 @@ export const AnnouncementPostingUI = ({
 							{/* Cancel Button */}
 							<Button
 								className="brightness-hover transition hover:bg-red-300 dark:hover:bg-red-900"
-								onClick={() => {
-									!sharingInfo &&
+								onClick={async () => {
+									if (!sharingInfo) {
 										setChosenCommunities([
 											{
 												id: communityid,
 												name: "",
 											},
 										]);
+									}
+									await supabase.functions.invoke("delete-file", {
+										body: {
+											path: files.map((file) => `announcements/${file.dbName}`),
+										},
+									});
+									setFiles([]);
 									// If you are in sharing or editing mode, cancelling should take you back to
 									// the original announcement, not the "New Announcement" UI
 									sharingInfo?.setSharing
@@ -241,6 +268,7 @@ export const AnnouncementPostingUI = ({
 													author: user.id,
 													title: title,
 													content: editorState?.toJSON() as unknown as Json,
+													files: files,
 												},
 												chosenCommunities.map(({ id }) => id)
 											);
@@ -268,11 +296,15 @@ export const AnnouncementPostingUI = ({
 													id: editingInfo.id,
 													author: user.id,
 													title: editingInfo.title,
+													files: editingInfo.files
+														? editingInfo.files.map((file) => file.dbName)
+														: [],
 													clone_id: editingInfo.clone_id,
 												},
 												{
 													title: title,
 													content: editorState?.toJSON() as unknown as Json,
+													files: files,
 												}
 											);
 											//and sets the announcement with its new data
@@ -283,9 +315,12 @@ export const AnnouncementPostingUI = ({
 													setNewInfo({
 														title: title,
 														content: editorState?.toJSON() as unknown as Json,
+														files: getDataOutArray(newAnnouncement.data)
+															.files as unknown as CoursifyFile[],
 													});
 
 												editingInfo.setEditing(false);
+												setFiles([]);
 											}
 											setSending(false);
 											// This is for when you are neither sharing nor editing (just posting normally)
@@ -297,6 +332,7 @@ export const AnnouncementPostingUI = ({
 													user?.id!,
 													title,
 													editorState?.toJSON() as unknown as Json,
+													files,
 													chosenCommunities.map(({ id }) => id)
 												);
 
@@ -311,6 +347,7 @@ export const AnnouncementPostingUI = ({
 														)
 													);
 													setShowPosting(false);
+													setFiles([]);
 												} else {
 													setErrorText("Error: Failed to post announcement");
 												}

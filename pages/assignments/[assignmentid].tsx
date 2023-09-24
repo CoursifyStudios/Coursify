@@ -36,6 +36,11 @@ import {
 } from "react";
 import { Tab } from "@headlessui/react";
 import AssignmentGradingUI from "@/components/assignments/assignmentGrading";
+import {
+	BetterFileCarousel,
+	FileCarousel,
+} from "@/components/files/genericFileView";
+import { CoursifyFile } from "@/components/files/genericFileUpload";
 import { ColoredPill } from "@/components/misc/pill";
 
 const Panel = dynamic(
@@ -175,6 +180,280 @@ const Post: NextPageWithLayout = () => {
 	return (
 		// Left pane
 		<div className="mx-auto flex w-full max-w-screen-xl px-4 pb-6 pt-6 md:px-8 xl:px-0 ">
+			<YourAssignments />
+			<div
+				className={`grow rounded-xl px-4  ${
+					fullscreen ? "flex" : "hidden md:flex"
+				} 
+				${tab == 0 && "md:h-[calc(100vh-6.5rem)]"}
+				`}
+			>
+				<AssignmentPane />
+			</div>
+		</div>
+	);
+
+	function AssignmentPane() {
+		const [open, setOpen] = useState(false);
+		if (
+			!router.isReady ||
+			!(teacherAssignments || studentAssignments) ||
+			(!assignment && assignmentid != "0")
+		) {
+			return <Loading />;
+		}
+
+		if (
+			assignmentid == "0" ||
+			(tab == 0 &&
+				teacherAssignments &&
+				teacherAssignments.some((ta) => assignmentid == ta.id)) ||
+			(tab == 1 &&
+				studentAssignments &&
+				studentAssignments.some((ta) => assignmentid == ta.id))
+		) {
+			// 0 is a placeholder for when the user hasn't selected an assignment yet
+			return (
+				<div className="m-auto flex flex-col items-center">
+					<Image
+						src={launch}
+						alt="Nothing present icon"
+						width={150}
+						height={150}
+						draggable={false}
+						className="select-none"
+					/>
+					<h1 className=" mt-4 max-w-xs text-center font-semibold">
+						Click an assignment on the left pane to get started
+					</h1>
+				</div>
+			);
+		}
+
+		if (assignment?.error) {
+			return (
+				<div className="m-auto flex flex-col items-center">
+					<Image
+						src={noData}
+						alt="Nothing present icon"
+						width={150}
+						height={150}
+					/>
+					<h1 className=" mt-4 max-w-xs text-center font-semibold">
+						This assignment {"doesn't"} exist (or you don{"'"}t have access to
+						it)
+					</h1>
+				</div>
+			);
+		}
+
+		if (assignment?.data) {
+			if (
+				tab == 1 &&
+				!("submissions" in assignment) &&
+				typeof assignmentid == "string"
+			) {
+				return (
+					<AssignmentGradingUI
+						setAllAssignmentData={
+							setAssignment as Dispatch<
+								SetStateAction<TeacherAssignmentResponse>
+							>
+						}
+						allAssignmentData={assignment as TeacherAssignmentResponse}
+						setTeacherAssignments={setTeacherAssignments}
+						assignmentID={assignmentid}
+						fullscreen={fullscreen}
+						setFullscreen={setFullscreen}
+						supabase={supabase}
+					/>
+				);
+			}
+
+			return (
+				<>
+					<div className="flex grow flex-col">
+						{/* Top part of main window */}
+						<AssignmentHeader
+							assignment={assignment}
+							fullscreen={fullscreen}
+							setFullscreen={setFullscreen}
+						/>
+						<section
+							className={`scrollbar-fancy relative mt-5 flex flex-1 overflow-x-hidden whitespace-pre-line md:pr-2 ${
+								assignment.data.type == AssignmentTypes.DISCUSSION_POST
+									? "flex-col"
+									: "flex-col-reverse xl:flex-row"
+							}`}
+						>
+							<div
+								className={`flex flex-col ${
+									assignment.data.type == AssignmentTypes.DISCUSSION_POST
+										? "h-max"
+										: "grow"
+								}`}
+							>
+								<h2 className="text-xl font-semibold">Details</h2>
+								{(assignment.data.content &&
+									(assignment.data.content as unknown as SerializedEditorState) // @ts-expect-error lexical/bad-types
+										.root.children[0].children.length) ||
+								assignment.data.files ? (
+									<div className="mb-5 mt-2 flex grow flex-col gap-4">
+										{assignment.data.content &&
+											// @ts-expect-error
+											assignment.data.content.root.children[0].children
+												.length != 0 && (
+												<Editor
+													editable={false}
+													initialState={assignment.data.content}
+													className="rounded-xl bg-gray-200 p-5"
+													focus={false}
+												/>
+											)}
+										{assignment.data.files && (
+											<BetterFileCarousel
+												allFiles={
+													assignment.data.files as unknown as CoursifyFile[]
+												}
+											/>
+										)}
+									</div>
+								) : (
+									<div className="mb-5 mt-2 grid grow place-items-center rounded-xl bg-gray-200 p-5 text-lg font-medium">
+										No assignment details
+									</div>
+								)}
+							</div>
+							{/* Submission side panel */}
+							{assignment.data.type != AssignmentTypes.DISCUSSION_POST ? (
+								<div
+									className={`sticky mb-7 flex shrink-0 flex-col space-y-4 xl:top-0 xl:mb-0 xl:ml-4 xl:w-72 `}
+								>
+									<div className="flex justify-between items-center !-mb-2">
+										<h2 className="text-xl font-semibold">Submission</h2>
+										{revisions.find((r) => r.grade != null) && (
+											<ColoredPill color="gray">
+												{assignment.data.max_grade ? (
+													<>
+														Grade:{" "}
+														{revisions.find((r) => r.grade != null)!.grade} /{" "}
+														{assignment.data.max_grade}
+													</>
+												) : (
+													"Teacher Reviewed"
+												)}
+											</ColoredPill>
+										)}
+									</div>
+									{revisions.find((r) => r.comment != null) && (
+										<div
+											className={` flex flex-col rounded-xl bg-gray-200  px-5 py-4`}
+										>
+											<h2 className="text-lg font-semibold ">
+												Teacher Comment
+											</h2>
+											<p>{revisions.find((r) => r.comment != null)!.comment}</p>
+										</div>
+									)}
+									<div
+										className={` rounded-xl overflow-y-auto scrollbar-fancy bg-gray-200 ${
+											open ? "max-h-16 p-1" : "max-h-[32rem] px-5 py-4"
+										}  overflow-hidden transition-all duration-300`}
+									>
+										{!open ? (
+											<>
+												{assignment.data.submission_instructions ? (
+													<>
+														<h2 className="text-lg font-semibold ">
+															Teacher{"'"}s Instructions:
+														</h2>
+														<p className="max-w-md text-sm text-gray-700">
+															{assignment.data.submission_instructions}
+														</p>
+													</>
+												) : (
+													<h2 className="text-lg font-semibold ">
+														Submit assignment
+													</h2>
+												)}
+												<div className="mt-4 flex flex-col space-y-4">
+													<Panel
+														assignmentType={assignment.data.type}
+														setRevisions={setRevisions}
+														revisions={revisions}
+														settings={
+															assignment.data
+																.settings as unknown as AssignmentSettingsTypes
+														}
+														assignmentID={
+															Array.isArray(assignmentid!)
+																? assignmentid[0]
+																: assignmentid!
+														}
+													/>
+												</div>
+											</>
+										) : (
+											<h2
+												className="cursor-pointer px-4 py-3 text-lg font-semibold"
+												onClick={() => setOpen(false)}
+											>
+												Back to Submission...
+											</h2>
+										)}
+									</div>
+									{revisions.length > 0 && (
+										<div className={`flex flex-col rounded-xl bg-gray-200 `}>
+											<button
+												className="flex items-center px-5 py-4"
+												onClick={() => setOpen((open) => !open)}
+											>
+												<h3 className="text-lg font-semibold">
+													Revision History
+												</h3>
+												<BarsArrowDownIcon className="ml-auto h-6 w-6" />
+											</button>
+
+											{open && (
+												<>
+													<div className="px-5 pb-4">
+														Revision history is coming soon
+													</div>
+												</>
+											)}
+										</div>
+									)}
+								</div>
+							) : (
+								<div className="flex flex-col ">
+									<h2 className="text-xl font-semibold">Discussion Posts</h2>
+									<Panel
+										assignmentType={assignment.data.type}
+										setRevisions={setRevisions}
+										revisions={revisions}
+										settings={
+											assignment.data
+												.settings as unknown as AssignmentSettingsTypes
+										}
+										assignmentID={
+											Array.isArray(assignmentid!)
+												? assignmentid[0]
+												: assignmentid!
+										}
+									/>
+								</div>
+							)}
+						</section>
+					</div>
+				</>
+			);
+		}
+		// Typescript wanted me to do this. The user shouldn't ever encounter this state
+		return <div>An unknown error occurred. Assignment id: {assignmentid}</div>;
+	}
+
+	function YourAssignments() {
+		return (
 			<div
 				className={`scrollbar-fancy mr-4 grow items-stretch overflow-x-clip md:grow-0 sticky top-8 ${
 					fullscreen ? "hidden" : "flex"
@@ -322,260 +601,7 @@ const Post: NextPageWithLayout = () => {
 					</div>
 				</div> */}
 			</div>
-			<div
-				className={`grow rounded-xl px-4  ${
-					fullscreen ? "flex" : "hidden md:flex"
-				} 
-				${tab == 0 && "md:h-[calc(100vh-6.5rem)]"}
-				`}
-			>
-				<AssignmentPane />
-			</div>
-		</div>
-	);
-
-	function AssignmentPane() {
-		const [open, setOpen] = useState(false);
-		if (
-			!router.isReady ||
-			!(teacherAssignments || studentAssignments) ||
-			(!assignment && assignmentid != "0")
-		) {
-			return <Loading />;
-		}
-
-		if (
-			assignmentid == "0" ||
-			(tab == 0 &&
-				teacherAssignments &&
-				teacherAssignments.some((ta) => assignmentid == ta.id)) ||
-			(tab == 1 &&
-				studentAssignments &&
-				studentAssignments.some((ta) => assignmentid == ta.id))
-		) {
-			// 0 is a placeholder for when the user hasn't selected an assignment yet
-			return (
-				<div className="m-auto flex flex-col items-center">
-					<Image
-						src={launch}
-						alt="Nothing present icon"
-						width={150}
-						height={150}
-						draggable={false}
-						className="select-none"
-					/>
-					<h1 className=" mt-4 max-w-xs text-center font-semibold">
-						Click an assignment on the left pane to get started
-					</h1>
-				</div>
-			);
-		}
-
-		if (assignment?.error) {
-			return (
-				<div className="m-auto flex flex-col items-center">
-					<Image
-						src={noData}
-						alt="Nothing present icon"
-						width={150}
-						height={150}
-					/>
-					<h1 className=" mt-4 max-w-xs text-center font-semibold">
-						This assignment {"doesn't"} exist (or you don{"'"}t have access to
-						it)
-					</h1>
-				</div>
-			);
-		}
-
-		if (assignment?.data) {
-			if (
-				tab == 1 &&
-				!("submissions" in assignment) &&
-				typeof assignmentid == "string"
-			) {
-				return (
-					<AssignmentGradingUI
-						setAllAssignmentData={
-							setAssignment as Dispatch<
-								SetStateAction<TeacherAssignmentResponse>
-							>
-						}
-						allAssignmentData={assignment as TeacherAssignmentResponse}
-						setTeacherAssignments={setTeacherAssignments}
-						assignmentID={assignmentid}
-						fullscreen={fullscreen}
-						setFullscreen={setFullscreen}
-						supabase={supabase}
-					/>
-				);
-			}
-			return (
-				<>
-					<div className="flex grow flex-col">
-						{/* Top part of main window */}
-						<AssignmentHeader
-							assignment={assignment}
-							fullscreen={fullscreen}
-							setFullscreen={setFullscreen}
-						/>
-						<section
-							className={`scrollbar-fancy relative mt-5 flex flex-1  overflow-y-auto overflow-x-hidden whitespace-pre-line md:pr-2 ${
-								assignment.data.type == AssignmentTypes.DISCUSSION_POST
-									? "flex-col"
-									: "flex-col-reverse xl:flex-row"
-							}`}
-						>
-							<div
-								className={`flex flex-col ${
-									assignment.data.type == AssignmentTypes.DISCUSSION_POST
-										? "h-max"
-										: "grow"
-								}`}
-							>
-								<h2 className="text-xl font-semibold">Details</h2>
-								{assignment.data.content &&
-								(assignment.data.content as unknown as SerializedEditorState) // @ts-expect-error lexical/bad-types
-									.root.children[0].children.length != 0 ? (
-									<Editor
-										editable={false}
-										initialState={assignment.data.content}
-										className=" scrollbar-fancy mb-5 mt-2 flex grow flex-col overflow-y-scroll rounded-xl bg-gray-200 p-5"
-										focus={false}
-									/>
-								) : (
-									<>
-										<div className="mb-5 mt-2 grid grow place-items-center rounded-xl bg-gray-200 p-5 text-lg font-medium">
-											No assignment details
-										</div>
-									</>
-								)}
-							</div>
-							{assignment.data.type != AssignmentTypes.DISCUSSION_POST ? (
-								<div
-									className={`sticky mb-7 flex shrink-0 flex-col space-y-4 xl:top-0 xl:mb-0 xl:ml-4 xl:w-72 `}
-								>
-									<div className="flex justify-between items-center !-mb-2">
-										<h2 className="text-xl font-semibold">Submission</h2>
-										{revisions.find((r) => r.grade != null) && (
-											<ColoredPill color="gray">
-												{assignment.data.max_grade ? (
-													<>
-														Grade:{" "}
-														{revisions.find((r) => r.grade != null)!.grade} /{" "}
-														{assignment.data.max_grade}
-													</>
-												) : (
-													"Teacher Reviewed"
-												)}
-											</ColoredPill>
-										)}
-									</div>
-									{revisions.find((r) => r.comment != null) && (
-										<div
-											className={` flex flex-col rounded-xl bg-gray-200  px-5 py-4`}
-										>
-											<h2 className="text-lg font-semibold ">
-												Teacher Comment
-											</h2>
-											<p>{revisions.find((r) => r.comment != null)!.comment}</p>
-										</div>
-									)}
-									<div
-										className={` rounded-xl overflow-y-auto scrollbar-fancy bg-gray-200 ${
-											open ? "max-h-16 p-1" : "max-h-[32rem] px-5 py-4"
-										}  overflow-hidden transition-all duration-300`}
-									>
-										{!open ? (
-											<>
-												{assignment.data.submission_instructions ? (
-													<>
-														<h2 className="text-lg font-semibold ">
-															Teacher{"'"}s Instructions:
-														</h2>
-														<p className="max-w-md text-sm text-gray-700">
-															{assignment.data.submission_instructions}
-														</p>
-													</>
-												) : (
-													<h2 className="text-lg font-semibold ">
-														Submit assignment
-													</h2>
-												)}
-												<div className="mt-4 flex flex-col space-y-4">
-													<Panel
-														assignmentType={assignment.data.type}
-														setRevisions={setRevisions}
-														revisions={revisions}
-														settings={
-															assignment.data
-																.settings as unknown as AssignmentSettingsTypes
-														}
-														assignmentID={
-															Array.isArray(assignmentid!)
-																? assignmentid[0]
-																: assignmentid!
-														}
-													/>
-												</div>
-											</>
-										) : (
-											<h2
-												className="cursor-pointer px-4 py-3 text-lg font-semibold"
-												onClick={() => setOpen(false)}
-											>
-												Back to Submission...
-											</h2>
-										)}
-									</div>
-									{revisions.length > 0 && (
-										<div className={`flex flex-col rounded-xl bg-gray-200 `}>
-											<button
-												className="flex items-center px-5 py-4"
-												onClick={() => setOpen((open) => !open)}
-											>
-												<h3 className="text-lg font-semibold">
-													Revision History
-												</h3>
-												<BarsArrowDownIcon className="ml-auto h-6 w-6" />
-											</button>
-
-											{open && (
-												<>
-													<div className="px-5 pb-4">
-														Revision history is coming soon
-													</div>
-												</>
-											)}
-										</div>
-									)}
-								</div>
-							) : (
-								<div className="flex flex-col ">
-									<h2 className="text-xl font-semibold">Discussion Posts</h2>
-									<Panel
-										assignmentType={assignment.data.type}
-										setRevisions={setRevisions}
-										revisions={revisions}
-										settings={
-											assignment.data
-												.settings as unknown as AssignmentSettingsTypes
-										}
-										assignmentID={
-											Array.isArray(assignmentid!)
-												? assignmentid[0]
-												: assignmentid!
-										}
-									/>
-								</div>
-							)}
-						</section>
-					</div>
-				</>
-			);
-		}
-		// Typescript wanted me to do this. The user shouldn't ever encounter this state
-		return <div>An unknown error occurred. Assignment id: {assignmentid}</div>;
+		);
 	}
 };
 

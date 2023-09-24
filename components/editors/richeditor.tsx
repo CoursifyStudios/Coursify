@@ -14,6 +14,7 @@ import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { HeadingNode, QuoteNode } from "@lexical/rich-text";
 import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import richTheme from "../../lib/editor/richtheme";
+import { $isRootTextContentEmpty } from "@lexical/text";
 
 import { AutoLinkPlugin } from "@lexical/react/LexicalAutoLinkPlugin";
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
@@ -102,7 +103,7 @@ export default function Editor({
 	editable: boolean;
 	updateState?:
 		| Dispatch<SetStateAction<undefined | EditorState>>
-		| ((state: EditorState) => void);
+		| ((state: EditorState | undefined) => void);
 	initialState?: Json | SerializedEditorState;
 	initialStateEditor?: EditorState;
 	className?: string;
@@ -148,7 +149,13 @@ export default function Editor({
 						<LinkPlugin />
 						{updateState && (
 							<OnChangePlugin
-								onChange={updateState}
+								onChange={(state) =>
+									updateState(
+										$isRootTextContentEmpty(true) || state.isEmpty()
+											? undefined
+											: state
+									)
+								}
 								ignoreSelectionChange={true}
 							/>
 						)}
