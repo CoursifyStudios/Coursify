@@ -18,7 +18,9 @@
 		"slink": "supabase link --project-ref hhrehffmdrcjqowwvgqg",
 		"static": "next export",
 		"ionic:build": "yarn build && yarn static",
-		"ionic:serve": "npm run start"
+		"ionic:serve": "npm run start",
+		"license": "echo \"Updating licenses\" && cd ./scripts/ && deno task export-licenses && npm run fmt",
+		"postinstall": "echo \"Make sure to run `yarn run license` to update licenses on install/uninstall!\""
 	},
 	"dependencies": {
 		"@aws-sdk/client-ses": "^3.409.0",

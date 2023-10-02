@@ -22,7 +22,7 @@ import {
 import { adminModifyClassUsers } from "./tables/classUsers.ts";
 
 savePolicies(
-	"./policies.sql",
+	"./rls/policies.sql",
 	assignmentViewing,
 	assignmentManagement,
 	assignmentSubmissionView,
