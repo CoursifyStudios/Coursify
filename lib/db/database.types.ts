@@ -453,18 +453,42 @@ export interface Database {
 			};
 			listings: {
 				Row: {
+					condition: string | null;
 					id: string;
+					info: string | null;
+					pictures: Json[] | null;
+					price: number | null;
+					pricing_flexible: boolean | null;
+					seller: string | null;
 					textbook: string | null;
 				};
 				Insert: {
+					condition?: string | null;
 					id?: string;
+					info?: string | null;
+					pictures?: Json[] | null;
+					price?: number | null;
+					pricing_flexible?: boolean | null;
+					seller?: string | null;
 					textbook?: string | null;
 				};
 				Update: {
+					condition?: string | null;
 					id?: string;
+					info?: string | null;
+					pictures?: Json[] | null;
+					price?: number | null;
+					pricing_flexible?: boolean | null;
+					seller?: string | null;
 					textbook?: string | null;
 				};
 				Relationships: [
+					{
+						foreignKeyName: "listings_seller_fkey";
+						columns: ["seller"];
+						referencedRelation: "users";
+						referencedColumns: ["id"];
+					},
 					{
 						foreignKeyName: "listings_textbook_fkey";
 						columns: ["textbook"];
@@ -641,6 +665,7 @@ export interface Database {
 					adoption_level: string | null;
 					author: string | null;
 					course: string;
+					course_id: number | null;
 					edition: string | null;
 					id: string;
 					isbn: string;
@@ -653,6 +678,7 @@ export interface Database {
 					adoption_level?: string | null;
 					author?: string | null;
 					course: string;
+					course_id?: number | null;
 					edition?: string | null;
 					id?: string;
 					isbn: string;
@@ -665,6 +691,7 @@ export interface Database {
 					adoption_level?: string | null;
 					author?: string | null;
 					course?: string;
+					course_id?: number | null;
 					edition?: string | null;
 					id?: string;
 					isbn?: string;

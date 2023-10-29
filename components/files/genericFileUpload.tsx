@@ -34,7 +34,7 @@ const GenericFileUpload: NextPage<{
 
 		setFiles(
 			files.concat({
-				link: "",
+				link: file.type.startsWith("image/") ? URL.createObjectURL(file) : "",
 				name: file.name,
 				dbName: name,
 				size: file.size,
