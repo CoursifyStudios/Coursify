@@ -451,6 +451,28 @@ export interface Database {
           }
         ]
       }
+      listings: {
+        Row: {
+          id: string
+          textbook: string | null
+        }
+        Insert: {
+          id?: string
+          textbook?: string | null
+        }
+        Update: {
+          id?: string
+          textbook?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listings_textbook_fkey"
+            columns: ["textbook"]
+            referencedRelation: "textbooks"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       relationships: {
         Row: {
           parent_id: string[] | null
@@ -613,6 +635,45 @@ export interface Database {
             referencedColumns: ["id"]
           }
         ]
+      }
+      textbooks: {
+        Row: {
+          adoption_level: string | null
+          author: string | null
+          course: string
+          edition: string | null
+          id: string
+          isbn: string
+          new_only: string | null
+          publisher: string | null
+          subject: string
+          title: string
+        }
+        Insert: {
+          adoption_level?: string | null
+          author?: string | null
+          course: string
+          edition?: string | null
+          id?: string
+          isbn: string
+          new_only?: string | null
+          publisher?: string | null
+          subject: string
+          title: string
+        }
+        Update: {
+          adoption_level?: string | null
+          author?: string | null
+          course?: string
+          edition?: string | null
+          id?: string
+          isbn?: string
+          new_only?: string | null
+          publisher?: string | null
+          subject?: string
+          title?: string
+        }
+        Relationships: []
       }
       user_achievements: {
         Row: {
