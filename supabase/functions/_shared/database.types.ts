@@ -453,34 +453,34 @@ export interface Database {
       }
       listings: {
         Row: {
-          condition: string | null
+          condition: number | null
           id: string
           info: string | null
           pictures: Json[] | null
           price: number | null
           pricing_flexible: boolean | null
-          seller: string | null
-          textbook: string | null
+          seller: string
+          textbook: string
         }
         Insert: {
-          condition?: string | null
+          condition?: number | null
           id?: string
           info?: string | null
           pictures?: Json[] | null
           price?: number | null
           pricing_flexible?: boolean | null
-          seller?: string | null
-          textbook?: string | null
+          seller: string
+          textbook: string
         }
         Update: {
-          condition?: string | null
+          condition?: number | null
           id?: string
           info?: string | null
           pictures?: Json[] | null
           price?: number | null
           pricing_flexible?: boolean | null
-          seller?: string | null
-          textbook?: string | null
+          seller?: string
+          textbook?: string
         }
         Relationships: [
           {

@@ -20,13 +20,13 @@ export const Textbook = ({
 }) => {
 	const { newTab } = useTabs();
 	return (
-		<div className="p-4 bg-gray-200 rounded-md grid">
+		<div className="p-3 bg-gray-200 rounded-md grid">
 			<p>{book.title}</p>
 			<p>
 				{book.adoption_level} - {book.course}
 			</p>
 			<Link
-				className="ml-auto bg-blue-300 flex py-1.5 px-2 rounded-lg mt-auto"
+				className="bg-blue-500 flex py-1.5 px-2 rounded-lg ml-auto mt-auto"
 				href={"/textbooks/" + book.id}
 				onClick={() => newTab("/textbooks/" + book.id, book.title)}
 			>
