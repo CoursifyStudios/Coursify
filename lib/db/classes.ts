@@ -108,6 +108,7 @@ export const getClass = async (
 		)
 		.eq("id", classid)
 		// will be improved, don't worry
+		.order("due_date", { foreignTable: "assignments", ascending: false })
 		.limit(5, { foreignTable: "assignments" })
 		//not sure if the line below does anything worthwhile
 		//.order("date", { foreignTable: "agendas", ascending: true })
@@ -118,7 +119,6 @@ export const getClass = async (
 			{ foreignTable: "agendas" }
 		)
 		.limit(3, { foreignTable: "agendas" })
-		.order("due_date", { foreignTable: "assignments", ascending: true })
 		.single();
 };
 
