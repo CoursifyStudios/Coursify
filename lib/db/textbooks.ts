@@ -75,7 +75,9 @@ export async function editListing(
 		pricing_flexible: boolean;
 	}
 ) {
-	const newFileLinks = listing.pictures?.map((file) => file.dbName);
+	const newFileLinks = listing.pictures?.map(
+		(file) => `/textbooks/${file.dbName}`
+	);
 	//removing any no longer wanted files
 	if (oldPictures) {
 		await supabase.functions.invoke("delete-file", {
@@ -116,8 +118,17 @@ export async function editListing(
 
 export async function deleteListing(
 	supabase: SupabaseClient<Database>,
-	listingID: string
+	listingID: string,
+	files: string[]
 ) {
+	if (files.length > 0) {
+		await supabase.functions.invoke("delete-file", {
+			body: {
+				path: files,
+			},
+		});
+	}
+
 	return await supabase
 		.from("listings")
 		.delete()

@@ -297,7 +297,9 @@ export const AnnouncementPostingUI = ({
 													author: user.id,
 													title: editingInfo.title,
 													files: editingInfo.files
-														? editingInfo.files.map((file) => file.dbName)
+														? editingInfo.files.map(
+																(file) => `announcements/${file.dbName}`
+														  )
 														: [],
 													clone_id: editingInfo.clone_id,
 												},
