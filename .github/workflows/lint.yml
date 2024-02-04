@@ -1,7 +1,4 @@
-# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
-# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
-
-name: Lint Test
+name: Deno Lint
 
 on:
   push:
@@ -10,20 +7,17 @@ on:
     branches: [dev]
 
 jobs:
-  build:
+  check:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v3
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v3
+      - name: Install Deno
+        uses: denoland/setup-deno@main
         with:
-          node-version: "16"
-          cache: "npm"
+          deno-version: v1.x
 
-      - name: Setup ESLint
-        run: npm install
-
-      - name: Test ESLint
-        run: npx eslint .
+      - name: Lint
+        run: deno lint --config=deno.jsonc

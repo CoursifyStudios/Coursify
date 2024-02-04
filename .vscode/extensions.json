@@ -1,12 +1,13 @@
 {
 	"recommendations": [
+		"denoland.vscode-deno",
+		"bradlc.vscode-tailwindcss",
 		"ms-azuretools.vscode-docker",
 		"irongeek.vscode-env",
 		"dbaeumer.vscode-eslint",
 		"visualstudioexptteam.vscodeintellicode",
 		"esbenp.prettier-vscode",
 		"wayou.vscode-todo-highlight",
-		"bradlc.vscode-tailwindcss",
 		"ionic.ionic",
 		"usernamehw.errorlens"
 	]

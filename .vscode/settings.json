@@ -1,55 +1,20 @@
 {
-	"typescript.tsdk": ".\\node_modules\\typescript\\lib",
-	"typescript.enablePromptUseWorkspaceTsdk": true,
-	"cSpell.words": [
-		"AMPM",
-		"announcementid",
-		"assignmentid",
-		"assignmentuuid",
-		"Astley",
-		"Automagically",
-		"betatag",
-		"bloxs",
-		"classid",
-		"classpills",
-		"codehighlightplugin",
-		"communityid",
-		"couldn",
-		"coursify",
-		"CROSSPOST",
-		"elementarraytype",
-		"Formik",
-		"googledrive",
-		"Grammarly",
-		"graydient",
-		"groupid",
-		"Hcux",
-		"headlessui",
-		"heroicons",
-		"infopills",
-		"listitem",
-		"lukas",
-		"membernum",
-		"nextjs",
-		"postgres",
-		"Postgrest",
-		"profileid",
-		"richeditor",
-		"richtheme",
-		"safelisting",
-		"schoolwide",
-		"seagullz",
-		"Securityandprivacy",
-		"Sesh",
-		"sidepanel",
-		"supabase",
-		"svgs",
-		"tabstest",
-		"trojker",
-		"tyvm",
-		"upsert",
-		"userid",
-		"zustand"
-	],
-	"deno.enable": false
+	"deno.enable": true,
+	"deno.lint": true,
+	"editor.defaultFormatter": "denoland.vscode-deno",
+	"[typescriptreact]": {
+		"editor.defaultFormatter": "denoland.vscode-deno"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "denoland.vscode-deno"
+	},
+	"[javascriptreact]": {
+		"editor.defaultFormatter": "denoland.vscode-deno"
+	},
+	"[javascript]": {
+		"editor.defaultFormatter": "denoland.vscode-deno"
+	},
+	"css.customData": [".vscode/tailwind.json"],
+	// I cannot get this singular line to stop being added by vscode - Bloxs
+	"workbench.iconTheme": "vscode-icons"
 }
