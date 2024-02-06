@@ -155,7 +155,12 @@ const TeacherClass: NextPage<TeacherClassType> = ({
 								<h4 className="max-w-[10.5rem] truncate text-sm font-medium">
 									{assignment.name}
 								</h4>
-								<p className="text-xs">12/24 students submitted</p>
+								{/* show correct number of students submitted -BS */}
+								<p className="text-xs">
+									{assignment.submissions.length}/
+									{classData.class_users.map((user) => !user.teacher).length}{" "}
+									students submitted
+								</p>
 							</div>
 							<div
 								tabIndex={-1}

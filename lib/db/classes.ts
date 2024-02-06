@@ -40,7 +40,10 @@ export async function getAllClasses(
 						*,
 						starred (
 								*
-						)
+						),
+                        submissions (
+                            count
+                        )
 				)
 			)
 			`
