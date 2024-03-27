@@ -127,7 +127,7 @@ export const editAnnouncement = async (
 		await supabase.functions.invoke("delete-file", {
 			body: {
 				path: oldAnnouncement.files.filter(
-					(oldFile) => newFileLinks?.includes(oldFile)
+					(oldFile) => !newFileLinks?.includes(oldFile)
 				),
 			},
 		});
