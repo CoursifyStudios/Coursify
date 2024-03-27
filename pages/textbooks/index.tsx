@@ -1,6 +1,6 @@
 import { getAllListings, handleConditions } from "@/lib/db/textbooks";
 import { NextPageWithLayout } from "../_app";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
+import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import Layout from "@/components/layout/layout";
 import { Disclosure } from "@headlessui/react";
 import {
@@ -13,9 +13,11 @@ import { SpecificCheckboxList } from "./booklist";
 import { Listing } from "@/components/textbooks/listing";
 import { ReactElement, useState } from "react";
 import Dropdown from "@/components/misc/dropdown";
+import { Button } from "@/components/misc/button";
 
 const Offers: NextPageWithLayout = () => {
 	const supabase = useSupabaseClient();
+	const user = useUser();
 	const [page, setPage] = useState(1);
 	const [search, setSearch] = useState("");
 	const [minPrice, setMinPrice] = useState<number>(0);
@@ -86,7 +88,9 @@ const Offers: NextPageWithLayout = () => {
 						};
 					})
 				);
-				setMaxPrice(Math.max(...data.data.map((listing) => listing.price!)));
+				setMaxPrice(
+					Math.max(...data.data.map((listing) => listing.price!)) + 1
+				);
 			}
 		})();
 	});
@@ -96,7 +100,7 @@ const Offers: NextPageWithLayout = () => {
 			<TextbookNavbar title="All offers for SHC books" />
 			<div className="flex">
 				<section className="bg-gray-200 w-80 sm:shrink-0 p-4 rounded-r-2xl">
-					<p className="text-lg font-semibold">Filters:</p>
+					<p className="text-lg font-semibold text-center">Filters:</p>
 					<div className="grid">
 						<p className="mt-1 font-semibold">Class</p>
 						{Array.from(
@@ -112,7 +116,7 @@ const Offers: NextPageWithLayout = () => {
 								title={subject}
 							/>
 						))}
-						<hr className="h-px bg-black border-0 m-2 mx-6" />
+						<hr className="h-px dark:bg-white bg-black border-0 m-2 mx-6" />
 						<SpecificCheckboxList
 							items={listings.map(
 								(listing) => listing.textbooks?.adoption_level
@@ -262,6 +266,18 @@ const Offers: NextPageWithLayout = () => {
 							setFilter={setPublisherFilter}
 							title="Publisher"
 						/>
+						<Button
+							className="mx-auto"
+							onClick={() =>
+								sellerFilter[0] && user?.user_metadata?.full_name
+									? setSellerFilter([])
+									: setSellerFilter(user?.user_metadata?.full_name)
+							}
+						>
+							{sellerFilter[0] && user?.user_metadata?.full_name
+								? "Show all sellers' listings"
+								: "Show only my listings"}
+						</Button>
 					</div>
 				</section>
 				<section className="w-full max-w-screen-2xl px-3">

@@ -1,5 +1,5 @@
 import { useRouter } from "next/router";
-import { NextPageWithLayout } from "../_app";
+import { NextPageWithLayout } from "../../../_app";
 import { ReactElement, useEffect, useState } from "react";
 import Layout from "@/components/layout/layout";
 import { CoursifyFile } from "@/components/files/genericFileUpload";
@@ -10,10 +10,11 @@ import { TextbookNavbar } from "@/components/textbooks/navbar";
 import { Listing } from "@/components/textbooks/listing";
 import { Button } from "@/components/misc/button";
 import { CreateListing } from "@/components/textbooks/createListing";
+import { getDataOutArray } from "@/lib/misc/dataOutArray";
 
 const Textbook: NextPageWithLayout = () => {
 	const router = useRouter();
-	const { textbookid } = router.query;
+	const { textbookid, title } = router.query;
 	const supabase = useSupabaseClient();
 	const user = useUser();
 	const [conditionFilter, setConditionFilter] = useState<number[]>([]);
@@ -83,7 +84,10 @@ const Textbook: NextPageWithLayout = () => {
 					open={showPosting}
 					setOpen={setShowPosting}
 					supabase={supabase}
-					book={{ id: textbookid, title: listings[0].textbooks?.title! }}
+					book={{
+						id: textbookid,
+						title: getDataOutArray(title) ?? listings[0].textbooks?.title!,
+					}}
 					addListing={(listing) =>
 						setListings(
 							listings.concat({
@@ -202,7 +206,7 @@ const Textbook: NextPageWithLayout = () => {
 								))}
 						</div>
 					) : (
-						<p>Sorry, no textbooks of that type could be found.</p>
+						<p>Sorry, no listings for that book could be found.</p>
 					)}
 				</section>
 			</div>

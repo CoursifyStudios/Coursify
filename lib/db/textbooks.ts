@@ -121,7 +121,7 @@ export async function deleteListing(
 	listingID: string,
 	files: string[]
 ) {
-	if (files.length > 0) {
+	if (files && files.length > 0) {
 		await supabase.functions.invoke("delete-file", {
 			body: {
 				path: files,

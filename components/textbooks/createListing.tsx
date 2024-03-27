@@ -195,7 +195,7 @@ export const CreateListing = ({
 					></Field>
 
 					<label htmlFor="price" className="flex justify-between h-6">
-						Pricing Flexible:
+						Pricing Flexible?:
 						<Field name="flexible" type="checkbox"></Field>
 						Price (USD):
 						<Field

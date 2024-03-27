@@ -15,6 +15,7 @@ import { useState } from "react";
 import { useSupabaseClient, useUser } from "@supabase/auth-helpers-react";
 import { Database } from "@/lib/db/database.types";
 import { CreateListing } from "./createListing";
+import { ListingView } from "./listingView";
 
 export const Listing = ({
 	listing,
@@ -49,12 +50,21 @@ export const Listing = ({
 	const { newTab } = useTabs();
 	const user = useUser();
 	const [info, setInfo] = useState(listing);
+	const [showViewing, setShowViewing] = useState(false);
 	const [showDeleting, setShowDeleting] = useState(false);
 	const [showEditing, setShowEditing] = useState(false);
 	const [deleted, setDeleted] = useState(false);
 	const supabase = useSupabaseClient<Database>();
 	return (
 		<>
+			{/* For viewing */}
+			<ListingView
+				open={showViewing}
+				setOpen={setShowViewing}
+				title={listing.textbooks?.title!}
+				listingInfo={listing}
+			></ListingView>
+			{/* For editing */}
 			<CreateListing
 				open={showEditing}
 				setOpen={setShowEditing}
@@ -69,6 +79,7 @@ export const Listing = ({
 				}
 				editingInfo={{ ...info, clear: () => {} }}
 			/>
+			{/* For deleting */}
 			<Delete
 				open={showDeleting}
 				setOpen={setShowDeleting}
@@ -77,16 +88,28 @@ export const Listing = ({
 				pictures={info.pictures.map((picture) => picture.dbName)}
 				id={listing.id}
 			/>
-			<div className=" p-4 rounded-lg bg-gray-200" hidden={deleted}>
+			<div
+				className=" p-4 rounded-lg bg-gray-200"
+				hidden={deleted}
+				onClick={() => {
+					setShowViewing(true);
+				}}
+			>
 				<p>{info.textbooks?.title}</p>
 				{info.pictures && info.pictures.length > 0 ? (
-					<ImagePreview file={info.pictures[0]} />
+					<Image
+						src={info.pictures[0].link}
+						alt={`ugc image of ${info.pictures[0].name}`}
+						width={192}
+						height={192}
+						className="mx-auto rounded object-cover object-center !min-w-48 h-48"
+					/>
 				) : (
 					<p className="p-3 bg-orange-400 grow h-48 rounded-lg">No image</p>
 				)}
 
 				<p>
-					{handleConditions(info.condition)} - ${info.price}
+					{handleConditions(info.condition) ?? "No condition"} - ${info.price}
 					{info.pricing_flexible && " (Flexible)"}
 				</p>
 

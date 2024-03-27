@@ -27,7 +27,7 @@ export const Delete = ({
 
 	return (
 		<Popup closeMenu={() => setOpen(false)} open={open} size="sm">
-			<h2 className="title-sm">Delete Listing</h2>
+			<h2 className="title-sm">Are you sure you wish to delete the listing?</h2>
 			<div className="mt-2 flex justify-between">
 				<Button onClick={() => setOpen(false)}>Cancel</Button>
 				<Button
@@ -35,7 +35,7 @@ export const Delete = ({
 					onClick={async () => {
 						setError("");
 						setDeleting(true);
-						const dBReturn = await deleteListing(supabase, id);
+						const dBReturn = await deleteListing(supabase, id, pictures);
 						setDeleting(false);
 						if (dBReturn.error) {
 							setError(dBReturn.error.message);

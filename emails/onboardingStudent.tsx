@@ -53,7 +53,8 @@ const CoursifyInviteStudentEmail = ({
 
 						<Section className="text-center mt-[32px] mb-[32px]">
 							<Button
-								pX={20}
+								//@ts-ignore
+								pX={20} //TODO: idk what the deal is with this erroring.
 								pY={12}
 								className="bg-blue-500 rounded-lg text-white text-[16px] font-semibold no-underline text-center"
 								href="https://app.coursify.one/login"

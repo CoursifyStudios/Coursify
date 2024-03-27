@@ -27,8 +27,10 @@ export const Textbook = ({
 			</p>
 			<Link
 				className="bg-blue-500 flex py-1.5 px-2 rounded-lg ml-auto mt-auto"
-				href={"/textbooks/" + book.id}
-				onClick={() => newTab("/textbooks/" + book.id, book.title)}
+				href={"/textbooks/books/" + book.title + "/" + book.id}
+				onClick={() =>
+					newTab("/textbooks/books/" + book.title + "/" + book.id, book.title)
+				}
 			>
 				View Listings
 				<ArrowTopRightOnSquareIcon className="h-6 w-6 ml-2" />
