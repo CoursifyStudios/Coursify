@@ -80,7 +80,7 @@ export default function ScheduleComponent({
 													v.class &&
 													v.class.block == item.block &&
 													v.class.schedule_type == item.type
-											)?.class!.name // And we fill in the UI with the name
+											)!.class!.name // And we fill in the UI with the name
 										}
 										<ColoredPill
 											color={
