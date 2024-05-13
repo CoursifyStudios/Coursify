@@ -69,7 +69,7 @@
 		"react-tagsinput": "^3.20.3",
 		"sass": "^1.66.1",
 		"sharp": "^0.32.6",
-		"tailwindcss-theme-swapper": "^0.7.3",
+		"tailwindcss-theme-swapper": "^0.11.4",
 		"typescript": "^5.2.2",
 		"use-child": "^1.0.0",
 		"yup": "^1.2.0",
