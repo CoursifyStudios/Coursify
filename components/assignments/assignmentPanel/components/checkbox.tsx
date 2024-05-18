@@ -179,8 +179,8 @@ const CheckBox: NextPage<{
 							? "Submitted!"
 							: "Submit"
 						: dbSubmission?.final
-						? "Resubmit Draft"
-						: "Save Draft"}
+							? "Resubmit Draft"
+							: "Save Draft"}
 				</Button>
 				{loading && <Loading className="bg-gray-300" />}
 			</div>

@@ -108,13 +108,13 @@ const AssignmentCalender: NextPage<{
 								{date.getDate()}
 							</div>
 						</>
-				  ))
+					))
 				: [...new Array(28)].map((_, i) => (
 						<div
 							className="h-10 w-10 animate-pulse rounded bg-gray-200"
 							key={i}
 						></div>
-				  ))}
+					))}
 		</div>
 	);
 };

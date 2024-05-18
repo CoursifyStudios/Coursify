@@ -87,7 +87,7 @@ export const AnnouncementPostingUI = ({
 						id: communityid,
 						name: "",
 					},
-			  ]
+				]
 	);
 	const [files, setFiles] = useState<CoursifyFile[]>(
 		editingInfo ? editingInfo.files ?? [] : []

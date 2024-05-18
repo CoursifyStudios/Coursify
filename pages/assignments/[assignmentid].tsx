@@ -108,20 +108,20 @@ const Post: NextPageWithLayout = () => {
 					sAssignments.length > 0
 						? sAssignments //.sort((a, b) => {
 						: // 	const aScore =
-						  // 		a.submissions.length > 0
-						  // 			? a.submissions.some((s) => s.final == true)
-						  // 				? 2
-						  // 				: 1
-						  // 			: 0;
-						  // 	const bScore =
-						  // 		b.submissions.length > 0
-						  // 			? b.submissions.some((s) => s.final == true)
-						  // 				? 2
-						  // 				: 1
-						  // 			: 0;
-						  // 	return aScore - bScore;
-						  // })
-						  []
+							// 		a.submissions.length > 0
+							// 			? a.submissions.some((s) => s.final == true)
+							// 				? 2
+							// 				: 1
+							// 			: 0;
+							// 	const bScore =
+							// 		b.submissions.length > 0
+							// 			? b.submissions.some((s) => s.final == true)
+							// 				? 2
+							// 				: 1
+							// 			: 0;
+							// 	return aScore - bScore;
+							// })
+							[]
 				);
 			}
 		})();

@@ -170,9 +170,9 @@ export const setThisSchedule = (
 			!scheduleData.data?.template && scheduleData.data?.schedule_items
 				? (scheduleData.data.schedule_items as unknown as ScheduleInterface[])
 				: !Array.isArray(scheduleData.data?.schedule_templates)
-				? (scheduleData.data?.schedule_templates
-						?.schedule_items as unknown as ScheduleInterface[])
-				: undefined
+					? (scheduleData.data?.schedule_templates
+							?.schedule_items as unknown as ScheduleInterface[])
+					: undefined
 		);
 };
 

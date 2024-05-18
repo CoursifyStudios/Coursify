@@ -47,10 +47,10 @@ export const Popup: NextPage<{
 									size == "sm"
 										? "max-w-screen-sm"
 										: size == "md"
-										? "max-w-screen-md"
-										: size == "lg"
-										? "max-w-screen-lg"
-										: "max-w-xl"
+											? "max-w-screen-md"
+											: size == "lg"
+												? "max-w-screen-lg"
+												: "max-w-xl"
 								} flex-col rounded-xl bg-white/75 py-4 pl-4 shadow-md max-h-[95vh] scrollbar-fancy overflow-y-auto [scrollbar-gutter:stable] backdrop-blur-xl dark:bg-neutral-950/75 dark:text-gray-100`}
 							>
 								{children}

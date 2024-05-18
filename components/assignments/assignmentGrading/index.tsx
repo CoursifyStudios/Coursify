@@ -95,8 +95,8 @@ const AssignmentGradingUI = ({
 			student.submissions.filter((s) => s.final).length == 0
 				? false
 				: !is
-				? student.submissions.filter((s) => s.final)[0].grade == null
-				: student.submissions.filter((s) => s.final)[0].grade != null
+					? student.submissions.filter((s) => s.final)[0].grade == null
+					: student.submissions.filter((s) => s.final)[0].grade != null
 		);
 
 	const notSubmitted = students.filter(
@@ -261,7 +261,7 @@ const AssignmentGradingUI = ({
 							},
 							"publish"
 						),
-			  }
+				}
 			: undefined;
 
 	return (
@@ -365,9 +365,9 @@ const AssignmentGradingUI = ({
 												selectedStudent.submissions.find((s) => s.final)
 													? selectedStudent.submissions.find((s) => s.final)!
 															.comment == comment &&
-													  selectedStudent.submissions.find((s) => s.final)!
+														selectedStudent.submissions.find((s) => s.final)!
 															.grade == grade &&
-													  graded.some((student) => student.id == selectedID)
+														graded.some((student) => student.id == selectedID)
 													: false
 											}
 										>
@@ -376,8 +376,8 @@ const AssignmentGradingUI = ({
 													? "Update Grade"
 													: "Update Review"
 												: maxGrade
-												? "Grade Assignment"
-												: "Set Reviewed"}
+													? "Grade Assignment"
+													: "Set Reviewed"}
 										</Button>
 									</div>
 								</div>

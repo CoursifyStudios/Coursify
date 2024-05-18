@@ -179,8 +179,8 @@ const ScheduleEditor: NextPageWithLayout = () => {
 																!scheduleItem.specialEvent
 																	? "blue"
 																	: !scheduleItem.customColor
-																	? "green"
-																	: scheduleItem.customColor
+																		? "green"
+																		: scheduleItem.customColor
 															}
 														>
 															{to12hourTime(
@@ -233,8 +233,8 @@ const ScheduleEditor: NextPageWithLayout = () => {
 																!scheduleItem.specialEvent
 																	? "blue"
 																	: !scheduleItem.customColor
-																	? "green"
-																	: scheduleItem.customColor
+																		? "green"
+																		: scheduleItem.customColor
 															}
 														>
 															{to12hourTime(

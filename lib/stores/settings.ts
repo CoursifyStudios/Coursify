@@ -38,7 +38,7 @@ export const useSettings = create<SettingsStore>()(
 						? {
 								...state.data,
 								...data,
-						  }
+							}
 						: defaultSettings,
 				}));
 			},

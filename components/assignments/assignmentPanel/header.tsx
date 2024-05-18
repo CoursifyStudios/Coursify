@@ -106,15 +106,15 @@ const AssignmentHeader: NextPage<{
 								{assignment.data.hidden
 									? "Hidden from students"
 									: new Date(assignment.data.publish_date!).getTime() >
-									  new Date().getTime()
-									? `Publishes on ${formatDate(
-											new Date(assignment.data.publish_date)
-									  )}`
-									: assignment.data.due_date
-									? `Due ${formatDate(new Date(assignment.data.due_date))}`
-									: `Published on ${formatDate(
-											new Date(assignment.data.publish_date)
-									  )}`}
+										  new Date().getTime()
+										? `Publishes on ${formatDate(
+												new Date(assignment.data.publish_date)
+											)}`
+										: assignment.data.due_date
+											? `Due ${formatDate(new Date(assignment.data.due_date))}`
+											: `Published on ${formatDate(
+													new Date(assignment.data.publish_date)
+												)}`}
 							</ColoredPill>
 						)}
 					</div>
