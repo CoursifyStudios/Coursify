@@ -65,14 +65,14 @@ const StudentClass: NextPage<StudentClassType> = ({
 							showTimeLoading
 								? "h-5 w-20 animate-pulse"
 								: time?.timeStart == undefined
-								? "hidden"
-								: ""
+									? "hidden"
+									: ""
 						}
 					>
 						{time?.timeStart != undefined && !showTimeLoading
 							? to12hourTime(time?.timeStart, settings.showAMPM) +
-							  " - " +
-							  to12hourTime(time?.timeEnd, settings.showAMPM)
+								" - " +
+								to12hourTime(time?.timeEnd, settings.showAMPM)
 							: ""}
 					</ColoredPill>
 				</div>
@@ -91,7 +91,7 @@ const StudentClass: NextPage<StudentClassType> = ({
 											? classData.users!
 											: classData.users!.find(
 													(user) => user.id == userData.user_id
-											  );
+												);
 										if (!user)
 											return (
 												<p className="text-sm italic text-gray-700" key={i}>

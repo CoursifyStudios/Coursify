@@ -53,13 +53,13 @@ export const CommunityPicker = ({
 									)}
 								</button>
 							);
-					  })
+						})
 					: [...new Array(6)].map((_, i) => (
 							<div
 								key={i}
 								className="h-12 animate-pulse rounded-lg bg-gray-200"
 							/>
-					  ))}
+						))}
 			</div>
 		</Popup>
 	);

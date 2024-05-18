@@ -40,7 +40,7 @@ export const postAnnouncements = async (
 						return withoutFile;
 					}
 				})
-		  )
+			)
 		: [];
 	communities.forEach((community) => {
 		announcements.push({
@@ -126,8 +126,8 @@ export const editAnnouncement = async (
 	if (oldAnnouncement.files) {
 		await supabase.functions.invoke("delete-file", {
 			body: {
-				path: oldAnnouncement.files.filter(
-					(oldFile) => newFileLinks?.includes(oldFile)
+				path: oldAnnouncement.files.filter((oldFile) =>
+					newFileLinks?.includes(oldFile)
 				),
 			},
 		});
@@ -152,7 +152,7 @@ export const editAnnouncement = async (
 						return coursifyFile;
 					}
 				})
-		  )
+			)
 		: [];
 	//not the most elegant, sure, but it works an only uses one request. Until we get an SQL function, we use this. I'm Bill, this is my pr,
 	return await supabase

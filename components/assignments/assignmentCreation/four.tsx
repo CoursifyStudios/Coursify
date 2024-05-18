@@ -97,7 +97,7 @@ const AssignmentCreation: NextPage<{
 							return withoutFile;
 						}
 					})
-			  )
+				)
 			: [];
 		const { assignmentType: _, ...assignmentSettings } =
 			assignmentData.settings;

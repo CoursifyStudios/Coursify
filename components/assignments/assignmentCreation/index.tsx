@@ -173,7 +173,7 @@ export const CreateAssignment: NextPage<{
 													hidden: false,
 												} as NewAssignmentData);
 												setStage((stage) => stage + 1);
-										  }
+											}
 								}
 							>
 								<div className="flex items-center">

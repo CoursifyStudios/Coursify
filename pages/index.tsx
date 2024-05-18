@@ -218,7 +218,7 @@ const Home = () => {
 																						assignment.starred
 																							? Array.isArray(
 																									assignment.starred
-																							  )
+																								)
 																								? assignment.starred.length > 0
 																								: !!assignment.starred
 																							: false

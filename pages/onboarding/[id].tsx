@@ -207,8 +207,8 @@ const Onboarding = () => {
 									? "h-96"
 									: "h-[18.5rem]"
 								: userData.year
-								? "h-[18.5rem]"
-								: "h-56")
+									? "h-[18.5rem]"
+									: "h-56")
 						} 
 						${
 							id == OnboardingState.SecondStage &&
@@ -225,7 +225,7 @@ const Onboarding = () => {
 										WebkitTransform: `translate3d(0, 0, 0)`,
 										msTransform: `translate3d(0, 0, 0)`,
 										transform: `translate3d(0, 0, 0)`,
-								  }
+									}
 								: undefined
 						}
 					>

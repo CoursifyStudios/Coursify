@@ -306,7 +306,7 @@ const FileUpload: NextPage<{
 					{settings.minFiles > submission.files.length
 						? `${submission.files.length}/${settings.minFiles} minimum files`
 						: settings.maxFiles &&
-						  `${submission.files.length}/${settings.maxFiles} maximum files`}
+							`${submission.files.length}/${settings.maxFiles} maximum files`}
 				</ColoredPill>
 			)}
 			{submission.files.length > 0 && (
@@ -387,10 +387,10 @@ const FileUpload: NextPage<{
 							? (
 									revisions.find((submission) => submission.final == true)
 										?.content as SubmissionFileUpload
-							  ).files
+								).files
 									.map((f) => f.fileName)
 									.join(",") ==
-							  submission.files.map((f) => f.fileName).join(",")
+								submission.files.map((f) => f.fileName).join(",")
 							: false) ||
 						loading ||
 						// min/max validation

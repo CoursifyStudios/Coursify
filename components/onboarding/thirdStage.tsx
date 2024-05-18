@@ -68,8 +68,8 @@ const OnboardingThirdStage = ({
 								(mainTeacher
 									? mainTeacher.user_id
 									: teachers.length > 0
-									? teachers[0].user_id
-									: "")
+										? teachers[0].user_id
+										: "")
 						);
 
 						return (

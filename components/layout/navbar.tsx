@@ -34,7 +34,7 @@ const Navbar: NextComponentType = () => {
 					"https://hhrehffmdrcjqowwvgqg.supabase.co/storage/v1/object/public/cdn/assets/demo-images/user",
 				email: "demo@coursify.one",
 				full_name: "Coursify Demo User",
-		  }
+			}
 		: user?.user_metadata ?? {};
 	const [username, setUsername] = useState<string>();
 	const [fullname, setFullName] = useState<string>();

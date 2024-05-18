@@ -385,7 +385,7 @@ const Admin: NextPageWithLayout = () => {
 							typeof id == "string" ? id : "",
 							query
 						),
-				  ])
+					])
 				: await Promise.all([
 						getUsers(
 							supabase,
@@ -395,7 +395,7 @@ const Admin: NextPageWithLayout = () => {
 							query
 						),
 						getUsersPages(supabase, 50, typeof id == "string" ? id : "", query),
-				  ]);
+					]);
 
 			if (data.data && pages) {
 				// @ts-expect-error relationships will never be an array
@@ -760,21 +760,20 @@ Activities	The user's activities, as displayed on their profile
 			setLoading(false);
 			return;
 		}
-		setUsers(
-			(users) =>
-				users?.map((mappedUser) => {
-					if (selectedRows.includes(mappedUser.id)) {
-						return {
-							...mappedUser,
-							enrolled: [
-								{
-									admin_bool: admin,
-								},
-							],
-						};
-					}
-					return mappedUser;
-				})
+		setUsers((users) =>
+			users?.map((mappedUser) => {
+				if (selectedRows.includes(mappedUser.id)) {
+					return {
+						...mappedUser,
+						enrolled: [
+							{
+								admin_bool: admin,
+							},
+						],
+					};
+				}
+				return mappedUser;
+			})
 		);
 
 		newNotification(`Set user(s) to ${admin ? "admin" : "standard account"}`);
@@ -813,30 +812,28 @@ Activities	The user's activities, as displayed on their profile
 				}`
 			);
 			if (selectedUser) {
-				setUsers(
-					(users) =>
-						users?.map((mappedUser) => {
-							if (mappedUser.id == selectedUser!.id) {
-								return {
-									...mappedUser,
-									[cell.modified!]: value,
-								};
-							}
-							return mappedUser;
-						})
+				setUsers((users) =>
+					users?.map((mappedUser) => {
+						if (mappedUser.id == selectedUser!.id) {
+							return {
+								...mappedUser,
+								[cell.modified!]: value,
+							};
+						}
+						return mappedUser;
+					})
 				);
 			} else if (selectedClass) {
-				setClasses(
-					(classes) =>
-						classes?.map((mappedClass) => {
-							if (mappedClass.id == selectedClass!.id) {
-								return {
-									...mappedClass,
-									[cell.cmodified!]: value,
-								};
-							}
-							return mappedClass;
-						})
+				setClasses((classes) =>
+					classes?.map((mappedClass) => {
+						if (mappedClass.id == selectedClass!.id) {
+							return {
+								...mappedClass,
+								[cell.cmodified!]: value,
+							};
+						}
+						return mappedClass;
+					})
 				);
 			}
 		}
@@ -1426,7 +1423,7 @@ Activities	The user's activities, as displayed on their profile
 											rows.length == users?.length
 												? []
 												: // brilliant
-												  users?.map((user) => user.id) || []
+													users?.map((user) => user.id) || []
 										);
 									}}
 								>
@@ -1477,8 +1474,8 @@ Activities	The user's activities, as displayed on their profile
 														selected && selectedSquare == undefined
 															? rows.filter((row) => row != mappedUser.id)
 															: selectedSquare != undefined
-															? [mappedUser.id]
-															: rows.concat([mappedUser.id])
+																? [mappedUser.id]
+																: rows.concat([mappedUser.id])
 													);
 												}}
 											>
@@ -2106,8 +2103,8 @@ Activities	The user's activities, as displayed on their profile
 														selected && selectedSquare == undefined
 															? rows.filter((row) => row != mappedClass.id)
 															: selectedSquare != undefined
-															? [mappedClass.id]
-															: rows.concat([mappedClass.id])
+																? [mappedClass.id]
+																: rows.concat([mappedClass.id])
 													);
 												}}
 											>
@@ -2634,7 +2631,7 @@ function UserSelector({
 																	)
 															),
 													},
-											  ]
+												]
 											: []),
 									]}
 								>

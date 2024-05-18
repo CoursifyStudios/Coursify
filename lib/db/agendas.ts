@@ -30,7 +30,7 @@ export const fetchAgendasAndAssignments = async (
 							(assignment) =>
 								// filter to make sure that this assignment was not already fetched
 								assignments.indexOf(assignment) === -1
-					  )
+						)
 					: []
 			)
 		);

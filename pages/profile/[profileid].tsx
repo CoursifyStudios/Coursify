@@ -88,7 +88,7 @@ export default function Profile() {
 								<EnvelopeIcon className="mr-1.5 h-4 w-4 text-gray-800" />
 								{profile && profile.data && profile.data.email
 									? profile.data.email.slice(0, 26) +
-									  (profile.data.email.length > 26 ? "..." : "")
+										(profile.data.email.length > 26 ? "..." : "")
 									: "No email found"}
 							</div>
 						</ColoredPill>
@@ -113,7 +113,7 @@ export default function Profile() {
 												earned={new Date(achievement.date_earned)}
 											/>
 										)
-								  )
+									)
 								: [...new Array(4)].map((_, i) => (
 										<div
 											className="flex cursor-pointer select-none flex-col items-center rounded-xl"
@@ -122,7 +122,7 @@ export default function Profile() {
 											<div className="relative h-16 w-16 animate-pulse rounded-full bg-gray-300"></div>
 											<div className="mb-2 mt-3 h-6 w-16 animate-pulse rounded bg-gray-300"></div>
 										</div>
-								  ))}
+									))}
 						</div>
 					</div>
 				)}
@@ -153,13 +153,13 @@ export default function Profile() {
 											isLink={true}
 										/>
 									)
-						  )
+							)
 						: [...new Array(6)].map((_, i) => (
 								<div
 									key={i}
 									className="h-48 w-[19rem] animate-pulse rounded-xl bg-gray-200"
 								></div>
-						  ))}
+							))}
 				</div>
 			</div>
 			{/* Right sidepanel, list of groups */}

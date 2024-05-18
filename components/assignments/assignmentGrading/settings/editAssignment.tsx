@@ -79,7 +79,7 @@ const EditAssignment = ({
 		const toDelete: CoursifyFile[] = assignment.data!.files
 			? (assignment.data!.files as unknown as CoursifyFile[]).filter((file) => {
 					!f.some((f) => f.dbName == file.dbName);
-			  })
+				})
 			: [];
 
 		const files = f.map((file) => {
@@ -133,7 +133,7 @@ const EditAssignment = ({
 										path: toDelete.map((file) => `assignments/${file.dbName}`),
 									},
 								}),
-						  ]
+							]
 						: []
 				)
 		);

@@ -242,7 +242,7 @@ const Text: NextPage<{
 							typeof (dbSubmission?.content as SubmissionText).content ==
 								"string"
 								? //@ts-expect-error huh.mp4
-								  dbSubmission.content.content
+									dbSubmission.content.content
 								: ""
 						}
 					/>

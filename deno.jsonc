@@ -3,14 +3,14 @@
 		"include": ["./pages", "./components", "./lib"],
 		"exclude": ["./lib/editor"],
 		"rules": {
-			"exclude": ["ban-ts-comment", "require-await", "no-window"]
-		}
+			"exclude": ["ban-ts-comment", "require-await", "no-window"],
+		},
 	},
 	"fmt": {
 		"indentWidth": 4,
 		"useTabs": true,
 		"singleQuote": false,
 		"semiColons": true,
-		"lineWidth": 80
-	}
+		"lineWidth": 80,
+	},
 }

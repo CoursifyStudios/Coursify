@@ -153,8 +153,8 @@ export const CreateAgenda = ({
 					date: editingInfo
 						? new Date(editingInfo.date).toLocaleDateString("en-CA")
 						: // I couldn't get this working until I used this.
-						  // I've found the first (and only) reason for Canada to exist!
-						  new Date().toLocaleDateString("en-CA"),
+							// I've found the first (and only) reason for Canada to exist!
+							new Date().toLocaleDateString("en-CA"),
 				}}
 				onSubmit={async (values) => {
 					setErrorMessage("");
@@ -170,7 +170,7 @@ export const CreateAgenda = ({
 									description: editorState?.toJSON() as unknown as Json,
 									assignments: chosenAssignments,
 									files: files ?? [],
-							  })
+								})
 							: await createAgenda(
 									supabase,
 									classID,
@@ -178,7 +178,7 @@ export const CreateAgenda = ({
 									editorState?.toJSON() as unknown as Json,
 									chosenAssignments,
 									files ?? []
-							  );
+								);
 						// FAILURE STATE
 						if (DBreturn.error) {
 							setLoading(false);
@@ -279,7 +279,7 @@ export const CreateAgenda = ({
 						{assignments.length > 0
 							? Array.from(
 									new Set(assignments.concat(results ? results : []))
-							  ).map(
+								).map(
 									(assignment) =>
 										(query.length == 0
 											? true
@@ -322,7 +322,7 @@ export const CreateAgenda = ({
 												</Button>
 											</div>
 										)
-							  )
+								)
 							: "Make some assignments to include them in your agendas!"}
 					</div>
 					<Button

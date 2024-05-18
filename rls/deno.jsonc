@@ -1,5 +1,5 @@
 {
 	"tasks": {
-		"export": "deno run --allow-write ./index.ts"
-	}
+		"export": "deno run --allow-write ./index.ts",
+	},
 }

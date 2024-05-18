@@ -60,7 +60,7 @@ export default function ScheduleComponent({
 											"/classes/" +
 											(checkClassMatchesSchedule(item)
 												? // @ts-expect-error
-												  checkClassMatchesSchedule(item).class!.id
+													checkClassMatchesSchedule(item).class!.id
 												: "") //link to the correct class
 										}
 										onClick={() => {
