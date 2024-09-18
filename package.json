@@ -67,7 +67,7 @@
 		"react-dom": "^18.2.0",
 		"react-email": "2.1.1",
 		"react-tagsinput": "^3.20.3",
-		"sass": "^1.66.1",
+		"sass": "^1.79.0",
 		"sharp": "^0.32.6",
 		"tailwindcss-theme-swapper": "^0.7.3",
 		"typescript": "^5.2.2",
