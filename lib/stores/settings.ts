@@ -6,10 +6,11 @@ import { Database } from "../db/database.types";
 export interface Settings {
 	theme: "light" | "dark" | "system";
 	compact: boolean;
-	sortBySchedule: boolean;
+	sortBySchedule: boolean; //disabled (does not work)
 	homepageAssignments: "all" | "student" | "none";
 	homepageView: "auto" | "tabbed" | "student" | "teacher";
 	showAMPM: boolean;
+	schedulesToShow: "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7";
 }
 
 interface SettingsStore {
@@ -25,6 +26,7 @@ const defaultSettings: Settings = {
 	homepageAssignments: "student",
 	homepageView: "auto",
 	showAMPM: false,
+	schedulesToShow: "2",
 };
 
 export const useSettings = create<SettingsStore>()(

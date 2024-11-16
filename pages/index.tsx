@@ -5,17 +5,14 @@ import HomepageClassesUI from "../components/class/homepage";
 //import { sortClasses } from "../components/class/sorting";
 import { AssignmentPreview } from "../components/assignments/assignments";
 import ScheduleComponent from "../components/complete/schedule";
-import {
-	AllClasses,
-	AllClassesResponse,
-	getAllClasses,
-} from "../lib/db/classes";
+import { AllClasses, getAllClasses } from "../lib/db/classes";
 import { Database } from "../lib/db/database.types";
 import { ScheduleInterface, getSchedulesForXDays } from "../lib/db/schedule";
 import { useSettings } from "../lib/stores/settings";
 import blankCanvas from "@/public/svgs/blank-canvas.svg";
 import Layout from "@/components/layout/layout";
 import Image from "next/image";
+import { Button } from "@/components/misc/button";
 
 const Home = () => {
 	const supabaseClient = useSupabaseClient<Database>();
@@ -25,12 +22,16 @@ const Home = () => {
 	const [schedules, setSchedules] = useState<
 		{ schedule: ScheduleInterface[]; date: Date }[]
 	>([]);
+	const [showMoreSchedules, setShowMoreSchedules] = useState(false);
 	const dateFormat = new Intl.DateTimeFormat("en-US", {
 		weekday: "long",
 		month: "long",
 		day: "numeric",
 		timeZone: "Europe/London",
 	});
+	const {
+		data: { schedulesToShow },
+	} = useSettings();
 
 	useEffect(() => {
 		const [classes, schedule] = [
@@ -71,7 +72,11 @@ const Home = () => {
 					getAllClasses(supabaseClient, user.id),
 					// read comment in above useEffect as to why I'm fetching 3 dates -Lukas
 					// I'm going to fetch like 5 because weekends or some excuse - Bill
-					getSchedulesForXDays(supabaseClient, new Date(), 1),
+					getSchedulesForXDays(
+						supabaseClient,
+						new Date(),
+						parseInt(schedulesToShow) - 1
+					),
 				]);
 
 				if (classes.data && classes.data[0]) {
@@ -138,9 +143,9 @@ const Home = () => {
 						{/* Schedule UI */}
 						<section
 							id="Schedule"
-							className="flex grow flex-col md:flex-row lg:ml-10 lg:flex-col"
+							className="flex grow flex-col md:flex-row lg:ml-10 lg:flex-col max-lg:"
 						>
-							{schedules.map((schedule, index) => (
+							{schedules.slice(0, 2).map((schedule, index) => (
 								<div key={index} className="w-full md:mr-4 lg:mr-0">
 									<h2 className="title mr-2">
 										{dateFormat.format(schedule.date)}
@@ -153,6 +158,37 @@ const Home = () => {
 									/>
 								</div>
 							))}
+							{schedules.length > 2 && !showMoreSchedules && (
+								<Button
+									className="justify-center max-lg:hidden"
+									onClick={() => setShowMoreSchedules(true)}
+								>
+									Show More Schedules
+								</Button>
+							)}
+							{showMoreSchedules && (
+								<div className="max-lg:hidden">
+									{schedules.slice(2).map((schedule, index) => (
+										<div key={index} className="w-full md:mr-4 lg:mr-0">
+											<h2 className="title mr-2">
+												{dateFormat.format(schedule.date)}
+											</h2>
+
+											<ScheduleComponent
+												classes={classes}
+												schedule={schedule.schedule}
+												loading={loading}
+											/>
+										</div>
+									))}
+									<Button
+										className="justify-center"
+										onClick={() => setShowMoreSchedules(false)}
+									>
+										Show Fewer Schedules
+									</Button>
+								</div>
+							)}
 						</section>
 					</div>
 					{Array.isArray(classes) &&

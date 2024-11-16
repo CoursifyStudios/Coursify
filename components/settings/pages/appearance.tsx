@@ -43,6 +43,44 @@ const Theming: NextPage = () => {
 		},
 	];
 
+	const numberOfSchedulesToShow: {
+		id: Settings["schedulesToShow"];
+		name: string;
+	}[] = [
+		{
+			id: "0",
+			name: "0",
+		},
+		{
+			id: "1",
+			name: "1",
+		},
+		{
+			id: "2",
+			name: "2",
+		},
+		{
+			id: "3",
+			name: "3",
+		},
+		{
+			id: "4",
+			name: "4",
+		},
+		{
+			id: "5",
+			name: "5",
+		},
+		{
+			id: "6",
+			name: "6",
+		},
+		{
+			id: "7",
+			name: "7",
+		},
+	];
+
 	const homepageViewTypes: { id: Settings["homepageView"]; name: string }[] = [
 		{
 			id: "auto",
@@ -95,7 +133,8 @@ const Theming: NextPage = () => {
 			<Header name="class" page={1}>
 				Classes
 			</Header>
-			<ToggleSection
+			{/* Disabled */}
+			{/* <ToggleSection
 				name="Sort Classes by Schedule"
 				description="Sort classes based on your schedule. When disabled, classes will be sorted by block number." //rearrangable classes hopefully coming soon TM
 				enabled={settings.sortBySchedule}
@@ -104,7 +143,7 @@ const Theming: NextPage = () => {
 						sortBySchedule: !settings.sortBySchedule,
 					})
 				}
-			/>
+			/> */}
 			<DropdownSection
 				name="Homepage Classes View"
 				description="Change the way classes are displayed on the homepage. By default, we sample your classes to determine which one fits best for you." //should be clarified
@@ -117,6 +156,19 @@ const Theming: NextPage = () => {
 						homepageView: value.id as Settings["homepageView"],
 					});
 				}}
+			/>
+			<DropdownSection
+				name="Number of schedules to show"
+				description="Choose how many days of schedules to show on your homepage. By default we show two."
+				currentValue={
+					numberOfSchedulesToShow.find(
+						(theNumber) => theNumber.id == settings.schedulesToShow
+					)!
+				}
+				values={numberOfSchedulesToShow}
+				onChange={(value) =>
+					set({ schedulesToShow: value.id as Settings["schedulesToShow"] })
+				}
 			/>
 			<Header name="assignment" page={1}>
 				Assignments
