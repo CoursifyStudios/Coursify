@@ -22,7 +22,7 @@ interface CoursifyInviteStudentEmailProps {
 
 const CoursifyInviteStudentEmail = ({
 	name = "Lukas",
-	schoolName = "Sacred Heart Cathedral Preparatory",
+	schoolName = "Oakbridge Kings Boarding School",
 }: CoursifyInviteStudentEmailProps) => {
 	const previewText = `Join ${schoolName} on Coursify`;
 	return (

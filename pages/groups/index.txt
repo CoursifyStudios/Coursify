@@ -34,7 +34,7 @@ export default function GroupDirectory() {
 								key="123"
 								id="123"
 								photo="https://images.unsplash.com/photo-1687981576001-1417d139c229?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3174&q=80"
-								name="SHC Announcements"
+								name="Announcements"
 								membernum="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam gravida placerat purus at posuere. Quisque ut ornare arcu, quis accumsan risus. Suspendisse ligula libero, tincidunt nec magna condimentum, dapibus iaculis lacus. Fusce lectus ipsum, mollis varius justo at, sollicitudin rhoncus massa. Donec ornare arcu at lectus suscipit, ac aliquet velit vestibulum. Nullam eget vulputate ligula. Duis sit amet metus lorem. Vivamus maximus in tortor quis ornare."
 								isLink={true}
 							/>
@@ -42,7 +42,7 @@ export default function GroupDirectory() {
 								key="123"
 								id="123"
 								photo="https://images.unsplash.com/photo-1687981576001-1417d139c229?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3174&q=80"
-								name="SHC Library"
+								name="Library"
 								membernum="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam gravida placerat purus at posuere. Quisque ut ornare arcu, quis accumsan risus. Suspendisse ligula libero, tincidunt nec magna condimentum, dapibus iaculis lacus. Fusce lectus ipsum, mollis varius justo at, sollicitudin rhoncus massa. Donec ornare arcu at lectus suscipit, ac aliquet velit vestibulum. Nullam eget vulputate ligula. Duis sit amet metus lorem. Vivamus maximus in tortor quis ornare."
 								isLink={true}
 							/>
@@ -50,7 +50,7 @@ export default function GroupDirectory() {
 								key="123"
 								id="123"
 								photo="https://images.unsplash.com/photo-1687981576001-1417d139c229?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=3174&q=80"
-								name="SHC Fitness Center"
+								name="Fitness Center"
 								membernum="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam gravida placerat purus at posuere. Quisque ut ornare arcu, quis accumsan risus. Suspendisse ligula libero, tincidunt nec magna condimentum, dapibus iaculis lacus. Fusce lectus ipsum, mollis varius justo at, sollicitudin rhoncus massa. Donec ornare arcu at lectus suscipit, ac aliquet velit vestibulum. Nullam eget vulputate ligula. Duis sit amet metus lorem. Vivamus maximus in tortor quis ornare."
 								isLink={true}
 							/>
