@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a target="_blank"><img src="https://cdn.discordapp.com/attachments/1018976233884749917/1095927183001796628/logo.png" alt="Coursify Logo" width="200"></a>
+  <a target="_blank"><img src="https://raw.githubusercontent.com/CoursifyStudios/Coursify/refs/heads/dev/public/brand-logos/coursify.svg" alt="Coursify Logo" width="200"></a>
   <br>
 Coursify
   <br>
