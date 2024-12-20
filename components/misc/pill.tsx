@@ -77,7 +77,7 @@ export const CopiedHover: NextPage<{
 						} px-2 py-1 text-center text-sm font-medium shadow-lg transition`}
 					>
 						{!copied && "Tap to "}
-						{copied ? "Copied!" : customText ?? "Copy Link"}
+						{copied ? "Copied!" : (customText ?? "Copy Link")}
 					</div>
 				</Transition>
 			</div>

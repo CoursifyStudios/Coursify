@@ -90,7 +90,7 @@ export const AnnouncementPostingUI = ({
 				]
 	);
 	const [files, setFiles] = useState<CoursifyFile[]>(
-		editingInfo ? editingInfo.files ?? [] : []
+		editingInfo ? (editingInfo.files ?? []) : []
 	);
 	const [showCrossPosting, setShowCrossPosting] = useState(false);
 	const [sending, setSending] = useState(false); // controls like a loading state thing

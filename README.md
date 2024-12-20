@@ -114,7 +114,8 @@ While there aren't currently any style or brand guidelines, we do have a few rul
 ```jsx
 <label>
 	<span className="label-text label-required">Input name</span>
-	<input type="text" /> {/*`type="text"`` is required to add default styles to the input element*/}
+	<input type="text" />{" "}
+	{/*`type="text"`` is required to add default styles to the input element*/}
 </label>
 ```
 
@@ -123,7 +124,8 @@ _You can remove `label-required` if the field isn't required._
 ```jsx
 <label>
 	<span className="label-text">Input name</span>
-	<input type="text" /> {/*`type="text"`` is required to add default styles to the input element*/}
+	<input type="text" />{" "}
+	{/*`type="text"`` is required to add default styles to the input element*/}
 </label>
 ```
 

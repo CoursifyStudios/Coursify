@@ -35,7 +35,7 @@ const Navbar: NextComponentType = () => {
 				email: "demo@coursify.one",
 				full_name: "Coursify Demo User",
 			}
-		: user?.user_metadata ?? {};
+		: (user?.user_metadata ?? {});
 	const [username, setUsername] = useState<string>();
 	const [fullname, setFullName] = useState<string>();
 
