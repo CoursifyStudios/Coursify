@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  <a href="https://coursify.dev" target="_blank"><img src="https://cdn.discordapp.com/attachments/1018976233884749917/1095927183001796628/logo.png" alt="Coursify" width="200"></a>
+  <a target="_blank"><img src="https://cdn.discordapp.com/attachments/1018976233884749917/1095927183001796628/logo.png" alt="Coursify Logo" width="200"></a>
   <br>
 Coursify
   <br>
@@ -17,8 +17,6 @@ Coursify
   <a href="#standards">Standards</a> •
   <a href="#credits">Credits</a>
 </p>
-
-![Coursify](https://cdn.discordapp.com/attachments/984948771198746725/1095847122630361300/Previewprojectpreview.png)
 
 ## Features
 
